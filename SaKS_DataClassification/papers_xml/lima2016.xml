@@ -1,0 +1,314 @@
+<article>
+  <title>An artificial immune system with continuous-learning for voltage disturbance diagnosis in electrical distribution systems</title>
+  <abstract>
+    <sentence>This paper presents a new artificial immune algorithm with continuous-learning, which is inspired by the biological immune system, to realize the voltage diagnosis in electrical distribution systems.</sentence>
+    <sentence>This conception allows one to compose a diagnosis system that can continuously learn without reinitialization when new disturbances occur due to the evolution of the electrical system.</sentence>
+    <sentence>Two artificial immune algorithms, which are the negative selection algorithm and the clonal selection algorithm, are used for the pattern recognition process and the learning process, respectively.</sentence>
+    <sentence>The principal application of this new method aids the operation during failures, supervises the protection system, and can evolve with the power systems to continuously acquire new knowledge.</sentence>
+    <sentence>This new methodology has a direct impact in the area of diagnosis in electrical systems, as well as, in the pattern recognition problem, because the main contribution and novelty of this method is the continuous learning capability, which enables the system to learn unknown patterns without having to restart the knowledge.</sentence>
+    <sentence>This is the major advantage of this methodology.</sentence>
+    <sentence>To evaluate the efficiency and performance of this new method, failure simulations were performed in a real distribution system with 134 buses using the EMTP software.</sentence>
+    <sentence>The results show robustness and efficiency.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Diagnosis</keyword>
+    <keyword>Voltage disturbances</keyword>
+    <keyword>Artificial immune systems</keyword>
+    <keyword>Negative selection algorithm</keyword>
+    <keyword>Clonal selection algorithm</keyword>
+    <keyword>Continuous-learning</keyword>
+    <keyword>Electrical distribution systems</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Nowadays, a new concept of electrical power systems called Smart Grids requires several investments to transform the electrical systems that provide modern technologies to generate, transmit and principally distribute electrical energy systems (Dongli, Meng, &amp; Song, 2011), (Gungor et al., 2011).</sentence>
+    <sentence>The smart grid concept is based on an intense usage of automation, computation and telecommunication technologies to monitor and control electrical systems that allow the implementation of new control, communication, protection and optimization strategies to improve the efficiency of the currently available systems (Gungor et al., 2011).</sentence>
+    <sentence>Thus, several technologies are used, particularly digital and information technology (Alag et al., 2001), which allow the development of integrated systems that combine acquisition, analysis and data processing techniques, to provide the necessary assistance to automation, control and decision-making processes (Northcote-Green &amp; Wilson, 2007).</sentence>
+    <sentence>Considering the failure diagnosis for the smart grid, those systems must be based on auto-restoration idea, i.e., they must be able to automatically detect, analyze, respond and restore failures (Dongli et al., 2011) without human intervention.</sentence>
+    <sentence>Thus, using intelligent techniques (artificial neural networks, fuzzy logic, artificial immune systems, etc.)</sentence>
+    <sentence>is an alternative to the diagnosis problem.</sentence>
+    <sentence>Several techniques based on this concept have been used to aid the operators in executing routines in electrical systems, which provides security, velocity and efficiency in planning corrective actions.</sentence>
+    <sentence>However, most failure-diagnosis methods based on intelligence proposed to the actual electrical systems have a learning strategy to obtain the knowledge, on which all efficiency and robustness depend.</sentence>
+    <sentence>Normally, these strategies (training or learning algorithms) must always reinitialize the learning process when the system is executed or a new disturbance occurs; therefore, the system is not significantly intelligent.</sentence>
+    <sentence>The system does not constantly learn, and when a new pattern appears, every learning process is executed again.</sentence>
+    <sentence>A modern and intelligent failure-diagnosis system to the smart grids must continuously learn, follow innovations and modernizations of the electrical system, which include new types of prominent failures, learn with experience and constantly evolve.</sentence>
+    <sentence>Developing a system with these characteristics is a complex task.</sentence>
+    <sentence>In the literature, many studies present methods to solve the problem of the diagnosis of disturbances, as in (Uyar, Yildririm, &amp; Gencoglu, 2008), (Oleskovicz et al., 2009), (Zhang, Li, &amp; Hu, 2011), (Lima, Lotufo, &amp; Minussi, 2014), (Lima, Minussi, Bessa, &amp; Fidalgo, 2015), however these approaches do not consider the minimum requisites to the smart grids, i.e., the objective to provide continuous-learning to a pattern recognition system.</sentence>
+    <sentence>This requisite based on auto-restoration idea, i.e., continuous learning provide the ability to perform the detection, analyze, respond and classify failures without human intervention.</sentence>
+    <sentence>In the literature, there are a few approaches that propose methodologies to develop a system with continuous training to realize diagnosis.</sentence>
+    <sentence>For example, in Pham and Cham (2007) is proposed an online learning asymmetric boosted classifiers for object detection.</sentence>
+    <sentence>This approach is one of the first to try the continuous learning in techniques of pattern recognition.</sentence>
+    <sentence>In the reference (Marchiori, Silveira, Lotufo, Minussi, &amp; Lopes, 2011) the authors presents a methodology to analyze the transient stability in electrical energy systems using, a Euclidean ARTMAP neural network with continuous training.</sentence>
+    <sentence>In this paper the Euclidean ARTMAP neural network was modified to learning continuously and identify novelties in the analysis of the transient stability in electrical systems, i. e., the Euclidean ARTMAP neural network was able to identify unknown patterns, which were not learned yet in the training process.</sentence>
+    <sentence>In Barros, Tonelli-Neto, Decanini, and Minussi (2015) the authors present a method to detection and classification of voltage disturbances in electrical power systems using a modified Euclidean ARTMAP neural network with Continuous Training.</sentence>
+    <sentence>In this strategy the neural network is initially trained to obtain the knowledge.</sentence>
+    <sentence>In the online process, if a pattern in analysis is unknown by the diagnostic system, is executed an online learning phase, and starting this, the diagnostic system is able to identify and classify the pattern that was unknown to the system.</sentence>
+    <sentence>This method presents a precision of 90.32% in the voltage disturbance diagnosis.</sentence>
+    <sentence>In this sense, this work aims to propose a new approach to develop a system with continuous training to realize the voltage disturbances diagnosis in electrical distribution systems based on the Biological Immune System (BIS).</sentence>
+    <sentence>Two immune algorithms were used to compose this system: the Negative Selection Algorithm (NSA) (Forrest, Perelson, Allen, &amp; Cherukuri, 1994) and the clonal selection algorithm (CLONALG) (de Castro &amp; Von Zuben, 2000).</sentence>
+    <sentence>The artificial immune algorithm, which is inspired by the BIS, is a promising technique in Intelligent Computing (IC).</sentence>
+    <sentence>The BIS computationally reproduces the principal characteristics and the propriety functionalities and abilities.</sentence>
+    <sentence>It has a stable, reliable, and adaptive architecture, allowing the continuous inclusion of the training module.</sentence>
+    <sentence>This propriety allows the system to introduce new experiences and knowledge without the need to reinitialize the immune memory of the system.</sentence>
+    <sentence>This is one advantage of using Artificial Immune Systems, which allow the possibility of continuous training unlike in other techniques such as using Artificial Neural Networks (ANNs).</sentence>
+    <sentence>In some ANNs, to improve the training, it is necessary to reinitialize the process, consequently destroying the knowledge previously acquired, except for a few architectures that have the plasticity propriety as in the neural networks of the ART (Adaptive Resonance Theory) family (Carpenter, Grossberg, Markuzon, Reynold, &amp; Rosen, 1992).</sentence>
+    <sentence>The main contribution and novelty of the approach proposed in this paper is the paradigm shift, that is, enable continuous learning for the pattern recognition methods.</sentence>
+    <sentence>This ability allows great evolution to intelligent systems, where the methods are able to learn in online mode, acquiring knowledge of the unknown patterns for the system.</sentence>
+    <sentence>To evaluate and validate the efficiency of this new approach, the results were compared with a conventional diagnosis system based only in the NSA, proposed and presented in Lima, Lotufo, and Minussi (2013).</sentence>
+    <sentence>This paper is organized as follows.</sentence>
+    <sentence>Section 2 discusses the BIS, Section 3 focuses on the NSA, and Section 4 tackles the CLONALG.</sentence>
+    <sentence>The modeling and simulations is presented in Section 5.</sentence>
+    <sentence>The proposed methodology is presented in Section 6, and the applications and results are discussed in Section 7.</sentence>
+    <sentence>The conclusions are presented in Section 8.</sentence>
+  </section>
+  <section name="Biological immune system">
+    <sentence>The BIS is the principal defense of organisms against several infective agents that invade/infect the human body.</sentence>
+    <sentence>In this case, the BIS must instantaneously act by effectively responding to the invading agents and identifying them to protect the human body (indicating the disease).</sentence>
+    <sentence>There are two types of responses: the innate immune system and the adaptive immune system.</sentence>
+    <sentence>The innate immune system is the first defense line with a fast response characterized by dendritic cells (APC- Antigen Presenting Cell) and phagocyte (Granulocytes, Macrophages, etc.</sentence>
+    <sentence>), which are responsible for ingesting strange particles to the organism and other types of defenses, such as physical barriers (skin) and chemicals (de Castro, 2001).</sentence>
+    <sentence>The adaptive immune system is the second level, which can recognize microorganisms, such as viruses, bacteria, fungi, protozoa, helminthes, and some types of worms.</sentence>
+    <sentence>The adaptive immune system is responsible for realizing the learning process on the infective agents on the first contact with the antigens, i.e., the first exposure to the infective agent.</sentence>
+    <sentence>In addition, it is responsible for creating memory immune cells from the first exposure to the infective agent to accelerate a response to this type of infective agent in future exposure (de Castro &amp; Timmis, 2002).</sentence>
+    <sentence>Operation of the pattern recognition of the BIS The biological organism, particularly the human body, is composed of several cells and molecules that work in harmony and respond to strange agents that enter the organism, which are called antigens.</sentence>
+    <sentence>The BIS has fundamental characteristics such as pattern recognition, learning and neutralization of infective agents.</sentence>
+    <sentence>These steps represent an immune response, which is illustrated on Fig 1.</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Representation of the BIS.</sentence>
+    <sentence>Step (I) represents the BIS exposure to an antigen (infective agent).</sentence>
+    <sentence>The BIS can react with two types of responses: the innate immune response, which begins at step (II), and the adaptive immune response, which begins at step (VII).</sentence>
+    <sentence>If the process begins with the innate immune system (step (II)), the infective agent is considered to be an unknown agent by the BIS, and the infective cell in the organism must be identified and informed a posteriori; then, the adaptive immune system begins an adaptive response (learn and generate antibodies to neutralize the antigen).</sentence>
+    <sentence>If the process begins with the adaptive immune system (step (VII)) the antigen is known by the BIS, and the detection process is realized by the memory lymphocytes in the organism.</sentence>
+    <sentence>In step (II), the innate immune process begins when some antigen (infective agent) is ingested by a dendritic cell (APC- Antigen Presenting Cell).</sentence>
+    <sentence>At this phase, the antigens are ingested and disintegrated into antigen peptides.</sentence>
+    <sentence>In step (III), the pieces of peptides are linked to the MHC (Major Histocompatibility Complex) molecules and presented to the surface of the dendritic cell.</sentence>
+    <sentence>In step (IV), the T lymphocytes, which have receptive molecules at the surface, can recognize/identify different antigen MCH/peptides that are processed by the dendritic cells, i.e., when there is a link (combination), the antigen is recognized, and the lymphocyte state is activated.</sentence>
+    <sentence>This step represents the proper/non-proper discrimination of the organism, which distinguishes proper cells from the infective agents (de Castro, 2001), (Dasgupta, 1998).</sentence>
+    <sentence>Based on this pattern recognition principle, reference (Forrest et al., 1994) proposes the NSA.</sentence>
+    <sentence>After the antigen detection, at step (V), the lymphocytes T are activated and secrete chemical signals (lymphokine) that suggest to other BIS components that a cell is infected.</sentence>
+    <sentence>After an infected cell is identified (step (VI)), B lymphocytes can recognize the infected cell and start the learning process, which is more commonly known as the principle of clonal selection (step (VII)).</sentence>
+    <sentence>In this case, B lymphocytes can recognize free identified antigens without ingesting and digesting the presenting cells (APC).</sentence>
+    <sentence>When B cells recognize an antigen (by indication or memory), the clonal selection process begins, which is also known as learning process (step VIII).</sentence>
+    <sentence>In this step, the lymphocytes pass under a clone and hyper-mutation process, which generates a set of B lymphocytes in the organism.</sentence>
+    <sentence>Then, step (IX) is a discerning process, where B lymphocytes with high affinity are separated to pertain to the memory set, and those with low affinity are activated and transformed in plasmocytes (step X) to secrete antibodies.</sentence>
+    <sentence>In step (XI), the BIS-detected antigens are neutralized by the generated antibodies, which destroys the risk (disease).</sentence>
+    <sentence>In step (XII), the high-affinity lymphocytes in the distinguishing process are transformed and pertained to memory lymphocytes to substitute for those with low affinity.</sentence>
+    <sentence>The new memory lymphocytes begin to circulate in the organism to ensure an efficient and fast response to a future exposure to the same antigen (infective agent).</sentence>
+    <sentence>It is emphasized that the entire process is realized with the cooperation of the cells that form the BIS, each of which is responsible for a relatively simple function, and the set that realizes an extremely complex work (de Castro, 2001), (Dasgupta, 1998).</sentence>
+    <sentence>This paper was inspired by the BIS operation, pattern recognition and learning processes.</sentence>
+  </section>
+  <section name="Negative selection algorithm">
+    <sentence>The NSA is based on the pattern recognition process of the biological immune system and elaborated as a computational model.</sentence>
+    <sentence>The NSA is proposed in Forrest et al.</sentence>
+    <sentence>(1994).</sentence>
+    <sentence>In this algorithm (negative selection) the T lymphocytes that occur at a specific time and discriminates the proper/non-proper cells in the organism.</sentence>
+    <sentence>The algorithm is executed in two phases, such as presented in Figs.</sentence>
+    <sentence>2 and 3 (de Castro, 2001): Fig 2.</sentence>
+    <sentence>Flowchart of the censor phase of the NSA.</sentence>
+    <sentence>Fig 3.</sentence>
+    <sentence>Flowchart of the monitoring phase of the NSA.</sentence>
+    <sentence>The censor phase of the NSA consists primarily of generating a detector set from the data that were randomly chosen and verifying which data can recognize a non-proper pattern.</sentence>
+    <sentence>The detectors are similar to the mature T cells that can recognise pathogenic agents (Lima et al., 2013).</sentence>
+    <sentence>The monitoring phase consists of monitoring a system to identify a change in behaviour; thus, this monitoring phase classifies the change using the detector set that was created in the censor phase.</sentence>
+    <sentence>The censor phase occurs in the off-line mode, and the monitoring phase occurs in real-time mode (de Castro &amp; Timmis, 2002), (Dasgupta, 1998).</sentence>
+    <sentence>The chains at the NSA represent the patterns by data structures (vectors).</sentence>
+    <sentence>These chains can be classified in two types of NSA: the antigens (Ag) and the lymphocytes (Ab).</sentence>
+    <sentence>The Ag is the signal to be analyzed, unknown by the NSA and represented by expression (1).</sentence>
+    <sentence>The detectors, that is, the lymphocytes (Ab), are expressed according to expression (2) (Lima et al., 2013), (de Castro &amp; Timmis, 2002): (1) (2) where: L is the dimension of the lymphocytes (Ab) and antigens (Ag).</sentence>
+    <sentence>It is emphasized that the censor and monitoring phases of the NSA are executed off-line and on-line, respectively (de Castro &amp; Timmis, 2002).</sentence>
+    <sentence>Matching criterion and affinity rate A criterion called matching or combination is used to evaluate the affinity with the chains (antigens and lymphocytes) and determine their similarity.</sentence>
+    <sentence>The matching can be perfect or partial.</sentence>
+    <sentence>This paper uses the partial matching and affinity proposed in Bradley and Tyrrell (2002).</sentence>
+    <sentence>The affinity rate represents the similarity grade with the two analyzed chains.</sentence>
+    <sentence>According to Bradley and Tyrrell (2002), the affinity is defined as follows: (3) where: TAf affinity rate; An number of normal chains in the problem (proper chains); At total number of chains in the problem (proper and non-proper chains).</sentence>
+    <sentence>The precise affinity rate can be calculated using Eq (3), where a statistical relation with the samples is proposed.</sentence>
+    <sentence>A deviation, i.e., a tolerance rate, is proposed where the combination with the patterns is acceptable and can improve the diagnosis (Lima et al., 2013): (4) where: Agi nominal value of position i of the antigen (pattern under analysis); nominal value of position i minus the deviation adopted in the antibody (detector pattern); nominal value of position i plus the deviation adopted in the antibody (detector pattern).</sentence>
+    <sentence>Expression (5) represents the method to quantify the total affinity with the analyzed patterns (Bradley &amp; Tyrrell, 2002), (Lima &amp; Minussi, January-2014): (5) where: AfT percentage of affinity with the analyzed patterns; L total number of positions; Pc matching position; sum (number) of the matching positions.</sentence>
+    <sentence>Thus, if AfT is greater than TAf, then the combination/matching with the patterns occurs, i.e., the patterns are considered equal/similar.</sentence>
+    <sentence>Otherwise, there is no matching with the patterns.</sentence>
+  </section>
+  <section name="Clonal selection algorithm">
+    <sentence>The clonal selection algorithm, CLONALG, was originally proposed in de Castro and Von Zuben (2000).</sentence>
+    <sentence>There are two available versions of the algorithm in the literature, one of which solves machine learning problems and pattern recognition, and the other solves optimization problems (de Castro, 2001).</sentence>
+    <sentence>The CLONALG for recognition problems and machine learning has the following steps (de Castro, 2001), (de Castro &amp; Timmis, 2002): Step I: Initialization: generate a random population (Ab=Ab{M}+ Ab{R}) with N lymphocytes for each antigen (Agi).</sentence>
+    <sentence>N is given by M+R; Step II: Affinity evaluation: each antigen (Agi) is presented to every Ab of the population (Ab) in a process of affinity evaluation.</sentence>
+    <sentence>A vector f of affinity is determined; Step III: Selection: the n Abs with high affinity f to Agi are selected to compose a sub population (Ab{n}); Step IV: Cloning: the n selected Ab s proliferate (clone) proportionally to the affinities of the antigen (Agi) and generate a C population of clones in each selected Ab; Step V: Hyper-mutation: the C population of clones is submitted to the maturation affinity process, which generates a new population, C*, where each Ab will mutate with a rate inversely proportional to the affinity f; Step VI: Affinity evaluation: determine the affinity f* with the set C* of mutated clones and the antigen Agi; Step VII: Re-selection: from the mature population C*, re-select the n best mature Ab s to make a sub-population (Ab{n}).</sentence>
+    <sentence>From this sub-population, choose the best Abs to enter the memory set (Ab{n}).</sentence>
+    <sentence>A Ab enters the memory set if it has high affinity rate and can substitute a Ab of the memory; Step VIII: Meta-dynamics: substitute d antibodies of (Ab{R}) by new individuals (Ab{d}) to make the repertoire diverse.</sentence>
+    <sentence>The anti-bodies with the lowest affinity are substituted; Step IX: Repeat steps II-VIII until the stop criterion is satisfied.</sentence>
+    <sentence>At the end of the iterative process, the memory set (Ab{M}) has M Abs with high affinity rates to the antigen (Agi).</sentence>
+    <sentence>This memory set can be used by the NSA to detect and classify learned antigens in the clonal selection process.</sentence>
+    <sentence>For learning problems, step VIII (meta-dynamics) is not executed; therefore, d = 0.</sentence>
+    <sentence>The number Nc of clones generated in Step IV for each Abi is given by Eq (6) (de Castro, 2001): (6) where: β is a multiplicative factor between [0,1], N is the total number of Abs of population Ab, and round(.)</sentence>
+    <sentence>is the approximation operator to the closest integer.</sentence>
+    <sentence>The mutation rate (α) of each clone is defined according to Eq (7) (de Castro, 2001): (7) where: ρ is a control damping parameter of the exponential function and f n is the normalized value of affinity f, which is calculated using Eq (8).</sentence>
+    <sentence>(8) Then, each clone mutates according to (9) (de França, Von Zuben, &amp; de Castro, 2005): (9) where: m is the number of mutations that each clone has, round(.)</sentence>
+    <sentence>is the approximation operator to the closest integer, α is the mutation rate, and N(0,1) is the Gaussian random variable with mean zero and σ = 1.</sentence>
+  </section>
+  <section name="Modelling and disturbance simulation">
+    <sentence>Although there was no database of distribution systems under perturbations, the data to evaluate the methodology was provided simulating events in test systems.</sentence>
+    <sentence>Using the routine models (Dubé, 1996) from the EMTP software (EMTP-RV 2011), a real distribution system with 134 buses was modeled.</sentence>
+    <sentence>A sample frequency of 15.36 kHz, which is equivalent to 256 samples per cycle, was used as a parameter.</sentence>
+    <sentence>The simulation time was 200 ms. For the voltage disturbances, the theoretical model proposed by Abdel-Galil, Kamel, Youssef, El-Saadany, and Salama (2004) was used for the simulations, where each disturbance was generated by varying the parameters in the equations that represented the waveform of the disturbances.</sentence>
+    <sentence>In total, 624 simulations were executed for the 134-bus system (LaPSEE 2011).</sentence>
+    <sentence>The simulations considered the phase where the disturbance occurred, 50–120% to loading system, and the parameters of the theoretical model.</sentence>
+    <sentence>Table 1 presents the quantity of executed simulations for each class of disturbance.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Number of simulations executed.</sentence>
+    <sentence>Voltage disturbance 134 buses Outage 48 Harmonic 144 Swell 72 Sag 72 Swell with harmonic 96 Sag with harmonic 96 Oscillatory transient 96 Total 624</sentence>
+  </section>
+  <section name="Proposed methodology">
+    <sentence>This section describes the methodology proposed to realize the voltage disturbance diagnosis in electrical distribution systems using the artificial immune algorithm with continuous-learning.</sentence>
+    <sentence>The voltage disturbance diagnosis system with continuous-learning in this section is inspired by the pattern recognition and learning process of the BIS, which was described in Section 2.A of this work.</sentence>
+    <sentence>To computationally formulate and reproduce this biological process, the NSA proposed by Forrest et al.</sentence>
+    <sentence>(1994) and the CLONALG proposed by de Castro and Von Zuben (2000) were used.</sentence>
+    <sentence>The NSA realizes the voltage diagnosis disturbance and the CLONALG as a strategy for learning.</sentence>
+    <sentence>The diagnosis system with continuous-learning has five principal steps: NSA (off-line) censoring, novelty detection, continuous-learning, NSA monitoring and knowledge updating.</sentence>
+    <sentence>The block diagram is shown in Fig 4.</sentence>
+    <sentence>According to Fig 4, in the off-line process called censor module, the proper and disturbance detectors for the NSA are defined, which form the set of NSA detectors.</sentence>
+    <sentence>Fig 4.</sentence>
+    <sentence>Diagnosis system with continuous-learning.</sentence>
+    <sentence>Thus, from the data acquisition system (SCADA (Wylie &amp; Pleydell, 2008)), voltage readings are executed at the electrical distribution substation to obtain the oscillographs.</sentence>
+    <sentence>Then, the censor module defines the proper detector set.</sentence>
+    <sentence>For electrical distribution systems, the proper signals have the normal operation characteristics.</sentence>
+    <sentence>Then, 256 window samples of the signal that represents the normal system operation are filed as proper detectors.</sentence>
+    <sentence>Subsequently, the censor module is executed to generate the disturbance detectors, and for each type of disturbance, the censor module is executed once.</sentence>
+    <sentence>In this phase, the detectors are randomly generated from a set of signals that represent the disturbed system.</sentence>
+    <sentence>Thus, 1 cycle (256 points) in the simulated data is windowed and these data are compared window by window with the proper detectors.</sentence>
+    <sentence>If there is matching, the random vector is rejected.</sentence>
+    <sentence>Otherwise, it is accepted and filed as a disturbance detector in the set of the disturbance detectors.</sentence>
+    <sentence>The censor process is illustrated in Fig 5.</sentence>
+    <sentence>Fig 5.</sentence>
+    <sentence>Censor Module of NSA.</sentence>
+    <sentence>The system operator defines the number of detectors (proper or disturbances).</sentence>
+    <sentence>The detector set is used for the novelty detection and monitoring steps of the NSA.</sentence>
+    <sentence>The monitoring process (on-line) is executed after the off-line process.</sentence>
+    <sentence>The test set (antigens), which is obtained from the acquisition system (SCADA (Wylie &amp; Pleydell, 2008)), is formed using every available signal in the database.</sentence>
+    <sentence>Then, a random signal is selected to be analyzed.</sentence>
+    <sentence>The novelty detection step is executed when a signal is selected to be analyzed, and the analyzed signal is compared with the detector set of the NSA.</sentence>
+    <sentence>The matching of the signal with some detector is verified.</sentence>
+    <sentence>If they match, the analyzed signal is known by the system, i.e., there is no novelty.</sentence>
+    <sentence>Otherwise, the signal is considered a novelty or unknown by the system.</sentence>
+    <sentence>When the system identifies a novelty, the continuous-learning step is executed to learn about the new antigen (analyzed signal), and the learning process occurs, which is realized by the CLONALG.</sentence>
+    <sentence>The objective of the CLONALG is to generate a memory set (knowledge) from an unknown signal (antigen).</sentence>
+    <sentence>This process follows the steps in Section 4 of this work.</sentence>
+    <sentence>Initially, a population of lymphocytes is randomly generated.</sentence>
+    <sentence>To randomly generate a lymphocyte, the maximum and minimum values of the voltage signal to be detected (antigen) are identified, and a vector with 256 positions is created and randomly filled with real values between the maximum and minimum voltages, which generates a random signal.</sentence>
+    <sentence>Eq (5) is used to quantify the affinity with the lymphocytes of the population (Ab) and the antigen.</sentence>
+    <sentence>Then, the n best lymphocytes with highest affinity values to the antigen are selected for the clonal process.</sentence>
+    <sentence>To quantify the affinity with the lymphocytes of the population (Ab) and the antigen, Eq (5) is used.</sentence>
+    <sentence>Then, the n best lymphocytes with highest affinity values to the antigen are selected for the cloning and hyper-mutation processes.</sentence>
+    <sentence>The number of clones is calculated using Eq (6), and the number of mutations to be realized on the clones depends on the calculus of Eqs.</sentence>
+    <sentence>(7)–(9).</sentence>
+    <sentence>Mutation is an evolutionary process to execute little modifications in the lymphocyte structure to increase the affinity to the antigen.</sentence>
+    <sentence>Due to the analyzed signals are expressed by vectors with real positive and negative numbers, this method uses the inductive mutation techniques (Wylie &amp; Shakhnovich, 2012), which is an evolutionary-algorithm technique to solve this type of problems.</sentence>
+    <sentence>Thus, the mutation process consists of realizing a mutation using Eq (10) in a random position of the signal (lymphocyte).</sentence>
+    <sentence>(10) where: is the mature lymphocyte, is the position to be mutated, is the goal (learning pattern), and α is a random number between [0, 1].</sentence>
+    <sentence>After the lymphocytes are matured, the n best matured clones are re-selected to be included in the population.</sentence>
+    <sentence>The selected lymphocytes replace the worst lymphocytes of the population.</sentence>
+    <sentence>Furthermore, the best lymphocytes are separated for the memory set.</sentence>
+    <sentence>The process is repeated until the stop criterion is satisfied.</sentence>
+    <sentence>In this work, the stop criterion is that every lymphocyte of the memory set reaches at least 92% affinity with the antigen (signal to be learned).</sentence>
+    <sentence>Fig 6 illustrates the learning process of CLONALG to learn a harmonic signal.</sentence>
+    <sentence>Fig 6(a) illustrates the signal to be learned.</sentence>
+    <sentence>Fig 6(b) shows the memory antibody randomly generated in red in the iteration 1.</sentence>
+    <sentence>Fig 6(c), (d), (e), (f), (g), (h) and (i) shows the memory anti-body after 50, 100, 150, 200, 250, 300 and 350 iterations, respectively.</sentence>
+    <sentence>Finally, Fig 6(j) illustrates the memory anti-body after the stop criterion is satisfied, i.e., the affinity with the random signal and the pattern to be learned are greater than 92%.</sentence>
+    <sentence>Fig 6.</sentence>
+    <sentence>Learning process of the CLONALG.</sentence>
+    <sentence>At the end of the CLONALG process, there is a memory set (knowledge) related to the unknown antigen.</sentence>
+    <sentence>This knowledge set is included to the detector set of the NSA to provide knowledge to the system.</sentence>
+    <sentence>For example, in another analysis of the same type, the system can recognize and classify the disturbance.</sentence>
+    <sentence>This characteristic is known as continuous-learning.</sentence>
+    <sentence>When the novelty detection step does not identify a novelty, i.e., when the antigen is known by the NSA, the process occurs according to Fig 7, similarly to the conventional NSA.</sentence>
+    <sentence>Thus, the signal under analysis must be compared with the detector set of the NSA and evaluate the matching and affinity to detect the abnormality and later classify the signal according to the class of disturbance where matching occurs.</sentence>
+    <sentence>Fig 7.</sentence>
+    <sentence>Monitoring Module of the NSA.</sentence>
+    <sentence>After the signal is analyzed, the monitoring process of the NSA finishes.</sentence>
+    <sentence>Furthermore, the knowledge module is updated, which is responsible for evaluating whether there is a requirement to update the detector set of the NSA (knowledge) to improve the disturbance detection and classification processes.</sentence>
+    <sentence>This case uses the matching of the detectors with the antigen signal (signal under analysis) as the criterion.</sentence>
+    <sentence>If 70% of the disturbance detectors match the analyzed signal, it is not necessary to update the detection set of the NSA for the signal classified.</sentence>
+    <sentence>If less than 70% of the detectors do not match with the classified pattern, the knowledge-updating process occurs.</sentence>
+    <sentence>When the NSA cannot recognize the signal with less than 70% of the detectors, it is necessary to update the detector set of the NSA to improve the recognition process and use the antigen to learn (obtain knowledge).</sentence>
+    <sentence>Therefore, it is necessary to update the knowledge of the CLONALG learning process, which is executed according to the previous description and identical to the process realized by the continuous-learning module.</sentence>
+    <sentence>After the learning process and a set of memory lymphocytes of the antigen signal (signal under learning) is obtained, the best lymphocyte of the memory set must be selected and updated to the detector set of the NSA.</sentence>
+    <sentence>The updating occurs on the substitution of one detector that does not match the antigen pattern.</sentence>
+    <sentence>This detector is substituted by the best lymphocyte of the memory set generated on the learning process realized by the CLONALG.</sentence>
+    <sentence>The learning updating only occurs when there is the need to reinforce the NSA knowledge, i.e., when fewer than 70% of the detectors do not satisfy the affinity criterion, matching no antigen.</sentence>
+    <sentence>Then, this detector is substituted by a new detector generated in the learning process, which is called the updating knowledge.</sentence>
+    <sentence>The process in Fig 4 is repeated until every antigen (test set) is analyzed.</sentence>
+  </section>
+  <section name="Results and applications">
+    <sentence>This section presents the obtained results of the proposed method in the simulated test system.</sentence>
+    <sentence>The algorithm was developed using MATLAB® (MATLAB 2011).</sentence>
+    <sentence>Every test and simulation was performed using a PC Intel Core 2 Duo 1.9 GHz with 2 GB of RAM (Random-Access Memory).</sentence>
+    <sentence>The proposed algorithm used a real distribution system with 134 buses (LaPSEE 2011).</sentence>
+    <sentence>The proposed method was evaluated to verify the efficiency, precision and robustness in the voltage disturbance diagnosis using the conventional algorithm (without continuous training), proposed and explained in Lima et al.</sentence>
+    <sentence>(2013), and the algorithm with continuous training.</sentence>
+    <sentence>The metrics adopted to the efficiency, precision and robustness are: ability to learn unknown patterns, percentage of correct answers and computational time.</sentence>
+    <sentence>Table 2 presents the parameters in the tests, which were obtained using an empirical test process.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Parameters.</sentence>
+    <sentence>Parameters NSA without continuous training NSA with continuous training TAf 66.66% 66.66% N – 25 M – 9 R – 16 n – 5 β – 0.3 ρ – 4 d – 0 Three patterns were excluded during the censor phase in both systems (with and without continuous training) to evaluate the performance of the novelty-detection, continuous-learning and knowledge-updating modules of the proposed algorithm.</sentence>
+    <sentence>The excluded patterns were: swell, harmonic and oscillatory transient.</sentence>
+    <sentence>They were randomly chosen like any disturbance, and the algorithms began the monitoring process online without knowing these patterns.</sentence>
+    <sentence>Table 3 shows the results with the previously mentioned patterns and configurations for the conventional diagnosis, i.e., the diagnosis without continuous training.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Results of the system without continuous training.</sentence>
+    <sentence>Disturbances 134 buses Tested patterns Matching patterns Matching (%) Swell 72 0 0.00 Sag 72 70 97.22 Outage 48 48 100.00 Harmonic 144 0 0.00 Swell with harmonic 96 96 100.00 Sag with harmonic 96 95 98.95 Oscillatory transient 96 0 0.00 Total 624 309 49.51 The conventional diagnosis system cannot identify the excluded patterns from the censor process, i.e., it cannot identify these types of patterns.</sentence>
+    <sentence>Table 4 presents the results of the diagnosis process with continuous training.</sentence>
+    <sentence>The configurations and parameters are identical to those used for the conventional NSA algorithm.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Results of the continuous-training system.</sentence>
+    <sentence>Disturbances 134 buses Tested patterns Matching patterns Matching (%) Swell 72 71 98.61 Sag 72 72 100.00 Outage 48 48 100.00 Harmonic 144 140 97.22 Swell with harmonic 96 96 100.00 Sag with harmonic 96 96 100.00 Oscillatory transient 96 95 98.95 Total 624 618 99.03 Table 4 shows that the continuous-training system can learn the unknown disturbances and execute the diagnosis in another analysis.</sentence>
+    <sentence>In addition, the updating knowledge module contributes to increase the matching rate for some known disturbances because the system updates the detector set of the NSA in the online monitoring process, which reinforces and improves the knowledge.</sentence>
+    <sentence>Tables 3 and 4 show an improvement in diagnosing the disturbances, i.e., the system with continuous training can evolve with the experience and diagnose the disturbances that were not previously diagnosed.</sentence>
+    <sentence>The excluded patterns from the censor process were not recognized by the system without continuous training with 0% matches.</sentence>
+    <sentence>After using the continuous training, the patterns are identified with a matching rate of approximately 98.95% for the swell, 97.22% for the harmonic and 98.95% for the oscillatory transient.</sentence>
+    <sentence>In conclusion, it is possible to control the quality of the generated lymphocytes in the memory set of the learning process with the CLONALG.</sentence>
+    <sentence>To finish the learning process, the lymphocytes of the memory set and the antigens (pattern to be learned) must have an affinity of at least 92%.</sentence>
+    <sentence>With this criterion, it is possible to ensure that the memory lymphocytes have high affinity values and provide efficiency in the diagnosis process.</sentence>
+    <sentence>Fig 8.</sentence>
+    <sentence>Graph of the efficiency with time.</sentence>
+    <sentence>Fig 9.</sentence>
+    <sentence>Graph of the precision with time.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>8 and 9 show graphs of the obtained results with and without continuous training to analyze the matches and the precision in a given time.</sentence>
+    <sentence>The instant of time is the occurrence of a failure, i.e., the quantity of failures that the system analyzes until the considered instant.</sentence>
+    <sentence>Fig 8 shows a linear relationship between the instant of time (number of failures) and the number of matches until this instant of time.</sentence>
+    <sentence>When the system continuously learns, the linear relationship tends to have an angular coefficient of approximately 1 and a linear coefficient of approximately 0 for each analyzed instant, i.e., an inclination of approximately 45o represents an optimal precision.</sentence>
+    <sentence>For the system without continuous training, the linear relationship presents different coefficients with an inclination of approximately 22o, which confirms that after the continuous training, the system improves the performance with time.</sentence>
+    <sentence>Finally, Fig 9 shows the precision of the system considering the analyzed instants of time (failures) until the moment.</sentence>
+    <sentence>The system without continuous training has a low error precision of approximately 50% until the end.</sentence>
+    <sentence>The system with continuous training has almost no error and maintains a precision of approximately 100% during the entire time.</sentence>
+    <sentence>Comparative study Table 5 presents a comparative study that uses matching according to the proposed method and the principal references that are available in the literature.</sentence>
+    <sentence>This study presented methods with continuous learning and methods without continuous learning.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Comparative Study.</sentence>
+    <sentence>Reference Electrical system/theoretical model Method used Total match (%) (Uyar et al., 2008) (Abdel-Galil et al., 2004) Multilayer Perceptron (Levenberg-Marquardt) e wavelet 96.21 (Zhang et al., 2011) Not specified Decision tree and Fourier transform 99.00 (Lima et al., 2013) 134-bus Negative Selection Algorithm 99.11 (Oleskovicz et al., 2009) 138/13,8 kV Multilayer Perceptron e wavelet 99.31 (Decanini, Tonelli-Neto, Malange, &amp; Minussi, 2011) 134-buss Fuzzy ARTMAP neural network and wavelet transform 99.66 (Lima, Lotufo, &amp; Minussi, 2015) 134-buss Negative Selection Algorithm with wavelet transform 100.00 (Lima et al., 2015) 134-buss Modified Negative Selection Algorithm 100.00 (Barros et al., 2015) 134-bus Modified Euclidean ARTMAP neural network with continuous learning 90.32 This work 134-bus Immunologic algorithm with continuous learning 99.03 The proposed method presents a matching index and a precision that is similar to other works that are available in the literature.</sentence>
+    <sentence>It should be emphasised that the use of the continuous learning changes the sensitivity of the voltage disturbance diagnosis and can detect and classify any abnormality; therefore, good results are presented.</sentence>
+    <sentence>Comments about the algorithm After carrying out the tests and obtaining the results, we identified the strengths and weaknesses of the proposed algorithm; these are presented in this section.</sentence>
+    <sentence>Strengths: • The proposed algorithm presented excellent performance, presenting a good accuracy rate (99.03%) when compared to the best works available in the literature.</sentence>
+    <sentence>• The algorithm require low processing time.</sentence>
+    <sentence>• This algorithm has the capacity to identify unknown patterns (unknown disturbances).</sentence>
+    <sentence>• This method has the capacity to continuously improve/reinforce the knowledge and permanently learn without reinitializing the learning process.</sentence>
+    <sentence>• This method is able to follow innovations and modernizations of the electrical system, which include new types of prominent failures, learn with experience and constantly evolve.</sentence>
+    <sentence>Weaknesses: • The algorithm proposed have several parameters that must be set in advance.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>This work presents a new approach for voltage disturbance diagnosis with continuous training based on the BIS.</sentence>
+    <sentence>Two artificial immune algorithms were used for the diagnosis and learning: NSA and CLONALG.</sentence>
+    <sentence>The continuous learning algorithm is compared with the conventional algorithm, i.e., without continuous learning, proposed and explained in Lima et al.</sentence>
+    <sentence>(2013).</sentence>
+    <sentence>Three patterns were excluded from the censor process of both systems to evaluate the novelty detection, and the conventional process matches 49.51% of the analyzed disturbances.</sentence>
+    <sentence>The algorithm with continuous learning matches 99.03% for every pattern.</sentence>
+    <sentence>The continuous-learning module can continuously learn to identify unknown disturbances.</sentence>
+    <sentence>The obtained results show that the diagnosis with continuous learning performs better (in terms of efficiency, precision and robustness) than the system without the continuous learning.</sentence>
+    <sentence>Therefore, the newly proposed detection strategies in this paper, which continuously learn and update knowledge, provide the diagnosis system with sufficient precision, efficiency and robustness for important applications and the capacity to follow the evolution of electrical systems such as the smart-grid environment.</sentence>
+    <sentence>The main advantage of this method is the capacity to continuous learning, which is a novelty in methods of voltage disturbances diagnosis.</sentence>
+    <sentence>This advantage is very important to evolution of the techniques in intelligent systems.</sentence>
+    <sentence>The results allow practical applications such as modeling and development of an efficient system for intelligent diagnosis in smart grids.</sentence>
+    <sentence>Based on the accuracy index of the computational algorithm, certainly in a real network with modern relays or a robust system of acquisition data, analysis and diagnosis should provide better efficiency.</sentence>
+    <sentence>Finally, the proposed methodology when compared to other methods such as artificial neural networks presents the capacity to continuously improve/reinforce the knowledge and permanently learn without reinitializing the learning process, improving the diagnosis process.</sentence>
+    <sentence>To give sequence to this research, it is suggested the following topics: add module to perform wavelet analysis and processing of signals; investigate the possibility of investing in distribution systems environment in anticipatory character; apply the method proposed to distribution systems with non-linear loads and distributed generation.</sentence>
+  </section>
+</article>

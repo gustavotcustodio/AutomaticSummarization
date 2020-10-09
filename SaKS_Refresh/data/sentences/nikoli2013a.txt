@@ -1,0 +1,196 @@
+The Bee Colony Optimization (BCO) meta-heuristic deals with combinatorial optimization problems.
+It is biologically inspired method that explores collective intelligence applied by the honey bees during nectar collecting process.
+In this paper we perform empirical study of the BCO algorithm.
+We apply BCO to optimize numerous numerical test functions.
+The obtained results are compared with the results in the literature.
+The numerical experiments performed on well-known benchmark functions show that the BCO is competitive with other methods and it can generate high-quality solutions within negligible CPU times.
+In recent years, majority of the hard combinatorial optimization problems in engineering, management, and control have been successfully solved by various metaheuristics.
+Great number of metaheuristics is based on natural metaphors (nature-inspired algorithms).
+These algorithms are inspired by various biological and natural processes.
+Genetic algorithm is inspired by evolution principles (Goldberg, 1989; Holland, 1975).
+Artificial neural networks are composed of the elements that function similarly to a biological neuron (Wasserman, 1993).
+Cellular automata are based on basic concepts of life.
+Artificial immune systems are motivated by immune systems.
+The simulated annealing technique (Cerny, 1985; Kirkpatrick, Gelatt, & Vecchi, 1983) is based on the analogy with certain problems in the field of statistical mechanics (Metropolis, Rosenbluth, Rosenbluth, Teller, & Teller, 1953).
+Natural systems have become significant sources of ideas and models for development of various artificial systems (Beni & Wang, 1989; Beni & Hackwood, 1992; Bonabeau, Dorigo, & Theraulaz, 1997).
+The popularity of the nature-inspired algorithms is mainly caused by the capability of biological systems to successfully adjust to continually varying environment (Teodorović, 2003).
+Neural networks, evolutionary computation, ant colony optimization (Colorni, Dorigo, & Maniezzo, 1991; Dorigo, 1992; Dorigo & Di Caro, 1999; Dorigo, Maniezzo, & Colorni, 1996), particle swarm optimization, (Kennedy & Eberhart, 1995; Kennedy & Eberhart, 1999; Kennedy, Eberhart, & Shi, 2001) artificial immune systems, and bacteria foraging algorithm are some of the algorithms and concepts that were inspired by nature.
+The Bee Colony Optimization (BCO) meta-heuristic (Lučić & Teodorović, 2001, 2002, 2003a, 2003b; Teodorović, 2009) that we analyze in this paper also belongs to the class of nature-inspired algorithms.
+The BCO is a stochastic, random-search technique.
+The BCO technique uses a similarity between the way in which bees in nature look for food, and the way in which optimization algorithms search for an optimum of (given) combinatorial optimization problems.
+In the 1999–2002, the basic concepts of BCO (Lučić & Teodorović, 2001, 2002, 2003a) were introduced by Dušan Teodorović (adviser) and Panta Lučić (Ph.D. candidate) while doing research at Virginia Tech.
+The BCO was evolving through the later applications (Teodorović, Lučić, Marković and Dell’ Orco, 2006; Teodorović, Lučić, Marković, & Orco, 2006; Teodorović & Dell’ Orco, 2008; Teodorović, 2008; Dimitrijević, Teodorović, Simić, & Šelmić, 2011).
+Up to now it is successfully applied to various real-life optimization problems: the vehicle routing problem (Lučić & Teodorović, 2003b), the routing and wavelength assignment (RWA) in all-optical networks (Marković, Teodorović, & Aćimović-Raspopović, 2007), the ride-matching problem (Teodorović & Dell’Orco, 2005), the traffic sensors locations problem on highways (Šelmić, Edara, & Teodorović, 2008), the static scheduling of independent tasks on homogeneous multiprocessor systems (Davidović, Šelmić, & Teodorović, 2009; Davidović, Jakšić, Ramljak, Šelmić, & Teodorović, in press; Davidović, Šelmić, Teodorović, & Ramljak, 2012), determining the locations of uncapacitated inspection stations in a traffic network, the p-center problem (Šelmić, Teodorović, & Vukadinović, 2010), disruption management in public transit (Nikolić & Teodorović, submitted for publication).
+In this paper, we perform empirical study of the BCO algorithm.
+We apply BCO to optimize numerous numerical test functions.
+The obtained results are compared with the results achieved by the Artificial Bee Colony (ABC) (Karaboga, 2005; Karaboga & Basturk, 2007; Karaboga, Basturk, Akay, & Ozturk, 2007; Karaboga & Basturk, 2008), Genetic Algorithm (GA), Differential Evolution (DE), and Particle Swarm Optimization (PSO).
+The numerical experiments are performed on well-known benchmark functions.
+We show that the BCO is competitive with other methods and that it can generate high-quality solutions within negligible CPU times.
+The paper is organized as follows.
+Section 2 describes basic principles of the BCO metaheuristic.
+Function Optimization by BCO is described in Section 3.
+Results of experiments are given in Section 4.
+Section 5 contains conclusion.
+The basic idea of designing BCO is to compose the multi-agent system (colony of artificial bees) that will search for good solutions of a variety of combinatorial optimization problems.
+The artificial bees explore the principles used by honey bees for the period of nectar collection process.
+In other words, BCO principles are gathered from natural systems.
+Artificial bees explore through the search space, looking for the feasible solutions.
+In order to discover better and better solutions, artificial bees collaborate and exchange information.
+via collective knowledge and sharing information among themselves, artificial bees focus on more promising areas, and gradually discard solutions from the less promising ones.
+Little by little, artificial bees jointly generate and/or improve their solutions.
+The BCO search is running in iterations until some predefined stopping criteria is satisfied.
+Population of agents (artificial bees) consisting of B bees collaboratively searches for the optimal solution.
+Every artificial bee generates one solution to the problem.
+There are constructive (Lučić & Teodorović, 2001, 2002, 2003a, 2003b) and improvement version (Davidović, Ramljak, Šelmić, & Teodorović, 2011; Nikolić & Teodorović, submitted for publication) of the BCO algorithm.
+In constructive BCO each bee adds a (different) new component to the previously generated partial solution, while in the improvement version of the BCO bees modify some components of the complete solution in order to enhance them.
+The algorithm consists of two alternating phases: forward pass and backward pass.
+During each forward pass, every artificial bee explores the search space.
+It applies a predefined number of moves (NC), which construct and/or improve the solution, yielding a new solution.
+NC is a parameter used to define the frequency of information exchange between bees.
+Its value depends on each particular problem characteristics.
+If NC takes small values, then the search process is intensified, since each newly generated part consists of only a few components.
+The difference between solutions, generated by different bees, is minor.
+On the other hand, if NC is large, each bee adds more components to its partial solution, thus introducing variety among different solutions.
+Suppose we have B bees, namely Bee 1, Bee 2, … , Bee B which participate in the decision-making process on n entities.
+One of the possible situations which may arise after the first forward pass in the case NC = 3 and B = 3 is illustrated in Fig 1.
+An example of partial solutions after the first forward pass, NC=3, B=3 Fig 1.
+An example of partial solutions after the first forward pass, NC = 3, B = 3.
+Upon obtaining new partial solutions for each bee, the second phase, the so-called backward pass, starts (Fig 2).
+During the backward pass, all bees share information about their solutions.
+In nature, bees would perform a dancing ritual, which would inform other bees about the amount of food they have found, and the proximity of the patch to the hive.
+In the search algorithm, the quality of each generated solution is determined, i.e.
+the current value of the objective function is calculated.
+During the backward pass, every bee decides, with a certain probability, whether it will stay loyalto its solution or not.
+Contrary to bees in nature, artificial bees that are loyal to their generated solutions are at the same time recruiters, i.e.
+their solutions are considered by other bees.
+Once the solution is abandoned the bee becomes uncommittedand has to select one of the advertised solutions.
+This decision is taken with a probability, such that better advertised solutions have greater opportunities to be chosen for further exploration.
+The first backward pass, NC=3, B=3 Fig 2.
+The first backward pass, NC = 3, B = 3.
+In such a way, within each backward pass all bees are divided into two groups (R recruiters, and the remaining B − R uncommitted bees) as shown in Fig 3.
+Dividing bees into two groups (B=3) Fig 3.
+Dividing bees into two groups (B = 3).
+Values for R and B − R change from one backward pass to another.
+Let us assume that after comparing all generated partial solutions Bee 3 from the previous example decided to abandon its solution, and join Bee 1.
+The resulting situation is presented in Fig 4.
+Recruiting of uncommitted followers and the second forward pass NC=3, B=3 Fig 4.
+Recruiting of uncommitted followers and the second forward pass NC = 3, B = 3.
+Bee 1 and Bee 3 “fly together” along the path already generated by Bee 1.
+In practice, this means that the partial solution generated by Bee 1 is associated (copied) to Bee 3.
+When they “reach the end of the path”, they are free to make an individual decision about the next constructive step.
+This actually means that each of them will add different components to the same partial solution.
+Bee 2 will keep its partial solution without being chosen by any hive-mates and will perform a new constructive step independently.
+The two phases of the search algorithm, namely the forward and backward passes, alternate in order to generate all required complete solutions (one for each bee).
+At that stage the best solution is determined and an iteration of BCO is completed.
+The BCO algorithm runs iteration by iteration until a stopping condition is met.
+A possible stopping condition could be, for example, the maximum number of iterations, the maximum number of iterations without the improvement of the objective function, the maximum allowed CPU time, etc.
+In the end, the best solution found is reported as the final one.
+In this paper we apply the improvement version of the BCO algorithm.
+The BCO algorithm parameters whose values need to be set prior the algorithm execution are as follows: B – the number of bees involved in the search, IT – the number of iteration, NP – the number of forward and backward passes in a single iteration, NC – the number of changes in one forward pass, S – the best known solution.
+The following is the pseudo code of the BCO algorithm: procedure BCOi(inB, IT, NP, NC, outS) fori = 1 toBdo Determine an initial solution for the i-th bee.
+Evaluate the solution of the i-th bee.
+S← the best solution of the bees.
+forj = 1 toITdo fori = 1 toBdo the bee i ← Set an initial solution.
+fork = 1 toNPdo fori = 1 toBdo forr = 1 toNCdo Evaluate modified solutions generated by possible changes of the i-th bee solution.
+By roulette wheel selection choose one of the modified solutions.
+fori = 1 toBdo Evaluate solution of the i-th bee.
+fori = 1 toBdo Make a decision whether the i-th bee is loyal.
+fori = 1 toBdo ifthe bee i doesn’t loyalthen Choice one of the loyal bees to be followed by the i-th bee.
+ifthe best solution of the beesbetterthen solution S S ← the best bee’s solution.
+Let us introduce the following notation: B – the number of bees NC – the number of changes the variables that bee should perform in one forward pass IT – the total number of iteration LB – left boundary (the minimum value of the variable) RB – right boundary (the maximum value of the variable) d – range The following is the pseudo-code of the BCO algorithm for function optimization: (b = 0; b < B; b ++) Assign the values of the variables in a random manner, and calculate the value of function for the bee b; Discover the bee that has the minimum value of function and keep the corresponding solution as the best known solution; d = RB − LB for (it = 1;it < = IT;it ++) { Assign an initial solution to each bee.
+; NC = random(); for (k = 1;k < = TotalNumberOfMoves;k ++)// count moves; { for (b = 0; b < B, b ++) { For the variable, chosen in a random manner, generate, in a random manner, the new value of the variable; Evaluate bee’s solution; Update the best known solution; } if (k mod NC == 0) {// backward pass; for (b = 0;b < B,b ++) Evaluate the (partial/complete) solution of bee b; for (b = 0;b < B,b ++) Loyalty decision using the roulette wheel for bee b; for (b = 0;b < B,b ++) If (b is uncommitted), choose a recruiter using the roulette wheel. }
+} d = d∗0.998; if (d < 0.001) d = RB − LB; } Before the beginning of the first iteration, we assign, in a random manner, one solution to every bee.
+In this way, we create B solutions.
+The best among these solutions is the best known solution.
+In the beginning of every iteration, we take into account the best known solution, as well as B created solutions in previous iteration (in total B + 1 solutions).
+By roulette wheel selection, we choose one initial solution among B + 1 considered solutions.
+We assign this initial solution to all bees.
+Artificial bees modify this solution during their flights.
+The new variable value (in the case of value increasing) was determined by the following relation: (1) The new variable value (in the case of value decreasing) was determined by the following relation: (2) where: random (0, 1) – random number from the interval [0, 1].
+We decrease d in every iteration.
+We take care not to have d smaller than 0.001.
+We performed changes of the values of the variables in the following way: • The total number of changes of the values of variables, within one iteration, was determined in a random manner from the interval (Beni, 1988; Camazine & Sneyd, 1991).
+• The variables whose value has to be changed were also chosen in a random manner.
+• The decision to decrease, or to increase the value of the chosen variable was made in a random manner.
+Loyalty decision The probability that bth bee (at the beginning of the new forward pass) is loyal to its previously generated solution is expressed as follows: (3) where: Ob – the normalized value for the objective function of the solution created by the b-th bee; Omax – maximum over all normalized values of the solutions to be compared; u – the ordinary number of the forward pass (e.g., u = 1 for first forward pass, u = 2 for second forward pass, etc.).
+The better the generated solution (higher Ob value), the higher the probability that the bee b will be loyal to it.
+Using the probability and a random number generator, for each artificial bee it is decided whether to become uncommitted follower, or to continue exploring already known path.
+Recruiting process For each uncommitted bee with a certain probability it is decided which recruiter it would follow.
+The probability that b’s solution would be chosen by any uncommitted bee is equal to: (4) where Ok represents normalized value for the objective function of the k-th advertised solution and R denotes the number of recruiters.
+Using the probability pb and a random number generator, each uncommitted follower join one recruiter.
+In this paper, we are interested in finding the global minimum of a function, i.e.
+in discovering the smallest value in the entire range of the function, with BCO metaheuristic.
+We take from the literature 51 benchmark functions (Hedar & Fukushima, 2006; Karaboga & Bahriye, 2009).
+This set of functions is reasonable large and includes various function types (unimodal, multimodal, multidimensional, etc).
+The benchmark functions that we use for the evaluation of the considered algorithms are given in the Table 1, where: D – dimension, C – characteristic.
+Table 1.
+Benchmark functions used for evaluation (Hedar & Fukushima, 2006; Karaboga & Bahriye, 2009).
+No.
+Range D C Function Formulation 1 [−5.12, 5.12] 5 US Stepint 2 [−100, 100] 30 US Step 3 [−100, 100] 30 US Sphere 4 [−10, 10] 30 US SumSquares 5 [−1.28, 1.28] 30 US Quartic 6 [−4.5, 4.5] 5 UN Beale 7 [−100, 100] 2 UN Eason f(x) = −cos (x1) cos (x2) exp (−(x1 − π)2 − (x2 − π)2) 8 [−10, 10] 2 UN Matyas 9 [−10, 10] 4 UN Colville 10 [−D2, D2] 6 UN Trid6 11 [−D2, D2] 10 UN Trid10 12 [−5, 10] 10 UN Zakharov 13 [−4, 5] 24 UN Powell 14 [−10, 10] 30 UN Schwefel 2.22 15 [−100, 100] 30 UN Schwefel 1.2 16 [−30, 30] 30 UN Rosenbrock 17 [−10, 10] 30 UN Dixon- Price 18 [−65.536, 65.536] 2 MS Foxholes 19 [−5, 10] × [0, 15] 2 MS Branin 20 [−100, 100] 2 MS Bohachevsky1 21 [−10, 10] 2 MS Booth f(x) = (x1 + 2x2 − 7)2 + (2x1 + x2 − 5)2 22 [−5.12, 5.12] 30 MS Rastrigin 23 [−500, 500] 30 MS Schwefel 24 [0, π] 2 MS Michalewicz2 25 [0, π] 5 MS Michalewicz5 26 [0, π] 10 MS Michalewicz10 27 [−100, 100] 2 MN Schaffer 28 [−5, 5] 2 MN Six Hump Camel Back 29 [−100, 100] 2 MN Bohachevsky2 30 [−100, 100] 2 MN Bohachevsky3 31 [−10, 10] 2 MN Shubert 32 [−2, 2] 2 MN GoldStein-Price 33 [−5, 5] 4 MN Kowalik 34 [0, 10] 4 MN Shekel5 35 [0, 10] 4 MN Shekel7 36 [0, 10] 4 MN Shekel10 37 [−D, D] 4 MN Perm 38 [0, D] 4 MN PowerSum 39 [0, 1] 3 MN Hartman3 40 [0, 1] 3 MN Hartman6 41 [−600, 600] 30 MN Griewank 42 [−32, 32] 30 MN Ackley 43 [−50, 50] 30 MN Penalized 44 [−50, 50] 30 MN Penalized2 45 [0, 10] 2 MN Langerman2 46 [0, 10] 5 MN Langerman5 47 [0, 10] 10 MN Langerman10 48 [−π, π] 2 MN FletcherPowell2 49 [−π, π] 5 MN FletcherPowell5 50 [−π, π] 10 MN FletcherPowell10 51 [−100, 100] 30 Schwefel 4.1.
+First experiment In the paper (Karaboga & Bahriye, 2009) authors found their solution after 500,000 generations.
+They also had 50 individuals in each generation.
+In order to make similar experimental conditions, we performed 10,000 iterations.
+We performed 50 changes within every itaration.
+The number of artificial bees was equal to 50.
+We were interested in finding the global minimum of considered functions.
+The search for the global minimum was repeated 30 times, with different random seeds.
+We calculated mean, standard deviation, and SEM and showed them in the Table 2.
+This table also contains the results obtained by GA, DE, PSO and ABC algorithm.
+These results are taken from Karaboga and Bahriye (2009).
+Table 2.
+The results of the first experiment.
+Function Min GA PSO DE ABC BCO 1 0 Mean 0 0 0 0 0 StdDev 0 0 0 0 0 SEM 0 0 0 0 0 2 0 Mean 1170 0 0 0 0 StdDev 76.56145 0 0 0 0 SEM 13.978144 0 0 0 0 3 0 Mean 1110 0 0 0 7.58145E−11 StdDev 74.214474 0 0 0 2.65698E−11 SEM 13.549647 0 0 0 4.85097E−12 4 0 Mean 148 0 0 0 2.92851E−10 StdDev 12.4092893 0 0 0 1.25473E−10 SEM 2.265616 0 0 0 2.29082E−11 5 0 Mean 0.1807 0.00115659 0.0013633 0.0300166 5.28384E−05 StdDev 0.027116 0.000276 0.000417 0.004866 2.03331E−05 SEM 0.004951 0.0000504 0.0000761 0.000888 3.71231E−06 6 0 Mean 0 0 0 0 1.33701E−12 StdDev 0 0 0 0 1.7955E−12 SEM 0 0 0 0 3.27812E−13 7 −1 Mean −1 −1 −1 −1 −1 StdDev 0 0 0 0 1.72469E−11 SEM 0 0 0 0 3.14885E−12 8 0 Mean 0 0 0 0 3.98899E−14 StdDev 0 0 0 0 4.06916E−14 SEM 0 0 0 0 7.42924E−15 9 0 Mean 0.014938 0 0.0409122 0.0929674 3.79251E−08 StdDev 0.007364 0 0.081979 0.066277 4.75467E−08 SEM 0.001344 0 0.014967 0.0121 8.6808E−09 10 −50 Mean −49.9999 −50 −50 −50 −49.9997398 StdDev 0.0000225 0 0 0 0.000400312 SEM 0.00000411 0 0 0 7.30867E−05 11 −210 Mean −209.476 −210 −210 −210 −209.959472 StdDev 0.193417 0 0 0 0.011587643 SEM 0.035313 0 0 0 0.002115605 12 0 Mean 0.013355 0 0 0.0002476 2.28926E−09 StdDev 0.004532 0 0 0.000183 2.1658E−09 SEM 0.000827 0 0 0.0000334 3.95419E−10 13 0 Mean 9.703771 0.00011004 0.000000217 0.0031344 4.08028E−07 StdDev 1.547983 0.00016 0.000000136 0.000503 3.84256E−07 SEM 0.282622 0.0000292 2.48E−08 0.0000918 7.01552E−08 14 0 Mean 0 0 0 0 2.0557E−05 StdDev 1.386856 0 0 0 3.01608E−06 SEM 0.253204 0 0 0 5.50658E−07 15 0 Mean 7400 0 0 0 2.87601E−08 StdDev 1140 0 0 0 2.19555E−08 SEM 208.1346 0 0 0 4.0085E−09 16 0 Mean 196000 15.088617 18.203938 0.0887707 10.57166275 StdDev 38500 24.170196 5.036187 0.07739 16.58267899 SEM 7029.106155 4.412854 0.033333 0.014129 3.027569116 17 0 Mean 1220 0.66666667 0.6666667 0 0.450003633 StdDev 266 0.00000001 0.000000001 0 0.152565513 SEM 48564733 1.8257E−09 1.8257E−10 0 0.027854524 18 0.998 Mean 0.998004 0.99800393 0.9980039 0.9980039 0.998003838 StdDev 0 0 0 0 3.55295E−16 SEM 0 0 0 0 6.48677E−17 19 0.398 Mean 0.397887 0.39788736 0.3978874 0.3978874 0.397887387 StdDev 0 0 0 0 6.35409E−08 SEM 0 0 0 0 1.16009E−08 20 0 Mean 0 0 0 0 6.18629E−06 StdDev 0 0 0 0 9.13214E−06 SEM 0 0 0 0 1.66729E−06 21 0 Mean 0 0 0 0 6.44059E−14 StdDev 0 0 0 0 9.80376E−14 SEM 0 0 0 0 1.78991E−14 22 0 Mean 52.92259 43.9771369 11.716728 0 3.84426E−09 StdDev 4.56486 11.728676 2.538172 2.538172 1.14559E−09 SEM 0.833426 2.141353 0.463405 0.463405 2.09154E−10 23 −12569.5 Mean −11593.4 −6909.1359 −10266 −12569.487 −12569.4866 StdDev 93.254224 457.957783 521.849292 0 1.00007E−08 SEM 17.025816 83.611269 95.276209 0 1.82588E−09 24 −1.8013 Mean −1.8013 −1.5728692 −1.801303 −1.8013034 −1.80130341 StdDev 0 0.11986 0 0 3.93507E−11 SEM 0 0.021883 0 0 7.18443E−12 25 −4.6877 Mean −4.64483 −2.4908728 −4.683482 −4.6876582 −4.687658179 StdDev 0.09785 0.256952 0.01529 0 8.04178E−10 SEM 0.017865 0.046913 0.002287 0 1.46822E−10 26 −9.6602 Mean −9.49683 −4.007183 −9.591151 −9.6601517 −9.66015171 StdDev 0.141116 0.502628 0.064205 0 4.23107E−09 SEM 0.025764 0.091767 0.011722 0 7.72485E−10 27 0 Mean 0.004239 0 0 0 4.86463E−15 StdDev 0.004763 0 0 0 7.63391E−15 SEM 0.0087 0 0 0 1.39375E−15 28 −1.03163 Mean −1.03163 −1.0316285 −1.031628 −1.0316285 −1.03162845 StdDev 0 0 0 0 1.17607E−11 SEM 0 0 0 0 2.14719E−12 29 0 Mean 0.06829 0 0 0 1.63206E−13 StdDev 0.078216 0 0 0 2.27566E−13 SEM 0.01428 0 0 0 4.15477E−14 30 0 Mean 0 0 0 0 6.73076E−12 StdDev 0 0 0 0 7.43862E−12 SEM 0 0 0 0 1.3581E−12 31 −186.73 Mean −186.731 −186.73091 −186.7309 −186.73091 −186.730909 StdDev 0 0 0 0 2.00751E−10 SEM 0 0 0 0 3.6652E−11 32 3 Mean 5.250611 3 3 3 3 StdDev 5.870093 0 0 0 3.49952E−10 SEM 1.071727 0 0 0 6.38922E−11 33 0.00031 Mean 0.005615 0.00049062 0.0004266 0.0004266 0.000307486 StdDev 0.008171 0.000366 0.000273 0.0000604 4.34546E−10 SEM 0.001492 0.0000668 0.0000498 0.000011 7.93369E−11 34 −10.15 Mean −5.66052 −2.0870079 −10.1532 −10.1532 −10.1531997 StdDev 3.866737 1.17846 0 0 3.60383E−10 SEM 0.705966 0.215156 0 0 6.57967E−11 35 −10.4 Mean −5.34409 −1.9898713 −10.40294 −10.402941 −10.4029406 StdDev 3.517134 1.420602 0 0 3.78657E−10 SEM 0.642138 0.259365 0 0 6.9133E−11 36 −10.53 Mean −3.82984 −1.8796753 −10.53641 −10.53641 −10.5364098 StdDev 2.451956 0.432476 0 0 2.50189E−10 SEM 0.447664 0.078959 0 0 4.56781E−11 37 0 Mean 0.302671 0.03605158 0.0240069 0.0411052 0.000929463 StdDev 0.193254 0.048927 0.046032 0.023056 0.001642492 SEM 0.035283 0.008933 0.008404 0.004209 0.000299877 38 0 Mean 0.010405 11.3904479 0.0001425 0.0029468 9.73981E−07 StdDev 0.009077 7.3558 0.000145 0.0029468 1.09971E−06 SEM 0.001657 1.342979 0.0000265 0.002289 2.00778E−07 39 −3.86 Mean −3.86278 −3.6333523 −3.862782 −3.8627821 −3.86278215 StdDev 0 0.116937 0 0 7.0696E−11 SEM 0 0.02135 0 0 1.29073E−11 40 −3.32 Mean −3.29822 −1.8591298 −3.226881 −3.3219952 −3.27777000 StdDev 0.05013 0.439958 0.047557 0.047557 0.053700841 SEM 0.009152 0.080325 0.008683 0.008683 0.009804387 41 0 Mean 10.63346 0.01739118 0.0014792 0 0.012713431 StdDev 1.161455 0.020808 0.002958 0 0.017814131 SEM 0.212052 0.003799 0.00054 0 0.0032524 42 0 Mean 14.67178 0.16462236 0 0 7.35252E−06 StdDev 0.178141 0.493867 0 0 1.55191E−06 SEM 0.032524 0.0207338 0 0 2.83339E−07 43 0 Mean 13.3772 0.0207338 0 0 1.77429E−11 StdDev 1.448726 0.041468 0 0 2.41315E−11 SEM 0.2645 0.007571 0 0 4.40579E−12 44 0 Mean 125.0613 0.00767535 0.0021975 0 2.45571E−10 StdDev 12.001204 0.016288 0.004395 0 1.80035E−10 SEM 2.19111 0.002974 0.000802 0 3.28697E−11 45 −1.08 Mean −1.08094 −0.67268 −1.080938 −1.0809384 −3.06774756 StdDev 0 0.274621 0 0 5.27957E−11 SEM 0 0.050139 0 0 9.63913E−12 46 −1.5 Mean −0.96842 −0.5048579 −1.499999 −0.93815 −1.49994381 StdDev 0.287548 0.213626 0 0.000208 5.73078E−08 SEM 0.052499 0.039003 0 0.000038 1.04629E−08 47 NA Mean −0.63644 −0.0025656 −1.0528 −0.4460925 −1.17242327 StdDev 0.374682 0.003523 0.302257 0.133958 0.294476459 SEM 0.068407 0.000643 0.055184 0.024457 0.0537638 48 0 Mean 0 0 0 0 9.44478E−12 StdDev 0 0 0 0 2.26617E−11 SEM 0 0 0 0 4.13745E−12 49 0 Mean 0.004303 1457.88344 5.988783 0.1735495 8.11416E−06 StdDev 0.009469 1269.362389 7.334731 0.068175 1.08904E−05 SEM 0.001729 231.752805 1.339133 0.012447 1.98831E−06 50 0 Mean 29.57348 1364.45555 781.55028 8.2334401 124.8629713 StdDev 16.02078 1325.379655 1048.813487 8.092742 286.3093074 SEM 2.925035 1325.379655 241.980111 1.477526 52.27268869 In order to determine if the BCO average is significantly different than the averages obtained by other metaheuristics, we perform Student’s t-test.
+The t statistic has the following form: (5) where: – mean of the first sample, SD1 – standard deviation of the first sample, – mean of the second sample, SD2 – standard deviation of the second sample, n1 – first sample size, n2 – second sample size.
+The values of and SD2 are obtained by the BCO algorithm, while and SD1 values are obtained by other algorithms (GA, PSO, DE and ABC).
+The calculated values of the t statistic are given in the Table 3.
+Table 3.
+The calculated values of the t statistic in the first experiment.
+Function BCO vs GA BCO vs PSO BCO vs DE BCO vs ABC 1 0 0 0 0 2 83.70209711 0 0 0 3 81.92095235 −8.05599E − 05 −8.05599E − 05 −8.05599E − 05 4 65.32440058 −0.000143196 −0.000143196 −0.000143196 5 35.99504755 1.338190157 1.585015938 24.73864447 6 −5.46514E − 06 −5.46514E − 06 −5.46514E − 06 −5.46514E − 06 7 −1.6961E − 05 −1.6961E − 05 −1.6961E − 05 −1.6961E − 05 8 −1.08311E − 06 −1.08311E − 06 −1.08311E − 06 −1.08311E − 06 9 11.10574998 −0.000952637 2.733435975 7.68291349 10 −0.043839417 −0.071214889 −0.071214889 −0.071214889 11 11.96309991 −2.062141961 −2.062141961 −2.062141961 12 16.1395584 −0.000269431 −0.000269431 7.182047473 13 34.33483197 0.937955877 −0.001687903 21.50297771 14 −8.11873E − 05 −0.064833373 −0.064833373 −0.064833373 15 35.5539204 −0.001063114 −0.001063114 −0.001063114 16 27.88255333 1.009364915 6.454611508 −14.09730125 17 25.11181665 3.038206352 3.038206773 −6.310277526 18 47.13370837 26.79309992 18.07569633 18.07569633 19 −0.008402392 −0.000580059 0.000289089 0.000289089 20 −0.01121256 −0.01121256 −0.01121256 −0.01121256 21 −1.12665E − 06 −1.12665E − 06 −1.12665E − 06 −1.12665E − 06 22 63.50007742 20.53707502 25.28400842 −8.29568E − 09 23 57.32980619 67.69841865 24.17693386 −20.9140502 24 2.977476794 10.43872598 0.358054338 0.008798011 25 2.397338629 46.82699097 1.495999507 −0.004148604 26 6.339109349 61.60139216 5.886336928 0.00088638 27 4.874650264 −3.04956E − 07 −3.04956E − 07 −3.04956E − 07 28 −2.470019698 −0.074300541 0.724272511 −0.074300541 29 4.782138367 −1.87389E − 06 −1.87389E − 06 −1.87389E − 06 30 −1.35169E − 05 −1.35169E − 05 −1.35169E − 05 −1.35169E − 05 31 −35.24347555 −0.45192502 3.413802818 −0.45192502 32 2.099984468 −6.26858E − 05 −6.26858E − 05 −6.26858E − 05 33 3.557747441 2.736176936 2.382850127 10.21051686 34 6.363872184 37.48990369 −0.092663732 −0.092663732 35 7.878137627 32.43714858 0.159466729 −0.122006931 36 14.98126219 109.6358819 −0.063549745 −0.063549745 37 8.369920524 3.027940074 2.06096833 4.719409131 38 6.236494846 8.481476737 0.732227031 5.15850882 39 1.399107854 10.74629097 0.096261234 0.031118903 40 −0.472424221 15.62617015 1.178246047 −1.023957197 41 49.7581796 0.189670855 −0.460908817 −0.521724304 42 451.0957247 1.825654803 −0.032326843 −0.032326843 43 50.57543108 2.738586349 −1.9783E − 05 −1.9783E − 05 44 57.07668587 2.581017173 2.738599719 −0.000100244 45 1497673.317 47.76883522 1497674.824 1497674.523 46 10.12448292 25.51331107 −1.262667036 9702.852131 47 4.451799575 11.80753419 1.054812014 7.11745647 48 −1.08669E − 05 −1.08669E − 05 −1.08669E − 05 −1.08669E − 05 49 2.345935356 6.290683014 4.472129605 13.92612646 50 −22.39834034 5.12228697 3.428976237 −34.05807841 The t values shown in the Table 3 can be positive, or negative.
+The positive value of the t statistic indicates that the BCO discovered better solution than the competitive metaheuristic.
+In the opposite case, the competitive algorithm discovered better solution.
+We stated confidence interval at the 95% confidence level (t0.05 = 1.96).
+When —t— > 1.96, the difference between the two values is significant.
+In this situation, the BCO solution is better, when t has positive value.
+Negative t value means that the competitive metaheuristic has better solution.
+The case when —t— < 1.96 corresponds to the situation when the difference between the observed values is not significant.
+Table 4 gives the information about metaheuristics that discovered significantly better solutions.
+Table 4.
+Metaheuristics that discovered significantly better solutions.
+Function BCO vs GA BCO vs PSO BCO vs DE BCO vs ABC 1 – – – – 2 BCO – – – 3 BCO – – – 4 BCO – – – 5 BCO – – BCO 6 – – – – 7 – – – – 8 – – – – 9 BCO
+There is no significant difference between BCO and PSO on 27 functions.
+BCO performed better on 22 functions, while PSO was better on 1 function.
+Comparison between BCO, and DE shows that there is no significant difference between BCO and DE on 35 functions.
+On 14 functions BCO is better than DE, while DE is better on 1 function.
+Finally, when comparing BCO and ABC, one concludes that there is no significant difference between BCO and ABC on 34 functions.
+BCO is better than ABC on 12 functions, while ABC performed better on 4 functions.
+Second experiment For the second experiment, we used 23 functions studied by Hedar and Fukushima (2006) and Karaboga and Bahriye (2009) performed search through 100,000 generations.
+The number of individuals in every population was equal to 20.
+In the case of the ACO algorithm, the number of artificial ants equal 20.
+When solving the considered problems by the BCO metaheuristic, we performed 5000 iterations.
+Within every iteration we performed 20 changes of variables.
+Table 5 contains the results of the second experiment.
+The results related to the CES, FES, ESLAT, CMA–ES and ABC approaches are taken from the papers (Hedar & Fukushima, 2006; Karaboga & Bahriye, 2009).
+Table 5.
+The results of the second experiment.
+Function CES FES ESLAT CMA–ES ABC BCO 3 Mean 1.7E−26 0.00025 2E−17 9.7E−23 0.000757 4.03454E−08 SD 1.1E−25 0.000068 2.9E−17 3.8E−23 0.000248 1.44103E−08 14 Mean 8.1E−20 0.06 0.000038 4.2E−11 0.000895 0.000121495 SD 3.6E−19 0.0096 0.000016 7.1E−23 0.000127 2.39181E−05 15 Mean 337.62 0.0014 0.0000061 7.1E−23 0.000701 1.33926E−05 SD 117.14 0.00053 0.0000075 2.9E−23 0.000278 7.39296E−06 51 Mean 2.41 0.0055 0.78 5.4E−12 2.72 1.38515E−06 SD 2.15 0.00065 1.64 1.5E−12 1.18 1.34725E−06 16 Mean 27.65 33.28 1.93 0.4 0.936 48.04025793 SD 0.51 43.13 3.35 1.2 1.76 40.16415276 2 Mean 0 0 0.02 1.44 0 0 SD 0 0 0.14 1.77 0 0 5 Mean 0.047 0.012 0.39 0.23 0.0906 0.000539556 SD 0.12 0.0058 0.22 0.087 0.0189 0.00026546 23 Mean −8E+93 −12556.4 −2.3E+15 −7637.1 −12563.673 −12552.9053 SD 4.9E+94 32.53 5.7E+15 895.6 23.6 41.51380052 22 Mean 13.38 0.16 4.65 51.78 0.000466 1.67845E−08 SD 43.15 0.33 5.67 13.56 0.000344 7.51734E−09 42 Mean 6E−13 0.012 0.000000018 6.9E−12 0.000781 6.09131E−05 SD 1.7E−12 0.0018 5.4E−09 1.3E−12 0.000183 1.41912E−05 41 Mean 6E−14 0.037 0.0014 0.00074 0.000837 0.019122627 SD 4.2E−13 0.05 0.0047 0.0027 0.00138 0.021086394 43 Mean 1.46 0.0000028 1.5E−12 0.00012 0.000698 2.04747E−09 SD 3.17 0.00000081 2E−12 0.00034 0.000278 2.15121E−09 44 Mean 2.4 0.000047 0.0064 0.0017 0.000798 4.45677E−08 SD 0.13 0.000015 0.0089 0.0045 0.000213 3.86834E−08 18 Mean 2.2 1.2 1.77 10.44 0.998 0.998003838 SD 2.43 0.63 1.37 6.87 0.000321 1.75921E−15 33 Mean 0.0013 0.00097 0.00081 0.0015 0.00118 0.000307487 SD 0.00063 0.00042 0.00041 0.0042 0.000145 9.04715E−10 28 Mean −1.031 −1.0316 −1.0316 −1.0316 1.031 −1.03162845 SD 0.0012 0.0000006 9.7E−14 7.7E−16 0.000304 8.09067E−11 19 Mean 0.401 0.498 0.398 0.398 0.3985 0.397887668 SD 0.0036 0.00000006 1E−13 1.4E−15 0.000327 5.67035E−07 32 Mean 3.007 3 3 14.34 3 3.000000003 SD 0.012 0 5.8E−14 25.05 0.000309 3.09352E−09 39 Mean −38613 −3.86 −3.8628 −3.8628 −3.862 −3.86278215 SD 0.0012 0.004 2.9E−13 4.8E−16 0.000277 2.19027E−09 40 Mean −3.24 −3.23 −3.31 −3.28 −3.322 −3.26582313 SD 0.058 0.12 0.033 0.058 0.000135 0.056160767 34 Mean −5.72 −5.54 −8.49 −5.86 −10.151 −9.00057412 SD 2.62 1.82 2.76 3.6 0.0117 2.119259359 35 Mean −6.09 −6.76 −8.79 −6.58 −10.402 −9.55496662 SD 2.63 3.01 2.64 3.74 0.000311 1.962694802 36 Mean −6.42 −7.63 −9.65 −7.03 −10.535 −9.65768072 SD 2.67 3.27 2.06 3.74 0.00202 1.991488213 Like in the previous case, in order to determine if the BCO average is significantly different than the averages obtained by other metaheuristics, we performed Student’s t-test.
+In the second experiment we performed 50 runs for every considered function.
+We used t-test for the case of two big independent samples.
+The t statistic has the following form: (6) The notation used is the same like in the first experiment.
+Table 6 contains calculated values of the t statistic in the second experiment.
+Table 6.
+The calculated values of the t statistic in the second experiment.
+Function CES FES ESLAT CMA–ES ABC 3 −19.59829554 25.73114034 −19.59829553 −19.59829554 21.36579667 14 −35.55739217 43.66127437 −20.31064442 −35.55737988 41.89757937 15 20.17534494 18.31190114 −4.847341718 −12.68075076 17.30773625 51 7.846507118 59.21572503 3.32926238 −7.196869401 16.135585 16 −3.55342489 −1.753142965 −8.008506859 −8.299267867 −8.201683921 2 0 0 1 5.694915254 0 5 2.710185927 13.81710572 12.39191419 18.46224862 33.35243029 23 −1.142857143 −0.463838938 −2.824561403 38.38035848 −1.578468309 22 2.170567784 3.393939038 5.74074072 26.73008849 9.482216591 42 −30.04625726 46.42833939 −30.03737663 −30.04625415 27.46185809 41 −6.348093145 2.306141348 −5.742422576 −6.053017917 −6.057278281 43 3.223974759 24.1797514 −6.657553854 2.470546081 17.57548801 44 129.2307668 21.9124622 5.033672812 2.644375117 26.22388701 18 3.462540385 2.244401802 3.944505938 9.620665667 −0.083690222 33 11.02792226 11.04188338 8.579490296 1.987521672 42.12131739 28 3.665978366 331.9567286 2461773.705 2461775.474 14.47096723 19 6.051756992 1229018.09 1386.732738 1386.732738 13.10800916 32 4.083331695 −6.354263554 −6.354263553 3.168862275 −6.3615E−05 39 8.645857097 4.868757129 −57057.52938 −57057.52988 19.76544591 40 2.238971772 1.892662077 −4.747389704 −1.229193592 −7.001987435 34 6.814620886 8.671555736 1.027082209 5.262519166 −3.799845633 35 7.391081272 5.444692434 1.6277637 4.930437995 −3.02096564 36 6.80408715 3.707204517 0.018764553 4.341047678 −3.083739974 The confidence interval was stated at the 95% confidence level (t0.05 = 1.96).
+Table 7 shows metaheuristics that discovered significantly better solutions.
+Table 7.
+Metaheuristics that discovered significantly better solutions (second experiment).
+Function CES FES ESLAT CMA–ES ABC 3 CES BCO ESLAP CMA–ES BCO 14 CES BCO ESLAP CMA–ES BCO 15 BCO BCO ESLAP CMA–ES BCO 51 BCO BCO BCO CMA–ES BCO 16 CES – ESLAP CMA–ES ABC 2 – – – BCO – 5 BCO BCO BCO BCO BCO 23 – – ESLAP BCO – 22 BCO BCO BCO BCO BCO 42 CES BCO ESLAP CMA–ES BCO 41 CES BCO ESLAP CMA–ES ABC 43 BCO BCO ESLAP BCO BCO 44 BCO BCO BCO BCO BCO 18 BCO BCO BCO BCO – 33 BCO BCO BCO BCO BCO 28 BCO BCO BCO BCO BCO 19 BCO BCO BCO BCO BCO 32 BCO FES ESLAP BCO – 39 BCO BCO ESLAP CMA–ES BCO 40 BCO – ESLAP – ABC 34 BCO BCO – BCO ABC 35 BCO BCO – BCO ABC 36 BCO BCO – BCO ABC
+We performed an empirical study of the BCO algorithm.
+We apply BCO to optimize numerous numerical test functions.
+In this paper the BCO worked as an improving algorithm.
+We generated our initial solutions in a random manner, and by perturbing solutions, artificial bees improved them.
+The obtained results are compared with the results achieved by the Artificial Bee Colony, Genetic Algorithm, Differential Evolution, and Particle Swarm Optimization.
+The numerical experiments performed on well-known benchmark functions show that the BCO is competitive with other methods and it can generate high-quality solutions within negligible CPU times.
+The BCO has already been effectively applied to some combinatorial optimization problems.
+Theoretical results supporting BCO concepts are still absent.
+This work is crucial in the future research.
+Based on the achieved results and gained experience, new models founded on BCO principles (autonomy, distributed functioning, self-organizing) are likely to considerably contribute to solving complex engineering, management, and control problems.

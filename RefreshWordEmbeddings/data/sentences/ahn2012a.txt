@@ -1,0 +1,189 @@
+This paper examines movement in implied volatility with the goal of enhancing the methods of options investment in the derivatives market .
+Indeed , directional movement of implied volatility is forecasted by being modeled into a function of the option Greeks .
+The function is structured as a locally stationary model that employs a sliding window , which requires proper selection of window width and sliding width .
+An artificial neural network is employed for implementing and specifying our methodology .
+Empirical study in the Korean options market not only illustrates how our directional forecasting methodology is constructed but also shows that the methodology could yield a reasonably strong performance .
+Several interesting technical notes are discussed for directional forecasting .
+In general , there are two well-known ways to address future volatility in financial markets .
+The first method is to build the financial time series model with historical volatility and use it for calculation of future volatility .
+The second approach is to calculate implied volatility based on a mathematical financial model that handles future volatility in terms of the current value of financial instruments .
+Recently , research on utilizing the implied volatility to predict the financial derivative movement has been receiving increased attention .
+For instance , refer to Latane and Rendleman ( 1976 ) , Malliaris and Salchenberger ( 1996 ) and Andreou , Charalambous , and Martzoukos ( 2008 ) .
+In this article , we propose to use implied volatility directly , i.e. , directional forecasting of implied volatility itself is our main concern .
+Directional forecasting ( up-down forecasting ) of implied volatility will clearly lead to enhanced investment techniques in the derivatives market by providing a useful standard .
+For example , if stock market implied volatility is expected to increase , it is best to buy options related to the stock market index because one can easily profit off the market with increased volatility from buying options .
+To the best of our knowledge , no research has been reported regarding directional forecasting of implied volatility .
+An important step in the directional forecasting of implied volatility is the selection of input variables .
+Because implied volatility in options is theoretically determined by the current value of options , various parameters related to call and put options could be considered to be input variables .
+Among these parameters , option Greeks stand out for directional forecasting because they are the quantities representing the sensitivities of the price of options to a change in underlying financial instruments .
+In other words , option Greeks are usually defined in terms of mathematical derivatives supply , which is essential information for directional forecasting .
+Latane and Rendleman ( 1976 ) and Beckers ( 1981 ) used the Vega value of the option Greeks for regular forecasting of the option values .
+For modeling implied volatility as a function of option Greeks , we use a sliding window ( Kohzadi , Boyd , Kermanshahi , & Kaastra , 1996 ) as our major architecture because it enables us to implement a locally stationary model .
+A locally stationary model is needed here because implied volatility or option price tends to change its mechanism over time .
+A locally stationary model shows that the window width and sliding width of sliding window are two useful parameters for installing a locally stationary model .
+By choosing the two parameters , we may attempt various kinds of local stationary models and find an appropriate one .
+Detailed discussion of these models will be given in Section 3 .
+As the main execution tool , an artificial neural network ( ANN ) is employed .
+Recently , artificial intelligence tools , including an ANN , have been used widely for financial market forecasting ( see Ahn , Lee , Oh , and Kim ( 2009 ) , Ye and Gu ( 1994 ) and Yao , Li , and Tan ( 2000 ) and others for examples ) .
+This approach has been employed because financial market movement is quite complicated , and artificial-intelligence tools are preferred to fit the complex relationship between input and output .
+In this study , we test our forecasting methodology against the Korean options market because it usually records the highest number of trades in a year among the options market around the world .
+Furthermore , easy access to abundant data makes the Korean options market an attractive experimental venue .
+Our study is organized as follows .
+Section 2 discusses the research background , and Section 3 presents our forecasting methodology for implied volatility in detail .
+Section 4 illustrates and discusses our experiment results in Korean options market .
+Conclusions are drawn in Section 5 .
+Options market An option is a security giving the right to buy or sell an asset within a specified period , subject to certain conditions .
+There are two types of options : the American Option , which can be exercised at any time up to the date that the option expires , or the European Option , which can be exercised only on a specified future date .
+An option that conveys the right to buy something is known as a call ; an option that conveys the right to sell is called a put .
+The price that is paid for the underlying asset when the option is exercised is called the exercise price or strike price .
+The last day on which the option may be exercised is called the expiration date or maturity date .
+In options markets , investors can take two positions : a long position or a short position .
+An investor buys the option in a long position , while selling an option is a short position .
+The seller of the option ( writer ) has the obligation to exercise an option upon the request of the buyer .
+The option writer receives cash upfront ( or option premium ) , i.e. , the option price , as compensation for the risk taken .
+This transaction means that the seller of the option at the beginning of the transaction knows the maximum profit .
+Fig 1 presents option payoff and profit diagrams .
+The option payoff and profit diagrams : ( a ) payoffs and profits from long call… Fig 1 .
+The option payoff and profit diagrams : ( a ) payoffs and profits from long call and long put , ( b ) payoffs and profits from short call and short put .
+The simplest kind of option is one that gives the right to buy a single share of common stock , which is referred to as a call option .
+In general , a higher stock price correlates with a greater call option value .
+When the stock price is much greater than the exercise price , the option will be exercised .
+The current value of the option will thus be approximately equal to the price of the stock minus the price of a pure discount bond that matures on the same date as the option , with a face value equal to the striking price of the option .
+Conversely , if the price of the stock is much less than the exercise price , the option is almost sure to expire without being exercised ; therefore , its value will be near zero in that case .
+Implied volatility of options The implied volatility of an option is the volatility implied by the current price of the option based on an option pricing model .
+Therefore , implied volatility is a forward-looking measure that is different from historical volatility , which is calculated from known past prices of a security .
+The Black-Scholes option pricing model derives a theoretical value for an option with a variety of inputs in which the value of an option depends on an estimate of the future realized volatility , σ , of the underlying value .
+To make this statement mathematically : ( 1 ) where C is the theoretical value of an option , and f is a pricing model with σ and other inputs as its arguments .
+The function f is monotonically increasing with σ meaning that a higher value of volatility σ results in a higher theoretical value C of the option .
+Conversely , by the inverse function theorem , there can be , at most , one value for σ that when applied as an input to f ( σ , ⋅ ) , will result in a particular value for C. More precisely , assume that there is some inverse function g = f-1 such that ( 2 ) where is the market price for an option .
+Next , the value is the volatility implied by the market price , or the implied volatility .
+In this paper , we are interested in directional forecasting of .
+In order to obtain the value of implied volatility using the Black-Scholes model , there are two methods available .
+One is the method of trial and error , and the other is the Newton-Raphson method .
+In this paper , we used the former .
+Option Greeks Greeks are a set of factor sensitivities that are used extensively by traders to quantify the exposures of portfolios that contain options .
+Each Greek measures how the portfolio ’ s market value would respond to a change in a certain variable : an underlier , volatility , interest rate or time .
+There are five Greeks : Delta , Gamma , Theta , Vega , and Rho .
+Delta measures the speed of the option price movement compared with the movement of the underlying asset .
+Call option Delta is defined as ( 3 ) where r is the interest rate , T is time left until maturity , , σ is the market volatility , X is the strike price , and S is the underlying asset ’ s price and N is the standard normal distribution function .
+Put option Delta is ( 4 ) Gamma is the rate of change of delta measured against the rate of change in the underlying asset .
+Call and Put option Gamma is defined as ( 5 ) Theta is a measure of how time decay affects the option premium .
+Call option Theta is defined as ( 6 ) where .
+Put option Theta is defined as ( 7 ) Vega measures an option ’ s sensitivity to the stock ’ s volatility .
+Call and put Option Vega is defined as ( 8 ) Rho measures an option ’ s sensitivity to riskless rate changes .
+Call Rho is always positive , and Put rho is always negative .
+Call option Rho is defined as ( 9 ) Put option Rho is defined as ( 10 ) 2.4 .
+KOSPI 200 options KOSPI 200 options are based on the KOSPI 200 index , which is a market-capitalization weighted index that consists of 200 blue chip stocks listed on the Korean stock market .
+Introduced on July 7 , 1997 , KOSPI 200 options became the world ’ s most heavily traded derivatives in spite of their short history .
+A summary of the KOSPI 200 options is given in Table 1 .
+Table 1 .
+A summary of KOSPI 200 options .
+Facts Contents Underlying index KOSPI 200 index Type European option Trades in Contracts Price change limit 10 % of the previous day ’ s closing price Price quotes 0.01 point ( KRW 1000 ) = 0.01 Index points Minimum tick of strike price 2.5 Index Points ( KRW 250,000 ) Expiration date Second Thursday of each contract month Settlement method Cash A trader in KOSPI 200 options market receives 100,000 won per one KOSPI 200 index point at expiration date .
+Suppose one trader buys one call option for 110,000 won and one put option for 100,000 won with 250 strike price .
+Next , the trader will gain 790,000 won when the KOSPI 200 index reaches the 260 point at expiration date .
+Indeed , the call option value will be 1,000,000 won , while the put option value will be zero at expiration date .
+Fig 2 illustrates how options are traded .
+An example of how options are traded in the KOSPI 200 options market Fig 2 .
+An example of how options are traded in the KOSPI 200 options market .
+From Fig 2 , one may see that ATM of KOSPI 200 is 250 , and call and put options with strike price 250 are being traded at 3.50 ( KRW 350,000 ) and 4.45 ( KRW 445,000 ) , respectively .
+When ATM box is up , the call option price is up to 5.15 from 3.50 , and the put option price is down to 3.45 from 4.45 , which shows a clear-cut negative correlation between call and put option price .
+The right-hand-side of Fig 2 illustrates how put option with strike price 245.00 is being traded .
+Indeed , the option is being traded at 2.63 ( KRW 263,000 ) , while its sell and purchase order quantities are being monitored on a real-time basis .
+Artificial neural network An ANN is an information processing paradigm that is inspired by the way biological nervous systems , such as the brain , process information .
+The key element of this paradigm is the novel structure of the information processing system .
+It is composed of a large number of highly interconnected processing elements that are ( neurons ) working in unison to solve specific problems .
+ANNs , similar to human beings , learn by example .
+An ANN is configured for a specific application , such as pattern recognition or data classification , through a learning process .
+Learning in biological systems involves adjustments to the synaptic connections that exist between the neurons .
+This adjustment is true of ANNs as well .
+The ANNs , with their remarkable ability to derive meaning from complicated or imprecise data , can be used to extract patterns and detect trends that are too complex to be noticed by either humans or other computer techniques ( Bodyanskiy & Popov , 2006 ; El Shazly & El Shazly , 1997 ; Kim , Oh , Son , & Hwang , 2004 ; Son , Oh , Kim , & Kim , 2009 ) .
+A trained ANN can be thought of as an “ expert ” in the category of information it has been given to analyze .
+This expert can then be used to provide projections , given new situations of interest , and the expert can answer “ what if ” questions .
+Another major strength that leads us to ANNs in this study is that ANN computations may be carried out in parallel and thus in real-time operation .
+Local stationarity and sliding window For directional forecasting , we employ the forecasting model ( 11 ) where h is a lag-1 classifier or forecaster with a set of input variables X = ( x1 ( t ) , … , xp ( t ) ) and discrete ( or categorical ) response variable I ( t + 1 ) = 1 or 0 .
+This is a lag l forecaster recently studied by Ahn , Son , Oh , Kim , and Song ( 2011 ) .
+Of course , model ( 11 ) assumes stationarity or time-invariant property of h , and 0 and 1 denote volatility decrease and increase respectively .
+Because one of the well-known features of implied volatility is time-variant or its changeability , h of model ( 11 ) needs to be adjusted to one depending on time t. To achieve this , we propose to utilize locally stationary concept ( e.g. , Dahlhaus , 1996 , 2000 ) , i.e. , ( 12 ) where A ( t ) = j if t ϵ [ a0 + ju , a0 + ju + v ) for u > 0 , v > 0 and j = 0 , 1 , 2 , … In other words , hj is locally stationary on each time interval [ a0 + ju , a0 + ju + v ) for j = 0 , 1 , 2 , … Please note that , where T is the entire time span , and that u determines how time intervals are laid overlapping each other and v is the length of each time interval .
+If u = v , then [ a0 + ju , a0 + ju + v ) for j = 0 , 1 , 2 , … are disjoint .
+For implementing model ( 12 ) , we introduce sliding window with total width v , which slides into the next window by width u at each jth move .
+Refer to Fig 3 .
+This window consists of two periods , i.e. , training period with length v − u and testing period with length u .
+Thus , total window width and sliding width clearly are v and u .
+By specifying u , v and the range of j , we can complete the sliding window carpentry and the structure of local stationary model given by ( 12 ) .
+Sliding window model Fig 3 .
+Sliding window model .
+Variable selection The main purpose of directional forecasting methodology is to predict accurately the ups and downs of the implied volatility of options at the money ( ATM ) at market closing time for next day ( or the lag one daily forecasting equivalently ) .
+Therefore , the input variables must have a strong correlation with ( next day ) implied volatility , and the most important variable is the current implied volatility at market closing time .
+As discussed in Section 2.3 , because option Greeks defined in terms of mathematical derivatives supply essential information for directional forecasting , they are selected as input variables for our directional forecasting methodology .
+An important technical note to mention in this study is that each of the selected input variables ( i.e. , the current implied volatility and the Greeks ) is averaged over call and put options at ATM to produce one single value , e.g. , the pair-wise averaging technique .
+We will later show this method ’ s usefulness for directional forecasting .
+Latane and Rendleman ( 1976 ) introduced this technique and then Schmalensee and Trippi ( 1978 ) and Beckers ( 1981 ) extended it to other prediction problems .
+For implementation of directional forecasting methodology , an artificial intelligence tool ANN is employed for finding hj s of ( 12 ) .
+Methodology implementation Empirical experiments were performed using KOSPI 200 options data .
+With the raw data from year 2003 to 2004 at hand , we programmed in Visual Basic to extract necessary information from the raw data .
+Please note that because the raw data contain a vast array of information , such as strike prices , underlying assets , maturities and riskless interest rate , trimming the data was inevitable and arduous .
+With the extracted data at hand , calculations are done in order to obtain the needed variables for our methodology .
+In fact , the Black–Scholes model is used to calculate the values of the implied volatility and the Greeks .
+The pseudo code for calculating these values can be seen in Figs .
+4 and 5 .
+Also , an exemplary calculation process of the Greeks is captured in Fig 6 .
+The entire process for data preparation is given in Fig 7 .
+Please recall from model ( 12 ) that the predicted or output variable has value either 0 or 1 .
+Pseudo code for implied volatility Fig 4 .
+Pseudo code for implied volatility .
+Pseudo codes for option Greeks Fig 5 .
+Pseudo codes for option Greeks .
+Calculation process for option Greeks Fig 6 .
+Calculation process for option Greeks .
+Data-preparation process Fig 7 .
+Data-preparation process .
+Implementing our methodology required the following guidelines .
+First , we specified sliding window parameters .
+For this step , a small pilot study was done to choose u = 5 ( or one week ) and v = 265 ( or 53 weeks ) .
+In other words , we chose one year as training period ( v − u = 260 , or 52 weeks ) and one week following the training period as testing period for sliding window .
+In addition j = 1 , ⋯ , 20 was set for 20 testing periods or 20 moves .
+Refer to Fig 8 .
+Second , as input variables we chose the pair-wise averaged values of the implied volatility of the option at ATM and the five Greeks , i.e .
+x1 , … , x6 with p = 6 .
+Third , an ANN was set via 6 hidden nodes , and the logistic activation function with learning rate , momentum and initial weight given by 0.1 , 0.1 and 0.3 , respectively .
+Finally , an ANN was run for finding hj for j = 1 , … , 20 .
+An overall description for implementing the methodology is given in Fig 9 .
+Specified sliding window Fig 8 .
+Specified sliding window .
+Process for methodology implementation Fig 9 .
+Process for methodology implementation .
+Experimental results Various experiments were done to check performance of our specified methodology forecasting direction of implied volatility .
+The performance was measured by hit rate ( or the number of the correct hits divided by the total number of hits ) .
+Two noteworthy facts are in order .
+( i ) We tried the 3-month ( u = 5 , v = 65 ) , 6-month ( u = 5 , v = 135 ) and one-year ( u = 5 , v = 265 ) training periods and observed that one year training period yielded the best outcome ( see Table 8 ) .
+( ii ) We tried p = 6 and p = 12 input variables .
+For p = 12 , we separate call and put options of each p = 6 pair-averaged input variable .
+We observed that p = 6 yielded the better .
+Refer to Table 3 .
+These experiment results show that respectable performance could be achieved by the proposed forecasting methodology .
+As seen in Tables 2 and 3 , a hit rate of 62 % was observed for the scheme ( p = 6 , u = 5 , v = 265 ) .
+This result is quite satisfactory compared to the purely non-informative hit rate of 50 % .
+Regarding choices of u and v , one may notice that the methodology needs a long training period ( one year ) and short testing period ( one week ) .
+One possible explanation is that high changeability intrinsic in option price requires a large amount of training data in determining the underlying mechanism , but limits sustainability of the underlying mechanism to a very short period .
+Regarding selection of input variables , our results confirm the usefulness of the pair-wise averaging technique .
+This finding is understandable because negative correlation between call and put option within each pair ( refer to Fig 2 ) needs to be addressed properly .
+In other words , considering the negative correlation , it is clear that pair-wise averages provide much more efficient and refined information for directional forecasting than the separate use of put and call options .
+Table 2 .
+Hit rate ( % ) comparison for three training periods .
+Week TR⁎ 1Y and TE⁎ 1W TR 3M and TE 1W TR 6M and TE 1W Training period Testing period Hit rate Training period Testing period Hit rate Training period Testing period Hit rate 1 03/01/02–03/12/30 04/01/02–04/01/08 60 03/01/02–03/03/31 03/04/01–03/04/07 80 03/01/02–03/06/30 03/07/01–03/07/07 40 2 03/01/10–04/01/08 04/01/09–04/01/15 60 03/01/10–03/04/07 03/04/08–03/04/14 60 03/01/10–03/07/07 03/07/08–03/07/14 20 3 03/01/17–04/01/15 04/01/16–04/01/27 80 03/01/17–03/04/14 03/04/15–03/04/21 60 03/01/17–03/07/14 03/07/15–03/07/22 40 4 03/01/24–04/01/24 04/01/28–04/02/03 80 03/01/24–03/04/21 03/04/22–03/04/28 60 03/01/24–03/07/22 03/07/23–03/07/29 40 5 03/02/03–04/02/03 04/02/04–04/02/10 60 03/02/03–03/04/28 03/04/29–03/05/07 60 03/02/03–03/07/29 03/07/30–03/08/05 40 6 03/02/10–04/02/10 04/02/11–04/02/17 60 03/02/10–03/05/07 03/05/09–03/05/15 60 03/02/10–03/08/05 03/08/06–03/08/12 60 7 03/02/17–04/02/17 04/02/18–04/02/24 80 03/02/17–03/05/15 03/05/16–03/05/22 80 03/02/17–03/08/12 03/08/13–03/08/20 60 8 03/02/24–04/02/24 04/02/25–04/03/03 60 03/02/24–03/05/22 03/05/23–03/05/29 60 03/02/24–03/08/20 03/08/21–03/08/27 60 9 03/03/03–04/03/03 04/03/04–04/03/10 80 03/03/03–03/05/29 03/05/30–03/06/05 60 03/03/03–03/08/27 03/08/28–03/09/03 20 10 03/03/10–04/03/10 04/03/11–04/03/17 80 03/03/10–03/06/05 03/06/09–03/06/13 60 03/03/10–03/09/03 03/09/04–03/09/15 60 11 03/03/17–04/03/17 04/03/18–04/03/24 40 03/03/17–03/06/13 03/06/16–03/06/20 20 03/03/17–03/09/15 03/09/16–03/09/22 40 12 03/03/24–04/03/24 04/03/25–04/03/31 60 03/03/24–03/06/20 03/06/23–03/06/27 60 03/03/24–03/09/22 03/09/23–03/09/29 80 13 03/03/31–04/03/31 04/04/01–04/04/08 80 03/03/31–03/06/27 03/06/30–03/07/04 60 03/03/31–03/09/30 03/10/01–03/10/08 40 14 03/04/07–04/04/08 04/04/09–04/04/16 60 03/04/07–03/07/04 03/07/07–03/07/11 40 03/04/07–03/10/08 03/10/09–03/10/15 80 15 03/04/14–04/04/16 04/04/19–04/04/23 60 03/04/14–03/07/11 03/07/14–03/07/21 20 03/04/14–03/10/15 03/10/16–03/10/22 40 16 03/04/21–04/04/23 04/04/26–04/04/30 40 03/04/21–03/07/21 03/07/22–03/07/28 20 03/04/21–03/10/22 03/10/23–03/10/29 40 17 03/04/28–04/04/30 04/05/03–04/05/10 40 03/04/28–03/07/28 03/07/29–03/08/04 60 03/04/28–03/10/29 03/10/30–03/11/05 40 18 03/05/07–04/05/10 04/05/11–04/05/17 60 03/05/07–03/08/04 03/08/05–03/08/11 60 03/05/07–03/11/05 03/11/06–03/11/12 60 19 03/05/15–04/05/17 04/05/18–04/05/24 60 03/05/15–03/08/11 03/08/12–03/08/19 80 03/05/15–03/11/12 03/11/13–03/11/19 40 20 03/05/22–04/05/24 04/05/25–04/06/01 40 03/05/22–03/08/19 03/08/20–03/08/26 40 03/05/22–03/11/19 03/11/20–03/11/26 60 Total 62 ( s.d.⁎⁎=14.36 ) 55 ( s.d.=18.20 ) 52 ( s.d.=16.41 ) ⁎ TR and TE denote training period and testing period , respectively .
+Y , M and W mean year , month and week , respectively .
+⁎⁎ s.d .
+means standard deviation .
+Table 3 .
+Hit rate ( % ) comparison for input variable selection .
+Week Training Period ( yy/mm/dd ) Testing Period ( yy/mm/dd ) Hit rate of 6 input variables⁎ Hit rate of 12 input variables⁎⁎ 1 03/01/02–03/12/30 04/01/02 ∼04/01/08 60 60 2 03/01/10–04/01/08 04/01/09–04/01/15 60 60 3 03/01/17–04/01/15 04/01/16–04/01/27 80 60 4 03/01/24–04/01/24 04/01/28–04/02/03 80 20 5 03/02/03–04/02/03 04/02/04–04/02/10 60 40 6 03/02/10–04/02/10 04/02/11–04/02/17 60 60 7 03/02/17–04/02/17 04/02/18–04/02/24 80 60 8 03/02/24–04/02/24 04/02/25–04/03/03 60 40 9 03/03/03–04/03/03 04/03/04–04/03/10 80 60 10 03/03/10–04/03/10 04/03/11–04/03/17 80 80 11 03/03/17–04/03/17 04/03/18–04/03/24 40 40 12 03/03/24–04/03/24 04/03/25–04/03/31 60 60 13 03/03/31–04/03/31 04/04/01–04/04/08 80 80 14 03/04/07–04/04/08 04/04/09–04/04/16 60 60 15 03/04/14–04/04/16 04/04/19–04/04/23 60 60 16 03/04/21–04/04/23 04/04/26–04/04/30 40 40 17 03/04/28–04/04/30 04/05/03–04/05/10 40 40 18 03/05/07–04/05/10 04/05/11–04/05/17 60 60 19 03/05/15–04/05/17 04/05/18–04/05/24 60 60 20 03/05/22–04/05/24 04/05/25–04/06/01 40 60 Total 62.0 ( s.d.†=14.36 ) 55.0 ( s.d.=14.32 ) ⁎ Six input variables : pair-wise averages of implied volatility and 5 Greeks .
+⁎⁎ 12 input variables : implied volatility of Call Option and Put Option , 5 Greeks of Call Option and Put Option .
+† s.d .
+means standard deviation .
+This study proposed directional forecasting methodology of implied volatility of options at ATM .
+Our forecasting methodology assumes a local stationarity , which is effectively implemented by the sliding window model .
+The sliding window model has two key parameters to be chosen , and our empirical studies demonstrate how one might be able to complete sliding window carpentry via an ANN .
+Also , our result confirms that pair-wise averaging technique serves well for directional forecasting when components of each are negatively correlated .
+Finally , note that the hit rate displayed by a completed methodology was a respectable 62 % .
+Having achieved such high accuracy , further research is certainly desirable in order to take advantage of our methodology .
+For instance , an appropriate investment strategy suited to directional forecasting of implied volatility might be identified or developed .

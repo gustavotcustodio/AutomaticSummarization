@@ -1,0 +1,441 @@
+<article>
+  <title>Applying machine learning in accounting research</title>
+  <abstract>
+    <sentence>Quite often, in order to derive meaningful insights, accounting researchers have to analyze large bodies of text.</sentence>
+    <sentence>Usually, this is done manually by several human coders, which makes the process time consuming, expensive, and often neither replicable nor accurate.</sentence>
+    <sentence>In an attempt to mitigate these problems, we perform a feasibility study investigating the applicability of computer-aided content analysis techniques onto the domain of accounting research.</sentence>
+    <sentence>Krippendorff (1980) defines an algorithm’s reliability as its stability, reproducibility and accuracy.</sentence>
+    <sentence>Since in computer-aided text classification, which is inherently objective and repeatable, the first two requirements, stability and reproducibility, are not an issue, this paper focuses exclusively on the third requirement, the algorithm’s accuracy.</sentence>
+    <sentence>It is important to note that, although inaccurate classification results are completely worthless, it is surprising to see how few research papers actually mention the accuracy of the used classification methodology.</sentence>
+    <sentence>After a survey of the available techniques, we perform an in depth analysis of the most promising one, LPU (Learning from Positive and Unlabelled), which turns out to have an F-value and accuracy of about 90%, which means that, given a random text, it has a 90% probability of classifying it correctly.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Data mining</keyword>
+    <keyword>Text classification</keyword>
+    <keyword>Accounting research</keyword>
+    <keyword>Artificial intelligence</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Quite often, in the hope of discovering new relations and insights, research involves analyzing and classifying large quantities of unstructured information, such as news items or annual reports.</sentence>
+    <sentence>So, to accurately extract the relevant information from the entire, and possibly huge, set of available raw data is an important challenge.</sentence>
+    <sentence>Since this can easily mean analyzing multiple thousands documents, manual analysis is often not feasible, unless off course, one limits himself to a very small subset of the total amount of available data.</sentence>
+    <sentence>Therefore, researchers typically delegate this very time consuming task to a series of human coders who will look through the entire set of news items and perform the classification.</sentence>
+    <sentence>There is however a problem.</sentence>
+    <sentence>You know, either implicitly or explicitly, which characteristics will make a document interesting, or positive, for you.</sentence>
+    <sentence>The difficulty is conveying these criteria to your coders.</sentence>
+    <sentence>But often, you will classify those documents, at least partly, on intuition.</sentence>
+    <sentence>When you attempt to explain these intuitive criteria to your coders, some nuances will be lost and their results will never completely match your intents.</sentence>
+    <sentence>Or, put more scientifically, the accuracy with which they classified the documents the way you intended it, will almost never be 100%.</sentence>
+    <sentence>This is only achievable if you do the job yourself.</sentence>
+    <sentence>Furthermore, repeatability is a major concern as a different group of coders will almost certainly produce a different outcome.</sentence>
+    <sentence>In an attempt to decrease the cost and further increase the speed of classification, recent research delegates this highly time consuming process to computers instead of human coders.</sentence>
+    <sentence>Without actually being able to argument the process, humans are able to make fussy decisions, like for example, whether a news item is favourable or unfavourable.</sentence>
+    <sentence>Classification algorithms basically try to autonomously discover the implicit, underlying decision structure used by their human counterpart.</sentence>
+    <sentence>As such, one can say that these algorithms try to mimic human decision making behaviour.</sentence>
+    <sentence>However, this introduces an important limitation.</sentence>
+    <sentence>Most computer aided classifications are limited to the use of naïve, heuristic algorithms such as word counting and frequency analysis.</sentence>
+    <sentence>The problem with these techniques is that they are not very accurate as they are not capable of handling the many syntactical and semantic nuances one typically finds in natural languages.</sentence>
+    <sentence>And because of this, they suffer from a rather large number of false positives and false negatives (Nigam, Mccallum, Thrun, &amp; Mitchell, 2000).</sentence>
+    <sentence>A more modern, and better, approach is the use of machine learning techniques.</sentence>
+    <sentence>In this case, a self-learning algorithm tries to discover the underlying characteristics on which a human classifier classifies documents as either relevant or not.</sentence>
+    <sentence>In a second phase it utilized this newly acquired knowledge to autonomously classify the entire set of documents.</sentence>
+    <sentence>In this contribution, we present a methodology for using these advanced machine learning techniques in accounting research.</sentence>
+    <sentence>More specifically, we demonstrate that the use of a text classification algorithm will greatly improve the classification speed of unstructured information while maintaining a very high accuracy.</sentence>
+    <sentence>The paper is structured as follows: Section 2 describes the major text classification methodologies; Section 3 describes a series of text classification application, both general and specific to accounting research.</sentence>
+    <sentence>Next, Section 4 presents an overview of the most important text classification approaches.</sentence>
+    <sentence>Section 5 maps these approaches to two candidate algorithms and selects the most appropriate one, in this case LPU (Learning from Positive and Unlabelled) which is discussed in detail in Section 6.</sentence>
+    <sentence>Next, Section 7 describes the complete process from raw data to classified information.</sentence>
+    <sentence>Section 8 presents three possible algorithms for automatically building test sets.</sentence>
+    <sentence>Section 9 describes the software program written to support this process and Section 10 evaluates the proposed classification process.</sentence>
+    <sentence>To wrap up, in Section 11 we summarize the complete process in four practical steps and finally present a real-life application in Section 12.</sentence>
+  </section>
+  <section name="Text classification methodologies">
+    <sentence>Neuendorf (2002) defines content analysis as the systematic, objective, quantitative analysis of message characteristics.</sentence>
+    <sentence>Due to the rapid advancements in computer text content analysis software, content analysis has been one of the fastest growing techniques of the last 20 years, especially in the field of mass communication research.</sentence>
+    <sentence>Text classification can be seen as a special case of content analysis.</sentence>
+    <sentence>It is a rather young discipline which tries to classify an artefact into one or more classes.</sentence>
+    <sentence>Usually, for simplicity, the artefact will be a written document, but this is not a requirement.</sentence>
+    <sentence>Also, most algorithms will limit the number of output classes to just one.</sentence>
+    <sentence>Either the artefact is part of this class, or it is not (Nigam et al., 2000).</sentence>
+    <sentence>Text classification methods can be divided into three major categories (Rosenberg, Schnurr, &amp; Oxman, 1990): ○ Individual word-count systems: this kind of coding is generally done by a computer because of the simplicity and repeatability of the task.</sentence>
+    <sentence>All the words receive a tag or category description, which is linked to procedures like frequency counts and other statistical procedures to identify text characteristics.</sentence>
+    <sentence>○ Human-scored, phrase-based content analysis: here human coders first divide text into phrases, which are then classified based on an explicit set of classification rules.</sentence>
+    <sentence>In accounting research this method is mostly used in analyzing social disclosure like, e.g.</sentence>
+    <sentence>environmental disclosures, intellectual capital disclosures (Beattie &amp; Thomson, 2007; Brammer &amp; Pavelin, 2006; Deegan &amp; Gordon, 1996; Gamble, Hsu, Kite, &amp; Radtke, 1995; Hasseldine, Salama, &amp; Toms, 2005; Patten, 2002; Tilt &amp; Symes, 2000), etc.</sentence>
+    <sentence>○ Computerized systems or CAQDAS (Computer-Aided Qualitative Data Analysis Systems): the newest systems contain parsers or artificial intelligence features to combine both syntax and lexicon in the text analysis (Kelle, Prein, &amp; Bird, 1995).</sentence>
+    <sentence>An important question to ask is how well these different systems perform.</sentence>
+    <sentence>For this, Krippendorff (1980) identifies three types of reliability: stability, reproducibility and accuracy.</sentence>
+    <sentence>The stability of an analysis is high if a coder has the same results for the same analysis twice (with a certain time-gap).</sentence>
+    <sentence>Reproducibility is the extent to which the coding produces the same result when the text is coded by multiple coders.</sentence>
+    <sentence>And accuracy is the extend to which the obtained result coincides with the optimal result.</sentence>
+    <sentence>Milne and Adler (1999) and Unerman (2000) investigated the reliability of the results when applying one of the first two categories and found that most research scored very badly.</sentence>
+    <sentence>So, either the results were not very stable, reproducible or accurate.</sentence>
+    <sentence>When using CAQDAS on the hand, as coding is automated and done on an objective and a repeatable way, these systems do not suffer from stability or reproducibility problems.</sentence>
+    <sentence>However, as it is much more difficult for a computer than a human coder to understand the meaning of a text, these approaches often suffer from a low accuracy.</sentence>
+    <sentence>Literature, summarized below, shows that most researchers seem to have a preference for one of the two manual methods, which is a petty as a computerized approach has the potential of greatly increasing the reliability of the results.</sentence>
+    <sentence>In an attempt to introduce CAQDAS approaches to accounting research, we will show the results of a very extensive accuracy test to show that it is possible to use automated algorithms, which do not suffer from stability or reproducibility problems, save huge amounts of time and effort, and have a very high accuracy.</sentence>
+  </section>
+  <section name="Text classification applications">
+    <sentence>Many examples of text classification applications can be given.</sentence>
+    <sentence>The best known one is spam filtering.</sentence>
+    <sentence>Here, a text classification algorithm tries to determine whether a message is spam or not (Yerazunis, Chhabra, Siefkes, Assis, &amp; Gunopulos, 2005).</sentence>
+    <sentence>Another common use is while searching the internet for documents in a certain language.</sentence>
+    <sentence>The search engine will use text classification algorithms to decide in which language a given document is written.</sentence>
+    <sentence>In agents based search algorithms, which is a technology developed to help human observers overcome information overload, an autonomous software application will go out on the internet to search for information that could be of interest to his owner (Cawsey, 1997).</sentence>
+    <sentence>In military, classification techniques are used to analyze both written and spoken conversations and to determine whether they are suspicious or not.</sentence>
+    <sentence>When zooming in on economics research, many applications of text classification can be found.</sentence>
+    <sentence>In the field of direct marketing: a core problem is selecting, and investing time, in those individuals which are most likely to become future customers.</sentence>
+    <sentence>A possible solution is to build a profile of your current customers and to classify the complete set of potential customers according to whether they fit this profile or not.</sentence>
+    <sentence>Those who match the profile are the most likely future customers (Liu, 2006).</sentence>
+    <sentence>In the domain of corporate social responsibility (CSR) disclosures, and more specific environmental disclosures, researchers have repeatedly applied classification algorithms.</sentence>
+    <sentence>Researchers like Hogner (1982), Gray, Kouhy, and Lavers (1995a, 1995b), Deegan and Rankin (1996), Brown and Deegan (1998) and Neu, Warsame, and Pedwell (1998) used classification algorithms to analyze environmental information in annual reports.</sentence>
+    <sentence>While Brown and Deegan (1998) analyze media news items of all firms with environmental impact, Deegan and Rankin (1996) focus on disclosures of companies who had been prosecuted by the Environmental Protection Authority.</sentence>
+    <sentence>When looking at other accounting research, Abrahamson and Park (1994) and Abrahamson and Amir (1996) examined the content of the president’s letters to shareholders by searching for the number of negative words in these letters.</sentence>
+    <sentence>Deephouse (2000) introduced content analysis in the measurement of a firm’s media reputation.</sentence>
+    <sentence>Previously, media reputation was measured by using the theoretically weak Fortune rankings, but Deephouse changed the scene by using the ‘media favourableness coefficient’, which was based on an intensive rating process, where all news items about certain banks were manually classified as favourable or unfavourable.</sentence>
+    <sentence>Pollock and Rindova (2003) and Greenwood, Li, Prakash, and Deephouse (2005) followed his example, by using the same method to measure reputation.</sentence>
+    <sentence>All mentioned studies used a complete manual content analysis technique to measure the information content of the annual report.</sentence>
+    <sentence>Only Abrahamson and Park (1994) and Abrahamson and Amir (1996) used a partially computerized content analysis to examine the president’s letter.</sentence>
+    <sentence>But it was rather limited: the computer summed the number of times each word appeared in the letters.</sentence>
+    <sentence>After this, the manual process continued.</sentence>
+    <sentence>It is obvious that accounting research is often limited because of this manual labour.</sentence>
+    <sentence>In this paper we try to demonstrate that there is a reliable alternative to investigate a large amount of data, besides the manual approach.</sentence>
+    <sentence>As they are the most common type of classification, we limit our research to the investigation of binary classification problems such as determining whether a news item is favourable or not for a given firm.</sentence>
+  </section>
+  <section name="Text classification approaches">
+    <sentence>Now that we have determined possible use cases for automated text classification in accounting research, we will give an overview of the most relevant types of text classification algorithms and select the one most suitable for our purpose: filtering out the relevant samples from a very large and unordered set of unstructured data.</sentence>
+    <sentence>Broadly speaking there are two approaches in text classification: unsupervised and partly supervised.</sentence>
+    <sentence>In the first approach, the algorithm is fed with a complete analysis of features to look for during classification.</sentence>
+    <sentence>Naïve implementations will for example perform word counting, and depending on the number of occurrences, determine whether the input document is a match or not.</sentence>
+    <sentence>More complex implementations use semantic analysis in order to determine whether an input document has a positive or negative connotation.</sentence>
+    <sentence>The advantages and disadvantages of this approach are exactly the opposite of those of partly supervised classification, which will be described in the next paragraph: subtle nuances can be difficult or impossible to accurately describe, but the algorithm is completely deterministic (Sandler, 2005).</sentence>
+    <sentence>In the latter approach, partly supervised classification, we train the algorithm by feeding it examples of positive and negative artefacts.</sentence>
+    <sentence>After this learning step, the algorithm can autonomously classify new incoming artefacts.</sentence>
+    <sentence>The biggest advantage of this approach is that these algorithms can capture subtle nuances which are very difficult or impossible to express in explicit algorithmic notation.</sentence>
+    <sentence>The disadvantage is that they have to be trained, which is a subjective and time consuming activity.</sentence>
+    <sentence>The most common implementation is the naïve Bayesian classifier (Sahami, Dumais, Heckerman, &amp; Horvitz, 1998).</sentence>
+    <sentence>Most text classification algorithms require two training sets: a set of positive samples and a set of negative samples.</sentence>
+    <sentence>While the first set contains examples of the type of document you would like to find, the second set contains examples of documents you absolutely don’t want.</sentence>
+    <sentence>Usually, you know what you want to find, and as such, building the positive set is reasonably easy.</sentence>
+    <sentence>Building the negative set on the other hand, is usually very difficult as it is not that easy to accurately define which documents are completely wrong.</sentence>
+    <sentence>Because of this, a specialized class of text classification algorithms, those who only require positive and unlabelled documents to learn, is becoming popular.</sentence>
+    <sentence>An unlabelled document is one which has not yet been explicitly labelled as either positive or negative.</sentence>
+    <sentence>An extra advantage of this class of text classification algorithms is that unlabelled data is often plentiful and cheap while labelled data is very time consuming to produce and as such scarce and usually very expensive.</sentence>
+    <sentence>Most of the examples described in the previous section fall into this category.</sentence>
+    <sentence>Surprisingly often, it seems difficult to build the negative set, and as such, algorithms which only require positive and unlabelled data can be extremely useful.</sentence>
+    <sentence>Let us, as an example, consider the problem of classifying financial reporting research papers.</sentence>
+    <sentence>While it is very easy to build a sample of positive documents, building the complement, the absolute negative documents, is not.</sentence>
+    <sentence>Considering the marketing example, the group of existing customers is the positive set and all potential customers form the unlabelled set.</sentence>
+    <sentence>How would you, in this case, define the negative set?</sentence>
+    <sentence>Put differently, who are the customers you really do not want?</sentence>
+    <sentence>As for accounting research, it is relatively easy to come by large sets of unlabelled documents such as press items, management letters, etc., and we know the type of document we want to find (the positive documents): the set of documents which were written in a favourable fashion, the documents which provide stock exchange information, the documents which describe a new product, etc.</sentence>
+  </section>
+  <section name="Text classification algorithm selection">
+    <sentence>Based on free academic availability, and whether it is fit for purpose, we selected two text classification algorithms: a naive Bayesian classifier (Sahami et al., 1998) and LPU (Liu, Dai, Li, &amp; Yo, 2003; Liu, Ya, &amp; Li, 2002).</sentence>
+    <sentence>The first algorithm, a naive Bayesian classifier, also known as Idiot’s Bayesian, is a simple probabilistic classifier based on applying Bayes’ theorem with strong (naive) independence assumptions.</sentence>
+    <sentence>In spite of their naive design and apparently over-simplified assumptions, naive Bayes classifiers often work much better in many complex real-world situations than might be expected.</sentence>
+    <sentence>Recently, careful analysis of the Bayesian classification problem has shown that there are some theoretical reasons for the apparently unreasonable efficacy of naive Bayes classifiers (Hand &amp; Yu, 2001).</sentence>
+    <sentence>LPU (which stands for Learning from Positive and Unlabelled data) is a partly supervised text classification algorithm that learns from a set of positive documents and the complete set of unlabelled documents, i.e.</sentence>
+    <sentence>all other, unclassified, documents.</sentence>
+    <sentence>Its approach is distinctively different from most other algorithms which require both positive and negative sample documents.</sentence>
+    <sentence>In order to evaluate the different classification algorithms, we construct a simple test in which the algorithms have to determine which news items reports about a certain firm.</sentence>
+    <sentence>The set of news items consists of 3391 news items, of which 50 are manually classified as either positive (=this news item reports about the chosen firm) or negative (=this news item does not report about the chosen firm) and serve as learning set.</sentence>
+    <sentence>Another 50 were classified manually as positive or negative and serve as our test set.</sentence>
+    <sentence>The two algorithms have to classify the test set using the learning set as example.</sentence>
+    <sentence>An algorithm scores 100% if it manages to correctly classify all 50 test cases.</sentence>
+    <sentence>LPU, using ROC as the sub-algorithm for the first step and SVM as the sub-algorithm for the second step (more on these options in the next chapter), achieves an accuracy of 80%.</sentence>
+    <sentence>The Bayesian approach achieves a score of about 50%.</sentence>
+    <sentence>As a result, we opt to use LPU for the remainder of this research project.</sentence>
+  </section>
+  <section name="The LPU algorithm in more detail">
+    <sentence>LPU requires three input files: one containing a set of positive documents, called the training set, one containing all unlabelled documents and one containing test documents, called the test set.</sentence>
+    <sentence>As we will discuss later in more detail, this file actually has two uses.</sentence>
+    <sentence>It can contain manually classified test cases or it can contain all documents we want to classify.</sentence>
+    <sentence>In the first case, each document has to be explicitly marked as either positive or negative.</sentence>
+    <sentence>This information is used by LPU to determine how well the classifier performed.</sentence>
+    <sentence>In the second case, each document should be marked as positive.</sentence>
+    <sentence>In these files, each line represents a document and should be formatted in accordance with the following syntax: line ≕ targetfeature:valuefeature:value ⋯ feature:value target ≕ +1 | |−1 feature ≕ integer value ≕ integer Each line consists of a target and a series of feature–value pairs.</sentence>
+    <sentence>The target is either +1 (for a positive document), −1 (for a negative document) or undefined.</sentence>
+    <sentence>In the test set, each line’s target has to be either +1 or −1.</sentence>
+    <sentence>The lines in the other sets will always have a target of undefined.</sentence>
+    <sentence>Each feature (or word) is represented with an integer, and its value is the number of times (frequency count) that the feature (word) appeared in the document.</sentence>
+    <sentence>Features with value zero can be skipped.</sentence>
+    <sentence>The feature number in each document must be in increasing order, i.e., “34:2 356:4” is ok, but “356:4 34:2” is not.</sentence>
+    <sentence>So as you can see, the syntax of LPU is rather complicated.</sentence>
+    <sentence>Given the positive and the unlabelled documents, this algorithm learns in two consecutive steps.</sentence>
+    <sentence>First, LPU tries to identify a set of reliably negative documents from the unlabelled set.</sentence>
+    <sentence>To do this, LPU autonomously determines which characteristics all items in the positive set share.</sentence>
+    <sentence>It is then assumed that all positive items will have these characteristics and all negative items will not.</sentence>
+    <sentence>To do this, LPU can use three techniques: spy, roc (rocchio) and nb (naive bayes).</sentence>
+    <sentence>As rocchio generally gives the best results (Liu et al., 2002, 2003), we exclusively use this approach.</sentence>
+    <sentence>In the second step, a classifier is build which will try to maximize the number of unlabelled documents that get classified as negative, while maintaining the positive training documents correctly classified.</sentence>
+    <sentence>For this LPU supports two algorithms: SVM (Support Vector Machine) and EM (Expectation Maximization).</sentence>
+    <sentence>As SVM generally gives the best results (Liu et al., 2002, 2003), we exclusively use this approach.</sentence>
+    <sentence>Because typically, there will be multiple sets of characteristics that will be shared by all items in the positive set, both steps will be executed iteratively, resulting in a classifier for each discovered set of characteristics.</sentence>
+    <sentence>To compare their performance, for each classifier, two variables are used: the F-value and the classification accuracy.</sentence>
+    <sentence>The F-value measures the performance of a system on a particular class.</sentence>
+    <sentence>The F-value is defined as: where p is the precision and r is the recall (Li &amp; Liu, 2003).</sentence>
+    <sentence>The recall is defined as the ratio of the number of relevant records retrieved to the total number of relevant records in the database.</sentence>
+    <sentence>In LPU terminology, this comes down to the number of documents correctly categorized as positive to the total number of positive documents in the test set.</sentence>
+    <sentence>The precision is the ratio of the number of relevant records retrieved to the total number of irrelevant and relevant records retrieved.</sentence>
+    <sentence>In LPU terminology this becomes the number of documents correctly categorized as positive to the number of documents either correctly or falsely classified as positive.</sentence>
+    <sentence>Recall and precision are inversely related: as recall increases, precision will decrease.</sentence>
+    <sentence>This inverse relationship has to do with language: if we ease our search criteria, recall will be high, but precision will be low.</sentence>
+    <sentence>If we use stricter search criteria, our precision will be high, but our recall will be low.</sentence>
+    <sentence>To obtain a high F-value, an optimum between both variables should be found.</sentence>
+    <sentence>Accuracy is the degree of conformity of a measured or calculated quantity to its actual (true) value.</sentence>
+    <sentence>Here, this comes down to the percentage of learning set cases that was classified correctly.</sentence>
+    <sentence>It is obtained by taking the average of the positive and negative recall.</sentence>
+    <sentence>The best classifier is the one with the highest F-value and accuracy.</sentence>
+    <sentence>Usually, the classifier with the highest accuracy will also have the highest F-value, but this is not a hard requirement.</sentence>
+    <sentence>If this is not the case, one can use the Euclidean norm of these two values which defines as: Note that the construction of the classifiers is completely test set agnostic.</sentence>
+    <sentence>To build its classifiers, LPU requires nothing but the training and the unlabelled set.</sentence>
+    <sentence>Because of this, the exact same algorithm can be used for determining the classification accuracy as for performing the actual classification.</sentence>
+    <sentence>In the first case you supply a representative set of well known, manually classified, samples as test case and LPU will classify them using all previously constructed classifiers.</sentence>
+    <sentence>The classifier that produces the highest F-value and accuracy can be considered as being the most appropriate one for this type of classification.</sentence>
+    <sentence>In the second case, you must supply the complete set of documents that need to be classified.</sentence>
+    <sentence>Again LPU will classify them using all previously constructed classifiers.</sentence>
+    <sentence>This time however, as each document was by default initialized as a positive document, the produced F-values and accuracies are meaningless.</sentence>
+    <sentence>But, since the training and unlabelled sets are the same as those used while determining the accuracy and since the first test set was chosen to be representative for the second one, one may safely assume that the classifier that performed best in the accuracy determination run, will also perform best in the classification run.</sentence>
+    <sentence>Hence, the results of the classification are the ones produced by this classifier.</sentence>
+  </section>
+  <section name="Four stage text algorithm">
+    <sentence>Now that we have established that LPU (roc, svm) is the classifier of choice, we will describe the complete process of classifying unstructured information into meaningful data fit for scientific analysis.</sentence>
+    <sentence>This process consists of four stages, from which the first two are optional.</sentence>
+    <sentence>Stage 1: filtering Often, when one searches a database for documents concerning a certain firm, all documents containing that firm’s name are returned.</sentence>
+    <sentence>Usually, this is not what we want.</sentence>
+    <sentence>If you, for example, consider news items, it is not because a news item mentions a given company’s name that the news item is about that company.</sentence>
+    <sentence>It could be that the company name is mentioned because it is a competitor of the firm the news item is about, or because at some point in time they had the same managing director, etc.</sentence>
+    <sentence>To filter out these non-relevant news items, a simple heuristic is used: only retain news items addressing the name of the firm at least two times.</sentence>
+    <sentence>In addition, we exclude all double news items by retaining only one news item with the same title.</sentence>
+    <sentence>Stage 2: building the training set In order for LPU to train its learning algorithms, it needs samples of the kind of documents it has to retrieve.</sentence>
+    <sentence>These samples are known as the training set and contain the top most positive documents.</sentence>
+    <sentence>This is best done manually because this is the only way to ensure that all syntactical and semantic nuances in classifying a document are accounted for.</sentence>
+    <sentence>If this is the case, one can skip to stage 3.</sentence>
+    <sentence>However in this case we want to investigate whether the algorithm is capable of mimicking a decision process.</sentence>
+    <sentence>Therefore we build our training set based on an automatic technique, also called trainers, to make the whole accuracy process repeatable.</sentence>
+    <sentence>These trainers can be very diverse in concept and algorithm.</sentence>
+    <sentence>It is impossible to cover all possible training algorithms, so we will concentrate on one sub category and discuss three examples of heuristic, dictionary based trainers.</sentence>
+    <sentence>As their category name implies, they are based on simple dictionary based algorithms.</sentence>
+    <sentence>As such, we will start this discussion with a description of how to build the required dictionaries.</sentence>
+    <sentence>The approach works as follows: you perform a word frequency count over the entire set of news items and sort the words from most to least frequently occurring.</sentence>
+    <sentence>To prevent being flooded with words which occur only a very few times, you can set a cut-off frequency and only consider words with a frequency count larger than this cut-off point.</sentence>
+    <sentence>Abrahamson and Park (1994), who used these techniques in their research, determined the cut-off point at 30 occurrences.</sentence>
+    <sentence>Next, one manually iterates over the complete word list and eliminates all words which do not contribute to making a news item positive.</sentence>
+    <sentence>For example, the goal can be to build a dictionary of favourable words, a dictionary of accounting related words, a dictionary of juridical terms, etc.</sentence>
+    <sentence>This dictionary is now ready to be used by a trainer.</sentence>
+    <sentence>It has to be noted that most commercially available text classification algorithms provide standard dictionaries of positive and negative words.</sentence>
+    <sentence>The problem with these is that they are not domain specific.</sentence>
+    <sentence>So, words which are generally considered as negative (or positive) in certain domains will not be in that list (for example: deflation), while the list will contain many other words which do not appear in the set of documents to analyze.</sentence>
+    <sentence>The result of this will be a lower accuracy than with hand-picked dictionaries.</sentence>
+    <sentence>Depending on the trainer one will use, one may have to construct one or two dictionaries.</sentence>
+    <sentence>While the positive dictionary is always necessary, some trainers additionally require a dictionary of negative words.</sentence>
+    <sentence>In other words, a dictionary containing words which contribute to classifying documents as negative.</sentence>
+    <sentence>For some classifications, such as determining which news items are favourable and which are not, this poses no real problem.</sentence>
+    <sentence>It is no more difficult to build a dictionary of unfavourable words than it is to build one of favourable words.</sentence>
+    <sentence>For other classification on the other hand, such as selecting the accounting related documents, this is more complex.</sentence>
+    <sentence>It is easy to determine which words are typically accounting related, but it is much more difficult to determine which words are not.</sentence>
+    <sentence>The first trainer we will discuss is the one put forward by Abrahamson and Park (1994) which they used to analyze how corporate officers conceal negative organizational outcomes from shareholders.</sentence>
+    <sentence>It only requires a positive dictionary and assigns each document a score based on the total number of positive (or in the case of Abrahamson and Park negative) words it contains.</sentence>
+    <sentence>Consequently they used this score to sort the news items in descending order, i.e.</sentence>
+    <sentence>the news items containing the most positive words come first and the one having the least amount of positive words comes last.</sentence>
+    <sentence>Although this is a very simple heuristic, Abrahamson and Park (1994) have shown it works rather well in a manual analysis as they achieved a Cohen’s kappa of 77%.</sentence>
+    <sentence>Starting from this basic trainer, we have built two extensions.</sentence>
+    <sentence>The first calculates the document scores based on the following equation: This approach has two important advantages.</sentence>
+    <sentence>The first one is that the presence of negative words will lower the final score.</sentence>
+    <sentence>Its added value can easily been seen if one considers two documents with an equal amount of positive words, but where the second one also has a fair share of negative ones.</sentence>
+    <sentence>It is intuitively logical that the second one should score less than the first one.</sentence>
+    <sentence>The second advantage is that it corrects the influence of document length.</sentence>
+    <sentence>Indeed, long documents have more words, and as such, a higher probability of containing an element from the positive (or negative) dictionary.</sentence>
+    <sentence>As a result, in the first heuristic, longer documents will be favoured in respect to shorter ones.</sentence>
+    <sentence>Now that we divide the score by the total number of detected matches, this problem is corrected.</sentence>
+    <sentence>However, after some experiments, we discovered that this heuristic had its own problems.</sentence>
+    <sentence>For example, in the absence of negative words, a document with many positive words is scaled exactly as high as a document with only a few positive words.</sentence>
+    <sentence>Since 100/100 equals 1/1, they both receive a score of 1, which is not correct.</sentence>
+    <sentence>In an attempt to solve this, we constructed a third trainer.</sentence>
+    <sentence>This one scores its documents based on the following equation: This one has all the advantages of the second algorithm without its downside.</sentence>
+    <sentence>Stage 3: determining the optimal training set In this third stage we have to determine the optimal training set size.</sentence>
+    <sentence>If chosen too small, there is not enough information to optimally learn all the nuances, if chosen too large, the documents start to contain too many negative elements which will confuse the learning algorithm.</sentence>
+    <sentence>The optimal training set size depends upon the type of document one wants to classify and the quality of the trainer used.</sentence>
+    <sentence>The best approach to determine the optimum is by an iterative approach where we execute LPU in accuracy mode.</sentence>
+    <sentence>Here, the test set contains a series of well-known validation documents and the F-value and accuracy will tell us how well we did.</sentence>
+    <sentence>The training set size with the highest F and A values can be considered as the optimum.</sentence>
+    <sentence>To find the optimum, a series of different algorithms can be used.</sentence>
+    <sentence>One could use formally described optimum finding techniques such as a hill climber or simulated annealing, or one could just perform a large number of test runs and select the best performing one.</sentence>
+    <sentence>Stage 4: classifying the news items Finally, once we have the optimal training set size, we can run LPU in classification mode.</sentence>
+    <sentence>Here, the test set contains all documents from the unlabelled set and the output shows the classification result of each of those documents.</sentence>
+  </section>
+  <section name="Building test sets">
+    <sentence>You can either manually select which documents will be included in the test set and what their classification should be or use an automated, algorithm based, training set builder.</sentence>
+    <sentence>Since we want this accuracy test to be repeatable, we decide to build a test set using the algorithm based approach.</sentence>
+    <sentence>Three sampling algorithms were used building a training set using only the desired test set size, S. The first and simplest one is called MinMax and builds a test set of obvious samples.</sentence>
+    <sentence>For this, it selects the S/2 most positive news items and the S/2 most negative news items.</sentence>
+    <sentence>The closer S approaches the unlabelled set size, the higher the level of difficulty.</sentence>
+    <sentence>The second sampling algorithm, which is called systematic sampling, builds a test set where the samples are uniformly distributed over the entire range of training scores.</sentence>
+    <sentence>This test set gives a good indication of the granularity of the classification process.</sentence>
+    <sentence>The closer the score get to 0, the less pronounced the news item is either positive or negative, and the more difficult it becomes to classify it.</sentence>
+    <sentence>As such, the F-value and accuracy of this test give a good indication of how fussy news items may become before the classifier becomes unreliable.</sentence>
+    <sentence>The news items whose scores are the closest to the results of the following formula are selected whereas n indicates the place of the ordered news item which has a value between 1 and the total amount of news items.</sentence>
+    <sentence>The third and last sampling algorithm, also referred to as stratified sampling, builds a test set where the samples are uniformly selected from the entire set of news items, sorted according to their score.</sentence>
+    <sentence>Since the score distribution is almost always a Gaussian, there will be more samples from the central regions than from the outer ones.</sentence>
+    <sentence>Because of this, this test is a very challenging one as there are almost no obvious cases and many fuzzy ones.</sentence>
+    <sentence>The news items with position given by the following equation are selected: whereas n indicates the place of the ordered news item which varies from 0 until the total amount of news items.</sentence>
+    <sentence>Therefore, a test set built this way is, due to fundamental properties of probabilistic distribution, a good representation for the complete unlabelled test set.</sentence>
+  </section>
+  <section name="The software tool">
+    <sentence>Because it is rather complicated to use LPU directly, and the complete process is rather long and work intensive, a software tool is developed which aids the researcher through the different stages of the classification process.</sentence>
+    <sentence>Its input is the complete set of unstructured data and its output is the list of classified documents.</sentence>
+    <sentence>Currently, our software tool only supports Lexis-Nexis as information source.</sentence>
+    <sentence>Since each information source uses its own non-standardized data format, a document parser, which converts the proprietary format into a common internal representation, has to be written for each source one wants to use.</sentence>
+    <sentence>Each document is split into two sections: header information such as title, release date, author, etc., which is read-only, and the body text which can, if desired, be edited.</sentence>
+    <sentence>This can be useful for documents that contain only a few relevant paragraphs.</sentence>
+    <sentence>As an example we mention the weekly overview news items one finds in the daily press.</sentence>
+    <sentence>Once the documents have been read into our tool, you can optionally filter them for relevance.</sentence>
+    <sentence>The algorithm used for this is the one described in stage 1 of Section 7.</sentence>
+    <sentence>Although we currently only provide two filter algorithms, if required, more can easily be added.</sentence>
+    <sentence>In order to allow the necessary visual inspection, non-relevant documents are not deleted, but simple marked as non-relevant and visually greyed-out.</sentence>
+    <sentence>In order to simplify the dictionary building activity, our software tool can generate a frequency count list of all encountered words.</sentence>
+    <sentence>Optionally, if you are not interested in the complete word list, you can either provide a relative or absolute cut-off frequency.</sentence>
+    <sentence>Filtering out the positive or negative words remains manual work.</sentence>
+    <sentence>Once this is done, in order to create the training set, you can choose between the three trainers described above, or manually select the training set members.</sentence>
+    <sentence>Depending on the training algorithm’s needs, they will ask the user to supply the positive and negative dictionary of choice.</sentence>
+    <sentence>If you want to execute an LPU accuracy run, you need to build a test set.</sentence>
+    <sentence>This can either be done manually or using one of the three algorithms described in Section 8.</sentence>
+    <sentence>Moreover, the tool can be instructed to start LPU in accuracy test or in classification test mode.</sentence>
+    <sentence>LPU will generate a series of output files from which one contains the actual results.</sentence>
+    <sentence>An output filter will convert these results into a CSV-file (Comma Separated Values).</sentence>
+    <sentence>This way it can be easily read in popular spreadsheets such as Microsoft Excel and OpenOffice Calc.</sentence>
+    <sentence>Furthermore, this file format is recognized by all major statistical packages as there are R, S-plus, SPSS, STATA, etc.</sentence>
+    <sentence>As with the input parsers, the application allows the easy integration of additional output filters.</sentence>
+    <sentence>Fig 1 shows a screenshot of this software tool.</sentence>
+    <sentence>A screenshot of the software Fig 1.</sentence>
+    <sentence>A screenshot of the software.</sentence>
+  </section>
+  <section name="Evaluation">
+    <sentence>In Liu et al.</sentence>
+    <sentence>(2003) the overall reliability and performance of LPU, as well as its applicability in a wide range of applications, has already been extensively described.</sentence>
+    <sentence>Therefore, for this evaluation, we will only investigate how well it classifies news items relevant for accounting research.</sentence>
+    <sentence>The success of the described methodology will be measured based on the accuracy with which LPU manages to classify news items in the way it was thought to do so.</sentence>
+    <sentence>Although it would be better to build the training and test sets manually, this would be very subjective and non-repeatable.</sentence>
+    <sentence>Moreover, we want to evaluate whether the LPU-algorithm is able to mimic our definition of positive and negative in an accounting sample.</sentence>
+    <sentence>Therefore, we have chosen to build the test and training sets in an objective and repeatable manner using one of the described automated algorithms.</sentence>
+    <sentence>The closer the accuracy is to 100%, the more of the implicitly conveyed nuances have been detected and correctly applied.</sentence>
+    <sentence>For this evaluation, we used Lexis-Nexis to retrieve the complete media coverage of 20 randomly selected US-firms during the period 1995–2000, which resulted in 3381 news items.</sentence>
+    <sentence>After applying the relevance filter, we retained a set of 1555 news items.</sentence>
+    <sentence>The goal of this classification was to determine which news items were favourable and which were unfavourable for their respective companies.</sentence>
+    <sentence>To identify the subtle differences between favourable and unfavourable news items in a way as objective and repeatable as possible, a word frequency count based on the complete news item set was constructed.</sentence>
+    <sentence>From this list, all words with a frequency of at least 30 were retained.</sentence>
+    <sentence>A human coder examined this list and marked every word that might denote either an economically negative or positive connotation.</sentence>
+    <sentence>From this, two dictionaries were created.</sentence>
+    <sentence>The negative one consisted of 76 words and the positive one of 79 words (see respectively Tables 1 and 2).</sentence>
+    <sentence>From these dictionaries, the training set was constructed using the third training heuristic, the one that divides the score by the total number of words in the news item.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Positive words dictionary.</sentence>
+    <sentence>Word Frequency Word Frequency Accomplished 60 Honor 47 Achieve 168 Honored 46 Achieved 128 Hopeful 32 Achievement 52 Improve 240 Achievements 33 Improved 225 Achieving 35 Improvement 183 Active 253 Improvements 117 Actively 71 Improving 113 Adequate 58 Normalized 45 Adequately 33 Obtain 131 Advantage 132 Obtained 141 Advantages 31 Obtaining 35 Approved 268 Opportunities 271 Attractive 78 Opportunity 180 Benefit 301 Optimistic 71 Benefits 312 Pleased 351 Better 409 Popular 109 Bonus 34 Positive 231 Boost 70 Positively 33 Boosted 46 Powerful 36 Capabilities 101 Profitable 218 Capability 39 Profitably 41 Confidence 73 Profits 289 Confident 87 Promoted 145 Effective 411 Promotion 46 Effectively 61 Proud 56 Efficiencies 96 Reliability 68 Efficiency 67 Reliable 46 Efficient 63 Satisfaction 53 Excellence 84 Solution 69 Excellent 108 Solutions 190 Excited 117 Strength 99 Exciting 64 Strengthen 80 Favorable 101 Strong 568 Gain 391 Stronger 62 Gained 80 Succeed 31 Gaining 33 Success 191 Gains 150 Successful 258 Good 461 Successfully 123 Happy 48 Table 2.</sentence>
+    <sentence>Negative words dictionary.</sentence>
+    <sentence>Word Frequency Word Frequency Adverse 121 Hurt 111 Adversely 45 Improperly 65 Aggressive 104 Inability 31 Aggressively 47 Indebtedness 131 Alerts 32 Kickbacks 49 Bad 135 Layoffs 92 Bankruptcy 678 Lose 44 Blamed 60 Losing 74 Collapsed 38 Loss 2998 Concern 116 Losses 324 Concerned 46 Lost 292 Concerning 431 Misleading 275 Concerns 129 Misrepresenting 32 Crashed 35 Miss 73 Crisis 62 Missed 34 Critical 104 Negative 99 Damage 165 Negatively 56 Damaged 33 Poor 293 Damages 175 Problem 164 Death 79 Problems 382 Deficit 114 Reorganization 232 Delay 41 Resignation 43 Delayed 42 Resigned 110 Delays 108 Shortages 66 Delisting 32 Suffered 86 Difficult 93 Tough 33 Difficulties 69 Traits 32 Disappointed 59 Trouble 54 Disappointing 36 Troubled 73 Disaster 41 Troubles 35 Discontinued 120 Unable 55 Doubtful 48 Unfavorable 36 Dramatically 36 Unprofitable 31 Expensive 80 Violated 64 Failed 126 Violating 50 Failing 49 Violation 34 Failure 92 Violations 137 Fear 43 Weak 86 In a first experiment we wanted to determine the influence of the training set size on the accuracy and this for different levels of difficulty.</sentence>
+    <sentence>To simulate an increasing level of difficulty, we used the MinMax test set sampling builder with an increasing test set size.</sentence>
+    <sentence>As its size increases, the test set will include news items whose classification becomes less and less obvious.</sentence>
+    <sentence>In one extreme, the test set only contains the two most obvious news items and in the other extreme, it contains them all.</sentence>
+    <sentence>Fig 2 shows this relation for three training set sizes: the 10% most obvious news items, the 50% most obvious news items and for all news items.</sentence>
+    <sentence>Table 3 contains the complete set of results.</sentence>
+    <sentence>The influence of the test and training set sizes on the accuracy Fig 2.</sentence>
+    <sentence>The influence of the test and training set sizes on the accuracy.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Influence of the test and training set sizes on the accuracy.</sentence>
+    <sentence>Training set size Test set size (MinMax) Positive news items 10% (156) 20% (310) 30% (467) 40% (622) 50% (778) 60% (933) 70% (1089) 80% (1244) 90% (1400) 100% (1555) Percent Amount F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy 1 8 13.79 51.92 7.32 50.97 4.96 50.75 3.75 50.48 3.02 50.39 2.53 50.38 2.17 50.32 1.90 50.16 1.69 50.14 1.52 50.13 10 78 73.17 78.85 47.29 65.48 37.06 61.46 30.05 58.84 25.17 57.20 21.46 56.06 18.94 55.19 17.03 54.58 15.28 54.07 13.84 53.54 20 155 88.57 89.74 80.31 83.55 68.36 76.02 58.64 70.74 51.22 67.13 46.31 64.95 42.01 62.99 38.40 61.58 35.20 60.29 31.41 58.69 30 233 94.59 94.87 88.89 90.00 86.75 88.22 79.77 82.96 72.79 78.28 67.78 75.13 63.41 72.45 58.75 69.86 55.03 67.79 51.87 66.09 40 311 96.73 96.79 91.78 92.26 90.49 91.22 89.90 90.68 82.89 85.09 78.24 81.46 73.86 78.42 68.73 74.76 65.47 72.50 63.61 70.33 50 389 98.04 98.08 95.30 95.48 93.88 94.22 93.60 93.89 92.77 93.19 87.59 88.42 83.60 85.12 77.67 79.98 74.70 77.64 72.35 75.80 60 466 98.72 98.72 97.05 97.10 95.77 95.93 95.87 95.98 96.04 96.14 94.60 94.75 91.52 91.92 86.13 86.98 82.80 84.21 79.94 81.79 70 544 99.35 99.36 97.69 97.74 96.46 96.57 96.56 96.62 96.23 96.27 95.24 95.28 94.16 94.21 88.16 88.34 85.14 85.71 82.83 83.59 80 622 99.35 99.36 99.02 99.03 98.48 98.50 97.76 97.75 96.46 96.40 95.38 95.28 94.60 94.49 90.95 90.51 88.19 98.86 86.41 86.04 90 699 98.70 98.72 99.35 99.35 98.70 98.72 97.92 97.91 96.60 96.53 95.72 95.61 95.02 94.86 91.46 90.92 90.54 89.93 88.54 87.84 100 777 99.36 99.36 99.68 99.68 99.14 99.14 98.25 98.23 96.62 96.53 95.55 95.39 95.15 94.95 91.62 91.00 90.81 90.14 90.12 89.32 Two important observations can be made.</sentence>
+    <sentence>The first one is that, for any given training set sizes, as the test set becomes more complex, the accuracy drops.</sentence>
+    <sentence>Put in other words, the more news items that are considered as important, the bigger the training set has to be.</sentence>
+    <sentence>This is an important observation because we are not always interested in all news items.</sentence>
+    <sentence>Often, we only care about the X% most obvious samples.</sentence>
+    <sentence>In these cases, a strongly reduced training set can be sufficient, which can be important if one has to build it by hand.</sentence>
+    <sentence>The second observation is about the influence of the training set size on the accuracy.</sentence>
+    <sentence>Table 4 shows, for a series of training set sizes, the recall of the positive (Rpos) and negative (Rneg) test set samples.</sentence>
+    <sentence>As already briefly mentioned above, the larger the training set, the easier it becomes to correctly classify positive news items, which results in a gradually increasing positive recall.</sentence>
+    <sentence>However, since the additional news items gradually contain more and more negative elements, it will become increasingly difficult to correctly classify negative news items, which can be seen by the decreasing negative recall.</sentence>
+    <sentence>The same observation holds for different test set sizes.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>The influence of the training set size on the positive and negative recall.</sentence>
+    <sentence>Training set size Test set size Positive news items 10% 50% 100% % Amount Rneg Rpos Rneg Rpos Rneg Rpos 1 8 96.15 7.69 99.23 1.54 99.49 0.77 10 78 100.00 57.69 100.00 14.40 99.61 7.46 20 155 100.00 79.49 99.75 34.52 98.46 18.92 30 233 100.00 89.74 98.46 57.41 95.62 26.55 40 311 98.72 94.87 97.94 72.24 88.80 51.87 50 389 100.00 96.15 98.97 87.40 88.29 63.32 60 466 98.72 98.72 94.86 94.34 88.20 72.59 70 544 98.72 98.72 93.83 94.86 88.03 79.15 80 622 100.00 98.73 94.66 97.94 83.27 88.80 90 699 100.00 97.44 94.60 98.46 81.72 93.95 100 777 98.72 100.00 93.83 99.23 81.21 97.43 For the news items and training algorithm used in this experiment, the optimal training set size is at 100% of the positive news items, with an F-value of 90.12 and an accuracy of 89.32.</sentence>
+    <sentence>In this particular experiment, with increasing training set sizes, the decrease of Rneg is less pronounced than the increase of Rpos.</sentence>
+    <sentence>Because of this, the largest possible training set size is the optimal one.</sentence>
+    <sentence>This is however not necessary always the case.</sentence>
+    <sentence>One can easily imagine that for another news item set or training algorithm, at some point, the decrease of Rneg can surpass the increase of Rpos.</sentence>
+    <sentence>In this case, the optimum will be somewhere in the middle.</sentence>
+    <sentence>Therefore, it is important to determine, for each new news item set or training algorithm, the optimum size.</sentence>
+    <sentence>In a second experiment, we want to determine the test set size that is minimally required in order to accurately predict the F-value and accuracy of a full classification.</sentence>
+    <sentence>When using automated algorithms, a test set consisting of the entire news item set can easily be created.</sentence>
+    <sentence>The results of which will be the exact F-value and accuracy of the full classification.</sentence>
+    <sentence>If however, the test set is created in a manual fashion, this approach is not an option.</sentence>
+    <sentence>Here it is important to limit the size of this test set as much as possible while still remaining accurate.</sentence>
+    <sentence>For this experiment, we used the third test set sampling algorithm, the stratified sampling.</sentence>
+    <sentence>If we assume that in the complete news item list the news item scores are randomly distributed, we can select a sub set of news items and still have the same score distribution.</sentence>
+    <sentence>Table 5 shows the prediction error (in %) when using certain test set sizes, and this for the different training set sizes.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Influence of the test set size on the prediction error.</sentence>
+    <sentence>Training set size Test set size Positive news items 1% (16) 2.5% (40) 5% (78) 7.5% (120) 10% (156) % Amount F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy F-value Accuracy 1 8 −16.66 3.07 −8.00 −2.37 −3.48 −1.15 −1.76 −0.70 −1.01 −0.51 10 78 13.84 6.48 13.84 3.54 8.84 2.26 1.34 0.21 1.79 0.33 20 155 11.41 5.75 13.23 3.69 5.32 2.28 5.82 3.69 5.04 1.64 30 233 15.51 7.27 0.02 −1.41 −1.70 −0.58 −3.94 −2.24 3.27 1.35 40 311 17.46 11.51 3.00 2.83 3.96 −0.18 0.45 −0.50 3.78 0.46 50 389 5.68 5.21 3.60 0.80 9.02 2.91 −3.58 −2.53 4.66 2.72 60 466 −7.56 −6.45 2.14 1.79 2.16 2.30 −2.20 −1.54 2.48 2.30 70 544 −11.29 −10.53 −4.35 −3.91 2.31 2.82 −3.12 −2.24 0.71 0.90 80 622 −1.09 −2.20 −1.39 −1.46 1.41 1.42 −0.20 0.21 −0.77 −1.14 90 699 −5.58 −6.28 −4.48 −3.66 0.74 0.66 0.85 1.17 −0.90 −1.26 100 777 −9.88 −10.68 −2.90 −3.18 −0.36 −0.42 0.04 0.15 −1.90 −2.35 As shown in Table 5, a test set size of 2.5% is already sufficient to predict the actual F-value and accuracy with a 4% error margin.</sentence>
+    <sentence>From this, we can conclude that if we manually build a test set containing only 2.5% of all news items, we get a good estimate of how well LPU will perform in classifying all news items.</sentence>
+    <sentence>In our third experiment, we evaluated the influence of the training set building algorithms.</sentence>
+    <sentence>To do this, we compared the F-value and accuracy achieved with a test set of 100%, using each of the described training set builders.</sentence>
+    <sentence>As all three algorithms are based on the same basic feature: word counts, it comes as no surprise that the optimal trainer set size for each of them is the same: 777 news items.</sentence>
+    <sentence>Do note that when using the trainer originally proposed by Abrahamson and Park (1994), the number of positive news items, i.e.</sentence>
+    <sentence>news items with a score &gt;0, is 1201 instead of 777 when using one of the other trainers.</sentence>
+    <sentence>Their trainer reaches a maximal F-value of 87.46 and accuracy of 86.36.</sentence>
+    <sentence>When using the second proposed training set builder, an F-value of 90.00 and an accuracy of 89.19 were achieved.</sentence>
+    <sentence>The third one achieves and F-value of 90.12 and accuracy of 89.32.</sentence>
+    <sentence>These findings are summarized in Table 6.</sentence>
+    <sentence>Table 6.</sentence>
+    <sentence>Influence of the training algorithm on the accuracy.</sentence>
+    <sentence>Training set size Training algorithm Original (p − n)/(p + n) (p − n)/tot Amount F-value Accuracy F-value Accuracy F-value Accuracy 78 31.78 58.56 23.98 55.53 13.84 53.54 155 44.40 62.29 35.03 57.27 31.41 58.69 233 59.20 68.60 48.92 62.10 51.87 66.09 311 67.02 72.27 58.73 66.09 63.61 70.33 389 72.36 75.23 57.44 66.15 72.35 75.80 466 76.82 78.44 73.94 75.55 79.94 81.79 544 80.87 81.79 77.61 78.31 82.83 83.59 622 82.72 82.69 82.17 82.05 86.41 86.04 699 84.11 83.66 86.87 86.16 88.54 87.84 777 87.46 86.36 90.00 89.19 90.12 89.32 855 84.38 81.98 – – – – 932 81.97 78.31 – – – – 1010 80.35 75.61 – – – – 1088 77.81 71.56 – – – – 1166 75.52 67.63 – – – – 1201 74.57 65.89 – – – – It is important to notice that the maximum accuracy of the three approaches is more or less the same.</sentence>
+    <sentence>From this we concluded that LPU is training algorithm agnostic.</sentence>
+    <sentence>No matter which training algorithm was used, the achieved accuracy was around 88%.</sentence>
+    <sentence>Furthermore, the first training algorithm nicely demonstrates the statements made above about the location of the optimal training set size.</sentence>
+    <sentence>With this training algorithm the optimal is not at the maximum number of available positive news items!</sentence>
+    <sentence>Finally, in the fourth experiment, we wanted to determine how well training sets constructed with the proposed algorithms corresponds with human intuition.</sentence>
+    <sentence>For this experiment, two human codifiers manually build a test set of 40 news items, which comes down to 2.5% of the total number of available news items.</sentence>
+    <sentence>To minimize the change of human classification errors, we only considered news items that were obviously positive or negative for all two coders.</sentence>
+    <sentence>Furthermore the news items were chosen to ensure that 50% of them would be positive and 50% negative.</sentence>
+    <sentence>Table 7 lists the selected news items.</sentence>
+    <sentence>Table 7.</sentence>
+    <sentence>List of manually selected test news items.</sentence>
+    <sentence>Company Negative Positive AgriBio 19 37 29 269 Dorsey 3 94 Coram 11 97 46 128 79 160 Family Golf 30 93 Jenna Lane 1 8 Kitty Hawk 43 108 92 133 99 186 Matthews 16 64 New York Bagel 56 76 Premier Laser 15 42 124 205 Ridgeview 52 50 Sunterra 28 111 35 172 Waxman 52 45 157 115 For each of the described training set builder, the test was ran using its optimal training set size as determined in the previous experiment.</sentence>
+    <sentence>Table 8 shows the results.</sentence>
+    <sentence>The third training algorithm seems to correspond best to human intuition and is as such the advised trainer when you do want to use LPU but do not have the time or budget to build the training set manually.</sentence>
+    <sentence>Table 8.</sentence>
+    <sentence>Correspondence between intuition and automated training sets builders.</sentence>
+    <sentence>Original (p − n)/(p + n) (p − n)/tot 55 82.5 87.5</sentence>
+  </section>
+  <section name="A practical approach">
+    <sentence>If you want to build the test and training sets in a manual manner, the following practical approach can be followed: 1.</sentence>
+    <sentence>First you need to determine the level of news item obviousness you want.</sentence>
+    <sentence>Once this is known, you have to calculate the number of news items you need as a test set.</sentence>
+    <sentence>In this specific sample, this will be about 2,5% of the number of relevant news items.</sentence>
+    <sentence>How many news items can be considered as relevant depends on the obviousness level selected in step one.</sentence>
+    <sentence>Once the test set is determined, the training set building can start.</sentence>
+    <sentence>This is an iterative process.</sentence>
+    <sentence>In the beginning, you start small and regularly check the achieved F-value and accuracy.</sentence>
+    <sentence>Once the values are above the predetermined threshold, you can stop adding news items.</sentence>
+    <sentence>If however, you see that the accuracy starts to decline again or that it reached the maximum number of positive news items, you have to decide whether the current F-value and accuracy are acceptable or not.</sentence>
+    <sentence>If not, you can consider to raise the obviousness level or to select another training approach.</sentence>
+    <sentence>Once the F-value and accuracy are within acceptable ranges, you can perform the full classification.</sentence>
+  </section>
+  <section name="A real-life application">
+    <sentence>One of the main reasons why we embarked on this methodological study was that we needed something like this for our overall research goal: studying the impact of a firm’s media reputation on a company.</sentence>
+    <sentence>Currently, we are applying the classification process as described in this contribution in a research project that attempts to classify all media exposure during the years 2001–2005 of 181 listed UK companies as either favourable or unfavourable for the given company.</sentence>
+    <sentence>In total, Lexis-Nexis returned about 54,109 matching news items.</sentence>
+    <sentence>Subsequently, a test set was constructed manually.</sentence>
+    <sentence>The optimal training set size was determined to be 1,400 news items.</sentence>
+    <sentence>With this training set, a manually constructed test set resulted in an F-value of 90% and an accuracy of 89%.</sentence>
+    <sentence>The 80%-MinMax test achieved an F-value and accuracy of respectively 89% and 88%.</sentence>
+    <sentence>The results of this classification will be used to determine the media favourableness coefficient of the different companies and its influence on the company’s financial performance, more specifically its credit policy.</sentence>
+  </section>
+  <section name="Summary and conclusions">
+    <sentence>In this contribution we attempted to make a case for applying machine learning in accounting research.</sentence>
+    <sentence>We gave a concise overview of some important text classification algorithms and selected the most applicable one, in this case LPU.</sentence>
+    <sentence>Furthermore, a four stage text classification process, three semi-automated training set builders and three fully automated test set builders were proposed.</sentence>
+    <sentence>Given that, using CAQDAS, coding is done on an objective and repeatable way, stability and reproducibility are no issues.</sentence>
+    <sentence>The accuracy of LPU, the third requirement of reliable text classification, as identified by Krippendorff (1980), still needed to be thoroughly tested.</sentence>
+    <sentence>An elaborate analysis showed that LPU achieves an F-value and accuracy of about 90% and as such, can be used to reliably and efficiently classify large numbers of unstructured documents.</sentence>
+    <sentence>Although, in this study, we only considered classification based on the degree of favourableness of a news item, the proposed algorithm is adjustable to almost every kind of content analysis.</sentence>
+  </section>
+</article>

@@ -1,0 +1,454 @@
+Convergence analysis for pure stationary strategies in repeated potential games: Nash, Lyapunov and correlated equilibria
+
+Abstract
+
+In game theory the interaction among players obligates each player to develop a belief about the possible strategies of the other players, to choose a best-reply given those beliefs, and to look for an adjustment of the best-reply and the beliefs using a learning mechanism until they reach an equilibrium point. Usually, the behavior of an individual cost-function, when such best-reply strategies are applied, turns out to be non-monotonic and concluding that such strategies lead to some equilibrium point is a non-trivial task. Even in repeated games the convergence to a stationary equilibrium is not always guaranteed. The best-reply strategies analyzed in this paper represent the most frequent type of behavior applied in practice in problems of bounded rationality of agents considered within the Artificial Intelligence research area. They are naturally related with the, so-called, fixed-local-optimal actions or, in other words, with one step-ahead optimization algorithms widely used in the modern Intelligent Systems theory.
+
+This paper shows that for an ergodic class of finite controllable Markov games the best-reply strategies lead necessarily to a Lyapunov/Nash equilibrium point. One of the most interesting properties of this approach is that an expedient (or absolutely expedient) behavior of an ergodic system (repeated game) can be represented by a Lyapunov-like function non-decreasing in time. We present a method for constructing a Lyapunov-like function: the Lyapunov-like function replaces the recursive mechanism with the elements of the ergodic system that model how players are likely to behave in one-shot games. To show our statement, we first propose a non-converging state-value function that fluctuates (increases and decreases) between states of the Markov game. Then, we prove that it is possible to represent that function in a recursive format using a one-step-ahead fixed-local-optimal strategy. As a result, we prove that a Lyapunov-like function can be built using the previous recursive expression for the Markov game, i.e., the resulting Lyapunov-like function is a monotonic function which can only decrease (or remain the same) over time, whatever the initial distribution of probabilities. As a result, a new concept called Lyapunov games is suggested for a class of repeated games. Lyapunov games allow to conclude during the game whether the applied strategy provides the convergence to an equilibrium point (or not). The time for constructing a Potential (Lyapunov-like) function is exponential. Our algorithm tractably computes the Nash, Lyapunov and the correlated equilibria: a Lyapunov equilibrium is a Nash equilibrium, as well it is also a correlated equilibrium. Validity of the proposed method is successfully demonstrated both theoretically and practically by a simulated experiment related to the Duel game.
+
+Keywords
+Nash equilibrium
+Lyapunov equilibrium
+Correlated equilibrium
+Convergence
+Complexity analysis
+Repeated Markov games
+Best-reply analysis
+
+1. Introduction
+1.1. Brief review
+
+An agent blindly takes directives without thinking: it is an entity capable executing particular tasks without explicit instruction. An agent is considered intelligent if it can be autonomous, flexible, and social. To behave intelligently an agent requires decision making. In general, artificial intelligence (AI) makes emphasis in methods related to machine learning, knowledge representation and reasoning, decision making under uncertainty, planning, and other well-studied areas. Game theory attempts to model the principles of rational interaction among players. It is the same goal of the modern AI research which is focusing on studying modern multiagent intelligent systems and how to represent intelligent behavior. In repeated games the interaction among players obligates each agent to look for an adjustment of the best-reply strategies and the beliefs using a learning mechanism until they reach an equilibrium point. The best-reply strategy approach is frequently applied, for example, in repeated games related to intelligent systems such as “Nim game” , “Three Cards two persons game” , “Red-Black card” , “Russian Roulette” , “A Pursuit game” , “Fighter-Bomber Duel” , “Simplified 2-Person Poker” , “United Nations Security Council” , “Bargaining game” , “Battle of the Sexes” (see (Jones, 1980)) and “ Duoligopolistic Market” , “Taxation and Provision of Government Service” , “Oil Price Arrangement” , “Capitalist Worker Treatment” , “Consumption Stock Pollution Equilibrium” , “Innovation Production Dilemma (R&D competition)” , “ Nonrenewable Resources: The Doomsday Problem” (see (Dockner, Jorgensen, Van Long, & Sorger, 2000)). The fundamental problem facing best-reply dynamics is that it does not predict how players arrive at an equilibrium point.
+
+The process of finding an equilibrium point can be justified as a mathematical shortcut represented by the result of a learning algorithm (Fudenberg & Levine, 1999; Poznyak, Najim, & Gomez-Ramirez, 2000) or an evolutionary process. But, the learning or evolutionary justifications logically imply that beliefs and choices will not be consistent if players do not have time to learn or evolve.
+
+A realization of any rational (expedient) strategy in a conflict situation (or game) is naturally related with its execution by a computer algorithm which is the heart of the Artificial Intelligence area. What is Artificial Intelligence? It is the search for a way to map intelligence into mechanical hardware and enable a structure into that intelligent system to formalize thought. Following Russell and Norvig (1995) Artificial Intelligence is the study of human intelligence and actions replicated artificially, such that the resultant bears to its design a reasonable level of rationality. The best-reply strategies analyzed in this paper represent the most frequent type of an artificial intelligence algorithm applied in practice and realized within bounded rationality.
+
+The best-reply dynamics results in a natural implementation of the behavior of a Lyapunov-like function. The dynamics begins by choosing an arbitrary strategy profile of the players (Myerson, 1978; Nash, 1951; 1996; 2002; Selten, 1975). Then, in each step of the process some player exchanges his strategy to be the best-reply to the current strategies of the other players. A Lyapunov-like function monotonically decreases and it results in the elimination of a strictly-dominated strategy from the strategy space. As a consequence, the complexity of the problem is reduced. In the next step, are eliminated the strategies that survived the first elimination round and are not best-reply to some strategy profile, and so forth. This process ends when the best-reply (Lyapunov-like function) converges to a Lyapunov equilibrium point. Therefore, a Lyapunov game has also the benefit that it is common knowledge of the players that only best-reply are chosen. By the natural evolution of a Lyapunov-like function a strategy played once is not played again, no matter what.
+
+The best-known solution concept of the best-reply dynamics is the Nash equilibrium (Nash, 1951; 1996; 2002), in which each player chooses a randomized strategy, and each player is not able to increase her/his expected utility by unilaterally deviating to a different strategy. The correlated equilibrium (Aumann, 1974; 1987) is an alternative solution concept. While in a Nash equilibrium players randomize independently, in a correlated equilibrium players are allowed to coordinate their behavior “based on signals” from an intermediary. Applied mathematicians, operation researchers, electrical engineers and mathematical economists have studied the computation of solution concepts since the early days of game theory (Goldberg & Papadimitriou, 2006; Govindan & Wilson, 2003; Jiang & Leyton-Brown, 2015; Jiang, Leyton-Brown, & Bhat, 2011; van der Laan, Talman, & van der Heyden, 1987; Lemke & Howson, 1964; von Neumann & Morgenstern, 1944; Papadimitriou, 2005; Papadimitriou & Roughgarden, 2008; 2011; Scarf, 1967) .
+1.2. Related work
+
+Potential games were introduced by Monderer and Shapley (1996). However, several definitions of potential games have been introduced in the literature. Voorneveld (2000) suggested the best-reply potential games allowing infinite improvement paths by imposing restrictions only on paths in which players that can improve actually deviate to a best-reply. Dubey, Haimanko, and Zapechelnyuk (2006) presented the notions of pseudo-potential games. All these classes of potential games start with an arbitrary strategy profile, and using a single real-valued function on the strategy space a player that can improve deviate to a better strategy. The iteration process converges to a Nash equilibrium point. Potential games embrace many practical application domains including dominance-solvable games, routing games and shortest-path games (Engelberg & Schapira, 2011; Fabrikant, Jaggard, & Schapira, 2013; Fabrikant & Papadimitriou, 2008). In general, all the classes of potential games reported in the literature are contained into the definition of Lyapunov games.
+
+In this paper we show that for a ergodic class of finite controllable Markov chains games the best-reply strategies lead to one of the Lyapunov/Nash equilibrium points obligatory. As well, we show that the Lyapunov/Nash equilibrium point solution is a correlated equilibrium. This conclusion is done by the Lyapunov Games concept which is based on the designing of an individual Lyapunov function (related with an individual cost function) which monotonically decreases (non-increases) during the game.
+
+In Lyapunov games (Clempner, 2006; Clempner & Poznyak, 2011; 2015) a natural existence of the equilibrium point is ensured by definition. Clempner (2015) suggested that the stability conditions and the equilibrium point properties of Cournot and Lyapunov meet in potential games. In general, convergence to an equilibrium point is also guaranteed to exist. A Lyapunov-like function monotonically decreases and converges to a Lyapunov equilibrium point tracking the state-space in a forward direction. The best-reply dynamics result in a natural implementation of the behavior of a Lyapunov-like function. As a result, a Lyapunov game has also the benefit that it is common knowledge of the players that only best-reply is chosen. In addition, a Lyapunov equilibrium point presents properties of stability that are not necessarily presented in a Nash equilibrium point.
+
+A game is said to be stable with respect to a set of strategies if the iterated process of strategies (Guesnerie, 1996; Hofbauer & Sandholm, 2009; Pearce, 1984; Tan & Costa Da Werlang, 1988) (in our case, the best-reply dynamics) selection converges to an equilibrium point, without considering what are the initial strategies the players start with. To converge to an equilibrium point every player selects his/her strategies by optimizing his/her individual cost function looking at the available strategies of other players (Brgers, 1993; Hilas, Jansen, Potters, & Vermeulen, 2003; Osborne & Rubinstein, 1994). Any deviation from such an equilibrium point would return back to the same equilibrium point. This is because the natural evolution of the iterated process of strategies selection that tries to follow the optimal strategies and rectifies the trajectory to reach a stable equilibrium point (this is the case when the equilibrium point is unique) (Bernheim, 1984; Moulin, 1984; Osborne & Rubinstein, 1994; Pearce, 1984). In this sense, we can state that a Lyapunov equilibrium point is a strategy once being in the stable state of the strategies choices it is no player’s interest to unilaterally change strategy. An important advantage of the Lyapunov games is that every ergodic system can be represented by a Lyapunov-like function. For a repeated (ergodic) game a recursive mechanism is implemented to justify an equilibrium play (Clempner & Poznyak, 2011, 2013). If the ergodic process of the stochastic game converges, then we have reached an equilibrium point, and moreover, a highly justifiable one (Poznyak et al., 2000).
+1.3. Main contribution
+
+We present a method for the construction of a Lyapunov-like function (with a monotonic behavior) that has a one-to-one relationship with a given cost-function. Being bounded from below, a decreasing Lyapunov-like function provides the existence of an equilibrium point for the applied pure and stationary local-optimal strategies (Gimbert & Zielonka, 2009; 2012) and, besides, ensures the convergence of the cost-function to a minimal value (Clempner & Poznyak, 2011). The resulting vector Lyapunov-like function is a monotonic function whose components can only decrease over time. As a result, a repeated game may be represented by a one-shot game. It is important to note that in our case, the problem becomes more complicated to justify because repeated games are transformed in one-shot games replacing the recursive mechanism by a Lyapunov-like function.
+
+The Lyapunov-like functions are used as forward trajectory-tracking functions. Each applied local-optimal action produces a monotonic progress toward the equilibrium point. Tracking the state-space in a forward direction allows the decision maker to avoid invalid states that occur in the space generated by a backward search. In most cases (when probabilistic characteristics are unknown or incomplete (Poznyak et al., 2000)), the forward search gives the impression of being more useful than the backward search. The explanation is that in the backward direction, when the case of incomplete final states arises, invalid states appear, which cause obvious problems. Certainly, a feed-forward strategy cannot guarantee that the global minimization process is achieved: it usually leads to a local optimal solution. But in many practical situations (such as the weights-adjustment process in Neural Networks (Poznyak, Sanchez, & Yu, 2001) or in Petri-nets (Murata, 1989)) such strategies significantly improve the behavior of the controlled Markov process.
+
+We will investigate the class of the, so-called, pure and stationary local-optimal policies (strategies). Such strategies realizes a local (one-step) predicted optimization assuming that the past history Fn (states (s) and actions (a)) cannot be changed evermore: a policy {dn}n ≥ 0 is said to be local-optimal if it minimizes the conditional mathematical expectation of the cost-function
+such that
+
+. The behavior of an individual cost-function, when such strategies are applied, turns out to be non-monotonic and, as a result, to make the conclusion that such strategies lead to some equilibrium point (usually, the Nash equilibrium (Goemans, Mirrokni, & Vetta, 2005) ) is a hard task requiring a special additional analysis. Even in repeated games, the convergence to a stationary equilibrium is not always guaranteed (see (Chen & Deng, 2006; Daskalakis, Goldberg, & Papadimitriou, 2006)).
+
+In summary, this paper makes the following contributions:
+
+1.
+
+    we show that the behavior of the cost sequence corresponding to the local-optimal (best-reply) strategy, has a non-monotonic character that does not permit to prove exactly the existence of a limit point;
+2.
+
+    we suggest a “one-to-one” mapping between the current cost-function and a new “energy function” (Lyapunov-like function) which is monotonically non-increasing on the trajectories of the system under the local-optimal (best-reply) strategy application;
+3.
+
+    we change the classical behavior of a repeated game for a Potential game in terms of the Lyapunov theory;
+4.
+
+    we show that a Lyapunov equilibrium point is a Nash equilibrium point, but in addition it also presents several advantages: (a) a natural existence of the equilibrium point is ensured by definition, (b) a Lyapunov-like function can be constructed to respect the constraints imposed by the Markov game, (c) a Lyapunov-like function definitely converges to a Lyapunov equilibrium point, and (d) a Lyapunov equilibrium point presents properties of stability;
+5.
+
+    as well, we prove that the Lyapunov equilibrium point is also a correlated equilibrium;
+6.
+
+    the convergence of the pure and stationary local-optimal (best-reply) strategy is also obtained for a class of ergodic controllable finite Markov chains;
+7.
+
+    we provide an algorithm in terms of an analytical formula for the numerical realization of the local-optimal (best-reply) strategy and we also analyze the complexity of the algorithm.
+
+1.4. Organization of the paper
+
+The paper is structured in the following manner. The next section introduces the necessary mathematical background and terminology needed to understand the rest of the paper. Section 3 suggests the formulation of the decision model where all the structural assumptions are introduced, giving a detailed analysis of the game. A method for the construction of a Lyapunov-like function as well the analysis of the convergence is described in Section 4, which is the main result of this paper. Section 5 presents the proves of coincidence of the Lyapunov equilibrium with the Nash and the correlated equilibria. Section 6 presents a simulated experiments related to the repeated Duel game. Finally, in Section 7 some concluding remarks and future work are outlined.
+2. Markov chains games
+
+As usual let the set of real numbers be denoted by
+and let the set of non-negative integers be denoted by . The inner product for two vectors u, v in is denoted by . Let Sbe a finite set, called the state space, consisting of all positive integers of states . A Stationary Markov chain (Clempner & Poznyak, 2014) is a sequence of S -valued random variables sn, satisfying the Markov condition:
+(1)
+The Markov chain can be represented by a complete graph whose nodes are the states, where each edge (s(i), s(j)) ∈ S2 is labeled by the transition probability (1). The matrix determines the evolution of the chain: for each
+
+, the power Πk has in each entry (s(i), s(j)) the probability of going from state s(i) to state s(j) in exactly k steps.
+
+A Controllable Markov Decision Process is a 5-tuple (Clempner & Poznyak, 2014; Poznyak et al., 2000)
+(2)
+
+where:
+
+(1) S is a finite set of states,
+endowed with discrete topology; (2) A is the set of actions, which is a metric space. For each s ∈ S, A(s) ⊂ A is the non-empty set of admissible actions at state s ∈ S. Without loss of generality we may take ; 3) is the set of admissible state-action pairs, which is a measurable subset of S × A; 4) is a stationary transition controlled matrix, where
+representing the probability associated with the transition from state s(i) to state s(j) under an action a(k) ∈ A(s(i)), ; 5) V: S→
+
+is a cost function, associating to each state a real value.
+
+The Markov property of the decision process in (2) is said to be fulfilled if
+
+The strategy (policy)
+represents the probability measure associated with the occurrence of an action a(n) from state . The elements of the transition matrix for the controllable Markov chain can be expressed as
+
+We use notations
+Δ (the mixed strategies profile). Let us denote the collection {d(k|i)(n)} by Δn as follows
+
+In this paper we will investigate the class of the, so-called, local-optimal policies (strategies) defined below.
+
+Definition 1
+
+A policy {dn}n ≥ 0 is said to be local-optimal (or best-reply strategy) if for each n ≥ 0 it minimizes the conditional mathematical expectation of the cost-function
+under the condition that the prehistory of the process
+is fixed and cannot be changed hereafter, i.e., it realizes the “one-step ahead” conditional optimization rule
+(3)
+where is the cost function at the state
+
+.
+
+Remark 2
+
+Locally optimal policy is known as a “myopic” policy in the games literature.
+
+The dynamic of the game for Markov chains is described as follows. The game consists of
+players (denoted by ) and begins at the initial state sl(0) which (as well as the states further realized by the process) is assumed to be completely measurable. Each player lis allowed to randomize, with distribution over the pure action choices ∈ and . Below we will consider only stationary strategies . These choices induce the state distribution dynamics
+In the ergodic case (when all Markov chains are ergodic for any stationary strategy the distributions exponentially quickly converge to their limits satisfying
+(4)
+For any player l, his individual rationality is the player’s cost function Vl of any fixed policy dl is defined over all possible combinations of states and actions, and indicates the expected value when taking action al in state sl and following policy dl thereafter. The V-values can be expressed by
+(5)
+where
+the function is a constant at state when the action is applied. Then, the cost function of each player, depending on the states and actions of all participants, are given by the values so that the “average cost function” Vl for each player l in the stationary regime can be expressed as
+(6)
+where
+and is a matrix with elements
+(7)
+satisfying
+(8)
+Notice that by (11) it follows that
+(9)
+In the ergodic case for all . Theindividual aimof each participant is Vl(cl) →
+
+.
+
+Let us denote by
+the vector average cost function at the state and time under the fixed strategy that is,
+where is the average cost function at the state and time for the player l, namely,
+where is the cost function of the l-player at the state and,
+
+is the operator of the conditional mathematical expectation subject to the constraint that at time n the mixed strategy d(n) has been applied.
+3. Problem formulation
+
+To tackle this problem we proposed representing the state-value function V using a linear (with respect to the control d ∈ Δ) model. After that we obtain the policy d that results in the minimum trajectory value. Finally, we present V in a recursive matrix format.
+3.1. The state-value function
+
+The probability of the player l to find itself in the next state is as follows:
+The cost function Vl of any fixed policy dl is defined over all possible combinations of states and actions, and indicates the expected value when taking action al in state s and following policy dl thereafter. The V-values for all the states of (2) can be expressed by
+(10)
+where is a constant at state s(il) when the action al(kl) is applied (without loss of generality it can be assumed to be positive) and Pl(sl(n)) for any given Pl(s(0)) is defined as follows
+or, in matrix format,
+
+We will assume hereafter that
+for all l. Indeed, by the identity
+the minimization of the state-value function is equivalent to the minimization of the function where which is strictly positive if we take
+(11)
+
+Then, in a vector format, the formula (10) can be expressed as
+
+where
+(12)
+
+Let us first introduce the following statement about the unit simplex.
+
+Lemma 3
+
+Let
+be the unit simplex in RN, that is,
+Then,
+and the minimum is achieved at least for
+
+.
+
+Indeed, it is evident that
+and the equality is achieved at least for
+
+.
+
+As a result we have that
+
+At this point, let us introduce the following general definition of Lyapunov-like function
+
+Definition 4
+
+Let
+be a continuous map. Then, is said to be a Lyapunov-like function1 iff it satisfies the following properties:
+
+(1)
+
+    ∃s*, called below a Lyapunov equilibrium point, such that 
+
+(2)
+
+for all s ≠ s*and all
+
+(3)
+
+if there exists a sequence with as i → ∞ for all
+
+(4)
+
+for all s ≠ s′ ≠ s* and
+
+    .
+
+Given fixed history of the process
+(14)
+(and considering point (4) of Definition 4), the identity in (14) is achieved for the pure and stationary local-optimal policy
+(15)
+where is the Kronecker symbol and is an index for which
+(16)
+
+3.2. The recursive matrix form
+
+As a result we can state the following lemma.
+
+Lemma 5
+
+The V-values for all state-action pairs from(10)in the recursive matrix format become
+(17)
+whereand
+
+Remark 6
+
+Under the local-optimal strategy (15) the probability state-vector
+satisfies the following relation
+(18)
+where
+
+4. Lyapunov-like function analysis and design
+
+The aim of this section is to associate to any cost function
+
+governed by (17), a Lyapunov-like function which monotonically decreases (non-increases) on the trajectories of the given system.
+4.1. Recurrent form for the cost function
+
+In view of (11) let us represent
+as
+and denoting
+we get
+(19)
+
+Now we are ready to formulate the main result of this paper.
+4.2. The Lyapunov function algorithm
+
+Defining
+as
+(20)
+we get
+(21)
+which leads to the following statement.
+
+Theorem 7
+
+Let
+be a non-cooperative game and let the recursive matrix format be represented by(19). Then, a possible Lyapunov-like function(which is monotonically non-increasing) for G has the form
+(22)
+where
+and
+
+Proof
+
+Let us consider the recursion
+with γn, xn, ηn ≥ 0. Defining
+we obtain . Indeed,
+which implies
+and therefore . In view of this we have
+
+that proves the result. □
+
+The method proposed to find a Lyapunov-like function
+is as follows:
+
+1.
+
+    Initialize the values of
+
+2.
+
+    Compute
+Ifthen
+
+3.
+
+    Repeat until 
+
+    converges (for a given convergence criteria).
+
+4.3. Convergence analysis
+
+Following Section 4.2 (Ergodicity Verification, pag. 8) in (Clempner & Poznyak, 2014) , let us introduce the next definition.
+
+Definition 8
+
+For a homogeneous (stationary) finite Markov chain with transition matrix
+the parameter kerg(n0) defined by
+is said to be the coefficient of ergodicity of this Markov chain at time n0, where
+is the probability to evolve from the initial state to the state to the state
+
+after n0 transitions.
+
+The coefficient of ergodicity kerg(n0) can be estimated from below as
+(23)
+
+Theorem 9
+
+If for a finite Markov chain, corresponding the player l and controllable by the best-reply strategy(16), the lower bound estimate of the ergodicity coefficient
+(24)
+
+is strictly positive, that is,
+
+then the following properties hold:
+
+(1) there exists a unique stationary distribution
+(25)
+
+(2) the convergence of the current state distribution to the stationary one is exponential:
+(26)
+
+Corollary 10
+
+Since the sequence
+is bounded from below and monotonically non-increasing, then by the Weierstrass theorem it converges, that is, there exists a limit
+
+Corollary 11
+
+If the series
+converges, i.e.,
+then the productalso converges (by the inequalityapplication that is valid for any x ∈ R), namely,
+(27)
+which implies the existence of a limit (a convergence) of the sequenceof the given loss-function too, i.e.,
+(28)
+
+Remark 12
+
+Notice that by the property (26) the infinite product in (28) always exists for ergodic Markov chains, that is,
+since by Corollary above
+This means that the behavior of the sequence may serve as an indicator of the convergence of the game: the approach of the vector-cost function to its limit point
+
+means that we are close to one of the equilibrium points of the game. Note that this convergence is exponential.
+5. Nash, Lyapunov and correlated equilibria
+
+Definition 13
+
+A Lyapunov game is a tuple
+
+where Vl is a Lyapunov-like function (monotonically decreasing in time).
+
+Theorem 14
+
+Let
+
+be a Lyapunov game. Suppose the players make their decision given any individually rational strategy. Then, there exists a Lyapunov strategy that is a Nash equilibrium.
+
+Proof
+
+Let suppose that d* is a Lyapunov equilibrium point. It can be shown that in this Lyapunov equilibrium, the payoff for player l would be lower or equal than
+. Because, is a minimax strategy its utility cannot be improved, i.e.
+
+This is precisely the definition of Nash equilibrium (Nash, 1951). Thus, d* is a Nash equilibrium.
+
+Now consider any Nash equilibrium d*. We want to show that Vl has an asymptotically approached infimum (or reaches a minimum). Since, d* is a equilibrium point its utility cannot be modified. In addition,
+is a minimax strategy against player i.e.
+
+Since the Lyapunov-like function is a nonincreasing function of the strategies d (by Definition 4) an infimum or a minimum is attained in d*. Then, d* is a Lyapunov equilibrium. □
+
+Theorem 15
+
+The Lyapunov equilibrium point coincides with the Correlated equilibrium point.
+
+Proof
+
+Any Nash equilibrium is a correlated equilibrium (Aumann, 1974), and a Nash equilibrium exists in a finite game (Goemans et al., 2005). Now by Theorem 14 we know that a Lyapunov equilibrium is a Nash equilibrium, then it is a correlated equilibrium, i.e. we need to ask that (16) holds for the probability distribution σ ∈ Δ over outcomes induced by the Lyapunov equilibrium
+
+again, it is the definition of a mixed Nash equilibrium (Aumann, 1974). □
+
+Theorem 16
+
+Every Lyapunov game has a unique Nash equilibrium and correlated equilibrium.
+
+Proof
+
+A Lyapunov equilibrium is a correlated equilibrium due to the fact that (Neyman, 1997) prove the existence of the correlated equilibrium in Potential games. Moreover, the strategy sets are compact and the potential is strictly concave, then the game has a unique correlated equilibrium. □
+6. Numerical examples
+
+In this example we consider the repeated “Duel game” where Player I and Player II each have a gun loaded with exactly one bullet and stand 10 steps apart. Starting with Player I, they take turns deciding whether to fire or not. Each time a player chooses not to fire, the other player takes one step forward before choosing whether to fire in turn. In other words, they start 10 steps apart facing each other and Player I decides whether to take a shot at Player II. If Player I does not, Player II takes a step forward and decides whether to take a shot at Player I. If Player II does not, Player I takes a step forward and decides whether to take a shot at Player II, and so on (players repeat the actions). The situation is grave because if a player fires and misses, the other can then simply not fire until they get next to each other and then shoot the opponent point blank. (Assume that if the players are next to each other, the one whose turn it is to shoot will certainly do so and will certainly hit the opponent.) The probability of hitting the opponent depends on the distance between them and on the skill of the shooter. Let
+be the total number of steps taken by the players. Let ϕσ denote the decision distance, i.e., the distance between the players, after σ steps. Thus, the initial decision distance for Player I is ϕ0, the next one is ϕ1 for Player II, and so on. If players use pure strategies (ϕI, ϕII) where ϕI is the decision distance at which Player I opens fire, and ϕII is the decision distance at which Player II opens fire, then the outcome of the game depends on who fires first and successfully shoots the other one. If ϕI > ϕII then Player I fires first with probability pI(ϕI). If ϕI < ϕII then Player II fires with probability . Then their payoff functions are given by:
+(29)
+and
+(30)
+To obtain a payoff matrix we assign values to the parameters of the game. Let the total distance and let ϕσ. Such that pI(ϕσ) is the probability of Player I hitting Player II firing at distance ϕσ, and is the probability of Player II hitting Player I firing at distance ϕσ. Let for the number of states and let be the number of actions (for simplicity). The payoff functions reflect the players’ desire to maximize the probability of survival. Then, considering ( 12) the payoff matrices for
+
+are as follows:
+
+For Player1 and Player2
+and let the transition matrices for
+
+be defined as follows
+
+For Player 1
+For Player 2
+The beginning profile is supposed to be uniform, that is, for any player and its states
+
+. But as it follows from the statements above in the ergodic case this profile can be arbitrarily selected without any influence to the final equilibrium point.
+
+For d1* and d2*(15) the fixed local-optimal strategies, and k* the best-reply strategy the following results have been obtained:
+
+For Player 1
+
+For Player 2
+
+•
+
+    in Figs. 1 and 3 the state-value function behavior is shown (where during game repetition the states of the players fluctuate according to the given probabilistic dynamics) showing completely non-monotonic behavior;
+
+
+    Fig. 1. Non-monotonic behavior of the cost-function for Player 1.
+•
+
+    in Figs. 2 and 4 the corresponding Lyapunov-like functions (22) are plotted definitely demonstrating a monotonic decreasing behavior;
+
+
+    Fig. 2. Monotonic behavior of the Lyapunov-like function for Player 1.
+
+
+    Fig. 3. Non-monotonic behavior of the cost-function for Player 2.
+
+
+    Fig. 4. Monotonic behavior of the Lyapunov-like function for Player 2.
+•
+
+    the results of the two methods clearly show that under the same fixed local-optimal strategy the original cost functions converge non-monotonically to the values 37.2410 (for the first player) and 1219.5 (for the second player) and converge monotonically to the values 36.2727 and 1188.4, respectively.
+
+As it follows from the example, the existence of a monotonic decreasing behavior in the constructed Lyapunov-like functions for all players allows to conclude that the considered game has a tendency to evaluate (converge) to an equilibrium point. Conversely, the non-monotonic cost-functions do not permit to get this conclusion: one cannot say during the repeating game whether the selected best-reply strategy leads to an equilibrium or not. There also is no guarantee that the non-monotonicity of the cost-functions will converge on an equilibrium point.
+
+From the example, we also conclude that the proposed method solves a game via the elimination of sequentially unreasonable strategies. A strategy for player ι is eventually optimal if, ι’s strategy is the optimal strategy among all strategies ι could play using a Lyapunov-like function. A strategy for player ι is eventually dominant if it is eventually the best-reply against every strategy of the other player. We conclude that the Lyapunov-like function process eliminates strategies that are not the best-reply to some strategy profile. Then, there is a best-reply strategy that follows the monotonic decreasing behavior of the Lyapunov-like function which is eventually dominant for the class of rational strategies against regular strategies.
+7. Conclusion
+
+This paper is a theoretical and practical contribution to feed-forward repeated Markov games. The proposed optimization framework and formalism provides a significant difference in the conceptualization of the problem domain. By the introduction of a Lyapunov-like function as a solution concept for a Markov game we propose a model that is natural, guarantees the existence of an equilibrium point and it is computationally tractable. The proposed method solves a game via the elimination of sequentially unreasonable strategies using myopic policies, which focus only on the current state. As a solution concept it is consider that a player choose a pure and stationary strategy that is the best-reply to any strategy profile of the adversary players. The complexity of the problem is naturally reduced, i.e., a Lyapunov-like function represents the behavior of a repeated (ergodic) game replacing the recursive mechanism with a one-shot strategic play. The Lyapunov-like function process eliminates strategies that are not the best-reply to some strategy profile that survives the corresponding elimination round. By definition of the Lyapunov-like function, this process converges to a Lyapunov equilibrium point. As a consequence the game evolution does not require having a recursive mechanism or any previous beliefs to get a solution. A new concept called Lyapunov games is suggested for a class of repeated Markov games. Lyapunov games establish a mechanism to conclude whether the applied strategy provides the convergence to an equilibrium point (or not) during the game. The principal drawback of the Lyapunov theory is concluding the exitence or construction of a Lyapunov-like function. Our approach presented a method for constructing a Lyapunov-like function.
+
+In terms of future work, there exist a number of challenges left to address for future research in Lyapunov-based game theory having interesting implications for those in: (i) evolutionary algorithms for repeated games, because an important emerging open research challenge is that selection of the best-reply strategies of
+
+can be improved using some mechanisms inspired by biological evolution: reproduction, mutation, recombination, and selection; (ii) economic theory interested in analyzing the optimistic attitude for the leader firm in duopoly/monopoly models representing the strong Stackelberg equilibrium using a Lyapunov approach; (iii) shortest-path theory given that the use of a Lyapunov-like function can produce better results for finding the shortest-path for a certain kind of problems; (iv) theoretical game theory, because the Lyapunov method introduces new equilibrium and stability concepts; (v) computational game theory, because a Lyapunov-like function represents a distance function that can be employed for computing a Lp-equilibrium; (vi) the same mathematical interpretation presented here using the Duel game (as an expressive mechanism for exploring efficiency and performance on agents employing a foresight bounded rationality) can be employed in other repeated games having military application such as “Fighter-Bomber Duel Game,” “The Pursuit Game” and “Security Game.” We show that in game theory foresight bounded rationality implemented using a Lyapunov-like function guarantees optimality.
+
+1
+
+    By the original definition of A. M. Lyapunov the following conditions must be satisfied for an energy function: locally for any small neighborhood Ωδ of the origin the following inequalities must be satisfied for any x ∈ Ωδ
+    (13)α∥x∥2≤V(x)≤β∥x∥2,α>0V(xn+1)<V(xn)
+    If some additional requirements are necessary, or the above conditions hold globally (Lyapunov–Krasovskii) and the second inequality is fulfilled non-strictly, that is, V(xn+1)≤V(xn), then in these cases the considered energy function is commonly referred to as “ Lypunov-like function” (see, for example (Bellman, 1962)).

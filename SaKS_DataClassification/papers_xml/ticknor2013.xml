@@ -1,0 +1,171 @@
+<article>
+  <title>A Bayesian regularized artificial neural network for stock market forecasting</title>
+  <abstract>
+    <sentence>In this paper a Bayesian regularized artificial neural network is proposed as a novel method to forecast financial market behavior.</sentence>
+    <sentence>Daily market prices and financial technical indicators are utilized as inputs to predict the one day future closing price of individual stocks.</sentence>
+    <sentence>The prediction of stock price movement is generally considered to be a challenging and important task for financial time series analysis.</sentence>
+    <sentence>The accurate prediction of stock price movements could play an important role in helping investors improve stock returns.</sentence>
+    <sentence>The complexity in predicting these trends lies in the inherent noise and volatility in daily stock price movement.</sentence>
+    <sentence>The Bayesian regularized network assigns a probabilistic nature to the network weights, allowing the network to automatically and optimally penalize excessively complex models.</sentence>
+    <sentence>The proposed technique reduces the potential for overfitting and overtraining, improving the prediction quality and generalization of the network.</sentence>
+    <sentence>Experiments were performed with Microsoft Corp. and Goldman Sachs Group Inc. stock to determine the effectiveness of the model.</sentence>
+    <sentence>The results indicate that the proposed model performs as well as the more advanced models without the need for preprocessing of data, seasonality testing, or cycle analysis.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Bayesian regularization</keyword>
+    <keyword>Neural network</keyword>
+    <keyword>Stock prediction</keyword>
+    <keyword>Overfitting</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Stock price prediction has recently garnered significant interest among investors and professional analysts.</sentence>
+    <sentence>The prediction of stock market trends is very complex, owing to the inherent noisy environment and high volatility related to daily market trends.</sentence>
+    <sentence>The complexity of the market and stock price movement is related to a number of factors including political events, market news, quarterly earnings reports, and conflicting trading behavior.</sentence>
+    <sentence>Traders often rely on technical indicators based on stock data that can be collected on a daily basis.</sentence>
+    <sentence>Despite the availability of these indicators, it is often difficult to predict daily to weekly trends in the market.</sentence>
+    <sentence>In the past two decades, a large body of research for predicting stock market returns has been developed.</sentence>
+    <sentence>This body of knowledge contains many artificial intelligence (AI) approaches, namely artificial neural networks (ANN).</sentence>
+    <sentence>A number of these networks have utilized feedforward neural networks to predict stock trends (Baba &amp; Kozaki, 1992; Chenoweth &amp; Obradovic, 1996; Fernandez-Rodriguez, Gonzalez-Martel, &amp; Sosvilla-Rivebo, 2000; Ghiassi, Saidane, &amp; Zimbra, 2005; Hamzacebi, Akay, &amp; Kutay, 2009; Lendasse, De Bodt, Wertz, &amp; Verleysen, 2000; Roh, 2007; Walezak, 1999).</sentence>
+    <sentence>Leung, Daouk, and Chen (2000) analyzed a number of parametric and nonparametric models for predicting stock market trends and returns.</sentence>
+    <sentence>The empirical results suggested that the probabilistic neural network (classification model) outperforms the standard feedforward neural network (level estimation model) in predicting stock trends.</sentence>
+    <sentence>One drawback of using standard back propagation networks is the potential for overfitting the training data set, which results in reduced accuracy on unknown test sets.</sentence>
+    <sentence>To address the potential overfitting of neural network weights, some researchers have developed hybridized neural network techniques (Chu, Chen, Cheng, &amp; Huang, 2009; Leigh, Purvis, &amp; Ragusa, 2002; Oh &amp; Kim, 2002).</sentence>
+    <sentence>Hassan, Nath, and Kirley (2007) utilized a hybrid model that included Hidden Markov Model (HMM), Artificial Neural Networks (ANN), and genetic algorithm (GA) to predict the price of three major stocks.</sentence>
+    <sentence>The results of their study indicated that the next day stock price could be predicted to within a 2% of the actual value, a significant improvement over other standard models.</sentence>
+    <sentence>In recent years, a number of techniques including fuzzy logic, genetic algorithms, and biologically based algorithms have been utilized to improve feedforward neural networks (Armano, Marchesi, &amp; Murru, 2004; Atsalakis &amp; Valvanis, 2009; Blanco, Delgado, &amp; Pegalajar, 2001; Chang &amp; Liu, 2008; Chang, Wang, &amp; Zhou, 2012; Chen, Yanga, &amp; Abraham, 2006; Ritanjali &amp; Panda, 2007; Yudong &amp; Lenan, 2009).</sentence>
+    <sentence>Neural networks and support vector machines were compared by Kara, Boyacioglu, and Baykan (2011) to predict stock price index movement, the results of which showed the superiority of neural networks.</sentence>
+    <sentence>These new techniques have improved the capability of the original back propagation neural network with some success and reduced some of the drawbacks of ANNs related to noise fitting.</sentence>
+    <sentence>In this paper the feedforward artificial neural network coupled with Bayesian regularization is introduced as a novel approach to predicting stock market trends.</sentence>
+    <sentence>The networks ability to predict stock trends is shown for two major United States stocks and is compared to another advanced hybrid technique.</sentence>
+    <sentence>The simulations indicate that the weight optimization technique offers an enhanced level of performance compared to other advanced techniques.</sentence>
+    <sentence>A brief discussion of Bayesian regularization is included to provide a brief background on the equations governing the technique and its potential applications in financial time series forecasting.</sentence>
+  </section>
+  <section name="Bayesian regularization of neural networks">
+    <sentence>The back propagation neural network is a very popular technique in the field of ANN which relies on supervised learning, typically through the use of a gradient descent method to reduce a chosen error function (e.g.</sentence>
+    <sentence>mean squared error).</sentence>
+    <sentence>Fig 1 provides a general architecture for a feedforward neural network, including the three main layers of the model: input, hidden, and output.</sentence>
+    <sentence>The connection between neurons in Fig 1 in each layer is termed a link.</sentence>
+    <sentence>This link is stored as a weighted value which provides a measure of the connection between two nodes (Garson, 1991; Goh, 1995).</sentence>
+    <sentence>The supervised learning step changes these weights in order to reduce the chosen error function, generally mean squared error, in order to optimize the network for use on unknown samples.</sentence>
+    <sentence>A major issue for these techniques is the potential for overfitting and overtraining which leads to a fitting of the noise and a loss of generalization of the network.</sentence>
+    <sentence>General architecture of three-layer feedforward neural network Fig 1.</sentence>
+    <sentence>General architecture of three-layer feedforward neural network.</sentence>
+    <sentence>To reduce the potential for overfitting, a mathematical technique known as Bayesian regularization was developed to convert nonlinear systems into “well posed” problems (Burden &amp; Winkler, 2008; MacKay, 1992).</sentence>
+    <sentence>In general, the training step is aimed at reducing the sum squared error of the model output and target value.</sentence>
+    <sentence>Bayesian regularization adds an additional term to this equation: (1) where F is the objective function, ED is the sum of squared errors, Ew is sum of square of the network weights, and α and β are objective function parameters (MacKay, 1992).</sentence>
+    <sentence>In the Bayesian network the weights are considered random variables and thus their density function is written according the Baye’s rules (Forsee &amp; Hagan, 1997): (2) where w is the vector of network weights, D represents the data vector, and M is the neural network model being used.</sentence>
+    <sentence>Forsee and Hagan (1997) assumed that the noise in the data was Gaussian, and with this assumption were able to determine the probability density function for the weights.</sentence>
+    <sentence>The optimization of the regularization parameters α and β require solving the Hessian matrix of F(w) at the minimum point wMP.</sentence>
+    <sentence>Forsee and Hagan (1997) proposed a Gauss–Newton approximation to the Hessian matrix which is possible if the Levenburg–Marquardt training algorithm is used to locate the minimum.</sentence>
+    <sentence>This technique reduces the potential for arriving at local minima, thus increasing the generalizability of the network.</sentence>
+    <sentence>The novelty of this technique is the probabilistic nature of the network weights in relation to the given data set and model framework.</sentence>
+    <sentence>As a neural network grows in size through additional hidden layer neurons, the potential for overfitting increases dramatically and the need for a validation set to determine a stopping point is crucial.</sentence>
+    <sentence>In Bayesian regularized networks, overly complex models are penalized as unnecessary linkage weights are effectively driven to zero.</sentence>
+    <sentence>The network will calculate and train on the nontrivial weights, also known as the effective number of parameters, which will converge to a constant as the network grows (Burden &amp; Winkler, 2008).</sentence>
+    <sentence>The inherent noise and volatility of stock markets introduces a high probability of overfitting and overtraining for general back propagation networks.</sentence>
+    <sentence>These more parsimonious networks reduce the chance of overfitting while eliminating the need for a validation step, thus increasing the available data for training.</sentence>
+  </section>
+  <section name="Prediction model">
+    <sentence>In this paper, a three layered feedforward ANN was used to predict daily stock price movements.</sentence>
+    <sentence>The model consisted of an input layer, hidden layer, and output layer depicted in Fig 1.</sentence>
+    <sentence>Inputs to the neural network included daily stock data (low price, high price, opening price) and six financial indicators, which were represented with nine neurons in the input layer.</sentence>
+    <sentence>The output of the network was the next day closing price of the chosen stock.</sentence>
+    <sentence>The number of neurons in the hidden layer was chosen empirically by adjusting the number of neurons until the effective number of parameters reached a constant value.</sentence>
+    <sentence>The layer weights of the network were optimized according the procedure of Forsee and Hagan (1997), using mean squared error as the performance evaluation function.</sentence>
+    <sentence>A tangent sigmoid function was chosen for the hidden layer, meaning the return value will fall in the range [−1, 1], using the following function (Harrington, 1993): (3) The architecture of the network and effective number of parameters are shown in Table 1, where a hidden layer with five neurons was deemed to be sufficiently large.</sentence>
+    <sentence>The network was permitted to train for no more than 1000 epochs, at which point the optimization routine would cease.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>ANN parameters for stocks in initial experiment.</sentence>
+    <sentence>Stock Neurons Layers Effective number of parameters Microsoft (MSFT) 5 3 20.0 Goldman Sachs (GS) 5 3 20.2 Neural network training is best suited to data that falls within a small specified range, generally produced by some normalization procedure.</sentence>
+    <sentence>In this study, data was normalized within the range [−1, 1] by the use of the “mapminmax” function in MATLAB software.</sentence>
+    <sentence>This normalization procedure is utilized so that larger input values do not overwhelm smaller inputs, helping reduce network error (Kim, 2003).</sentence>
+    <sentence>A reverse of this procedure is performed on the output data to obtain the stock value in the appropriate units before comparison to actual data.</sentence>
+  </section>
+  <section name="Simulation experiments">
+    <sentence>Test data The research data used for stock market predictions in this study was collected for Goldman Sachs Group, Inc. (GS) and Microsoft Corp. (MSFT).</sentence>
+    <sentence>The total number of samples for this study was 734 trading days, from 4 January 2010 to 31 December 2012.</sentence>
+    <sentence>Each sample consisted of daily information including low price, high price, opening price, close price, and trading volume.</sentence>
+    <sentence>The training data set was chosen as the first 80% of the samples, while the testing data comprised the remaining 20% of the samples.</sentence>
+    <sentence>The neural network model was used to predict the price of the chosen stock one day in the future.</sentence>
+    <sentence>All of the available data was utilized to estimate the appropriate size of the network, increasing the number of hidden layer neurons until the effective number of parameters converged to a constant value.</sentence>
+    <sentence>A comparison study was also performed to test the efficacy of the network in this study to an advanced hybrid model by Hassan et al.</sentence>
+    <sentence>(2007).</sentence>
+    <sentence>For this experiment, data was collected for Apple Inc. (AAPL) and International Business Machines Corp. (IBM).</sentence>
+    <sentence>The total number of samples for this study was 492 trading days from 10 February 2003 to 21 January 2005.</sentence>
+    <sentence>The training set for this experiment includes trading days from 10 February 2003 to 10 September 2004, while the testing data includes 91 trading days from 13 September 2004 to 21 January 2005.</sentence>
+    <sentence>These trading and testing periods were chosen to ensure uniformity in experiment conditions for both models.</sentence>
+    <sentence>Technical indicators Six technical indicators were used in this study as part of the input variables to the network.</sentence>
+    <sentence>Technical indicators are often used by investors in the stock market as a potential mechanism for predicting market trends (Kim, 2003).</sentence>
+    <sentence>A number of indicators have been developed, though only a subset of the major indicators were used in this study.</sentence>
+    <sentence>A general search of the existing literature helped deduce the major indicators to be used in this study (Yudong &amp; Lenan, 2009; Kara et al., 2011; Kim &amp; Han, 2000).</sentence>
+    <sentence>The indicators used in this study, including their formulae, are summarized in Table 2.</sentence>
+    <sentence>All of these indicators are computed from the raw data collected for each stock.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Selected technical indicators and their formulas.</sentence>
+    <sentence>Name of indicator Indicator formula Exponential moving average (5 and 10 day) Relative strength index (RSI) Williams R% Stochastic K% Stochastic D% Ct is the closing price, Lt is the low price, Ht is the high price at time t. Smoothing factor, α = 2/(1 + h), h is the time period for h day moving average (i.e.</sentence>
+    <sentence>5 or 10).</sentence>
+    <sentence>HHt and LLt are highest high and lowest low in the last t days.</sentence>
+    <sentence>Upt means upward price change; Dwt means downward price change at time t.</sentence>
+  </section>
+  <section name="Results and discussion">
+    <sentence>Network size determination The first stage of the experiment involved determining the appropriate network size for the Bayesian regularized network.</sentence>
+    <sentence>The data for GS and MSFT were analyzed separately, utilizing the full data set.</sentence>
+    <sentence>The number of hidden layer neurons was adjusted at each iteration until a constant number of effective parameters were found.</sentence>
+    <sentence>The total hidden layer neurons were adjusted between two and ten, in which a value of five was found to be sufficiently large as shown in Table 1.</sentence>
+    <sentence>Network output for test stocks The results of the network prediction are shown in Fig 2, which depicts the one day future actual stock value and predicted stock value.</sentence>
+    <sentence>The Bayesian regularized network provides on average a &gt;98% fit to future stock prices for both stocks over the full trading period.</sentence>
+    <sentence>The technology and banking stocks were chosen because of the differences in industry market behavior and volatility.</sentence>
+    <sentence>Microsoft stock was highly volatile over the length of the trading period as well as in daily trading.</sentence>
+    <sentence>The proposed model was able to handle this noise and volatility without overfitting the data which can be seen in the fit for testing data (points beyond day 600).</sentence>
+    <sentence>This result provides evidence that the model can handle large datasets with significant noise and volatility while maintaining generalizability.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>3 and 4 shows the results of this experiment plotted as target stock price versus predicted price.</sentence>
+    <sentence>The dashed line indicates a line with a slope of one, which would indicate a perfect fit.</sentence>
+    <sentence>The reduced error in the training data is expected, however, the limited spread in the testing data provides evidence that the model is providing appropriate generalization.</sentence>
+    <sentence>One day future stock price versus trading day: model prediction and actual… Fig 2.</sentence>
+    <sentence>One day future stock price versus trading day: model prediction and actual stock price.</sentence>
+    <sentence>Comparison of microsoft target and predicted stock price – one day future value Fig 3.</sentence>
+    <sentence>Comparison of microsoft target and predicted stock price – one day future value.</sentence>
+    <sentence>Comparison of Goldman Sachs target and predicted stock price – one day future… Fig 4.</sentence>
+    <sentence>Comparison of Goldman Sachs target and predicted stock price – one day future value.</sentence>
+    <sentence>Performance metric The performance of the Bayesian regularized artificial neural network was measured by computing the mean absolute percentage error (MAPE).</sentence>
+    <sentence>This performance metric has been used in a number of studies and provides an effective means of determining the robustness of the model for predicting daily trends (Chang &amp; Liu, 2008; Chang et al., 2012; Hassan et al., 2007).</sentence>
+    <sentence>This metric is first calculated by finding the absolute value of the deviation between the actual stock price and the predicted stock price.</sentence>
+    <sentence>This value is then divided by the actual stock price and multiplied by 100 to determine the percentage error of the individual data point.</sentence>
+    <sentence>This procedure is performed over the entire trading space, summed, and then divided by total trading days to arrive at the MAPE value.</sentence>
+    <sentence>The MAPE value is computed using the following equation: (4) where r is the total number of trading days, yi is the actual stock price on day i, and pi is the predicted stock price on day i.</sentence>
+    <sentence>Results Table 3 presents the experimental results for the two stocks (GS and MSFT) chosen for this study.</sentence>
+    <sentence>The MAPE value was calculated for the training, testing, and total data sets to monitor the effectiveness of the model at predicting unknown data.</sentence>
+    <sentence>It is interesting to note the small MAPE value for each stock during the testing phase.</sentence>
+    <sentence>These values indicate that on average, the Bayesian regularized network can predict the stock price to within 98% accuracy.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Forecast accuracy of the Bayesian regularized ANN.</sentence>
+    <sentence>Stock Training MAPE (%) Test set MAPE (%) Total MAPE (%) Microsoft (MSFT) 1.0494 1.0561 1.0507 Goldman Sachs (GS) 1.5235 1.3291 1.4860 In order to test the efficacy of this approach, the network was tested against the same data set used in Hassan et al.</sentence>
+    <sentence>(2007) to directly compare the two models.</sentence>
+    <sentence>After a thorough analysis, the network architecture for this model included twenty hidden neurons, as opposed to the five neurons in the first experiment.</sentence>
+    <sentence>The results of this experiment are shown in Table 4 and plotted in Fig 5.</sentence>
+    <sentence>The results show that Bayesian regularized network forecasts are as good as both the fusion model and the ARIMA model in Hassan et al.</sentence>
+    <sentence>(2007).</sentence>
+    <sentence>The data from Tables 3 and 4 showed that the proposed model is an effective technique for estimating next day closing prices and can provide a simplified financial time series prediction tool compared to other similar advanced neural network techniques.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Forecast accuracy comparison with Hassan et al.</sentence>
+    <sentence>(2007).</sentence>
+    <sentence>Stock name Mean absolute % error (MAPE) in forecast for 91 test dataset Proposed Bayesian ANN Fusion model with weighted averagea ARIMA modela Apple Inc. (AAPL) 1.9688 1.9247 1.8009 IBM Corporation (IBM) 0.7441 0.8487 0.9723 a Models from Hassan et al.</sentence>
+    <sentence>(2007) One day future stock price prediction for comparison with Hassan et al Fig 5.</sentence>
+    <sentence>One day future stock price prediction for comparison with Hassan et al.</sentence>
+    <sentence>(2007).</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>In this paper a novel time series forecasting tool was introduced.</sentence>
+    <sentence>The model combines Bayesian regularization with the Levenberg–Marquardt algorithm to forecast the movement of stock prices.</sentence>
+    <sentence>The results of this model indicate that this tool reduces the potential for overfitting and local minima solutions that commonly plague neural network techniques.</sentence>
+    <sentence>The probabilistic nature of the network weights allows the investor to safely expand the network without increasing the risk of overfitting through the use of the effective number of parameters.</sentence>
+    <sentence>The proposed model showed strong generalization with respect to recent stock trends for two companies in varying market domains.</sentence>
+    <sentence>To evaluate the efficacy of this model, the network was compared to an advanced hybrid neural network model by Hassan et al.</sentence>
+    <sentence>(2007).</sentence>
+    <sentence>The results indicate that the forecasting ability of the model in this study is comparable, and potentially superior, to the fusion model and ARIMA model.</sentence>
+    <sentence>Prediction of stock market trends is very important for the development of effective trading strategies.</sentence>
+    <sentence>This model is a novel approach to solving this problem type and can provide traders a reliable technique for predicting future prices.</sentence>
+    <sentence>It is important to note that addition or substitution of other technical indicators could improve the quality of this model in future applications.</sentence>
+  </section>
+</article>

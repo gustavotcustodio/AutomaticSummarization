@@ -1,0 +1,341 @@
+Large deployment of Electric Vehicles (EVs) adds new challenges in the operation of a microgrid.
+Assuming that a number of EV owners allow their batteries to charge when their cars are parked, this paper proposes an approach that aims to find suitable individual active power set-points corresponding to the hourly charging rate of each EV battery connected to the microgrid.
+A multi agent system based controller is designed to find these active power set points for optimal power management of EVs, distributed energy resources in the microgrid, and the loads.
+Electric vehicles (EV) have received considerable attention in recent years.
+Under existing policies, one million EVs are expected to hit the road by 2015.
+Since EVs run on electricity, a large penetration of EVs in the market is likely to increase the demand for electricity.
+Grid operators are concerned that this increased demand might result in an increase in the peak load, which would require them to add additional power generation capacity to the grid (DeForest, 2009; Fell, 2010).
+However by using Demand-Side Management commands or pricing signals the grid operators might be able to delay, reduce or switch-off the rate of charging when the demand for electricity is high and push the EVs to charge during nonpeak hours (Vandael, Boucke, Holvoet, & Deconinck, 2010).
+This would not only reduce the need for new investments but also result in better utilization of the existing power grid.
+Electric utilities are increasingly diversifying their generation portfolio by adding large quantities of renewable energy resources in order to mitigate climate change and to reduce our dependence on fossil fuels.
+This group of intermittent generating resources in the form of micro-generators is called as a Micro Grid (MG).
+MG may either be connected to the main grid or may be operated on an islanded mode of operation.
+These resources of electricity, like wind and solar power, are intermittent in that the instantaneous power output of these resources depends on the environmental conditions, such as wind speed, at any given time (Kamboj, Kempton, & Decker, 2011).
+To match the instantaneous power output of these resources with the instantaneous power demand, the electricity grid needs some form of energy storage devices.
+However, our current electricity grid has a negligible amount of storage capacity, primarily associated with hydro-electric facilities.
+Since most vehicles are parked over 90% of the time, these EVs can be used as a large distributed battery and can provide power storage and ancillary services to the electricity grid when they are not being driven.
+This concept is known as Vehicle-To-Grid power or V2G power.
+It is an interesting, logical, and viable alternative to use nonpolluting energy sources to supply less polluting vehicles.
+In addition, further scenarios characterized by increasing penetration levels of renewable power sources with intermittent nature, such as wind and photovoltaic generation, and also micro-generation systems connected to Low Voltage (LV) distribution grids should be taken into account.
+If EVs were to attain a market share in the automobile market, with an average battery capacity of 4 kWh, a fleet of 500 EVs citywide would potentially add an extra two megawatt load to the power grid (assuming simultaneous charge of all 500 vehicles at one-hour charge rate).
+If these EVs are charged and discharged from/to the grid randomly, peak load will be high; distribution transformers will be overloaded and overheated.
+The EVs energy consumption pattern will also significantly influence the electricity market because market structure, market rules, demand levels, market concentration and energy sources to produce electricity have a strong influence on market performances (Ghaderi, Azadeh, Pourvalikhan Nokhanda, & Fathi, 2012).
+Hence to avoid worst scenarios, an intelligent energy management system that controls and adapts the load power consumption is needed.
+Presently commercial systems have been developed that have the capability to remotely control the charging of pilot vehicle fleets (IEEE, 2006).
+Several authors have presented their research on integration of electric vehicles into the grid (Bessa & Matos, 2012; Bessa, Matos, Soares, & Lopes, 2012; Lingwen et al., 2011; Sortomme & El-Sharkawi, 2012; Sundstrom & Binding, 2012; Wencong et al., 2012).However there is a need for a more detailed study into the problem, which takes into account of the charging patterns and consumer behavior.
+This paper proposes an intelligent power management scheme using multi agent systems for power management in the MG to meet the rising demand of EVs.
+The objective of this research is to develop a distributed energy management system for the MG with EV penetration so that the loads are met in an economical manner.
+The energy market of MG with EVs is analyzed and some possible demand management strategies are investigated.
+In the MG being considered for the test case, generators are in the form of several renewable energy resources and loads are in the form of consumers who own EVs in addition to the domestic loads.
+The paper is organized as follows.
+Section 2 will first describe the system architecture that will enable effective energy management of multiple EVs connected to a MG.
+The functions, attributes and interactions of the system will be described.
+The system consists of a decentralized controller that will dynamically sample the market price, consumers need and SOC of the battery to make a real time decision on the power allocation.
+Section 3 will present a brief introduction to application of Multi Agent Systems (MAS) for power management of MG with EVs.
+Section 4 will describe how power management is performed in MG with EVs.
+Section 5 gives a brief overview of artificial immune system.
+Section 6 details how the proposed approach is implemented using MAS.
+Section 7 presents simulation results on a test case.
+Two types of charging viz., uncontrolled charging and economical charging have been considered for simulation purposes.
+Section 8 presents the conclusions.
+A MG is a LV distribution system with several comprising small modular generation units connected to the LV network through power electronic interfaces, electrical loads, storage devices and a hierarchical control and management system supported by a suitable communication infrastructure, such that the MG can be operated either in islanded mode or connected to the MV system (Yang, 2012), (Kukandeh, Kukandeh, & Kazemi, 2009).
+The MG is centrally controlled and managed by the MGCC installed at the MV/LV secondary substation, which is responsible to head the MG hierarchical control system.
+The control of the power flow is especially a major concern for the EVs since they have several charging options.
+They can be charged at their maximum power using the fast charging option, or they can be plugged in for longer times and charge by drawing less power.
+When they are fast charging they may endanger the grid resilience.
+Another issue to consider for EV charging is the source of power.
+As these vehicles are aiming to go green, their best option should be charging from the renewable energy resources.
+The MG considered for this study consists of a micro turbine, a fuel cell, a wind turbine and five PV arrays.
+The number of EVs connected in the MG is determined based on the maximum capacity of the MG.
+The MG architecture to which EVs are to be connected is represented in Fig 1.
+EVs can be considered as simple loads when their owners simply define that batteries must be charged with a fixed rate, which corresponds to a dumb charging or as dynamic loads.
+If the EV owners define a time interval for the charging to take place, allowing some EV management structure to control the charging rate, then that is called as a smart charging framework.
+From the grid point of view, the second approach yields more benefits since the EV management structure will control the charging process by reducing/increasing the charging rate according to the system operating conditions (Peças Lopes, Soares, & Almeida, 2011) (Pecas Lopes et al., 2009a) (Peças Lopes, Soares, Da Silva, & Almeida, 2009b), so that charging can be distributed during valley hour periods and at times when there is large renewable power generation.
+MG architecture Fig 1.
+MG architecture.
+Multi Agent Systems (MAS) has been identified by the IEEE Power Engineering Society’s MAS Working Group as a promising control approach in power engineering.
+The working group identified the key benefits MAS can bring about:
+- Extensibility: the ability to easily add new functionality and augmenting or upgrading existing functionality.
+- Fault tolerance: the ability of the system to meet its design objectives in case of failure.
+MAS are further explained in the next section
+The distributed control is achieved by designing a decentralized agent based system that can intelligently and autonomously make decisions based on the need of the hour.
+Agent based systems are systems composed of many interacting autonomous, artificial intelligent agents.
+Complex agent-based systems (CAS) composed of simple agents that demonstrate complex collective behavior offer several advantages over traditional multi agent systems that rely on deliberative agents.
+Though some problems are best suited for knowledgeable and able agents, traditional multi-agent systems (MAS) that utilize them have significant shortcomings in at least one of the following areas: robustness, adaptability, stability and scalability.
+Systems in which agents change their strategies in response to actions by other agents can quickly adapt to environmental changes; however, this feature is usually achieved at the expense of global stability (Rash, Rouff, Truszkowski, Gordon, & Hinchey, 2000).
+The high communication and computational cost required to coordinate agent behavior constrain the size of the traditional MAS to at most a few dozen agents.
+Yet another disadvantage is that the complexity of the agent’s internal states and its interactions with other agents make these systems ill-suited for rigorous quantitative analysis.
+A well-designed CAS, on the other hand, is an efficient, robust, adaptive and stable agent-based system.
+It lacks central control, meaning that the system can recover quickly from mistakes, agent failure and environmental change.
+Because it has very low communication and computational requirements, there are virtually no constraints on system size.
+Moreover software agents serve as basic components for synthesizing collective behavior.
+Power management in MGs with EVs fall under the category of applications which requires collective behavior (and hence a agent based system) from all sources and loads connected to the overall system.
+Management and control of power in a MG with EVs depends on the grid power pricing and also on the customer preferences (demand side management) and charging options chosen by the domestic load consumers and EV owners respectively.
+Moreover, agent based systems have been commonly used to study the electricity market for operating a power system because of its ability to model the complex behaviors of various participants in a large scale energy market.
+Thus in our research, power management, energy/power market and agents are all interrelated.
+An agent can be as simple as a single variable within a computer program or as complex as an intelligent object such as a human being involving possibly an infinite number of states, decisions, and actions/reactions.
+Therefore, the precise definition of “agents” is domain dependent.
+From the electric power market standpoint, we consider agents to have the following features: autonomy, heterogeneity, adaptation and social ability.
+In addition to the above main features, other desirable features include interactivity, communicability, mobility, flexibility, and concurrence.
+Finally, although each agent is an autonomous unit, both individual agents and the agent-based system are goal oriented; their goals direct their behavior and decisions.
+In the proposed multi agent system for power management in a MG with EVs, distributed control is achieved by designing a decentralized agent based system that can intelligently and autonomously make decisions based on the need of the hour.
+The implementation of MAS is done using the JADE (Java Agent Development framework) agent management platform.
+JADE (Bellifemine, Caire, Trucco, & Rimassa, 2010) is a software development framework for developing MAS and applications conforming to FIPA (Foundation for Intelligent Physical Agents) (Odell & Huget, 2003) standards for intelligent agents.
+The proposed multi agent system (MAS) consists of EV agents, generator agents and load agents, main grid agent and optimizing agent.
+A mathematical model was developed for the EV in Java.
+This model is made to represent a EV agent using JADE.
+The load agents are categorized based on their priority according to the customer’s needs.
+Thus there are three load agents for each consumer, first being the vital loads which are of utmost importance to the consumer, non-vital loads–loads that are not as important as the vital loads meaning that non vital loads can be shut down for a chosen duration and the long term shut down loads which are the least priority loads which can be shut down for longer time periods than the non-vital loads.
+Generation agents correspond to the various DERs located in the MG.
+The main grid agent corresponds to the main grid which feeds the loads during peak demand periods.
+The optimizing agent is the one who is responsible for calculating the set points of the generators and loads and for communicating the generation and load settings to the corresponding agent.
+As the EV agents send their power request at regular time intervals, the optimizing agent dynamically adapts their information about the expected load.
+The implementation of an intelligent management system, where the EVs are connected to the MG, involves a decentralized controller that can autonomously distribute the available generation between all the domestic loads and EVs.
+In this work, we have designed a decentralized controller using a multi-objective optimization approach, which can intelligently manage the power consumed by the domestic loads and the EVs in a MG.
+Distributed control is achieved by designing a decentralized agent-based system that can intelligently and autonomously make decisions based on the need of the hour.
+The overall architecture of the agent system consists of EV agents, a main grid agent, several DER agents, household domestic load agents and an optimizing agent.
+The function of a EV agent is to charge the battery of its EV in time.
+The function of a generator agent is to make sure that it delivers power to the required loads and EVs at the right time economically.
+The function of a domestic load agent is to communicate with the generator agent about the total load and self -adjust the loads in such a manner that the vital domestic loads are supplied with uninterrupted power.
+The domestic load agents have to perform load shedding under emergency conditions when the generated power is not sufficient enough to supply all the loads.
+These functions are not independent of each other.
+To perform all the functions, the agents have to coordinate with each other through communication.
+The domestic load agents are categorized based on their priority according to the customer’s needs.
+In addition, the load agents are included in the Demand Response (DR) program.
+Thus there are three load agents for each consumer, first being the vital loads which are of utmost importance to the consumer, non-vital loads–loads that are not as important as the vital loads meaning that non-vital loads can be shut down for a chosen duration and the long term shut down loads which are the least priority loads which can be shut down for longer time periods than the non-vital loads.
+In addition to the EV agent and the load agents, the MAS system is composed of generation agents, the main grid agent and an optimizing agent.
+DER agents correspond to the various DGs and renewable energy resources located in the MG.
+The main grid agent corresponds to the main grid which feeds the loads during peak demand periods.
+The optimizing agent is the one who is responsible for calculating the set points of the generators and loads and for communicating the generation and load settings to the corresponding agent.
+As the EV agents send their power request at regular time intervals, the optimizing agent dynamically adapts their information about the expected load.
+The adaptability of the MAS is determined by the rate at which requests of EV agents can be processed by the optimizing agents.
+If a request is sent for the first time by a EV agent, the optimizing agent has to recalculate the set points again.
+If a request from a EV contains the same intentions as the last request, no recalculation is needed.
+When the MG is operating in grid connected mode and the EVs are charging from charging stations, EVs draw power from the grid which would increase the active power losses.
+If the MG is operating under islanded mode, EVs charging from charging stations would increase the cost of generation by DERs in the MG.
+Hence mathematically the problem is formulated as a multi objective optimization problem that involves minimization of the variance of active power flow (Karnama, Resende, & Lopes, 2011) through the point of common coupling considering the additional consumption of the EV batteries and minimization of cost of generation of the DERs in the MG (1) where Cj is the cost of generation for the jth micro-generator, Ph is the hourly power injected at the point of common coupling and μ is the average value of power after considering EV consumption (2) (3) where PEV is the power drawn by all EV, PMG is the sum of all microgenerations in the microgrid and Ploads is the sum of power drawn by loads (that are chosen by the consumer based on priority and power pricing at that hour) during 24 h of a typical day.
+Eq (1) is subject to the following constraint (4) LSOC, OSOC, HSOC representing the lowest desired, optimal desired and highest desired state of charge of the battery in the EV.
+The first and third are values specified by the car owner and the second value is determined by the optimization problem.
+Artificial Immune System (AIS) has been chosen as an optimization algorithm since the immune system is a decentralized system with no central controller and control is distributed throughout our body via its constituent cells and molecules.
+Yet it performs the common goal of destroying the foreign substances entering the body.
+Immune System possesses several properties such as pattern recognition, self/non-self discrimination, immune memory, immune network and colonial expansion.
+Similarly, multi agent systems have several agents that have individual goals.
+They learn and utilize the attained intelligence to perform a global goal.
+There are distinct similarities between the intelligent agents and the immune system.
+A brief review of AIS is provided in the next section.
+Artificial immune systems are intelligent models or/and algorithms developed by some researchers who are inspired by the potential functionalities of human immune systems.
+In an earlier version of artificial immune systems (De Castro & Timmis, 1996), the candidate antibodies evolve according to their affinity combined with the particular antigen.
+There the multiplier of cloned antibodies is kept fixed despite their affinity, also called fixed cloning, which means that all antibodies have the identical reproduction capability.
+Also, the mutation of antibodies is adjusted according to their affinity combined with the particular antigen.
+It is called affinity-based mutation.
+However, the simple proximate linear relationship between the mutation of antibodies and their affinity impairs the convergence (speed and accuracy) of artificial immune systems.
+In addition, the corresponding immune suppression operator is activated when the similarity or stimulation between any two antibodies is below a certain threshold.
+This kind of suppression is similarity-based.
+This threshold has a crucial effect on the performance of artificial immune system; however, it was just defined by trial and error.
+These existing disadvantages make artificial immune system itself difficult to adaptive plenty of optimization problems.
+Hence an Improved Adaptive Artificial Immune System (IA–AIS) algorithm was proposed (Li, Zhang, & Tan, 2011).
+This improved algorithm is used in this research to determine the optimum generation settings, load settings and charging settings for generators, loads and EVs respectively.
+In this method, three immune operators, including cloning, mutation and suppressor, are redesigned to improve and enhance the adaptability of artificial immune systems and the extreme research target is to upgrade the performance of artificial immune system in complex engineering optimization problem.
+Interested readers can refer to (Li et al., 2011) for a detailed explanation, algorithm and flowchart of the IA–AIS.
+It was observed that this novel method is good at not only mining the local information but also probing potential information of objective function, which guarantees that the global optima is found quickly and accurately.
+Hence the above mentioned optimization problem was solved using the IA–AIS.
+In order to assess the performance of the approach described above, the MG network presented in Fig 1 was used.
+The network comprises three feeders: one serving a primarily residential area, one industrial feeder serving a small workshop and one feeder with commercial consumers.
+For each feeder, the load curves are as shown in Fig 2 for a typical weekday in October.
+The total energy demand for this day is 3188 kWh.
+The power factor of all loads is assumed to be equal to 0.85 lagging.
+A variety of DERs such as an MT, a proton-exchange membrane fuel cell, a directly coupled WT and several PVs are installed in the residential feeder.
+It is assumed that all DER sources produce active power at unity power factor, neither requesting nor producing reactive power.
+The minimum and maximum generation limits of the DER sources are given in Table 1.
+The bid coefficients assumed by the DER sources expressed in cents of Euro (Ect) per kWh and hour are given in Table 2.
+In the same table, start up costs where applicable are presented.
+Typical load curve of the test case Fig 2.
+Typical load curve of the test case.
+Table 1.
+Operating limits of DERs.
+DER Type Min power limit (kW) Max power limit (kW) 1 Micro turbine 6 30 2 Fuel cell 3 30 3 Wind turbine 0 15 4 PV 1 0 3 5 PV 2 0 2.5 6 PV 3 0 2.5 7 PV 4 0 2.5 8 PV 5 0 2.5 Table 2.
+Bid coefficients of DERs.
+Type bi (Ect/kWh) ci (Ect/h) Start up cost (Ect) Micro turbine 4.37 85.06 9 Fuel cell 2.84 255.18 16 Wind turbine 10.63 0 0 PV 1 54.84 0 0 PV 2 54.84 0 0 PV 3 54.84 0 0 PV 4 54.84 0 0 PV 5 54.84 0 0 To simplify our analysis, all units in this paper are assumed to be operating in electricity mode only and no heat is required for the examined period.
+In order to consider realistic numbers, the electrical efficiency of the fuel-consuming units, as well as the depreciation time for their installation have been taken into account.
+Actual energy prices from the Amsterdam Power Exchange (ApX) for a day (Amsterdam Exchange Data, 2007) with rather volatile prices have been assumed to represent realistically the open market operation (Table 3).
+The number of EVs to be connected in the MG network was estimated analytically based on the number of electricity clients (customers) in that network.
+An estimate of EVs from residential electricity clients was computed based on the approach suggested in Saber and Venayagamoorthy (2011).
+A brief description of this method is given in Appendix.
+Table 3.
+Market prices from APX.
+Hour Price (Euro/MWh) Hour Price (Euro/MWh) 1 22.64 13 149.86 2 19 14 400 3 13.98 15 210 4 12 16 194.99 5 11.53 17 60 6 19.94 18 41.3 7 23.01 19 35.16 8 38.37 20 43.95 9 149.86 21 117.12 10 400 22 54 11 400 23 30 12 400 24 25.57 Three different penetration levels with three different numbers of EVs have been considered for studying the effect of variation of number of EVs on load and energy management.
+Based on these calculations, the following results (Table 4) were obtained.
+The EVs charging has been classified into two types depending on the time of charge, (1) Economical charging and (2) Uncontrolled charging.
+(1) Economical charging: Economical charging was assumed to take place between 23.00 and 6.00.
+Users are assumed to start charging their batteries every day at 23.00.
+This case is more likely, than uncontrolled charging giving existing incentives for off-peak energy use.
+For this case, we assumed a constant charging rate of 1.4 kW which is based on a common household 110/120 volt, 20 A circuit with continuous rating of 1.8–2.0 kW.
+Despite this low charging rate, the charge time for a completely discharged battery is still less than six hours.
+(2) Uncontrolled charging: Uncontrolled charging denotes the case where the customers charge their EVs without following any monetary incentive scheme.
+Random starting times were created for each customer based on Gaussian distribution.
+The mean value of this distribution was chosen to coincide with the peak residential load.
+This is approximately 18.00 during winter and at 17.00 during summer which corresponds to the time at which residents return home.
+A standard deviation of two hours was considered.
+The uncertainty of each customers EV battery SOC prior to charging, was addressed creating a random charging duration for each EV owner.
+In this implementation, since some EV owners might prefer to charge completely unrestricted, the number of EV owners willing to charge during off peak hours is assumed as 50%.
+In order to ensure smart management of battery charging of EVs and for decentralized control of all the generators, loads and EVs, the following agents have been implemented in the case study.
+Table 4.
+EV specifications.
+Number of registered EVs in the MG (assumed) 2, 4, 10 Capacity of the battery 7.5 kWh Charging/discharging frequency 1/day SOC during departure 50% System efficiency 85% Usable energy in battery pack 6 kWh Average distance covered by a vehicle 12,000 miles/year Average distance covered by EVs per kWh 3.49 miles (1) Market agent (2) DER agent (3) Load agent (4) Optimizing agent (5) Auctioneer agent (6) EV agent To develop an agent-based framework, it is necessary to define the detailed functions of each agent according to the characteristics of the individual energy source/sink.
+The following is a brief description of elements in the agent based architecture.
+The sequence of agent communications is depicted in Fig 3.
+Agent based management of MG with EVs Fig 3.
+Agent based management of MG with EVs.
+(1) Market agent: This agent represents the bulk electric grid and announces the open market pricing to the load agent, DER agent and optimizing agent.
+As the tariff varies every 15 min, data is sent over the channel for every 15 min interval.
+(2) DER agent: The energy source agent manages the represented energy source based on the local measured information and the communications with other agents.
+The agent receives information from the optimizing agent about how much energy will be supplied and directs the corresponding energy source to do so.
+The control strategies for different types of energy sources may be different than each other, depending upon the characteristics of the fuels.
+The DER agent submits asks to the auctioneer agent during every 15 min interval.
+(3) Load agent: The load agent is to manage the load to make it a controllable energy resource.
+In an agent-based management of smart grid, the load also participates in the competition by participating in the bidding process according to the low and high priority loads in each type of load.
+The load agent submits its high priority and low priority bids for every 15 min interval to the auctioneer agent (4) Optimizing agent: This agent sends the demand and pricing information to the optimization routine, viz., artificial immune system algorithm.
+The AIS algorithm returns optimal generation of each DER back to the controller agent such that the sum of all DER generations equals load demand.
+This in turn is communicated to each DER agent so as to adjust their generation settings.
+(5) Auctioneer agent: The trading strategy adopted in this work viz., RB auction strategy is conducted by the auctioneer agent to assess the risk associated with a bid or ask under current market conditions and respond accordingly.
+A profit-maximizing adaptive bidding strategy based on risk and CE price prediction is utilized by the auctioneer agent.
+(6) EV agent: This agent represents the vehicle and is used for negotiating with the auctioneer agent for charging and discharging.
+This agent considers the financial benefits of charging/discharging based on the consumers’ personal driving habit and market prices.
+Each EV agent has a different parking time and final state of charge (SOC) which he would like to possess at the end of his stopover.
+Here, it is assumed that each EV agent tries to have at least 10% more energy than used for the latest trip.
+Once connected, the EV agent transmits the plug capacity, connection timer, initial and final desired SOC to the optimizing agent who then runs the optimization routine and determines how the available energy can be distributed.
+The EV agent can exhibit either one of two charging behaviors viz., uncontrolled charging or economical charging.
+The optimization routine described in step (4) considers customers preferences and energy prices so as to optimize the energy usage.
+Moreover, to maximize the financial benefits, a demand response algorithm m is incorporated in the load agents that can change the energy usage by end use customers from their normal consumption patterns, in response to changes in the price of electricity over time.
+The optimizing agent communicates with the optimization routine to determine the optimal settings of DERs in the MG and also the EVs.
+Here the MGs are considered to be operating in both islanding mode as well as grid connected mode.
+When the market price for energy is lower than the DER’s selling price, then the loads and EVs decide to buy power from the grid meaning the MG is operating in a grid connected mode.
+On the other hand, if the DER’s selling price is lower than the grid pricing, then the loads and EVs decide to buy power locally from the DERs and hence the MG can operate in an islanded mode.
+The optimizing agent described in step (4) carries out the optimization routine by receiving domestic, commercial and industrial load demands, EV charging load demand (if the EV is in charging mode), EV power output (during discharge) and generations from DERs in the MG.
+The outputs from the optimization routine are the generation settings for the DER, load settings (depending on MG is in islanded mode or grid connected mode) and charge/discharge settings of the EVs.
+These optimum settings are then communicated to the respective agents (DER, load and EV) and the generation levels will be set at the DERs and charging/discharging levels will be set at the EVs.
+When the MG is operating in islanded mode, if the EVs are in charging mode and if all the loads are turned ON, then there is a chance that demand may become greater than generation.
+To avoid this scenario, we have implemented demand response which can be used to turn OFF certain loads based on their priority/importance at the chosen time period.
+The EV owners discharge their vehicles during peak hours when there is a demand for power and also when the power tariff is high.
+This benefits the consumers in providing uninterrupted power supply and also earns profits for the EV owners.
+The selling prices (ASKs) are submitted by DERs to the auctioneer agent.
+The load agents and EV agents also submit their buying prices (BIDs) to the auctioneer agent.
+A Risk Based (RB) auction strategy was used by the buyers and sellers, which makes decisions based on the notion of risk attitude (adapted to best fit the prevailing market situations).
+Risk is defined as the most appropriate way to characterize the agent’s willingness to trade.
+Thus the DER agents, load agents and EV agents form a BID or ASK depending on how risk seeking or risk averse they are and adapt their risk attitude, based on past experience.
+This causes them to be more effective in prevailing market conditions.
+This adaptive behavior by the agents modifies the BIDs and ASKs continuously till a settlement is reached between them.
+The negotiations are carried out through the auctioneer agent who acts as a broker between the selling agents and buying agents.
+Interested readers can refer to Vytelingum, Dash, David, and Jennings (2004) for more on RB auction strategy.
+The proposed approach for energy management in a MG with EVs was implemented on the test system shown in Fig 1.
+Simulations were carried out with three different levels of EV penetration in the MG.
+Moreover two different charging scenarios were considered to study the effect of charging type/customers preferences on energy management and demand response.
+The charging scenarios of EVs that were considered in this paper are economical charging and uncontrolled charging.
+The objective of this paper is to develop an energy management solution and to study the effect of availability of renewable DERs and the effect of different charging profiles on the power management problem.
+The main advantages of the proposed approach are that the MAS presented in this paper works on an extendable, flexible and scalable architecture for expressing EV intentions and for controlling their charging behavior.
+The auction strategy used in this paper is an adaptive risk based strategy which adapts itself depending on past experience and prevailing market conditions.
+The simulations were tested on a multi agent platform programmed using a JADE agent management platform.
+Once initialized, agents attached to MG components, or groups of components can operate independently, according to their programming.
+The agent platform directly supports “Plug and Play” connectivity, as agents can come on-and off asynchronously and can be easily replicated for fault survivability.
+Collectively, MG agents operate according to user-defined goals and can work independently or cooperatively as their programming dictates, executing their responsibilities in parallel with other agents.
+These agents were simulated with three different levels of EV penetration, 2, 4, and 10.
+Each case corresponds to a specific loading configuration.
+To create a case, appropriate residential profiles are assigned to each customer.
+The EVs are randomly allocated to customers and EV charging profiles are added on top, to create final customer profiles.
+It is assumed in this implementation that, only the residential customers possess EVs and they charge their vehicles only at their respective homes.
+The demand response strategies based on load type are given in Table 5.
+Table 5.
+DR strategies by load type.
+Priority Type DR strategy Critical loads Refrigerator Not shed or shifted at all Freezer Cooking Lighting Deferrable loads Water heating Shut down the equipment when the price is higher, load will be shifted to less expensive hours Clothes drying EV Interruptible loads Space cooling/space heating 9.00 am–5.00 pm: turn OFF 5.00 pm–9.00 am: adjust by 10 °F and resume after peak hours Optional lighting Turn OFF 50% of the lighting loads when the price is higher The load shared, for all the three EV penetration scenarios are shown in Fig 4 for uncontrolled charging (usually in the evening) and without demand response and when the MG is grid connected.
+The uncontrolled charging scenario in most cases adds to the system peak load.
+The low penetration level’s impact on the peak load is minimal while both the medium and high EV penetration scenarios’ would increase peak demand.
+In the uncontrolled charging scenario, one-third of the EV fleet begins charging at 6:00 pm, exactly the time when the peak demand occurred on the peak winter day.
+As a result, all of the EV penetration scenarios analyzed would add to the system peak.
+In the winter months, the early evening peak is driven by residential energy use.
+Given that EVs represent a significant household load, charging when returning home from work would increase early evening peak demand for electrical energy during the cold weather months.
+Fig 5 depicts the variation of EV penetration levels under conditions of economical charging without demand response and when the MG is grid connected.
+This charging scenario assumes that either through financial incentives such as off peak rates, the EVs do not charge until 12.00 am midnight.
+Fig 6 illustrates that a large number of EVs could charge from the grid without adding to system peak demand under an economical charging scenario.
+Penetration rates of around 10 EVs can be accommodated without the need to build additional generation and transmission.
+In both the cases discussed above, demand response was not considered because the MG was connected to the grid (because the grid prices were lower than the DER selling prices).
+In the next simulation, the DER’s ASKs were modified to be lower than the grid prices and hence the MG was operating in islanded mode.
+EV penetration impact: uncontrolled charging Fig 4.
+EV penetration impact: uncontrolled charging.
+EV penetration impact: economical charging Fig 5.
+EV penetration impact: economical charging.
+Load profile for 2 EVs with demand response in islanded mode Fig 6.
+Load profile for 2 EVs with demand response in islanded mode.
+In the islanded mode, with EVs charging and all the domestic appliances connected in the domestic customers’ location, load demand is greater than the available generation.
+To meet this increased demand, several more distributed energy resources have to be introduced into the MG which is not an economically viable option.
+Hence demand management has to be included in this scheme so that some of the loads can be turned ON or OFF based on their importance and time of consumption.
+Demand management or Demand response can be accomplished by (a) staggering the EV charging time, or (b) performing household load control.
+The implementation of demand management with EVs is built upon an existing infrastructure and is mainly a software based solution.
+In most cases, the software-based solution can be considered more cost effective than a hardware-based solution (Shao, Pipattanasomporn, & Rahman, 2009), i.e.
+building more DERs in the MG.
+In the demand management scheme, the EVs act as a load on the system to recharge their batteries within the time available between reconnection to the grid and the next journey.
+If that time is longer than the minimum time required for recharging, this introduces the flexibility to shift the loads within that period to reduce peak demand and fill periods of lower demand, thereby reducing the need for balancing the available energy resources.
+Demand management is provided by the charging flexibility of individual EVs, which allows them to charge during the lowest demand periods within the charging window that is provided by the vehicle owners.
+Because low demand coincides with low prices, the reward for such flexibility is cheaper charging for the vehicle owner.
+Demand management balancing services generate revenue by allowing vehicles to either purchase electricity for cheaper than was anticipated, thus saving money, or by allowing vehicles to sell the right to consume electricity, thus earning money.
+Since in this paper, the focus is primarily on EVs operating under G2V mode, the former incentive is considered.
+Demand response is included into the original problem formulation as a sub-problem which can be used to maximize consumer comfort index (Shao, Pipattanasomporn, & Rahman, 2012).
+so that the consumer achieves low cost and does not compromise on his comfort level.
+For EV charging at home, the delay is usually not a problem unless the user needs the EV in the evening, for which they will set a higher priority for the EV.
+In that case, EV charging will be guaranteed.
+Therefore the comfort indices are not applicable to EVs.
+But for all the other appliances such as water heaters, air conditioners and washing machines, comfort indices are defined as These indices are defined based on the severity, scale and duration of convenience violations for each controllable appliance.
+Table 6 lists the consumer comfort zones for different appliances.
+The numbers listed above are based on typical consumer preference.
+The comfort zone may vary by areas and can be re-defined according to any available concrete survey data.
+The indices are used to measure the impacts of DR on the consumer’s convenience.
+With demand response implemented along with risk based auction conducted in the energy market, the load profiles for a penetration of 2, 4 and 10 are illustrated in Figs.
+6–8 respectively.
+Economical charging and uncontrolled charging are depicted by red and blue curves respectively.
+Table 6.
+Consumer comfort zones for different appliances.
+Air conditioners Water heaters Washing machine EV Comfort zone ⩽±2°F difference from setting ⩽±10°F difference from setting ⩽30 min within the original charging time ⩽30 min within the original charging time Load profile for 4 EVs with demand response in islanded mode Fig 7.
+Load profile for 4 EVs with demand response in islanded mode.
+Load profile for 10 EVs with demand response in islanded mode Fig 8.
+Load profile for 10 EVs with demand response in islanded mode.
+In the above graphs, green line indicates the maximum capacity of the MG, blue line indicates the economical charging and red line indicates uncontrolled charging.
+In Fig 6, since there are only 2 EVs involved, there is not much of a variation between economic charging and uncontrolled charging behaviors.
+But in Figs.
+7 and 8, a huge variation in the power consumed and the manner in which demand management takes in account this variation, can be observed.
+The load profiles of air conditioners, washing machines and water heaters in the MG during the day is given in Figs.
+9–11 with a EV penetration of 4.
+Load profile of the air conditioner with demand response Fig 9.
+Load profile of the air conditioner with demand response.
+Load profile of the washing machine with demand response Fig 10.
+Load profile of the washing machine with demand response.
+Load profile of the water heater with demand response Fig 11.
+Load profile of the water heater with demand response.
+The proposed demand response strategy can provide the utility with unchanged peak demand to avoid building new distributed energy resources, while being able to accommodate EV charging by suitably turning ON or OFF, the other loads, based on customer’s preferences.
+Since the utility only sends the demand limit to each house and will leave all the household control decision to the consumer, the proposed demand management strategy will respect the consumer’s own choices and protect their privacy.
+The results obtained above prove the applicability of demand management integrated with risk based auctions to maximize profitability of the customer.
+During economical charging pattern, the EV owners were given preferential pricing for the power consumed so as to encourage and boost charging during off peak hours.
+This reduces the overall peak demand on the system and thereby reduces the total load on the power transmission and distribution system.
+By optimally controlling the EVs charging pattern, this research minimizes the variance of active power flow through the point of common coupling and the cost of power generation by DERs in the MG.
+The transportation system in the US was built in an era of cheap gas.
+Gas is not cheap anymore.
+So there’s no doubt about the fact that the transportation system needs a change.
+People are already moving back into the cities, moving closer to where they work.
+Given the potential for near-term, large-scale deployment it is important that policy makers and electricity industry members understand the impact that EVs will have on national electricity infrastructures.
+Large numbers of EVs have the potential to threaten the stability of the power system.
+This paper models two different charging patterns for the EVs.
+In this paper, a multi agent based framework is proposed for optimal power management in a MG with EV penetration.
+The generators, loads and EVs are represented as agents in a multi agent system, which can coordinate and communicate with each other for efficient and economical operation of the MG.
+The integration of demand management strategy along with risk based auction strategy is also explored.
+In this demand management strategy, the utility sends in the power demand limit signal to the consumer and the control decisions are left to the customer.
+This ensures that customer’s choices and needs are met and simultaneously provides the customer with economical power.
+Customer’s choices are defined based on his comfort indices and his comfort/tolerance level.
+With a higher penetration of EVs the customer will not have to sacrifice his comfort at home in exchange for cheaper power.
+Making use of these indices to implement demand management will aid in improving the customer participation in these programs.
+We have considered a MG that can have a maximum of 10 EVs along with existing domestic loads.
+If the size of the MG is increased, then an increased penetration of EVs may be considered.
+The authors will be extending this research work by studying a higher capacity MG with a much higher penetration of EVs compared to the case in this paper.
+As the number of EVs increases, it will become more difficult to keep the household load under a given demand limit and not violating the consumer’s comfort level.
+At that point, the utilities may not be able to rely solely on demand response to shave the peak demand.
+When all demand resources are exploited, utilities can explore other means such as increasing the DERs or opt for transmission and distribution equipment upgrade to address high EV penetration scenarios.
+Appendix A.
+The number of EVs in an electric power network can be estimated analytically based on number of electricity clients (customers) in that network.
+An estimate of EVs from residential electricity clients may be computed as follows: where: • NEV = Number of EVs • NVUC−V2G = % of the number of registered EVs for participation in generation scheduling with V2G • VREC = Average number of EVs per residential electricity client • NREC = Number of residential electricity clients • XRL = Percentage of residential loads in the power network • Lmin = Minimum load in the power network at given time (MW) • AVHLD = Average hourly load demand per residential electricity client (kW) • AVMEC = Average monthly electricity consumption per residential electricity client (kWh)

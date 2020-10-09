@@ -1,0 +1,338 @@
+Brain tumor grade identification is an invasive technique and clinicians rely on biopsy and spinal tap method.
+The proposed method takes an effort to develop a non-invasive method for the tumor grade (Low/High) identification using magnetic resonant images.
+The process involves preprocessing, image segmentation, tumor isolation, feature extraction, feature selection and classification.
+An analysis on the performance of the segmentation techniques, feature extraction methods, automatic feature selection (SFLA) and constructed classifiers (support vector machines, learning vector quantization and Naives Bayes) is done on the basis of accuracy, efficiency and elapsed time.
+This analysis motivates towards the accurate determination of tumor grade from MR images instead of depending on magnetic resonant spectroscopy and biopsy.
+Fuzzy c-means segmentation outperformed other segmentation techniques, shape and size based textural feature promoted the demarcation of tumor grades, Naive Bayes classifier succeeded in terms of efficiency, error and elapse time when compared with SVM and LVQ.
+The study was carried out with 200 images consisting training set (164 images) and testing set (36 images).
+The results revealed that the system is robust and accurate (91%), consumed less time in grade identification, an alternative for biopsy and MRS in the brain tumor grade identification diagnosis procedure.
+A brain tumor is an abnormal growth of cells in the brain or the spinal canal which can cause uncontrollable cell division in the brain or in the lymphatic tissue or blood vessels that can prove to be life threatening.
+However, brain tumors can be cancerous or benign depending on the rapidity of their growth and nature.
+Brain tumors are to be detected at the earliest possible stage and treated before it can prove to be fatal.
+The proposed method deals with a unique class of brain tumors namely the Astrocytoma which is malignancy of a type of glial cells called Astrocytes found mostly in the cerebrum of the brain.
+There are four types (grades) of Astrocytoma based on the grading provided by the World Health Organization (WHO) which is generally followed internationally.
+Pilocytic Astrocytoma is the first type (grade) of Astrocytoma common in children that grows gradually and usually are benign.
+Low grade astrocytoma is the second type whose borders are not well defined and they spread rarely to the other parts of the central nervous system.
+The third type is the Anaplastic Astrocytoma which invade neighboring tissues and they are not uniform in appearance.
+They fall under the high grade Glioma category with poor clinical prognosis.
+Glioblastoma multiforme is the most malignant fourth type brain tumor which is very common and tends to grow and spread to other parts of the brain quickly.
+Grade I and Grade II form the low grade Glioma brain tumors whereas Grade III and Grade IV form the high grade Glioma brain tumors.
+The methodology deals with the classification of Astrocytoma into low grade and high grade Gliomas respectively.
+Medical Image analysis for brain tumor detection relies on magnetic resonant images and magnetic resonant spectroscopy in the initial diagnosis procedure.
+Recent works on brain tumor grade identification entirely depend on MR images and spectroscopy (Arizmendi, Vellido, & Romero, 2012) methods to promote non-invasive techniques.
+(Metwally et al., 2014) has demonstrated that magnetic resonant spectroscopy is a complimentary tool which saves a patient from biopsy to identify the type/grade.
+(Luts, Heerschap, Suykens & Van Huffel, 2007) combined MRI with MRS data for the construction of multi classifier system in brain tumor classification based on least squares support vector machines.
+Grading of astrocytic brain tumors is also based on gene expression microarray data, which utilized simple artificial neural network as classifier (Petalidis, Oulas, & Backlund, 2008).
+Machine learning schemes also supports efficient classification in tumor type identification.
+In the investigation made by (Yen & Langari, 2004), (Zhao et al., 2010) (Zacharaki et al., 2012), (El-Dahshan, Mohsen, Revett & Salem, 2014) the region of interest (tumor) was isolated from MR brain image which was followed by feature extraction.
+The predominant features were selected and support vector machines were employed for texture pattern classification.
+An efficient method with improved accuracy has to be implemented for the non-invasive tumor grade identification from MR images.
+The existing method (Zacharaki et al., 2009), provide 88% of accuracy with 102 brain images: The procedure involved: ROI definition (software package FSL), feature extraction (Gabor), feature selection (Ranking Selection) and classification (SVM).
+Fig 1.
+Non-invasive procedure for the grade discrimination of astrocytoma (tumor).
+We propose an expert system to improve the accuracy based on ROI definition (FCM & Watershed segmentation), feature extraction (GLCM, PCA and statistical methods), optimized feature selection (Shuffling Frog Leaping Algorithm) and classification (SVM, LVQ and Naive Bayes).
+Motivation The proposed non-invasive method involves grade identification of Astrocytoma (tumor) from MR images.
+MR images is efficient in the detection of tumor because of its high contrast, high spatial resolution and less radiation.
+Magnetic resonant images provide information about the size and location of tumor but unable to classify the type/grade of tumor.
+Hence clinicians proceed towards invasive methods in which biopsy and spinal tap methods are painful and time consuming.
+This inability motivated us towards the development of an expert system to improve the diagnostic ability of MRI.
+Moreover, there is no need to go for a biopsy at the earliest stage as the aim of this method is to classify the tumors with the help of the MR images alone.
+The analysis began with the isolation of tumor (region of interest) using segmentation methods (Section 2.3).
+The segmented tumor image is now subjected to feature extraction (Section 2.4), automatic feature selection (Section 2.5) and classification (Section 2.6) of features.
+The results (Section 3) proved that the method is accurate in grade demarcation since the ROI is considered for evaluation procedure.
+The developed automated system, assist premier diagnosis and it is efficient in provision of quick results in clinical outcomes.
+The proposed scheme is highlighted in Fig 1 to comprehend the procedure involved in the non-invasive method of grade identification of Astrocytoma.
+Image database An MR scan or CT scan can provide a picture of the anatomy of the brain.
+MR scanned image is taken for the entire process implemented.
+MR scan is more sensitive than CT.
+It is non-invasive and has little exposure to radiation.
+There are three types of MR image scans, namelyT1 weighted MRI (gray matter (dark gray) and white matter (lighter gray) tissues are efficiently contrasted), T2 weighted MRI (gray matter (lighter gray) and white matter (darker gray)) and PD weighted MRI (The gray (bright) and white (darker gray) matter is differentiated with little contrast between brain and CSF).The proposed method utilized 200, T2 weighted images.
+Training set consisted of 164 images (82-low grade & 82-high grade) and testing set consisted of 36 images (18-low grade and 18-high grade).
+Pre-processing The medical data used is magnetic resonant head data carrying information on Astrocytoma.
+The data is obtained from a diagnostic lab and consists of abnormal MR brain images of human volunteers.
+The imaging modalities and artefacts are to be removed and hence subjected to pre-processing.
+The conventional methods of resizing and filtering are substituted using pulse coupled neural network and a median filter.
+Pulse coupled neural network Removal of noise from the image is an important factor in image processing.
+The PCNN network (Subashini & Sahoo, 2014) can be used to achieve this as filtering of noise will always help in getting more accurate result.
+The advantage of this network is that it removes only the noisy pixels without disturbing the other pixels and thus the relevant details and the edges are preserved.
+The noise is pin pointed and filtered based on the spatial information and time information of the original image.
+A median filter is used in conjunction with PCNN to remove common noise occurring in medical images like the Binary or salt and pepper noise (Wen & Wen, 2013).
+Tumor segmentation and isolation Image segmentation is the process of dividing a digital image in to multiple segments that have a strong correspondence with original image.
+There are numerous types of segmentation techniques are available such as threshold based segmentation, edge based segmentation, region based segmentation and clustering based segmentation.
+The segmentation methods applied for tumor isolation in this grade identification process is discussed in Sections 2.3.1 and 2.3.2.
+Fuzzy c-means segmentation Fuzzy c-means clustering is the best known unsupervised clustering algorithm.
+It is generally used to find the interesting patterns or groups of data from the given set.
+This form of clustering is often used to segment images where pixels are partitioned into regions corresponding to different objects.
+The fuzzy c-means algorithm allows a point in an image or given set of data to belong to multiple clusters thus producing a soft partition of the dataset.
+A set of clusters are well separated when any two points in a cluster are closer than the shortest distance between two clusters in different clusters.
+In order to do the partition of clusters, an objective function Jm is used which is shown in Eq (1) (1) where ‘P’ is a fuzzy partition of the dataset X formed by C1, C2,…,Ck clusters.
+Parameter ‘m’ is a weight that determines the degree with which the partial clusters affect the clustering result.
+‘vi’ minimizes the objective function to find a good partition where‘’that minimize Jm further.
+The FCM theorem states that a constrained fuzzy partition [C1, C2,….Ck] can be a local minimum of the objective function Jm only if the following conditions in Eqs.
+(2) and (3)are satisfied: (2) (3) The fuzzy c-means segmentation is carried out to cluster and the pixels are grouped together to get the desired segments of tumor (Yen & Langari, 2004).
+Edge-based segmentation method Edge-based segmentation is the segmentation method based on the edge in an image.
+The proposed method applies edge detection before segmentation for tumor isolation.
+Few edge detection methods are median filter, gradient operators and Hilbert transform (Nixon & Aguado, 2008).
+Watershed segmentation algorithm Gray scale digital image is considered as topographic surface in watershed segmentation.
+The segmentation is based on the intensity and pixels are grouped with similar intensity.
+This is a better way to segment the tumor from image.
+Few morphological operations are performed to isolate the tumor region from the image.
+If the image is a 3D topographic image, x and y denote the coordinate plane and z, the pixel value, then M1, M2, ...., MR is the regional minima of an image g(x, y), which is the pixel of coordinate (x, y) (Vincent & Soille, 1991).
+C(Mi)is the catchment basin coordinate associated with Mi that is flooded at stage n and T[n] is the set of coordinates (s,t) given by Eq (4).
+(4) The maximum pixel of g(x,y) is calculated and the minimum pixel is assigned to Mi.
+The topography will be flooded from n=min+1.
+Eq (5) denotes the catchment basin for the co ordinate (s,t).
+If (x, y) ∈ C(Mi)and at location (x,y) Otherwise as shown in Eq (5).
+(5) C[n], union of the flooded catchment basin is given in Eq (6) (6) Let n = n+1, the set of connected components Q is calculated from T[n] as per Eq (4).
+For everyq ∈ Q[n], there are three conditions which are mentioned below • If is empty, then q is incorporated in to C[n–1] to form C[n] and it shows the calculated new minimum.
+• If contains one connected component of C[n–1], then q is incorporated in to C[n–1] to form C[n], which shows q is within the catchment basin of some regional minimum.
+• If contains more than one connected component of C[n–1], it shows that a ridge is found which divides the catchment basin.
+The points of ridges are calculated and set as dam.
+Eqs.
+(4) and (5) are repeated to calculate C[n] until n reaches to max+1.
+Feature extraction Feature extraction is a unique form of dimensionality reduction i.e.
+transforming the input data in to a specific set of features.
+Large amount of data is needed to represent a single image which occupies large memory and time consuming.
+So, the features are extracted in order to reduce the data, memory and time.
+The extraction techniques are different for the textural, intensity and shape based features.
+Fig 2 shows shape, texture and intensity based features, which describe the types of features that are extracted from tumor images.
+Fig 2.
+Shape, texture and intensity based features.
+Textural features: gray level co-occurrence matrix The textural features, which represent the surface or structure, are calculated by converting the MR images into Gray Level Co-occurrence Matrices (GLCM) which is based on the repeated recurrence of some gray level configuration in the texture.
+This configuration varies with the distance rapidly in fine textures and slowly in coarse textures.
+Since the segmented images show a sharp change in textures, the features obtained after the segmentation provide a significant variation among the various parameters calculated from the GLCM values.
+GLCM is a way of extracting second order statistical textures defined as Haralick's texture descriptors namely Angular Second Moment (ASM), entropy, autocorrelation, dissimilarity, maximum probability, inverse difference etc.
+In a GLCM, the number of rows and columns is equal to the number of gray levels, G in a given image (Sasikala & Kumaravel, 2007).
+Table 1.
+GLCM based feature extraction on low grade images.
+Sl.
+no.
+Contrast Dissimilarity ASM Entropy Max probability Inverse idm Area 1 0.7 0.1 1.0 0.1 1.0 1.0 1.0 295.0 2 0.1 0.0 1.0 0.1 1.0 1.0 1.0 244.0 3 0.1 0.0 1.0 0.1 1.0 1.0 1.0 374.0 4 0.1 0.0 1.0 0.1 1.0 1.0 1.0 149.0 5 0.1 0.0 1.0 0.1 1.0 1.0 1.0 235.0 6 0.0 0.0 1.0 0.1 1.0 1.0 1.0 242.0 7 0.1 0.0 0.9 0.1 1.0 1.0 1.0 345.0 8 0.1 0.0 1.0 0.1 1.0 1.0 1.0 218.0 9 0.1 0.0 0.9 0.1 1.0 1.0 1.0 328.0 10 0.0 0.0 1.0 0.0 1.0 1.0 1.0 145.0 Table 2.
+GLCM based feature extraction on high grade images.
+Sl.
+no.
+Contrast Dissimilarity ASM Entropy Max probability Inverse idm Area 1 0.1 0.0 0.9 0.2 1.0 1.0 1.0 486.0 2 0.1 0.0 0.9 0.2 1.0 1.0 1.0 387.0 3 0.1 0.0 0.9 0.2 1.0 1.0 1.0 640.0 4 0.1 0.0 0.9 0.2 1.0 1.0 1.0 424.0 5 0.7 0.0 0.9 0.2 1.0 1.0 1.0 357.0 6 0.1 0.0 0.9 0.1 1.0 1.0 1.0 303.0 7 0.1 0.0 1.0 0.1 1.0 1.0 1.0 442.0 8 0.0 0.0 1.0 0.5 1.0 1.0 1.0 263.0 9 0.1 0.0 0.9 0.2 0.9 1.0 1.0 395.0 10 0.1 0.0 0.8 0.3 0.9 1.0 1.0 447.0 Manually, seven features were chosen and computed using the GLCM method listed out and are represented in Eqs.
+(7–13).
+Contrast: it is a measure of the local intensity variation in an image.
+(7) 2.
+Dissimilarity: the measure of dissimilarity between the pixels.
+(8) 3.
+Angular Second Moment (ASM): it is the measure of homogeneity of an image.
+It usually provides relatively high values in the GLCM.
+(9) 4.
+Entropy: homogeneous images have higher entropy where as inhomogenities has low entropy.
+(10) 5.
+Maximum Probability (MP) (11) 6.
+Inverse Difference Moment (IDM): it is the local homogeneity of the image.
+It has higher values for homogeneous images and lower values for non homogeneous images.
+(12) 7.
+Inverse: it can be computed from (13) The features computed (Joshi & Rana, 2010) from the matrix showed varying differences with respect to both the Grades are tabulated in Tables 1 and 2.
+Non-textural features: area calculation The only other non-textural feature i.e.
+the area of tumor was calculated by removing the unwanted portions of the segmented image through morphological operations like erosion and dilation.
+The isolated tumor portion was subjected to Sobel's edge detection and then the calculation of area (Tables 1 and 2) in terms of pixels.
+Sobels's edge detection is a discreet differentiation operator which plays a vital role in image processing.
+It gives an approximation of the gradient of the image intensity function.
+It's based on convolution of a 3×3 mask with the original image.
+It can detect edges quite efficiently (Sonka, Hlavac, & Boyle, 2008).
+Principle component analysis (PCA) Principle Component Analysis is the process of extracting the principle features.
+It is based on orthogonal transformation i.e.
+converting the set of correlated variables in to set of uncorrelated variable.
+Here, the correlated variable is the segmented image and the uncorrelated variable is the features which are principle components.
+The lower dimensional feature vectors are estimated from the original data set by means of PCA.
+represents the n × N matrix, where each and every ‘x’ is the n dimensional face vector, from a p × q face image.
+‘n’ is the total number of pixels in the given image (p x q) (Rathi & Palani, 2012).
+PCA is the linear transformation of image in to a feature vector, shown in Eq (14) (14) Where Y is the m x n feature vector matrix, `m' is the feature vector dimension and W is the `n x m' transformation matrix, and the eigen vectors are the column of W. The `m' largest eigen vector can be calculated from the Eq (15) (15) where ‘ei’ and ‘λ’ are eigenvectors and eigen values of the matrix.
+The total scatter matrix ‘S’ and the mean value ‘µ’ are given in Eqs.
+(16) and (17).
+(16) (17) The transformed feature vector is WTSW after linear transformation.
+The projection Wopt is to maximize the determinant of the scatter matrix in Eq (18) (18) where ‘w’ is the set of eigen vector of ‘S’ corresponding to the ‘m’ largest eigen values.
+In this the given input image is ‘n’ dimensional that is reduced to ‘m’ dimensional feature vector and the reduced ‘m’ feature vector is less than the original ‘n’ image vector.
+Table 3.
+Texture, shape and intensity based feature extraction on low grade images.
+Sl.
+no Entropy Mean Moment Skewness Variance Area Std deviation Histogram Eigen vector 1 4.6 202 55 11.5 55 336 111 106 −100.2 2 4.2 173 69 8.2 69 530 122 104 −100.2 3 4.7 172 90 8.9 90 538 114 121 −72.51 4 4.3 153 141 9.6 1429 630 124 157 −72.5 5 3.6 207 331 11.9 332 681 96 261 −72.15 6 3.6 173 377 12.2 379 685 116 282 −52.69 7 4.2 177 431 11.7 432 882 113 298 −44.75 8 4.6 127 322 8.1 323 954 120 186 −44.02 9 4 188 351 9.5 352 1035 109 248 −31.08 10 4.2 152 529 9.5 530 1075 98 290 −30.88 Table 4.
+Texture, shape and intensity based feature extraction on high grade images.
+Sl.
+no Entropy Mean Moment Skewness Variance Area Std deviation Histogram Eigen Vector 1 4.3 169 4135 12.5 4150 2534 117 177 −105.73 2 4.2 129 10276 9.4 10316 2555 124 1128 −51.694 3 3.7 179 999 11.1 1002 2664 112 444 −44.756 4 3.5 184 3095 11.3 3107 2695 111 947 −0.0475 5 3.9 187 2535 14.4 2544 2801 110 781 −0.0454 6 4 187 38846 13.9 38988 3336 109 3029 −0.0365 7 3.7 160 54074 12.9 54286 3457 120 3461 −0.0318 8 4.2 167 5154 12.2 5173 3505 118 1043 −0.03 9 3.8 175 65750 14 66007 3909 116 784 −0.0298 10 4.5 149 1204 9.2 1208 3923 122 400 −0.0226 2.5.
+Feature selection Feature selection is the process of selecting the redundant feature for the classifier that can be tremendously useful in reducing the dimensionality and execution time of the data to be processed.
+It is mainly useful in data analysis process, as it shows which feature is more important for grade prediction and how these features are related.
+The textural and non-textural features are tabulated in Tables 1–4.
+Shuffling Frog Leaping Algorithm is applied for selecting the most predominant feature.
+Shuffling frog leaping algorithm (SFLA) The SFLA combines the benefits of both Genetic based memetic algorithms and Social behavior based PSO algorithms.
+SFLA generate better results than the Genetic algorithm (Rouhi, Jafari, Kasaei, & Keshavarzian, 2015) in terms of efficiency and effectiveness (Elbeltagi, Hegazy & Grierson, 2005).
+In this, the entire populations of frogs are dispersed within a different subset called a Memeplex.
+Different memeplexes are considered as a different culture of frogs, each performing local search (Niknam, Rasoul Narimani, Jabbari & Reza Malekpour, 2011).
+The extracted features are the initial population set.
+(1) Initial population: For an S dimensional problem, initial population of ‘P’ frogs is created.
+A frog is represented as in Eq (19) (19) (2) Sorting and distribution: Based on the fitness value, frogs are sorted in descending order, then the whole population is partitioned in to ‘m’ memeplexes, each contains ‘n’ frogs (mxn).
+The first frog belongs to the first Memeplex; the second frog belongs to the second Memeplex;‘m’ frog is belongs to the ‘m’ memeplex.
+The memeplexes are the various textural and non-textural parameters.
+(3) Memeplex evolution: Frogs with the best and the worst fitness are identified as Xb and Xw and the frog with the global fitness is identified as Xg (Yang, Chuang, Ke, & Yang, 2008).Change in frog position is as per Eqs.
+(20) and (21).
+(20) (21) ‘rand’ is random number between 0 and 1.
+The maximum change in position is defined by Dmax and it replaces the worst frog, if this generates the better solution.
+If Eqs.
+(20) and (21) do not replace the worst frog, then the change in position is given by (22) (22) If Eqs.
+(20) and (22) do not provide better solution, then a new solution is randomly generated.
+(4) Shuffling: Within each memeplexes, the individual frogs hold ideas and evolve through the process of memetic evolution.
+After a defined number of memetic evolution steps, ideas are passed among memeplexes in a shuffling process.
+(5) Terminal condition: The local search and the shuffling processes continue until defined convergence criteria are satisfied.
+The parameter that shows best demarcation among themselves is chosen for classification/determination of tumor grade.
+Classification of tumor The method proposes a linear classification of features into low grade an high grade.
+Support Vector Machines (SVM), Learning Vector Quantization (LVQ) and Naives Bayes are efficiently used in the process of grade identification.
+Support vector machine (SVM) SVM are linear machines used for pattern classification and non-linear regression.
+A hyperplane is constructed which acts as a decision base to create a margin between the positive and negative samples.
+The main goal is to maximize this margin.
+Various theories of statistical learning are used to achieve this property.
+Since SVM implements a method of minimizing structural risk, it provides a good generalization performance of pattern classificationproblemsinspite the fact that problem-domain knowledge is lacking.
+This property is very much unique to SVM and thus it has an advantage over other conventional classifiers.
+The support vectors have a small set of training data which is obtained by the algorithm.
+Learning machines are constructed depending on the inner product kernel and characterized by decision surfaces of their own (Bauer & Nolte, 2011).
+A linear classification of data is required for the grade identification (low/high), a linearly separable optimal hyperplane, ‘x’ is built which is expressed in Eq (23).
+(23) where, ‘ xp’ is the nominal projection of ‘x’ onto the hyperplane, ‘r’ is the desired algebraic distance and ‘wo’ is the optimum value of the weight vector used to find the separation between the closest data points called the margin of separation denoted by ρ.
+The optimal hyperplane is found which lead to the construction of a support vector machine for pattern recognition.
+Moreover, the inner product kernel is defined by Eq (24).
+(24) where, ϕT(x)ϕ(xi) represents the inner product of the two vectors induced in the feature space by ‘x’ and ‘xi’ corresponding to the ‘i’th sample.
+The inner product kernel is used to construct the optimal hyperplane in the feature space.
+With the help of the optimal hyperplane, we can construct a support vector machine as given by Eq (25).
+(25) where, is the training sample and the Lagrange multipliers are used to maximize the objective function (Haykin, 2003).
+Learning vector quantization (LVQ) The LVQ network is a hybrid network which uses supervised and unsupervised learning techniques to form classifications.
+It consists of a number of neurons in each layer where each neuron in the first layer is assigned to a single neuron in the second layer.
+S1 is the number of neurons in the first layer and S2 is the number of neurons in the second layer.
+S2 will usually be larger than S1.
+Each neuron in the first layer of the LVQ learns a prototype vector and thus the classification of the region of the input space is done.
+Unlike SVM where the input and the weight vector proximity are computed using an inner product, LVQ functions by computing the distance directly.
+Thus it prevents the normalization of vectors.
+The input of the first layer of LVQ is given by Eq (26).
+(26) where, ‘n’ is the net input, ‘w’ is the weight vector and ‘p’ is the vector prototype.
+The second layer of the LVQ network concatenates the subclasses into one class with a W2 matrix.
+A set of examples of proper network behavior are required for training the network.
+This task is achieved by the training matrix.
+Each neuron in the first layer is assigned to an output neuron after which the learning occurs and this process helps in the generation of a W2 matrix.
+All elements of W2 are made zero except if a hidden neuron I can be assigned to class K, then .
+The hidden weights of W1 are trained using the Kohonen rule and the network is shown in Fig 3.
+LVQ network showing the neuron layers and the input layer (Hagan, Demuth & Beale, 2002).
+Fig 3.
+LVQ network showing the neuron layers and the input (Martin T.Hagan, Howard B. Demuth and Mark Beale, 2008).
+Naive Bayesian classification The Bayesian classification is a supervised learning method in addition to the statistical method for classification.
+It provides a useful outlook for understanding and evaluating many learning algorithms.
+It computes precise probabilities for hypothesis and robust to noise.
+The main advantage of this method is that, it requires only a small amount of training data set.
+A Naive classifier is a simple probabilistic classifier based on Baye's theorem with strong independent assumptions.
+The network is trained efficiently by the nature of the probability model.
+It is mainly suited when the input dimensionality is too high.
+The training data are accompanied by labels indicating the class of the observations and the new data is classified based on the training set (John & Langley, 1995).
+The probability model for a classifier is a conditional model shown in Eq (27).
+(27) where C is the dependent class variable with a small number of classes, F1 through Fn are features, n is the number of features.
+If the number of features is large, then the probability table is infeasible.
+The Baye's theorem is given below in Eq (28), (28) The above Eq (28) can be simplified as Eq (29) (29) Since the proposed method is an alternative for invasive methods, a thorough analysis has been done with image segmentation, feature extraction and classification techniques to choose the best technique with improved accuracy.
+This section describes in detail, the design of each technique and also gives the algorithms and programming methodologies used in each stage of the work.
+The grade identification procedure dealt with the segmentation of MR images using fuzzy c-means based clustering and water shed, followed by extraction of textural and non-textural based features.
+Area is calculated after edge detection.
+The selected features are used for classification using SVM, LVQ and Naive Bayes algorithms and the process is depicted in Fig 4.
+Astrocytoma grade identification procedure.
+Fig 4.
+Astrocytoma grade identification procedure.
+Image pre-processing The following algorithms are used to implement the image pre-processing Step 1: Start Step 2: Convert the image into gray scale image Step 3: Resize the image to 512×512 Step 4: De-noise the image using a PCNN based median filter Step 5: End Fig 5(a and b) depicts the original and preprocessed low grade astrocytoma image.
+This process of resizing, enhancing the quality of image is applied for the training and testing images (164- testing set, 36- training set).
+Fig 5.
+(a) Low grade Astrocytoma original image (b) Low grade pre-processed image 3.2.
+Image segmentation Segmentation is a challenging task since the region of interest needs to be fixed ignoring grey matter, white matter, cerebrospinal fluid without losing valuable information.
+The results are depicted in Fig 6 conversion of original image to edge detected image.
+Fig 6.
+(a) Original image (b) Segmented image (c) Edge detected image.
+Conversion of original image to edge detected image.
+FCM based segmentation A three-class fuzzy segmentation algorithm (Yen & Langari, 2004) is carried out to segment the tumor Step 1: Start Step 2: Define a function F, giving the dataset, the number of clusters and the weight as the input Step 3: Define a variable which represents the termination tolerance and variable I =0, 1, 2… Step 4: Repeat for all I Step 5: Calculate the cluster prototypes using Eq (3) of Section (2.3.1) Step 6: Compute the distances between the dataset elements and the prototype elements Step 7: Update the partition matrix U by computing the membership function using the Eq (2) of Section (2.3.1) if 1 ≤ k ≤ N. Step 8: Otherwise, set the membership function to zero Step 9: Repeat until ||Ul-Ul-1|| is less than the termination tolerance Fig 7.
+Graphical representation of features: Top left
+Step 10: End 3.2.2.
+Water shed segmentation The steps involved in the watershed segmentation are given below: Step 1: The image is loaded and converted in to gray scale image Step 2: The gradient magnitude is calculated which is used as a segmentation function Step 3: The foreground objects are marked and the background markers are computed Step 4: The watershed transform of the gradient magnitude is calculated Step 5: After watershed transform some morphological operations are applied for segregate the tumor from the segmented image 3.2.3.
+Tumor isolation The following algorithm describes the use of morphological operators to isolate the tumor by removing the unwanted portions and by enhancing the required portions (Nixon & Aguado, 2008).
+Step 1: Start Step 2: Read the segmented image Step 3: Use the command imerode() for eroding the unwanted portions Step 4: Use the command imdilate() for dilating certain parts of the tumor Step 5: Repeat Step 3 and Step 4 until the tumor is isolated completely Step 6: End 3.2.4.
+Algorithm for area calculation Step 1: Start Step 2: Compute the number of rows and columns of pixels the image Step 3: initialize a variable area Step 4: Start for (i= 1: no of rows) Step 5: for (j=1: no of columns) Step 6: if, the pixel values come within the edge detected area, increment area by 1 Step 7: else, increment area by 0 Step 8: Display area Step 9: List out the area along with the texture based features Step 10: End 3.3.
+Feature extraction Texture based feature, non-textural (shape) features and intensity based features are calculated for training the classifiers.
+The algorithm for each of the feature extraction techniques is given below in the Sections (3.3.1)–(3.3.3).
+Texture based feature extraction Step 1: Start Step 2: Read the images with the isolated images Step 3: Construct the Gray Level Co-occurrence Matrix for the image Step 4: Using the values from the matrix, compute the features using Eqs.
+(7)– (13) of Section 2.4.1 Step 5: List out the features for all the 200 images (both training and testing) Step 6: End 3.3.2.
+Shape based feature extraction Step 1: Start Step 2: Read the images with the isolated tumor Step 3: Using Sobel's edge detection operator, detect the edge of the isolated tumor Step 4: From the edge detected image, calculate the area of the tumor in pixels 3.3.3.
+Intensity based feature extraction Principle component analysis is performed by using the following steps: Step 1: The mean value is calculated from the given data Step 2: The new matrix A is computed by subtracting the mean from the data S Step 3: The covariance matrix is calculated from the new matrix A Step 4: The eigen values (V1V2V3....VN) and vectors are derived from the covariance matrix C and the eigen vector is also calculated from the data set S Step 5: From the large eigen values, a low dimension data set is created 3.4.
+Feature selection If the extracted features are directly applied as an input to the classifier, the accuracy of the classifier is poor and it took more time for processing.
+To overcome this problem, feature selection is applied to select the most discriminate feature.
+Fig 7 Graphical Representation of Features: Top left- Area, Top right-Variance, Bottom left-Standard Deviation and Bottom right-Eigen Vector, exhibiting the difference between feature values of low grade and high grade Astrocytoma out of which the most predominant feature is chosen for classification.
+From these graphs, we conclude that among these nine features, ‘Area’ is the prominent feature that shows a clear demarcation between low grade and high grade astrocytoma images.
+The steps followed in Shuffling Frog Leaping Algorithm: Step 1: Initially the population P is generated, that is the entire feature is taken as a population Step 2: The fitness function (I) of population P is calculated Step 3: The population P is sorted in descending order for easy access Step 4: The entire population is divided into m memeplexes Step 5: The local search is performed Step 6: After a specific number of iteration, memeplexes are shuffled among.
+Step 7: The best solution is generated if the criteria are satisfied; otherwise the algorithm goes to Step 3 3.5.
+Classification The approach implements three classifiers, SVM ( Kumar, 2008), LVQ and Naive Bayes to classify the grades and the algorithms are as follows in Sections (3.5.1)–(3.5.3) 3.5.1.
+Support vector machines (SVM) Step 1: Start Step 2: Obtain a linearly separable set Sand obtain its size Step 3: Initialize a threshold for checking the support vectors Step 4: Initialize and setup a Hessian Matrix Step 5: Find the ones of the vectors Step 6: Initialize the parameters for the optimization problem Step 7: Use a standard ‘qp’ function for quadratic optimization to obtain the Legranges multipliers vector Step 8: Find the support vector indices and the number of support vectors Step 9: Find the optimal bias by averaging all the support vectors Step 10: Obtain the classification from the decision region calculations using the support vector indices, the Legrange multiplier vector and the optimal bias Step 11: Display the classification Step 12: End 3.5.2.
+Learning vector quantization (LVQ) Step 1: Start Step 2: Initialize the reference weight vectors Step 3: Start for, every input vector Step 4: Calculate the Euclidian distance between the reference weights and the data points Step 5: Find the vectors with the minimum Euclidian distance Step 6: Push the vector towards the input vector if the sample is correctly classified Step 7: If not, push the vector away from the input vector Step 9: Reduce the learning rate accordingly.
+Step 10: Repeat Step 5 to Step 9 for all the vectors considered Step 11: End 3.5.3.
+Naive Bayes classifier The classifier algorithm is based on the following steps: Step 1: The training data set is created for both low grade and high grade images which contains ‘Area’ as the feature and its corresponding labels Step 2: The probability of corresponding classes is calculated Step 3: The area of the testing image is calculated Step 4: Based on the area, the probability of low grade and high grade is calculated Step 5: From the greatest probability the tumor grade is identified and displayed 3.6.
+Efficiency calculation This section describes the algorithm to compute the efficiency and elapse time for all three classifiers discussed in the Sections (3.5.1)–(3.5.3).
+Step 1: Start Step 2: Store each of the classification result in a variable ans Step 3: Initialize another variables, tt = 0, k = 0, l = 0 Step 4: Subtract tt from ans and store it as E Step 5: Start fork=1: the number of test images Step 6: Start ifE(k)==0 Step 7: Increment l by one Step 8: End if Step 9: End for Step 10: Display efficiency as (l/no.
+of test images)*100 Step 11: End
+MR images offer limited information on tumor characterization.
+This information concentrates more on texture and size of the tumor.
+An attempt was made to develop a non-invasive grade identification system based on textural non-textural, intensity and shape based features.
+In this regard, the evaluation of this approach critically suggested the following: fuzzy c-means segmentation performed was found to be a better solution for the grade identification of medical images compared to its counterpart, watershed segmentation.
+The results obtained for each type of segmentation is shown by Figs.
+8 and 9.
+Results showed that shape based features are of utmost relevance and thus the computation of area helped in efficient classification.
+Area was a major factor because, the grade of the tumors depended immensely on their size.
+Thus, Area was found to have much demarcation between the two Grades, compared to other features as displayed in Tables 1–4.
+Moreover, it was observed that while some features displayed significant demarcation between the Grades, other features overlapped with each other and thus showed poor classification results.
+Fig 7 represents the plots of some features showing a variation (Top Left and Top Right) and some features depicting minimum variation (Bottom Left and Bottom Right).
+Pre-dominant features are important for accurate classification.
+The features could be selected either manually or by automatic means.
+The latter showed more accurate results that the former as it used the Shuffling Frog Leaping Algorithm (SFLA) to select the most discriminant feature.
+The output of the SFLA is shown in Fig 10.
+Fig 8.
+Images showing the original image, the enhanced image, FCM segmented image and the isolated tumor image for low grade and high grade Astrocytoma.
+Fig 9.
+Images showing the original image, the enhanced image, Watershed segmented image and the isolated tumor image for low grade and high grade Astrocytoma Fig 10.
+Screenshots from Matlab, revealing Shuffling Frog Leaping Algorithm output.
+Table 5 lists out the results obtained from after classification of the 36 testing images using SVM, LVQ and Naive Bayes classifiers.
+Results show that SVM and LVQ classifiers constructed could be used for bulk image classification, whereas the Naive Bayes classifier classified one image at a time.
+Further, the efficiency of classification (Chart 1) for all the three classifiers showed that LVQ and Naive Bayes classifier exhibited more or less the same accuracy (Chart 2) when compared to the SVM classifier.
+The time taken (Chart 3) to classify was more for SVM in comparison with Naive Bayes classifier, which took the least time to classify followed by LVQ classifier.
+This is verified by Table 6.
+The results were validated by renowned radiologists and physicians and hence we were successful in grading the astrocytoma brain tumors efficiently.
+Table 5.
+Classification results obtained from the SVM, LVQ and Naive Bayes classifiers.
+Image no.
+Original grade SVM LVQ Naive Bayes 1 LOW HIGH HIGH LOW 2 LOW LOW LOW LOW 3 LOW LOW LOW LOW 4 LOW LOW LOW LOW 5 LOW LOW LOW LOW 6 LOW LOW LOW LOW 7 LOW LOW LOW LOW 8 LOW LOW LOW LOW 9 LOW LOW LOW LOW 10 LOW LOW HIGH HIGH 11 LOW LOW LOW LOW 12 LOW LOW LOW HIGH 13 LOW LOW LOW LOW 14 LOW LOW LOW LOW 15 LOW LOW LOW HIGH 16 LOW LOW LOW HIGH 17 LOW LOW LOW LOW 18 LOW HIGH HIGH LOW 19 HIGH HIGH HIGH HIGH 20 HIGH HIGH HIGH HIGH 21 HIGH LOW HIGH HIGH 22 HIGH HIGH HIGH HIGH 23 HIGH HIGH HIGH HIGH 24 HIGH LOW HIGH LOW 25 HIGH HIGH HIGH LOW 26 HIGH HIGH HIGH HIGH 27 HIGH HIGH HIGH HIGH 28 HIGH HIGH HIGH HIGH 29 HIGH HIGH HIGH HIGH 30 HIGH HIGH HIGH HIGH 31 HIGH HIGH HIGH HIGH 32 HIGH HIGH HIGH HIGH 33 HIGH HIGH HIGH HIGH 34 HIGH HIGH HIGH HIGH 35 HIGH HIGH HIGH HIGH 36 HIGH HIGH HIGH HIGH Chart 1.
+Efficiency of the classifiers.
+Chart 2.
+Error rate (%) in classification.
+Chart 3.
+Elapse time of classifiers.
+Table 6.
+Performance of classifiers.
+Type of classifier SVM LVQ Naive Bayes % Efficiency 88.88% 91.67% 91% % Error 11.12% 8.33% 9% Elapse time (s) 0.5286 s 0.1572 s 0.0342 s
+The traditional method involves finding the grade of the tumor by manual extraction, segmentation and then a series of tests for grade identification and confirmation.
+This process is time consuming and unwanted for a preliminary diagnosis.
+Moreover, they are invasive methods, which proved to be chaotic.
+The proposed method implemented helps the physician to make an initial diagnosis without adhering to an invasive method.
+The process comprised of brain image pre-processing, image segmentation, tumor isolation (ROI), feature extraction, feature selection and classification of selected features to discriminate the grade.
+Median Filter and Pulse coupled neural network is applied for image pre-processing.
+Fuzzy C Means and water shed are the segmentation techniques utilized.
+Sobels's edge detection and morphological operators isolated the tumor from MR image.
+The isolated images are subjected to extraction techniques to compute textural, non-textural, shape and intensity based features.
+The most predominant parameter is automatically selected using Shuffling Frog Leaping Algorithm.
+It combines the benefits of the both the genetic-based memetic algorithm (MA) and the social behavior-based Particle Swarm Optimization (PSO) algorithm.
+The most distinguished benefit of SFLA is its fast convergence speed.
+The selected feature list or the knowledge base is used to train the classifiers.
+SVM, LVQ and Naive Bayes are the classifiers which demarcate data into low grade or high grade Glioma tumors.
+The classification accuracy varied from 88 to 91%.
+The performance of classifiers implemented showed that LVQ and Naive Bayes are better than SVM.
+The efficiency and elapse time of each classifier calculated found to be promising in continuing non-invasive grade identification methods.
+A comparative study among segmentation techniques proved that Fuzzy C Means segmentation is the best suitable technique for isolation of any tumor.
+The developed method is very much discrete in providing a better means of medical image segmentation and is more suitable for classification of images in bulk.
+The research problem focused on identifying the brain tumor grade from MR images.
+The major challenge experienced was the preparation of the database.
+The header information of the patients was removed, followed by image preprocessing techniques to remove motion artifacts and noise.
+MR brain tumor images were collected for all the four grades and the process was time consuming.
+The testing set and training set images were segregated into low grade and high grade with the help of radiologists and physicians.
+The accuracy of the proposed method can be improved by increasing the number of images in the dataset.
+This would definitely improve the efficiency and accuracy of the automated tumor grade identification system.
+Segmentation of tumor was time consuming and difficult since the tumor boundary need to be preserved without losing shape and grey level information.
+The proposed intelligent system can be further extended in the development of: (1) A clinical decision support system, comprising MRS, MRI and pathological images to automatically diagnose any brain disease/abnormalities.
+The information in the database would contribute to the accurate determination of diseases, (2) An Automated brain tumor classification employing probabilistic neural network with image and data processing techniques, (3) A Radiology and computer assisted diagnosis (CAD) systems to aid histopathologists and clinicians in cancer diagnosis and research and (4) A novel method for the extraction of definable objects such as white matter, grey matter, tumour and tumor boundary by preserving its shape and grey level information.

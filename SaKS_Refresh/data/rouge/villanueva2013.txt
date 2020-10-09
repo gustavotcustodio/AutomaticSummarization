@@ -1,0 +1,346 @@
+Disambiguation of prepositions is performed. It processes text (documents) in Spanish. Frames are used to help disambiguation and as carriers of semantics.
+
+0.104667 - In natural language processing (NLP), disambiguation is the procedure used to solve name conflicts of polysemic concepts (different meanings); in fact, phrase disambiguation is a problem not totally solved in NLP.
+0.079867 - Several disambiguation types exist; for instance, noun disambiguation (bank is a word with several meanings) or when a word is both used as a noun and as a preposition.
+0.075162 - Work herein reported describes an algorithm and its implementation to disambiguate prepositions in Spanish phrases; some of them are: a {to} (Translation to English are in bold for explanation purposes; they give only one of the senses of the Spanish word, which usually have multiple meanings.
+0.039216 - ), ante {before}, bajo {under}, cabe {fits}, desde {from}, contra {against}, en {in}, por {by}, según {according to}, sin {without}, entre {between}, so {under}, con {with}, hacia {towards}, sobre {about}, hasta {until}, de {of}, tras {after}, para {for}.
+0.070412 - This tool will be used in a text analyzer (being built) that converts a text document to its corresponding ontology representation, with the goal of allowing another program to use the information to answer non trivial questions (**).
+0.076190 - Nowadays much information is in text form, be printed documents (books, magazines) or in digital format.
+0.089431 - To process it and to represent it in some language understood by a computer, a natural language treatment is needed.
+0.057471 - Computational Linguistic is the Computer Science area that studies this text processing.
+0.081633 - Some of its areas are: • Design of syntactic analyzers.
+0.090090 - • Design of taggers and lemmatizers.
+0.129032 - • Design of disambiguators.
+0.000000 - • Automatic translators.
+0.090615 - This article focuses on the design of a preposition disambiguator, using a verb lemmatizer that uses frames (Molina, 2004) to identify the meaning of verbs and nouns.
+0.078014 - Before a computer can “understand” phrases in natural language, it is important that they are free of ambiguities, and that their syntax be correct.
+0.060606 - Spanish is a complex language because interpretation of sentences depends on their grammatical structure, as well and in the precision and elaboration of their rules of formation (Moreno, Palomar, Molina, & Fernández, 1999).
+0.070175 - Accompanying problems are syntactic and semantic ambiguity (polysemy or different meanings for a sentence, noun, verb, preposition, etc.)
+0.000000 - (Mooney, 2003).
+0.079309 - The article is organized as follows: Section 2 describes concepts used in text analyzers; Section 3 reviews syntactic disambiguators, as well as concepts of our study case; Section 4 proposes a disambiguation method for prepositions in Spanish texts; it identifies ambiguous prepositions and provides the correct meaning, using the containing phrase as context; Section 5 presents results, applications and difficulties.
+0.067511 - Conceptually, a NLP system divides text analysis in several layers: morphological analysis, syntactic analysis and semantic analysis (Mooney, 2003):
+0.068182 - - Syntactical analysis or parsing: It determines the grammatical structure of a text with respect to a given (more or less) formal grammar.
+0.039801 - - Semantic analysis: It assigns meaning to the syntactic structures; that is, it establishes correspondences between the syntactic structures and the semantic meaning (correct sense) of each work (Palomino et al., 2007) The variability of the Spanish grammar and the precision and elaboration of formation rules difficult the analysis tasks (Zapata & Arango, 2005), since several types of ambiguities are present: – Morphologic ambiguity: A word in a sentence may represent more than one syntactic role or grammatical cathegory (Mooney, 2003; Allen, 1987; Hausser, 2001).
+0.016260 - For instance: Ana no quiere a su esposo porque es infiel {anne does not love her husband because is unfaithful}.
+0.043011 - Who is unfaithful?
+0.000000 - Ana or her husband?
+0.000000 - – Syntactic ambiguity: When a sentence has more than one syntactic representation (given by more than one grammar rule) (Mooney, 2003; Allen, 1987; Hausser, 2001).
+0.000000 - Example.
+0.028986 - En el temblor las mujeres y los niños asustados fueron los primeros en salir del edificio {In the earthquake, scared women and children were the first to leave the building}.
+0.062500 - It is not clear whether both women and children were scared, or only children.
+0.077519 - Classes of syntactic ambiguity are: ∘ Coordinative ambiguity.
+0.015152 - When a sentence contains more than one conjunction: linking conjunctions (and, nor, that), disjunctive conjunctions (or, but, at least, even) and others.
+0.047619 - ∘ Prepositional ambiguity.
+0.033333 - When a sentence contains a prepositions.
+0.057971 - This article deals with this type of ambiguity.
+0.020833 - Example: Voy a la playa con rocas {I go to the beach with rocks}.
+0.000000 - Who has the rocks?
+0.000000 - Me, or the beach?
+0.037634 - – Semantic ambiguity: When a sentence has more than one meaning; it refers to phenomena like homonymy and polysemy, where a word can have different meanings (Mooney, 2003; Allen, 1987; Hausser, 2001; Suárez, 2004).
+0.041237 - Example: Le compró flores {He bought flowers to her}: the indirect complement le may refer to the recipient of the flowers, or to the seller.
+0.045198 - Example (ambiguity of nouns and verbs): Sal de México, {get out of Mexico, or Mexican salt}, where Sal may be interpreted as a verb {to leave} or as a noun {salt}.
+0.048780 - Example (ambiguity caused by prepositions; this is the problem solved in this paper): Olla de barro, Olla de México.
+0.000000 - {clay pot, Mexican pot}.
+0.069652 - “De” means “made of” in the first sentence, and “originary from” in the second sentence.
+0.057971 - In this paper we deal with semantic ambiguity.
+0.091324 - Different solution strategies are needed, according to the type of ambiguity present in a sentence (Galicia, 2000).
+0.161594 - The disambiguator of Colorado (2008) disambiguates Spanish words.
+0.059701 - It uses the “Simplified Lesk Algorithm (Vasilescu, Langlais, & Lapalme, 2004) with substantial modifications and extensions.
+0.120567 - In contrast to other disambiguation models, it does not carry a previous tagging of the text, nor it is told which words need disambiguation.
+0.066667 - It is a non-supervised method.
+0.019048 - The results she obtains show the model’s strength, when compared to the best international criteria.
+0.053333 - Different approaches Colorado (2008), McCarthy (2003) and Mihalceay and Pedersen (2005) classify disambiguation in several groups: (1) Statistical methods, which require large computational and lexical resources.
+0.047059 - (2) Knowledge based methods (Cuevas, 2006) and Artificial Intelligence methods, using ontologies or semantic networks, and often restricted to specific domains.
+0.000000 - (3) Corpus based methods.
+0.062500 - (4) Hybrid and Bootstrapping methods, presenting a mixture of problems from (1) and (2).
+0.036036 - Details in Palomino et al.
+0.000000 - (2007).
+0.056738 - Methods of noun and verb disambiguation (Colorado, 2008; McCarthy, 2003; Mihalceay & Pedersen, 2005; Vasilescu et al., 2004) can also use supervised and unsupervised training.
+0.083333 - These works disambiguate nouns or verbs in a sentence, while our work disambiguates prepositions.
+0.057971 - As introduction, we give a definition for preposition.
+0.073762 - Prepositions Prepositions are words used to relate ideas composing a sentence; thus, by themselves, they lack expressive meaning of their own, but they contribute in a fundamental manner to provide meaning to the whole sentence since they establish a semantic relation.
+0.104762 - Many times, prepositions are wrongly used and they form part of the vices of a language.
+0.076055 - Classification of prepositions There are two types: the separable prepositions, more frequent, formed by whole words; and inseparable prepositions, attached to the word they qualify.
+0.053170 - This work studies the separable prepositions, which are: a {to}, ante {before}, bajo {under}, cabe {beside}, desde {from}, contra {against}, en {in}, por {by}, según {as}, sin {without}, entre {between}, so {under}, con {with}, hacia {towards}, sobre {upon}, hasta {until}, de {of}, tras {behind}, para {for}.
+0.053333 - Prepositions are classified in groups according to the sense they provide to the expressions they qualify, although some prepositions belong to more than one group: 1.
+0.050633 - Place prepositions: Assign a place: a {to}, de {from}, en {in}, entre {between}, hacia {towards}, por {by}, tras {behind}.
+0.073333 - Time prepositions: A success is placed on the time line: a {to}, con {with}, de {of}, desde {since}, en {in}, para {before}, por {by}, sobre {after}.
+0.076503 - Causal prepositions: Provide a link between origin and result: de {of}, por {by}.
+0.045977 - Purpose prepositions: They determine a purpose or objective: a {to}, para {for}.
+0.065574 - Company prepositions: Expresses association of subjects with respect to an action: con {with}.
+0.095238 - Instrument prepositions: They express the means by which the action is or has been performed: a {to}, con {with}, de {of}, en {in}.
+0.080586 - Modal prepositions: They indicate the way in which the action is carried out: a {to}, con {with}, de {of}, en {in}, por {by}.
+0.065041 - Inseparable prepositions: Those that join a word to skew or modulate its meaning or orientation, as shown in Table 1.
+0.000000 - Table 1.
+0.057971 - Inseparable prepositions (first and third columns), with examples.
+0.072072 - Explanations in { } are for clarity.
+0.010178 - Preposition Example Preposition Example a amoral {amoral} peri periférico {outlying} ab absorber {to absorb] poli polifacético {versatile} ante anteponer {to put before} pos pospospuesto {postponed} anti antihigiénico {unhygienic} pre prenatal {prenatal} bi binacional {binational} pro Prosecretario {Assistant Secretary} des desconfiado {distrustful} re recaída {relapse} di difundir {to spread} res restablecido {restored} dis disfunctional {dysfunctional} retro retrógrado {retrograde} equi equivalente {equivalent} sin sinsabores {troubles} extra extraordinario {extraordinary} sub subsecuente {subsequent} hiper hipertrofiado {hypertrophied} super superfino {extra fine} in inmoral {immoral} trans transoceánico {transoceanic} inter interespacial {interspatial} ultra ultramarino {overseas } mono monoaural {monaural} uni unilateral {unilateral} o oponerse {to object} vi virrey {viceroy} ob obsecuente {obsequious} vice vicepresidente {vice president} per perseguir {to pursue} Few documented works exist regarding algorithms to disambiguate prepositions, and very few to disambiguate Spanish prepositions.
+0.086957 - One of the former is Palomino et al.
+0.000000 - (2007).
+0.057062 - It focuses primarily on syntactic disambiguation, of the prepositional and coordinative type; results are interesting; their approach to the problem differs from ours as follows: Their method applies four steps: (1) the syntactic analysis of the sentence, using a module of NLTK (Web site 4), and a set of tools for natural language processing written in Phyton (Web site 5); (2) the type of syntactic ambiguity in the sentence is determined, coordinative or prepositional; (3) this is the disambiguation step, which depends on the type of ambiguity detected in (2); (4) results are shown.
+0.050125 - Our work does not take into account the syntactic ambiguity, but it assumes instead that the syntax is correctly detected, and we only deal with semantic ambiguity (that is, the sense or the meaning of the sentence).
+0.079491 - Another work (Nübel, 1996) deals with disambiguation of prepositions for multilingual spoken translation (German, English and Japanese): one person is fluent in German, another in Japanese, and the translator among them gets help from VERBMOVIL (a real-time translator of dialogues; undergoing tests) in English.
+0.106615 - It uses lexical-semantic information about the structure of the dialogue, to ascertain how much the meaning of prepositions depends on context.
+0.078014 - The relation to our work is that they use ontologies to map abstract relations (templates) that help to determine the context of the preposition.
+0.080426 - Each preposition is linked to a template or abstract relation that indicates the possibility of the use of that preposition in the context of the template.
+0.065574 - The model of the dialogue is being built through a finite state machine.
+0.114286 - In Litkowski and Hargraves (2007) a method is exposed to disambiguate prepositions, applied to lexical examples.
+0.095238 - It uses a set of 25,000 lexical instances comprising the 34 most frequent English prepositions.
+0.077710 - Each instance identifies a preposition (in a complete sentence) to be tagged (EAGLE tags), taken from FrameNet, a corpus based on the Oxford Dictionary, used to identify the coherence of prepositions in sentences.
+0.025641 - The method is a supervised algorithm rendering 0.693 accuracy.
+0.099291 - In our work, the semantics of the words is inside the description of the frames, which help to identify the context surrounding the preposition.
+0.053170 - Frames Frames were perhaps introduced by Allan, Collins, and Quillian (1969) or Minsky (1975), who defines them as data structures to represent generic situations, such as the representation of a type of behavior and things expected in a living room, in a restaurant, in a children party.
+0.079511 - Several kinds of information are found in frames: how to use it; what activities or successes are performed there; what other successes occur after the frame (a subsequent frame).
+0.103448 - A frame can be considered as a network of nodes and relations.
+0.027586 - Frames represent scenes, for instance: the frame representing a children party has more semantics that the definition in a dictionary: [fiesta –_Reunión de gente para celebrar algún suceso, o simplemente para divertirse (Diccionario de la Real Academia Española).
+0.025641 - party: a social gathering; also: the entertainment provided for it.
+0.000000 - (Webster Dictionary)].
+0.031008 - Table 2 elaborates the frame “children party”.
+0.000000 - Table 2.
+0.083333 - Part of the frame “children party”.
+0.000000 - Dress: better than everyday dresses.
+0.038462 - Gift: Must be wrapped and given to the celebrated child.
+0.031008 - Celebrating hide-and-seek, guessing riddles, jokes.
+0.062016 - Decoration: balloons, figures made of crepe paper.
+0.036036 - Cake: candles, wishes, to blow.
+0.000000 - Songs: Happy Birthday.
+0.000000 - Place: Party room, home, kindergarten.
+0.075269 - Many concepts may be related to a frame, and they will enrich it semantically; thus, most of the information intertwined in the represented scenario (concept, event, or activity) must be present in the frame.
+0.043716 - There is no standard notation about frames; we have proposed one (Table 3).
+0.063768 - It is formed by: (1) Header, representing the name of the concept, a character indicating if it is a noun (s, for sustantivo), verb (v), etc., and in parenthesis its gender.
+0.031373 - (2) Body, containing elements such as: quees {what it is; its meaning}, agenteactivo {active agent, who initiates or carries out the action}, agentepasivo {passive agent, who suffers the change or consequences of the action provoked by the active agent}, hiperonimia {hypernym, concept of which the frame is a subset}, sinónimo {synonym, other words used for this frame}, hiponimia {hyponym, a particularization of this frame, a frame which is a subset of this frame}, comoseusa {how it is used; example of the concept in a sentence}, frasetemat {thematic phrase, colloquial sentence, where the word is used with a different meaning}, and (3) Our notation allows adding semantic elements as needed, for instance the element lugar {place}.
+0.000000 - Table 3.
+0.025641 - The frame describing “Fiesta Infantil” {children party} showing its elements.
+0.072727 - Phrases between quotes indicate the description of the corresponding semantic part.
+0.026183 - (defmarco fiesta infantil s (genero fem) {children party} {female gender} (quees “Reunión de personas en un lugar para {what it is} divertirse o celebrar un acontecimiento y en la que se suele bailar, comer, etc.”) {Gathering of persons in a place to have a good time or} {to celebrate an event and in which it is customary to} {dance, to eat, etc}a (agenteactivo “El que organiza la fiesta”, {active agent} “el festejado”) {The celebrated person} (agentepasivo “El que acude a la fiesta”, {passive agent} “familiares”, “amigos”) {Who comes to the party, relatives, friends} (hiperonimia “acontecimiento”, “suceso”, {hypernym} “Reunion”) {Event, success, gathering} (sinonimo “fiesta de niños”) {child party} (hiponimia “fiesta de cumpleaños”, {hiponym} “celebración de bautizo”) {Birthday party, baptism party} (lugar “sala de fiestas”, “casa particular”, {place} “jardín de niños”) {Party room; home; kindergarten} (comoseusa “se conocieron en una fiesta {how it is used} de cumpleaños”) {They met at a birthday party} (frasetemat {thematic phrase} (coloq “para todo haces fiesta”, “para cualquier acto, actividad, acontecimiento {“You make noise for anything”; “any act, activity or} se externa al público, amigos, familiares”) {happening is exposed to the public, to friends, relatives”} ) ) a In this paper, the authors (not the algorithm) have added {English translations} to some inputs and outputs.
+0.186985 - Prior to disambiguation, tagging and lemmatizing of words is performed by our method.
+0.054422 - Our lemmatizer also identifies the root of the word.
+0.076923 - Algorithm of the lemmatizer It has two steps: Step 1.
+0.046377 - It works on an input file which is previously tagged (using the EAGLES [4] standard); this file must have the extensiontxt.tag; the tags have the structure shown in Table 4.
+0.000000 - Table 4.
+0.022989 - Noun, Verb, Adjective tags according to EAGLES standard (Toral et al., 2005).
+0.010549 - Position Attribute Value Code 1 Cathegory Verb V 2 Type Main M Auxiliar A Semiauxiliar S 3 Mode Indicative I Subjunctive S Imperative M Infinitive N Gerund G Participle P 4 Tense Present tense P Imperfect I Future tense F Past tense S Imperfect past C – 0 5 Person First 1 Second 2 Third 3 6 Number Singular S Plural P 7 Genre Masculine M Feminine F The following example (Table 5) shows the tags given to the sentence “en ese año se celebró la conferencia de Dartmouth” {In that year it was celebrated the Dartmouth conference}.
+0.000000 - Table 5.
+0.031008 - Words in a sentence, with their tags.
+0.043716 - The boldface word is the verb which is a candidate to be lemmatized.
+0.029724 - Line palabra {Word} etiqueta {tag} 1 en {in} SPS00 2 ese {that} DD0MS0 3 año {year} NCMS000 4 se {it} P0000000 5 {celebr}’o {celebrated} VMIS3S0 6 la {the} DA0FS0 7 conferencia {conference} NCFS000 8 de {of} SPS00 9 dartmouth {Darmouth} NC00000 Step 2 .
+0.069652 - After tagging, each verb in the sentence is identified, and its corresponding frame is searched.
+0.095238 - Table 6 shows the frame of “celebrar” {to celebrate}.
+0.000000 - Table 6.
+0.078947 - Showing a frame with descriptive elements such as quees {what is it}, ejemplo {example} and raíz {root}.
+0.025114 - (defmarco celebrar(gram “v tr”) {to celebrate} {transitive verb} (QueEs “Llevar a cabo un acto o ceremonia”) {To carry out an act or ceremony} (Ejemplo “Se celebraba un mitin en la plaza” {a meeting was celebrated in the main square} “Las reuniones se celebraban en su casa”, {Gatherings were held in his home} “Celebraron una asamblea”, {An assembly was celebrated} “El sábado se celebraron las elecciones”) {Elections were held on Saturday} (Raíz “celebr”)) {root} Once the verb is found, it is compared with the root of the frame.
+0.027211 - Table 7 shows the tag given to celebró {celebrated}.
+0.000000 - Table 7.
+0.051282 - Comparing the tagged verb with the root in the frame.
+0.039801 - 5 celebró VMIS3S0 If there is coincidence, the verb is recognized and the root identified.
+0.058722 - It is important to notice here that our disambiguator needs the lemmatizer when it requires to disambiguate using frequent words, for instance “hablaremos sobre literatura”, {we will talk about literature} (see Tables 20–22); in this case sobre {about} is the preposition and the words giving sense to it are hablaremos {we will talk} and literatura {literature}.
+0.083333 - Thus, it is required to lemmatize hablaremos identifying its root as hablar {to speak}.
+0.113636 - Once done this, our disambiguator will give the sense of the preposition, the result is shown as [theme] {topic} in Table 23.
+0.101266 - The Lemmatizer only has those two steps; after it, the document goes to the Disambiguator, which is now explained.
+0.110804 - Disambiguator of prepositions A hypernym of a word is defined as another word whose meaning contains that of the first word, it is a superclass or superset of it.
+0.056738 - An hypernym forms part of the morphosyntax of the sentence, that is, the set of elements and rules that allows construction of meaningful sentences.
+0.068966 - We obtain most of our hypernmys from the WordNet semantic data base.
+0.095238 - Some examples of hypernyms are given in Table 8.
+0.000000 - Table 8.
+0.086022 - Examples of hypernyms.
+0.000000 - Hypernyms Derived words Material {material} Vidrio, madera, plástico, hule, etc.
+0.000000 - {glass, wood, plastic, rubber, etc.}
+0.000000 - Animal {animal} Vaca, perro, gato, pato, pez, etc.
+0.000000 - {cow, dog, cat, fish, etc.}
+0.000000 - Persona {person} Niño, amigo, papá, mamá, etc.
+0.000000 - {child, friend, father, mother, etc.}
+0.038462 - The lemmatizer receives as input a tagged and lemmatized file.
+0.068729 - Only words contributing to the meaning of the preposition will be analyzed; these words are the nouns and verbs found before and after the preposition.
+0.062016 - Example: Jarra de Agua {pitcher of water}.
+0.207879 - Jarra and Agua are used to disambiguate preposition de.
+0.072917 - The algorithm often compares the hypernyms of the words preceding and following the preposition.
+0.128205 - The flow of the disambiguator is given in Fig 1.
+0.093023 - Flow diagram of the disambiguator Fig 1.
+0.108108 - Flow diagram of the disambiguator.
+0.065041 - Next, we describe the possible flows or routes that may be followed to disambiguate a preposition, starting with Route 1.
+0.022989 - A route is the way followed by the algorithm under some conditions.
+0.114286 - ROUTE 1 • The disambiguator identifies the prepositions in the file (which is already tagged and lemmatized).
+0.064103 - • Nouns or verbs before and after the preposition are identified.
+0.102564 - These words contain the information needed to disambiguate the preposition.
+0.058290 - • If the word following the preposition is a noun, the field HiperonimoPost {following hypernym} of the frame of the noun is compared with the hypernym of the frame of the preposition.
+0.043716 - If the following word is not a noun, flow continues in ROUTE 2.
+0.089347 - If there were coincidences when comparing hypernyms with only one frame of the preposition, a meaning is assigned to the preposition and the algorithm ends.
+0.076503 - If the number of coincides is not one, flows continues to ROUTE 3.
+0.101959 - ROUTE 2 • Field “frequent words” of the frame of the preposition is compared with the previous and following words.
+0.082192 - • If there are coincidences, a meaning (a sense) is assigned to the preposition and the algorithm ends.
+0.060606 - If there are no coincidences in the frequent words and there were no coincidences in the hypernym, the algorithm could not assign a meaning to the preposition, and it ends (with this preposition).
+0.061856 - Otherwise, if there is more than one coincidence in the frequent words, more than one meaning is assigned to the preposition, and the algorithm ends.
+0.048470 - ROUTE 3 • If the word previous to the preposition is a noun, the field HiperonimoAnt {previous hypernym} of the frame of the noun is compared with the hypernym field of the preposition If the number of coincidences differs from one, flow goes to ROUTE 2, otherwise a sense is assigned to the preposition and the algorithm ends.
+0.043716 - If the previous word is not a noun flows goes to ROUTE 2.
+0.014981 - To show the algorithm in action we will analyze the following sentence: “La vida de los colibríes está en estrecha relación con la de ciertas plantas y flores; de hecho constituyen una gran importancia para los ecosistemas, pues, son agentes polinizadores de gran cantidad de plantas en los bosques tropicales”.
+0.052980 - {Life of hummingbirds is in close relation with that of certain plants and flowers; in fact they constitute a great importance to ecosystems, since they are pollinating agents of a large amount of plants in tropical forests} Table 9 shows the tagged words.
+0.000000 - Table 9.
+0.065574 - Tagged words of the sentence, the first column continues in the fourth column.
+0.022774 - la {the} DA0FS0 para {for} SPS00 vida {life} NCFS000 los {the} DA0MP0 de {of} SPS00 ecosistemas {ecosystems} NCMP000 los {the} DA0MP0 , {,} Fc colibríes {hummingbirds} NCMP000 pues {since} CS esta {is} DD0FS0 , {,} Fc en {in} SPS00 ser {are} VSIP3P0 estrecha {close} AQ0FS0 agentes {agents} NCMP000 relación {relation} NCFS000 polinizadores {pollinizers} NCMP000 con {with} SPS00 de {of} SPS00 la {that} DA0FS0 gran {great} AQ0CS0 de {of} SPS00 cantidad {amount} NCFS000 ciertas {some} DI0FP0 de {of} SPS00 plantas {plants} NCFP000 plantas {plants} NCFP000 y {and} CC en {in} SPS00 flores {flowers} NCFP000 los {the} DA0MP0 , {,} Fc bosques {forests} NCMP000 de {in} SPS00 tropicales {tropical} AQ0CP0 hecho {fact} NCMS000 .
+0.000000 - {.}
+0.043956 - Fp constituyen {they constitute} VMIP3P0 una DI0FS0 gran {great} AQ0CS0 importancia {importance} NCFS000 The disambiguator is formed by the following steps: Step 1.
+0.048485 - The algorithm will analyze all the prepositions contained in the file.
+0.068027 - Their disambiguation will depend on the resources (frames) available.
+0.079602 - The prepositions are identified with the tags SPCMS y SPS00 as shown in Table 10.
+0.000000 - Table 10.
+0.101449 - Prepositions identified in the sentence of Table 9.
+0.048780 - Palabra Etiqueta Para {for} SPS00 Con {with} SPS00 En {in} SPS00 Del {of the} SPCMS De {of} SPS00 Step 2.
+0.060606 - Once prepositions are found, nouns or verbs located before and after each preposition are sought (except when a punctuation mark is found).
+0.104332 - These are called “significant words” (they provide most of the information used to disambiguate the preposition); their tags start with “N” for a noun and “V” for a verb.
+0.115385 - These words help to determine the sense of a preposition.
+0.048485 - Significant words found in this example are shown in Table 11.
+0.000000 - Table 11.
+0.066667 - Significant words before and after prepositions.
+0.022764 - Previous noun/verb Tag Preposition Following noun/verb Tag vida {life} NCFS000 de {of} colibríes {hummingbirds} NCMP000 relación {relation} NCMS000 con {with} plantas {plants} NCFP000 polinizadores {pollinizers} NCMP000 de {of} cantidad {amount} NCFS000 importancia {importance} NCFS000 para {for} ecosistemas {ecosystems} NCMP000 cantidad {amount} NCFS000 de {of} plantas {plants} NCFP000 plantas {plants} NCFP000 en {in} bosques {forests} NCMP000 Step 3.
+0.119403 - Next, the disambiguator looks for the frame of each preposition and the previous significant word.
+0.068182 - In our example: “la vida de los colibríes …” {life of hummingbirds} will look the frame of colibrí (all nouns are singular).
+0.073813 - • Table 12 shows the frames of preposition “de” with two senses (for lack of space we only show two frames).
+0.086957 - In our example the preposition corresponds to possession.
+0.000000 - Table 12.
+0.165650 - Two frames of preposition “de”.
+0.028553 - (defMarco de (gram “prep”) {of} {preposition} (QueEs “Significa una relación de {what it is} posesión ó pertenencia, así como de dependencia entre personas ó cosas”) {Means a relation of possession or belonging, as well as dependence among persons or things} (Sinonimia “posesión”) {possession, ownership} (Ejemplo “La casa de mi padre”, {example} “Los juguetes de los niños”, “Los parques de la ciudad”) {The house of my father; the toys of children; the parks of the city} (PalabrasFrecuentes “”) {frequent words} (HiperonimiaPost “persona”, {following hypernym} “organismo”, “organización”, “objeto”) {person; organism; organization; object} (HiperonimiaAnt “objeto”, “organismo”, {previous hyperym} “persona”, “estado”, “atributo”, “organo”) {object; organism; person; state; attribute; organ} ) (defMarco de (gram “prep”) {of} {preposition} (QueEs “Indica el todo o el conjunto del {what it is} que se torna o separa una parte”) {It indicates the whole or set of which a part is taken or separated} (Sinonimia “grupo”) {synonymy} {group} (Ejemplo “Dos de ellos ganaron”, {example} “Pagué parte de la deuda”) {“Two of them won;” “I paid part of the debt”} (PalabrasFrecuentes “grupo”) {frequent words} {group} (HiperonimiaPost “persona”, “organismo”, {following hypernym} “organización”) {person, organism, organization} (HiperonimiaAnt “cantidad”, “grupo”, {previous hypernym} “magnitud”) {amount, group, magnitude} ) Table 13 shows a frame of noun “colibrí”.
+0.000000 - Table 13.
+0.114943 - Frame of colibri, to save space only some semantic fields are shown.
+0.018265 - (defMarco colibrí (gram “s m sing”) {hummingbird} {singular masculine} (QueEs “pájaro de la familia de los troquélidos, {what it is} exclusiva de América, de aproximadamente {Bird of the troquelidos family, 7 cm de longitud, de pico largo y delgado, exclusive of America, of approximately con un plumaje muy brillante y vistoso en el 7 cm length, long and thin beak, with very que predomina el color verde.”) bright and colorful plumage, where green color dominates} (Hiperonimia “ave”,“animal”,“vertebrado”, {hypernym} “organismo”) {bird, animal, vertebrate, organism} ) Step 4.
+0.059140 - The disambiguator will compare the hypernyms (general description of a concept) of all frames of the preposition under analysis (Table 12) against the hypernyms of the frames of the following significant word (Table 13).
+0.090909 - In our example the following hypernyms are compared (Table 14), all of this in order to identify the context of the preposition.
+0.000000 - Table 14.
+0.066667 - Comparing hypernyms (first sense of “de”).
+0.040000 - Hypernyms of “de” Hypernyms of “Colibrí” Person bird organism animal organization vertebrate object organism Now we compare the hypernyms of the second sense of the preposition.
+0.000000 - See Table 15.
+0.000000 - Table 15.
+0.054422 - Comparing the hypernyms of the second sense of “de”.
+0.044325 - Hypernyms of “de” Hypernyms of “Colibrí” person bird organism animal organization vertebrate organism If coincidences are found between the hypernym of just only one frame of the preposition with some hypernym of the following significant word, the meaning of the preposition is that of the field “synonymy” of the coinciding frame (of the preposition) and the algorithm ends.
+0.091463 - In our example coincidences exist between the hypernms of the following noun and two frames of preposition “de” (Tables 14 and 15).
+0.059701 - In this case where more than one frames coincide, the former significant word is anlyzed.
+0.078431 - It is vida {life}.
+0.093023 - Table 16 shows the frame of vida.
+0.000000 - Table 16.
+0.117647 - Frames of concept vida.
+0.023529 - (defMarco vida (gram “s m sing”) {life} (QueEs “estado de actividad de los seres {what it is} orgánicos por el que se desarrollan, evolucionan y se reproducen.”) {State of activity of organic beings by which they grow, evolve and reproduce} (Hiperonimia “existencia”,”estado”, {hypernym} “atributo”,”abstraccíon”) {Existence, state, attribute, abstraction} ) (defMarco vida (gram “s m sing”) {life} (QueEs “modo de pasar el tiempo las {what it is} personas, según su actividad, su conducta, {Way by which people spend time, according la satisfacción de sus necesidades y de sus to their activity, their behavior, the satisfaction deseos”) of their needs and of their wishes} (Hiperonimia “experiencia”,“conocimiento”, {hypernym} “rasgo psicológico”,“abstracción”) {Experience, knowledge, psychological trait, abstraction} ) The hypernyms of the former significant word (field HiperionimiaAnt) are compared against the hypernyms of each frame of the preposition (Table 12).
+0.068966 - Table 17 shows the comparisons against the first sense of the preposition.
+0.000000 - Table 17.
+0.066667 - Comparison of the three intervening hypernyms.
+0.045662 - attribute of hypernym “de” (first column) coincides with attribute of hypernym of “vida” (as existence), middle column.
+0.036745 - Hypernyms of “de” Hypernyms of “vida” Hypernyms of “vida” object existence experience organism state knowledge person attribute Psychological trait state abstraction abstraction attribute organ Now, hypernyms of the second sense of the preposition are compared.
+0.039216 - There are no coincidences.
+0.000000 - See Table 18.
+0.000000 - Table 18.
+0.041667 - Comparing the hypernyms of “de” (second sense) against the two senses of concept vida.
+0.037500 - Hypernyms of “de” Hypernyms of “vida” Hypernyms of “vida” quantity existence experience group state knowledge magnitude attribute Psychological trait abstraction abstraction As we can see, only there is coincidence of the hypernyms of the first sense of the preposition against the hypernyms of the previous noun.
+0.076312 - Thus, the sense of the preposition is the field “synonymy” of the coinciding frame; thus, the meaning is posesión {possession, ownership}.
+0.000000 - See Table 19.
+0.000000 - Step 5.
+0.044403 - This step is carried out if the significant word following the preposition is not a noun, or if a sense has not been determined in the former steps.
+0.000000 - Table 19.
+0.129877 - Output showing disambiguation of “de” as posesión {ownership, possesion}.
+0.060387 - la DA0FS0 vida NCFS000 de SPS00 [posesión] los DA0MP0 colibríes NCMP000 (a) The field PalabrasFrecuentes {frequent words} of the frames of the preposition is compared with the previous and following significant words around the preposition.
+0.071197 - An example with the sentence “hablaremos sobre literatura…” {let us talk about literature…} shows some frames of the preposition “sobre” {above; envelope; about; upon} in Table 20.
+0.000000 - Table 20.
+0.109091 - Frames of the preposition sobre; only two different senses are shown.
+0.016878 - (defMarco sobre (gram “prep”) {over, above} (QueEs “Indica que algo o alguien está situado en un {what it is} nivel o en una jerarquía superior a la de otra cosa o persona”) {It indicates that something or somebody is situated in a level or in a hierarchy superior to the other thing or person} (Sinonimia “jerarquía”) {hierarchy} (Ejemplo “El presidente está sobre los ministros”) {The President is above the ministers} (PalabrasFrecuentes “persona”) {person} (HiperonimiaPost “persona”, “organización”) {person, organization} (HiperonimiaAnt “persona”, “organización”) {person, organization} ) (defMarco sobre (gram “prep”) {about} (QueEs “Introduce el tema o el asunto de que trata {what it is} algo”) {It introduces the theme or subject of which something talks} (Sinonimia “tema”) {synonymy} {topic, theme} (Ejemplo “Habló sobre sus experiencias didácticas”) {example} {He talked about his didactic experiences} (PalabrasFrecuentes“interactuar”) {frequent words} {interact} (HiperonimiaPost “ciencia”, “disciplina”,“organismo”) {following hypernym} {science, discipline, organism} (HiperonimiaAnt “interactuar”) {previous hypernym} {interact} ) Table 21 shows the frequent words related to the first sense of preposition “sobre”.
+0.000000 - Table 21.
+0.039801 - The first column shows the frequent words of sobre taken from its first sense (hierarchy).
+0.050314 - Frequent words Previous and following significant words persona {person} hablar {to talk} literatura {literature} For the second sense (second frame) of sobre (Table 20) we have Table 22.
+0.000000 - Table 22.
+0.039801 - The first column shows the frequent words of sobre taken from its second sense (topic).
+0.055138 - Frequent words Previous and following significant words interactuar {to interact} hablar {to talk} literatura {literature} With the first frequent word of the frame, “person” (Table 21), the algorithm consults in a dictionary the words related to it.
+0.083333 - This dictionary contains groups of words related to the encompassing word; it is part of the linguistic resources used by the algorithm.
+0.027211 - Its contents are created from the WordNet data base.
+0.060606 - Thus, the algorithm finds that “hablar” {to talk} and “literatura” {literature}, do not belong to the set of words related to person.
+0.000000 - See Fig 2.
+0.024242 - Words in the dictionary expanding the concept persona {person} Fig 2.
+0.027211 - Words in the dictionary expanding the concept persona {person}.
+0.075324 - If we consider the frequent words of the second frame of preposition sobre (Table 20), the algorithm determines that word hablar {to talk} is in the set of words related to word interactuar {to interact}, as shown in Fig 3.
+0.072917 - List of words in the dictionary expanding the concept interactuar {to interact} Fig 3.
+0.080460 - List of words in the dictionary expanding the concept interactuar {to interact}.
+0.079602 - Thus, it is determined that the sense of sobre is the second sense (Table 20).
+0.062016 - Its output is shown in Table 23.
+0.000000 - Table 23.
+0.072464 - Preposition disambiguated with the sense tema {theme, topic}.
+0.031008 - The algorithm adds [tema] to the output.
+0.055172 - hablar VMN0000 {to talk} sobre SPS00 [tema] {topic} literatura NCFS000 {literature} If no coincidence in frequent words is found, the algorithm is unable to determine the meaning of the preposition; it could be improved adding more frequent words to the dictionary.
+0.059317 - If significant words coincide with just one frame, the meaning of the preposition is that of the field “synonymy” of the frame; if there are more than one coincidence, the algorithm determines more than one sense for the preposition, for instance procedencia {place of origin} and parte {part of}.
+0.000000 - Table 24 shows this.
+0.000000 - Table 24.
+0.063927 - Where a preposition has been identified with two senses: procedencia {place of origin} and parte {part of}.
+0.028986 - The algorithm adds [procedencia, parte] to the output.
+0.076923 - It narrowed down the meaning of de but not completely.
+0.038095 - científicos NCMP000 {scientists} de SPS00 [procedencia, parte] {place of origin; part of} México NCMS000
+0.110575 - Examples of preposition “DE” Input is a file with extensiontxt.tag.
+0.128205 - The input to the disambiguator is shown in Table 25.
+0.000000 - Table 25.
+0.086957 - The list of tagged words, candidates for disambiguation.
+0.000000 - divisas NCFP000 {currency} de SPS00 europa NCFS000 {Europe} ∗ .
+0.000000 - Fp programa NCMS000 {program} de SPS00 computadora NCFS000 {computer} ∗ .
+0.081633 - Fp Fig 4 shows the output of the disambiguator.
+0.039801 - Output screen showing the preposition de with two meanings, the first one is… Fig 4.
+0.030769 - Output screen showing the preposition de with two meanings, the first one is origen {procedence, origin} in divisas de Europa {currencies from Europe}, the second sense is posesión {ownership}, in programa de computadora {computer program}.
+0.057471 - Examples for preposition “PARA” Table 26 shows the list of tagged words.
+0.000000 - Table 26.
+0.093023 - List of words for their possible disambiguation.
+0.050633 - ejemplos NCMP000 {examples} mis DP1CPS {my} para SPS00 {for} trabajos NCMP000 {works} desambiguar VMN0000 {to disambiguate} con SPS00 {with} ∗ .
+0.021858 - Fp la DA0FS0 {the} este DD0MS0 {this} escuela NCFS000 {school} documento NCMS000 {document} ∗ .
+0.022039 - Fp ser VSIP3S0 {to be; is} necesitar VMIP1S0 {to need} para SPS00 {for} llegar VMN0000 {to arrive; to reach} la DA0FS0 {the} para SPS00 {for} Secretaría NCFS000 {Secretary, Ministry} el DA0MS0 {the} ∗ .
+0.000000 - Fp anochecer NCMS000 {nightfall} salgo VMIP1S0 {I leave} ∗ .
+0.031373 - Fp mañana NCFS000 {tomorrow} es VSIP3S0 {it is} para SPS00 {for} malo AQ0MS0 {bad} México NCMS000 el DA0MS0 {the} ∗ .
+0.014184 - Fp dia NCFS000 {day} venir NCMS000 {to come} para SPS00 {for} para SPS00 {for} el DA0MS0 {the] compartir VMN0000 {to share} viaje NCMS000 {journey} ∗ .
+0.068966 - Fp Fig 5 shows the output of the disambiguator, for Table 26.
+0.139257 - Disambiguated output where the senses of preposition para {for} are,… Fig 5.
+0.073784 - Disambiguated output where the senses of preposition para {for} are, respectively, uso {use} in ejemplos para desambiguar {examples for disambiguation}, destinado a {destined to} in documento (es) para la Secretaría {document for the Ministry} and destino {destination} in salir (salgo) mañana para México {leave tomorrow for Mexico}.
+0.031008 - Two more senses exist, presented in Figs.
+0.043011 - 6 and 7.
+0.099502 - Disambiguated sense for preposition para {for} is uso {use} in ser (es) malo… Fig 6.
+0.071942 - Disambiguated sense for preposition para {for} is uso {use} in ser (es) malo para el viaje {it is bad for the journey} and plazo {deadline, period} in necesitar (necesito) llegar para el anochecer {I need to arrive at nightfall}.
+0.146911 - Disambiguated output where the sense of preposition para is given as destino… Fig 7.
+0.154198 - Disambiguated output where the sense of preposition para is given as destino {destination}.
+0.092682 - Fig 7 shows disambiguation of para in phrase ser (es) malo el día para el viaje {the day is bad for the journey}.
+0.021858 - Examples for preposition “EN” Table 27 gives a brief example, with short sentences.
+0.000000 - Table 27.
+0.000000 - Each word shows its tag.
+0.037500 - platicar VMG0000 {to talk} la DA0FS0 {the} en SPS00 {in} fiesta NCFS000 {party} el DA0MS0 {the} ser VSIP3S0 {to be] auto NCMS000 {car} mejor AQ0CS0 {better} se P0000000 {is} en SPS00 {in] decir VMIP3S0 {to say} compañía NCFS000 {company} que CS {that} de SPS00 {of} .
+0.041667 - Fp los DA0MP0 {the} llamar VMSP1S0 {to call} amigos NCMP000 {friends} en SPS00 {in} .
+0.018265 - Fp cuanto RG {soon –as soon as} el DA0MS0 {the} termines NCMP000 {you finish} hierro NCMS000 {iron} .
+0.061856 - Fp se P0300000 {is} la DA0FS0 {the} funde VMIP3S0 {to melt} casa NCFS000 {house} en SPS00 {in} de SPS00 {of} caliente AQ0CS0 {hot} juarez NCFS000 .
+0.070423 - Fp ir VSIS3S0 {to go} construida VMP00SF {built} en SPS00{in} 1806. z Output of the disambiguator for Table 27 is shown in Fig 8: Output of the algorithm, where preposition en has the meanings lugar {place} in… Fig 8.
+0.066667 - Output of the algorithm, where preposition en has the meanings lugar {place} in platicar en el auto {to talk in the car} and tiempo {time} in llamar en cuanto termines {call as soon as you finish}.
+0.057770 - Fig 9a presents output for the sense of preposition de as posesión {owmnership} in la casa de Juárez {the house of Juárez} and for preposition en as tiempo {time} in construida en 1806 {built in 1806}.
+0.072727 - The algorithm assigns meanings to preposition de and en Fig 9a.
+0.081633 - The algorithm assigns meanings to preposition de and en.
+0.048110 - Remark: In the following sentences (Table 27): • La fiesta es mejor en compañía de los amigos {the party is better in company of friends}.
+0.000000 - • El hierro se funde en caliente {Iron melts when hot}.
+0.101449 - The disambiguator assigned no meaning to preposition en.
+0.039216 - In the second sentence, the word caliente {hot} is not a noun, thus the algorithm did not take it into account.
+0.148423 - Examples of disambiguation of preposition “a” Consider the following sentences: 1.
+0.000000 - Recibo a los invitados {I receive the guests}.
+0.027211 - Me iré a Oaxaca {I will go to Oaxaca}.
+0.048485 - El trabajo está destinado a fracasar {work is destined to fail}.
+0.108844 - Tagging of those sentences is shown in Table 28.
+0.000000 - Table 28.
+0.000000 - Tagged sentences.
+0.021858 - recibir VMIS3S0 {to receive} a SPS00 {to} los DA0MP0 {the} invitados NCMP000 {guests} .
+0.021858 - Fp me P010S000 {I} ir VMIP1S0 {to go} a SPS00 {to} oaxaca NCFS000 .
+0.015686 - Fp el DA0MS0 {the} trabajo NCMS000 {work} estar VMIP3S0 {to be} destinado AQ0MSP {destined} a SPS00 {to} fracasar VMN0000 {to fail} .
+0.128205 - Fp Output of the disambiguator is shown in Fig 9b.
+0.065574 - Presenting two senses for preposition a {to}, as complemento directo {direct… Fig 9b.
+0.101959 - Presenting two senses for preposition a {to}, as complemento directo {direct complement} and as an adverb of lugar {place}.
+0.000000 - Fig 10 contains additional output.
+0.059701 - Our software gives to preposition a {to} the meaning objetivo {objective} in el… Fig 10.
+0.058608 - Our software gives to preposition a {to} the meaning objetivo {objective} in el trabajo está destinado a fracasar {work is destinated to fail}.
+0.060150 - To quantify the results given by the disambiguator, we compute the percentage of correct answers for each preposition with the formula: where: P = percentage of correct answers (%); T = Total of correct answers; PA = Prepositions to be tested.
+0.123810 - The disambiguator starts with a list of Spanish prepositions to be disambiguated, with their different meanings.
+0.121787 - The lemmatizer shown is based in the frames of the prepositions, as used in Spanish, in order to tag the nouns and verbs and the hypernyms of prepositions and nouns of the sentence.
+0.089744 - This disambiguation technique, using frames, has not been used before.
+0.054645 - Our algorithm is unique in this regard; it is also a heuristic algorithm.
+0.072917 - To better assess its efficiency a larger set of frames should be defined (constructed).
+0.062016 - The disambiguator obtains good results (Table 29).
+0.100000 - The use of hypernyms is crucial.
+0.000000 - Table 29.
+0.000000 - Results for our disambiguador.
+0.009390 - Preposition Analyzed Correct Wrong Percentaje (%) A 7 5 2 71.42 de 28 25 3 89.28 con 7 7 0 100 según 4 4 0 100 para 23 21 2 91.3 sin 92 91 1 98.91
+
+[Frase 330] The lemmatizer shown is based in the frames of the prepositions, as used in Spanish, in order to tag the nouns and verbs and the hypernyms of prepositions and nouns of the sentence.
+[Frase 60] Many times, prepositions are wrongly used and they form part of the vices of a language.
+[Frase 114] Prior to disambiguation, tagging and lemmatizing of words is performed by our method.
+[Frase 89] In our work, the semantics of the words is inside the description of the frames, which help to identify the context surrounding the preposition.
+[Frase 13] This article focuses on the design of a preposition disambiguator, using a verb lemmatizer that uses frames (Molina, 2004) to identify the meaning of verbs and nouns.

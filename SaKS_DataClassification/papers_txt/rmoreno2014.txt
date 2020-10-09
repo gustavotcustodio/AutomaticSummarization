@@ -1,0 +1,249 @@
+Efficient Services Management in Libraries using AI and Wireless techniques
+
+Abstract
+
+Radio Frequency IDentification (RFID) has been used in a wide variety of applications such as highway toll collection, building access control, animal tracking, remote keyless entry for automobiles and tracking assets. For example, RFID in libraries, with a modest investment, can improve the capabilities of both librarians and users. This paper presents a new use of RFID in libraries to help determining the physical location of a book within the library and to provide assistance to users to arrive to the desired locations.
+
+Our initial prototype, named SIGUEME, has been extended and experimentally implemented in Meco’s Public Library (Madrid, Spain). The application comprises three main systems: an electronic one – which detects users through a RFID sensors system; an AI-based system to plan and to monitor the users’ requests according to their interests; and finally a screen-based information system that communicates visually the directions the users have to follow. We have developed a wireless communications system based on Zigbee technology to allow both, the information flow across the building and to connect the antennas to detect RFID users. This eliminates the need for using wires.
+
+The application not only helps users to easily locate the books or the reading rooms inside the building, but also automates tasks manually performed by the library staff (i.e. generate statistics about books usage time, age-related usage, etc).
+
+Keywords
+Libraries
+Orientation
+Planning
+RFID
+Zigbee
+
+1. Introduction
+
+Ubiquitous computing contexts rely on the convergence of wireless technologies and advanced electronics. Multiple sensor network applications can take advantage of the synergy resulting from the combined use of Radio Frequency IDentification (RFID) and Wireless Sensor Network (WSN) technologies. ZigBee is a wireless communications standard designed by the ZigBee Alliance3 that fulfils most WSN requirements in a wide variety of applications (Zhang, Yang, & Chen, 2009).
+
+RFID systems and WSNs represent two key technologies for ubiquitous computing that have attracted considerable attention in recent years because their use revolutionizes diverse application areas. RFID facilitates detection and identification of objects that are not easily detectable or distinguishable by using conventional sensor technologies. However, RFID does not provide information about the condition of the objects it detects.
+
+WSN on the other hand, not only provides information about the condition of the objects and the environment but they are also networks of small, cost-effective devices that can cooperate to gather and provide information by sensing environmental conditions such as temperature, light, humidity, pressure, vibration and sound. It also enables multihop wireless communications. Hence, the integration of these technologies expands their overall functionality and capacity. An introduction to the taxonomy and challenges of this integration could be found in Liu, Bolic, Nayak, and Stojmenovic (2008). The resulting integrated technology will have extended capabilities, scalability, and portability as well as reduced unnecessary costs.
+
+There are a lot of examples of applications, from highway toll collection, supply chain management, public transportation, controlling building access, animal tracking, developing smart home appliances, to remote keyless entry for automobiles, for locating children, etc. But, we can consider three big domains by the volume of applications:
+
+1.
+
+    Healthcare: separation of Zigbee and RFID technologies has been very common in healthcare systems. However, recent applications integrate both technologies what boost their potentials. A healthcare example of this empowerment is the improvement of patient treatment quality. The patients location can be tracked using RFIDs, while their condition can be monitored using sensors. Critical errors such as those in treatments orders or inaccurate medical records, can be avoided with the use of an integrated RFID-sensor network (Mitsugi et al., 2007). Another example is the development of prototypes of human-monitoring systems using active RFID tags, which are integrated with sensors. These sensor-tags can be, for example, used to continuously monitor the temperature of the blood bank refrigerator as well as to track the location of a blood bag (Kim et al., 2006).
+2.
+
+    Logistics: RFID systems have widely been used in the supply chain for product tracking, inventory control, and asset monitoring, while WSNs are used for space and environment monitoring. RFID–WSNs integrated sensors have also been adopted by the U.S. Navy (Roberti, 2004) to track valuable aircraft parts in storage. The integrated sensors are able to measure humidity, temperature, and air pressure, and for a network with other RFID sensor-tags. Another example of an integration scenario of RFID and WSNs, and for a tour group system, was proposed by Chen et al.. Each group’s guide holds a badge and each group’s member carries a ticket with a passive RFID tag in which the group’s ID is stored.
+3.
+
+    Libraries: RFID technology has been used originally in libraries to improve the available inventory of books (Ferrer, Dew, & Apte, 2010; Coyle, 2005; Thornley, Ferguson, Weckert, & Gibb, 2011; Wang, 2011) and to prevent theft (Young et al., 2004; Golding & Tennant, 2007). The first project implementing RFID in a library was deployed in 1998, in the Library of Rockefeller University in New York (Singh, Brar, & Fong, 2006). Shortly afterwards, in 1999, the Farmington Community Library was the first public library using RFID technology. Although RFID was initially conceived to streamline the inventory management (Suda & Rani, 2013), it can also help extending the library operating hours by means of the self-checkin and self-checkout stations (Singh et al., 2006).
+
+This last domain is the focus of this paper. The combination of RFID and WSN, in the libraries field, could solve other problems than the well-known one mentioned above. For example, a common difficulty that users face in large libraries, which have multiple floors and rooms, is the correct location of the books and the orientation of people inside the building. One way to solve this problem is to provide the building with an intelligent system to guide the users towards the reading rooms. This also provides a way to know at any time the number of users in the building and the possibility of its localization within it.
+
+This article presents the experiences and results of applying an extension of our initial prototype SIGUEME4 (R-Moreno et al., 2011) to the Meco’s Public Library (MPL) in Madrid. This application combines Artificial Intelligence (AI) techniques, RFID and Zigbee. RFID based indoor localization is a mature topic of research and researchers have proposed very interesting schemes to exactly locate the tags in a building with high accuracy (Hsu & Yuan, 2011; Ni, Zhang, & Souryal, 2011; Saab & Nakad, 2011). Our proposal does not pretend to propose any new method on how tags should be placed but how AI can be used to coordinate and monitor all the information about users, rooms and books. Some approaches use Wi-Fi for people tracking (Zhoua et al., 2014) but instead, we have decided RFID as the indoor location system (Tesoriero, Tebar, Gallud, Lozano, & Penichet, 2010). The reason was mainly influenced by the RFID infrastructure already available in libraries for books, that could be extended also for people.
+
+The paper is organized as follows. Section 2 describes the new services provided by the system in the MPL. Then, the different components of the architecture are described. Section 4 presents the results derived from the experience and use of this system in a real environment. Finally, conclusions and future work are outlined.
+2. Services provided in MPL
+
+MPL is located 42 km Northeast of Madrid (Spain), in a small town with a population around 12,500 citizens. The library has four rooms distributed on two levels as shown in Fig. 1.
+Map of MPL
+
+    
+
+Fig. 1. Map of MPL.
+
+On the ground floor, the first spot is the main entrance with the information and check-out front desk that gives access to Room 1. Any user who wants to enter/exit the library has to go through this point where an RFID security gate is placed. Fig. 2 (left) shows the checkpoint of our application (set on the main entrance) and the RFID gate 1 along with the RFID security gate. Fig. 2 (right) shows the main entrance from the other side, where the users can search for the books thanks to a PC located before the front desk. Additionally, they can delegate this task to the information desk staff. In both cases, they can ask for the latest books or the availability of reading materials they are interested in and they can also obtain information about the availability and room location of particular books. In the case of the users who want to borrow a book from the library, they can only pop by this desk and present the book(s) to borrow, together with the library card.
+Overview of different MPL locations
+
+    
+
+Fig. 2. Overview of different MPL locations.
+
+Room 1 acts both as an entry and exit point to the library. Once in this room, one can access the other three rooms where all the books are located. Room 2 holds Children, shown in Fig. 2 (center), and Juvenile’s literature and Room 3 hosts young adults books. On the first floor we can find Room 4, which can be accessed either by using the stairs or the elevator. This room holds Fiction and Non-Fiction books, Pamphlet/newspaper, local authors and regional collections books. All these rooms have a reading area, where the user can find tables and chairs to read the books comfortably.
+
+Hitherto, we have described the common operation of any library. We have extended the functionality of the service by adding the following elements: four RFID gates to detect the people in the building, one for each room that we can access in the library, a Zigbee wireless communication network to transmit the information collected by the detection system to the central computer, an AI based system to provide and monitor the paths that the user should follow and a set of information screens, located along the building, to inform the users about the path they have to follow in order to reach their objectives. Added to these elements also a collection of passive RFID tags are needed. Some of these tags can be embedded in the user reader card and others can be alone.
+
+In this implementation, the user can take advantage of the system in two different ways. On the one hand, he can look for the reading room he wants to visit, and on the other hand, he can search a specific book. In both cases, the system will guide him to the destination point. Besides, the books can be automatically located at any room if the librarians have passed the book(s) through the RFID gates of that room. Or they can manually incorporate the book details and room location into the central system that manages the library. This information is always available when the user wants to read or borrow a book.
+
+The book location instructions provided to the users are generated in the order in which the user has selected the book(s) or the reading room(s). The goal is considered achieved if the user has reached the room where the book is or the reading room that has been selected. We have not considered any optimization in the duration of the paths because we would need to take into account the physical conditions of the user, for example, if the user needs crutches, a wheelchair, etc. But the system can generate plans for disabled people, so in case the user has to access Room 4, the system will suggest him to take the elevator instead of the stairs.
+
+Once the user has decided what book(s) he wants to borrow or the reading room(s) he wants to visit, the system locates the room and generates a path from the user’s current location to the book/reading room location in the library. Or in the case of a book, the system will also show the shelf and the row where it is placed in the room. In addition, the visitor is assisted to find his destination thanks to the different screens located around the building. The information shown in the screens takes into account the way the visitor got the screen and could be a sign, or an orientation symbol, showing the direction he has to follow, according his current position in the building, to get his destination. All he has to do is follow this advice. The users will get assistance as many times as needed in order to find the books/reading rooms he is interested in. As the person walks through corridors, stairs and so on, he will pass through the different RFID gates unintentionally. Each time he passes through the gate, the system will detect him (thanks to the RFID card he carries), determine his position, will check if the movement direction is adequate (he follows the originally designed route) or not and will send the orientation message to the corresponding screen. If the user movement direction is not adequate, the system would have to calculate a new route from his new location.
+
+Since the system knows, at any time, the user’s position, it can immediately provide the information needed to reach the destination. This information appears on several screens located at strategic points. When a person arrives at his destination (reading room), the system will inform him of the location of the book (if that was what he decided). At this point, the system waits until the user leaves the room to guide him again to his next destination (reading room) or the exit. The user will be guided as many times as necessary until he has finished all the searches. After that, the system guides the user to the exit. During the library visit, users can get lost. In that case, the system will detect this situation and correct the error. To solve the problem, the system will generate a new path considering the user’s new situation, and it will inform him in the usual way.
+
+The possibilities of this system are not only limited to provide guidance but also to provide large amounts of data on the use of the library services. For example, we can generate diverse information such as statistics of demanded/borrowed books, average time spent in the different rooms, busiest period of time or busiest room, among others. All these data are extremely useful for internal management and for improving library facilities, since they allow the library staff to know the common paths that users follow, the average stay time in the different rooms, number of users in the library, etc. More specifically, MPL (as we assume it will occur in other private or public libraries), should generate periodic reports to Madrid’s regional offices on the number of people using the service, sex, age, what is the demand of books, visit hours with more affluence, etc. At present, this work is done manually. For example, if the staff needs to know the average room occupancy or the busiest schedule they have to extract that information by hand from the books usage or number of loans. In case of room occupancy is even more complicated since they have to check the books loaned in a room and extract the number of people that were reading those books. Although this approach is tedious, they can get estimates, but they cannot take into account if, for example, a user was just trying to prepare an exam, and he was simply studying in the room. If there are no presence sensors in each room, there is no way to automatically extract that information apart from counting them. If they want to be precise, they have to ask the users that information or count them, while using SIGUEME, they can precisely and automatically do it. In this respect, our application can enhance this process by automatically calculating the different statistics and generating those reports, saving time for the library staff, and thus justifying the use of this system.
+
+Another application of the system could be to locate children, that are lost in the building, if they carry a RFID tag. The system can automatically provide the location of the room in which the kid is by using the information from the RFID gates, i.e. the kid has passed the gate and the system is notified accordingly.
+
+With respect to the investment, the cost of this system in libraries or large buildings is directly related to the number of the RFID gates and screens required. The rest of the elements: the central computer, the Zigbee communication system (routers and end-devices are cheap) and the control software have almost the same cost whatever the size of the library is. However, with respect to the RFID gates, the price difference is significant. For example, each of the gates (composed of two panels and the signal processing system) used in this case, require a medium to high investment. There are other types of RFID detectors with less features that can be purchased for half of the price or less, but that are only recommended for much smaller spaces. The dimensions of our RFID gates are: 71 cm width, 152 cm height and 8 cm deep. Separation between doors where between 100–120 cm (following manufacturer’s specifications). Considering that SIGUEME is an experimental system in which we primarily verify its operation and the validity of the monitoring and guiding process, we have not paid special attention to the measurement of the reading rate, but we can ensure that it was above 90%. The main reason for not being 100% as the manufacturer aimed was because the users placed tags in a way that the gate could no read them (i.e. wrong orientation).
+
+In relation with the screens the cost is not too hight but at least the same number as the RFID gates is needed. Obviously, if the building is large the cost of the screens could be important. The cost of the tags, whether they are embedded in the reading cards or not, is insignificant.
+
+Related to the privacy issues, SIGUEME complies with the Spanish legislation. The users data have been also anonymized to be treated, managed and visualized by our application.
+
+From the point of view of the application, the criteria big or small is mainly established according to the number of different rooms, because that affects, as discussed earlier, directly the cost of the application. The number of users are, in this case, less critical as only has an impact on the flow of information through the ZigBee system, which is perfectly capable of handling high volumes of transmissions without collapsing. In any case, the location and number of the gates and the screens must be optimized in order to keep the whole system cheap and simple but efficient.
+
+The application is designed to assist all the users who are currently in the area where each screen is located. To this aim, when the number of users is high, the information will be periodically refreshed, placing first those messages concerning those users that have just entered the area. The information for each user will disappear from the screen when the user leaves the area and another RFID gate detects him. The information about the book will be also shown in the screen. If there are more than one book in the room in which the user is interesting in, the information of the location of each book will gradually pop up. After 10 min, the messages will disappear or when the user leaves the room, whatever is first. Obviously there is a dependency between screen size and the number of users who can be simultaneously informed. In general, an information system like the one presented here should be sized for the average case of readers. It is logical that in busy periods (large number of visitors) the system’s response time increases.
+3. The system architecture
+
+The system deployed in MPL is based on the SIGUEME prototype (R-Moreno et al., 2011). Until its installation in Meco, SIGUEME had only been tested in simulation environments, based on a prototype developed in the laboratory. What we describe in this article is the usage of the system in an environment with real users. There are important differences between the prototype and the implementation in the library like the guiding information display: in the prototype environment the information was printed on the main PC, while in Meco the information had to be displayed in the screen located closer to where the user was. Additionally, when several users were waiting to read the information, the visualization system had to refresh it, placing first the messages to the users that have entered the area more recently, as well as identifying them anonymously. We have also had to solve interference problems and communication issues between RFID and Zigbee that were not present in the prototypes developed in the laboratory.
+
+It should be noted that the tandem RFID–Zigbee is new in this implementation since in the model developed in the laboratory, the communication between the different modules were through wires and the RS-232 protocol. For this experiment, it was necessary to re-program the Communication Module among the different elements. The system consists of four modules, each one with a clearly defined functionality, and which are combined into a global system that orchestrates and controls all the modules.
+3.1. Detection Module
+
+The Detection Module is based on a RFID architecture that comprises RFID tags that are attached to the books and the users’ library card, RFID readers, and an Information Services server (ISs). The tags incorporate a micro-antenna and a silicon microchip, which contains a unique identification code. RFID readers have been located in the access points between reading rooms, loan areas or books access areas in the library. Each RFID reader sends the radiofrequency waves to the electronic tag. The waves emitted by the reader activate the microchip through the micro-antenna using radio waves and transmit the data back to reader, including a unique code. The data within a tag provides identification of the users and the books, and in the last case, the storage location, loan status and history.
+
+When the reader receives the transmitted data, it can check the unique code in the database, so that it becomes possible to know the identity of the object/person and any other information available in the database. When a user searches for a book, either for reading or loaning, the application will know where to find the book and therefore, the associated RFID reader will detect if the user has arrived at the room where the book is.
+
+The Detection Module identifies users passing through doors. When that happens, the module collects and transmits some data to the Control Module. More specifically, each user detection involves the transmission of an identifier of the type of transmitted data (2 characters), the gate number (4 characters), the date in DDMMYY format, time in hhmmss format and finally the RFID tag card bearing the user (16 characters). In summary, each user detection generates a 34 characters long string that looks like RM7970040411180139E9AF220100000001. The subsystem in charge of the string transmission and delivery is the Communication Module.
+3.2. Communication Module
+
+This module manages the transmission of the information from the RFID readers to the main computer and from it to the screens. Whenever a RFID gate detects a user or a book passing through it, the data it generates is sent to the to main computer. There is processed by the Control Module (described later) and, in the case of a visitor moving through the building, the instructions to guide him are sent to the corresponding screen.
+
+It is based on a ZigBee network (Willig, 2008) with nodes located throughout the building on the right places.
+
+One of the main reasons for choosing Zigbee was to allow interoperability between devices manufactured by different companies. That is, enabling interconnection and joint operation between different systems, in a consistent way. Therefore, its main feature is its ability to connect several devices allowing them to work more efficiently together. It enables RFID devices to communicate with each other as well as other networked devices, where RFID tags attached to objects are queried from RF transceivers and transmitted via ZigBee. The usual way of using this technology is by setting up a wireless network (see Fig. 3) in which there are three different types of items according to their role in the network:
+
+•
+
+    ZigBee Coordinator (ZC). It is the most comprehensive type of device. There should be one per network. Its main function is to control both the network and the paths to be followed by devices to connect to each other.
+•
+
+    ZigBee Router (ZR). It configures the intermediate points of the network. It is responsible for interconnecting separate devices in the network topology, and provides an application layer for user code execution.
+•
+
+    Final Device (ZED). It has the functionality to communicate with its parent node (ZC or ZR) and perform the required actions but it cannot transmit information to other final devices.
+
+MPL deployed architecture
+
+    
+
+Fig. 3. MPL deployed architecture.
+
+Another motivation, among others, on using Zigbee is its ease of installation, low cost and its ability to operate in dense networks. This last characteristic improves the reliability of communication. The use of this module also avoids wire building and facilitates the reposition of the network elements. The first feature is very important since libraries are often set in old buildings and wiring the building is quite expensive.
+
+Then, this module allows the Detection Module to communicate with the Control Module, and is responsible for transmitting data between the Visualization and the Control Modules.
+
+Once the entire system (central computer, RFID gates, screens and routers) is placed and running, it is able to transmit data. There are two sources that generate data: (i) RFID gates, which provide information about the detection of a user carrying a RFID card, and (ii) the central computer which implements the guidance system and sends guidance data to the information screens. We should point out that in addition to the operational data, the Zigbee network has to send control data in order to keep the system running. The information screens are handled by the Visualization Module.
+3.3. Visualization Module
+
+One of the main problems that any user has to face when visiting a big surface is the lack of information and signs that can guide them. To solve this situation, this module is responsible for displaying the information that each user must follow, using LCD screens located on strategic places such as bifurcations, where there are several possibilities and the user must make a decision. Additionally, in libraries, we also need to find the location of the books.
+
+The information displayed is the user ID as specified on the library card (a digit number, that for privacy reasons does not show the name or the last name) and a guidance instruction (which will differ depending on the point in which the visitor is). MPL only had two floors, the lower level at the entrance of the library and a reading room on the first level. The messages that will be displayed are: arrive to destination, straight, turn right, turn left, go backwards, take stairs up, take stairs down or take elevator, followed by the corresponding arrow/draw. In the case of a book, when the user arrives to the room where is located, the screen will show the book ID (the alphanumeric string that appears in the spine of the book) followed by its position, i.e. shelf and row. This information was saved in the RFID tag of the book, so our system accesses and shows this information when it detects the user is in the same room as the book.
+
+The performance of the screens depends on the number of display lines that they have. If the number of users in a transition zone is bigger than the monitor capacity, the monitor will be properly refreshed so that all people can get their respective information. Obviously, there is a compromise between the amount of information the screen shows for each visitor, the size of the screen and the number of people to deal with. More experience with the system will get a better performance. The information will disappear from the screen when the user leaves the area and another RFID reader detects him.
+3.4. Control Module
+
+This module consists of an intelligent planning system, the Parallel Integration of Planning and Scheduling System (PIPSS) (Plaza, R-Moreno, Castaño, Carbajo & Moreno, 2008) that calculates, on demand, the actions to reach the destination from a given starting point. Planning is a subarea of the AI field that consists of a set of techniques which aim at providing efficient searches of problems’ solutions. The two inputs of a planner are:
+
+•
+
+    Domain theory. First, we need to supply a domain description which comprises a set of operators, allowing the planner to go from a defined initial state to a state in which a set of goals is fulfilled. It is based on the STRIPS representation (Fikes & Nilsson, 1971) that has evolved into a standard language, the Planning Domain Definition Language (PDDL) (Gerevini, Long, Cumbria, Golding, &Tennant,Tenn). It was introduced to overcome what were seen as computational difficulties when using states to construct plans. In PDDL, a world state is represented by a set of logical formulae, the conjunction of which is intended to describe the given state. Actions are represented by the so-called operators. An operator consists of pre-conditions (conditions that must be true to allow the action execution), and post-conditions or effects (usually constituted of an ‘add list’ and a ‘delete list’). The ‘add list’ specifies the set of formulae that are true in the resulting state while the ‘delete list’ specifies the set of formulae that are no longer true and must be deleted from the description of the state. For instance, in this domain, the operators would be the direction instructions to the users, that is: “go straight”, “turn right”, “turn left”, “go backwards”, “take stairs up”, “take stairs down” and “take elevator”, among others.
+
+    Fig. 4 shows how the “turn right” operator is coded in PDDL. For a person to move from room A (represented in the example by the variable 
+
+) to room B (represented by the variable
+
+    ), it is necessary that the person (represented by the variable ?person) was in room A in the first place (represented by the predicate (person_in_room ?p ?origin) and after executing the action, the person will be in room B (represented by the predicate (person_in_room ?p ?destination) and therefore the person is not anymore in room A, that is, we have the delete effect (not (person_in_room ?p origin)). Another important piece of information is how the different rooms are connected. This type of information could range from sub-sections of the building map (e.g. one room is on the right/left of another room) to the complete building map.
+    An example of an operator in PDDL
+
+        
+
+    Fig. 4. An example of an operator in PDDL.
+
+    This information is set by direction predicates. In this case, we have used (on-right ?origin ?destination) to represent that the destination room is on the right of the origin.
+•
+
+    Problem. It is described in terms of a set of states and goals. Those states are represented by a logical formula specifying a situation for which one is seeking for a solution.
+
+    –
+
+        Initial state. In planning, one has to specify the starting situation of the posed problem. In our application, a potential initial state would be the rooms in the library where the users – who are looking for either books or reading rooms – are located. In Fig. 5 we can see that the predicates belonging to the initial state are enclosed in the set :init. As initial state we have the connections between the different rooms (i.e. (on-right Room1 Room2), (on-left Room2 Room1)) from all the possible directions. Also in this part of the file, we represent the locations of the different users registered in the library (i.e. (person_in_room ID0001 Room1)).
+        An example of a problem in PDDL
+
+            
+
+        Fig. 5. An example of a problem in PDDL.
+    –
+
+        Goals. They are often viewed as specifications for a plan. They describe what are considered successful behaviors after the execution of the plan: i.e. specifying the targets that are desired to be true at the end of the solution of the problem. In this application, one goal could be that each user arrives to the selected reading room. In Fig. 5 we have defined three goals enclosed in the set :goal. In this example all of the users should arrive to Room 4.
+
+Given these inputs, the planner provides a solution consisting of an ordered sequence of instructions for each user, who will reach the desired room given a particular initial location.
+
+The Control Module is also responsible for supervising all the information coming from the RFID readers and translating it into the PDDL representation needed by the planner, in order to provide a plan. It also monitors that the users execute the plans as expected. Thus, the user will be guided as many times as necessary until all the queries are satisfied. While the users are trying to find the selected room, they can get confused. If that is the case, this module will detect it and it will provide more accurate instructions, by calling the planner and generating a new customized plan for the user. The intelligent monitor system on top of the planner will check if the effects of the actions are satisfied. If any of them is false, the system will generate a new plan from the actual position of the user, wich is determined by the information from the RFID readers. The user will be informed in the usual way, i.e. through the LCD screens. Additionally, this module will translate the plan provided by the planner and send it to the Visualization Module. The Control Module also manages which screen has to display the message.
+4. Experimental results
+
+Although the MPL is a small building, it meets the basic conditions for testing the system, its installation, commissioning and data collection. Its size, with around 5,500 users and 23,000 books, is small enough to keep a limited deployment complexity, but it is sufficient to test the system benefits. The library layout (shown in Fig. 1) has helped the deployment of the system. Additionally, the good engagement of the library managers and authorities was also a key point to select this library for the experimental evaluation of our system.
+
+In order to evaluate the data collecting system and to test the software, we gathered data for one week and analyzed the results. We used this data to feed the different modules and show the capabilities of this solution. We have collected data in three experiment types:
+
+1.
+
+    System evaluation. In this experiment we assessed the proper functioning of the system and its capacity to transmit messages correctly through the different RFID gates. For this test, the testers, equipped with RFID cards, passed several times through each RFID gate and then verified the right operation of the system analyzing the logs.
+
+    One important thing we checked, in this first test, was the ability of the RFID gates to detect two different tags passing almost at the same time across the same reader. We found that if two tags pass very close in time the RFID detector is not capable of distinguish one from the other or even it does not recognize one of both. To establish the minimum separation between two tags to be detected is an important issue that must be addressed in the future. Another important topic is the case when a user stops inadvertently just in the middle of a RFID gate. In this situation the system will generate a continuous flow of useless signals, in that case, an option could be cut the stream of data after a certain number of detections.
+
+    However, the most important problem arises when a only tag passes, without stopping, through a RFID gate in such an orientation that the magnetic field flow across the tag circuit is so small that it has no enough energy to give a detectable electrical response. This challenge is very difficult to tackle if we only use flat tags and it means that some user-system interactions will be undetected.
+
+    Nevertheless, most of the experimental data collected in this test were very satisfactory and we could check the whole system was working very well.
+2.
+
+    Unguided real users. This experiment was performed to collect data from real users, who were moving freely across the library rooms without any prior instruction. The users’ destinations were not considered. This way, we gathered information about the occupation of each room by time, average occupation and average time spent by users in each room of the library. For instance, Fig. 6 shows the density plot of the time that the users have spent in each of the rooms. Looking at the diagram, it is clear that in Room 1 the users tend to stay a longer time in comparison to the other rooms. On the contrary, users in other rooms tend to stay a similar time. In addition, it can be seen that the users, on average, stay uniformly between 400 and 900 s in Rooms 2, 3 and 4; nonetheless, the user profile is different in Room 1, users there stay typically between 400 and 1200 s. This difference is consistent with the special role that the Room 1 plays in the library. On the one hand, this room is a transient one and all the visitors going to any other room have to pass through it to get their destination. They also have to pass through it when they change rooms and when they are on their way out. Room 1 also has its own function because it holds the newest library purchases and the books of general interest. So that, many readers spend an important amount of time inside that room exclusively.
+    Kernel plot with the time spent by the users in each one of the library rooms
+
+        
+
+    Fig. 6. Kernel plot with the time spent by the users in each one of the library rooms.
+
+    During this test some of the problems detected in the System evaluation check were found. That is: two people passing together by the same gate, a person going across the RFID gates with a book or tags that do not give any signal because of its orientation when passing through the gates. Some of these problems are unavoidable but can be reconstructed, in some cases, with the rest of the signals given by the other detectors.
+
+    On top of that, in this second test some new problems showed up. Most of them related to the users behavior, that is: people losing their tags, ruining them or even people swapping inadvertently their reader cards.
+
+    The whole data we collect in this stage is also very useful even if we do not want to help or guide the users. Because at that point, we are able to follow a complete user behavior along all the time he has been at the library and we can do it for most of the visitors in the experiment. In addition, all the data we gather allow us to have a lot of information about the use people are doing of the library and help us to improve the performance of the service.
+3.
+
+    Guided real users. The users, in this case, were guided through the various rooms in the library. The main goal of this experiment was to assess the guidance sub-system and its capacity to help users to find their itinerary. In most cases it has been found that the system provided all the information needed to direct visitors and shows this information in the right screen and in the proper time.
+
+    However, this third experiment (when the users have to interact with the system) showed a very interesting fact, that is: users need some kind of training before they can take full advantage of the system and use its different facilities. This training means, at least, two things: knowledge and confidence. Of course, the main aim of this work was not to teach the library visitors how to fully interact with SIGUEME but we realize that this is an important issue that should be addressed in the future. As example, we can mention the relevance of the set of symbols, or signs, to indicate the orientation a user should follow when he ask for it looking at the screens.
+
+    In general, in this third test, the causes of malfunctions or errors were the same that in the previous checks.
+
+From a general point of view, when SIGUEME fully works, it provides reporting functionalities to support decision-making processes that, in simpler systems, would be much more difficult, if not impossible, to generate. Other important information is shown in Fig. 7. It contains a mosaic plot that visualizes the number of users per day and room during the whole week. The surface of each square in the plot is proportional to the number of users in that room and day. The variance of room occupancy during the week is pretty small, the number of users in each room is almost constant. At the same time, we can see that Room 1 is the most used one. This plot is also consistent with the library usage and, in some sense, confirms that the system is working well. For instance, it is clear that anyone counting among the visitors of Rooms 2, 3 and 4 has to count among the ones visiting transient Room 1, so that, this last room has to show bigger numbers that the other three added.
+Mosaic plot representing the number of users per week, day, and room
+
+    
+
+Fig. 7. Mosaic plot representing the number of users per week, day, and room.
+
+It is also possible to capture a time series showing the number of users in each room. Actually, Fig. 8 represents a time series (week period) that shows the number of users in each room. Rush hours are clearly shown in the picture, and when the library is closed as well. Again, we do not appreciate significant differences among the rooms by the day of the week.
+Time serie representing the library occupancy by room
+
+    
+
+Fig. 8. Time serie representing the library occupancy by room.
+
+During the testing, the library staff found an interesting but unplanned application: it allows to locate any individual reader, anytime, inside the library. This feature is very useful specially at closing time when they have to know who, and where, still remains in the library.
+
+Before concluding the description of this application it should be noted that, besides the processes management, guided movements and library users monitoring, the system provides files which include all the interactions of the visitors with the system every day. These data will constitute a database which will allow, in a subsequent studies, to establish how the library is used by providing information about most used rooms, busiest schedules, capacity to longer opening hours, and so on. We highlight that the availability of this information would not be possible with conventional systems guided by signposts or other passive signaling.
+5. Conclusions and future work
+
+This article has demonstrated the potential and advantages of using RFID technology to boost and optimize the services offered by libraries. The developed prototype combines wireless technology (RFID and Zigbee) with AI techniques (automatic planning) to detect, guide and monitor users through the library. It also facilitates the process of locating the books or reading rooms the user is interested in. But the benefits are not only limited to users, but also to those providing the service, i.e. the library staff. With this system, librarians can automatically generate facility usage statistics, books usage time, age-related usage, etc. In summary, data that are periodically required by the competent bodies.
+
+The affordances of the system could be enhanced if it was integrated into the self-checking and self-checkout stations.
+
+From a practical point of view, some of the most important problems found in the real experiment of the systems must to be fixed or, at least, taking into account in the future. That is: the minimum separation between two tags passing through a RFID gate in order to detect both of them, how to recover lost data using the rest of the available data, the communication messages and the training of the users.
+
+In addition to what is described in this paper, the system can also be used to find people, especially children, who are in the building but whose location is unknown. This can be done through the information sent by the RFID gates and assuming that the person has with him the library card with the RFID tag. Another application, that could be developed in the future, is the efficient evacuation of building users in case of an emergency that requires it. Since we know the total number of users and the rooms in which they are, one could implement a system to manage the movement of people, globally, by building up their complete evacuation process.
+
+1
+
+    Tel.: +34 91 885 49 01; fax: +34 91 885 49 51.
+
+2
+
+    Tel.: +34 91 885 6502; fax: +34 885 6923.
+
+3
+
+    http://www.zigbee.org
+
+4
+
+    The letters stand for Sistema Inteligente de GUiado para Entornos Multiusuario Extensos – Intelligent Guidance System for multiuser extensive environments – that means FOLLOW ME

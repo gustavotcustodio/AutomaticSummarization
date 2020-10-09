@@ -1,0 +1,348 @@
+<article>
+  <title>Integration computing and collective intelligence</title>
+  <abstract>
+    <sentence>Techniques for processing knowledge in collectives are more and more needed because of rapidly increasing number of autonomous sources of knowledge in the world.</sentence>
+    <sentence>Collective intelligence, among others, deals with creating the knowledge of a collective which is consistent and complete.</sentence>
+    <sentence>This means that it should contain all elements not belonging to the knowledge of collective members, but can be inferred on the basis of knowledge of them.</sentence>
+    <sentence>For this process the methodologies for knowledge integration seem to be very useful.</sentence>
+    <sentence>In this paper the authors present a framework for integrating knowledge of a collective which shows that knowledge of a collective should not be a normal sum of knowledge of its members.</sentence>
+    <sentence>The model for knowledge integration using complex hierarchical structures has been also presented and analyzed.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Collective intelligence</keyword>
+    <keyword>Integration computing</keyword>
+    <keyword>Integration functions</keyword>
+    <keyword>Hierarchical structures</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Computational models of human intelligence often focus on the individual as the only area of analysis (Pentland, 2006).</sentence>
+    <sentence>In recent years the trend to consider whole groups of individuals has become more and more visible (Google N-Gram Viewer, 2013).</sentence>
+    <sentence>One of the examples of such approach is multi-agent technology, which enables making decisions based on a set of autonomous sources from agents’ knowledge bases (Bosse, Jonker, Schut, &amp; Treur, 2006; Castelfranchi, 1998; Hoen &amp; Bohte, 2003).</sentence>
+    <sentence>Another example is Web Intelligence, where the knowledge is originated from different knowledge bases with different structures and most often inconsistent referring to a common subject (Fischer, Giaccardi, &amp; Eden, 2005; Gan &amp; Zhu, 2007; Zettsu &amp; Kiyoki, 2006).</sentence>
+    <sentence>Collective intelligence, the more general term than that one considered in this paper, is in turn often defined as an intelligence that emerges from the collaboration and competition of many individuals (Levy, 1997; Russell, 1995).</sentence>
+    <sentence>This intelligence may appear to have a mind of its own, independent of the individuals it consists of.</sentence>
+    <sentence>In opinion of many authors, collective intelligence appears in a wide variety of forms of the collective knowledge state, which arises in the results of the consensus decision-making processes.</sentence>
+    <sentence>Three main features of collective intelligence may be distinguished: • Elements of the collective are autonomous and intelligent.</sentence>
+    <sentence>• Their knowledge may be inconsistent.</sentence>
+    <sentence>• The collective members are commonly task-oriented.</sentence>
+    <sentence>One of the phenomena of collective knowledge is that it is often larger than the sum of individual’s knowledge.</sentence>
+    <sentence>For example, if one collective member knows that “ ” and another that “”, then together they also know that “ ”.</sentence>
+    <sentence>One of possible processes, by means of which knowledge bases of individuals become the knowledge of the collective, is integration.</sentence>
+    <sentence>This process has the following possible aspects: • Several objects are merged to give a new element representing them.</sentence>
+    <sentence>The initial objects are then discarded and only the new representant is used.</sentence>
+    <sentence>• Several objects create a “union” acting as a whole.</sentence>
+    <sentence>In cases like data warehouse federations, the initial objects may even remain unchanged and the “union” is only a new, common perspective for the final user.</sentence>
+    <sentence>• Several objects are connected with each other.</sentence>
+    <sentence>This may be done as part of the previous two aspects, as well as an independent process.</sentence>
+    <sentence>It is often named “mapping” or “matching” in literature, depending on the final result.</sentence>
+    <sentence>The first two aspects are most important and most popular.</sentence>
+    <sentence>They are also most useful for purposes of collective intelligence.</sentence>
+    <sentence>In practice very often knowledge on the same subject is gathered from different sources, for example in Internet.</sentence>
+    <sentence>If someone wants to solve a problem he/she often asks not only one expert but several.</sentence>
+    <sentence>It is normal thus in such situation the knowledge originating from different sources can be inconsistent and for making a use of it, some integration technique should be applied.</sentence>
+    <sentence>In general, a collective is understood as a set of intelligent units like experts, agent systems, or simply a set individuals which are autonomous in making decisions.</sentence>
+    <sentence>Each of collective members has its own knowledge, but when collective members are asked for giving their opinions, comments, solutions for some problem, the knowledge of whole collective (i.e.</sentence>
+    <sentence>the collective knowledge) may not be the normal sum of members knowledge.</sentence>
+    <sentence>This phenomenon is the motivation of our work.</sentence>
+    <sentence>We would like to know if the collective knowledge is larger or smaller than the sum of collective members knowledge.</sentence>
+    <sentence>To our best knowledge, in the word-wide literature there have been performed some experiments with the participation of people which showed that in general if the collective knowledge is larger, but no mathematical model has been proposed.</sentence>
+    <sentence>And this is the main objective of our paper.</sentence>
+    <sentence>The framework we propose in this work contains only a generic model for the additional value of knowledge of a collective.</sentence>
+    <sentence>We do not show, however, what is the influence of the number of collective members on this additional value.</sentence>
+    <sentence>This should be the subject of the future work.</sentence>
+    <sentence>Integration may be used as a tool to determine the knowledge of the whole collective.</sentence>
+    <sentence>When the knowledge state of all individuals is integrated then some new element or a union of elements will be created.</sentence>
+    <sentence>This new integrated element will represent the knowledge of the whole collective and may contain information exceeding the simple sum of individual states.</sentence>
+    <sentence>The integration process itself may be conducted using multiple methods to achieve different solutions – each of them may contain different additional knowledge.</sentence>
+    <sentence>In this paper we describe the integration function and the Aug function that we use to calculate this new knowledge.</sentence>
+    <sentence>We also provide some specific results for knowledge trees, where different situations related to integration may occur.</sentence>
+    <sentence>The rest of this paper is organized as follows: Section 2 contains a short survey of collective intelligence research in terms of integration; Section 3 contains the notion of integration functions, including a function to determine the additional knowledge that may be gained by the process; Section 4 contains a short description of multi-level integration process; Section 5 provides multiple examples in which this research may be used in complex tree integration; and Section 6 contains some concluding remarks and avenues for future research.</sentence>
+  </section>
+  <section name="Related works">
+    <sentence>The concept of collective intelligence may be tracked back to works in psychology area, where it was made distinct from the more broad concept of collective behavior (Weschsler, 1971).</sentence>
+    <sentence>It was postulated that while individuals pool resources for task achievement, it requires the collective intelligence aspect for cross-fertilization of ideas.</sentence>
+    <sentence>Thus collective intelligence was found more innovative, if not more effective, than the sum of tasks completed by individuals working separately.</sentence>
+    <sentence>This aspect of intelligence was first adopted in the field of Computer Science in works on artificial life and robotics.</sentence>
+    <sentence>Early works utilized the collective aspect of animal behavior and intelligence, aiming to apply them to automatic solutions, be it agent (Ferber, 1999) or robot (Mataric, 1993; Millonas, 1992).</sentence>
+    <sentence>In each case the analysis of most simple behaviors lead to observing more complex emergent ones.</sentence>
+    <sentence>This leads directly to the current definition of collective intelligence, which may have been best expressed in terms of utility functions (Tumer &amp; Wolpert, 1999): general world utility is a function of the state of all agents across all time, a more specific private utility function is a function of only one agents state at a single moment; “the aim of collective intelligence designer is to maximize world utility through the proper selection of private utility functions”.</sentence>
+    <sentence>This definition lacks only a single important point about collective intelligence – the fact that knowledge used by world utility function may be much larger than sum of knowledge from all private utilities.</sentence>
+    <sentence>Integration is the process by which the summary knowledge of the collective may be determined.</sentence>
+    <sentence>In its merging aspect it may be tracked back to works such as Margush and McMorris (1981), where mathematical solutions were necessary to find an “average” of multiple experimental results.</sentence>
+    <sentence>It was mostly developed by evolutionary biologist to solve the problem of finding a real phylogenetic tree based on inconsistent data (Adams, 1986; Day, 1985).</sentence>
+    <sentence>The general solution was called the median tree.</sentence>
+    <sentence>It is obtained by finding the element that minimizes the sum of distances to all inputs of integration.</sentence>
+    <sentence>The name is based on the fact that in one dimensional euclidean space the element minimizing the sum of distances is the median of the inputs.</sentence>
+    <sentence>To solve this problem (proven to be NP-hard for trees (Amir &amp; Keselman, 1994)) a variety of algorithms were proposed, including cluster approach (Day, 1985), triads and nestings (Adams, 1986).</sentence>
+    <sentence>The median procedure was the basis for development of multiple tools in knowledge management, including consensus theory (Nguyen, 2008; Nguyen, 2002) and knowledge integration methods (Konieczny, 2000; Lin &amp; Mendelzon, 1999).</sentence>
+    <sentence>Large part of research described in this paper is based on those papers and builds on their basis.</sentence>
+    <sentence>In particular, the research presented in this paper is most similar to that published in Margush and McMorris (1981), which defined the median tree as similar to our postulate .</sentence>
+    <sentence>Modern research on integration occurs in multiple areas and applications.</sentence>
+    <sentence>These range from continued work on phylogenetic trees (Jansson, Shen, &amp; Sung, 2013) and schema matching (Peukert, Eberius, &amp; Rahm, 2012), to ontology alignment (Bock &amp; Hettenhausen, 2012) and data warehouse federations (Kern, Stolarczyk, &amp; Nguyen, 2012).</sentence>
+    <sentence>The continued research in the first area is due to the fact that existing algorithms are not computationally efficient and the final solution to the problem would have to deal with integration of massive structures (trees with millions of vertices).</sentence>
+    <sentence>Thus current work focuses on finding solutions faster than the old algorithms, possibly in polynomial or linear time (Jansson et al., 2013).</sentence>
+    <sentence>A lot of work is also directed towards applying basic data integration techniques in real world application.</sentence>
+    <sentence>A large part of this research lacks a theoretical basis, but is focused on the specific application it is intended for.</sentence>
+    <sentence>These range from merging logs (Claes &amp; Poels, 2014) to merging documents or their schemas (Peukert et al., 2012).</sentence>
+    <sentence>The work presented in this paper intends to create this theoretical basis for the applications research, as well as provide the multi-level integration tool to improve computation time for existing methods.</sentence>
+    <sentence>The schema matching research area is active due to the fact that the schemas become larger in real-world applications.</sentence>
+    <sentence>The algorithms may be later used as part of integration process for data and knowledge.</sentence>
+    <sentence>Most existing systems are semi-automatic and work by creating mapping suggestions that are later corrected by the user.</sentence>
+    <sentence>This requires human effort both before and after the matching is conducted, first in order to teach the system and then to improve the results.</sentence>
+    <sentence>Current research, among others, aims to improve this process by including adaptation in subsequent uses (Peukert et al., 2012).</sentence>
+    <sentence>The area of ontology alignment is closely related to schema matching in its underlying principles, but focuses in larger part on knowledge relationships than on basic data.</sentence>
+    <sentence>Currently multiple issues had been solved and good alignment and integration algorithms exist, but there are still challenges to be overcome (Shvaiko &amp; Euzenat, 2013).</sentence>
+    <sentence>A lot of current work is also focused on fast algorithms, due to increasing complexity of structures being aligned (Bock &amp; Hettenhausen, 2012), as well as creating algorithms independent of expert interaction and fulfilling some given criteria on the characteristics of the result (Guzmn-Arenas &amp; Cuevas, 2010).</sentence>
+    <sentence>Ontology-based solutions utilizing similar research methodologies are often thought as a step towards true semantic integration (Xue, Ghenniwa, &amp; Shen, 2011).</sentence>
+    <sentence>There are also other approaches to integration, using different methods and tools.</sentence>
+    <sentence>Authors of Huang, Yang, Wang, and Tsai (2010) propose a fuzzy approach to knowledge integration and use particle swarm optimization as a basis for this process.</sentence>
+    <sentence>In Gmez, Chesevar, and Simari (2013) the authors focus on description logic as a tool for merging ontologies, meanwhile eliminating inconsistencies and filling incomplete fragments.</sentence>
+    <sentence>The data warehouse federations area is a fairly unexplored area of integration.</sentence>
+    <sentence>Federations are an unified view on multiple warehouses and do not interfere in their internal structure.</sentence>
+    <sentence>A user query to the federation is viewed in a general schema (which is a result of integration), but to provide an answer it must be translated back to component schemas, processed, and the answer must be integrated before presenting it to the user (Kern et al., 2012).</sentence>
+  </section>
+  <section name="General knowledge integration problem">
+    <sentence>To improve clarity of the rest of this paper, we will first introduce a refined form of some notations proposed in our previous research.</sentence>
+    <sentence>By U we denote a set of objects representing the potential elements of knowledge referring to a concrete real world.</sentence>
+    <sentence>The elements of U can represent, for example, logic expressions, tuples etc.</sentence>
+    <sentence>Symbol denotes the powerset of U, that is the set of all subsets of U.</sentence>
+    <sentence>By we denote the set of all k-element subsets (with repetitions) of set U for (N is the set of natural numbers), and let Thus is the set of all non-empty finite subsets with repetitions of set U.</sentence>
+    <sentence>A set can represent the knowledge of a collective where each element represents knowledge of a collective member.</sentence>
+    <sentence>Note that X is a multi-set.</sentence>
+    <sentence>We also call X a collective knowledge profile, or a profile in short.</sentence>
+    <sentence>Set U can contain elements which are inconsistent with each other.</sentence>
+    <sentence>Two elements are inconsistent if they represent two states of knowledge which cannot take place in the real world to which U refers, simultaneously.</sentence>
+    <sentence>A set is called inconsistent if all the knowledge states represented by its elements cannot take place in the real world to which U refers, simultaneously, and Z is minimal in the sense that any proper subset of Z does not have this property.</sentence>
+    <sentence>Set is called consistent if any its subset is not inconsistent.</sentence>
+    <sentence>We assume that between elements of set U a distance function can be defined: which is: • Nonnegative, i.e.</sentence>
+    <sentence>.</sentence>
+    <sentence>• Reflexive, i.e.</sentence>
+    <sentence>if , and • Symmetrical, i.e.</sentence>
+    <sentence>, where is the closed interval of real numbers between 0 and 1.</sentence>
+    <sentence>Pair is called a distance space.</sentence>
+    <sentence>The definition of a distance function is independent of the structure of elements of U.</sentence>
+    <sentence>In our previous works we have defined distance functions for logic expressions (Nguyen, 2008; Nguyen, 2009), relational tuples (Nguyen, 2002), complex trees (Maleszka &amp; Nguyen, 2011; Maleszka &amp; Nguyen, 2013).</sentence>
+    <sentence>Thus function d is a half-metric.</sentence>
+    <sentence>Metric conditions, including transitivity, in many cases are too strong.</sentence>
+    <sentence>We define the integration function as follows: Definition 1 By an integration function in space we call a function For a collective the value is called the knowledge state of collective X.</sentence>
+    <sentence>Let denote the set of all integration functions in space .</sentence>
+    <sentence>For and let and Below we define a set of postulates for knowledge functions.</sentence>
+    <sentence>Definition 2 A integration function satisfies the postulate of: 1.</sentence>
+    <sentence>Unanimity (Un): for each and .</sentence>
+    <sentence>Simplification (Si): 3.</sentence>
+    <sentence>Quasi-unanimity (Qu): for each , where symbol denotes the sum operation for multi-sets.</sentence>
+    <sentence>Consistency (Co): for each .</sentence>
+    <sentence>Proportion (Pr): for any .</sentence>
+    <sentence>1-Optimality (O1): If X is inconsistent then for any .</sentence>
+    <sentence>2-Optimality (O2): If X is inconsistent then for any .</sentence>
+    <sentence>Complexity (Cp): If X is consistent then .</sentence>
+    <sentence>Postulates and are used for inconsistent conflict resolution, that is for such profiles which are inconsistent.</sentence>
+    <sentence>These postulates are well-known in consensus theory (Nguyen, 2008), here defined in a refined form, that facilitates our further research.</sentence>
+    <sentence>One of very important aspects of collective knowledge is that the knowledge of a collective is not a “normal sum” of its members’ knowledge.</sentence>
+    <sentence>As a very simple example let’s consider a collective consisting of 2 members, where one has knowledge and the second knows that (for being some parameters).</sentence>
+    <sentence>Then together as a collective their knowledge contains and additionally, .</sentence>
+    <sentence>We will define a function (named Aug) which determines the “additional” elements arising in a collective.</sentence>
+    <sentence>For the above example we simply have This function has the following signature: For contains knowledge elements which can be inferred from those belonging to X.</sentence>
+    <sentence>We define the following conditions for function Aug: 1.</sentence>
+    <sentence>For any : ø This condition means that function Aug refers only to the additional elements.</sentence>
+    <sentence>For any : New elements which can be inferred from X should be included in its integration (Integration function I has been defined above).</sentence>
+    <sentence>If X is inconsistent then ⧹ This case considers X as an inconsistent profile, that is X is a profile having the following property: all its elements can not take place simultaneously.</sentence>
+    <sentence>For this situation we use postulate or for integrating elements from X, and new elements can appear in this process.</sentence>
+    <sentence>If then there is no new element.</sentence>
+    <sentence>If ø then ø .</sentence>
+    <sentence>It is an intuitive condition, that is if elements from X cannot be integrated, then there can not be any additional ones.</sentence>
+    <sentence>If ø then there exists such that ø .</sentence>
+    <sentence>This condition means that if X does not have additional elements, then extending X by Y will have this property.</sentence>
+    <sentence>In practice, this means that if a collective is not creative, then it becomes creative after adding new members.</sentence>
+    <sentence>Let us consider these properties in terms of the abovementioned example.</sentence>
+    <sentence>We may denote , therefore .</sentence>
+    <sentence>It may be observed that ø.</sentence>
+    <sentence>If some integration function I would consider the sum of knowledge, then , or as stated above and ⧹.</sentence>
+    <sentence>Let now denote , for which ø, but ø .</sentence>
+  </section>
+  <section name="Multi-level integration and applications for big data processing">
+    <sentence>For big data, that is when a collective knowledge profile is very large, one can use the multi-level integration process.</sentence>
+    <sentence>Such process is based on dividing X into smaller groups and realizing integration process for each of them.</sentence>
+    <sentence>Next, the integration results will be treated as a new profile which will be the subject to a new integration process.</sentence>
+    <sentence>The procedure can be realized for m levels of integration.</sentence>
+    <sentence>The integration function I defined in Definitions 1 and 2 can be treated as 1-level integration.</sentence>
+    <sentence>Now we define multi-level integration process.</sentence>
+    <sentence>Two-level integration process Let be a collective.</sentence>
+    <sentence>We define the 2-level integration process as follows.</sentence>
+    <sentence>• Step 1.</sentence>
+    <sentence>Clustering set X to groups .</sentence>
+    <sentence>• Step 2.</sentence>
+    <sentence>Determining integration for these groups.</sentence>
+    <sentence>• Step 3.</sentence>
+    <sentence>Determining integration for X: The main idea of 2-level integration process is based on first partitioning the collective to smaller groups.</sentence>
+    <sentence>Next one should integrate elements for each group and finally integrate the results of integration processes for these groups.</sentence>
+    <sentence>Let’s note that sets create a partition of set X, thus is ø for and .</sentence>
+    <sentence>The following postulates should be fulfilled for 2-level integration process (i.e.</sentence>
+    <sentence>for function ): 1.</sentence>
+    <sentence>Unanimity: 2.</sentence>
+    <sentence>Simplification-1: 3.</sentence>
+    <sentence>Simplification-2: The first postulate is obvious since if all collective elements are identical then the value function I for each group is the same element, thus the value of also should be the same.</sentence>
+    <sentence>Postulate Simplification-1 is identical as postulate Simplification for function I. Postulate Simplification-2 specifies that if the cardinalities of all groups are equal each other then the value of should be the same as of I.</sentence>
+    <sentence>This postulate is the consequence of postulate Simplification-1 and postulate Simplification for function I.</sentence>
+    <sentence>Multi-level integration process The idea for multi-level integration process is more general to the 2-level process.</sentence>
+    <sentence>The clustering procedure and integration function are calculated in each level.</sentence>
+    <sentence>The output of each level is a new profile being the sum of integration function values for all group.</sentence>
+    <sentence>Let be a collective.</sentence>
+    <sentence>We define the m-level integration process as follows.</sentence>
+    <sentence>• Step 1 (Level 1).</sentence>
+    <sentence>Clustering set X to groups .</sentence>
+    <sentence>• Step 2 (Level 1).</sentence>
+    <sentence>Determining integration for these groups and creating profile: • Step 3 (Level 2).</sentence>
+    <sentence>Clustering set to groups .</sentence>
+    <sentence>• Step 4 (Level 2).</sentence>
+    <sentence>Determining integration for these groups and creating profile: • Step 2m-1 (Level m).</sentence>
+    <sentence>Clustering set to groups .</sentence>
+    <sentence>• Step 2m (Level m).</sentence>
+    <sentence>Determining integration for these groups and calculating the final integration for profile X: Similarly as for 2-level process, the following postulates should be fulfilled for m-level integration process (i.e.</sentence>
+    <sentence>for function ): 1.</sentence>
+    <sentence>Unanimity: 2.</sentence>
+    <sentence>Simplification-1: 3.</sentence>
+    <sentence>Simplification-2: The justification for these postulates is similar as for the 2-level integration process.</sentence>
+  </section>
+  <section name="Integration techniques using hierarchical structures">
+    <sentence>One of the structures that have been investigated in terms of integration computing and collective intelligence is complex tree (Maleszka &amp; Nguyen, 2011).</sentence>
+    <sentence>In this section some interesting results are presented, as applied to trees with labeled leaves.</sentence>
+    <sentence>Complex tree is defined as , where Y is the set of allowed vertex types, S determines which types of vertices have which attributes, V is the set of labeled vertices in the tree, and E is the set of all edges in the tree.</sentence>
+    <sentence>In this paper we present properties that occur for simplest complex tree, that is with one vertex type and single attribute of each node – a label.</sentence>
+    <sentence>For simplicity of notation, it is assumed that each vertex is its label.</sentence>
+    <sentence>Thus all described properties also occur for labeled trees.</sentence>
+    <sentence>The integration function defined in Section 3 has now the following form: Below, input trees will be numbered by and the output tree will be marked as .</sentence>
+    <sentence>We may also define this task in the following way: Definition 3 Tree integration is a process, in which: • the input is a set of complex trees , • the output is a single complex tree , • input and output trees are tied by a set of relationships defined by criteria .</sentence>
+    <sentence>The aim of integration is denoted in terms of criteria that the integration function should satisfy on a given level.</sentence>
+    <sentence>Each requirement for criterion is defined as follows: where is the measure of this criterion and is the level on which the criterion should be satisfied (most often ).</sentence>
+    <sentence>The full list of criterions may be found in Maleszka and Nguyen (2011).</sentence>
+    <sentence>In this section only select criteria will be used.</sentence>
+    <sentence>Decomposition property A specific case of multilevel integration described in Section 4 occurs for the criterion of completeness.</sentence>
+    <sentence>Completeness for complex trees is based on a similar criterion for general schema matching.</sentence>
+    <sentence>Its measure may be defined as a relation of the number of vertices from input trees in the integrated one, to their number in the input trees: where For any algorithm where completeness is equal to 1, one may decompose it to a series of partial integrations of pairs.</sentence>
+    <sentence>The result of the multilevel integration process will have completeness also equal to 1, but resulting tree may have different structure.</sentence>
+    <sentence>If the algorithm generates all trees satisfying the criterion, then the resulting sets will be identical.</sentence>
+    <sentence>Let assume even number of input trees N (similar reasoning may be used also for odd Ns).</sentence>
+    <sentence>Completeness equal to 1 means that: Therefore after integration .</sentence>
+    <sentence>As no other criteria are considered then: (1) It may be observed that for sets of vertices the following is true: Based on equivalence (1) the sum of sets is the set of vertices that are the result of integration .</sentence>
+    <sentence>Similarly, set is the set of vertices in .</sentence>
+    <sentence>Therefore we have: This allows the following notation: But as are the result of integrating pairs of trees, then: Additionally, because the sum of multisets is commutative, then integration based on completeness is also commutative.</sentence>
+    <sentence>Decomposition may be done also for some of the criteria in the minimality group, with the same note about the result.</sentence>
+    <sentence>Minimality is defined as a criterion measuring the size of the output tree in relation to the input trees, by a number of possible measures.</sentence>
+    <sentence>A simple measure of vertex number in the tree is one of the most basic ones: Similar to the case of completeness, a reasoning that allows decomposition will be shown for the even number of inputs.</sentence>
+    <sentence>Minimality in this variant will only be equal to 1, if: Assume that the result of integrating two trees has a multiset of vertices .</sentence>
+    <sentence>As minimality criterion is met, then: Similar property occurs for other pairs of trees.</sentence>
+    <sentence>All those inequalities sum up to the following: If the trees are integrated, the result is some tree .</sentence>
+    <sentence>The set of vertices of this tree is .</sentence>
+    <sentence>Consequently: Regarding the previous inequality this means that the following is true: More concise, the following is true: Therefore, minimality criterion is met, but and may not be the same trees.</sentence>
+    <sentence>Relationships between criteria In our previous research, the application of path search in trees has been considered in terms of integration criteria.</sentence>
+    <sentence>A generalized algorithm that may represent common methods was presented and later analyzed in Maleszka and Nguyen (2012).</sentence>
+    <sentence>While multiple authors focus on optimization of algorithms, the aim of integration remains identical – all path searches from the input trees must remain possible in the integrated tree.</sentence>
+    <sentence>By analyzing the algorithm it was possible to determine values and boundaries on other integration criteria.</sentence>
+    <sentence>Thus, additional effects of the process may be described.</sentence>
+    <sentence>Below, description of determining the relation between path completeness criterion and completeness criterion from Section 5.1 when integrating two trees is presented.</sentence>
+    <sentence>The path completeness criterion measures the number of paths (starting in root and ending in leaves) from the input trees that remain in the integrated tree: where • is a path, is the ith element of path p, • is the set of all paths in T, • is a measure of path or partial path length in that is most similar to p, and specifically: • , • .</sentence>
+    <sentence>The completeness criterion for vertices was defined in Section 5.1.</sentence>
+    <sentence>The generalized integration algorithm focused on keeping all paths is presented as follows: Algorithm 1.</sentence>
+    <sentence>Path Completeness Algorithm Input: A set of input trees Output: A single output tree BEGIN Create set P of all paths in input trees.</sentence>
+    <sentence>Create the output tree consisting of a random path p from P. Delete that p from P. while do Select random path r from P. ifr starts from a vertex that is identical to the root of Compare consecutive vertices on r to consecutive child vertices in , starting from the root, until a differing vertex or end of path.</sentence>
+    <sentence>Add the rest of path r as subtree of the last common vertex or r and .</sentence>
+    <sentence>else if first vertex of r occurs in any place in then Add the rest of path r as subtree of that vertex.</sentence>
+    <sentence>else Add the whole path r as a subtree of ’s root.</sentence>
+    <sentence>end if end if Delete r from P. end while Return the output tree .</sentence>
+    <sentence>END Let M represent the set of all possible labels (for simplicity M is a natural number), be the number of all labels used in input trees, and be the number of nodes in each input tree, and be the number of leaves in each tree (note that number of paths is equal to the number of leaves).</sentence>
+    <sentence>The following inequalities occur: (2) (3) The probability that a given label will occur on a given position in the tree is (in general case ).</sentence>
+    <sentence>As integration algorithms do not add new vertices if identical ones already exist, then completeness may be calculated as: After transformation we have: From the properties of the tree (2) and (3) this may be further presented as: Or more simply: This equation may be now used to determine the overall value of the criterion.</sentence>
+    <sentence>As the number of common elements in integrated trees may vary (this may also be calculated), only the simplest case will be presented here.</sentence>
+    <sentence>In the example, let (only the root is common in the integration process).</sentence>
+    <sentence>Then the upper boundary for the criterion is: This value details a very limited case, but similar reasoning may be used to determine boundaries in cases, where there are more common elements in trees.</sentence>
+    <sentence>With information about probability of element co-occurrence, it is possible to define the boundaries in the general case.</sentence>
+    <sentence>During our research (Maleszka &amp; Nguyen, 2012) we have conducted simulations of integration process for this specific situation.</sentence>
+    <sentence>Partial results of this research are shown in Table 1.</sentence>
+    <sentence>This results are within the boundaries determined by analytical means.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Simulation of path-based integration – impact on other criteria.</sentence>
+    <sentence>T – number of trees, N – avg.</sentence>
+    <sentence>number of nodes in tree, M – range of possible labels.</sentence>
+    <sentence>Criterion , , , , , , Structure completeness 0.92 0.91 0.85 Link completeness 0.99 0.98 0.98 Path completeness 1 1 1 Similar reasoning may be used to find relations between other integration criteria.</sentence>
+    <sentence>Analytical solutions The 1-optimality criterion is a measure of the 1-optimality postulate for consensus proposed in Section 3.</sentence>
+    <sentence>It may be defined as the relation of the sum of distances between the solution found by the integration algorithm and the input trees to the same sum for the best possible solution.</sentence>
+    <sentence>This criterion is defined as follows: In a general case finding the best ( ) solution for trees is a complex task, but in specific cases analytical solutions exist.</sentence>
+    <sentence>Assume that the structure of all input trees is identical and only labels differ from each other.</sentence>
+    <sentence>For simplicity numerical labels in will be used.</sentence>
+    <sentence>The following distance measure will be used: where and are trees, is the label value for node v in tree is the depth of the node in the tree and is some parameter in .</sentence>
+    <sentence>The following reasoning leads to analytical solution for this case.</sentence>
+    <sentence>Denote the minimal sum of distances given by the best solution to as: where is the set of all input profiles.</sentence>
+    <sentence>Based on the definition of the distance measure this is equal to: One may eliminate the denominator from the minimum, as it is constant: Further, due to the identical structure of all trees, the sums are commutative, therefore: Furthermore, as the distances in each node are independent from each other, one may remove one of the sums from the minimum: Based on this equation we may conclude, that the solution for may be calculated independently for each node.</sentence>
+    <sentence>As this is reduced to one-dimension Euclidean distance, the solution for is finding the median of the values, as shown in Nguyen (2002).</sentence>
+    <sentence>Similar reasoning may be used in several other cases to find analytical solutions to specific problems that are in general case computationally complex.</sentence>
+    <sentence>Inconsistency of integration criteria Another group of features that may be identified when integrating complex trees is the fact, that not all aims may be achieved simultaneously.</sentence>
+    <sentence>This happens due to certain criteria being inconsistent.</sentence>
+    <sentence>An example of such situation occurs for trees with identical multisets of vertices, where at least one node in an input tree has a different parent than his analogue in other trees.</sentence>
+    <sentence>In such trees the inconsistent criteria are precision and relationship completeness – only one of them can be satisfied fully.</sentence>
+    <sentence>The relationship completeness criterion is similar to completeness described in Section 5.1, but calculates the number of edges from input trees that remain in the output tree and aims to represent all the edges in the result.</sentence>
+    <sentence>The precision criterion measures the redundancy in the output tree.</sentence>
+    <sentence>In its simplest form it may be calculated as: Let two trees and have the structure described above.</sentence>
+    <sentence>The difference between the trees may be described as: where is a parent of B in tree and C is the parent of B in tree .</sentence>
+    <sentence>Assuming relationship completeness equal to 1, the following is true: ( contains all edges from and ).</sentence>
+    <sentence>As the integrated structure is a complex tree (a graph with constraints on the number of in-edges), then multiset must contain at least two copies of B.</sentence>
+    <sentence>The input trees and each contain a single vertex B, so from multiset sum must contain only one instance of B.</sentence>
+    <sentence>Therefore , which means that precision is smaller than 1.</sentence>
+    <sentence>On the other hand, if precision is equal to 1 then from its definition .</sentence>
+    <sentence>As input trees have the same multisets, then from multiset theory – if and each have only once instance of B then can only have one instance of B.</sentence>
+    <sentence>Due to being a tree, B can have only a single in-edge towards its parent, either or .</sentence>
+    <sentence>This means that , which in turn means that relationship completeness is smaller than 1.</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>In this article we discuss a mathematical model of integration, both on the general level and for a given knowledge structure.</sentence>
+    <sentence>We both summarize our previous work and provide new important tools for future research.</sentence>
+    <sentence>In this, our research is similar to that conducted by Gmez et al.</sentence>
+    <sentence>(2013) or Margush and McMorris (1981).</sentence>
+    <sentence>In the former, the authors use descriptive logic for merging ontologies eliminating inconsistencies and incompleteness.</sentence>
+    <sentence>Meanwhile, our approach on general level uses set theory, but for specific structures other tools may be used.</sentence>
+    <sentence>In this, the model proposed in Gmez et al.</sentence>
+    <sentence>(2013) may be easily converted to a specific case of our model.</sentence>
+    <sentence>On the other hand the mathematical model proposed in Margush and McMorris (1981) and later refined by others is a solid basis on which our research was built.</sentence>
+    <sentence>In it the authors suggest merging data structures by means of optimization with conditions.</sentence>
+    <sentence>Here, optimization with conditions is one of ways of determining the consensus.</sentence>
+    <sentence>The proposed Aug function is especially important for describing collectives (groups of experts), for example in terms of its creativity or diversity.</sentence>
+    <sentence>The Aug function will also be used in our future research, as described below.</sentence>
+    <sentence>The multi-level integration proposed in this paper could be applied to multiple algorithms used for integration in practical applications.</sentence>
+    <sentence>The general definition is a first step towards expanding this research area.</sentence>
+    <sentence>The main advantage of multi-level integration is the possibility of improving the computation time for complex algorithms.</sentence>
+    <sentence>The last presented part of our research is concentrated on applying the previous parts of the paper to integration of hierarchically structured data.</sentence>
+    <sentence>We do not concentrate on integration task or integration criteria definitions, which were fully detailed in our previous work (Maleszka &amp; Nguyen, 2011), but focus on properties of the integration process and algorithms.</sentence>
+    <sentence>This part of our research may be treated as a concept aimed at increasing the possibilities of syntactically merge and align data from multiple sources.</sentence>
+    <sentence>This may be used in both database and information systems.</sentence>
+    <sentence>This article focuses on building a mathematical model of integration.</sentence>
+    <sentence>While this part of the research is complete, it is also a smaller part of a larger model of collective intelligence.</sentence>
+    <sentence>One may note that other models may be proposed to describe the issue of integration function and additional knowledge gained during integration, as well as another approach to multi-level integration.</sentence>
+    <sentence>As other models may prove superior, this remains a possible weakness of the presented research.</sentence>
+    <sentence>Due to this factor we aim to expand this research, in much part by applying the model to several practical situations.</sentence>
+    <sentence>Determining the consensus of opinions of several experts is an old problem that has multiple possible solutions.</sentence>
+    <sentence>The problem that was not considered is the optimal number of experts.</sentence>
+    <sentence>The common assumption is that the more experts there are, the better the consensus.</sentence>
+    <sentence>In our future research we aim to examine this assumption.</sentence>
+    <sentence>Our hypothesis is that there exists such a number of experts for each issue or type of issue, that adding another expert to the group provides less additional knowledge (determined by the Aug function discussed in this paper) than the cost of this expert participation.</sentence>
+    <sentence>If this hypothesis is proven, we may then determine the optimal number of experts for the given issue (type of issue).</sentence>
+    <sentence>We are currently cooperating with both social scientists and economists to consider this problem in real world applications.</sentence>
+    <sentence>A related issue is determining the creativity of a collective (ability to generate additional knowledge).</sentence>
+    <sentence>Previous research shows that the more heterogeneous the collective is, the closer the integration result is to the real state of knowledge.</sentence>
+    <sentence>The same may be applied to additional knowledge generated by cooperation of the collective members.</sentence>
+    <sentence>We may use the techniques described in this paper to compare different groups in terms of the Aug function.</sentence>
+    <sentence>Our preliminary hypothesis is that the composition of the collective influences the Aug function.</sentence>
+    <sentence>Further research may show if it is possible to compose such a collective that maximizes this function.</sentence>
+    <sentence>Another issue we consider in relation to this research is the process of opinion and knowledge diffusion in groups.</sentence>
+    <sentence>The main aspect of this issue is to be carried out by social scientists.</sentence>
+    <sentence>Based on their observations, we want to use the approach to integration computing presented in this paper to model chosen aspects of group communications.</sentence>
+    <sentence>This research avenue may be also heavily influenced by the two previously described.</sentence>
+    <sentence>Some preliminary research hypotheses for this research, stated by social scientists, are as follows: with increasing time of group communication the frequency of repeatable sequences is increasing (the collective becomes less creative); mental similarity in the picture of social order causes similar people to use common linguistic sequences (homogenous groups have reduced dimensionality of considered issue).</sentence>
+    <sentence>Here data mining methods should be very useful (Van, Vo, &amp; Le, 2014).</sentence>
+    <sentence>In our future research, we will also use this model for ontology merging in an information system intended to optimize processes in transportation companies.</sentence>
+    <sentence>It was observed that the descriptions of problems to be optimized for several companies that have similar operational models are very similar (e.g.</sentence>
+    <sentence>mining company using buses to drive miners to work and city transportation company driving children to school).</sentence>
+    <sentence>As the knowledge structure used is an ontology, it is possible to use ontology merging techniques derived from research presented in this paper.</sentence>
+    <sentence>A common ontology may then be used to add and optimize processes in additional companies.</sentence>
+    <sentence>We are currently cooperating with over a dozen different transportation companies to implement such system.</sentence>
+  </section>
+</article>

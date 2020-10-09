@@ -1,0 +1,197 @@
+In this paper , we present a novel approach for computing the Pareto frontier in Multi-Objective Markov Chains Problems ( MOMCPs ) that integrates a regularized penalty method for poly-linear functions .
+In addition , we present a method that make the Pareto frontier more useful as decision support system : it selects the ideal multi-objective option given certain bounds .
+We restrict our problem to a class of finite , ergodic and controllable Markov chains .
+The regularized penalty approach is based on the Tikhonov ’ s regularization method and it employs a projection-gradient approach to find the strong Pareto policies along the Pareto frontier .
+Different from previous regularized methods , where the regularizator parameter needs to be large enough and modify ( some times significantly ) the initial functional , our approach balanced the value of the functional using a penalization term ( μ ) and the regularizator parameter ( δ ) at the same time improving the computation of the strong Pareto policies .
+The idea is to optimize the parameters μ and δ such that the functional conserves the original shape .
+We set the initial value and then decrease it until each policy approximate to the strong Pareto policy .
+In this sense , we define exactly how the parameters μ and δ tend to zero and we prove the convergence of the gradient regularized penalty algorithm .
+On the other hand , our policy-gradient multi-objective algorithms exploit a gradient-based approach so that the corresponding image in the objective space gets a Pareto frontier of just strong Pareto policies .
+We experimentally validate the method presenting a numerical example of a real alternative solution of the vehicle routing planning problem to increase security in transportation of cash and valuables .
+The decision-making process explored in this work correspond to the most frequent computational intelligent models applied in practice within the Artificial Intelligence research area .
+Brief review Multi-criterion optimization is a well-established research area with an extensive collection of solution concepts and methods presented in the literature ( for an overview see , for example , Collette & Siarry , 2004 ; Dutta & Kaya , 2011 ; Ehrgott & Gandibleux , 2002 ; Eichfelder , 2008 ; Mueller-Gritschneder , Graeb , & Schlichtmann , 2009 ; Roijers , Vamplew , Whiteson , & Dazeley , 2013 ; Zitzler , Deb , & Thiele , 2000 ) .
+The most common notion of multi-criterion optimization is that of efficient ( or Pareto optimal ) solutions , namely those solutions that can not be improved upon in all coordinates ( with strict improvement is at least one coordinate ) by another solution .
+Regrettably efficient solutions are non-unique .
+Then , different methods have been proposed to identify one optimal solution , such that of computing the scalar combinations of the objective functions .
+Alternatively , an optimization method that leads to a well-defined solution is the constrained optimization problem , where one criterion is optimized subject to explicit constraints on the others .
+In practice decision makers often find it hard to specify such preferences , and would prefer a representation method based-on an intelligent system able to exemplify the range of such possible alternatives .
+Many researchers utilized versatile computational intelligent models such as Pareto based techniques for handling this types of problems ( Angelov , Filev , & Kasabov , 2010 ) .
+In the context of Markov decision processes ( MDP ) serious works have been developed to compute efficient solutions .
+Durinovic , Lee , Katehakis , and Filar ( 1986 ) presented a MOMDP based on the average reward function to characterize the complete sets of efficient policies , efficient deterministic policies and efficient points using linear programming .
+Beltrami , Katehakis , and Durinovic ( 1995 ) considered a MOMDP formulation for deploying emergency services considering the area average response time and the steady-state deterioration in the ability of each district to handle future alarms originating in its own region .
+Wakuta and Togawa ( 1998 ) suggested a policy iteration algorithms for finding all optimal deterministic stationary policies concerned with MOMDP with no discounting as well as discounting .
+Chatterjee , Majumdar , and Henzinger ( 2006 ) considered MDPs with multiple discounted reward objectives showing that the Pareto curve can be approximated in polynomial time in the size of the MDP .
+Etessami , Kwiatkowska , and Yannakakis ( 2007 ) studied efficient algorithms for multi-objective model checking problems which runs in time polynomial in the size of the MDP .
+Clempner and Poznyak ( 2016c ) provided a method based on minimizing the Euclidean distance is proposed for generating a well-distributed Pareto set in multi-objective optimization for a class of ergodic controllable Markov chains .
+Clempner ( 2016 ) proposed to follow the Karush–Kuhn–Tucker ( KKT ) optimization approach where the optimality necessary and sufficient conditions are elicited naturally for a Pareto optimal solution in MOMDP .
+Clempner and Poznyak ( 2016a ) presented a multi-objective solution of the Pareto front for Markov chains transforming the original multi-objective problem into an equivalent nonlinear programming problem implementing the Lagrange principle .
+Clempner and Poznyak ( 2016d ) suggested a novel method for computing the multi-objective problem in the case of a metric state space using the Manhattan distance .
+Learning schemes for constrained MCs were presented by Poznyak , Najim , and Gomez-Ramirez ( 2000 ) , based on the theory of stochastic learning automata .
+Pirotta , Parisi , and Restelli ( 2015 ) provided an algorithm to exploit a gradient–based approach to optimize the parameters of a function that defines a manifold in the policy parameter space so that the corresponding image in the objective space gets as close as possible to the Pareto frontier .
+As well as , Vamplew , Dazeley , Barker , and Kelarev ( 2009 ) studied the benefits of employing stochastic policies to MO tasks and examined a particular form of stochastic policy known as a mixture policy proposing two different methods .
+Motivation Let us consider a general vector optimization problem as ( 1 ) where is the optimization variable , is a proper cone , is the objective function , are the inequality constraint functions , and are the equality constraint functions .
+Here the proper cone is used to compare the objective values .
+The optimization problem presented in Eq ( 1 ) is a convex optimization problem if : i ) the objective function f ( x ) is -convex , ii ) the inequality constraint functions gi ( x ) are convex , and iii ) the equality constraint functions hi ( x ) are affine .
+Let us consider the set of achievable objective values of feasible points , The values are to be compared using the inequality meaning that x1 is ‘ better than or equal ’ in value to x2 .
+In this sense , if the set has a minimum ( optimal point of the problem given in Eq ( 1 ) ) then there is a feasible point x * such that for all feasible xi .
+When an optimization problem has an optimal point it is unique : if x * is an optimal point then f ( x * ) can be compared to the objective at every other feasible point , and is better than or equal to it .
+A point x * is optimal if and only if it is feasible and where is the set of values that are worse than , or equal to , f ( x * ) .
+We say that a feasible point x is Pareto optimal ( or efficient ) if f ( x ) is a minimal element of the set of achievable values .
+In this case we say that f ( x ) is a Pareto optimal point for the optimization problem given in Eq ( 1 ) .
+Thus , a point x * is Pareto optimal if it is feasible and , for any feasible x , implies .
+A point x is Pareto optimal if and only if it is feasible and ( 2 ) where is the set of points that are better than or equal to f ( x * ) , i.e. , the achievable value better than or equal to f ( x * ) is f ( x * ) itself .
+An optimization problem can have many Pareto optimal points .
+Every Pareto optimal point is an achievable objective value that lies in the boundary of the set of feasible points .
+The set of Pareto optimal points satisfies where denotes the boundary of the set of feasible points .
+Let us consider the scalar optimization problem ( 3 ) The weight vector λ is a free parameter that allows to obtain ( possibly ) different Pareto optimal solutions of the optimization problem ( 1 ) .
+Geometrically , this means that a point x is optimal for the scalarized problem if it minimizes λ⊺f ( x ) over the feasible set , if and only if for any feasible xi .
+If the optimization problem given in Eq ( 1 ) is convex , then the scalarized problem given in Eq ( 3 ) is also convex , since λ⊺f ( x ) is a scalar-valued convex function .
+This means that we can find Pareto optimal points of a convex optimization problem by solving a convex scalar optimization problem .
+Note that this problem may have non-unique solution .
+Tikhonov ’ s regularization ( Tikhonov , Goncharsky , Stepanov , & A.G. , 1995 ; Tikhonov & Arsenin , 1977 ) is one of the most popular approaches to solve discrete ill-posed of the minimization problem ( 4 ) The method looks for establishing an approximation of x by replacing the minimization problem ( 4 ) by a penalized problem of the form with a regularization parameter δ > 0 .
+The term penalizes large values of x , and result in a sensible solution in cases when minimizing the first term only does not .
+The parameter δ is computed to obtain the right balance making both , the original objective function and the term small .
+We can described the regularization problem as an optimization problem ( 5 ) Using the scalarization method to solve the problem given in Eq ( 5 ) we have that We have that the function fδ ( x ) is strictly convex if the Hessian matrix is positive semi-definite or , equivalently , δ should provide the inequality or , equivalently , δ should provide the inequality ( 6 ) However , in this case δ should be large enough and it can modify ( sometimes significantly ) the shape of the original functional .
+Main contribution To address this shortcoming , this paper provides a novel approach for solving the multi-objective Markov chains problem using a regularizing poly-linear functions based on a penalty function optimization approach .
+This paper makes the following contributions : • Based on the fact that the unconstrained optimization problem has a unique solution only if the functional is strongly convex , we formulate the expected properties for the regularized penalty function for the constrained problem including equality and inequality constraints .
+• Immediately , we present the main result on the extremal points of the penalty functions proving that there exists a solution of the original problem with minimal weighted norm which is unique .
+• Then , we suggest a projection-gradient algorithm for computing the penalty function .
+We prove the convergence of the gradient method and the rate of convergence of the parameters μ , δ and γ .
+• In addition , we present a version of the same algorithm without inequality constraints .
+• Next , we formulate the MOMCP introducing basic notions on Markov chains and presenting the poly-linear Markov cost functions for justifying why the regularizing poly-linear functions solution approach is necessary .
+• We formulate the original problem considering the c-variable method for the introduction of linear constraints over the poly-linear functions in the MOMCP .
+• We present a method that make the Pareto frontier more useful as decision support system selecting the ideal multi-objective option given certain bounds ( Clempner & Poznyak , 2015 ) .
+• Finally , we experimentally validate the method presenting a numerical example of a real alternative solution of the vehicle routing planning problem .
+Organization of the paper The remainder of this paper is organized as follows .
+The next Section provides the controllable Markov chains theory and the formulation of the MOMCP .
+Section 3 presents a decision support method that consists on determining a scalar λ * given specific bounds .
+Bounds are restrictions imposed by the decision maker over the Pareto front that establish a specific decision area where the strategies can be selected .
+Section 4 presents the penalty function regularized optimization method which balanced the value of the functional using a penalization term ( μ ) and the regularizator parameter ( δ ) at the same time improving the computation of the strong Pareto policies .
+Section 5 proves the convergence of the gradient regularized penalty algorithm .
+Section 6 validates the method presenting a numerical example of a real alternative solution of the vehicle routing planning problem to increase security in transportation of cash and valuables .
+Section 7 concludes and discusses future work .
+To make the paper more accessible , the long technical proofs are placed in the appendix .
+Markov chains Let S be a finite set , called the state space , consisting of finite set of states .
+A Stationary Markov chain is a sequence of S-valued random variables s ( n ) , satisfying the Markov condition ( Clempner & Poznyak , 2014 ) .
+The Markov chain can be represented by a complete graph whose nodes are the states , where each edge ( s ( i ) , s ( j ) ) ∈ S2 is labeled by the transition probability .
+The matrix determines the evolution of the chain : for each , the power Πk has in each entry ( s ( i ) , s ( j ) ) the probability of going from state s ( i ) to state s ( j ) in exactly k steps .
+Definition 1 A controllable Markov chain ( Poznyak et al. , 2000 ) is a 4-tuple ( 7 ) where : • S is a finite set of states , ; • A is the set of actions .
+For each s ∈ S , A ( s ) ⊂ A is the non-empty set of admissible actions at state s ∈ S .
+Without loss of generality we may take ; • is the set of admissible state-action pairs , which is a measurable subset of S × A ; • is a stationary controlled transition matrix , where represents the probability associated with the transition from state s ( i ) to state s ( j ) under an action a ( k ) ∈ A ( s ( i ) ) , .
+Definition 2 A Markov Decision Process is a pair ( 8 ) where : • MC is a controllable Markov chain ( 7 ) • is a cost function , associating to each state a real value .
+The Markov property of the decision process in ( 8 ) is said to be fulfilled if The strategy ( policy ) represents the probability measure associated with the occurrence of an action a ( n ) from state .
+The elements of the transition matrix for the controllable Markov chain can be expressed as Let us denote the collection { d ( k|i ) ( n ) } by Dn as follows A policy is said to be local optimal if for each n ≥ 0 it maximizes the conditional mathematical expectation of the utility function under the condition that the history of the process is fixed and can not be changed hereafter , i.e. , it realizes the “ one-step ahead ” conditional optimization rule where is the utility function at the state .
+Poly-linear Markov cost function The multi-objective optimization problem for Markov chains is described as follows .
+The problem consists of cost-functions ( denoted by ) and begins at the initial state sl ( 0 ) which ( as well as the states further realized by the process ) is assumed to be completely measurable .
+Each of the cost-functions l is allowed to randomize , with distribution over the pure action choices ∈ and .
+From now on , we will consider only stationary strategies .
+In the ergodic case when all Markov chains are ergodic for any stationary strategy the distributions exponentially quickly converge to their limits satisfying Each cost-function is depending on the states and actions of all the other cost-functions , is given by the values so that the “ average cost function ” Jl in the stationary regime can be expressed as where is a matrix with elements ( 9 ) satisfying ( 10 ) and Notice that by ( 9 ) it follows that ( 11 ) In the ergodic case for all .
+Theindividual aim of each cost-function is 2.3 .
+Problem formulation Multi-objective optimization is concerned with the problem of optimizing several functions simultaneously .
+A precise mathematical statement was given by Pareto ( 1896 ) ; 1897 ) and Germeyer ( 1971 , 1976 ) .
+In the single objective case , an optimum is defined as a policy d * where a given cost-function Jl ( cl ) assumes its minimum .
+In the sense of Pareto , in multi-objective optimization we consider several functions where the minimal optima for a given function is different from the minimal optima of the remaining functions ( Germeyer , 1971 , 1976 ) .
+Definition 3 A multi-objective Markov chain is a tuple ( 12 ) where : • MC is a controllable Markov chain ( 7 ) • is a vector function whose components are used to define the different cost criteria .
+Remark 1 The multi-objective control problem is to find a policy c * that minimizes .
+To study the existence of Pareto policies we shall first follow the well-known “ scalarization ” approach .
+Thus , given a n-vector λ > 0 we consider the scalar ( or real-valued ) cost-function J .
+The Pareto set can be defined as ( Germeyer , 1971 , 1976 ) ( 13 ) such that The Pareto front is defined as the image of under J as follows We consider the usual partial order for n-vectors x and y , the inequality x ≤ y means that xi ≤ yi for all .
+We have that A sequence converging to x is said to converge in the direction if there is a sequence of positive numbers in such that in → 0 and Let be a subset of .
+The tangent cone to at is the set of all the directions in which some sequence in converges to x .
+Definition 4 Let be a subset of .
+A vector in is said to be 1. a Pareto point of if there is no such that x < x * ; 2. a weak Pareto point of if there is no such that x < < x * ; 3. a proper Pareto point of if x * is a Pareto point and , in addition , the tangent cone to at x * does not contain vectors y < 0 .
+Definition 5 A policy d * is said to be is a Pareto policy ( or Pareto optimal ) if there is no policy d such that J ( d ) < J ( d * ) , and similarly for weak or proper Pareto policies .
+Let ‖·‖ be the Euclidean norm in and let be the map defined as This is a utility function ( or a strongly monotonically increasing function ) for the MOMCP in the sense that if d and d′ are such that J ( d ) < J ( d′ ) , then ϱ ( d ) < ϱ ( d′ ) .
+Definition 6 A policy d * is said to be strong Pareto optimal ( or a strong Pareto policy ) if it minimizes the function ϱ that is , Remark 2 As ϱ is a utility function , it is clear that a strong Pareto policy is Pareto optimal , but of course the converse is not true .
+The problem is how to compute in order to generate a Pareto front where d is a strong Pareto policy ( seeDefinition 6 ) .
+The decision support method consists on determining a scalar λ * and the corresponding strategies d * ( λ * ) given specific min and max bounds that belong to the Pareto front ( Clempner & Poznyak , 2015 ) .
+Bounds correspond to restrictions imposed by the decision maker over the Pareto front that establish a specific decision area where the strategies can be selected .
+The optimal that corresponds to that with minimal distance to the utopian point .
+The method is described as follows : Let define the min and max allowed bounds as follows ( 14 ) Suppose that these bounds are a priory given as ( see Fig 1 ) Fig 1 .
+Decision support method : bounds specification .
+Let define the optimal that corresponds to the solution of the problem ( 15 ) ( Jl * corresponds with the utopian point ) subject to Lemma 7 The problem ( 15 ) formulated above is feasible iff 1 .
+( 16 ) 2 .
+( 17 ) ⌀ The optimal individual utility is given by As well as , the optimal global utility Let us represent the problem above in the form of a poly-linear function optimization with linear constraints , namely , We will construct the matrix using the ergodicity constraints defined in ( 10 ) ( 18 ) Then , we have that Developing the formulas and multiplying by for each component we have where is the Kronecker ’ s delta , then is defined as follows where and is as follows
+Poly-linear optimization problem formulation Consider the following poly-linear programming problem ( 19 ) Introducing the “ slack ” vectors with nonnegative components , that is , uj ≥ 0 for all the original problem ( 19 ) can be rewritten as ( 20 ) Note that this problem may have non-unique solution and .
+Define by X * ⊆Xadm the set of all solutions of the problem ( 20 ) .
+Penalty functions approach Following Zangwill ( 1969 ) and Garcia and Zangwill ( 1981 ) consider the penalty function ( 21 ) where the parameters k and δ are positive .
+Obviously , the unconstraint on x the optimization problem ( 22 ) has a unique solution since the optimized function ( 21 ) is strongly convex ( Poznyak , 2008 ) if δ > 0 .
+Note also that where and ( 23 ) 4.3 .
+Expected property of RPFA Proposition 8 If the penalty parameter μ tends to zero by a particular manner , then we may expect that x * ( μ , δ ) and u * ( μ , δ ) , which are the solutions of the optimization problem tend to the set X * of all solutions of the original optimization problem ( 20 ) , that is , ( 24 ) where ρ { a ; X * } is the Hausdorff distance defined as Below we define exactly how the parameters μ and δ should tend to zero to provide the property ( 24 ) .
+The main result on the extremal points of the penalty functions Theorem 9 Let us assume that 1 ) the bounded set X * of all solutions of the original optimization problem ( 20 ) is not empty and the Slater ’ s condition holds , that is , there exists a point such that ( 25 ) 2 ) The parameters μ and δ are time-varying , i.e. , such that ( 26 ) Then ( 27 ) where x * * ∈ X * is the solution of the original problem ( 20 ) with the minimal weighted norm which is unique , i.e. , ( 28 ) and ( 29 ) Proof See Appendix A □ We also need the following lemma .
+Lemma 10 Under the assumptions of the Theorem above there exist positive constants Cμ and Cδ such that ( 30 ) Proof See Appendix A □
+The recurrent procedure Consider the following recurrent procedure for finding the extremal point z * * = : ( 31 ) where and 5.2 .
+Main result on the convergence of the projection gradient method Theorem 11 convergence of the gradient method If ( 32 ) then ( 33 ) Proof See Appendix A □ 5.3 .
+Special selection of the parameters Let us select the parameters of the algorithm ( 31 ) as follows : ( 34 ) To guarantee the convergence of the suggested procedure , by the property and by the conditions ( 32 ) we should have ( 35 ) 5.4 .
+On the rate of the convergence Let us prove the following simple result .
+Lemma 12 Suppose that for a nonnegative sequence { un } the following recurrent inequality holds ( 36 ) where numerical sequences { αn } and { βn } satisfies ( 37 ) Then ( 38 ) Proof Lemma 12 For it follows which by the same Theorem 16.14 in Poznyak ( 2008 ) implies ( 38 ) .
+□ By ( 34 ) and ( A.23 ) we have As the result , and for we get if v ∈ ( 0 , 1 ] satisfies ( 39 ) or , equivalently , v ≤ .
+So , the rate of convergence for will be estimated by the following relation This leads to the following conclusion : the best rate of the convergence to zero is defined as ( 40 ) where Since ≥ = > 1 we have Under constrains ( 39 ) and ( 35 ) the maximal upper estimate is achieved when 2γ = = 1 implying γ = ≤ = and .
+Finally we get ( 41 ) 5.5 .
+Optimization without inequality constrains Without the constrains of the inequality type we may take and the recurrent algorithm become to be as follows : Conditions to the parameters
+This example presents a real alternative solution of the vehicle routing planning problem to increase security in transportation of cash and valuables ( see , Beltrami et al. , 1995 for multi-objective Markov decision in urban modeling ) .
+Companies in the arena are focused in the physical transfer of cash , jewels , coins , etc .
+As a result of the type of the transported goods the security vehicles are frequently exposed to attacks along their routes .
+Crime is a significant challenge .
+In addition , the risk rates and the losses are different from sector to sector .
+A conflict arises because higher risk exposures allow a reduction of the travel cost .
+We suggest a bi-objective formulation using the proposed method with the goal of reducing both the risk and the travel cost .
+The problem is weighted according to which a maximum amount of valuables can be transported the security vehicle .
+It is important to note that each customer must be assigned to exactly one of the routes and the vehicle capacity must not be exceeded .
+Assuming that a vehicle picks up cash and valuables at certain places i visited along route , a risk index φ for each criminal l can be defined as follows where is the risk of criminal to attack place i and action k along a given route and , is the maximum risk able to undertaken by a criminal to attack place i .
+The risk method assesses the probabilities for the actions of the attackers and it is defined as follows ( 42 ) It is interesting to remark that in our case we used i and j as the sequence between two consecutive places ( states ) that measure the probability of an attack on a specific roadway segment .
+In terms of Markov chains we observe the current state i ∈ S. Then , by optimizing the risk using Eq ( 42 ) is selected an optimal action .
+Then two things happen : a cost Jijk is incurred and , the system at time moves to a new state j ∈ S with probability π ( i , j|k ) .
+Let us consider and .
+Then , fixing and the Pareto front for 1000 points is shown in Fig 2 which represents the routing plans that should both be safe and efficient .
+The Pareto front allows the decision-maker to deal with two critical problems : a ) the minimization of the traveled cost-time of a security vehicle and , b ) the reduction of the expected exposure of the transported goods to robberies .
+This is not a simple assignment .
+It involves the conflict between objectives and the difficulty of selecting the routes which implicate to visit and to collect valuables along several places every day .
+The corresponding value of the vector λ and the joint strategy for is as follows : Fig 2 .
+Regularized Pareto front : security routing against vehicle attack .
+Route 1 ( color cyan ) Route 2 ( color blue ) Route 3 ( color red ) Route 4 ( color green ) Route 5 ( color magenta ) In Fig 3 we show the security routing bounds for decision making over the Pareto front .
+Bounds correspond to restrictions imposed by the decision maker over the Pareto front that establish a specific decision area where the strategies can be selected .
+By computing the minimum distance to the utopian point using Eq ( 15 ) we have that Route 3 ( color red ) fulfill the requirements .
+Fig 3 .
+Security routing bounds for decision making over the Pareto front .
+Many real-world problems involve the optimization of multiple criteria or conflicting objectives often need to be balanced simultaneously .
+The most common notion of multi-criterion optimization is that of efficient ( or Pareto optimal ) solutions , namely those solutions that can not be improved upon in all coordinates ( with strict improvement is at least one coordinate ) by another solution .
+Unfortunately efficient solutions are non-unique .
+In this sense , when dealing with multiple objectives , it is often assumed that the relative importance of the objectives is known a priori .
+This paper addressed a novel approach using a gradient method for computing the Pareto frontier in MOMCPs that integrated a regularized penalty method for poly-linear functions restricted to a class of finite , ergodic and controllable Markov chains .
+An advantage with other approaches in the field is that the regularizator parameter ( δ ) allows to find the strong Pareto policies .
+Our policy-gradient multi-objective algorithms exploit a gradient-based approach so that the corresponding image in the objective space gets a Pareto frontier of just strong Pareto policies .
+A disadvantage is that the computational complexity is increased .
+We presented the convergence conditions and computed the estimate rate of convergence of variables μ and δ corresponding to the regularized penalty method .
+The resulted equation in this nonlinear system is an optimization problem for which the necessary and efficient condition of a minimum was solved using the projected gradient method .
+We proved the convergence of the gradient regularized penalty algorithm .
+We also considered the variable method for introducing the equality constraints that ensure the result belongs to the simplex and it satisfies ergodicity constraints .
+We also proposed a decision support method for the multi-objective optimization that allows to select the ideal goal between the conflicting objectives .
+We experimentally validated the method presenting a numerical example of a real alternative solution of the vehicle routing planning problem .
+The vehicle routing planning problem arise in many decision-making situations .
+We considered this problem in the context of multiple criteria model that takes into account two types of criteria , which are used in decision maker ’ s preferences .
+When formulating our multiple criteria model we assumed that the decision bounds represent the higher priority area for the decision maker .
+While we recognize the existence of other approaches , in this paper we focused on those routing selection problems that match the above structure of decision area where the strategies can be selected .
+In terms of future work , there exist a number of challenges left to address .
+One interesting technical challenge is that of extending the regularization method for the Lagrange principle .
+Moreover , the main future goal is to apply this technique to game theory in terms to ensure the existence of a unique equilibrium point ( Clempner & Poznyak , 2016b ) .
+An interesting empirical challenge would be to run a long-term real controlled experiment and evaluate the behavior of the regularized solution proposed in this paper .
+Appendix A .
+Proofs of Theorems and Lemmas Theorem 9 a ) First , let us prove that the Hessian matrix H associated with the penalty function ( 23 ) is strictly positive definite for any positive μ and δ , i.e. , we prove that for all and ( A.1 ) To prove that , by the Schur lemma ( Poznyak , 2008 ) , it is necessary and sufficient to prove that ( A.2 ) We have By the Schur lemma implying , which holds for any δ > 0 by the condition ( 26 ) since So , H > 0 which means that the penalty function ( 23 ) is strongly convex and , hence , has a unique minimal point defined below as x * ( μ , δ ) and u * ( μ , δ ) .
+b ) By the strictly convexity property ( A.1 ) for any and any vector ≔ for the function we have ( A.3 ) Selecting in ( A.3 ) x ≔ x * ∈ X * ( x * is one of admissible solutions such that ) and we obtain Dividing both sides of this inequality by δn we get ( A.4 ) Notice also that from ( A.3 ) , taking and it follows implying which means that the sequence is bounded .
+In view of this and taking into account that by the supposition ( 26 ) from ( A.4 ) it follows ( A.5 ) From ( A.5 ) we may conclude that ( A.6 ) and where is a partial limit of the sequence which , obviously , may be not unique .
+The vector is also a partial limit of the sequence .
+c ) Denote by the projection of to the set Xadm , namely , ( A.7 ) and show that ( A.8 ) From ( A.6 ) we have implying where the vector inequality is treated in component-wise sense .
+Therefore Introduce the new variable ( A.9 ) where by the Slater condition ( 25 ) 0 < νn ≔ < 1 .
+For new variable we have and therefore In view of that ≤ ≤ which proves ( A.8 ) .
+d ) The last step is to prove the inequality ( A.10 ) From ( A.4 ) we get ( A.11 ) By the strong convexity property we have ( see Corollary 21.4 in Poznyak , 2008 ) ≥ 0 for any which , in view of the property ( A.8 ) , implies and Since any polynomial function is Lipschitz continuous on any bounded compact set , we can conclude that 6. which gives = which by ( A.11 ) leads to ( A.12 ) Dividing both side of the inequality ( A.12 ) by and in view ( A.8 ) we finally obtain ( A.13 ) This , by ( 26 ) , for n → ∞ leads to ( A.10 ) .
+Finally , for any x * ≤ X * it implies This inequality exactly represents the necessary and sufficient condition that the point x * is the minimum point of the function on the set X * .
+Obliviously , this point is unique and has a minimal norm among all possible partial limits .
+Theorem is proven .
+□ Lemma 10 The necessary and sufficient conditions for the points to the extremal points of the function are as follows : ( A.14 ) where is the Lagrange function for the problem ( 22 ) defined for λn , x ( i ) ≥ 0 , λu , x ( j ) ≥ 0 as Multiplying the first equation in ( A.14 ) by and the second one by in view of the complementary slackness conditions we derive implying ( A.15 ) By the construction of the regularized penalty function it follows that ( A.16 ) Indeed , if it is not the case , then can not be the optimal point since the function is more than its value when In view of this , the identity ( A.15 ) is equal to ( A.17 ) implying and The last identity can be represented as ( A.18 ) where = 1 and Notice that in the last identity , by the boundedness property of Xadm , ≤ c = const and the matrix are of the following structure where adj is the matrix adjoined to A and Aji is the cofactor to the element aij .
+Since this matrix is nonsingular it follows that aij∣k ≠ 0 .
+The matrix has the same structure , namely , In view of that the vector ( A.18 ) has the following structure ( A.19 ) where and The structure ( A.19 ) together with the equality ( A.16 ) directly implies ( 30 ) .
+□ Theorem 11 In view of ( 31 ) it follows ( A.20 ) By the inequalities ( see the inequalities ( 21.17 ) and ( 21.36 ) in Poznyak , 2008 ) we can conclude that ≤ + where .
+We also have Then , in view of Lemma ( 10 ) , from ( A.20 ) for we obtain or , equivalently , ( A.21 ) where ( A.22 ) Using the inequality ≤ + r ∈ ( 0 , 1 ) , θn > 0 for and = , ρ ∈ ( 0 , 1 ) , the inequality ( A.21 ) can be reduced to the following one ( A.23 ) By Theorem 16.14 in Poznyak ( 2008 ) if which is equivalent to ( 33 ) .
+Theorem is proven .
+□

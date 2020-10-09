@@ -1,0 +1,217 @@
+Joint moment is one of the most important factors in human gait analysis .
+It can be calculated using multi body dynamics but might not be straight forward .
+This study had two main purposes ; firstly , to develop a generic multi-dimensional wavelet neural network ( WNN ) as a real-time surrogate model to calculate lower extremity joint moments and compare with those determined by multi body dynamics approach , secondly , to compare the calculation accuracy of WNN with feed forward artificial neural network ( FFANN ) as a traditional intelligent predictive structure in biomechanics .
+To aim these purposes , data of four patients walked with three different conditions were obtained from the literature .
+A total of 10 inputs including eight electromyography ( EMG ) signals and two ground reaction force ( GRF ) components were determined as the most informative inputs for the WNN based on the mutual information technique .
+Prediction ability of the network was tested at two different levels of inter-subject generalization .
+The WNN predictions were validated against outputs from multi body dynamics method in terms of normalized root mean square error ( NRMSE ( % ) ) and cross correlation coefficient ( ρ ) .
+Results showed that WNN can predict joint moments to a high level of accuracy ( NRMSE < 10 % , ρ > 0.94 ) compared to FFANN ( NRMSE < 16 % , ρ > 0.89 ) .
+A generic WNN could also calculate joint moments much faster and easier than multi body dynamics approach based on GRFs and EMG signals which released the necessity of motion capture .
+It is therefore indicated that the WNN can be a surrogate model for real-time gait biomechanics evaluation .
+Human movement prediction has been one of the most interesting and challenging fields in biomechanics .
+Predictions from such studies can be used in surgical intervention planning ( Reinbolt , Fox , Schwartz , & Delp , 2009 ; Reinbolt , Haftka , Chmielewski , & Fregly , 2008 ) , athletes training ( Iyer & Sharda , 2009 ; Pfeiffer & Hohmann , 2012 ; Schmidt , 2012 ) and prosthesis and orthosis design ( Au , Berniker , & Herr , 2008 ; Joshi , Mishra , & Anand , 2011 ; Rupérez et al. , 2012 ) .
+In addition joint moments are important factors in order to investigate joint reaction forces , which in turn affect joint functions such as tribology characteristics of the joint including friction , wear and lubrication of the articulating surfaces .
+Joint loading can be determined by instrumented prosthesis ( Fregly et al. , 2012 ) which is not feasible most of the time .
+It can also be calculated based on multi body dynamics method using the measured gait data in a gait laboratory equipped with 3D motion capture system and force plate .
+Measured kinematics and kinetics as well as anthropometric data are then used in an inverse dynamics analysis to calculate joint moments ( Robert , Causse , & Monnier , 2013 ) .
+However multi body dynamics approach is generally time-consuming which prevents it from serving as a real-time technique especially in gait retraining programs where the real-time calculation of joint moments is needed to evaluate the efficiency of the rehabilitation program .
+There are also some major difficulties using multi body dynamics analysis .
+Such musculoskeletal models are sensitive to muscle-tendon geometry , muscle origin and insertion ( Ackland , Lin , & Pandy , 2012 ; Carbone , van der Krogt , Koopman , & Verdonschot , 2012 ) .
+On the other hand it is not always straight forward to validate and verify the models .
+Numerical methods are also important considerations in multi body dynamics analysis which may result in the failure of solutions .
+According to the above limitations , artificial intelligence has been recruited in this area due to its ability in pattern recognition and signal prediction .
+For a complete review on neural network application in biomechanics one can refer to Schöllhorn ( 2004 ) .
+Especially in the field of joint moment prediction , for example , Uchiyama et al .
+used a three-layer feed forward artificial neural network ( FFANN ) to predict the elbow joint torque using electromyography ( EMG ) signals , shoulder and elbow joint angles for constant muscle activation ( Uchiyama , Bessho , & Akazawa , 1998 ) .
+Luh et al .
+also used a three-layer FFANN to predict elbow joint torque using EMG signals , joint angle and elbow joint angular velocity ( Luh , Chang , Cheng , Lai , & Kuo , 1999 ) .
+Wang and Buchanan ( 2002 ) proposed to calculate muscle activities using EMG signals based on a four-layer FFANN .
+Predicted muscle activities were then used by a Hill-type model in order to estimate muscle forces and elbow joint torque .
+Song and Tong ( 2005 ) also investigated a recurrent artificial neural network ( RANN ) for elbow torque estimation using EMG data , elbow joint angle and angular velocity .
+Hahn ( 2007 ) used a three-layer FFANN to predict isokinetic knee extensor and flexor torque based on age , gender , height , body mass , EMG signals , joint position and joint velocity .
+However this study predicted only net knee flexion extension torque and did not predict other lower extremity joint moments .
+Liu et al , presented a FFANN to predict lower extremity joint torques in the sagittal plane using GRFs and related parameters measured during vertical jumping ( Liu , Shih , Tian , Zhong , & Li , 2009 ) .
+This study also predicted ankle , knee and hip joint moments only in the sagittal plane for vertical jump .
+Favre et al , proposed to use a three-layer FFANN to predict the external knee adduction moment based on force plate data and anthropometric measurements ( Favre , Hayoz , Erhart-Hledik , & Andriacchi , 2012 ) .
+This paper also investigated only knee adduction moments and did not consider other lower extremity joint moments .
+In a recent study Oh et al .
+also successfully predicted the three dimensional GRFs and moments based on three-layer FFANN using fourteen inputs of body parts trajectories and accelerations .
+This study also proved the possibility of calculating joint forces and moments based on the GRFs predicted with the intelligent network ( Oh , Choi , & Mun , 2013 ) .
+All of the above studies have used traditional neural network to predict joint moments .
+However a major disadvantage of neural network is that local data structures are discarded in FFANN learning process ( Cordova , Yu , & Li , 2012 ) .
+In addition , the initial weights are adjusted randomly at the beginning of the training algorithm which can slow down the training process ( Haykin , Haykin , Haykin , & Haykin , 2009 ) .
+Another disadvantage is that the network may fall in to a local minimum during the training procedure so the network output never converges to the target ( van der Smagt & Hirzinger , 1998 ) .
+In order to cope with these disadvantages , wavelet neural network ( WNN ) has been introduced as an alternative method .
+WNN combines the theory of wavelet with ANN structure in order to benefit general approximation ability of neural networks as well as localization property of wavelets .
+A WNN is a three-layer FFANN with a hidden layer in which neurons are activated by wavelets as activation functions so the local data structures are considered in both time and frequency domains .
+This type of intelligent networks has been used successfully in pattern classification ( Subasi , Alkan , Koklukaya , & Kiymik , 2005 ; Subasi , Yilmaz , & Ozcalik , 2006 ) , function estimation ( Zainuddin & Pauline , 2011 ) , system identification ( Billings & Wei , 2005 ; Wei , Billings , Zhao , & Guo , 2010 ) , signal prediction ( Chen , Yang , & Dong , 2006 ; Pourtaghi , 2012 ; Zhang & Wang , 2012 ) and especially in bankrupting and price forecasting ( Chauhan , Ravi , & Karthik Chandra , 2009 ; Mingming & Jinliang , 2012 ) which has significantly nonlinear dynamic patterns .
+According to the above studies , it may be possible to design WNN for joints moments prediction .
+To the best of our knowledge WNN has not been used before in human gait biomechanics prediction .
+This study had two main purposes ; first to develop a generic multi-dimensional WNN as a real-time surrogate model for joint moment prediction ; second , to compare the prediction accuracy of WNN with three-layer FFANN .
+To aim the purposes , four subjects walked with three different conditions ( normal gait as well as two different knee rehabilitation programs ) were obtained from the literature .
+A generic multi-dimensional WNN was designed and trained at two different levels of inter-subject generalization .
+To avoid time consuming procedure of marker trajectory collection and processing , and consider the previous studies ( Favre et al. , 2012 ; Hahn , 2007 ; Liu et al. , 2009 ) , EMG and GRFs were considered as network inputs .
+WNN predictions were validated against inverse dynamics analysis and compared with those predicted by a three-layer FFANN .
+Subjects Four different patients unilaterally implanted with knee prostheses including three males and one female ( height : 168.25 ± 2.63 cm ; mass : 69.18 ± 6.24 kg ) were taken from a previously published data base ( https : //simtk.org/home/kneeloads ; accessed on , 5 September 2013 ) .
+Three different sessions were considered for each subject including normal , medial thrust and walking pole patterns .
+In each session , five gait trials were recorded under the same walking condition .
+For a complete description of sessions and trials one can refer to Fregly et al .
+( 2012 ) .
+In brief , medial thrust pattern , a successful rehabilitation pattern for knee joint off-loading , included a slight decrease in pelvis obliquity and a slight increase in pelvis axial rotation and leg flexion compared to normal gait ( Fregly , Reinbolt , Rooney , Mitchell , & Chmielewski , 2007 ) .
+In addition walking pole included two lateral poles as walking aids which has been effective to reduce knee joint loading ( Willson , Torry , Decker , Kernozek , & Steadman , 2001 ) .
+It should be pointed out that although several gait cycles were measured in each gait trial , only two complete gait cycles of each trial were used , leading to a total of 120 data sets ( four subjects * three sessions * five trials * two gait cycles ) .
+Data pre-processing Due to high frequency rate of GRFs and EMG signals ( 1000–1200 Hz ) and low frequency rate of calculated joint moments ( 100–120 Hz ) , data were preprocessed before using as WNN inputs .
+GRFs were down sampled according to the calculated joint moments and then re-sampled to 100 points for a complete gait cycle using the nearest neighbor interpolation method .
+GRF amplitudes were also normalized by body weight ( BW ) .
+A total of 14 EMG signals were recorded including semimembranosus ( semimem ) , biceps femuris ( bifem ) , vastus intermedius ( vasmed ) , vastus lateralis ( vaslat ) , rectus femoris ( rf ) , medial gastrocnemius ( medgas ) , lateral gastrocnemius ( latgas ) , tensor fasciae latae ( tfl ) , tibia anterior ( tibant ) , peroneal , soleus , adductor magnus ( addmagnus ) , gluteus maximus ( gmax ) and gluteus medius ( gmed ) .
+In order to deal with high rate variation of EMG signals , root mean square ( RMS ) was used as one of the most accepted techniques to represent EMG signals in time domain ( Staudenmann , Roeleveld , Stegeman , & Van Dieen , 2010 ) .
+EMG signals were divided in to 50 m s intervals to calculate RMS features of EMG signals based on the following equation : ( 1 ) where N = 20 and shows the number of samples within each interval ( Arslan , Adli , Akan , & Baslo , 2010 ) .
+Butterworth filter of order 10 with a cut off frequency of 1 Hz was also applied to RMS features .
+Preprocessed EMG signals were re-sampled to 100 points for one complete gait cycle .
+Input variable selection : mutual information Using redundant or little informative inputs can yield to a more complicated network with a decreased level of prediction ability .
+Therefore network inputs were chosen according to mutual information criteria which was calculated based on the following equation : ( 2 ) In which X refers to input variables ( GRFs and RMS features of EMG signals ) and Y refers to the outputs ( joint moments ) .
+P ( x , y ) is the joint probability density function of X and Y , while p ( x ) and p ( y ) are the marginal probability density functions of X and Y respectively ( May , Dandy , & Maier , 2011 ) .
+Artificial neural network Due to the successful application of three-layer feed forward artificial neural network for joint moment prediction , this structure was adopted to approximate the highly nonlinear relation between GRFs and EMG features as inputs and lower extremity joint moments as outputs .
+FFANN was implemented using the Neural Network Toolbox of Matlab ( v. 2009 , The MathWorks , Inc. , Natick , MA ) .
+Prediction ability of the network was tested at two different levels of inter-subject generalization ( Liu , Herzog , & Savelberg , 1999 ) : ( i ) Level 1 : specific inter-subject A three-layer FFANN with a given number of inputs ( to be determined from the mutual information technique in Section 2.3 ) was trained with the walking patterns of three subjects out of four walked under a given gait pattern .
+This network was then tested to predict the joint moments corresponding to the fourth subject for the same walking condition ( specific training data space ) .
+( i ) Level 2 : non-specific inter subject The network was trained with all of the available walking patterns corresponding to three subjects out of four .
+The network was then tested to predict the joint moments of the fourth subject for a given walking condition ( non-specific training data space ) .
+In other words , at this level network was trained based on all of the walking conditions ( normal , medial thrust and walking pole ) corresponding to three subjects at the same time .
+According to this fact that in back propagation algorithm , descent gradient may fall in to local minimum and the outputs never converge to targets , this network was trained based on Levenberg–Marquardt algorithm with an adaptive learning rate .
+Training data space was randomly divided into three parts including train ( 65 % ) , validation ( 15 % ) and test ( 15 % ) .
+Train and validation parts were used to train the network and adjust the connection weights/biases .
+The optimal number of hidden neurons and epochs were determined according to the test and validation error .
+Increasing the number of neurons and epochs reduce the validation error however using too many hidden neurons and epochs decrease the network generalization ability due to over fitting and yield to test error increment .
+Hidden and output neurons were activated by “ tansig ” and “ purlin ” functions respectively .
+It should be noted that the intelligent network had one output node which was used to predict one component of joint moments at time in order to increase the prediction accuracy .
+Training procedure was continued to achieve an error goal of 0.0001 or reach 3000 epochs .
+Once the network was trained , it was employed to calculate the joints moments associated with the test data set ( fourth subject ) .
+According to Iyer and Rhinehart ( 1999 ) the network was trained and run 100 times for each test data set and the average of these 100 runs was considered as the network prediction on that test data set .
+Network performance was investigated based on Pearson correlation coefficient ( ρ ) and normalized root mean square error ( NRMSE % ) .
+Wavelet neural network Taking advantage of the localization property of wavelets ( Alexandridis & Zapranis , 2013 ) and generalization ability of the neural network , a multi-dimensional WNN with Ni input nodes , No output nodes ( No = 1 ) and M number of hidden neurons ( wavelons ) was developed in which hidden neurons were activated by wavelets as activation functions ( Fig 1 ) .
+Each input node was related to each wavelon , with a special value of shift , scale and input weight parameters .
+Therefore , input weights , scaling and shifting parameters formed M * Ni matrices .
+Accordingly , each wavelon was activated by a multi-dimensional wavelet which was defined as the multiplication of one-dimensional wavelets as below : ( 3 ) In which ψ ( t ) is Morlet wavelet function : ( 4 ) where Ni indicates the number of input nodes and wik , tik and λik are the input weight , shift and scale parameters relating kth input to the ith hidden wavelon respectively .
+It should be pointed out that each neuron acted on each input signal by a shifted and scaled version of mother wavelet ( Morlet ) .
+The output of each wavelon was fed in to each output neuron with a special value of weight led to a No * M output weight matrix .
+Consequently the output of the proposed network was defined as follows : ( 5 ) where is defined in Eq ( 3 ) and wji is the output weight relating ith hidden wavelon to jth output node .
+The was also needed as a bias value to deal with nonzero mean functions ( Zhang & Benveniste , 1992 ) .
+Due to the above equations , five groups of parameters ( input weights , shift , scale , output weights and bias values ) were adjusted in WNN training .
+It should be pointed out that unlike the FFANN ; in the case of WNN it is important to initialize the adjustable parameters properly before training in order to guarantee that the daughter wavelets ( shifted and scaled versions of mother wavelet ) cover the entire of the input data space .
+Accordingly the WNN was trained in two main steps .
+First the adjustable parameters were initialized according to Zhang and Benveniste ( 1992 ) ; second , the network was trained based on batch gradient descent algorithm since the data vectors were not too large and included only 100 samples describing one complete gait cycle .
+The batch gradient descent algorithm developed for training the WNN is presented in Appendix 1 .
+The error goal , number of training epochs and hidden neurons were determined based on the same procedure with the FFANN .
+All of the above analysis were conducted in Matlab ( v. 2009 , The MathWorks , Inc. , Natick , MA ) .
+WNN structure with Ni inputs , M hidden wavelons and one output which was used… Fig 1 .
+WNN structure with Ni inputs , M hidden wavelons and one output which was used to predict each component of lower extremity joint moments .
+Inverse dynamics analysis A valid three dimensional musculoskeletal model with 23 degrees of freedom ( DOF ) and 92 muscles was recruited , available in Opensim software library ( Delp et al. , 2007 ) .
+The model had three-DOF ball-and-socket hip joint , a hinge knee joint , universal joint for ankle–subtalar complex and hinge metatarsal joint .
+The model was first scaled using experimental marker trajectories .
+Scaled model was then used in the inverse kinematics ( IK ) analysis to calculate joint angles .
+In order to calculate joint moments , the scaled model was first imported to reduced residual analysis ( RRA ) in which musculoskeletal center of mass was modified so as the calculated joint angles would be in consistence with experimental GRFs .
+The modified scaled model , calculated joint angles and experimental GRFs were then imported to compute muscle control ( CMC ) module in which muscle activities were calculated .
+Finally lower extremity joint moments were calculated using inverse dynamics analysis ( ID ) based on the CMC module calculations .
+Calculated joint moments were considered as WNN and ANN outputs to train the networks and validate the predictions .
+Prediction capability of a generic multi-dimensional WNN was investigated at two different generalization levels ; ( i ) level 1 ; specific inter-subject and ( ii ) level 2 ; non-specific inter-subject .
+WNN predictions were validated against inverse dynamics calculations and compared with those obtained from a three-layer FFANN .
+MI criterion was calculated between 18 potential inputs ( three dimensional GRFs , moment of vertical GRF around center of pressure and a total of 14 EMG signals represented with 14 RMS features in time domain ) and six joint moments outputs ( hip abduction/adduction , hip flexion/extension , hip rotation , knee flexion/extension , and ankle flexion/extension and subtalar eversion moments ) .According to the results ( Table 1 ) eight EMG signals , including semimembranosus ( semimem ) , biceps femuris ( bifem ) , vastuslateralis ( vaslat ) , rectus femoris ( rf ) , tibia anterior ( tibant ) , peroneal , gluteus maximus ( gmax ) and gluteus medius ( gmed ) as well as two ground reaction components including anterior–posterior and vertical components of GRFs provided significant amount of information about joint moments and were chosen as the network ( WNN and FFANN ) inputs .
+Table 1 .
+MI calculations between RMS features of EMG signals and GRFs ( inputs ) and lower extremity joint moments ( outputs ) for subject 4 walked with normal gait pattern as an example .
+MI criteria measure the amount of relevancy between potential inputs and outputs ; higher MI values means more informative the input is regarding to the joint moments .
+Muscle abbreviations have been defined in the text .
+Hip abduction Hip flexion Hip rotation Knee flexion Ankle plantar flexion Subtalar eversion Semimem 5.54 8.12 7.11 8.71 7.02 7.32 Bifem 6.83 7.92 8.40 8.09 7.02 7.76 Vasmed 5.02 4.07 2.73 3.04 6.66 6.81 Vaslat 8.09 7.11 8.75 8.36 6.95 7.81 Rf 8.50 6.68 7.53 7.83 6.31 6.8 Medgas 2.37 1.38 3.86 2.29 2.35 1.43 Latgas 5.81 1.57 2.92 3.78 1.93 2.99 Tfl 4.14 2.79 3.82 3.55 1.34 1.69 Tibant 7.25 7.57 6.55 6.48 8.72 8.41 Peroneal 9.32 7.94 7.40 8.14 7.73 7.69 Soleus 8.29 2.21 1.39 5.34 5.18 4.99 Addmagnus 5.28 3.63 2.22 4.70 1.94 2.48 Gmax 7.07 7.77 6.07 6.46 8.59 8.28 Gmed 7.02 8.71 6.70 6.96 8.42 8.70 Anterior–posterior GRF 0.66 0.70 0.78 0.71 0.60 0.61 Medial-lateral GRF 0.35 0.33 0.17 0.14 0.11 0.18 Vertical GRF 0.72 0.99 0.78 0.79 0.59 0.87 GRF torque ( vertical ) 0.41 0.39 0.39 0.27 0.16 0.22 3.1 .
+Level 1 : specific inter-subject Inverse dynamics calculations are compared with FFANN predictions ( Fig 2 ) and WNN calculations ( Fig 3 ) for medial thrust pattern of subject 4 as the test data set .
+According to Fig 2 , a three-layer FFANN with 20 hidden neurons , 10 inputs and one output could predict the general pattern of lower extremity joint moments .
+However the predicted waveforms had different maximum and minimum values compared to the reference joint moments ( inverse dynamics calculations ) .
+For example , FFANN output could not predict the pattern of knee flexion–extension moment ( NRMSE = 11.01 % , ρ = 0.88 ) ( Fig 2d ) .
+Moreover FFANN output overestimated the local maximum and minimum variation on the hip flexion–extension joint moment ( NRMSE = 11.93 % , ρ = 0.89 ) .
+Predicted joint moments ( dashed line ) vs Fig 2 .
+Predicted joint moments ( dashed line ) vs. inverse dynamics calculations ( solid line ) using three-layer FFANN for subject 4 walked with medial thrust pattern corresponding to specific inter-subject training ( level 1 ) .
+Predicted joint moments ( dashed line ) vs Fig 3 .
+Predicted joint moments ( dashed line ) vs. inverse dynamics calculations ( solid line ) using three-layer WNN for subject 4 walked with medial thrust pattern corresponding to specific inter-subject training ( level 1 ) .
+On the other hand according to Fig 3 the three-layer WNN network with 15 hidden neurons could predict the overall pattern of lower extremity joint moments as well as local minimums and maximums on each waveform .
+The maximum error occurred in prediction of the hip abduction moment ( NRMSE = 5.69 % , ρ = 0.99 ) which was much lower than the maximum error for FFANN moment prediction ( hip adduction moment : NRMSE = 12.72 % , ρ = 0.97 ) .
+Fig 4 summarizes the accuracy of predictions for FFANN and WNN .
+According to the results , FFANN could predict joint moments to a certain level of accuracy for normal pattern medial thrust ( ) and walking pole ( ) patterns .
+Cross correlation values ranged from ρ = 0.86 to ρ = 0.98 and all the errors ( NRMSE ) were less than 13 % .
+NRMSE ( mean±standard deviation ) for FFANN and WNN predictions corresponding to… Fig 4 .
+NRMSE ( mean ± standard deviation ) for FFANN and WNN predictions corresponding to three walking patterns as normal , medial thrust and walking pole at level 1 ( specific inter-subject training ) .
+By comparison , WNN could predict the joint moments more accurately than FFANN ( normal pattern : ; medial thrust : ; and walking pole : ) .
+All of the cross correlation coefficients were higher than the corresponding values of FFANN and all errors were also lower than 10 % .
+It is also noteworthy that the optimal WNN structure required less number of hidden neurons ( 15 wavelons ) compared to the FFANN structure ( 20 hidden neurons ) used to predict joints moments for the same test data set .
+Detailed information about the NRMSE % and cross correlation coefficients ( ρ ) is presented in the Appendix ( Tables 1.A and 2.A ) for FFANN and WNN predictions .
+Level 2 : non-specific inter-subject Inverse dynamics calculated joint moments are compared against FFANN predictions ( Fig 5 ) and WNN calculations ( Fig 6 ) .
+According to the results ( Fig 7 ) errors were slightly increased at this level compared to the corresponding errors at level 1 .
+Due to non-specific inter subject training space with higher pattern variation at this level compared to level 1 , the number of hidden neurons was increased .
+For FFANN with 25 hidden neurons , cross correlation values ranged from ρ = 0.84 to ρ = 0.96 and all the NRMSE values were less than 20 % ( normal pattern : ; medial thrust : ; and walking pole : ) .
+Predicted joint moments ( dashed line ) vs Fig 5 .
+Predicted joint moments ( dashed line ) vs. inverse dynamics calculations ( solid line ) using three-layer FFANN for subject 4 walked with medial thrust pattern corresponding to non-specific inter-subject training ( level 2 ) .
+Predicted joint moments ( dashed line ) vs Fig 6 .
+Predicted joint moments ( dashed line ) vs. inverse dynamics calculations ( solid line ) using three-layer WNN for subject 4 walked with medial thrust pattern corresponding to non-specific inter-subject training ( level 2 ) .
+NRMSE ( mean±standard deviation ) for FFANN and WNN predictions corresponding to… Fig 7 .
+NRMSE ( mean ± standard deviation ) for FFANN and WNN predictions corresponding to three walking patterns as normal , medial thrust and walking pole at level 2 ( non-specific inter-subject training ) .
+For WNN with 19 hidden neurons , the average prediction errors were also increased compared to level 1 ( normal pattern : ; medial thrust : ; and walking pole : ) .
+However all of the cross-correlation values were still higher than those obtained from FFANN and all of the errors were also lower than corresponding FFANN prediction errors .
+Moreover it should be pointed out that although the prediction errors were increased slightly at level 2 compared to level 1 , the error increase in WNN predictions at level 2 were still smaller than the corresponding error increment in FFANN calculations ( Fig 8 ) .
+Compared to level 1 , more hidden neurons were required for both FFANN and WNN ; however the number of hidden neurons in WNN were still lower than in FFANN which was hired for the prediction of the same test data set .
+Detailed information about the NRMSE % and cross correlation coefficients is presented in the Appendix ( Tables 3.A and 4.A ) for FFANN and WNN predictions .
+Comparing the error increment between FFANN and WNN over level 1 ( specific… Fig 8 .
+Comparing the error increment between FFANN and WNN over level 1 ( specific inter-subject ) and level 2 ( non-specific inter-subject ) .
+At level 2 , the prediction errors were increased due to the higher variety in the training data space ; however the error increments in WNN predictions over level 1 and level 2 were generally lower than FFANN .
+This study demonstrated that a multi-dimensional wavelet neural network ( WNN ) trained with inter-subject data space can be employed as a real-time surrogate model to predict lower extremity joint moments associated with different gait patterns .
+The present study differed from the previous researches on joint moment ’ s prediction using neural network in two main aspects .
+First , a wavelet neural network was developed for the first time in this study to address the disadvantages of the traditional neural network .
+WNN predicted joint moments more accurately than feed forward artificial neural network used in the previous studies .
+Second , unlike previous studies , the data base adopted in this study included two different knee rehabilitation programs ( medial thrust and walking pole ) as well as normal gait .
+Due to this fact that knee rehabilitation programs mainly aim to reduce knee joint loading , a thorough real-time calculation of joint moments can provide useful information about the efficiency of rehabilitation plans .
+Reviewing the previous research ( Favre et al. , 2012 ; Liu et al. , 2009 ) used GRFs and related parameters to predict joint moments successfully , additionally ( Hahn , 2007 ) employed EMG signals to predict joint moments and forces using artificial intelligence .
+This is consistent with our study using EMG and GRFs contributions to predict joint moments .
+Such an approach also avoids the use of marker trajectories which need special equipment and can be time consuming .
+In order to improve the prediction ability of the intelligent networks ( WNN and ANN ) , mutual information technique was recruited to measure the amount of information provided by potential inputs ( RMS representations of EMG signals and GRFs ) about the outputs ( joint moments ) .
+This technique is noise robust and insensitive to data transformation .
+It also measures the dependency between variables without any pre-assumption about the data structure which makes it suitable for nonlinear data bases ( May et al. , 2011 ) .
+MI-based chosen EMG signals were also consistent with those signals used by Zhang et al .
+( 2012 ) and Hahn ( 2007 ) for lower extremity joint angles and moments predictions respectively .
+At level 1 ( specific inter-subject ) , the network was tested for the walking condition that has been specifically trained on it .
+On the other hand all of the walking patterns were included in the training data space at level 2 ( non-specific inter-subject ) .
+By comparison , training the WNN on specific data space with fewer number of training patterns led to slightly better prediction accuracy than training on non-specific gait patterns with higher number of training sets .
+Comparing the presented WNN approach with multi body dynamics , the latter needs a comprehensive data base of markers as its inputs that should be provided by motion capture .
+However motion capture is not always available in all laboratories .
+This approach also required musculoskeletal model to be scaled based on subject-specific anthropometric characteristics .
+Although multi body dynamics approach can provide physics-based insights into human walking and investigate casual relationships in gait analysis , such an approach is generally time consuming which prevents it to serve as a real-time method .
+Unlike inverse dynamics analysis , WNN could predict joint moments based on GRFs and a few number of EMG signals which released the necessity of motion capture .
+It also did not need musculoskeletal model or subject-specific scaling of the model .
+Once the network was trained based on inter-subject data base it could predict joint moments for a new subject with a high level of accuracy .
+Consequently WNN proposed a much easier and faster method for joint moment prediction which can serve as a real-time surrogate model for human gait analysis .
+Especially in gait rehabilitation where the real-time calculations of joint moments provide useful information about the efficiency of the rehabilitation plans and unwanted moment increment that may occur in adjacent joints which is one of the major concerns in gait rehabilitation .
+Therefore wavelet neural network has the potential of executing of a more effective rehabilitation program with minimum effort involved .
+As mentioned earlier , ( Liu et al. , 2009 ) proposed a three-layer FFANN to predict sagittal lower extremity joint torques associated with two different vertical jumping conditions .
+The network was trained based on non-specific inter-subject data space similar to the level 2 of the present study ; however their training data space included 18 data sets ( 9 subjects * 2 conditions ) .
+All of the NRMSE ( % ) values were below 10 % ( except for ankle moment in counter movement jump with NRMSE = 14.6 % ) .
+Compared to their study , the present three-layer FFANN had higher prediction errors since it was trained based on a smaller data base ( three subjects instead of nine subjects ) included larger patterns variation ( three different gait patterns instead of two different jumping condition ) .
+However the proposed WNN could predict joints moments to a higher level of accuracy and all of the NRMSE ( % ) values obtained from the WNN were below 11 % ( Tables 2.A and 4.A ) .Two previous studies by Liu et al .
+( 2009 ) and Favre et al .
+( 2012 ) supported this idea that a three-layer FFANN trained based on inter-subject data space is sufficient to predict joint moments using force plate data .
+This paper proposed that a generic WNN is also capable , and more accurate to predict three dimensional joint moments using GRFs and EMG signals for a subject that was not seen by the network before .
+Although WNN could predict joint moments based on GRFs and EMG signals successfully , it did not provide physical insights of human gait since it modeled the input–output relationship as a black box .
+This study did not aim to provide such understanding and should not be compared with inverse dynamics analysis in this aspect .
+Despite the computational cost of multi body dynamics , it is still one of the most accepted computational approaches in biomechanics due to its ability for physical modeling ( Ren , Jones , & Howard , 2008 ) .
+Finally it should be pointed out that there were also some limitations within the present study .
+One limitation was that the relatively small data pool of four subjects was used .
+It would be valuable to test the prediction capacity of multi-dimensional WNN for a larger subject pool .
+As another limitation , WNN was trained based on joint moments which were calculated by inverse dynamics analysis .
+Accordingly WNN could not be more accurate than inverse dynamics approach .
+Due to available experimental knee reaction force in the present data base , it would be valuable to recruit WNN to predict experimental joint reaction force based on GRFs and EMG signals and compare the results with inverse dynamics calculations .
+For the future application , wavelet neural network can be employed in conjunction with inverse dynamics analysis to decrease the computational cost .
+Intelligent surrogate models can learn the dynamics of the patterns and respond to a change in environment ( adopt to a new subject for example ) .
+Accordingly trained intelligent networks can release the necessity of calculation repetitions , hence intelligent surrogates can be used jointly with inverse dynamics analysis .
+A recent study for example used artificial neural network to solve the static optimization equations as part of inverse dynamics calculation procedure to speed up the calculation process ( van den Bogert , Geijtenbeek , Even-Zohar , Steenbrink , & Hardin , 2013 ) .
+The generalization ability of the proposed wavelet neural network can also benefit what-if studies in which sensitivity of joint moments would be investigated due to changes in joint kinematics .
+Once the intelligent network is trained based on inverse dynamics calculated joint moments , it can be used to predict joint moments in response to kinematic variations in order to conduct sensitivity analysis and release the necessity of inverse dynamics repetitions .
+All these will be conducted in future studies .
+This study demonstrated the feasibility of the wavelet neural network to calculate lower extremity joint moments using ground reaction forces and electromyography signals ; easier and faster than multi body dynamics and more accurate than feed forward artificial neural network .
+For specific inter-subject training , all of the prediction errors were lower than 9.00 % with correlation coefficients ρ > 0.89 .For non-specific inter-subject , all of the prediction errors were still lower than 11 % with ρ > 0.91 .
+Accordingly compared to the traditional feed forward neural network , the proposed structure was more stable and robust due to large variations in input patterns .
+The high level of accuracy and low computational cost at one hand , capability of joint moment calculation without marker trajectories at another hand , suggest the proposed network as a real-time surrogate model that benefit gait biomechanics analysis and rehabilitation execution .

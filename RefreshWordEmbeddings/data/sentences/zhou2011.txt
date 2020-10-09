@@ -1,0 +1,334 @@
+Amine-based carbon dioxide capture has been widely considered as a feasible ideal technology for reducing large-scale CO2 emissions and mitigating global warming .
+The operation of amine-based CO2 capture is a complicated task , which involves monitoring over 100 process parameters and careful manipulation of numerous valves and pumps .
+The current research in the field of CO2 capture has emphasized the need for improving CO2 capture efficiency and enhancing plant performance .
+In the present study , artificial intelligence techniques were applied for developing a knowledge-based expert system that aims at effectively monitoring and controlling the CO2 capture process and thereby enhancing CO2 capture efficiency .
+In developing the system , the inferential modeling technique ( IMT ) was applied to analyze the domain knowledge and problem-solving techniques , and a knowledge base was developed on DeltaV Simulate .
+The expert system helps to enhance CO2 capture system performance and efficiency by reducing the time required for diagnosis and problem solving if abnormal conditions occur .
+The expert system can be used as a decision-support tool that helps inexperienced operators control the plant ; it can be used also for training novice operators .
+The emission of large amounts of carbon dioxide ( CO2 ) has caused increasing public concern regarding environmental pollution and global warming .
+To mitigate this serious environmental problem , the CO2 capture technology has become widely accepted as useful technology for reducing CO2 emissions from industrial sources .
+The goal of CO2 capture is to capture and remove CO2 from industrial gas streams before it is released into the atmosphere .
+The amine-based CO2 capture process has become a common method for CO2 removal because it is energy efficient ( Sholeh , Svendsen , Karl , & Olav , 2007 ) .
+In the amine-based CO2 capture process , an amine solvent is used to absorb CO2 from the flue gas , and CO2 is subsequently extracted from the amine solvent , which can then be regenerated and reused .
+Operation of an amine-based CO2 capture system is a complicated task because it involves monitoring and manipulation of 16 components and a number of valves/pumps .
+The 16 components are associated with over a 100 parameters , including temperatures , flow rates , pressures , and levels of reaction instruments .
+The monitoring and control of critical parameters is an important task in operation of the CO2 capture process because it directly impacts plant performance and capture efficiency of CO2 .
+Since the monitoring and control task is complex , it is desirable to build a knowledge-based system that can automatically monitor , control , and diagnose the CO2 capture process .
+In this paper , we present research conducted with the objective of building a knowledge-based expert system that can monitor , control , and diagnose the CO2 capture processes at the International Test Centre for CO2 Capture ( ITC ) located at the University of Regina in Saskatchewan , Canada .
+The system is called the Knowledge-Based System for Carbon Dioxide Capture ( KBSCDC ) .
+The knowledge base consists of domain knowledge about : ( 1 ) the plant components and their attributes , and ( 2 ) the important process parameters and their desired operating ranges .
+The knowledge base also consists of the remedial actions that would address these abnormal situations .
+The KBSCDC system can help the operator monitor the operating conditions of the CO2 capture pilot plant by continuously comparing the measured values from sensors with normal or desired values .
+Plant components that have abnormal parameter values indicate that abnormal operating conditions have occurred .
+Deviations from the normal ranges would set off an alarm to advise the operator that a problem has occurred .
+The KBSCDC can conduct real-time monitoring and diagnosis , as well as suggest remedies for any abnormality detected , thereby improving the performance efficiency of the plant .
+An initial prototype of the system was developed on G2 ( trademark of Gensym Corporation , USA ) , which is an object-oriented expert system development tool .
+However , the prototype can only monitor reaction instruments and diagnose their abnormalities .
+The system did not include the process control strategies applied to the control devices .
+Details of the prototype system have been presented in Zhou , Chan , and Tontiwachiwuthikul ( 2009 ) .
+This paper presents an improved version of the knowledge-based expert system that was implemented with DeltaV Simulate ( trademark of Emerson Corp. , USA ) .
+DeltaV Simulate provides control utilities which enables the configuration of control strategies in small modular components .
+These modules link algorithm , conditions , and provide control over the field devices such as pumps and valves .
+Modules can communicate directly with each other , and can be coordinated by other modules to perform higher-level control strategies .
+The modules deploy different algorithms such as sequential function chart ( SFC ) and function block diagram ( FBD ) .
+SFC is made up of a series of steps , transitions , and actions and it is used for representing the sequence of controlling strategies which contain multiple states .
+FBD is made up of interconnected function blocks , which process the incoming signals and send the signal to the control devices .
+Each function block contains standard process control algorithm and parameters that customize the algorithm to perform a particular function in the process control .
+Therefore , the new version of KBSCDC has the following additional functions compared to the earlier G2 version : ( 1 ) modules for different control devices are configured based on their characteristics , and ( 2 ) the control strategies applied to the control devices are simulated .
+The paper discusses design and development of the improved version of the knowledge-based system , and demonstrates use of the system by using problems scenarios that occur due to abnormal conditions .
+The paper is organized as follows : Section 2 presents the background literature relevant to the area of CO2 capture and the knowledge acquisition approach of the inferential modeling technique adopted in this research .
+Section 3 describes the process of development of the knowledge base .
+Section 4 presents design and implementation of the system on DeltaV Simulate based on the developed knowledge base .
+Application of the system is demonstrated using a case study in Section 5 .
+Section 6 gives a conclusion and includes some discussion about future work .
+Studies of amine-based CO2 capture The study of amine-based CO2 capture has been ongoing for the last decade .
+The general objective of the study is to improve effectiveness and efficiency of the CO2 capture process .
+The research has been primarily conducted in the following two areas : ( 1 ) Study of the behaviour of the conventional amine solvents and development of new or improved solvents with higher CO2 absorption capacities , faster CO2 reaction rates , higher degradation resistance , and lower heat consumption for regeneration .
+The studies of corrosion were conducted in CO2 absorption systems using different types of aqueous amine solvents including methyldiethanolamine ( MDEA ) , diethanolamine ( DEA ) , 2-amino-2-methyl-1-propanol ( AMP ) and monoethanolamine ( MEA ) , and it was found that the corrosiveness increased in the order of MDEA < DEA < AMP < MEA ( Veawab , Tontiwachwuthikul , & Bhole , 1997 ; Veawab , Tontiwachwuthikul , & Chakma , 1999 ) .
+It was suggested that 2- ( 2-aminoethyl-amino ) ethanol ( AEEA ) is a potentially good absorbent for capturing CO2 because of its high absorption rate and high absorption capacity ( Sholeh et al. , 2007 ) .
+Chakma ( 1997 ) proposed that utilization of mixed solvents could reduce energy consumption and solve a number of operational problems .
+Idem et al .
+( 2006 ) evaluated the benefits of using mixed MEA/MDEA solvent for CO2 capture and found that a very large heat-duty reduction could be achieved by using a mixed MEA/MDEA solvent instead of a single MEA solvent .
+( 2 ) Selection of appropriate solvents for different applications to reduce the energy penalty .
+It was proposed that the crucial criteria of solvent selection include feed gas characteristics such as composition , pressure , temperature , and the treated gas specifications ( Veawab , Aroonwilas , Chakma , & Tontiwachwuthikul , 2001 ) .
+White , Strazisar , Granite , and Hoffman ( 2003 ) suggested that solvent selection is influenced by solvent characteristics such as CO2 absorption capability and rates and operational issues of the process such as corrosion potential and solvent stability .
+These factors influence the equipment size , solvent consumption and heat consumption .
+Tontiwachwuthikul ( 1996 ) proposed that the best solvents can be formulated by blending different amines to take full advantage of the desirable properties of each solvent .
+Some observations that can be derived from our survey of past research conducted in the field of CO2 capture include the following : ( 1 ) With respect to the objective of improving efficiency of the CO2 capture process , previous research studies rarely focused on using automation for supporting the process of monitoring and control of the CO2 capture system as a means for optimizing the plant performance and enhancing efficiency of the CO2 capture process .
+Operation of a CO2 capture system is a complicated task because it involves control of over 100 parameters .
+If these parameters are monitored and controlled effectively , the entire plant can work under desirable conditions and efficiency of the CO2 capture process can be greatly enhanced .
+( 2 ) Application of artificial intelligence technologies has not been made to the CO2 capture domain .
+Since operation of a CO2 capture system is extremely complicated , the process operators have accumulated significant knowledge and problem-solving skills over time .
+This experience is exclusive and hard to develop , and it is desirable to capture and encode the human expertise into a knowledge-based system for documentation and training purposes .
+Therefore , the objective of this study is to develop a knowledge-based system for monitoring and control of the CO2 capture process .
+Such a research study would help fill the gap in research for the field of CO2 capture process .
+Inferential modeling technique An important prerequisite for developing a knowledge-based system is to acquire expertise that can be encoded in the knowledge base .
+For acquiring knowledge on the CO2 capture process , we adopted the inferential modeling technique , which is derived from the inferential model .
+An inferential model is a generic categorization of knowledge types .
+It functions as a “ conceptual map ” to aid the knowledge engineer to identify and classify elements of the elicited expertise ( Chan , Tontiwachwuthikul , & Cercone , 1995 ) .
+Based on this map , the inferential modeling technique or IMT supports “ an iterative-refinement of knowledge elements in a problem-domain that provides top-down guidance on the knowledge types required for problem solving ” ( Chan , Peng , & Chen , 2002 ) .
+The resulting inferential model consists of the following four levels of knowledge : ( 1 ) Domain knowledge consists of objects , attributes , values , and relations .
+The objects include a set of concrete domain objects .
+The attributes describe the properties of the objects , which can be defined as a set of functions that receive input values and return output values .
+The relations describe the relationships among the objects or the attributes .
+( 2 ) Inference knowledge consists of abstract objects .
+These inference level objects can be described with inference relations and strength of inferences .
+The inference relations identify different types of relations among sets of abstract objects ; the strength of the inference is associated with each inference relation and represents the relative inferential significance of the relation .
+( 3 ) Task knowledge consists of a set of procedures or behaviours which are performed to complete a goal .
+A task is accomplished by means of a method that invokes the domain and inference objects or relations involved in this task .
+One task can be decomposed into a number of subtasks , and the objective of this task is accomplished by coordinating all the sub-goals .
+( 4 ) Strategy knowledge is defined as the knowledge used during the diagnostic process to decide what is the most opportune choice to make or , alternatively , to judge if it is worth executing a certain action with respect to other possible actions ( Mussi , 1993 ) .
+The IMT was applied and the templates of domain knowledge and task knowledge were used in the process of knowledge base development for the domain of amine-based CO2 capture process .
+Amine-based CO2 capture process The goal of CO2 capture is to separate CO2 from industrial gas streams before they are released into the atmosphere .
+The process of amine-based CO2 capture at the International Test Centre for CO2 capture ( ITC ) can be briefly described as follows : prior to CO2 capture , the flue gas is cooled down and particulates and other impurities such as SOx and NOx are removed as much as possible .
+The pre-treated flue gas is injected into the absorber column from the bottom , and it contacts solvent that is free of CO2 or lean amine solvent , which is injected from the top of the absorber column .
+The amine selectively absorbs CO2 from the flue gas .
+The amine solvent carrying CO2 , which is called CO2-rich or rich amine , enters the stripper column , where the CO2 is extracted from the amine solvent and the lean amine solvent is regenerated .
+The lean amine solvent is returned to the absorber column and used in the CO2 removal process again .
+The CO2 stream produced is dried and post-treated , and it can be either developed to a food grade quality or pressurized and transported to a suitable site for geological storage .
+The CO2 capture process is depicted in Fig 1 .
+Amine-based CO2 capture process flow diagram Fig 1 .
+Amine-based CO2 capture process flow diagram .
+The knowledge base in this study was developed in three phases : knowledge acquisition , knowledge analysis , and knowledge representation .
+In the process of knowledge acquisition , the first author acted as the knowledge engineer and interacted with the domain expert , who is the chief engineer of ITC , to acquire knowledge about problem-solving in the domain .
+The process of knowledge acquisition lasted 1 year , from January to December 2005 .
+During the phases of knowledge analysis and representation , the knowledge engineer analyzed the verbal information collected from the expert and configured them into a conceptual model .
+The IMT was applied in knowledge analysis , and the knowledge was formalized into an inferential model .
+The IMT decomposed knowledge into the two levels of domain knowledge and task knowledge .
+Domain knowledge Domain knowledge includes three components : the objects , their attributes , and values related to the attributes .
+The objects in the plant can be classified into two categories : static and dynamic .
+The static objects include the constructive components of the plant , which can be divided into the three classes of reaction instruments , valves , and pumps .
+The dynamic objects include the substances that circulate and react in the plant , i.e. , the water , amine solvent , and gases .
+The classification of objects is shown in Fig 2 , and the details are described in the following sections .
+Objects in CO2 capture plant Fig 2 .
+Objects in CO2 capture plant .
+Static objects and their attributes The three kinds of static objects including reaction instruments , valves and pumps are discussed in details as follows .
+Reaction instruments There are 16 primary reaction instruments involved in the plant .
+They are grouped into three main classes based on their functions and listed as follows : ( 1 ) Pre-treatment section , which includes the steam boiler , micro turbine , inlet-gas scrubber .
+( 2 ) Absorption-based CO2 section , which includes the absorber , off-gas scrubber , lean amine storage tank , lean amine cooler , rich amine vessel , lean/rich amine exchanger , stripper , reboiler , and reclaimer .
+( 3 ) Post-conditioning section for product purification , which includes the reflux condenser , reflux accumulator , CO2 wash scrubber , and CO2 dryer unit .
+The attributes of the reaction instruments include the temperature , pressure , or level of the instruments and the attributes of their output dynamic objects .
+The details of the attributes of the reaction instruments will be discussed in Section 3.1.2 .
+Valves and pumps The valves and pumps are manipulated to control the process parameters .
+Therefore , all the pumps and valves are associated with the attributes of the reaction instrument .
+In terms of representation in the knowledge hierarchy , the reaction instruments ’ attributes are represented one level below the reaction instrument objects .
+Corresponding to this representation , the pumps and valves are defined as modules in the system design because the modules are one level lower than the plant area in the DeltaV representational hierarchy .
+Valves : The valves can be categorized into two types based on their control mechanism : PID ( proportional-integral-derivative ) control valves and solenoid valves .
+While all the solenoid valves are used for controlling water flow , the PID valves can be subdivided into four groups based on the substances they manipulate : ( 1 ) steam supply control valve , ( 2 ) amine control valve , ( 3 ) water control valve , and ( 4 ) gas control valve .
+All the PID control valves in the plant can be identified by five attributes : the three system attributes of : ( 1 ) tag number ( the label for a valve/pump ) , ( 2 ) name ( the brief description ) , ( 3 ) type ( the mechanism of a valve/pump ) , and two design attributes of ( 4 ) location ( where the valve/pump is installed in the plant ) , and ( 5 ) distribution flow ( the dynamic object which a valve/pump controls ) .
+The solenoid valves can be identified by the additional attribute of status , which describes their ON/OFF state under normal conditions .
+Also , the attribute of distribution flow determines the process parameter controlled by a valve , and the attribute of location determines the plant area to which a valve belongs in the phase of system design .
+Pumps : Pumps include liquid distribution pumps and gas blower pumps .
+The liquid distribution pumps can be divided into three subclasses according to the types of flow they control : ( 1 ) water control pumps , ( 2 ) amine control pumps , and ( 3 ) chemical flow control pumps .
+Like solenoid valves , all the PID control valves in the plant can be identified by six attributes including tag number , name , type , location , distribution flow , and status .
+A sample valve and a sample pump are given in Table 1 .
+Table 1 .
+Samples of valve/pump .
+Tag Name Type Distribute flow Location Status FCV-600 ( valve ) Lean amine to absorber control valve PID control valve Amine solvent Between absorber and lean amine storage tank N/A B-200 ( pump ) Inlet flue gas blower Gas blower Flue gas Between flue gas scrubber and absorber ON 3.1.2 .
+Dynamic objects and their attributes The dynamic objects include amine solvent , water , and gas .
+The amine solvent can be classified into lean amine and rich amine based on the amount of CO2 it carries .
+The gases include flue gas ( with CO2 ) , off gas ( free of CO2 ) , CO2 , and steam .
+All the dynamic objects can be specified by the three attributes of temperature , pressure , and flow rate .
+Since the dynamic objects circulate and react through the entire process , the values of their attributes are constantly changing .
+Therefore , a decision was made to identify the properties of dynamic objects at any particular location with the tag of the sensor .
+Moreover , the knowledge engineer classified the attributes of the dynamic components with the attributes of the reaction instrument from which they flow .
+For example , the attributes of the lean amine storage tank include the level and temperature of the tank itself , as well as the attributes of its output lean amine .
+They include : ( 1 ) amine storage tank level ( DPT-600 ) , ( 2 ) lean amine storage tank temperature ( TE-640 ) , ( 3 ) lean amine to absorber flow rate ( FT-600 ) , and ( 4 ) lean amine to absorber temperature ( TE-600 ) .
+The attributes of dynamic objects are organized in this way due to three reasons .
+Firstly , the performance of the reaction instrument directly influences the attributes of its output dynamic objects ; hence , it is logical to group the reaction instrument with the output dynamic objects .
+Secondly , this approach enables straightforward examination of the attributes of dynamic objects at different phases in the process .
+Thirdly , this organization simplifies the grouping of attributes and facilitates design and construction of the KBSCDC .
+In this way , over 100 process parameters in the plant can be grouped into 16 reaction instrument groupings .
+Therefore , the entire system can be viewed in terms of 16 reaction components , their relevant attributes or process parameters , and the relevant valves/pumps .
+The values of the process parameters are monitored by the system so that if any abnormal value is detected , the relevant pump/valves will be manipulated to remedy the abnormal conditions .
+Task knowledge The objective of the KBSCDC is to maintain normal plant performance so that it produces CO2 at the desired rate .
+Therefore , the main task of the system is to monitor all the reaction instruments and ensure they operate under desirable conditions .
+The instruments that have abnormal parameter values indicate that abnormal operating conditions have occurred .
+The system can monitor the operating conditions of the CO2 capture plant by constantly comparing the measured values with desired parameter values .
+Deviation from the normal ranges of values triggers an alarm to advise the operator that a problem has occurred .
+The system then diagnoses the abnormal state and suggests the remedial control actions that would address the abnormal situation .
+The task of monitoring each reaction instrument includes the subtasks of monitoring its related attributes , i.e. , process parameters .
+Therefore , it is important to obtain the desirable operating ranges of the process parameters .
+The knowledge engineer identified 25 critical process parameters and their normal operating ranges with the help of the domain expert ; two sample parameters of the inlet-gas scrubber and their normal ranges of values are shown in Table 2 .
+Table 2 .
+Sample parameters and their normal operating ranges .
+Tag Parameter Unit Limit Value FT-420 Off gas scrubber wash water flow rate kg/min High 37.0 Low 5.0 LC-410 Off gas scrubber water level control % High 65.0 Low 5.0 Therefore , monitoring of the inlet-gas scrubber consists of the four subtasks of : ( 1 ) controlling the flow rate of flue gas into absorber ( FT-200 ) , ( 2 ) controlling the temperature of flue gas into absorber ( TE-201 ) , ( 3 ) controlling the wash water flow rate of scrubber ( FT-420 ) , and ( 4 ) controlling the inlet-gas scrubber water level ( LC-410 ) .
+The two sample subtasks of controlling the water level ( LC-410 ) and controlling the wash water flow rate ( FT-420 ) are discussed here .
+They are controlled so that the parameter values fall within the values specified in Table 2 .
+If the values should fall outside the normal ranges , the diagnosis and remedial control actions are determined by various conditions .
+The details of diagnosis and control actions for the sample parameter of wash water flow rate ( FT-420 ) are given in Table 3 .
+If the wash water flow rate ( FT-420 ) of the inlet-gas scrubber is less than 5.0 kg/m , a warning is given to the operator .
+The diagnosis of the situation is that the over low flow rate of wash water could be caused by the closed water circulation pump P-420 .
+Therefore , the remedial control action is to open pump P-420 to restart water circulation between the water tank and the inlet-gas scrubber .
+However , if P-420 is already open , then the PID valve FCV-420 should be opened to increase water flow .
+Table 3 .
+Diagnosis and control strategies for sample parameter of inlet-gas scrubber .
+Object Task Conditions Diagnosis and controlling actions Inlet-gas scrubber Control wash water flow rate ( FT-420 ) 5.0 kg/min < = FT-420 < = 37.0 kg/min Normal operation No action taken FT-420 < 5.0 kg/min Warning is given Diagnosis : The wash water flow to water tank is low or stopped by the closed water circulation pump-420 Remedial control action : Open P-420 to restart water circulation between water tank and scrubber ; otherwise , open up FCV-420 to increase volume of water returning to water tank if P-420 is open FT-420 > 37.0 kg/min Warning is given Diagnosis : The volume of wash water between the off gas scrubber and water storage tank is too high Remedial control action : Close FCV-420 to reduce wash water flow from the scrubber wash water storage tank
+System design The intelligent system of KBSCDC was implemented on DeltaV Simulate ( a trademark of Emerson Corp. , USA ) .
+DeltaV Simulate logically decomposes the entire system into plant areas and control modules .
+It supports various algorithms for implementing process control logic , and it allows the simulation of dynamic processes and real-time monitoring .
+The implementation of KBSCDC on DeltaV involves a hierarchy of 5 levels : plant area ( level 1 ) , module ( level 2 ) , algorithm ( level 3 ) , function block ( level 4 ) , and parameter ( level 5 ) .
+The hierarchy is shown in Fig 3 .
+Hierarchy of KBSCDC on DeltaV Fig 3 .
+Hierarchy of KBSCDC on DeltaV .
+The plant areas are logical divisions of the process control system , which can be based on physical plant locations or main process functions .
+A plant area consists of modules , and each module is a logic control entity responsible for configuring the control strategies .
+It contains algorithms , alarms , and other characteristics that define the process control .
+Algorithms define the logic steps that describe how the module behaves and how the tasks are accomplished .
+In this intelligent system , the function block diagrams ( FBD ) were used to continuously execute control strategies .
+The basic component of a FBD is a function block , which contains the control algorithm and defines the behaviour of the module .
+Each function block contains parameters which are the user-defined data manipulated by the module ’ s algorithm in its calculations and logic .
+The five-level hierarchy of the KBSCDC system supports a top-down approach for encoding knowledge into DeltaV Simulate .
+System construction on DeltaV Simulate can be explained by describing sample components of each level as shown in Fig 4 , and the details are described below .
+Implemented hierarchy of the KBSCDC in DeltaV Simulate Fig 4 .
+Implemented hierarchy of the KBSCDC in DeltaV Simulate .
+Three sample plant areas include the stripper , inlet-gas scrubber , and absorber .
+In this discussion , the inlet-gas scrubber is used as an example to illustrate how a plant area is constructed .
+The plant area of inlet-gas scrubber contains eight modules .
+Four of these are PID valve control modules for the process parameters of : ( 1 ) flue gas flow rate into absorber ( FC-200 ) , ( 2 ) inlet-gas scrubber water level control ( LC-410 ) , ( 3 ) temperature of flue gas to absorber ( TC-201 ) , and ( 4 ) wash water flow rate of inlet-gas scrubber ( FC-420 ) .
+The other four are 2-state control modules for the pumps and solenoid valves of : ( 1 ) flue gas blower ( B-200 ) , ( 2 ) make up water control valve ( EV-300 ) , ( 3 ) wash water control valve ( EV-420 ) , and ( 4 ) wash water pump ( P-420 ) .
+The algorithm used in the module of wash water flow rate into absorber ( FC-420 ) is represented in a function block diagram , which consists of the function blocks of data input simulation , data output simulation , and primarily a PID control function .
+Since the KBSCDC system is not connected to the CO2 capture plant at the current stage , the data input and output to the system are simulated by using function blocks .
+The PID control function block contains the most important parameters , which includes the set-point ( SP ) of the PID control and alarm activation limits , whose variable names in the system are HIGH_LIMIT and LOW_LIMIT .
+The details of system construction and implementation are given in Section 4.2 .
+More implementation details about the knowledge hierarchy of the KBSCDC in DeltaV Simulate are explained as follows .
+Fig 5 shows how the system knowledge base was developed in the DeltaV system .
+In Fig 5 , the white boxes on the left side contain the components of the knowledge base .
+As observed vertically from the top to bottom , the components of the domain knowledge consist of objects , the attributes of the objects , and values of the attributes .
+The blue or shaded boxes on the right side contain the components of the DeltaV Simulate .
+As observed vertically , the components of the DeltaV Simulate are also displayed from the higher to lower hierarchical level from the top to bottom ( refer to Fig 3 ) .
+More details on how the knowledge components are represented as the components of the DeltaV Simulate at different levels are given as follows : Level 1 : The objects of the plant include the reaction instruments , pumps , and valves .
+The reaction instruments are defined as the plant area in DeltaV Simulate .
+Since the CO2 capture plant contains 16 reaction instruments , there are together 16 plant areas defined in the system .
+Level 2 : As mentioned in Section 3.1.1.2 , the attribute of location of a valve or pump determines the plant area to which a valve or pump belongs in the system design .
+Each plant area can consist of a number of valves and pumps which manipulate multiple attributes of this plant area .
+Therefore , the objects of pumps and valves are defined as modules under the level of plant area in the DeltaV Simulate , although they are at the same level of objects as the reaction instruments in the knowledge base .
+As mentioned in Section 3.1.1.2 , the pumps and valves have two different control mechanisms of PID control and two-state control .
+Therefore , the pumps and solenoid valves based on a two-state control mechanism are defined as two-state control modules ; the PID control valves are defined as proportional-integral-derivative or PID control modules .
+Level 3 : The function block diagram ( FBD ) is a diagram that contains multiple interconnected function blocks .
+However , since FBD represents a type of algorithm and is not directly related to the knowledge base , it is not shown in Fig 5 .
+Level 4 : A function block is a logic processing unit that defines the behaviour of an algorithm for a particular module .
+Two types of function blocks are available : the two-state function block and the PID control function block .
+At this level , the attributes of the objects in the knowledge base are analyzed .
+As mentioned in Section 3.1.1.1 , the attributes of a reaction instrument include the attributes of the reaction instrument and the attributes of its output dynamic objects , such as the pressure and temperature .
+Since the PID control valves are used to control the attributes of the reaction instruments and the dynamic objects , the attributes of reaction instruments and dynamic objects and their relative PID control valves are combined into the PID control function blocks , which enable the present values of the attributes to approach their desired values by controlling the PID valves .
+As mentioned in Section 3.1.1.2 , the pumps and solenoid valves have another important attribute of status , which manipulate the attributes of the reaction instruments by switching between the ON/OFF states .
+Therefore , the pumps and solenoid valves are constructed by two-state control function blocks , which enable the pumps and solenoid valves to switch between their ON/OFF states to reach their desired state .
+Level 5 : At this level , the values of the attributes of the objects are analyzed .
+For the object of reaction instruments , the important attributes include their related operation properties , such as temperature , pressure , etc .
+Therefore , the values of these attributes are the high/low limits that specify the limits beyond which the present value of the parameter is outside the normal ( i.e .
+desired ) operating range and an alarm is activated .
+For the object of the PID control valves , the value of the attribute of set-point is critical as it defines the desired value for the PID control .
+Since the attributes of the reaction instruments and the dynamic objects and their relative PID control valves are combined into the PID control function blocks , their individual values including the high/low limits of the attributes of the reaction instruments and the dynamic objects , and the set-point values of the PID valves , are specified as critical parameters in the PID control function block .
+Since the solenoid valves and pumps are used to control the process parameters by switching between their ON/OFF states , the ON or OFF are the values of the attribute of status for the pumps and solenoid valves .
+Since the pumps and solenoid valves are constructed by two-state control function blocks , their ON/OFF status are defined as an important parameter in the two-status control function blocks .
+The details of system implementation are given in Section 4.2 .
+Design of knowledge-based system on DeltaV Simulate Fig 5 .
+Design of knowledge-based system on DeltaV Simulate .
+System implementation The DeltaV Simulate consists of three applications of DeltaV Explorer , Control Studio , and DeltaV Operate .
+Each of the applications conducts a specific function in the construction of the intelligent system .
+The DeltaV Explorer is a navigation tool for the user to construct and view the overall system , i.e. , the hierarchy of plant areas and modules .
+The Control Studio is used to design and graphically create the individual modules and templates that make up the control strategy .
+The DeltaV Operate functions in two modes of configure and run .
+In the configure mode , it is used to build process graphics and develop the user interface .
+In the run mode , it allows the operator to monitor and control the process by interacting with the system through the user interface .
+Plant areas The division of plant areas and specification of modules were completed in DeltaV Explorer , as shown in Fig 6 .
+The overall structure of the system , containing 16 reaction instruments or plant areas can be viewed in the left panel .
+One sample plant area of “ inlet-gas-scrubber ” is selected and the eight modules in this plant area are shown in the right panel .
+These include : ( 1 ) flue gas flow rate into absorber ( FC-200 ) , ( 2 ) inlet-gas scrubber water level control ( LC-410 ) , ( 3 ) temperature of flue gas to absorber ( TC-201 ) , ( 4 ) wash water flow rate ( FC-420 ) , ( 5 ) flue gas blower ( B-200 ) , ( 6 ) make up water control valve ( EV-300 ) , ( 7 ) wash water control valve ( EV-420 ) , and ( 8 ) wash water pump ( P-420 ) .
+These modules correspond to the modules shown at the module level in Fig 4 .
+Overall structure and modules in plant area “ inlet-gas-scrubber ” Fig 6 .
+Overall structure and modules in plant area “ inlet-gas-scrubber ” .
+Control modules A control module is constructed by combining various function blocks .
+The function blocks are connected with graphic wires , and data values pass through the wires from one block to another .
+The function blocks are executed in a logical order , which determines the behaviour of the module .
+The module of FC-420 in the plant area of “ inlet-gas-scrubber ” is used to illustrate the construction of the PID valve control modules .
+In Fig 7 , the FC-420 module is selected , which opens the list of function blocks listed in the top left panel and illustrated graphically in the right panel .
+Construction of PID control module FC-420 Fig 7 .
+Construction of PID control module FC-420 .
+The function block diagram of module FC-420 shown in the right panel of Fig 7 is expanded for clearer illustration in Fig 8 .
+It can be seen that the function blocks are connected to perform the control strategy .
+The details are described as follows .
+The connections of function blocks in module FC-420 Fig 8 .
+The connections of function blocks in module FC-420 .
+The control module of FC-420 contains the following function blocks : math multiply ( MLTY ) , addition ( ADD ) , analog control signal generator ( SGGN ) , filter ( FLTR ) , rate limit ( RTLM ) , PID function ( PID ) , and analog output ( AO ) blocks .
+The numbers at the bottom right of each function block show the execution order of the function blocks .
+If the execution involves the data being passed from the function block with a lower number to the one with a higher number , this is called “ forward execution ” , and the connection wire is represented by a solid line between the two function blocks .
+If the execution is backward , i.e. , the data passes from the function block with a higher number to the one with a lower number , the connection wire is represented as a dotted line .
+The input generated for module FC-420 is passed to function block FT-420 , which sends the input to PID1 for processing .
+The control signal generated by PID1 is sent to the water control valve FCV-420 .
+This is shown in Fig 8 .
+However , as the KBSCDC system is not connected to the field bus devices , the analog input is simulated using the function blocks of SGGN , ADD and FLRT .
+The SGGN function block uses a specified combination of a sine wave , a square wave , and a bias value to generate an output signal that simulates a process signal ( wire 1 in Fig 8 ) .
+The simulated input signal is summed with the feedback signal from the AO function block ( wire 2 ) through an ADD block and generates an actuating signal , which is sent to a FLTR block ( wire 3 ) .
+The FLTR block filters large changes in this signal and generates a smooth output signal ( wire 4 ) .
+The output signal is sent to the RTLM block , which limits the change rate of the signal to specific limits and maintains stability of the signal .
+The output signal of the RTLM block is input to the PID control block ( wire 5 ) , and the PID function block performs the functions of analog input/output processing , proportional-integral-derivative ( PID ) control , and alarms .
+The PID function block sends a signal to the AO block and updates the present value ( wire 6 ) .
+The AO block generates a control signal that indicates the valve position of FCV-420 , which enables the present value of FT-420 to approximate the set-point value as much as possible .
+The feedback signal of the AO block is wired back to the PID block to provide a bumpless transfer when the mode changes in the PID control block ( wire 7 ) .
+As well , the feedback bias signal from the AO block is sent through the MLTY block ( wire 8 ) to the SGGN block ( wire 9 ) .
+Since FT-420 is not only controlled by the valve FCV-420 , but also controlled by the pump P-420 , the status of P-420 is involved in this module as an external parameter ( the two-state module for P-420 is separately developed ) .
+The status of P-420 is connected to the SUB and MLTY blocks ( wire 10 , 11 , 12 ) , sent to the RTLM block ( wire 13 , 14 ) and then sent to the PID control block ( wire 5 ) .
+In this way , once the status of P-420 is changed ( 0–1 or 1–0 ) , the present value of FT-420 will be changed accordingly and the impact on FT-420 due to the status change of P-420 can be simulated .
+The details of the PID function block are explained in the next section .
+Function blocks and parameters One set of parameters contained in the PID control block is execution parameters : ( 1 ) PV : present value , ( 2 ) SP : set point of PID control , ( 3 ) Gain : the normalized proportional gain value , ( 4 ) Reset : the integral action time constant and ( 5 ) Rate : the derivative action time constant .
+The PID loop control is implemented by taking the error difference between SP and PV and calculating a control output signal using the PID control execution .
+Since the PID block supports alarm limit detection , the other set of parameters in the PID block are for alarm detection , which is defined by the desirable operating ranges of the process parameters .
+There are three classes of parameters for alarm detection : ALARM_TYPE , ALARM_LIMIT , and ALARM_ACT .
+They are shown in Fig 9 and explained as follows .
+Parameters for alarm activation Fig 9 .
+Parameters for alarm activation .
+ALARM_TYPE specifies two types of alarms for warning conditions : HIGH_ALARM and LOW_ALARM .
+ALARM_LIMIT specifies the alarm limits or the values at which the alarms are activated .
+Based on the two types of alarms , there are two alarm limits : HIGH_LIMIT and LOW_LIMIT .
+The system compares these limit values to the present value to determine if an alarm condition exists .
+ALARM_ACT is in a true/false ( 1/0 ) state to specify the alarm condition state .
+Corresponding to ALARM_LIMIT that includes HIGH_LIMIT and LOW_LIMIT , ALARM_ACT includes HIGH_ACT and LOW_ACT .
+When any alarm condition exists or when the present value exceeds any values of ALARM_LIMIT , ALARM_ACT is set to true to indicate that the alarm is activated .
+For example , the desirable operating range of FT-420 is between 5.0 and 37.0 kg/min .
+Therefore , the high limit ( HIGH_LIMIT ) of FT-420 is 37 and the low limit ( LOW_LIMIT ) is 5 .
+If the present value ( PV ) of FT-420 is higher than 37.0 kg/min ( HIGH_LIMIT ) , HIGH_ACT becomes true and the alarm for HIGH condition is activated .
+If the present value ( PV ) of FT-420 is lower than 5.0 kg/min ( LOW_LIMIT ) , LOW_ACT becomes true and the alarm for LOW condition is activated .
+If the present value is neither higher than 37.0 kg/min nor lower than 5.0 kg/min , neither HIGH_ACT nor LOW_ACT becomes true and no alarm is activated .
+The alarm is displayed on the user interface to remind the operator of the abnormal condition .
+The desirable operating ranges of the process parameters are not only used for alarm activation , but also trigger the diagnosis displays , which is the message box on the left top corner of screen shown in Fig 10 .
+System interface for case study Fig 10 .
+System interface for case study .
+Fig 10 describes a scenario in which the inlet-gas scrubber wash water flow rate ( FT-420 ) is in the abnormal condition .
+The current value of FT-420 shown on the panel of FC-420 is 3.2 kg/min , which is lower than its low limit of 5 kg/min .
+The alarm is activated and displayed on the interface , so that the panel for FC-420 is turned to the blue color .
+The diagnosis and control suggestions are sent to a message board on the user interface : “ If P-420 is on , open up FCV-420 to increase water returning from the scrubber to water tank ; if P-420 is off , turn off P-420 ” .
+The green colour of pump P-420 indicates its open status .
+Therefore , the remedial controlling action should be applied on the PID control valve FCV-420 .
+By pushing the control button of module FC-420 , the faceplate of FC-420 is displayed on the user interface , as shown in Fig 11 .
+Faceplate for control FT-420 Fig 11 .
+Faceplate for control FT-420 .
+The faceplate mainly contains two bar sliders .
+On the right is the PV ( present value ) slider , which indicates the present value of FT-420 .
+The two yellow arrowheads vertically positioned relative to the PV slider indicate the high and low alarm limits of the present value .
+The large , white arrowhead is the SP ( set-point ) indicator .
+To reset the set-point , the indicator is moved up to a desired set-point value , in this case at 25.0 kg/min .
+This reset value brings the present value of FT-420 to the normal operating range of between 5.0 and 37.0 kg/min , in this case 23.8 kg/min , which is displayed on top of the PV slider as the new present value of FT-420 .
+The output bar slider on the left indicates the output value of the PID loop .
+On top of the left slider is displayed the output value of FC-420 .
+In this case , it shows the valve position of FCV-420 is 26.2 % open .
+Fig 12 shows the interface after the normal operation of FT-420 is restored .
+The background panel for FC-420 has returned to its normal black colour , and the current value of FT-420 shown on the panel of FC-420 indicates that the water circulation rate has increased to 25.0 kg/min , which is within the normal operating range .
+As a remedial action has been applied to address the problem which triggered the alarm , the alarm and the diagnosis message have disappeared from the top left corner of the interface .
+Case study back to normal operation Fig 12 .
+Case study back to normal operation .
+In the present study , a knowledge-based expert system for monitoring and control of the CO2 capture process was developed .
+To develop the system , the IMT was applied to analyze the domain knowledge and problem-solving techniques and a knowledge base was established .
+The KBSCDC system was implemented on DeltaV Simulate , which provides features useful for development , such as graphic displays , alarms , and pop-up menus .
+Compared to G2 , DeltaV Simulate provides function blocks , which supported the configuration of control mechanisms and definition of the specific parameters for different valves and pumps , such as set-point value of a PID control valve and status of a two-state pump .
+Therefore , the tool of DeltaV Simulate enabled us to simulate the control strategies applied to the vales and pumps and the influence of the abnormal conditions caused by these control actions .
+The KBSCDC system helps to enhance performance and efficiency of the CO2 capture system by dramatically reducing the time for problem diagnosis and resolution when abnormal operating conditions occur .
+The system also can be used as a decision-support tool for inexperienced operators and aids them in controlling the plant ; it can be used for training novice operators .
+The knowledge base can be extended or refined with future additions of knowledge .
+The current version of the KBSCDC system has two disadvantages .
+Since there are altogether 16 components involved in the process , an abnormal condition can be caused by incorrect performance of more than one component or parameter .
+However , the system can only deal with abnormal operation of one component at a time .
+Moreover , the knowledge captured for system diagnosis and control represents the problem-solving expertise of only one expert operator .
+It is likely that other senior operators would conduct problem solving in a different manner .
+To address these weaknesses , future development of the system will focus on enabling monitoring , control , and diagnosis of multiple malfunctioning components or parameters and integrating expertise from additional operators to improve the capability and reliability of the system .

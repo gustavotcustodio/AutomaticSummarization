@@ -1,0 +1,307 @@
+Automatic microstructural characterization and classification using artificial intelligence techniques on ultrasound signals
+
+Abstract
+
+Secondary phases such as Laves and carbides are formed during the final solidification stages of nickel based superalloy coatings deposited during the gas tungsten arc welding cold wire process. However, when aged at high temperatures, other phases can precipitate in the microstructure, like the γ″ and δ phases. This work presents a new application and evaluation of artificial intelligent techniques to classify (the background echo and backscattered) ultrasound signals in order to characterize the microstructure of a Ni-based alloy thermally aged at 650 and 950 °C for 10, 100 and 200 h. The background echo and backscattered ultrasound signals were acquired using transducers with frequencies of 4 and 5 MHz. Thus with the use of features extraction techniques, i.e., detrended fluctuation analysis and the Hurst method, the accuracy and speed in the classification of the secondary phases from ultrasound signals could be studied. The classifiers under study were the recent optimum-path forest (OPF) and the more traditional support vector machines and Bayesian. The experimental results revealed that the OPF classifier was the fastest and most reliable. In addition, the OPF classifier revealed to be a valid and adequate tool for microstructure characterization through ultrasound signals classification due to its speed, sensitivity, accuracy and reliability.
+
+Keywords
+Feature extraction
+Detrended fluctuation analysis and Hurst method
+Optimum-path forest
+Support vector machines
+Bayesian classifiers
+Non-destructive inspection
+Nickel-based alloy
+Thermal aging
+
+1. Introduction
+
+Nb-bearing nickel-based superalloys, like the Inconel 625 alloy studied here, exhibit an outstanding combination of mechanical properties and resistance to pitting, crevice and intergranular corrosion due to the stiffening effect of chromium, molybdenum and niobium in its nickel matrix. These properties make precipitation hardening treatments unnecessary (Mathew, Rao, & Mannan, 1999). The extraordinary resistance against a wide range of organic and mineral acids is due to their excellent anti-corrosive properties, mainly at high temperatures. These alloys are commonly found in the marine, aerospace, chemical and oil and gas industries (Boser, 1979; Kohla & Peng, 1981; Thomas & Tait, 1994).
+
+The Inconel 625 alloy in particular has greater applicability, especially in highly corrosive environments such as the oil and gas industry, than many other Nickel (Ni) based alloys. Nowadays, this alloy is used widely in the weld overlay of the inner surface of carbon steel pipes and other equipment for the offshore industry. However, further studies of this alloy, such as this paper, are necessary to increase the overall knowledge of its properties.
+
+During welding of an Inconel 625 alloy, there is an intensive microsegregation of some elements, such as niobium (Nb) and molybdenum (Mo), within the interdendritic regions, causing the supersaturation of the liquid metal with these chemical elements in its final stage of solidification, which results in the precipitation of Nb-rich Laves phase and MC primary carbides of type NbC (Cieslak, 1981; Cieslak, Headley, & Romig, 1986). This segregation and precipitation of the secondary phases can change the mechanical properties of the alloy and decrease its resistance to corrosion (Yang, Zheng, Sun, Guan, & Hu, 2006). In addition, the Nb-rich Laves phase has a low melting point that causes an increase in the temperature solidification range, making the alloy susceptible to solidification cracking (Dupont, Banovic, & Marder, 2003). However, an adequate selection of the welding conditions can minimize the formation of the Nb-rich Laves phases and consequently, reduce its susceptibility to solidification cracking. Therefore, it is also important to investigate the phase transformation process.
+
+Nowadays, researchers are evaluating the use artificial intelligence techniques to characterize microstructures. For example, Albuquerque, Filho, Cavalcante, and Tavares (2010) quantified the porosity of synthetic materials from optical microscopic images successfully, and the solution proposed, which was based on an artificial neuronal network (ANN), proved to be more reliable. Albuquerque, de Alexandria, Cortez, and Tavares (2009) characterized the microstructures in images of nodular, grey, and malleable cast irons using a multilayer perceptron neuronal network (MLP) (Albuquerque, Cortez, de Alexandria, & Tavares, 2008), Kohonen’s self-organizing artificial neuronal network (Albuquerque et al., 2009), and using optimum-path forest (OPF) classifier (Papa, Nakamura, Albuquerque, Falcão, & Tavares, 2013). To evaluate the microstructures of hypoeutectic white cast iron accurately, morphological operators together with an MLP neuronal network (Albuquerque, Tavares, & Cortez, 2010) were necessary. However, the application of this techniques are not combined with non-destructive tests (i.e, ultrasound inspection), this being one of the main innovations of this work.
+
+However, despite the above mentioned techniques, improved classification methods for microstructural characterization are still required. To the best of our knowledge, this work introduces the fast, robust and recent OPF classifier, for first time to characterize and classify the microstructure of a thermally aged Ni-based alloy and in the as-welded state. This recent graph-based classifier reduces the pattern recognition problem as an optimum-path forest computation in the feature space induced by a graph, (Papa, Falcão, & Suzuki, 2009). As such, the OPF classifier does not interpret the classification task as a hyperplane optimization problem as traditional classifiers, but as a polynomial combinatorial optimum-path computation from some key samples, designated as prototypes, to the remaining nodes. A detailed description of the OPF classifier will be carried out in Section 2.5.1.
+
+Therefore, the main goal of this work was to evaluate the competence of the OPF classifier to monitor, thought ultrasound signal classification, the kinetics of the phase transformation of a Ni-based alloy thermally aged at 650 and 950 °C for 10, 100 and 200 h, as well as in the as-welded state. Detrended-fluctuation analysis (DFA) and Hurst method (Rescaled range – RS) were used in the feature extraction phase (i.e., preprocessing). Raw data (original) and preprocessed ultrasonic background echo and backscattered signals acquired with two types of transducers (4 and 5 MHz) were considered. For a further assessment of the OPF efficiency, the results obtained were compared with the ones achieved using the powerful classifiers, in particular the SVM and Bayesian classifiers.
+
+The potentiality and efficiency of ultrasonic signals combined with artificial intelligence classifiers to characterize the microstructures of a Ni-based alloy thermally aged and in the as-welded state were confirmed by the results. As far as the authors know, this is the first time that the effect of thermal aging on a Ni-based alloy has been analyzed using such classifiers on ultrasonic signals, which makes the results presented and discussed of noteworthy value.
+
+This paper is organized as follows: in the next section, the experimental procedures are described; then, in the third section, the experimental results are presented and discussed; finally, in the fourth and last section, the conclusions are pointed out.
+2. Experimental procedures
+
+This section describes the experimental work done to the temperatures 650 and 950 ° C for 10, 100 and 200 h, as well as the as-welded condition. First; the test setup is described, then the preparation of the Inconel 625 alloy samples is addressed. Afterwards, the ultrasonic signals acquired and the related fundamentals are introduced. Finally, the features of extraction methods and artificial intelligence techniques used to process and classify the ultrasonic signals are presented.
+2.1. Test setup
+
+Inconel 625 alloy coatings deposited on an ASTM A36 steel metal base were used in the experiments. The chemical compositions of these materials are given in Albuquerque, Silva, Normando, Moura, and Tavares (2012). For the welding a 4 mm diameter tungsten electrode doped with thorium was used, and pure argon (99.99%) was chosen as the shielding gas.
+
+An electronic multi-process power source connected to the data acquisition system monitored the current and tension during the welding. The manipulation of the torch was carried out using an industrial robot system, Fig. 1(a). An automatic cold wire feed system for gas tungsten arc welding (GTAW) was used to supply the filler metal. Fig. 1(b) shows the positioning unit that was used to guide the wire into the arc. This unit allows adjustments to be made to the configuration parameters and geometry of the wire feed. The weld coating was applied on an ASTM A36 steel metal base plate, resulting in a coating of 350 × 60 × 14 mm3. The remaining welding parameters used were: 285 A of welding current (DCEN), arc voltage of 20 V, travel speed equal to 21 cm/min, welding heat input of 16 kJ/cm, the wire feed speed equal to 6.0 m/min, arc length of 10 mm, 15 l/min of gas flow and arc oscillation describing a double-8 trajectory. Other minor considerations included the wire feed direction ahead of the arc weld, wire tip to pool surface was kept at a distance of 3 mm, the wire feeding angle was maintained constant and equal to 50°, and the electrode tip angle was fixed at 50°. To guarantee good overlaying with multiple passes deposited side by side, a distance equal to 2/3 of the initial weld bead width was established as an ideal step. Other arc oscillating parameters were: oscillation amplitude of 8 mm and wave length equal to 1.2 mm.
+Experimental setup used in the welding process: (a) robotic system, (b) GTAW…
+
+    
+
+Fig. 1. Experimental setup used in the welding process: (a) robotic system, (b) GTAW guide wire feed and torch.
+
+To produce a 10 mm thick coating on the substrate, seven layers with eight passes were deposited under identical welding conditions.
+2.2. Samples preparation
+
+After the welding, the coating was detached from the substrate by conventional machining, as the material of interest was only the Inconel 625 alloy. Then, the coating was divided into seven samples; three samples were submitted to heat aging treatments at 650 °C, three at 950 °C and both for aging times of 10, 100 and 200 h (Shankar, Rao, & Mannan, 2001), and the remaining one was kept as the as-welded state (0 h). The aged samples were water cooled with moderate agitation at room temperature.
+
+Afterwards, the seven samples were subjected to metallographic preparation that included grinding, polishing and electrolytic etching using 10% chromic acid with a tension of 2 V tension for 15 s. Metallographic images were acquired using a scanning electron microscope (SEM) Philips XL30 (Oxford Instruments, England), and a study of the chemical composition of the secondary phases was carried out through energy dispersive spectroscopy of X-rays (EDS).
+
+After the microstructural analysis, the background echo and backscattered signals were acquired to evaluate the effect of aging on the Inconel 625 alloy samples.
+2.3. Ultrasound signal acquisitions
+
+The pulse echo technique and direct contact method were used to capture the background echo and ,backscattered ultrasonic signals (Schölkopf & Smola, 2002). All the signals were obtained using commercial NDT ultrasonic transducers: one of 4 MHz (Krautkramer, Germain, model MB4S) and another one of 5 MHz (Krautkramer, Germain, model MSW-QCG). The choice of these transducers was based on the authors previous experience in this kind of NDT and knowledge concerning the materials under study (Albuquerque et al., 2010; Normando, Moura, Souza, Tavares, & Padovese, 2010; Silva et al., 2009). In fact, Albuquerque et al., in Albuquerque et al. (2012), showed that these frequencies revealed to be the most adequate to analyze the material under study, as a transducer with a frequency of 10 MHz completely attenuated the ultrasound signal, and one with a frequency of 2.25 MHz led to an adjacent echo that overlapped the signal extensively, seriously compromising the accuracy of the results.
+
+As a coupling material, SAE 15W40 lube oil was used for the longitudinal measurements. A Krautkramer ultrasound device (GE Inspection Technologies, USA, model USD15B) was used connected to a 100 MHz digital oscilloscope (Tektronix, USA, model TDS3012B), which transmitted the ultrasonic signals to a computer for processing, using a sampling rate of 1 GS/s.
+2.4. Ultrasonic signal preprocessing and classification
+
+The microstructural characterization was carried out using OPF, Bayesian, SVM with Radial Basis Function (RBF), linear and polynomial kernels classifiers on the original background echo and backscattered signals. These signals were also preprocessed using feature extraction techniques based on detrended fluctuation analysis (DFA) and Rescaled method (RS), in which a better description of these methods can be found in Albuquerque et al. (2012). In order to assure statistical significance, 40 signals were acquired for each sample and each background echo signal had 10,000 points, i.e., a total of 400,000 points was attained, and each backscattered signal had 500 points, resulting in a total of 20,000 points for this study. After signal preprocessing using the DFA and RS techniques, the number of points of the background echo signals was reduced to 1680, i.e., a reduction of 42 times, the backscattered signals to 960 points, which means a reduction of 24 times.
+
+Albuquerque et al., in Albuquerque et al. (2012) did not consider echo signals without preprocessing, claiming that the large number of points made their use impracticable. However, this problem has been overcome because the classifiers used in this work are faster and more powerful, which is one of the important contributions attained with this work.
+2.5. Ultrasound signals classification for the microstructural characterization
+
+In order to classify the original and preprocessed ultrasonic signal data, OPF, Bayesian, SVM RBF, SVM linear and SVM polynomial classifiers were employed and compared. For all classifiers, the training and testing phases were computed using the 10-fold cross validation approach on the same folds. For comparison purposes, the mean and standard deviation were computed on the results obtained by each classifier.
+2.5.1. Optimum path forest classifier
+
+The OPF classifier models the problem of pattern recognition as a graph partition in a given feature space. The nodes are represented by the feature vectors and all pairs are connect by edges, defining a complete graph. This kind of representation is straightforward, given that the graph does not need to be explicitly represented, and has low memory requirements. The partition of the graph is carried out by a competition process between some key samples, known as prototypes, which offer optimum paths to the remaining nodes of the graph. Each prototype sample defines its optimum-path tree (OPT), and the collection of all OPTs defines the optimum-path forest, which gives the name to the classifier (Papa et al., 2009).
+
+The OPF can be seen as a generalization of the well known Dijkstra’s algorithm to compute optimum paths from a source node to the remaining ones (Dijkstra, 1959). The main difference relies on the fact that OPF uses a set of source nodes, i.e., the prototypes, with any path-cost function. In case of Dijkstra’s algorithm, a function that summed the arc-weights along a path was applied. For OPF, a function that gives the maximum arc-weight along a path is used (Papa et al., 2009).
+
+Let Z = Z1 ∪ Z2 be a dataset labeled with a function λ, in which Z1 and Z2 are, respectively, training and test sets, and let S ⊆ Z1 be a set of prototype samples. Essentially, the OPF classifier builds a discrete optimal partition of the feature space such that any sample s ∈ Z2 can be classified according to this partition. This partition is an optimum path forest (OPF) computed in
+
+by the image foresting transform (IFT) algorithm (Falcão, Stolfi, & Lotufo, 2004).
+
+The OPF algorithm may be used with any smooth path-cost function which can group samples with similar properties (Falcão et al., 2004). This work used the path-cost function fmax, which is computed as:
+(1)
+
+in which d(s,t) means the distance between samples s and t, and a path π is defined as a sequence of adjacent samples. As such, fmax(π) computes the maximum distance between adjacent samples in π, when π is not a trivial path.
+
+The OPF algorithm assigns one optimum path P∗(s) from S to every sample s ∈ Z1, originating an optimum path forest P (a function with no cycles which assigns to each s ∈ Z1⧹S its predecessor P(s) in P∗(s) or a marker nil when s ∈ S. Let R(s) ∈ S be the root of P∗(s) that can be reached from P(s)). The OPF algorithm computes for each s ∈ Z1, the cost C(s) of P∗(s), the label L(s) = λ(R(s)), and the predecessor P(s).
+
+The OPF classifier is composed of two distinct phases: (i) training and (ii) classification. The former step consists, essentially, of finding the prototypes and computing the optimum-path forest, which is the union of all OPTs rooted at each prototype. After that, a sample is picked from the test sample, which is connect it to all the samples of the optimum-path forest generated in the training phase. Notice that this test sample is not permanently added to the training set, i.e., it is used only once. The next sections describe this procedure in more detail.
+
+Training: We say that S∗ is an optimum set of prototypes when the OPF algorithm minimizes the classification errors for every s ∈ Z1. S∗ can be found by exploiting the theoretical relation between the minimum-spanning tree (MST) and optimum-path tree for fmax (Allène, Audibert, Couprie, Cousty, & Keriven, 2007). The training essentially consists of finding S∗ and an OPF classifier rooted at S∗.
+
+By computing an MST in the complete graph (Z1,A), we obtain a connected acyclic graph whose nodes are all samples of Z1 and the arcs are undirected and weighted by the distances d between adjacent samples. The optimum spanning tree is the tree that has the least sum of its arc compared to any other spanning tree in the complete graph. In the MST, every pair of samples is connected by a single path that is optimum according to fmax. That is, the minimum-spanning tree contains one optimum-path tree for any selected root node.
+
+The optimum prototypes are the closest elements of the MST with different labels in Z1; i.e., elements that fall in the frontier of the classes. By removing the arcs between different classes, their adjacent samples become prototypes in S∗ and OPF can compute an optimum-path forest with minimum classification errors in Z1. It should be noted that a given class may be represented by multiple prototypes, i.e., optimum-path trees, and there must exist at least one prototype per class.
+
+Classification: For any sample t ∈ Z2, all arcs connecting t with samples s ∈ Z1 are addressed, as though t were part of the training graph. Considering all possible paths from S∗ to t, the optimum path P∗(t) from S∗ is found and t is labeled with the class λ(R(t)) of its most strongly connected prototype R(t) ∈ S∗. This path can be identified incrementally by evaluating the optimum cost C(t) as:
+(2)
+
+Let the node s∗ ∈ Z1 be the one that satisfies Eq. (2), i.e., the predecessor P(t) in the optimum path P∗(t). Given that L(s∗) = λ(R(t)), the classification simply assigns L(s∗) as the class of t. An error occurs when L(s∗) ≠ λ(t).
+2.5.2. Bayesian classifier
+
+Let p(ωi∣x) be the probability of a given pattern
+to belong to class ωi, i = 1, 2, … , c, which can be defined by the Bayes Theorem (Jaynes, 2003):
+(3)
+
+where p(x∣ωi) is the probability density function of the patterns that compose the class ωi, and P(ωi) corresponds to the probability of the class ωi itself.
+
+A Bayesian classifier decides whether a pattern x belongs to the class ωi when:
+(4)
+which can be rewritten as follows by using Eq. (3):
+(5)
+
+As one can see, the Bayes classifier’s decision function di(x) = p(x∣ωi)P(ωi) of a given class ωi strongly depends on the previous knowledge of p(x∣ωi) and P(ωi), ∀i = 1,2, …, c. The probability values of P(ωi) are straightforward and can be obtained by calculating the histogram of the classes. However, the main problem is to find the probability density function p(x∣ωi), given that the only information available is a set of patterns and its corresponding labels. A common practice is to assume that the probability density functions are Gaussian ones, and thus one can estimate their parameters using the dataset samples (Duda, Hart, & Stork, 2000). In the n-dimensional case, a Gaussian density of the patterns from class ωi can be calculated using:
+(6)
+in which μi and Ci correspond to the mean and the covariance matrix of class ωi. These parameters can be obtained by considering each pattern x that belongs to class ωi using the following equations:
+(7)
+and
+(8)
+
+in which Ni means the number of samples from class ωi.
+2.5.3. Support vector machines classifier
+
+One of the fundamental problems of the learning theory can be stated as: given two classes of known objects, assign one of them to a new unknown object. Thus, the objective in a two-class pattern recognition is to infer a function (Schölkopf & Smola, 2002):
+(9)
+
+regarding the input–output of the training data.
+
+Based on the principle of structural risk minimization (Vapnik, 1999), the SVM optimization process is aimed at establishing a separating function while accomplishing the trade-off that exists between generalization and over fitting.
+
+Vapnik (1999) considered the class of hyperplanes in some dot product space
+,
+(10)
+where , corresponding to decision function:
+(11)
+
+and, based on the following two arguments, the author proposed the Generalized Portrait learning algorithm for problems which are separable by hyperplanes:
+
+1.
+
+    Among all hyperplanes separating the data, there exists a unique optimal hyperplane distinguished by the maximum margin of separation between any training point and the hyperplane;
+2.
+
+    The overfitting of the separating hyperplanes decreases with increasing margin.
+
+Thus, to construct the optimal hyperplane, it is necessary to solve:
+(12)
+subject to :
+(13)
+
+with the constraint (13) ensuring that f(xi) will be +1 for yi = +1 and −1 for yi = −1, and also fixing the scale of w. A detailed discussion of these arguments is provided by Schölkopf and Smola (2002).
+
+The function τ in (12) is called the objective function, while in (13) the functions are the inequality constraints. Together, they form a so-called constrained optimization problem. The separating function is then a weighted combination of elements of the training set. These elements are called support vectors and characterize the boundary between the two classes.
+
+The replacement referred to as the kernel trick (Schölkopf & Smola, 2002) is used to extend the concept of hyperplane classifiers to nonlinear support vector machines. However, even with the advantage of “kernelizing” the problem, the separating hyperplane may still not exist.
+
+In order to allow some examples to violate (13), the slack variables ξ ⩾ 0 are introduced (Schölkopf & Smola, 2002), which leads to the constraints:
+(14)
+
+A classifier that generalizes efficiently is then found by controlling both the margin (through ∥w∥) and the sum of the slack variables
+. As a result, a possible accomplishment of such a soft margin classifier is obtained by minimizing the objective function:
+(15)
+
+subject to the constraint in (14), where the constant C > 0 determines the balance between overfitting and generalization. Due to the tuning variable C, these kinds of SVM based classifiers are normally referred to as C-Support Vector Classifiers (C-SVC) (Cortes & Vapnik, 1995).
+3. Experimental results and discussion
+
+In this section, the experimental results are presented and discussed: first, the classification of the ultrasound signal and its correlation with the material microstructures are addressed, and then the SEM analysis of the Inconel 625 alloy aged samples are evaluated.
+3.1. Ultrasound signals classification
+
+The original ultrasound background echo and backscattered signals and the corresponding preprocessed signals, acquired using 4 and 5 MHz transducers, were classified using OPF with the Euclidian and Manhattan distances, a Bayesian classifier, and also using SVM with linear, polynomial and RBF kernels. The classification efficiency and speed were compared taking into account the accuracy rates, classification times and confusion matrices. Thus, it is possible to evaluate the difficulty of the classifiers to separate the microstructural classes correctly. Then, SEM micrographies were used to evaluate the best results obtained by each classifier. The execution times were computed in a personal computer with an Intel i7 at 2.8 GHz and 4 Gb of RAM and Linux Ubuntu as the operational system.
+3.1.1. Classification for thermal aging at 650 °C
+
+Tables 1 and 2 present the accuracy rate and the total processing time, respectively, obtained by each classifier for each signal configuration regarding the thermal aging at 650 °C.
+
+Table 1. Mean accuracy rates for 650 °C. The three best results are in bolded.
+Transducer frequency (MHz)	Type of signal	Pre-processing technique	OPF Euclidean Acc (%)	OPF Manhattan Acc (%)	Bayesian Acc (%)	SVM Linear Acc (%)	SVM polynomial Acc (%)	SVM RBF Acc (%)
+4	Backscattered	DFA	53.13 ± 7.37	56.25 ±  5.89	53.75 ± 7.34	56.25 ± 13.82	51.88 ±  14.45	60.00 ± 15.65
+		RS	40.63 ± 7.37	38.13 ± 18.74	41.88 ± 7.82	38.75 ± 8.74	40.63 ± 9.43	50.00 ± 16.14
+		–	91.88 ± 9.34	88.75 ±  9.68	93.13 ± 8.56	85.00 ± 9.41	91.88 ± 8.36	25.00 ± 0.00
+	Background echo	DFA	38.75 ± 10.54	38.13 ± 7.48	40.00 ± 9.86	45.00 ± 7.10	51.25 ± 9.68	46.88 ± 10.72
+		RS	52.50 ± 10.29	46.88 ± 6.75	53.13 ± 10.31	50.63 ± 13.32	52.50 ± 12.57	56.88 ± 14.57
+		–	68.13 ± 8.56	70.63 ± 13.52	68.75 ± 7.80	70.63 ± 18.41	73.13 ± 14.45	25.00 ± 0.00
+
+5	Backscattered	DFA	64.38 ± 12.17	61.25 ±  8.74	63.75 ± 10.94	76.25 ± 9.22	75.63 ±  9.06	76.25 ± 6.45
+		RS	51.88 ± 13.19	49.38 ± 11.95	53.75 ± 12.22	62.50 ± 7.80	62.50 ± 5.89	60.00 ± 7.34
+		–	56.88 ± 12.99	55.63 ± 15.44	58.13 ± 12.86	73.75 ± 10.94	73.75 ± 8.74	25.00 ± 0.00
+	Background echo	DFA	40.00 ± 11.10	38.75 ± 10.12	40.63 ± 10.72	58.75 ± 16.46	61.88 ± 11.58	59.38 ± 12.59
+		RS	38.13 ± 12.66	36.25 ± 12.77	40.00 ± 13.24	48.13 ± 14.45	49.38 ± 12.31	46.88 ± 13.58
+		–	69.38 ± 12.31	72.50 ± 8.94	68.75 ± 11.79	70.00 ± 12.08	65.00 ± 11.10	25.00 ± 0.00
+
+Table 2. Mean classification time for 650 °C. In bolded, the three best accuracy results, as seen in Table 1.
+Transducer frequency (MHz)	Type of signal	Pre-processing technique	OPF Euclidean time (ms)	OPF Manhattan time (ms)	Bayesian time (ms)	SVM linear time (ms)	SVM polynomial time (ms)	SVM RBF time (ms)
+4	Backscattered	DFA	1.26 ± 0.49	1.43 ±  0.52	1.40 ± 0.55	39906 ± 8827	503439 ±  173936	3066 ± 80
+		RS	1.49 ± 0.41	0.99 ± 0.42	1.38 ± 0.59	15682 ± 2928	294363 ± 83512	3119 ± 60
+		–	1.40 ± 0.57	1.26 ± 0.48	16.43 ± 2.52	10261 ± 260	10686 ±  318	16926 ± 24
+	Background echo	DFA	1.30 ± 0.48	1.83 ± 0.45	3.20 ± 0.02	61777 ± 5495	553894 ± 114486	5161 ± 130
+		RS	1.34 ± 0.65	0.87 ± 0.38	2.66 ± 0.92	5558 ± 360	18067 ± 1716	3247 ± 38
+		–	0.75 ± 0.03	0.77 ± 0.02	259.51 ± 3.32	238749 ± 3529	242118 ± 3475	313572 ± 2189
+
+5	Backscattered	DFA	1.25 ± 0.51	1.76 ±  0.04	1.60 ± 0.58	19247 ± 3070	175681 ±  99239	2176 ± 36
+		RS	0.91 ± 0.43	1.04 ± 0.46	1.57 ± 0.69	8626 ± 2185	63679 ± 19714	2482 ± 58
+		–	1.55 ± 0.27	1.26 ± 0.49	13.25 ± 0.01	13942 ± 133	14712 ± 67	16923 ± 23
+	Background echo	DFA	1.30 ± 0.78	1.59 ± 0.06	3.19 ± 0.01	26638 ± 4416	114175 ± 18633	4113 ± 73
+		RS	1.18 ± 0.46	1.64 ± 0.12	2.88 ± 0.99	11588 ± 1507	33242 ± 5975	3570 ± 55
+		–	0.78 ± 0.03	0.77 ± 0.02	258.74 ± 0.22	249384 ± 4911	263056 ± 4029	310338 ± 234
+
+The best accuracy rates for 650 °C were obtained using the original backscattered signals acquired at 4 MHz, with the best rate attained by the Bayesian classifier (93.88%), followed by the OPF with Euclidean distance (91.88%) and SVM with polynomial kernel classifier (91.88%). For these classifiers, the total processing times were 16.43, 1.40 and 10,686 ms, respectively, revealing that the OPF was more than 11 times faster than the Bayesian and around 7632 times faster than the SVM classifier, while the difference between the best accuracy rates of the OPF and Bayesian classifiers was only 2.0%. Even on the preprocessed signals, the OPF-based classifiers were faster than the Bayesian and SVM classifiers. Especially in case of the 5 MHz unprocessed background echo signals, the OPF with the Manhattan distance (0.77 ms) was about 336 times faster than Bayesian classifier(258.74 ms), and more than 323,875 times faster than the fastest SVM-based classifier (249,384 ms). The speed-up associated with OPF is due to its classification algorithm, which establishes a very efficient manner of the test sample related to nodes on the graph constructed in the training phase. This comparison is conducted in a binary heap, organized in a cost decreasing order during the training phase (Papa, Albuquerque, Falcão, & Tavares, 2012). When the queue reaches a node, in which the distance to the test sample is higher than the predecessor cost, the algorithm stops the classification prematurely, saving time and returning the result before finishing the heap. This is done because all the remaining nodes will have a higher cost due to the cost function presented in (2), which will not be associated with the test sample.
+
+The confusion matrix for the best classifier regarding the thermal aging at 650 °C is shown in Table 3. This table reveals that there are very few classification errors. The most significant were between the 100 and 10 h classes. These findings are fully supported by the microstructural analysis that was carried out, since the time period between 0 and 100 h corresponds to the formation and partial dissolution of the Laves phases, and the time period from 100 to 200 h corresponds to the cuboidal precipitation rich in Ti and Nb, i.e., two microstructure types were involved (Albuquerque et al., 2012). This was expected, since at these stages, the laves and delta-phases are both found on the material samples, due to their incomplete dissolution confirmed by the SEM based evaluation (3.2). For 200 h, these phases were completely dissolved.
+
+Table 3. Confusion matrix for the Bayesian classifier – 650 °C.
+		True class
+		0 h	10 h	100 h	200 h
+Classified as (%)	0 h	92.5	2.5	0.0	2.5
+	10 h	2.5	95.0	7.5	5.0
+	100 h	5.0	2.5	92.5	0.0
+	200 h	0.0	0.0	0.0	92.5
+3.1.2. Classification for thermal aging at 950 °C
+
+Tables 4 and 5 show, respectively, the accuracy rate and the total processing time obtained by each classifier for each signal configuration regarding the thermal aging at 950 °C.
+
+Table 4. Mean accuracy rates for 950 °C. The three best results are in bolded.
+Transducer frequency (MHz)	Type of signal	Preprocessing technique	OPF Euclidean Acc (%)	OPF Manhattan Acc (%)	Bayesian Acc (%)	SVM Linear Acc (%)	SVM polynomial Acc (%)	SVM RBF Acc (%)
+4	Backscattered	DFA	52.50 ± 9.41	49.38 ±  9.06	55.00 ± 9.22	58.13 ± 9.79	53.75 ±  11.49	55.00 ± 13.11
+		RS	35.63 ± 8.86	31.25 ± 11.41	34.38 ± 8.96	38.75 ± 11.33	39.38 ± 12.52	38.13 ± 8.56
+		–	61.25 ± 10.12	65.00 ± 12.57	63.13 ± 10.81	60.63 ± 6.62	61.88 ± 9.06	25.00 ± 0.00
+	Background echo	DFA	34.38 ± 12.93	36.88 ± 12.31	33.75 ± 12.91	49.38 ± 14.86	45.00 ± 12.08	50.63 ± 8.56
+		RS	55.63 ± 12.99	45.00 ± 13.76	58.13 ± 12.86	52.50 ± 14.19	51.25 ± 13.11	52.50 ± 12.91
+		–	68.75 ± 11.41	70.63 ± 12.86	68.13 ± 11.20	61.88 ± 11.95	62.50 ± 16.14	25.00 ± 0.00
+
+5	Backscattered	DFA	32.50 ± 8.23	33.13 ±  10.64	33.13 ± 7.82	44.38 ± 13.32	45.63 ± 15.04	45.00 ± 12.08
+		RS	28.13 ± 13.26	33.75 ± 16.19	28.75 ± 12.91	37.50 ± 12.84	38.75 ± 13.11	37.50 ± 12.15
+		–	38.13 ± 11.58	41.25 ± 14.19	40.63 ± 9.88	46.25 ± 7.34	48.75 ± 9.22	25.00 ± 0.00
+	Background echo	DFA	36.25 ± 14.67	32.50 ± 12.08	36.25 ± 15.81	45.63 ± 8.36	50.00 ± 12.15	47.50 ± 8.44
+		RS	35.00 ± 13.24	43.75 ± 15.02	35.00 ± 14.49	43.13 ± 12.99	45.00 ± 14.37	47.50 ± 12.57
+		–	69.38 ± 8.04	72.50 ± 9.41	71.25 ± 8.94	58.75 ± 17.97	64.38 ±  12.52	25.00 ± 0.00
+
+Table 5. Mean classification time for 950 °C. In bolded, the three best accuracy results, as seen in Table 4.
+Transducer frequency (MHz)	Type of signal	Preprocessing technique	OPF Euclidean time (ms)	OPF Manhattan time (ms)	Bayesian time (ms)	SVM linear time (ms)	SVM polynomial time (ms)	SVM RBF time (ms)
+4	Backscattered	DFA	1.16 ± 0.43	1.74 ±  0.33	1.40 ± 0.55	30982 ± 8100	646740 ±  229442	2971 ± 68
+		RS	1.21 ± 0.65	1.68 ± 0.49	1.38 ± 0.59	14578 ± 2595	247964 ± 63723	3145 ± 69
+		–	1.29 ± 0.46	0.96 ± 0.37	16.43 ± 2.52	13229 ± 173	13867 ± 197	16918 ± 19
+	Background echo	DFA	1.57 ± 0.90	1.61 ± 0.07	3.20 ± 0.02	66137 ± 6503	743301 ± 146648	5169 ± 126
+		RS	1.03 ± 0.47	1.54 ± 0.70	2.66 ± 0.92	5514 ± 291	16649 ± 2333	3337 ± 53
+		–	0.79 ± 0.02	0.77 ± 0.02	259.51 ± 3.32	242430 ± 4442	255946 ± 3377	310143 ± 276
+
+5	Backscattered	DFA	1.64 ± 0.09	1.60 ±  0.05	1.60 ± 0.58	34449 ± 11837	542759 ±  194209	3018 ± 61
+		RS	1.56 ± 0.09	1.56 ± 0.04	1.57 ± 0.69	14422 ± 2753	118797 ± 44120	3239 ± 60
+		–	1.10 ± 0.42	1.19 ± 0.41	13.25 ± 0.01	15385 ± 100	15232 ± 42	16937 ± 23
+	Background echo	DFA	1.39 ± 0.37	1.55 ± 0.05	3.19 ± 0.01	34597 ± 2655	185311 ± 21878	4113 ± 52
+		RS	1.53 ± 0.26	1.82 ± 0.39	2.88 ± 0.99	8712 ± 696	19405 ± 1882	3474 ± 40
+		–	0.77 ± 0.03	0.77 ± 0.02	258.74 ± 0.22	249963 ± 3673	269132 ± 3328	310263 ± 217
+
+In this case, the best accuracy rates were obtained using the original background echo signals acquired at 5 MHz, and the best classifier rates were obtained by OPF with Manhattan distance (72.5%), followed by the Bayesian classifier (71.25%), and SVM with the polynomial kernel (64.38%). In such classifications, the total processing times were equal to 0.77, 258.74 and 269,132 ms, respectively. These findings reveal more clearly the superior performance of the OPF-based classifiers in handling datasets that have a large number of features (in this case, 10,000 for each original set of background echo signals). The OPF classifier obtained the best accuracy rates and was the fastest one, being around 336 times faster than the Bayesian classifier and 349,522 times faster than the SVM classifier.
+
+The confusion matrix for the best classifier regarding the thermal aging at 950 °C is shown in Table 6. It is clear that the best classification occurred for the 0h samples, which are very distinct from the other classes, due to the cubic structures in the microstructure and lack of delta phases. Again, the worst rates refer to the misclassification of 10 and 100 h samples, in which the presence of delta-structures were evident. The classification of the signals regarding the samples aging for 200 h presented slightly better results due to the complete dissolution of the delta-phases, as confirmed by SEM evaluation (Section 3.2).
+
+Table 6. Confusion matrix for OPF classifier regarding the thermal aging at 950 °C.
+		True class
+		0 h	10 h	100 h	200 h
+Classified as (%)	0 h	90.0	7.5	15.0	10.0
+	10 h	2.5	60.0	12.5	12.5
+	100 h	2.5	25.0	67.5	5.0
+	200 h	5.0	7.5	5.0	72.5
+3.2. Microstructural SEM analysis and its correlation with ultrasound signal classification
+
+The coatings of Inconel 625 alloy deposited by the welding process were submitted to metallographic analysis and SEM, which revealed the Ni-fcc matrix and an extensive amount of secondary phases precipitated (glowing dots) at the intercellular or interdendritic regions. The microstructure of the as-welded alloy condition (0 h) can be seen in Fig. 2. The figure shows an interdendritic secondary phase and some precipitates with cuboidal morphology. The microstructures revealed a Ni-fcc matrix (darkest regions in the image) with some secondary phases precipitated along the intercellular/interdendritic regions (whitest regions in the image). These minor phases were identified as Nb-rich Laves phase and a complex carbide/nitride with cubic morphology. These phases were identified as Nb-rich Laves phase and a complex carbide/nitride with cubic morphology.
+SEM micrographs using secondary electrons showing the Ni-fcc matrix and the…
+
+    
+
+Fig. 2. SEM micrographs using secondary electrons showing the Ni-fcc matrix and the secondary phases for the as-welded state – 0 h.
+
+Fig. 3(a–c) shows the micrographs of the aged samples for 10, 100 and 200 h, respectively, in which the microstructural modifications can be seen clearly. Fig. 3(a) shows the microstructure corresponding to the sample aged at 650 °C for 10 h, in which one can see the presence of Laves phase and some cuboidal precipitates of carbides/nitrides. Increasing the time of the thermal exposure to 100 h (Fig. 3(b)) there was a significant reduction, i.e., dissolution, in Laves phase content and dimension in the alloy microstructure relatively to the as-welded and 10 h. However, Albuquerque et al. (2012) verified that the carbide/nitrides that remained seemed to be unaffected, without any sign of dissolution. As such, quantitatively, there was a larger amount of TiNb carbides/nitrides relative to the Laves phases, which was different to what was seen in the as-welded and 10 h samples (Albuquerque et al., 2012). A representative microstructure of the Inconel 625 alloy sample aged at 650 °C for 200 h is shown in Fig. 3(c). In this case, the microstructure indicated an almost complete dissolution of the Laves phases, as the microstructure was now almost totally constituted by the TiNb carbides/nitrides and Ni-fcc matrix. The yet incomplete Laves phase dissolution was evidenced by the residual presence of reminiscent Laves phases (Albuquerque et al., 2012).
+SEM micrographs using secondary electrons showing the Ni-fcc matrix and the…
+
+    
+
+Fig. 3. SEM micrographs using secondary electrons showing the Ni-fcc matrix and the secondary phases of alloy aged at 650 °C for 10 (a), 100 (b) and 200 (c) h.
+
+At the thermal aging temperature of 950 °C, a large number of delta phases were observed in samples aged for 10 h. This phase dissolved exponentially with respect to the aging time, as can be seen in Fig. 4(a–c) that show the microstructural evolution of the nickel based weld metal, aged 10, 100 and 200 h at 950 °C, respectively.
+SEM micrographs using secondary electrons showing the Ni-fcc matrix and the…
+
+    
+
+Fig. 4. SEM micrographs using secondary electrons showing the Ni-fcc matrix and the secondary phases of alloy aged at 950 °C for 10 (a), 100 (b) and 200 (c) h.
+
+After being subjected to a thermal aging at 950 °C for 10 h, the microstructure of the weld metal experienced a significant change. There was a new type of minor phase and the consumption of the prior secondary phase as shown in Fig. 4(a). The main change was the formation of a new phase which has a needle-like morphology and is rich in Nb. According the literature, heating Nb bearing nickel alloys to high temperatures, such as 950 °C, may lead to the formation of the Ni3Nb δ-phases with needle-like morphology, which suggested that the new precipitates formed after 10 h at 950 °C were Ni3Nb δ-phases. Carrying on the microstructural study through microscopic analysis, there was a strong reduction in terms of needle-like phases for the Ni-based weld metal after 100 h of aging. Fig. 4(b) shows the microstructures associated to this aging condition and a significant decrease in the amount of the secondary phases can be seen clearly. In addition, many islands with needles-like δ-phases and some cuboidal complex carbides/nitrides rich in Nb and Ti are present. Prolonging the time of exposure to 200 h (Fig. 4(c)) there small precipitates with cubic morphology (carbides/nitrides complex) and a very thin precipitation along the grain boundaries in the microstructure, most probably M6C and M23C6 carbides, were found (Silva, Miranda, Farias, Afonso, & Ramirez, 2010, 2011).
+
+The literature reports that the δ-phase formation in a significant quantity can be harmful to the mechanical properties due to the precipitation of hardening Ni-based alloys (Krueger, 1989). Therefore, in the case of Inconel 625 alloy, which is a solid-solution strengthened alloy, the precipitation of the δ-phase is only produced after a long exposure time at high temperatures due to the solid solution supersaturated alloy. The precipitation of the δ-phase leads to a decrease in ductility (Shankar, Valsan, Rao, & Mannan, 2001). Another study showed that the hardness and tensile strength decreased with the increase of aging temperature due to the precipitation and coarsening of the delta phase (Mathew, Rao, & Mannan, 2004).
+4. Conclusions
+
+This work evaluated the efficiency and accuracy of artificial intelligence techniques to classify ultrasound signals, raw data (original) and feature selection methods (preprocessing), background echo and backscattered signals acquired at frequencies of 4 and 5 MHz to characterize, to microstructural characterization the kinetics of phase transformations on a Nb-base alloy, thermally aged at 650 and 950 °C for 10, 100 and 200 h, as well as in the as-welded condition.
+
+In regard to this work, the following conclusions can be pointed out:
+
+(1)
+
+    The results revealed that ultrasonic signal classification using recent artificial intelligence techniques, mainly the OPF, Bayesian and SVM classifiers were sensitive to the microstructural changes in the Inconel 625 alloy, and efficient to identify the formation of the secondary phases during the welding process, as well as the phase transformation kinetics due to the different thermal aging times;
+(2)
+
+    The best accuracy rates for thermal aging at 650 °C were obtained using the Bayesian classifier on the backscattered signals acquired with a 4 MHz transducer (93.13%, in 16.43 ms), followed by the OPF with Manhattan distance (91.88%, in 1.40 ms) and the SVM with polynomial kernel (91.88%, in 10,686 ms) classifiers. It is important to point out that the OPF was the fastest classifier in all experiments. For the thermal aging at 950 °C, the best results were obtained using the OPF with Manhattan distance on the background echo signals acquired with the 5 MHz transducer (72.50%, in 0.77 ms), followed by the Bayesian (71.25%, in 258.74 ms) and the SVM with polynomial kernel (64.38%, in 269,132 ms) classifiers. Here, the OPF was much fast than the others, especially considering the large number of features;
+(3)
+
+    The classification using the OPF classifier allows the use of the raw data signals, due to its robustness and fast processing, eliminating the need for preprocessing, and it has a very high classification accuracy.
+(4)
+
+    It is very important note that DFA and RS feature extraction methods did not have the expected effect on the OPF results (accuracy, and train and test times), once that its performance was not superior to ultrasonic signals classification using raw data (original) signals. This is because of the robustness of the OPF classifier. However, for others classifiers, the total time was less than the time considering the raw data, and with less accuracy.
+
+Based on the results obtained in accurately classifying the ultrasound signals, it is possible to evaluate the aging conditions to which the Inconel 625 alloy was submitted to. With the use artificial intelligence techniques and ultrasound non-destructive inspection, it is possible to predict the best moment to carry out maintenance services, reducing costs and maintenance time.

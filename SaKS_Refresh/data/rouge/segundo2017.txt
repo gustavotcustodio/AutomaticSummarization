@@ -1,0 +1,329 @@
+Newborn screening plans are a routine for newborn care. We present a fuzzy inference system to support newborn screening. It screens for 46 inborn errors of metabolism and takes as input up to 42 analytes. It has been tested with two different types of samples from three distinct sources. High accuracy on diagnosis is obtained in 98.7% less time than laboratory personnel.
+
+0.147854 - This paper presents a decision support system (DSS) called DSScreening to rapidly detect inborn errors of metabolism (IEMs) in newborn screening (NS).
+0.063585 - The system has been created using the Aide-DS framework, which uses techniques imported from model-driven software engineering (MDSE) and soft computing, and it is available through eGuider, a web portal for the enactment of computerised clinical practice guidelines and protocols.
+0.044990 - MDSE provides the context and techniques to build new software artefacts based on models which conform to a specific metamodel.
+0.061657 - It also offers separation of concern, to disassociate medical from technological knowledge, thus allowing changes in one domain without affecting the other.
+0.051002 - The changes might include, for instance, the addition of new disorders to the DSS or new measures to the computation related to a disorder.
+0.040100 - Artificial intelligence and soft computing provide fuzzy logic to manage uncertainty and ambiguous situations.
+0.074790 - Fuzzy logic is embedded in an inference system to build a fuzzy inference system (FIS); specifically, a single-input rule modules connected zero-order Takagi-Sugeno FIS.
+0.029144 - The automatic creation of FISs is performed by the Aide-DS framework, which is capable of embedding the generated FISs in computerized clinical guidelines.
+0.067797 - It can also create a desktop application to execute the FIS.
+0.057803 - Technologically, it supports the addition of new target languages for the desktop applications and the inclusion of new ways of acquiring data.
+0.059894 - DSScreening has been tested by comparing its predictions with the results of 152 real analyses from two groups: (1) NS samples and (2) clinical samples belonging to individuals of all ages with symptoms that do not necessarily correspond to an IEM.
+0.069797 - The system has reduced the time needed by 98.7% when compared to the interpretation time spent by laboratory professionals.
+0.094928 - Besides, it has correctly classified 100% of the NS samples and obtained an accuracy of 70% for samples belonging to individuals with clinical symptoms.
+0.084112 - Newborn screening (NS) is used to describe various tests that are done during the first few hours of the life of a newborn and, when properly timed and performed, have the potential for preventing severe health problems, including death (Therrell et al., 2015).
+0.094813 - Actually NS is intended to detect inborn errors of metabolism (IEMs) that can cause the sudden death of the newborn if they are not treated in time.
+0.025840 - On the contrary, if they are handled promptly, child mortality and morbidity are reduced (Hoffmann et al., 1996; Jones & Bennett, 2002; Sander et al., 2003), and the quality of life of infants and parents improves (Waisbren et al., 2003).
+0.049383 - NS is not a diagnosis procedure but a way of discarding a high percentage of the population minimizing the number of false-negatives (due to a low sensitivity) and false-positives (due to a low specificity).
+0.037296 - Therefore, a positive result does not imply that the newborn will necessarily develop the corresponding disease.
+0.034826 - Whenever a positive is detected, supplementary diagnostic procedures are performed (either clinical, biochemical, or genetic) in order to definitively confirm the preliminary result and, in that case, treat the subject (Calderón López, Jiménez Parrilla, & Losada Martínez, 2008).
+0.045045 - NS was first applied for the detection of Phenylketonuria (PKU) in the early sixties (Guthrie & Susie, 1963).
+0.059849 - Since then, this test has become part of the routine for newborn care and new techniques have been added to perform the procedure, for instance, enzyme-linked immunosorbent assay (Lequin, 2005), immunofluorescence (Fritschy & Härtig, 2001), and genetic testing or tandem mass spectrometry (MS/MS) (Millington, Kodo, Norwood, & Roe, 1990).
+0.032520 - The medical outcome of NS practice is clear (Wilcken et al., 2009).
+0.018215 - According to (Wilcken, Rinaldo, & Matern, 2012), NS can detect over 50 IEMs, including disorders related to amino acids, fatty acid oxidation, and organic acids.
+0.047619 - However, not all disorders are always screened.
+0.057971 - Indeed, the set of IEMs included in the NS panels varies from country to country.
+0.044796 - The reasons for excluding an IEM may be different, such as particular national policies, ethical issues (Loeber et al., 2012); laboratory response times (Bodamer, Hoffmann, & Lindner, 2007); or the cost effectiveness of the test (Cipriano, Rupar, & Zaric, 2007).
+0.000000 - Wilcken et al.
+0.053812 - (2012) state that screening programs are measured in terms of how they improve specificity (reducing the ratio of false-positives) without having a negative impact on sensitivity (the ratio of false-negatives).
+0.032634 - The response time is also critical, since some tests are discarded when they are too slow.
+0.035088 - The response time includes the time needed to perform the sample analysis using MS/MS equipment plus the time needed by laboratory professionals to evaluate the results and to create the corresponding report.
+0.109375 - NS is usually performed to a batch of blood samples to be screened.
+0.051002 - Some control samples with known substances are inserted regularly with the aim of assuring calibration standards and also for quality reasons (Li & Tse, 2010).
+0.036430 - Once the results have been gathered, they are analysed manually by comparing the measures and several computed ratios to their established cut-off values.
+0.020450 - Determining whether all values are in their normality ranges is generally done by importing the data into Excel-like spreadsheets.
+0.070922 - Any change on the procedure, such as the inclusion of a new IEM to be screened, requires analysts to transfer their knowledge into that spreadsheet.
+0.060150 - It would also be problematic if there were a test that should be removed.
+0.040073 - Rather than erasing some measures or calculations (i.e., columns), analysts usually prefer not using them, as they could be used for another test.
+0.067633 - Even with the help of some kind of software, NS is a time-consuming task.
+0.046243 - Thus, the development of artefacts such as decision support systems (DSSs) seems adequate because they can help laboratory professionals in their decisions.
+0.048930 - Moreover, it is highly advisable that these systems act as white box classification systems, which means that they do not only give a result, but also an explanation of their decisions.
+0.023810 - Moreover, the knowledge about the medical evidence is not exact, so some tolerance to imprecision, partial truth or uncertainty is needed.
+0.039755 - In this sense, soft computing techniques (Kecman, 2001), such as fuzzy logic, machine learning by neural networks or support vector machines, or evolutionary computation are especially adequate for the medical domain.
+0.109087 - A fuzzy inference system (FIS) could also be a way to cope with inaccuracy of medical knowledge.
+0.048930 - Using a FIS, values coming from NS are fuzzyfied into linguistic values that a health professional can understand, and then they are given a value of certainty to their absolute value.
+0.040541 - Then the reasoning process occurs, and finally the FIS returns a conclusion (or a list of them).
+0.041667 - FISs are able to give their conclusions even when gathered data is incomplete.
+0.038536 - They usually present quality of information (QoI) indexes (Lima, Novais, Costa, Bulas-Cruz, & Neves, 2010) to measure the reliability of the results.
+0.043896 - The weights of the rules in a FIS can be defined using data mining techniques (Gadaras & Mikhailov, 2009) or by experts based on their experience and evidence from bibliography (Alayón, Robertson, Warfield, & Ruiz-Alzola, 2007).
+0.043573 - The former method is accuracy-oriented and the results obtained using it may lose interpretability (Zhou & Gan, 2008).
+0.016878 - The latter is more interpretable, but good prediction ability cannot always be guaranteed (Garibaldi, Zhou, Wang, John, & Ellis, 2012).
+0.081560 - Besides, a considerable effort is usually required in order for it to be changed or updated, because it integrates the medical knowledge with programming skills.
+0.038647 - This paper presents DSScreening, an extendable DSS that uses a FIS as a core element.
+0.000000 - This FIS was created using the generative framework Aide-DS (Segundo et al., 2015).
+0.043573 - DSScreening is adaptable: the cut-off levels of the input variables and combinations of them can be changed.
+0.059621 - This is a way to accommodate to variations on the population measured.
+0.058559 - Each analyte (and its related ratios) has three linguistic values associated with it: Low, Normal and High.
+0.000000 - Their default cut-off levels (i.e.
+0.039683 - the absolute measures that define every linguistic value) have been defined, and the user is able to modify them if needed.
+0.027027 - Experts in the area have defined the weights assigned to the rules according to evidence in literature.
+0.065681 - The system is focused on helping to interpret the results of a MS/MS analysis by looking at the concentration of the relevant analytes for each IEM pattern.
+0.065937 - It is configured to display the most likely disorders (those with a probability equal to or higher than 50%) according to the measured values (if any) and explains why that conclusion has been reached.
+0.054398 - Thanks to the separation of concerns (Ossher & Tarr, 2001) that model-driven software engineering (MDSE) provides, professionals can readjust DSScreening features, such as adding new disorders to be screened, substituting a test with a new one, or adjusting values to new medical evidence (that is, changing default values, adding new analytes to be taken into account or removing some of them).
+0.045257 - Indeed, regeneration can also be performed to adapt the system to technological changes without modifying the knowledge that models it.
+0.035665 - Thus, actions such as adding new sources of data (e.g., reading data provided by a new MS/MS device) or executing the DSS in another software platform can be carried out without much more effort.
+0.049383 - The remainder of this paper is organized as follows.
+0.035412 - Section 2 will present research on the areas covered by this paper; Section 3 will provide specific information about the design and development of the implemented solution: the methods, how they collaborate to build DSScreening, and the samples used to measure its performance; Section 4 will present the results obtained for the samples presented in Section 3; Section 5 will discuss these results; and finally, Section 6 will state the conclusions of this work.
+0.046414 - There is some evidence in literature about the use of DSSs for helping diagnose IEMs using soft computing techniques.
+0.030303 - For instance, Chen et al.
+0.085921 - (2013) present a framework based on machine learning classification as a tool to predict 3 different IEMs, taking the values of 35 analytes as input, in a web-based NS system.
+0.057854 - The framework contains a support vector machine as a decision model, which is a high-accuracy black-box classification system (i.e., it provides accurate results but without explanations).
+0.000000 - Marquardt et al.
+0.079605 - (2012) present a tool for matching input analyte measures with historical record values for specific disorders.
+0.087146 - It is the result of a worldwide initiative for standardising and improving NS based on multivariate pattern-recognition.
+0.054054 - In this system, users have to select the input analytes and the IEM they want to check.
+0.043818 - The system will automatically convert the input profile into a composite score that is determined by the overlap between a healthy population and the ranges related to the target IEM.
+0.047101 - DSSs including FISs have been widely used for general screening purposes, such as short listing the most suitable candidates in the recruitment of a technical assistant in an industrial organization (Balas-Timar & Ignat, 2015), project portfolio selection (Khalili-Damghani, Sadi-Nezhad, Lotfi, & Tavana, 2013), and web-based house selection oriented to homebuyers using online real estate agents (Ho, Chang, & Ku, 2015).
+0.072072 - Using DSSs with embedded FIS for diagnosis and prevention in many fields of medicine is also frequent.
+0.017403 - For example, (Mahmoodabadi, Alirezaie, Babyn, Kassner, & Widjaja, 2010) categorise pediatric metabolic brain diseases; (Esposito, De Falco, & De Pietro, 2011) assess the health status of patients with multiple sclerosis; (Czabanski, Jezewski, Matonia, & Jezewski, 2012) test the fetal state using heart rate signals; (Samuel, Omisore, & Ojokoh, 2013) diagnose typhoid fever; (de Brito et al., 2013) identify risk for body dysmorphic disorder; (Bárdossy et al., 2014) classify cardiac tachyarrhythmia by analysing electrocardiograms; (Chourasia, Tiwari, & Gangopadhyay, 2014, Pal, Mandana, Pal, Sarkar, & Chakraborty, 2012), and (Sanz et al., 2014) diagnose coronary heart disease; (Lai, Leung, Ling, & Nguyen, 2013) detect low blood glucose episodes; (Nguyen, Khosravi, Creighton, & Nahavandi, 2015) diagnose breast cancer, and so on.
+0.043573 - In the present work we have used techniques from disciplines such as MDSE, soft computing and artificial intelligence.
+0.000000 - Section 3.1 describes them.
+0.017699 - In Section 3.2, the automatically constructed DSS is described.
+0.046620 - MDSE techniques require metamodels and models to be defined, and Section 3.3 focuses on them.
+0.046875 - Then, Section 3.4 is devoted to the tests that have been performed.
+0.048110 - Material and methods MDSE is a promising approach to address platform complexity by developing technologies that combine domain specific modelling languages and transformation engines and generators that analyse certain aspects of models and then synthesize various types of artefacts, such as source code, simulation inputs, XML deployment descriptions, or alternative model representations (Schmidt, 2006).
+0.067511 - Metamodels express declaratively (rather than imperatively) the essential characteristics of a system and help separate different kinds of knowledge.
+0.041854 - They formalise the structure of a domain, acting as the basis for any attempt at automation and encompassing the abstract syntax and the static semantics (Stahl, Völter, Bettin, Haase, & Helsen, 2006).
+0.046243 - Thus, every model is an instance of a metamodel, allowing the use of specific languages that are focused on one particular domain.
+0.032720 - These techniques have an impact on productivity, portability, interoperability, documentation, quality of the results, and reusability (Kleppe, Warmer, & Bast, 2003).
+0.057239 - To cope with the amount of analytes, which are sometimes complex, gathered from MS/MS, laboratory professionals often use software tools to understand the amount of data.
+0.046639 - For example, Mass++ (Tanaka et al., 2014) is an open source tool for visualization and analysis of mass spectrometry data, and OpenChrom (Wenig & Odermatt, 2010) is a cross-platform software for the analysis of chromatographic data.
+0.020833 - Soft computing techniques have a processing capability handling life ambiguous situations (Yardimci, 2009).
+0.027027 - As the medical knowledge is inherently uncertain, soft computing techniques have been widely used is this field.
+0.047138 - Specifically, FISs are extensively used in medical diagnosis due to their ability to model both the uncertainty of diagnoses and the imprecision of symptoms (Khatibi & Montazer, 2010).
+0.037559 - FISs are rule-based classification systems that use fuzzy logic (Jang, Sun, & Mizutani, 1997) and manage “if-then” rules to perform nonlinear mappings between an input and an output space.
+0.036697 - Because of the use of this kind of explicit rules, they usually have good interpretability (Gacto, Alcalá, & Herrera, 2011), which is also an important feature from a medical point of view.
+0.044905 - They have been applied in medicine to detect, for example, low blood glucose episodes (Lai et al., 2013) and coronary artery diseases (Pal et al., 2012).
+0.062802 - Aide-DS (Segundo et al., 2015) is a framework oriented to automatic construction of FIS.
+0.039683 - The only input is a model that is focused only on medical knowledge, that conforms a metamodel and represents a FIS.
+0.047930 - Thus, medical experts as well as specialized bibliography are the sources to outline the FIS to be built.
+0.025501 - Aide-DS applies MDSE techniques, such as model-to-model (M2M) and model-to-text (M2T) transformations (Sendall & Kozaczynski, 2003) to automatically generate FISs.
+0.059791 - Currently Aide-DS is able to automatically generate the source code in CLIPS/FuzzyCLIPS, JESS/FuzzyJESS and Matlab Script languages, which are de facto standards for the definition of rule-based systems.
+0.040404 - The result of the automatic generation performed by Aide-DS is a representation, expressed in one of these languages, of the FIS depicted in the aforementioned model.
+0.040900 - The FIS can be used into a desktop application on a PC, or embedded in a computerised clinical practice guideline.
+0.067511 - eGuider is a web-based portal for the enactment of computerised clinical guidelines and protocols (Pikatza et al., 2010).
+0.014572 - The FISs created by Aide-DS follow the approach known as single input rule modules connected zero-order Takagi-Sugeno (Yubazaki, Yi, & Hirota, 1997).
+0.056645 - Since FISs are rule-based classification systems that use fuzzy logic, they require a set of fuzzy rules.
+0.045908 - These rules follow the standard “antecedent, consequent” structure, for example, “if PHE is High, then PKU”, where PHE (Phenylalanine) is a fuzzy variable, High is a fuzzy linguistic value and PKU is a category.
+0.054264 - This example is taken from the context of NS, and it states that if the measure of the fuzzy variable (analyte) PHE lies in the fuzzy linguistic value High, then the category PKU (Phenylketonuria, an IEM) will be triggered.
+0.032720 - Instead of using numerical values, fuzzy logic characterizes each variable by linguistic expressions whose boundaries typically are not clearly defined.
+0.030864 - This allows uncertainty to exist during the inference process.
+0.046243 - Fuzzy logic helps to manage uncertainty by means of the membership functions (MFs), which assign probabilities to those situations that are unclear.
+0.067470 - In this context, for instance, when considering Phenylalanine as a fuzzy variable, three possible values have been established: Low, Normal, and High, whose MFs are depicted in Fig 1.
+0.059140 - According to that figure, a measure of 200 µmol/L is regarded as a high value with 100% certainty (since it is higher than 162), whereas having 60 µmol/L is considered normal (also with 100% certainty).
+0.051075 - However, a concentration of 148.5 µmol/L could be considered either normal (25%) or high (75%) depending on the circumstances (because it belongs to the [108, 162] interval, to which MFs do not assign 100% certainty).
+0.000000 - Fig 1.
+0.055556 - Example of trapezoidal MFs for the fuzzy variable PHE.
+0.027027 - Aide-DS manages trapezoidal MFs, which are frequently used due to their simplicity (Jang et al., 1997).
+0.028369 - Therefore, each MF is defined by 4 numerical values on the x axis: (1) the first point where the MF starts differing from 0% (24 for the Normal linguistic value in Fig 1); (2) the point where the MF reaches 100% (36 in Fig 1); (3) the point where it differs again from 100% (108 in Fig 1); and (4) the point where the MF reaches 0% again (162 in Fig 1).
+0.040936 - The inference process followed by the FIS created by Aide-DS begins with the calculation of the linguistic value related to each input numerical measure, as well as the corresponding degree of membership.
+0.063492 - For example, given that the input value for PHE is 148.5 µmol/L, then the corresponding linguistic values according to the MFs in Fig 1 are two: High with a membership degree of 75% and Normal with a membership of 25%.
+0.063670 - Next, each rule is assigned a truth-value that is equal to the degree of membership of the input value in its antecedent.
+0.053344 - Besides, consequents in this type of FISs follow a constant consequent function (CCF) that depends on the particular relationship between the fuzzy variable in the antecedent and the IEM in the consequent of the rule.
+0.038369 - Fig 2 shows a fragment of a particular case of DSScreening that considers 3 rules involving the input measures of 3 analytes (PHE, TYR (Tyrosine), and MET (Methionine)) plus 2 computed ratios (PHE/TYR (Phenylalanine-to-Tyrosine) and MET/PHE (Methionine-to-Phenylalanine)).
+0.046398 - Given that the input value for PHE (148.5 µmol/L) is High with a membership of 75%, for the first rule (i.e., If PHE is High then PKU) the presence of PKU is considered with a probability of 0.75.
+0.046620 - Similarly, the second and third rules compute a probability of 0.5 and 0.25, respectively.
+0.042693 - The first two rules have a CCF of 1, whereas the third rule has a CCF of −1, thus indicating that the actual input measure negatively affects PKU.
+0.051587 - Actually, MET/PHE usually has a Low value in cases presenting PKU, whereas PHE and PHE/TYR measures are always High.
+0.043478 - On the contrary, when PHE is Low, the existence of PKU can almost be discarded.
+0.039216 - Thus, for the rule “if PHE is Low then PKU”, the consequent is also assigned a negative CCF.
+0.033670 - Normal PHE values do not affect either positively or negatively PKU, so the rule “if PHE is Normal then PKU” is assigned a CCF equal to 0.
+0.051502 - Even when High values for both PHE and PHE/TYR have a positive influence on PKU (CCF = 1 in both cases), the former is usually more significant than the latter (McHugh et al., 2011).
+0.067460 - This is why they have been assigned different weights for PKU, as shown in the bottom left corner of Fig 2.
+0.018648 - The bottom right corner illustrates the weighted aggregation between the results of all consequents affecting PKU.
+0.050633 - The final result (0.82) represents the probability that the actual input measures correspond to a case of PKU.
+0.000000 - Fig 2.
+0.061728 - A fragment of the inference process followed by DSScreening.
+0.051587 - Finally, the probability for each IEM is calculated performing a weighted aggregation between the results of all consequents affecting that disorder.
+0.055138 - Weights represent the importance of the analytes that are related to the same IEM.
+0.056738 - They are expressed in the range [0, 1] and the sum of the weights for all the rules affecting a given IEM is always 1.
+0.058559 - When the probabilities of all categories are computed, the result is the category with a higher probability.
+0.009009 - If desired, the FIS can list the categories whose probability is above certain value (by default, 50%).
+0.051780 - Fig 3 shows a partial list of IEMs.
+0.000000 - Fig 3.
+0.049550 - Partial fragment of the results displayed by DSScreening that correspond to the input sample labelled Clinical_24.
+0.033755 - DSScreening DSScreening is an easily extendable DSS that uses a FIS created using Aide-DS as its core element.
+0.054181 - It is deployed in two ways: (1) as a standalone Java application (expected to be available soon as open source), or (2) embedded in a computerised clinical practice guideline, which is now available online through the eGuider Portal (http://www.e-guidesmed.ehu.es).
+0.044650 - DSScreening is adaptable: since the ranges that define the trapezoidal MFs for the fuzzy variables can change depending on the region where the NS is performed (which means that the concentration of a certain analyte can be considered to be Normal in one country, but High in another), the cut-off levels of the input variables and their ratios can be changed (see Fig 4) to manually tune or adapt to local population characteristics.
+0.059621 - This is a way to accommodate to variations on the population measured.
+0.042194 - Modified cut-off ranges are stored in a personalized file that can replace the default file at any time.
+0.048930 - Because the metamodel to which DSSscreening's FIS models conform allows to do so, it is also possible to define ranges of values depending on gender and age of the subject.
+0.067894 - However, since the system is intended to test 0–48 h samples, this option has been dismissed.
+0.000000 - Fig 4.
+0.028674 - Caption of the DSScreening user interface.
+0.055138 - Users are able to change normality values for every input variable or computed ratio.
+0.036036 - Each analyte and its related ratios have three linguistic values associated with them: Low, Normal and High.
+0.009662 - Although default cut-off levels have been defined, they can be modified by the user.
+0.065681 - The system is focused on helping to interpret the results of a MS/MS analysis by looking at the concentration of the relevant analytes for each IEM pattern.
+0.067317 - It is configured to show the most likely disorders (those with a probability equal to or higher than 50%, see Fig 3) according to the measured values (if any) and explains why that decision has been taken.
+0.026144 - Experts in the area have defined the weights assigned to the rules according to evidence in the literature.
+0.033755 - MDSE techniques have been used to add mechanisms to control the input data and arrange the cut-off ranges.
+0.055193 - Fig 5 shows a capture of the standalone version of DSScreening in which the main window shows an execution in progress whose input data has been loaded from a batch file.
+0.000000 - Fig 5.
+0.028674 - Caption of the DSScreening user interface.
+0.013605 - Users can set the input batch file.
+0.048309 - In addition, DSScreening can be parameterized to load input batch files to perform their evaluation.
+0.066006 - This way, it is able to load result batch files obtained by 3 types of MS/MS equipment (Agilent Technologies, AB Sciex and Waters) even though each of them returns the results of the analysis in a different file format.
+0.020050 - For example, Agilent Technologies equipment produces XML files, whereas Waters equipment returns Excel spreadsheets.
+0.069273 - For each input sample provided in the input batch file, DSScreening will present a result web page similar to the one previously presented in Fig 3.
+0.035398 - DSScreening does not consider disorders with a probability below 50%.
+0.023599 - If that occurs, then the subject is considered as “normal”.
+0.050125 - If there are IEMs with a higher probability, they are shown in descending order.
+0.036891 - For example, in the results shown in Fig 3, the most plausible IEMs, having probabilities of 100.00%, 75.65% and 63.52%, respectively, are Glutaric acidemia type I (GA I) and Carnitine palmitoyltransferase I deficiency (CPT I).
+0.037559 - To improve interpretability whenever an IEM is detected, a link to the corresponding page in the Online Mendelian Inheritance in Man (OMIM) website at http://www.omim.org is added.
+0.035398 - DSScreening also describes the overall QoI of the input data.
+0.039526 - For the execution shown in Fig 3, the overall QoI is 87.5%, which means that there is at least one missing input measure (not shown in Fig 3 and needed by the rules related to another IEM).
+0.053097 - Moreover, for each disorder, a specific QoI is also computed.
+0.041667 - In Fig 3, the QoI for either GA I or CPT I is 100%, because all input values needed by the fuzzy rules regarding these IEMs have been provided.
+0.035874 - The metamodel and the models The metamodel associated to DSScreening uses separation of concerns to abstract the system just to the essential characteristics that define the possible FISs that will be created.
+0.050096 - It includes input variables (either simple or complex); their linguistic values and their ranges in terms of their measures; and the disorders.
+0.051988 - When defining a model that conforms to the metamodel, i.e., an instance of a FIS, the required disorders, fuzzy variables and existing relationships between them will have to be described.
+0.042813 - DSScreening screens 48 IEMs that are distributed as follows: 15 amino acid disorders (Table A.1), 20 organic acid disorders (Table A.2), and 13 fatty acid disorders (Table A.3).
+0.052701 - Methylmalonic aciduria (see IEMs #14 to 18 in Table A.2) is a special organic disorder, because it is a genetically heterogeneous IEM that may have different origins and, thus, takes different names depending on its specific cause.
+0.060592 - Moreover, propionic acidemia (PROP, see IEM #19 in Table A.2) is an IEM that can be difficult to differentiate from methylmalonic aciduria, especially when the diagnosis is performed using only acylcarnitines as input (Seashore, 2009).
+0.031299 - In addition, the organic disorder B12 Def (mat) (see IEM #20 in Table A.2) refers to a maternal B12 vitamin deficiency, which can also cause methylmalonic aciduria in infants.
+0.049080 - The clinical variables considered by DSScreening correspond to input measures for 15 amino acids and 27 acylcarnitines (Table A.4).
+0.054852 - In the context of NS, it is usual that ratios between analytes offer better information than analytes by themselves.
+0.040100 - For instance, this is the case with CPT or SCHAD (McHugh et al., 2011).
+0.031250 - The ratios will be calculated automatically whenever both numerator and denominator are available.
+0.051282 - Thus, the system includes 33 complex input variables to represent these calculated ratios (Table A.5).
+0.028986 - Identically, the cut-off values and the vertices for their linguistic values are also computed.
+0.029963 - The relationships between analytes and the IEMs are synthesised in Table B.1 based on the work by Marín Soria et al.
+0.000000 - (2009), Vilarinho et al.
+0.000000 - (2010), McHugh et al.
+0.015152 - (2011) and Lund et al.
+0.035495 - (2012) and also on the Metagene Metabolic and Genetic Information Center (http://metagene.de).
+0.060150 - A positive symbol (+) means a high value of that analyte affects the corresponding IEM.
+0.052083 - Conversely, a negative symbol (-) means that it is affected by a low value.
+0.012346 - Empty cells indicate that the relationship is not considered.
+0.052288 - Actually, the diagnosis of certain IEMs only involves the input measures corresponding to acylcarnitines (Rinaldo, Cowan, & Matern, 2008).
+0.035714 - The last column in Table B.1 shows the weights of the relationships, as they have been included in the model.
+0.045198 - These weights are based on the information of the remaining columns.
+0.056497 - These relationships are the source for the rules in the FIS.
+0.039352 - In the second step of the FIS design process, the initial model was completed with technical specifications, such as the definition of the fuzzy sets corresponding to the linguistic values of the clinical variables, the composition of the CCFs and the weights of the rules.
+0.041667 - In this case, each analyte is characterized by 3 fuzzy linguistic values (Low, Normal and High) whose corresponding trapezoidal MFs were defined based on their default cut-off ranges.
+0.049550 - To generate the FIS, it was necessary to select the target execution language for the final FIS.
+0.021680 - Then the FIS was automatically created using model-to-code (M2C) transformations.
+0.055519 - Testing DSScreening DSScreening has been tested using data from analysing 203 samples (see Table 1): 51 were control samples, 95 corresponded to healthy newborns, 17 were from patients with symptoms but not affected by any IEM and the rest of the samples (40) corresponded to patients affected with an IEM.
+0.048077 - With the aim of measuring the quality of DSScreening, the results provided by the DSS have been compared to the results obtained by the experts at the source sites.
+0.000000 - Table 1.
+0.049383 - Description of the 203 samples used in this study.
+0.012687 - Source Sample organization Total Genetadi (18 batch files) Tyrosinemia (TYR I; TYR II) 10 Healthy newborns 95 111 Control Samples 6 MLCUH (15 batch files) Glutaric acidemia I (GA I) 2 Propionic acidemia (PROP) 3 Symptoms not corresponding to an IEM 12 43 Control Samples 26 ERNDIM (9 batch files) Carnitine palmitoyltransferase II deficiency, Lethal neonatal (CPT II) 1 Carnitine deficiency, Systemic primary (CUD) 2 Glutaric acidemia I (GA I) 2 Multiple Acyl-CoA dehydrogenase deficiency (MADD) 2 3-Hydroxy-3-Methylglutaryl-CoA lyase deficiency (HMG) 1 Isovaleric acidemia (IVA) 1 Long chain 3-Hydroxyacyl-CoA dehydrogenase deficiency (LCHAD) 1 Vitamin B12 deficiency (maternal) (B12 Def (mat)) 1 49 Acyl-CoA dehydrogenase, Medium chain, Deficiency of (MCAD) 5 Methylmalonic aciduria (Cbl A, B; MUT) 4 Holocarboxylase sinthetase deficiency (MCD) 1 Propionic acidemia (PROP) 3 Acyl-CoA dehydrogenase, Very long-chain, Deficiency of (VLCAD) 1 Symptoms not corresponding to an IEM 5 Control samples 19 Samples have been gathered from 3 different sources: 111 samples were provided by Genetadi Biotech, a company performing expanded NS that is located in Derio (Bizkaia), Spain; 43 were offered by the Metabolism Laboratory of Cruces University Hospital (MLCUH), which is located in Barakaldo (Bizkaia), Spain; and 49 were taken from 10 reports published by the European Research Network for evaluation and improvement of screening, Diagnosis and treatment of Inherited Disorders of Metabolism (ERNDIM) between 2009 and 2013.
+0.110683 - Samples from Genetadi Biotech correspond to newborns, and have been labelled as Screening_XX.
+0.025890 - They have been acquired from 18 batch files.
+0.023310 - The samples have been analysed using both acylcarnitines and amino acids by Waters mass spectrometry instrumentation.
+0.049645 - 10 out of 111 samples belong to individuals suffering from an IEM; 6 correspond to control samples; and the remaining samples correspond to healthy infants.
+0.047930 - Samples provided by the MLCUH belong to infants with clinical symptoms, and have been identified as Clinical_XX.
+0.038835 - They have been taken from 15 batch files.
+0.011799 - Only acylcarnitines have been analysed using an Agilent Tech spectrometer.
+0.039409 - 5 out of 43 belong to individuals suffering from an IEM; 26 correspond to control samples; and the rest match symptomatic individuals but not affected by any IEM.
+0.061728 - Samples taken from ERNDIM belong to individuals showing symptoms.
+0.026975 - Unlike the rest of the samples, the reports include patients of all ages, some of whom might have been under clinical treatment.
+0.030864 - The samples have been also labelled as Clinical_XX.
+0.028674 - They are in 9 batch files.
+0.051371 - An Agilent Tech spectrometer has been used to analyse only acylcarnitines.
+0.051813 - 25 out of 49 are individuals suffering from an IEM; 19 are control samples; and 5 correspond to individuals showing symptoms not corresponding to an IEM.
+0.088820 - DSScreening analysed a total of 18 batch files containing 111 NS samples from Genetadi in 108.4 s. This means that it took 0.98 s to diagnose each screening sample using input values for both acylcarnitines and amino acids.
+0.056259 - Also, it examined 24 batch files containing the input measures for only acylcarnitines of 109 clinical samples from MLCUH and ERNDIM (17 of them were duplicates) in 52.1 s. In this case, they were analysed at 0.48 seconds per sample.
+0.036036 - Table 2 summarises the results of the tests: All healthy individuals (100%) were classified correctly as negative.
+0.015152 - There were no false-positives.
+0.000000 - Table 2.
+0.056738 - Summary of the results of the tests performed with the blood samples provided by Genetadi Biotech (Screening_XX), and the MLCUH / ERNDIM reports (Clinical_XX).
+0.020408 - Result Description Genetadi MLCUH ERNDIM Total Negative Healthy individual classified as healthy 95 12 5 112 False-Positive Healthy individual classified as IEM – – – – False-Negative IEM classified as healthy – – 1 1 Positive (1) Correct IEM detected with highest probability 10 3 10 23 Positive (2) Correct IEM detected with a lower probability, but highest is similar – 2 6 8 Positive (3) Correct IEM detected with a lower probability, but highest is another IEM – – 4 4 Positive (4) Wrong IEMs detected – – 4 4 Regarding the samples that correspond to individuals affected by an IEM, the correct disorder was diagnosed with the highest probability in 23 cases (Positive 1–57.5%).
+0.030303 - Also, in 8 cases (20%) the correct IEM was ranked among other very similar organic disorders (Positive 2), such as those related to propionic and methylmalonic acidemias.
+0.052434 - Table C.1 shows more details of each sample test, such as probabilities given to each identified IEM and the corresponding QoI indexes.
+0.059791 - There are 4 clinical samples taken from the ERNDIM reports (10%) for which the correct IEM was identified but given a probability value lower than that assigned to another disease (Positive 3).
+0.029963 - Unlike the aforementioned cases related to methylmalonic acidemias and propionic acidemias, in these cases there is no apparent similarity between the identified IEMs.
+0.040404 - Finally, DSScreening detected the existence of one or more IEMs, but none of them corresponded to the correct one (Positive 4) in 4 clinical ERNDIM samples (10%).
+0.041298 - There was 1 sample (2.5%) with a false-negative.
+0.031250 - The results provide evidence that DSScreening can be an accurate tool for NS.
+0.056801 - The absence of false-positives means that it classified correctly not only the samples belonging to healthy newborns, but also those corresponding to individuals with symptoms but not suffering from any IEM.
+0.047316 - The factor of not considering symptoms as input do not distract the DSS.
+0.015873 - Regarding the false-negative cases, only one acylcarnitine profile was incorrectly classified as normal (sample Clinical_43, see Table C.1).
+0.056645 - However, many of the laboratories taking part in the ERNDIM have also considered this clinical sample as healthy.
+0.056937 - Actually, this particular sample has been included as an educational item to demonstrate the difficulties of correctly diagnosing patients with CPT II (Turner & Dalton, 2014).
+0.033898 - DSScreening diagnosed accurately all samples (100%) from Genetadi Biotech and MLCUH.
+0.024540 - In 4 of them (23.5%), not only the correct IEM but also at least one more disorder was detected.
+0.026144 - In another 2 cases (11.75%) it identified the correct IEM in the top five most likely acidemias.
+0.059791 - Both samples correspond to individuals suffering from PROP, which obtained a high probability and little difference compared to the identified IEM (see samples Clinical_12 and Clinical_17 in Table C.1).
+0.044990 - Regarding the 30 clinical samples taken from ERNDIM reports, some significant differences can be found between expected and obtained diagnoses.
+0.043478 - These reports correspond to both children and adults, some of whom were under clinical treatment.
+0.060606 - This could influence the composition of the input analytes at the time of taking the samples.
+0.057239 - In addition, most of the problematic samples had some analytes missing, which had a negative effect on the QoI index and, therefore, on the accuracy of results.
+0.040057 - All in all, DSScreening correctly identified all the 5 samples belonging to subjects with symptoms but not suffering from any IEM (16.67%), as well as 10 samples corresponding to different disorders (33.33%).
+0.080356 - It also ranked 6 samples belonging to patients with a type of methylmalonic acidemias and propionic acidemias (20%) among other very similar organic diseases.
+0.046414 - In all these cases the correct IEM was assigned a high probability, with little difference between other similar disorders.
+0.026350 - In another 4 samples (13.33%), even if the correct IEM was not given the highest probability, DSScreening raised important suspicion concerning it (see samples Clinical_18, Clinical_22, Clinical_ 27 and Clinical_45 in Table C.1).
+0.030812 - Finally, the FIS was not been able to correctly diagnose 5 samples (16.67%), including the false-positive case (see Table C.1, samples Clinical_25, Clinical_33, Clinical_ 37, Clinical_42 and Clinical_43).
+0.040650 - Some samples for which the correct IEM was not ranked in first position belong to cases where either an important analyte was missing (Clinical_22), or that were mild cases of the disorder (Clinical_25, Clinical_45) or that were simply too difficult to diagnose using only acylcarnitine profiles (Clinical_33, Clinical_42).
+0.057239 - The objective of NS is to raise suspicion for those individuals that could have an IEM and not necessarily to unequivocally diagnose it (Cipriano et al., 2007).
+0.052632 - Therefore, in such cases not only MS/MS analyses but also complementary diagnostic tests such as enzyme activity assays and searches for gene mutations should be performed in order to confirm a diagnosis.
+0.067251 - In summary, DSScreening has achieved an accuracy of 100% for the diagnosis of NS samples, and approximately of 70% for clinical samples (including totally correct results and also those related to similar acidemias).
+0.060606 - With regard to execution time, laboratory professionals usually need about 30 s to evaluate a healthy sample and at least 5 minutes to analyse a pathological one.
+0.043651 - Extrapolating these durations to the present study, they would need at least 202 min to evaluate the total of 152 samples.
+0.073218 - DSScreening needed a little less than 3 min for a total of 203 samples (including all control samples, which generally are discarded).
+0.087050 - This gives a time reduction of about 98.7%.
+0.070796 - DSScreening is a flexible and adaptable tool to perform NS.
+0.070922 - It is adaptable because the cut-off values can be defined (or modified) to tune the behaviour to the characteristics of the population being screened.
+0.055944 - Aide-DS is a valid framework to embed FIS-based DSSs in computerized clinical practice guidelines.
+0.098408 - The eGuider portal has published the guide for newborn screening, and allows the testing of a particular sample either by importing a file with all the measures or manually inputting the values for each analyte.
+0.067568 - MDSE techniques have been proven as a good tool to make the best practice of medicine available.
+0.028612 - The separation of concerns they provide allows adjusting the medical knowledge (adding new IEMs, analytes or ratios, modifying the existing ones, adding new tests, updating relationships, and so on) without changing the generation procedure.
+0.010417 - Conversely, technological artefacts can be changed or modified, without altering the medical knowledge.
+0.025641 - The speed that automation gives to the productive process of DSSScreening allows the instantaneous creation of new versions, by only changing the model that conforms to the FISs metamodel.
+0.037037 - Using MDSE might initially suppose needing more time to develop the final application, since the abstraction has to be raised, and the metamodel and the transformations defined.
+0.030075 - However, the resulting system can be constructed almost instantly after the model is created.
+0.036036 - Soft computing techniques have been proven to be adequate techniques to build artefacts to cope with uncertainty.
+0.092023 - Specifically, FISs are a good solution to show white-box reasoning systems, and, more particularly differential diagnoses, and specifically newborn screening.
+0.045113 - Although the results are good, the sample size (N = 152) seems to be insufficient.
+0.000000 - The tool by Chen et al.
+0.073596 - (2013) has been tested with 347,312 samples and the one by Marquardt et al.
+0.054201 - (2012) uses a database with 767,464 records to perform their calculations.
+0.081686 - There is a collaborative project included in the strategy of newborn screening translation research network (STRN) that offers a longitudinal pediatric data resource (LPDR) to researchers (Hall et al., 2014).
+0.055156 - We are in the process of gaining access to the data in order to increase the size to a more significative N. We have considered that defining fixed MFs for linguistic values for all input variables can restrict the behaviour of the system.
+0.049080 - A more flexible approach consists in defining the MFs at the IEM level instead of at the input variable level.
+0.000000 - Marquardt et al.
+0.063063 - (2012) assume that the cut-off ranges for a given analyte are different depending on the IEM.
+0.074392 - For example, both MADD and MCAD are characterized by having a high concentration of octanoylcarnitine (C8), but it is usually higher when it is related to MCAD than to MADD (McHugh et al., 2011).
+0.034858 - Besides, we could add age ranges (and, maybe, gender) to the cut-off values and linguistic values definition.
+0.058288 - This would possibly solve some of the problems with some of the ERNDIM samples, since some of them did not correspond to newborn infants.
+0.086721 - It is only a matter of changing the metamodel and the transformations.
+0.035398 - To preserve current knowledge, some M2M transformations should be defined.
+0.009662 - Finally, although FISs are easily interpretable, there are some actions that can enhance their interpretability.
+0.044990 - We plan to add links to the output to show the evidence that supports every decision taken or rule used.
+0.030303 - Appendix A Table A.1.
+0.057292 - List of the 15 amino acid disorders that DSScreening is able to test.
+0.028986 - Each disorder is characterised by its complete name, abbreviation, and code from the OMIM website.
+0.010296 - # Amino acid disorders OMIM 1 5,10-Methylenetetrahydrofolate reductase MTHFR 607093 2 Argininemia ARG 207800 3 Arginosuccinic aciduria ASA 207900 4 Carbamoyl phosphate synthetase I deficiency, Hyperammonemia due to CPS 237300 5 Citrullinemia, classic CIT I 215700 6 Citrullinemia, type II, Neonatal-onset CIT II 605814 7 Glycine encephalopathy NKHG 605899 8 Homocystinuria due to cystathionine beta-sinthase deficiency HCY 236200 9 Maple syrup urine disease MSUD 248600 10 Methionine adenosyltransferase deficiency MET 250850 11 Ornithine transcarbamylase deficiency, Hyperammonemia due to OTC 311250 12 Phenylketonuria PKU 261600 13 Pyruvate carboxylase deficiency PC 266150 14 Tyrosinemia, type I TYR I 276700 15 Tyrosinemia, type II TYR II 276600 Table A.2.
+0.057292 - List of the 20 organic acid disorders that DSScreening is able to test.
+0.027027 - Each disorder is characterised by its complete name, abbreviation and, when available, code from the OMIM website.
+0.005003 - # Organic acid disorders OMIM 1 2-Methylbutyryl-CoA dehydrogenase deficiency 2MBG 610006 2 3-Hydroxy-3-Methylglutaryl-CoA lyase deficiency HMG 246450 3 3-Methylcrotonyl-CoA carboxylase 1 deficiency 3MCC 210200 4 3-Methylchrotonyl-CoA carboxylase deficiency (maternal) 3MCC (mat) 5 3-Methylglutaconic aciduria, Type 1 3MGA 250950 6 Alpha-Methylacetoacetic aciduria BKT 203750 7 Encephalopathy,Ethylmalonic EE 602473 8 Holocarboxylase sinthetase deficiency MCD 253270 9 Glutamate formiminotransferase deficiency FIGLU 229100 10 Glutaric acidemia I GA I 231670 11 Isobutyryl-CoA dehydrogenase deficiency IBG 611283 12 Isovaleric acidemia IVA 243500 13 Malonyl-CoA decarboxylase deficiency MAL 248360 14 Methylmalonic aciduria, cblA type Cbl A, B 251100 15 Methylmalonic aciduria, cblB type 251110 16 Methylmalonic aciduria and homocystinuria, cblC type Cbl C, D 277400 17 Methylmalonic aciduria and homocystinuria, cblD type 277410 18 Methylmalonic aciduria due to methylmalonyl-CoA mutase deficiency MUT 251000 19 Propionic acidemia PROP 606054 20 Vitamin B12 deficiency (maternal) B12 Def (mat) Table A.3.
+0.078125 - List of the 13 fatty acid disorders that DSScreening is able to screen.
+0.027027 - Each disorder is characterised by its abbreviation, complete name and, when available, code from the OMIM website.
+0.010198 - # Fatty acid disorders OMIM 1 3-Hydroxyacyl-CoA dehydrogenase deficiency SCHAD 231530 2 Acyl-CoA dehydrogenase, Medium chain, Deficiency of MCAD 201450 3 Acyl-CoA dehydrogenase, Medium chain, Deficiency of (heterozygous) MCAD (het) 4 Acyl-CoA dehydrogenase, Short chain, Deficiency of SCAD 201470 5 Acyl-CoA dehydrogenase, Very long-chain, Deficiency of VLCAD 201475 6 Carnitine deficiency, Systemic primary CUD 212140 7 Carnitine deficiency, Systemic primary, Maternal CUD (mat) 8 Carnitine palmitoyltransferase I deficiency CPT I 255120 9 Carnitine palmitoyltransferase II deficiency, Lethal neonatal CPT II 608836 10 Carnitine-acylcarnitine translocase deficiency CACT 212138 11 Long chain 3-Hydroxyacyl-CoA dehydrogenase deficiency LCHAD 609016 12 Mitochondrial trifunctional protein deficiency TFP 609015 13 Multiple Acyl-CoA dehydrogenase deficiency MADD 231680 Table A.4.
+0.055545 - List of the 15 amino acids and 27 acylcarnitines that DSScreening uses as input.
+0.006803 - # Amino acid # Acylcarnitine # Acylcarnitine 1 Alanine 1 C0 16 C12 2 Arginine 2 C3 17 C14 3 Argininosuccinate 3 C3DC 18 C14:1 4 Citrulline 4 C4 19 C14:2 5 Glutamine 5 C4-OH 20 C16 6 Glycine 6 C4DC 21 C16-OH 7 Homocysteine 7 C5 22 C16:1-OH 8 Lysine 8 C5-OH 23 C18 9 Methionine 9 C5DC 24 C18-OH 10 Ornithine 10 C5:1 25 C18:1 11 Succinylacetone 11 C6 26 C18:1-OH 12 Phenylalanine 12 C6DC 27 C18:2 13 Tyrosine 13 C8 14 Valine 14 C10 15 Xleucine 15 C10:1 Table A.5.
+0.051371 - List of 33 complex variables (ratios) that DSScreening uses as input.
+0.002058 - # Ratio # Ratio # Ratio # Ratio 1 Arginine / Ornithine 10 Xleucine / Alanine 19 C4 / C8 28 C8 / C2 2 Argininosuccinate / Arginine 11 Xleucine / Phenylalanine 20 C5 / C0 29 C8 / C10 3 Citrulline / Arginine 12 C0 / (C16 + C18) 21 C5 / C2 30 C14:1 / C2 4 Citrulline / Phenylalanine 13 C3 / Methionine 22 C5 / C3 31 C14:1 / C16 5 Glutamate / Citrulline 14 C3 / C2 23 C5-OH / C0 32 C16-OH / C16 6 Glutamine / Citrulline 15 C3 / C16 24 C5-OH / C8 33 (C16 + C18:1) / C2 7 Methionine / Phenylalanine 16 C3DC / C10 25 C5DC / C5-OH 8 Phenylalanine / Tyrosine 17 C4 / C2 26 C5DC / C8 9 Valine / Phenylalanine 18 C4 / C3 27 C5DC / C16 Appendix B Table B.1.
+0.030864 - Relationships between all analytes and IEMs evaluated in DSScreening.
+0.025316 - A positive symbol (+) means an abnormal high value, while a negative symbol (−) means a value below the normal range.
+0.039526 - An empty cell indicates that this relationship is not considered by the authors of the papers in the columns labelled as {1}, {2}, {3}, {4}, and {5}, which correspond to the publications by Marín Soria et al.
+0.000000 - (2009), Vilarinho et al.
+0.000000 - (2010), McHugh et al.
+0.015152 - (2011) and Lund et al.
+0.030071 - (2012) and the Metagene Metabolic and Genetic Information Center, respectively.
+0.041958 - The last column shows the weights of the relationships as they have been included in DSScreening.
+0.045198 - These weights are based on the information of the remaining columns.
+0.002026 - # Disorder Analyte {1} {2} {3} {4} {5} Weight DSScreening 1 2MBG C5 + 0.3750 C5 / C2 + 0.2500 C5 / C0 + 0.1250 C5 / C3 + 0.1250 C5-OH + 0.1250 2 3MCC C5-OH + + + + + 0.6250 C5-OH / C0 + + 0.2500 C5O-H / C8 + 0.1250 3 3MCC (mat) C5O-H / C0 + 0.3333 C5-OH / C8 + 0.3333 C5-OH + 0.1667 C0 – 0.1667 4 3MGA C5-OH + + + 0.5000 C5-OH / C0 + + 0.3333 C5-OH / C8 + 0.1667 5 ARG Arginine + + + + + 0.6667 Citrulline / Arginine – + 0.1111 Argininosuccinate / Arginine – 0.1111 Arginine / Ornithine + 0.1111 6 ASA Argininosuccinate + + + + 0.3846 Citrulline + + + + 0.3077 Argininosuccinate / Arginine + + 0.1538 Citrulline / Phenylalanine + 0.0769 Glutamine + 0.0385 Lysine + 0.0385 7 B12 Def (mat) C3 + 0.4000 C3 / C2 + 0.2000 C3 / C16 + 0.2000 C3 / Methionine + 0.2000 8 BKT C5:1 + + + 0.4286 C5-OH + + 0.2857 C4-OH + 0.1428 C5-OH / C8 + 0.1428 9 CACT C16 + + + 0.3000 (C16 + C18:1) / C2 + 0.2000 C18 + 0.1000 C18:1 + + 0.1000 C18:2 + 0.1000 C5DC / C5-OH + 0.1000 C18:1-OH + 0.1000 10 Cbl A, B C3 / C2 + + 0.4000 C3 / C16 + + 0.2667 C3 + + 0.2667 Glycine + 0.0667 11 Cbl C, D C3 + + + 0.2857 C3 / C2 + + 0.1905 C3 / C16 + + 0.1905 C3 / Methionine + + 0.1905 Methionine – – 0.0952 Homocysteine + 0.0476 12 CIT I Citrulline + + + + + 0.6250 Citrulline / Arginine + + 0.2500 Citrulline / Phenylalanine + 0.1250 13 CIT II Citrulline + + + + 0.5000 Citrulline / Arginine + + 0.2500 Citrulline / Phenylalanine + 0.1250 Arginine + 0.1250 14 CPS Citrulline – – 0.3636 Glutamate / Citrulline + 0.1818 Citrulline / Phenylalanine – 0.1818 Glutamine / Citrulline + 0.1818 Glutamine + 0.0909 15 CPT I C0 / (C16 + C18) + + + + 0.2857 C16 – – – 0.2381 C0 + + 0.1905 C3 / C16 + 0.1428 C18 – 0.1428 16 CPT II C16 + + + 0.2000 C18:1 + + + 0.2000 (C16 + C18:1) / C2 + 0.1333 C14:1 / C2 + 0.1333 C18 + 0.0667 C16-OH + 0.0667 C18:2 + 0.0667 C0 / (C16 + C18) – 0.0667 C16:1-OH + 0.0667 17 CUD C0 – – – – 0.4444 C3 – 0.2222 C18:1 – 0.2222 C3 / Methionine – 0.1111 18 CUD (mat) C0 – 0.4286 C18:2 – 0.2857 C18:1 – 0.1428 C3 / Methionine – 0.1428 19 EE C4 + 0.4286 C4 / C3 + 0.2857 C4 / C2 + 0.1428 C5 / C3 + 0.1428 20 FIGLU C4 / C3 + 0.4286 C4 + 0.2857 C4 / C2 + 0.1428 C4 / C8 + 0.1428 21 GA I C5DC + + + + + 0.5000 C5DC / C16 + 0.2500 C5DC / C5-OH + 0.1667 C5DC / C8 + 0.0833 22 HCY Methionine + + + + 0.6250 Homocysteine + + 0.2500 Methionine / Phenylalanine + 0.1250 23 HMG C5-OH + + + + 0.4000 C6DC + + + + 0.3000 C5-OH / C0 + + 0.2000 C5-OH / C8 + 0.1000 24 IBG C4 + + + 0.5555 C4 / C3 + 0.2222 C4 / C2 + 0.1111 C4 / C8 + 0.1111 25 IVA C5 + + + + 0.5000 C5 / C3 + 0.2500 C5 / C2 + 0.1250 C5 / C0 + 0.1250 26 LCHAD C18:1-OH + + + + + 0.2703 C16-OH + + + + + 0.2703 C18-OH + + + + 0.2162 C16-OH / C16 + + + 0.1622 C16:1-OH + 0.0540 C18:1 0.0270 27 MADD C10 + + + + 0.1379 C4 + + + + 0.1379 C12 + + + 0.1034 C5 + + + 0.1034 C8 + + + 0.1034 C16 + + + 0.1034 C6 + + 0.0689 C14 + + 0.0689 C14:1 / C2 + 0.0345 C8 / C2 + 0.0345 C18 + 0.0345 C5DC + 0.0345 C14:1 + 0.0345 28 MAL C3DC / C10 + 0.6667 C3DC + 0.3333 29 MCAD C8 + + + + + 0.3448 C8 / C10 + + + + + 0.3448 C6 + + 0.1379 C8 / C2 + 0.0690 C10 + 0.0690 C10:1 0.0345 30 MCAD (het) C8 + 0.4286 C10 + 0.2857 C8 / C2 + 0.1428 C6 + 0.1428 31 MCD C5-OH + + + 0.4286 C5-OH / C0 + + 0.2857 C5-OH / C8 + 0.1428 C3 + 0.1428 32 MET Methionine + + 0.6000 Methionine / Phenylalanine + 0.4000 33 MSUD Xleucine + + + + + 0.3846 Valine + + + 0.2308 Xleucine / Alanine + + 0.1538 Xleucine / Phenylalanine + + 0.1538 Valine / Phenylalanine + 0.0769 34 MTHFR Methionine – – 0.4000 Homocysteine + + 0.4000 Methionine / Phenylalanine – 0.2000 35 MUT C3 + + + + + 0.3846 C3 / C2 + + + + 0.3078 C3 / C16 + + 0.1538 C4DC + + 0.1538 36 NHKG Glycine + + 1.0000 37 OTC Citrulline – – 0.3333 Glutamate / Citrulline + 0.1667 Citrulline / Phenylalanine – 0.1667 Glutamine / Citrulline + 0.1667 Glutamine + 0.0833 Ornithine – 0.0833 38 PC Citrulline + + 0.3846 Citrulline / Arginine + 0.1538 Citrulline / Phenylalanine + 0.1538 Tyrosine + 0.1538 Alanine + 0.0769 Lysine + 0.0769 39 PKU Phenylalanine + + + + 0.5714 Phenylalanine / Tyrosine + + + 0.4286 40 PROP C3 + + + + + 0.4167 C3 / C2 + + + + 0.3333 C3 / C16 + + 0.1667 Glutamine + 0.0417 Glycine + 0.0417 41 SCAD C4 + + + 0.2727 C4 / C2 + + + 0.2727 C4 / C3 + + + 0.2727 C4 / C8 + + 0.1818 42 SCHAD C5DC / C16 + 0.4286 C4-OH + 0.2857 C3 / C16 0.1428 C5DC / C8 + 0.1428 43 TFP C18:1-OH + + 0.3333 C16-OH + + 0.3333 C16-OH / C16 + 0.1667 C18-OH + 0.1667 44 TYR I Tyrosine + + + + 0.6154 Succinylacetone + + 0.3070 Methionine + 0.0769 45 TYR II Tyrosine + + + + 1.0000 46 VLCAD C14:1 + + + + + 0.3125 C14:2 + + + + 0.2500 C14:1 / C16 + + 0.1250 C14 + + 0.1250 C14:1 / C2 + + 0.1250 C18:1 + 0.0312 C16 + 0.0312 Appendix C Table C.1.
+0.075758 - Results obtained for input samples.
+0.045307 - Correctly diagnosed samples have been omitted for clarity.
+0.052288 - The following table shows, for each sample, its label, the expected result and the obtained ranking of IEMs.
+0.037940 - For each detected disorder, the probability and corresponding QoI index are given.
+0.007223 - Sample Expected result Obtained result Probability (%) QoI (%) Clinical_12 PROP Cbl C, D 100.00 100.00 B12 Def (mat) 100.00 100.00 PROP 98.59 100.00 Cbl A, B 98.39 100.00 MUT 91.04 100.00 MCD 76.48 100.00 Clinical_17 PROP Cbl C, D 100.00 100.00 B12 Def (mat) 99.21 100.00 Cbl A, B 97.80 100.00 PROP 96.04 100.00 MUT 90.50 100.00 Clinical_18 PROP Cbl A, B 72.58 98.39 CUD 72.22 100.00 CUD (mat) 66.00 70.00 Cbl C, D 60.00 100.00 PROP 55.99 92.96 B12 Def (mat) 54.35 97.83 MUT 52.24 98.51 Clinical_22 HMG 3MCC 91.67 100.00 3MGA 90.91 100.00 3MCC (mat) 81.82 100.00 MCD 78.31 84.34 MAL 70.18 100.00 HMG 61.73 62.96 Clinical_23 MUT Cbl C, D 100.00 100.00 B12 Def (mat) 100.00 100.00 MUT 98.51 100.00 Cbl A, B 98.39 100.00 PROP 95.95 100.00 GA I 75.00 100.00 BKT 62.97 100.00 Clinical_25 B12 Def (mat) CPT I 81.00 99.12 MSCHAD 58.82 98.04 Cbl A, B 57.10 100.00 Clinical_27 MCAD CUD 97.09 100.00 MCAD 87.91 100.00 MCAD (het) 67.05 100.00 CUD (mat) 65.49 70.00 Clinical_28 PROP Cbl C, D 100.00 100.00 B12 Def (mat) 100.00 100.00 PROP 98.44 100.00 Cbl A, B 98.22 100.00 MUT 83.43 100.00 CPT I 76.96 99.12 Clinical_31 MUT Cbl A, B 95.57 100.00 Cbl C, D 95.34 100.00 B12 Def (mat) 94.94 100.00 MUT 94.16 100.00 PROP 87.45 100.00 Clinical_33 MADD MCAD (het) 92.78 100.00 GA I 59.12 100.00 MSCHAD 58.82 98.04 MCAD 53.28 100.00 Clinical _37 VLCAD CUD 98.15 100.00 CUD (mat) 68.00 70.00 Clinical _40 PROP Cbl C, D 100.00 100.00 B12 Def (mat) 100.00 100.00 PROP 98.59 100.00 Cbl A, B 98.39 100.00 MUT 91.04 100.00 CPT I 81.04 99.12 Clinical _42 MADD MCAD (het) 98.27 100.00 MCAD 64.85 100.00 CPT I 57.37 99.12 Clinical _43 CPT II Normal Clinical _44 MUT Cbl C, D 100.00 100.00 B12 Def (mat) 100.00 100.00 MUT 98.51 100.00 Cbl A, B 98.39 100.00 PROP 91.55 100.00 GA I 79.06 100.00 3MGA 72.73 100.00 MCD 69.88 100.00 BKT 69.77 100.00 Clinical _45 MCD 3MCC 96.75 100.00 3MGA 96.45 100.00 3MCC (mat) 87.36 100.00 MCD 82.56 100.00 Clinical _47 Cbl A, B CPT I 77.27 99.12 Cbl C, D 61.04 100.00 MUT 59.37 100.00 Cbl A, B 58.24 100.00 B12 Def (mat) 58.17 100.00 MSCHAD 56.97 98.04
+
+[Frase 1] This paper presents a decision support system (DSS) called DSScreening to rapidly detect inborn errors of metabolism (IEMs) in newborn screening (NS).
+[Frase 15] Actually NS is intended to detect inborn errors of metabolism (IEMs) that can cause the sudden death of the newborn if they are not treated in time.
+[Frase 14] Newborn screening (NS) is used to describe various tests that are done during the first few hours of the life of a newborn and, when properly timed and performed, have the potential for preventing severe health problems, including death (Therrell et al., 2015).
+[Frase 226] DSScreening analysed a total of 18 batch files containing 111 NS samples from Genetadi in 108.4 s. This means that it took 0.98 s to diagnose each screening sample using input values for both acylcarnitines and amino acids.

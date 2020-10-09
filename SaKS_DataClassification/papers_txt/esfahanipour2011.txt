@@ -1,0 +1,314 @@
+A genetic programming model to generate risk-adjusted technical trading rules in stock markets
+
+Abstract
+
+Technical trading rules can be generated from historical data for decision making in stock markets. Genetic programming (GP) as an artificial intelligence technique is a valuable method to automatically generate such technical trading rules. In this paper, GP has been applied for generating risk-adjusted trading rules on individual stocks. Among many risk measures in the literature, conditional Sharpe ratio has been selected for this study because it uses conditional value at risk (CVaR) as an optimal coherent risk measure. In our proposed GP model, binary trading rules have been also extended to more realistic rules which are called trinary rules using three signals of buy, sell and no trade. Additionally we have included transaction costs, dividend and splits in our GP model for calculating more accurate returns in the generated rules. Our proposed model has been applied for 10 Iranian companies listed in Tehran Stock Exchange (TSE). The numerical results showed that our extended GP model could generate profitable trading rules in comparison with buy and hold strategy especially in the case of risk adjusted basis.
+
+Keywords
+Genetic programming
+Technical trading rules
+Risk-adjusted measures
+Conditional Sharpe ratio
+Tehran Stock Exchange (TSE)
+
+1. Introduction
+
+Technical analysis is a broad collection of methods and strategies which attempt to exploit the short term fluctuations in the stock markets. In this approach trading rules are generated from historical data, to determine the right time for buying and selling of the securities. Traders use these trading rules to profit from active and frequent trades in stock markets. This approach is called buy and sell strategy. An alternative approach which is known as buy and hold strategy is a more passive investment strategy. In this approach, investors buy and hold the assets for a long period of time, regardless of small fluctuations. Traders believe that they can earn more profit than investors. However, the profitability of technical analysis has been criticized by two hypotheses namely “random walk hypothesis” and “efficient market hypothesis”. These hypotheses state that there should not be any discernable and exploitable pattern in the financial data. According to these hypotheses, traders could not profit from technical trading rules. Although the first studies in 1960s and 1970s supported these hypotheses (Alexander, 1964; Fama, 1970; Fama & Blume, 1966; Jensen & Bennington, 1970), however investors were reluctant to abandon their charts and rules. According to Taylor reports, up to 90% of traders use some sort of technical analysis in their trading decision makings (Taylor, 2000).
+
+These hypotheses are also rejected by most of the academic researches which demonstrated technical trading rules could be profitable (Bessembinder & Chan, 1995; Brock, Lakonishok, & LeBaron, 1992; Pruitt & White, 1988). They compared the return of technical trading rules with the return of buy and hold strategy and found that positive excess returns can be achieved using technical trading rules. By positive excess returns, we mean that the buy and sell strategy is superior to the buy and hold strategy in terms of resulted returns.
+
+Above mentioned studies applied classical techniques for generating trading rules such as moving average and trading range break. New technologies such as artificial intelligent systems look more promising, because they allow a system to automatically generate and adapt profitable trading rules. For instance, genetic algorithms, genetic programming and neural networks are very successful in technical analysis (Bauer, 1994; Chou, Hsu, Yang, & Lai, 1997).
+
+Bauer (1994) used genetic algorithm to exploit technical trading rules in the US exchange market. These trading rules led to positive excess returns. However genetic programming (GP) seems to be more appropriate in extracting trading rules from historical data because of its structure (Potvin et al., 1994). In GP approach for rule discovery, rules are extracted in the form of decision trees from the past data. Allen and Karjalainen (1999) used genetic programming to generate technical trading rules on S&P500 data. They found that the transaction cost adjusted returns failed to obtain positive excess returns. Although the first studies such Allen and Karjalainen could not reject the EMH, but later studies demonstrated otherwise. Neely, Weller, and Dittmar (1997) used genetic programming to find technical trading rules for the main six currencies on foreign exchange market. Also Neely and Weller (1999) found the same results for three of four European monetary system (EMS) exchange rates. Another considerable work of Neely (2001) was in equity markets on S&P500. Despite that Neely considered risk adjusted excess returns, he could not reject the EMH which was inconsistent with Allen and Karjalainen (1999)’s claim. In another work, technical trading rules outperform the buy and hold strategy in risk unadjusted basis, but underperform when risk is considered in the case of three S&P indices (Fyfe, Marney, & Tarbert, 2005).
+
+All of the above-mentioned researches considered global market indices (e.g., Dow Jones, S&P500) and generated trading rules for these indices. They investigated the profitability of technical analysis and two critic hypotheses. Another promising approach is to consider stocks offered by individual companies. This approach looks more applicable since each stock is investigated separately and each rule is generated for one stock. Potvin, Soriano, and Vall’ee (2004) applied this approach for 14 Canadian companies listed on Toronto stock exchange. Their results showed that trading rules are generally beneficial when the market falls or when it is stable. Despite the attractiveness of this work, they did not consider transaction cost for evaluating fitness of generated rules. Transaction cost is brokerage fees that are payable for each trade carried out. Since many trades take place in the buy and sell strategy, transaction cost would affect the profitability of trading rules. Hence, Mallick, Lee, and Ong (2008) considered transaction cost in their GP model and applied it for thirty component stocks of Dow Jones Industrial Average index (DJIA). Their statistical results confirm that the GP based trading rules generate a positive excess return over the simple buy and hold strategy, under all market conditions whether rising or falling. Also genetic programming technique has been applied to generate transaction cost adjusted trading rules for nine Iranian companies (Esfahanipour, Karimi, & Mousavi, 2009). The later study showed that GP could generate profitable trading rules in comparison with the buy and hold strategy especially for companies having frequent trades in the market.
+
+Although risk is an important factor in trading decisions, however it is not considered in Potvin et al. (2004), Mallick et al. (2008), Esfahanipour et al. (2009). In these studies raw excess returns are evaluated rather than their risk adjusted excess returns. Also all of the above-mentioned studies generated trading rules using the historical data of stock prices and/or trading volumes. They did not consider other effective parameters on return such as dividends and splits. Investigating the structure of GP trading rules in previous studies, we found they generate trading rules with two buy and sell signals. In fact, they assumed that trading should be practiced every day. Since sometimes no trade is the best decision in stock trading, a useful extension of trading rules is to include “no trade” signal as well. In this approach the structure of trading rules should change to carry out three signals as buy, sell and no trade.
+
+Therefore, our goal here is to explore the application of GP for generating three signals technical trading rules on individual stocks in the case of risk adjusted measures and transaction cost. It also includes all effective factors such as dividends and splits. Table 1 summarizes previous works which used GP to generate trading rules in comparison with this study.
+
+Table 1. Position of this study among the related studies in the literature.
+Authors (year)	Outperformed buy and hold	Transaction cost	Applied risk measure	Dividend and splits	Case study
+Allen and Karjalainen (1999)		□			S&P500 index
+Neely et al. (1997)	□	□			6 EMS exchange rates
+Neely and Weller (1999)	□	□			4 EMS exchange rates
+Neely (2001)		□	Sharpe ratio, Jensen’s alpha, etc.		S&P500 index
+Potvin et al. (2004)					14 Canadian companies
+Fyfe et al. (2005)		□	Sharpe ratio		S&P indices
+Mallick et al. (2008)	□	□			30 DJIA companies
+Esfahanipour et al. (2009)	□	□			9 Iranian companies
+This study	□	□	Conditional Sharpe ratio	□	10 Iranian companies
+
+The reminder of this paper has been organized as follows. In the next section the GP algorithm is introduced. Then risk adjusted measures are investigated and one measure is selected for our GP model. In Section 4 a structure is proposed to extend GP based trading rules with three signals. A GP model is presented to generate risk adjusted trading rules in Section 5. Then our extended GP model is implemented on 10 Iranian companies and computational results are reported. The paper closes with our conclusion.
+2. Genetic programming
+
+Genetic programming as an artificial intelligence technique has recently been used successfully to extract knowledge in the form of IF–THEN rules and has been utilized in various fields particularly in finance and technical analysis (Chou et al., 1997; Engelbrecht & Schoeman, 2002). Koza (1992) developed this technique for the first time as an extension of genetic algorithm (GA) (Holland, 1975). The main difference between GP and GA is the representation of the solution. In GP, the individual population members are not fixed length character strings that encode possible solutions to the problem at hand, they are programs that, when executed, are the candidate solutions to the problem. These programs are expressed in genetic programming as parse trees, rather than as lines of code (Abraham, Nedjah, & Mourelle, 2006).
+
+The basic steps in a GP system are as follows (Poli, Langdon, & McPhee, 2008):
+
+1.
+
+    Randomly create an initial population of programs from the available primitives.
+2.
+
+    Repeat
+
+    2.1.
+
+        Execute each program and ascertain its fitness.
+    2.2.
+
+        Select one or two program(s) from the population with a probability based on fitness to participate in genetic operations.
+    2.3.
+
+        Create new individual program(s) by applying genetic operators with specified probabilities.
+
+3.
+
+    Until an acceptable solution is found or some other stopping condition is met (e.g., a maximum number of generations is reached).
+4.
+
+    Return the best-so-far individual.
+
+After introducing risk adjusted measures and trinary trading rules, each step of GP is explained and extended for generating trading rules in the following sections.
+3. Risk adjusted measures
+
+In trading rules evaluation, risk adjustment is potentially important because dynamic strategies, such as those found by GP, are often out of market (Neely, 2001). Therefore, the buy and sell strategy may bear much less risk than the buy and hold strategy. There are a lot of risk adjusted measures to adjust return for risk. Some measures have been investigated in this study which can be categorized as follows:
+
+•
+
+    Classic measures are the first risk adjusted measures which are developed on the basis of portfolio theory and the capital asset pricing model (CAPM). These measures include Sharpe ratio (Sharpe, 1966), Jensen’s α (Jensen, 1968), Treynor’s ratio (Treynor, 1965) and Information ratio (Sharpe, 1994).
+•
+
+    Drawdown based measures which measure the excess return of an asset over its drawdown as risk measure. The drawdown of a security is the loss incurred over a certain investment period. Calmar ratio (Young, 1991), Sterling ratio (Kestner, 1996) and Burke ratio (Burke, 1994) are three risk adjusted measures on the basis of drawdown.
+•
+
+    Lower partial moment (LPM) based measures such as Omega (Shadwick & Keating, 2002), Sortino ratio (Sortino & van der Meer, 1991), Kappa 3 (Kaplan & Knowles, 2004) and Upside potential ratio (Sortino, van der Meer, & Plantinga, 1999). These measures are generally called Kappa measures. The nth order of kappa measure computes the excess return as the difference between the asset’s return and the minimal acceptable return and computes risk as nth LPM. Where LPM measures risk by negative deviations of the returns realized in relation to a minimal acceptable return.
+•
+
+    Value at risk (VaR) based measures such as Excess return on value at risk (Dowd, 2000), conditional Sharpe ratio (Agarwal & Naik, 2004), R-ratio (Rachev et al, 2007) and Modified Sharpe ratio (Gregoriou & Gueyie, 2003). These measures are the ratio between the expected excess return of asset over risk free rate and the risk. In this approach risk measure is on the basis of VaR, including conditional VaR (CVaR) and modified VaR (MVaR).
+
+It is notable that these measures are generally calculated by the excess return of the asset over its risk. Variation of the most measures is based on their different definitions of risk. Among the investigated risk adjusted measures, the conditional Sharpe ratio is selected to apply in our GP model. Conditional Sharpe ratio is the ratio of the expected excess return over risk free rate and its conditional value at risk (CVaR). This ratio can be calculated by the Eq. (1):
+(1)
+
+where r is the return of the fund, rf is risk free rate; CVaR1−α is the conditional value at risk over the given time horizon with 100(1−α)% confidence level.
+
+CVaR is the expected loss under the condition that the value at risk is exceeded. In order to calculate CVaR, calculation of VaR is necessary at first. VaR can be approximated using variance–covariance method, historical simulation and Monte Carlo simulation. Among these methods historical simulation is an appropriate method considering security’s return distribution and historical data availability in stock markets. The formula for calculating of CVaR has been illustrated in Section 5.3.
+
+The reasons behind selection of the conditional Sharpe ratio as a suitable risk-adjusted measure in our GP model are as follows: (1) it uses a downside risk measure i.e., CVaR as risk measure; (2) it uses CVaR which is an optimal coherent risk measure (Inui & Kijima, 2005); (3) it is a suitable measure for evaluation of assets with non normal and fat tailed distributions of return (Agarwal & Naik, 2004); and (4) this measure includes the subjective risk aversion of an investor through confidence level selection (Acerbi & Tasche, 2002).
+4. Extension of trading rules structure to three signals
+
+Previous studies generated binary trading rules, i.e. they could only indicate two signals of buying or selling for trading decisions. Sometimes, do nothing is the optimal decision in real world decision making. Hence, no trade can be an optimal decision in stock trading, which is not indicated by binary trading rules. Therefore, we have extended the structure of previous trading rules to trinary ones which can produce three signals of buying, selling and no trade.
+
+In this approach a trinary trading rule is represented as a tree similar to a binary trading rule. The only difference is on its root, the root is a trinary operator whose state is a function of the states of its subtrees. These subtrees have Boolean outputs of true and false. In fact each subtree of root is a binary trading rule and the trinary trading rule signal is determined according to Table 2.
+
+Table 2. Trinary trading rule signal given the subtrees states.
+Subtree 1 state	Subtree 2 state	Trading rule signal
+True	True	Buy
+True	False	No trade
+False	True	No trade
+False	False	Sell
+
+A typical tree representing a trinary trading rule is illustrated in Fig. 1. This rule sends buy signal when the subtree 1 and subtree 2 states are true, i.e. the RSI over the past 50 days is greater than 72 and the transaction volume on 61 days ago is greater than 790 and also yesterday’s price is greater than average stock price over the past 40 days. A sell signal is sent when the state of the both subtrees is false, and no trade signal is sent otherwise.
+An example of trinary trading rule
+
+
+
+Fig. 1. An example of trinary trading rule.
+5. Genetic programming for generating trading rules
+
+In this section genetic programming technique is extended as a search procedure to extract trading rules from historical data. Rules are coded as tree structures with three signal outputs including buy, sell and no trade. In this approach, a trading rule is composed of some terminals and functions which are presented in the next subsection. A trading rule with depth of D is coded in Matlab in the form of an array with size of 2D -1.
+5.1. Terminal and function set
+
+As we know each decision tree in GP is composed of some functions (internal nodes) and terminals (leaves). For trading rules generation, terminal and function sets are adapted from (Potvin et al., 2004) as follows:
+
+    Terminal set:
+
+        Variables: adjusted prices for dividend and splits, transaction volume;
+
+        Real constants: chosen in the interval of [0, 200];
+
+        Boolean constants: True, False;
+
+    Function set:
+
+        Boolean operators: and, or, not;
+
+        Relational operators: <,>;
+
+        Arithmetic operators: +, −, /, ×;
+
+        The most used functions in technical analysis, as follows:
+
+        Norm (r1, r2): absolute value of the difference between two real numbers;
+
+        Avg (s, n): average of price or volume over the past n days;
+
+        Max (s, n): maximum value of price or volume over the past n days;
+
+        Min (s, n): minimum value of price or volume over the past n days;
+
+        Lag (s, n): price or volume is lagged by n days;
+
+        Volatility (p, n): variance in daily returns over the past n days;
+
+        RSI (p, n): relative strength index;
+
+        ROC (p, n): rate of change.
+
+Function set variation in both Boolean and real functions violate the closure assumption of GP, advised by Koza. Consequently we have to put some restrictions on the structure of trees. Boolean operators can be in the upper part of tree, real functions and arithmetic operators in lower part (except leaves) and relational operators are between the two.
+5.2. Initial population
+
+There are a number of different approaches to generate random initial population. These approaches include grow, full and ramped half-and-half methods (Poli et al., 2008). In full method all trees are created with predefined depth in all branches. The grow method, on the contrary, allows for the creation of trees of more varied sizes and shapes. In this method the depth of each branch is at most equal to predefined tree depth. In ramped half-and-half method, initial population is produced with a mix of grow and full methods. In this approach, half of the initial population is constructed using the full method and another half of the population is constructed using the grow method. We applied the latter method for initializing the population as a widely used method (Poli et al., 2008). Because of the particular structure of our trading rules, trees should be constructed in a recursive manner from the roots to the leaves.
+5.3. Fitness evaluation
+
+Previous studies evaluated the excess return of a trading rule over the buy and hold strategy as fitness function. In this model, the excess risk adjusted return is evaluated as fitness function. Since we included transaction costs, dividend and splits in the fitness function of our model, it is expected that the more realistic returns will be computed in comparison with the previous studies (Allen & Karjalainen, 1999; Esfahanipour et al., 2009; Mallick et al., 2008; Potvin et al., 2004).
+
+The risk adjusted return of the buy and hold strategy (RARB&H) is calculated with conditional Sharpe ratio as Eq. (2).
+(2)
+where RB&H is the expected return of the buy and hold strategy. It is calculated considering dividends, splits and transaction costs. CVaR1−α is calculated as Eq. (3).
+(3)
+
+where X is the profit/loss of the stock over a given risk horizon and VaR1−α is the worst expected loss over the given time horizon at 1 − α confidence level. VaR1−α is approximated via historical simulation.
+
+The cumulative return for a trading rule in a period is the sum of all transaction returns considering dividends and splits minus the related transaction costs. In risk adjusted version of our model, the cumulative risk adjusted return for a trading rule is the sum of risk adjusted returns of all transactions in the period and is calculated as Eq. (4).
+(4)
+
+n is the number of transactions in the period advised by trading rule, Ri is the return of ith transaction considering dividends, splits and transaction cost.
+
+The fitness function is simply calculated as Eq. (5), where RARB&S is the risk adjusted return of the generated trading rule (i.e., the buy and sell strategy).
+(5)
+
+The two following constraints have been applied for trading rules evaluation: (1) the sell signal can be implemented when the stock exists in the trader’s portfolio, since short selling is not permitted in this particular market, (2) the buy signal can be implemented when the sufficient capital is available.
+5.4. Selection
+
+Common selection algorithms include roulette wheel selection and tournament selection (Poli et al., 2008). In this study, roulette wheel method or fitness proportionate selection is used as selection method. In roulette wheel, each member chance for selection is proportionate to its fitness. In this method the selection probability of individual i is calculated as Eq. (6).
+(6)
+
+where, fi is the fitness of ith individual and the denominator sums the fitness values over all individuals in the current population.
+5.5. Genetic operators
+
+Crossover, mutation and reproduction operators have been used here to generate new populations. Crossover is applied to selected individuals with crossover rate. Crossover point is randomly selected for the first parent; however another crossover point is selected on second parent from a subset of allowed nodes, because of specific structure of our trees in this application. This subset includes functions or terminals which create meaningful offspring. Offspring are created by exchanging the two subtrees lying below the crossover nodes. Fig. 2 shows an example of crossover operator in the case of trinary trading rules. In this example, two functions (>) and (and) are selected as crossover points. Then, the subtrees lying crossover points are exchanged to create two new trading rules.
+An example of crossover operator in our GP model with trinary rules
+
+
+
+Fig. 2. An example of crossover operator in our GP model with trinary rules.
+
+Mutation is then implemented on some individuals or offspring with probability of mutation rate. Generally in mutation, a node is selected from tree as mutation point and its subtree is replaced with a feasible randomly generated subtree. However in our model, all three mutation strategies have been applied. These strategies include prune mutation, grow mutation, and node mutation Engelbrecht & Schoeman, 2002). In prune mutation a non leaf node is replaced by a leaf node, while in grow mutation a node is replaced by a randomly generated subtree and in node mutation the content of selected nodes are mutated.
+
+Above genetic operators are not applied on some selected individuals. These individuals are copied to new population without any modification with a reproduction rate.
+
+Maximum depth of offspring rules is considered for preventing bloat, therefore offspring rules cannot exceed a specified depth and they should regenerate if their depth exceeds predefined depth (Smith, 2002).
+6. Application of our GP model for Iranian companies
+
+Our extended genetic programming model has been applied on ten Iranian companies listed on Tehran Stock Exchange (TSE). We intend to examine the profitability of our trading rules and their risk adjusted excess returns in these companies.
+6.1. Data
+
+Iranian companies listed on Tehran Stock Exchange have been chosen for testing our GP model. Since Esfahanipour et al. (2009) obtained better rules for companies having frequent trading in the market; we select companies with the highest liquidity for testing our GP model. For this purpose, ten active companies with the highest liquidity in the recent years have been selected in different activity sectors. Selected companies and their sectors have been shown in Table 3.
+
+Table 3. Investigated Iranian companies in this study.
+Activity sector	Company	Symbol
+Motor vehicles & auto parts	Pars Khodro Co.	PKOD1
+Electric machinery & apparatus	Jooshkab Yazd Ind. Co.	JOSH1
+Refined petroleum products & nuclear fuel	Behran Oil Co.	NBEH1
+Real estate and construction	Iran Construction Investment Co.	SAKH1
+Chemicals & by-products	Petrochemical Industries Investment Co.	PETR1
+Motor vehicles and auto parts	Saipa Co.	SIPA1
+Motor vehicles and auto parts	Iran Khodro Industrial Group	IKCO1
+Chemicals & by-products	Arak Petrochemical Co.	PARK1
+Metal ores mining	Chadormalu Mineral & Ind. Co.	CHML1
+Pharmaceuticals	Sobhan Pharmacutical Co.	DSOB1
+
+Transaction cost is 0.515 percent of trade volume for buying and 1.0665 percent of trade volume for selling the stocks in TSE according to TSE’s regulation. The historical data included the dividend and splits adjusted closing price and transaction volumes for each working day (Research and Development Islamic Studies, 2009; Tehran Securities Exchange Technology Management, 2009).
+
+The GP based trading rules were learned on the training data and then were evaluated on previously unseen data associated with a testing period. The training and the testing periods are chosen as follows:
+
+    Training period: 22/8/2004–21/8/2007
+
+    Testing period: 22/8/2007–21/8/2008
+
+6.2. Parameter settings
+
+The best parameter settings for our GP are determined through the related studies (Esfahanipour et al., 2009; Fyfe et al., 2005; Potvin et al., 2004) as well as our preliminary experiments. Although larger population sizes perform better results, we set population size to 100 because of the time complexity (Esfahanipour et al., 2009). Crossover and mutation rates are selected considering preliminary experiments. The number of generations is set 50, since no significant improvements were observed after generation of 40 (see Fig. 3). Different values were also tried for other parameters. Based on these experiments, the parameter values shown in Table 4 were finally selected. Also, for risk evaluation the confidence level is set 95%, which is a confidence level selected by regulators (Acerbi, 2002).
+Rules improvement across evolution process for different stocks
+
+
+
+Fig. 3. Rules improvement across evolution process for different stocks.
+
+Table 4. Parameter settings for our GP model.
+Population size	100
+Number of generations	50
+Initialization method	Ramped half and half
+Max initial tree depth	6
+Max following tree depth	11
+Selection method	Roulette wheel
+Crossover rate	0.7
+Mutation rate	0.1
+Reproduction rate	0.2
+CVaR confidence level	95%
+6.3. Results
+
+Genetic programming model is applied on the ten mentioned Iranian companies. The trading rules were generated over the training period for each company. The best trained rule for each company is then evaluated over the testing period.
+
+It should be noted that in each case, two models are implemented to investigate profitability of trading rules in risk adjusted and unadjusted basis. In these models trading rules are generated with three signals including buy, sell and no trade. Also, Transaction cost, dividend and splits are considered in both models.
+
+The results of implementing risk unadjusted GP model is shown in Table 5. In this table, returns of the buy and hold strategy (B&H), cumulative returns of trading rules (B&S) and excess returns of trading rules over the buy and hold strategy (Excess return) are presented for each stock in columns 2–4 of this table respectively.
+
+Table 5. Numerical returns of risk unadjusted model.
+Symbol	B&H (%)	B&S (%)	Excess return (%)
+PKOD1	35.16	29.94	−5.21
+JOSH1	10.09	18.07	7.98
+NBEH1	−26.56	4.69	31.25
+SAKH1	−36.23	5.66	41.86
+PETR1	−40.02	6.5	46.52
+SIPA1	45.27	37.38	−7.89
+IKCO1	−8.56	3.52	12.08
+PARK1	−35.64	6.10	41.74
+CHML1	41.3	4.17	−37.13
+DSOB1	24.2	1.54	−22.66
+
+Average	0.9	11.76	10.85
+Number of positive returns	5	10	6
+
+Although GP based trading rules were profitable in all cases (positive B&S returns from 1.54% to 37.38%), they could not outperform the buy and hold in four stocks of PKOD1, SIPA1, CHML1 and DSOB1, with negative excess returns. In spite of these negative excess returns, the overall average excess return is positive (i.e., 10.85%) which indicates that the generated trading rules outperform the buy and hold strategy.
+
+By investigating the four stocks with negative excess returns as well as Fig. 4, which shows raw excess returns of GP based trading rules versus the buy and hold returns, we have can interpret the following results. The generated trading rules outperform the buy and hold strategy in falling and stable markets. But they underperform in the case of extremely rising markets. This is a similar result of Potvin et al. (2004) with binary trading rules without inclusion of transaction costs, splits and dividends.
+Excess returns versus the buy and hold returns in the case of risk unadjusted…
+
+
+
+Fig. 4. Excess returns versus the buy and hold returns in the case of risk unadjusted returns.
+
+However, the results of trading rules with risk adjusted measures are a little different which are presented in Table 6. According to this table, trading rules produce positive risk adjusted returns for all ten stocks. A more interesting result is that trading rules obtained positive excess risk adjusted returns over the buy and hold in all cases. Fig. 5 shows the excess risk adjusted returns of trading rules versus the buy and hold risk adjusted returns. This figure confirms the profitability of the generated trading rules in all market conditions whether falling or rising markets.
+
+Table 6. Numerical returns of risk adjusted model.
+Symbol	B&H (%)	B&S (%)	Excess risk adjusted return (%)
+PKOD1	0.01	1.42	1.41
+JOSH1	−0.02	0.00	0.02
+NBEH1	−0.01	3.45	3.47
+SAKH1	−0.02	0.06	0.08
+PETR1	−0.06	5.10	5.16
+SIPA1	0.01	1.03	1.04
+IKCO1	−0.03	7.02	6.99
+PARK1	−0.05	0.00	0.05
+CHML1	0.02	6.02	6.01
+DSOB1	0.02	5.01	4.99
+
+Average	−0.01	2.91	2.92
+Number of positive risk adjusted returns	4	10	10
+Excess risk adjusted returns versus the buy and hold risk adjusted returns
+
+
+
+Fig. 5. Excess risk adjusted returns versus the buy and hold risk adjusted returns.
+
+According to our results, although our GP model could not generate trading rules outperforming the buy and hold in rising markets, it is a profitable technique when risk adjusted measure is applied. In other words, notwithstanding the lower returns of GP based trading rules in rising markets, they can earn more returns per unit of risk in all market conditions.
+7. Conclusion
+
+In this paper, genetic programming (GP) technique has been applied to automatically generate technical trading rules on individual stocks. A GP model has been developed considering the risk importance in trader’s decision making and the effect of transaction cost, dividends and splits on transaction returns. Trading rule’s structure is also extended to three signals, including buy, sell and no trade.
+
+For risk adjusting of our model, risk adjusted returns are used to evaluate fitness of the generated trading rules. Among many risk adjusted measures which were reported in the literature, conditional Sharpe ratio has been selected in our model because of its less assumptions and more accuracy in risk measurement.
+
+Our extended GP models both risk adjusted and unadjusted models, are implemented for Ten Iranian companies listed on Tehran Stock Exchange (TSE). In risk unadjusted GP model, similar to results of Potvin et al. (2004), our trading rules outperformed the buy and hold strategy in falling and stable markets and they were not beneficial in extremely rising markets. In risk adjusted GP model, the generated trading rules outperformed the buy and hold strategy in all market conditions whether rising or falling markets. Therefore our GP model succeeded to generate profitable trading rules for all investors, whether risk seeking or risk averse.

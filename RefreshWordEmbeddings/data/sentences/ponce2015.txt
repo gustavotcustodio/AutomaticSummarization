@@ -1,0 +1,304 @@
+This paper proposes a robust liquid-level controller for coupled-tanks systems when dealing with variable discharge rates at the secondary tank , based on a hybrid fuzzy inference system that uses artificial hydrocarbon networks at the defuzzification step , so-called fuzzy-molecular control .
+The design methodology of the proposed controller is presented and discussed .
+In addition , a case study was run over the CE105 TecQuipment coupled-tanks system in order to implement and validate the fuzzy-molecular controller proposed in that work .
+A comparative evaluation with the proposed controller , a conventional PID controller specifically designed for this system and a QFT robust controller , was done .
+Also , a performance evaluation in terms of robustness , reference-tracking in a fixed operating point and reference-tracking in a variable operating point on-the-fly was run and analyzed .
+Results conclude that the proposed fuzzy-molecular controller deals with uncertainty and noise , can handle dynamics in operating point , a model of the plant is not required , and it is easy and simple to implement in comparison with other controllers in literature .
+To this end , the proposed fuzzy-molecular liquid-level controller inherits characteristics from fuzzy controllers and artificial hydrocarbon networks in order to implement an advanced robust and intelligent control system .
+Coupled-tanks systems are widely used in many industries .
+They are occupied in processes where fluids have to be stored in tanks and then transferred to other tanks as required ; maintaining some values , such as a specific height .
+For example , applications of liquid level control approaches in coupled-tanks include : petrochemical industries , paper making , water treatment , food processing , beverage industries , pharmaceutical , and so forth ( Abbas , Asghar , & Qamar , 2012 ; Holic & Vesely , 2011 ; Pan , Wonga , Kapilaa , & de Queiroz , 2005 ; Singh , Mukherjee , & Nikolaou , 2014 ) .
+However , these systems require efficient liquid level controllers , due to the necessity of pumping the liquid stored in a primary tank to a secondary tank that are actually coupled together ( see Fig 3 ) .
+In particular to coupled-tanks systems , one of the main problems in liquid level controllers considers the failure of them for reference-tracking due to variations of parameters in the system like time varying of discharge rates in tanks ( e.g .
+variations in valve opening ) , falling in a dynamic set point .
+In that sense , liquid level regulation in coupled-tanks systems can be handled using different control schemes .
+Literature and industry distinguish these control approaches as : fixed-gain controllers , predictive controllers , robust controllers , and intelligent controllers ( Abbas et al. , 2012 ; Benayache & Castelain , 2009 ; Benayache , Mahmoud , Chrifi-Alaoui , Bussy , & Castelain , 2009 ; Holic & Vesely , 2011 ; Pan et al. , 2005 ; Tahir , Iqbal , & Mustafa , 2009 ) .
+However , literature reports that fixed-gain controllers are inadequate when parameters of coupled-tanks systems are time varying and disturbances are present ( Abbas et al. , 2012 ; Liang , 2011 ) .
+In any case , the PID controller is the most used strategy in coupled-tanks systems ( Holic & Vesely , 2011 ) .
+For instance , predictive controllers are designed for calculating future control signals that minimizes a cost function defined over a prediction horizon ( Khalid & Kadri , 2012 ) .
+Several examples of this kind of control systems can be found , such as : the generalized predictive control ( GPC ) , the most popular model predictive method ( Clarke , Mohtadi , & Tuffs , 1987 ; Khalid & Kadri , 2012 ) ; or , the linear discrete-time model predictive control ( DMPC ) for multiple-input and multiple-output ( MIMO ) coupled-tanks systems ( Khalid & Kadri , 2012 ) .
+Recently , Khalid and Kadri ( 2012 ) use a linear model predictive control ( MPC ) based on Laguerre functions for determining the path of the state space model of the plant and minimizing perturbances .
+Alternately , robust controllers can deal with uncertainties , disturbances and time-varying systems ( Abbas et al. , 2012 ; Khan & Spurgeon , 2006 ) .
+Sliding mode control ( SMC ) is the most common robust control technique that has been implemented for coupled-tanks systems for overcoming disturbances and noise ( Abbas et al. , 2012 ) .
+However , chattering is an effect of SMC that causes a problem when dealing with controlling coupled-tanks systems .
+In that way , Almutairi and Zribi ( 2006 ) implement SMC in coupled-tanks system for liquid level using one static and dynamic sliding mode schemes in order to reduce the chattering problem .
+Other approaches of robust control are the second order sliding mode controller ( SOSMC ) developed for eliminating high frequency chattering due to high frequency switching ( Benayache & Castelain , 2009 ; Benayache et al. , 2009 ) , and the second order sliding mode controller for MIMO systems ( Khan & Spurgeon , 2006 ) .
+In the work of Khan and Spurgeon ( 2006 ) , a second order SMC is proposed , reducing the chattering problem but also improving the algorithm to produce a dynamic control without requiring the derivative of the sliding variable that typically needs an observer or peak detectors to inspect singular values .
+On the other hand , intelligent controllers ( IC ) are characterized for using algorithms and methods inspired on human intelligence , and more recently , on natural intelligence ( Yu , 2009 ) .
+In that sense , fuzzy controllers and neural networks controllers have been well studied because they do not need an explicit mathematical model of the plant in order to be designed ( Molina , Ponce , Ponce , Tello , & Ramirez , 2014 ; Yu , 2009 ) .
+In addition , these intelligent controllers have proved to be very efficient when dealing with nonlinearities , uncertainty and noise ( Liang , 2011 ; Ponce , Ponce , & Molina , 2013 ) , positioning intelligent controllers over fixed-gain , predictive and robust controllers .
+For example , Lian , Marzuki , and Rubiyah ( 1998 ) proposes a hybrid neuro-fuzzy control system auto-tuning with genetic algorithms , providing an adaptive controller that handles noise , uncertainty and nonlinearities in liquid level coupled-tanks control systems .
+In ( Li , Yi , & Zhao , 2008 ) , a type-II fuzzy control system is proposed to handle high uncertainty improving the characteristics of intelligent controllers for coupled-tanks liquid level systems .
+This type-2 fuzzy control system includes a footprint of uncertainty in membership functions to deal with nonlinear relationships like disturbances and noise , also provides a dynamic operating point .
+However , type-II fuzzy controllers are difficult to implement and spend a lot of computational resources .
+Recently , literature reports hybrid intelligent and predictive or robust controllers in order to exploit characteristics from both schemes .
+For example , Aliasghary , Ghasemzadeh , Naderi , and Pourazar ( 2011 ) propose an alternative robust controller using intelligent methods developing a hybrid radial basis function neural networks with a sliding mode control scheme , aiming to solve the chattering problem and to handle low uncertainty and noise .
+Sarailoo , Rahmani , and Rezaie ( 2015 ) present a model predictive control using bees algorithm , a nature-inspired method , for minimizing a predefined cost function to find the best input signals subject to constrains and a model of the system .
+From the above , liquid level coupled-tanks control system is still a challenging problem and a wide range of different controllers have been developed .
+In that way , this paper proposes a novel intelligent controller for a coupled-tanks system , based on a recent hybrid fuzzy inference system and artificial organic networks approach so-called fuzzy-molecular inference system ( Ponce et al. , 2013 ) .
+This fuzzy-molecular inference system inherits characteristics from fuzzy inference systems ( e.g .
+storage of knowledge from experts , dealing with uncertainty , linguistic variables ) and artificial organic networks ( e.g .
+packaging information in molecular units , organizing of information , dealing with aggresive uncertainty and noise ) , a learning method inspired on chemical organic compounds .
+In advance , fuzzy-molecular inference system can deal with uncertainty and under aggressive conditions of noise , with relative easiness of implementation ( Molina et al. , 2014 ; Ponce et al. , 2013 ) .
+Examples of fuzzy-molecular based controllers can be found in Molina et al .
+( 2014 ) Ponce , Ibarra , Ponce , and Molina ( 2014a ) , Ponce et al .
+( 2013 , 2014b ) .
+Thus , the objective of this work is to design , develop and implement an intelligent fuzzy-molecular liquid level controller for a coupled-tanks system in order to be robust in terms of any variation at the relative discharge rates of the second tank .
+In addition , this paper presents the implementation of the proposed controller in a case study over the CE105 TecQuipment coupled-tanks system .
+A comparative analysis with a conventional PID controller and a non-conventional quantitative feedback theory ( QFT ) controller , is presented and discussed .
+In a nutshell , the contribution of this work is summarized following : • A novel intelligent controller based on fuzzy-molecular inference systems specifically for coupled-tanks systems is proposed .
+• A simple but meaningful controller is described that overcomes uncertainty , noise and lack of robustness .
+• A model of the plant is not required , so that the proposed controller can be easily generalized to other coupled-tanks systems , and it will not present chattering .
+• A molecular partition of the output domain can be interpreted as linguistic units .
+• At last , the proposed intelligent controller improves fuzzy controllers and performs better output response compared with conventional PID controllers and non-conventional controllers .
+The rest of the paper is ordered as follows : Section 2 briefly describes artificial hydrocarbon networks and fuzzy-molecular inference systems .
+Then , Section 3 formalizes the proposed controller and its design .
+Later on , Section 4 describes the case study in which the proposal has implemented .
+Section 5 presents experimental results of the proposed controller .
+Lastly , Section 6 concludes this paper .
+This section introduces the notion of a fuzzy-molecular inference system ( FMI ) , firstly proposed by Ponce et al .
+( 2013 ) .
+Roughly speaking , it is a hybrid fuzzy inference system ( FIS ) composed of a fuzzy partition at the input space of antecedents , and artificial hydrocarbon networks structures of consequences as part of fuzzy implications .
+Fig 1 shows a fuzzy-molecular inference system ( Ponce et al. , 2013 ) .
+Structure of a general fuzzy-molecular inference system : fuzzification is… Fig 1 .
+Structure of a general fuzzy-molecular inference system : fuzzification is represented as a fuzzy partition of the input space , and defuzzification is composed of a molecular-based structure .
+For full understanding , artificial hydrocarbon networks algorithm is introduced before a formal description of the fuzzy-molecular inference system .
+Structure of an artificial hydrocarbon network using saturated linear chains of… Fig 2 .
+Structure of an artificial hydrocarbon network using saturated linear chains of molecules .
+Artificial hydrocarbon networks Artificial hydrocarbon networks algorithm is based on a technique called artificial organic networks .
+It is a class of learning algorithms , inspired on chemical organic compounds , that is mainly characterized by packaging information in modules , so-called molecules ( Ponce & Ponce , 2011 ; Ponce , Ponce , & Molina , 2014b ) .
+Similarly to chemical organic compounds , artificial organic networks define heuristic mechanisms for generating organized and optimized structures based on chemical energy .
+In a nutshell , artificial organic networks allow ( Ponce et al. , 2014b ) : modularity , inheritance , organizational , and structural stability .
+On the other hand , artificial hydrocarbon networks is a supervised learning algorithm with a graphical model structure inspired on chemical hydrocarbon compounds ( Ponce et al. , 2014b ) .
+Similar to chemical hydrocarbons , artificial hydrocarbon networks are composed of two atomic units : hydrogen and carbon atoms that can be linked with at most one and four other atoms , respectively .
+Actually , these atomic units interact among them to produce molecules .
+In particular to this method , the basic unit with information is the CH-molecule .
+It is made of two or more atoms linked between them in order to define a mathematical function φ centered in the carbon atom and parameterized with hydrogen atoms attached to it , as shown in ( 1 ) ; where , represents the behavior of CH-molecule , σ is a real value called the carbon value , is the ith hydrogen atom linked to the carbon atom , k represents the number of hydrogen atoms in the molecule , and x is the input to that molecule ( Ponce et al. , 2013 ; 2014b ) .
+( 1 ) If a CH-molecule is non-saturated ( i.e .
+k < 4 ) , then it can be joined together with other CH-molecules with the same property , forming chains of molecules so-called artificial hydrocarbon compounds .
+In Ponce et al .
+( 2014a , 2013 ) , authors suggest using saturated linear chains of molecules like in ( 2 ) ; where , CHk represents a CH-molecule with k hydrogen atoms associated to it , and the line symbol represents a simple bond between two molecules .
+Notice that outer molecules are CH3 while inner molecules are CH2 .
+( 2 ) Artificial hydrocarbon compounds also has associated a function ψ representing its behavior .
+For this work , it was selected the piecewise compound behavior ( Ponce et al. , 2014b ) , such that as expressed in ( 3 ) ; where , Lt represents the tth bound that limits the action of a CH-molecule over the input space .
+In that sense , if the input domain is in the interval x ∈ [ Lmin , Lmax ] , then and and the jth CH-molecule acts over the interval for all .
+( 3 ) At last , artificial hydrocarbon compounds can interact among them in definite ratios forming a mixture .
+For this method , weights are called stoichiometric coefficients and they are represented as elements as shown in ( 4 ) ; where , c is the number of compounds in the mixture ( Ponce et al. , 2014b ) .
+For this work , the artificial hydrocarbon networks structure considers one compound , such that , and .
+( 4 ) Formally , an artificial hydrocarbon network is a mixture of artificial hydrocarbon compounds ( see Fig 2 ) , each one obtained using a chemical-based meta heuristic rule .
+The training algorithm is known as the AHN-algorithm ( Ponce et al. , 2013 ; 2014b ) , and it is shown in Algorithm 1 ; where , ‖R‖ stands for the norm of R , and |A| is the cardinality of set A .
+Notice that Algorithm 1 reflects the restrictions about saturated linear chain of molecules and a piecewise compound behavior imposed for this work .
+For a detailed description of the general AHN-algorithm , see Ponce et al .
+( 2014b ) .
+In addition , the AHN-algorithm is available at the Artificial Organic Networks Toolkit for LabVIEW™ ( Ponce et al. , 2014b ; 2015 ) .
+AHN-Algorithm Algorithm 1 .
+AHN-Algorithm .
+Fuzzy inference system with a molecular approach Fuzzy-molecular inference systems are ensembles of artificial hydrocarbon networks and fuzzy inference systems ( Ponce et al. , 2013 ) .
+For instance , consider a FIS like Fig 1 .
+As shown , it considers three steps : fuzzification , fuzzy inference engine and defuzzification .
+The overall process maps crisp inputs to a fuzzy space and resulting values are returned to as crisp outputs using a molecular approach based on artificial hydrocarbon networks .
+In addition , a knowledge base stores information about a specific problem ( Ponce et al. , 2013 ) .
+Fuzzification step In this step , the fuzzy-molecular inference system receives an input x , known as a linguistic variable , and it is mapped to a fuzzy value in the range of [ 0 , 1 ] .
+Then , let F be a fuzzy set and μF ( x ) the membership function of F , ∀x ∈ X ; where X is the input domain space .
+Moreover , μF ( x ) ∈ [ 0 , 1 ] is a real value representing the degree of belonging x to the fuzzy set F as shown in ( 5 ) ( Ponce et al. , 2013 ) .
+( 5 ) In addition , x can be partitioned into k different fuzzy sets Fi , for all .
+Then , its membership value is calculated over the set of membership functions for all ( Ponce et al. , 2013 ) .
+To this end , the shape of these membership functions depends on the purpose of the problem domain , e.g .
+triangular functions .
+Fuzzy inference engine step It is a mechanism that computes the consequent value yp of a set of fuzzy rules that accept membership values of linguistic variables .
+For instance , let Rp be the pth fuzzy rule of the form as ( 6 ) ; where , is the set of linguistic variables at the antecendents , is the set of fuzzy partitions of the input space X , yp is the variable of the consequent in the pth rule , Mj is the jth CH-molecule of an artificial hydrocarbon network stimulated with the resulting fuzzy implication value ( see below ) , and Δ is any T-norm function ( Ponce et al. , 2013 ) .
+( 6 ) If assuming that is the result of any T-norm function , then ( 6 ) can be rewritten as ( 7 ) ; where , φj is the molecular behavior of Mj .
+For simplicity to this work , let assume that is the minimum function like expressed in ( 8 ) .
+( 7 ) ( 8 ) 2.2.3 .
+Defuzzification step In this step , it calculates the crisp output value y using centroid defuzzification ( 9 ) with all fuzzy rules of the form as ( 7 ) ; where , is the fuzzy evaluation of the antecedents and yp is the pth consequent value , for all fuzzy rules ( Ponce et al. , 2013 ) .
+( 9 ) 2.2.4 .
+Knowledge base At last , fuzzy-molecular inference systems enclose in the knowledge base specific information about the problem that the fuzzy inference engine step uses .
+This knowledge base can be represented as a matrix structure summarizing all fuzzy rules in the system and relating them with molecular outputs .
+This matrix can be constructed as suggested by Ponce et al .
+( 2013 ) 2014b ) : ( i ) generate all possible combinations of input variables using the labels of each set in the fuzzy partition of inputs , covering all the fuzzy rules , and ( ii ) for each combination , assign the corresponding label of molecule Mj that will act when the fuzzy rule is fired .
+This section describes the proposal about designing a liquid-level controller at the second tank in coupled-tanks systems using the fuzzy-molecular inference system .
+For instance , consider the system shown in Fig 3 , in which particularly , La represents the actual liquid level L at the second tank .
+If Lr represents the liquid-level reference value , then it can be computed the error over time e ( t ) between the reference and the actual values like in ( 10 ) .
+( 10 ) On the other hand , Fig 4 shows the block diagram of a liquid level control system for coupled-tanks systems .
+As noticed , this is a closed-loop system that occupies the reference value Lr and the actual liquid-level value La to compute the error e ( t ) , which it is used as an input of the control law .
+Once the control law generates the correction signal u ( t ) , it sets the pump of the plant ( see Fig 3 ) that will modify La .
+To this end , the next section describes the control law using the fuzzy-molecular inference system .
+Diagram of a coupled-tanks system Fig 3 .
+Diagram of a coupled-tanks system .
+( H , L ) : liquid-levels , ( Qa , Qb , Qc ) : related flows , ( Qi ) : inflow pump rate , ( A ) : tank cross-sectional area .
+Block diagram of the closed-loop liquid-level control system of coupled-tanks… Fig 4 .
+Block diagram of the closed-loop liquid-level control system of coupled-tanks systems .
+Design of the control law The FMI-based liquid level controller for coupled-tanks systems requires the design of the control law that will consist of four components , as observed in Fig 1 .
+Following , each component is described .
+Fuzzification step In order to design a FMI-based controller , a control strategy should be selected .
+The most common strategies in control theory are : the proportional ( P ) controller ; the proportional and derivative ( PD ) controller ; the proportional , integral and derivative ( PID ) controller ; and the proportional and integral ( PI ) controller .
+In any case , the error e ( t ) shown in ( 10 ) between the reference Lr and actual La liquid level values is required , as well as its derivative and/or its integral ∫e ( t ) dt .
+Other controllers require the derivative and/or integral of a suitable variable .
+Once a control strategy has chosen and the inputs of the controller have been selected , this step considers partitioning the input space into k fuzzy sets with its corresponding membership functions for each input x .
+As an example , if a P-controller was selected , then the only input is e ( t ) , and it can be partitioned into three fuzzy sets : “ negative ” , “ zero ” , and “ positive ” .
+Fuzzy inference engine step At this step , it is required to define the set of fuzzy rules of the form as ( 7 ) trying to cover the overall state space of the problem .
+Recalling ( 7 ) , the consequent values yp are computed using the behavioral function ( 1 ) of the CH-molecule specified in fuzzy rules ( for more details about molecules , see the next defuzzification step ) .
+Thus , the set of fuzzy rules is equivalent to the knowledge base .
+As an example of this step , consider the set of rules in ( 11 ) ; then , the knowledge base can be summarized as Table 1 .
+( 11 ) Table 1 .
+Example of a knowledge base using the set of rules in ( 11 ) .
+e ( t ) Molecule Negative M3 Zero M1 Positive M2 3.1.3 .
+Defuzzification step The last step in the FMI-based controller computes the correction signal u ( t ) in order to manipulate the proper actuators ( e.g .
+the water pump ) in the plant such that the liquid level La is regulated .
+In fact , the correction signal can be evaluated using ( 9 ) such that .
+On the other hand , the design of the set of molecules employed in fuzzy rules should be arranged in an artificial hydrocarbon compound like the saturated linear chain of molecules in ( 2 ) .
+In that sense , the design of defuzzification step considers to propose the number of molecules n in the compound , the set of hydrogen Hi and carbon σ values , and the set of bounds Lt of each CH-molecule in the compound .
+In Fig 5 , it shows an example of an artificial hydrocarbon compound presented as a structural formula ( Ponce et al. , 2014b ) , that represents the set of molecules M1 , M2 , M3 required in Table 1 .
+Example of a saturated linear chain of CH-molecules designed for a FMI-based… Fig 5 .
+Example of a saturated linear chain of CH-molecules designed for a FMI-based controller , represented in a structural formula diagram .
+This section describes the case study used for implementing and validating a fuzzy-molecular inference system based liquid-level controller for a coupled-tanks system .
+For experimental purposes , this controller was developed and implemented for the CE105 TecQuipment coupled-tanks system .
+In that sense , the latter system is also introduced , and a model identification was performed to run a comparative experiment between a conventional PID controller and the proposed FMI-based controller .
+Lastly , a comparative analysis between a non-conventional quantitative feedback theory ( QFT ) based controller and the proposed FMI-based controller is also presented and discussed .
+System description The CE105 TecQuipment coupled-tanks system used in the case study comprises two separate vertical tanks ( i.e. , primary and secondary ) , which they are connected by a flow channel ( see Fig 3 ) .
+The liquid input is supplied into the primary tank by a variable speed water pump that regulates the inflow .
+The intermediate channel allows a relative flow discharge from the primary to the secondary tank , regulated by valve-A .
+At last , liquids flow out the reservoir through valve-C .
+This system also contains valve-B which allows a flow discharge of the primary tank .
+To this end , valves can be manually varying from 0 ( totally closed ) to 5 ( totally opened ) .
+Each tank is fitted with a liquid level sensor mounted at the rear of the CE105 front panel .
+Both sensors are individually connected with a flexible tubing located at the base of the tanks .
+In addition , an in-line flow sensor is located near to the output of the water pump for measuring the flow rate at this point .
+Table 2 summarizes the technical specifications of the CE105 system related to the experiment ( Bastida , Ponce , Ramirez , & Molina , 2013 ; TecQuipment , 2013 ) .
+Lastly , the proposed fuzzy-molecular controller will be programmed in the LabVIEW platform hosted in a computer interfaced with the coupled-tanks system using a data-acquisition target NI-DAQ 6009 .
+Table 2 .
+Technical specifications of the CE105 TecQuipment coupled-tanks system ( Bastida et al. , 2013 ; TecQuipment , 2013 ) .
+Part Description Tanks ( cross sectional area ) 9 , 350mm2 Valves ( cross sectional area ) 78.5mm2 Discharge coefficient of valve-A ≈ 0.5 Discharge coefficient of valve-B ≈ 0.1 Discharge coefficient of valve-C ≈ 0.1 Water pump gain Level sensor gain 40V/m Liquid level sensors output , corresponding to Water pump flow sensor output , corresponding to For instance , consider the coupled-tanks system shown in Fig 3 .
+It can be modeled using the transfer function ( 12 ) with ( 13 ) already obtained from Bastida et al .
+( 2013 ) where , L is the liquid level of the secondary tank , V is the voltage of the water pump in the primary tank , H is the liquid level of the primary tank , Qa , Qb and Qc are the related flows associated to the valves in the system , A is the tank cross-sectional areas , Kp is the water pump gain and Kh is the sensor level gain both on the secondary tank , and s recalls to the frequency domain .
+( 12 ) ( 13 ) 4.2 .
+Design of the fuzzy-molecular liquid level controller The fuzzy-molecular liquid level controller for the CE105 TecQuipment coupled-tanks system is designed using the methodology described in Section 3 .
+As already said , conventional controllers for coupled-tanks systems have weaknesses when the dynamics of the system falls out the operating point , resulting in an unstable performance ( Abbas et al. , 2012 ; Liang , 2011 ) .
+Thus , the proposed fuzzy-molecular controller has to be robust .
+Particularly to this case study , the controller will be considered robust if it can respond to any discharge level of valve-C : level 2 ( mid-close ) , level 3 ( mid-open ) and level 4 ( almost-open ) .
+In that sense , a fuzzy-molecular PD controller is proposed with two inputs : the error function e ( t ) between the liquid-level reference value Lr ( t ) and the actual liquid-level value La ( t ) , and the change in the actual liquid-level defined as ( 14 ) .
+( 14 ) Then , the input domain space is partitioned into three fuzzy sets : “ negative ” ( N ) , “ zero ” ( Z ) and “ positive ” ( P ) .
+Figs .
+6 and 7 show the fuzzy membership functions for both inputs , respectively .
+Membership functions of the input error in liquid-level e ( t ) Fig 6 .
+Membership functions of the input error in liquid-level e ( t ) .
+Membership functions of the input change in liquid-level L˙a ( t ) Fig 7 .
+Membership functions of the input change in liquid-level .
+Furthermore , the set of fuzzy rules obtained for this proposed controller relates the above inputs with a molecular representation of the correction signal output u ( t ) , as seen in Table 3 .
+The output of the proposed controller is represented with three CH-molecules : “ zero ” ( MZ ) , “ positive ” ( MP ) and “ very positive ” ( MVP ) .
+Fig 8 shows the structural formula of the artificial hydrocarbon compound related to the correction signal u ( t ) .
+It is remarkable to say that linguistic meanings of the CH-molecules reflect the behavior of the control over the system , since the CE105 coupled-tanks system is regulated by modifying the in-line flow using the water pump , it can only be a positive flow rate ( e.g .
+fill in the primary tank ) .
+Table 3 .
+Knowledge base of the proposed fuzzy-molecular PD liquid level controller : input e ( t ) , input and output u ( t ) .
+u ( t ) N Z P e ( t ) N MZ MZ MZ Z MP MZ MZ P MVP MP MP Structural formula of the artificial hydrocarbon compound representing u ( t ) … Fig 8 .
+Structural formula of the artificial hydrocarbon compound representing u ( t ) employed in the proposed fuzzy-molecular PD liquid level controller .
+Design of the comparative experiment In order to measure the performance of the proposed fuzzy-molecular PD liquid level controller , three different experiments were designed .
+The first experiment considers a comparison between the proposed fuzzy-molecular PD controller and a conventional PID controller , with a fixed operating point .
+The second experiment considers a comparison between the proposed fuzzy-molecular PD controller and a non-conventional QFT controller , with a fixed operating point .
+Lastly , the third experiment considers three evaluations : robustness at any discharge level of valve-C , tracking at the reference liquid-level value at any discharge level of valve-C , and tracking at the reference liquid-level value due-to-changes of valve-C .
+Following , each experiment is briefly described .
+Comparative experiments These experiments will evaluate the performance of the fuzzy-molecular PD controller in contrast with a conventional PID controller and a non-conventional QFT controller .
+In particular , these experiments fixed the operating point to the following requirements : valve-A is totally opened ( level 5 ) , valve-B is almost-close ( level 1 ) and valve-C is almost-close ( level 1.5 ) .
+First , a model identification of the CE105 system was run in order to design a conventional PID controller .
+In particular , this model identification was obtained performing a frequency sweep to get the ratio between the liquid-level at the secondary tank L and the water pump voltage V. The frequency sweep was applied from 0.48mHz to 42.6mHz at intervals of 2.3mHz .
+Fig 9 shows the Bode diagrams obtained from the difference between amplitude and phase angle of the input and output signals when applying the frequency sweep , and it also shows a second-order system approximation .
+To this end , the second-order model identification of the CE105 TecQuipment system is expressed in ( 15 ) .
+The validation of ( 15 ) was determined by comparing a sinosoidal response of the system against the experimental model identification , as shown in Fig 10 .
+( 15 ) Bode diagrams obtained from the frequency sweep technique over the CE105 system… Fig 9 .
+Bode diagrams obtained from the frequency sweep technique over the CE105 system ( Bastida et al. , 2013 ) .
+Validation of the CE105 system using a sinosoidal response Fig 10 .
+Validation of the CE105 system using a sinosoidal response .
+( Solid-line ) : real response system , and ( ○ line ) : simulated response system ( Bastida et al. , 2013 ) .
+Once the model system was identified , a conventional PID controller was designed .
+Using the Ziegler–Nichols method , the PID controller gains result in : and .
+A detailed information about the model identification and PID controller design can be found in Bastida et al .
+( 2013 ) .
+On the other hand , a non-conventional QFT controller was also designed for comparative purposes .
+Briefly , QFT is a robust control ( Horowitz & Sidi , 1973 ) and it was designed for controlling those processes described by linear models with variable parameters .
+QFT is a unified theory that emphasizes the use of feedback for achieving the desired system performance tolerances despite plant uncertainty given by unknown parameters or nonlinear system behavior .
+The method uses Bode diagrams and Nichols charts aiming to ensure a robust design over performance specifications .
+In advance , QFT aims to synthesize ( loop-shape ) a simple , low-order controller with minimum bandwidth , satisfying the desired specifications and boarding feedback control problems with robust performance objectives ( Horowitz & Sidi , 1973 ) .
+In that sense , a QFT controller ( 16 ) was designed using the methodology described in ( Houpis & Rasmussen , 1999 ) .
+Additionally , a pre-filter ( 17 ) was also designed to ensure that the closed loop system accomplishes the design specifications .
+( 16 ) ( 17 ) 4.3.2 .
+Performance experiment On the other hand , the performance experiment considers to measure the robustness of the proposed fuzzy-molecular PD controller at different discharge levels of valve-C ( i.e .
+levels 2–4 ) .
+In addition , a tracking evaluation of a reference level over a specific period of time will be implemented too .
+Lastly , the latter evaluation will be expanded to measure the tracking of the proposed fuzzy-molecular PD controller due to changes in the discharge levels over a specific period of time .
+In fact , maximum overshooting , rising time , settling time , and error in steady-state will be considered .
+As explained previously , the proposed fuzzy-molecular liquid level PD controller was evaluated in the CE105 TecQuipment coupled-tanks system , running three different experiments : a comparative evaluation between the proposed controller and a conventional PID controller , also a comparative evaluation against a QFT controller , and a performance evaluation focusing on robustness , tracking with a fixed discharge level and tracking due to changes of discharge level .
+Following , the experimental results are presented .
+Comparative evaluation Using the proposed fuzzy-molecular PD controller , the conventional PID controller , and the non-conventional QFT controller described in Section 4 , a step response was run over the CE105 coupled-tanks system with the following configuration of valves : level 5 in valve-A , level 1 in valve-B and level 1.5 in valve-C .
+Fig 11 shows a comparison of these controllers .
+It can be seen that the proposed controller reaches the steady-state approximately 5 times faster than the conventional PID controller and 3 times faster than the QFT controller ( s , s and s , respectively ) .
+In addition , the maximum overshooting of the proposed controller is 20.0 % in contrast with the maximum overshooting of 22.0 % using the conventional PID controller .
+However , QFT controller does not present overshooting .
+Table 4 summarizes relevant results of the performance using these controllers .
+Comparative of the step responses between the proposed fuzzy-molecular PD… Fig 11 .
+Comparative of the step responses between the proposed fuzzy-molecular PD controller , and the conventional PID controller and QFT controller , using the discharge-levels configuration : level 5 , level 1 and level 1.5 of valves A , B and C , respectively .
+Table 4 .
+Comparative results between the proposed fuzzy-molecular PD controller and the conventional PID controller .
+Controller Maximum overshooting ( % ) Rising time ( s ) Settling time ( s ) Error in steady state ( mm ) ITAE Conventional PID 22.0 218.2 512.6 0.52 369,080 QFT controller 0.0 310.2 310.2 0.19 50,623 Fuzzy-molecular PD 20.0 56.3 93.4 0.17 44,803 In addition , the integral time-weighted absolute error ( ITAE ) ( Abbas et al. , 2012 ; Veerachary , 2014 ) was computed for each controller that measures the integral of error between the reference and the actual values weighted by time .
+Roughly speaking , it measures the speed and the error in steady-state of a controller , in which the smaller the ITAE the better of performance .
+In that sense , computations gave for the fuzzy-molecular PD controller , for the conventional PID controller , and for the QFT controller ; which means that the proposed fuzzy-molecular PD controller is better than both the conventional PID and the QFT controllers .
+It is important to note that the performance of the proposed controller is better than the conventional one over the above results .
+In addition , the proposed controller is also better than the non-conventional QFT controller in terms of the settling time , error in steady-state and ITAE .
+It is remarkable to say that both PID and QFT controller required previous knowledge of the plant for designing purposes , in contrast with the proposed controller .
+Moreover , the conventional PID controller can not handle a step response outside the operating point , and the QFT controller required a pre-filter in order to maintain the system inside control boundaries .
+To this end , the following performance evaluation of the proposed fuzzy-molecular liquid-level PD controller with a variable operating point is analyzed .
+Performance evaluation This subsection presents the performance results of the proposed fuzzy-molecular PD controller in terms of robustness , tracking , and tracking due-to-changes over the discharge level of valve-C. Actually , valve-A remains level 5 as well as valve-B remains level 1 .
+Robustness In order to prove the robustness of the proposed fuzzy-molecular PD controller , three experimental step responses were done for the set of discharge rate levels described above .
+Fig 12 shows these step responses for levels 2–4 of discharge rates , respectively .
+Notice that only at level 2 the step response has a maximum overshooting of 16.7 % while at levels 3 and 4 there is no maximum overshooting .
+In addition , the settling time at each level discharge rate response are s , s , and s , respectively .
+At last , the maximum steady-state error at each discharge rate level are mm , mm , and mm , respectively .
+Table 5 summarizes these results .
+Step response of the robust fuzzy-molecular liquid-level PD controller with… Fig 12 .
+Step response of the robust fuzzy-molecular liquid-level PD controller with different discharge levels of valve-C. Table 5 .
+Overall results of robustness using the step response of three different discharge levels of valve-C .
+Discharge level Maximum overshooting ( % ) Rising time ( s ) Settling time ( s ) Error in steady-state ( mm ) Level 2 20.0 24.0 41.5 1.05 Level 3 0.0 39.5 39.5 1.10 Level 4 0.0 76.0 76.0 0.95 5.2.2 .
+Tracking with a fixed discharge level In order to prove that the proposed fuzzy-molecular PD controller can track a liquid-level reference value , an experiment using a fixed discharge rate level 3 in valve-C was run .
+The CE105 system was subjected to three different reference levels : 25.0 , 62.5 and 50.0 mm .
+Fig 13 shows the resultant tracking response with the controller .
+The settling time at each reference level are : 25 mm upward in 39.5 s , 37.5 mm upward in 38.5 s , and 12.5 mm downward in 19.5 s. In every case , the absolute steady-state error is less than 1.00 mm .
+Resultant response of reference-tracking using the proposed fuzzy-molecular PD… Fig 13 .
+Resultant response of reference-tracking using the proposed fuzzy-molecular PD liquid-level controller with level 3 configuration at valve-C. 5.2.3 .
+Tracking with changes of discharge levels Finally , another experiment was done proving that the proposed fuzzy-molecular PD liquid-level controller can respond to changes in the discharge rate level of the secondary tank , ranging from levels 2 to 4 , as shown in Fig 14 .
+It can be seen that the controller is robust due to changes in the discharge rate level , maintaining a maximum steady-state error of mm .
+It is remarkable to say that the overshooting at the level-2 section ( Fig 14 ) is due to the dynamics of the system .
+Actually , the controller only acts when the liquid level value is under or close to the reference value , and the dynamics of the system acts when the liquid level is far above the reference value .
+Step response of the fuzzy-molecular liquid-level PD controller due to changes… Fig 14 .
+Step response of the fuzzy-molecular liquid-level PD controller due to changes in the discharge rate level of valve-C in the secondary tank .
+Discussion As shown in this case study , the proposed fuzzy-molecular PD liquid-level controller can deal with nonlinearities in the coupled-tanks system , also considering a robust approach for different discharge rate levels at valve-C associated to the secondary tank of the system .
+Moreover , this controller allows the step response to have a minimum overshooting in levels 3 ( mid-open ) and 4 ( almost-open ) , i.e .
+the most common valve configurations in real-world applications ( Bastida et al. , 2013 ; Benayache et al. , 2009 ) .
+Additionally , the proposed controller reduces the settling time in all valve configurations , in contrast with the settling time s of the conventional PID controller implemented for the specific operating point of the system , and s of the QFT controller .
+In addition , the proposed controller presented easiness of design in contrast with both conventional PID and QFT controllers that require the model of the plant to be configured .
+Moreover , the comparative analysis between the proposed fuzzy-molecular PD controller and the QFT controller showed that the proposed controller improves the output response in terms of robustness without using of a pre-filter or other mechanisms to maintain the control loop system accomplishes the design specifications .
+On the other hand , the fuzzy-molecular controller offers a molecular partition of the output domain in order that they can be seen as linguistic units ( e.g .
+“ negative ” , “ very positive ” , etc . ) .
+In fact , these molecular units can deal with uncertainties , noise ; and in this case , they can offer robustness to the controller .
+For instance , literature reports that a fuzzy-molecular controller can be used as an alternative of a type-II fuzzy controllers , a type of fuzzy based controllers that deal with uncertainty ( see Ponce et al. , 2013 ; Molina et al. , 2014 ) .
+In that sense , the fuzzy-molecular approach contributes to design a simple but meaningful controller , overcoming uncertainty , noise and lack of robustness , as analyzed in the coupled-tanks case study .
+This paper proposed a novel and robust liquid level controller for coupled-tanks systems based on a fuzzy-molecular approach .
+As described , the fuzzy-molecular controller considers three steps : fuzzification , fuzzy inference engine , and defuzzification using molecular units of information .
+The latter is based on saturated linear chains of artificial hydrocarbon compounds used for describing linguistic variables at the output domain .
+Moreover , these molecular units contribute when a controller requires dealing with uncertainty and noise , as well as operating in different set-points , i.e .
+robustness .
+In that sense , this work introduces a methodology for designing these fuzzy-molecular controllers for coupled-tanks systems .
+On the other hand , a robust fuzzy-molecular liquid-level PD controller was designed for and implemented in the CE105 coupled-tanks system in order to use it for different configurations at the discharge rate level of valve-C associated to the secondary tank .
+Experimental results validate the performance of the proposed controller against with a conventional PID controller specifically designed for that system and a QFT controller .
+In fact , the proposed fuzzy-molecular PD controller presented well performance in terms of maximum overshooting , rising time , settling time and error in steady-state .
+Additionally , the proposed controller obtained better performance in terms of ITAE evaluation in contrast with the other controllers .
+Tracking evaluations were also run and results determined that the proposed controller converges to the set of tests ( tracking with a fixed operating point and tracking with variable operating points on-the-fly ) .
+To this end , the case study showed that the proposed fuzzy-molecular PD controller is easy for implementation and powerful for controlling nonlinear systems .
+The performance of the proposed liquid level controller for coupled-tanks systems based on a fuzzy-molecular approach was tested and validated .
+In that sense , in comparison with other controllers from literature , this proposed approach presents practical advantages like : easiness of design through a general methodology ; simplicity in design but meaningful in comparison with type-II fuzzy controllers ; simplicity in design because it does not require a model of the plant to be configured ; robust performance that overcomes uncertainty , aggressive noise or disturbances and dynamics of the operating point ; avoidance of chattering ; and , easiness of interpretation due to the molecular partition of the output domain that can be seen as linguistic units of information .
+However , the proposed fuzzy-molecular controller also presents some limitations .
+For example , comparing with the QFT controller , the proposed controller is less efficient in terms of overshooting , thus an improvement of the output response is required .
+In addition , auto-tuning is also desirable to set parameters of membership functions , giving a more general robust and intelligent controller for liquid level coupled-tanks systems .
+Future research considers an improvement of the fuzzy-molecular controller in order to reduce overshooting in step response .
+More testing responses might be useful to increase the theory of fuzzy-molecular controllers , and a stability analysis method requires attention .
+Also , a hybrid fuzzy-molecular controller with learning methods has been considering to design an auto-tuning controller , increasing robustness and adaptability of the controller .
+In terms of computability , experiments in FPGA or other dedicated hardware are of importance to complete the validation of the controller for commercial purposes .

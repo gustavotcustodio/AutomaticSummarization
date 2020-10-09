@@ -1,0 +1,253 @@
+<article>
+  <title>Financial ratings with scarce information: A neural network approach</title>
+  <abstract>
+    <sentence>On a wake of Basel II Accord in 2004, banks and financial institutions can build an internal rating system.</sentence>
+    <sentence>This work focuses on Italian small firms that are more hard to judge because quite often financial data are not simply available.</sentence>
+    <sentence>The aim of this paper is to propose a simulation model for assigning rating judgements to these firms, using poor financial information.</sentence>
+    <sentence>The proposed model produces a simulated counterpart of Bureau van Dijk-K Finance (BvD) rating judgements.</sentence>
+    <sentence>It is clear that there are problems when small firms must be judged because it is difficult to obtain financial data; indeed in Italy these enterprises must deposit the balance-sheet in reduced form.</sentence>
+    <sentence>Suggested methodology is a three-layer process where each of them is formed by, respectively, one, two and four feed-forward artificial neural networks with back-propagation algorithm.</sentence>
+    <sentence>The proposed model is a good solution for evaluating small firms with poor financial information but not only: the research underlines and supports the ability of artificial neural networks of learning and reproducing some aspects or some features or behaviours of reality.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Rating judgements</keyword>
+    <keyword>Artificial neural networks</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Bankruptcy prediction of firms has been largely studied by banks and researchers since late 1960 (Altman, 1968).</sentence>
+    <sentence>Ravi Kumar and Ravi (2007) underlines that banks or firm health in competitive industries is dependent upon “(i) how financially solvent it is at the inception; (ii) its ability, relative flexibility and efficiency in creating cash from its continuous operations; (iii) its access to capital markets and (iv) its financial capacity and staying power when faced with unplanned cash short-falls”.</sentence>
+    <sentence>The concept of default probability has become very relevant after Basel II (2004) because the New Basel Accord (Basel Committee on Banking Supervision, 2004) provided the possibility for banks and financial institutions to define a model for assigning rating judgements to their customers.</sentence>
+    <sentence>For this reason many statistical and intelligent techniques have been used for forecasting default probability and economic-financial performances of firms.1 Rating judgements are known as evaluations of a potential borrower’s ability to repay debt, prepared by a credit bureau at the request of the lender.</sentence>
+    <sentence>Typically, a credit rating tells a lender or investor the probability of the subject being able to pay back a loan.</sentence>
+    <sentence>However, in recent years, credit ratings have also been used to adjust insurance premiums, determine employment eligibility, and establish the amount of a utility or leasing deposit.</sentence>
+    <sentence>A poor credit rating indicates a high risk of defaulting on a loan, and thus leads to high interest rate, or the refusal of a loan by the creditor.</sentence>
+    <sentence>Standard and Poor’s, Moody’s and Fitch Rating are the biggest rating agencies but with the New Accord all financial institutions can build a system for assigning ratings.</sentence>
+    <sentence>In this study judgements used have been extracted from Bureau van Dijk (BvD)2 that defined eight classes, from KR7 (the best performance) to D (default firms).</sentence>
+    <sentence>Obviously, the problem of determining rating scores or default probability is very close to the variables introduced in the model.</sentence>
+    <sentence>Indeed big rating agencies assess performance of firms on a base of balance-sheet accounts, market information (i.e.</sentence>
+    <sentence>share value) but also confidential data (economic situation of owner or shareholders or managers).</sentence>
+    <sentence>Nevertheless, the problem in this study is not feature selection because the issue faced is to build a model able to determine rating score of firms with scarce balance-sheet data.</sentence>
+    <sentence>Indeed rating judgement of Bureau van Dijk and then also that reproduced in this context is called “technical” because it does not draw from personal or informal information about firm.</sentence>
+    <sentence>The first studies on financial prediction model for bank were made by Beaver (1966) and Altman (1968) that have used univariate analysis and discriminant one.</sentence>
+    <sentence>The last work has been revised in Zeta analysis by Altman, Haldeman, and Narayanan (1977) that have introduced comprehensive inputs in the previous analysis.</sentence>
+    <sentence>In the following years many researchers used different models as logistic regression but also data envelopment analysis (DEA), for predicting failure probability of bank (Cielen, Peeters, &amp; Vanhoof, 2004; Kao &amp; Liu, 2004; Martin, 1977).</sentence>
+    <sentence>All these researches use statistical methodologies suffering from the assumption of multivariate-normality for independent variables.</sentence>
+    <sentence>If this hypothesis is violated these methods could be theoretically invalid for finite sample (Berrt &amp; Linoff, 1997; Huang, Chen, Hsu, Chen, &amp; Wu, 2004).</sentence>
+    <sentence>Data mining techniques and intelligent systems are good tools for finding out the potential and significant information from large data sets (Lin, Shiue, Chen, &amp; Cheng, 2009).</sentence>
+    <sentence>Indeed many authors displayed that decision tree methodology or artificial neural networks perform better than the discriminant analysis or logit regression in predicting bankruptcy event (Olmeda &amp; Fernandez, 1997; De Andres, Landajo, &amp; Lorca, 2005).</sentence>
+    <sentence>A second flow of studies focuses on hybrid frameworks that include strengths of different models.</sentence>
+    <sentence>In this direction is the work of Ahn, Cho, and Kim (2000) that combines a rough set approach and a neural network for forecasting failure of firms based on past financial performance data.</sentence>
+    <sentence>More recent study is made by Ryu and Yue (2005) that introduce the so called “isotonic separation method” for bankruptcy prediction.</sentence>
+    <sentence>The evidence emerging from these studies is that hybrid methodologies are the best performers because statistical methodologies, as logit, probit, ANOVA, discriminant analysis, are very effective in selecting determinant variables; whereas intelligent models are the best in providing provisions (Lee, Han, &amp; Kwon, 1996; Lin &amp; McClean, 2001).</sentence>
+    <sentence>Other researches use hybrid intelligent models for selecting input variables and forecasting default event as fuzzy clustering, self-organizing map or support vector machines (Alam, Booth, Lee, &amp; Thordarson, 2000; Huang, Chen, &amp; Wang, 2007; Lin et al., 2009).</sentence>
+    <sentence>The same considerations and results have been found on credit scoring field.</sentence>
+    <sentence>Indeed creditors construct classification rules (rating or credit scoring models) based on data of applicants.</sentence>
+    <sentence>Hybrid methodologies are the most numerous in the literature, in particular the methodologies combining statistical and intelligent techniques: clustering and neural network (Hsieh, 2005), artificial neural networks and multivariate adaptive regression splines (Lee &amp; Chen, 2005), discriminant analysis and neural network (Lee, Chiu, Lu, &amp; Chen, 2002), genetic algorithm and neural network (Chen &amp; Huang, 2003).</sentence>
+    <sentence>The research presented in this paper uses a unique technique, that is the feed-forward artificial neural network with back-propagation algorithm.</sentence>
+    <sentence>It will show the ability of this model to predict insolvency of a firm and to simulate credit ratings.</sentence>
+    <sentence>On the computation side, an algorithm for calculating an optimal threshold that separates good firms from bad ones is illustrated.</sentence>
+    <sentence>Moreover, a three-layer neural network framework for the rating simulation is explained.</sentence>
+  </section>
+  <section name="Research goal">
+    <sentence>In this study three subjects are considered.</sentence>
+    <sentence>The first two have a computational soul and the third one represents an application of model to rating assessment problem.</sentence>
+    <sentence>The inspiring idea was born from the evidence that in Italy the majority of firms have micro or small size and laws do not require them to present completed balance-sheets.</sentence>
+    <sentence>It became very difficult to assess these firms from the only information collected in these poor documents and also big analyst companies, as Bureau van Dijk (BvD), were not able to judge a lot of them.</sentence>
+    <sentence>Ceris-CNR institute analyses the economic and financial situation of Piedmont firms applying descriptive statistics but the data lack can often produce distorted images of reality or weak considerations.</sentence>
+    <sentence>On a wake of these remarks in the first presented model we discuss the artificial neural network validity in forecasting default probability of firms and its classification power in the situation of weak disposability of balance-sheet data.</sentence>
+    <sentence>A second more complex framework will be shown for proving that it is possible to simulate rating judgements also with scarce data.</sentence>
+    <sentence>Indeed Ceris-CNR buy from Bureau van Dijk rating judgements but for the above mentioned reason not all firms have their rating scores.</sentence>
+    <sentence>A third result shows a model customization built for improving outcomes just obtained from the previous framework.</sentence>
+  </section>
+  <section name="Models and data">
+    <sentence>As explained in the previous section Italian laws do not require that all firms compile detailed balance-sheets.</sentence>
+    <sentence>This depends on the nature of society and then, substantially, on the size of firms.</sentence>
+    <sentence>Rating agencies and analyser societies even have not disposability of data outside of balance-sheets for assessing financial and economic performances of firms.</sentence>
+    <sentence>AIDA3 database has been the source of our Italian data and according to the mainstream analysis of Ceris-CNR and according to the unbiased method of BvD, in the model only balance-sheet accounts are used, so that the judgement for each firm is a technical rating.</sentence>
+    <sentence>First model: validation of network The first step of the analysis was to define a model for forecasting default probability of firms starting from a database of failed and best performance firms.</sentence>
+    <sentence>The methodology chosen is a feed-forward artificial neural network with back-propagation algorithm as performance function.</sentence>
+    <sentence>An artificial neural network (ANN) is a network made up of several simple processors, units or neurons, each one possibly having a local memory.</sentence>
+    <sentence>The units are connected by unidirectional communication channels, connections, which carry numeric, as opposed to symbolic, data.</sentence>
+    <sentence>The units operate only on their local data and on the inputs they receive via the connections.</sentence>
+    <sentence>A neural network is a processing device, either an algorithm or actual hardware, whose design was inspired by the design and functioning of animal brains and components thereof.</sentence>
+    <sentence>Most neural networks have some sort of training rule whereby, the weights of connections are adjusted on the basis of presented patterns.</sentence>
+    <sentence>In other words, neural networks learn from examples, just like children who, for example, learn to recognise cats from examples of cats, and exhibit some structural capability for generalisation.</sentence>
+    <sentence>Neurons are often elementary non-linear signal processors, or they can be simple threshold discriminators.</sentence>
+    <sentence>Another feature of ANNs, which distinguishes them from other computing devices, is a high degree of interconnection, which allows a high degree of parallelism.</sentence>
+    <sentence>Furthermore, there is no idle memory containing data and programs, but rather each neuron is pre-programmed and continuously active.</sentence>
+    <sentence>The framework of an artificial neural network is represented as a group of nodes joined among them through links.</sentence>
+    <sentence>In the Multi-Layer Perceptron (MLP) network the neurons are organised in layers, as shown in Fig 1.</sentence>
+    <sentence>Feed-forward neural network Fig 1.</sentence>
+    <sentence>Feed-forward neural network.</sentence>
+    <sentence>Literature suggests that an artificial network with a only one hidden layer is the best structure for facing classification problem (Dillon, Calantone, &amp; Worthing, 1979; Hornik, Stinchcombe, &amp; White, 1989; Hornik, 1993; Min &amp; Lee, 2005; Olmeda &amp; Fernandez, 1997).</sentence>
+    <sentence>The feed-forward connections show that the information travels in the direction from the input layer to the output one, but it is possible to build different frameworks as the recurrent networks that provides different link among nodes.</sentence>
+    <sentence>The input layer has a number of neurons equal to the variables analysed, then the input matrix X is done by i rows and n columns (Xin).</sentence>
+    <sentence>In this study subscript i represents balance-sheet indexes and n are firms.</sentence>
+    <sentence>The optimal number of hidden nodes must be found empirically (Kim, 2003; Min &amp; Lee, 2005) but many researchers have shown that there is a relation between the hidden node number and the input one.</sentence>
+    <sentence>Patuwo, Hu, and Hung (1993), Nath, Rajagopalan, and Ryker (1997) Chauhan, Ravi, and Chandra (2009) suggests to use the formula (2i + 1) where i = 1, … , I represents the number of considered variables and this is the method chosen in the present study.</sentence>
+    <sentence>Salchenberger, Cinar, and Lash (1992) and Olmeda and Fernandez (1997) propose the proportion 0.75i that is more performing in time computing compared to that offered by Chauhan et al.</sentence>
+    <sentence>(2009).</sentence>
+    <sentence>The output layer is formed by the same number of neurons as the answers required to the model (k rows and n columns).</sentence>
+    <sentence>In this paper, only one neuron is the solution adopted, then k = 1 and n is the number of firms (Ykn).</sentence>
+    <sentence>Arrows linking layers represent connection weights (the biological “synapses”) that are tools collecting rules about inputs.</sentence>
+    <sentence>This information is mathematically represented by weights: Wij from input to hidden layer and Wjk from hidden to output one.</sentence>
+    <sentence>For computing the weight matrixes, that are the containers of signals between subsequent layers, are determined by mathematical transformation (called “transfer functions”).</sentence>
+    <sentence>The transfer or activation function, φ(·), from the hidden layer to the output one varies on the basis of a considered problem.</sentence>
+    <sentence>This function defines the output of a neuron in terms of the induced local field.</sentence>
+    <sentence>In this case, we use a logsigmoid function.</sentence>
+    <sentence>The transfer function from the input layer to the hidden one is tansigmoid.</sentence>
+    <sentence>The only requirement of the activation function is to satisfy the differentiability property.</sentence>
+    <sentence>Logistic and hyperbolic tangent functions are continuously differentiable non-linear activation functions.</sentence>
+    <sentence>In this study the activation function between the input and the hidden layer is the hyperbolic tangent sigmoid function: where f(x) ∈ [−1, 1] and x ∈ (−∞, +∞).</sentence>
+    <sentence>Similar function, logarithmic sigmoid function, is used from the hidden to the output layer for having a score included between 0 and 1, indeed: where f(x) ∈ [0,1] and x ∈ (−∞,+∞).</sentence>
+    <sentence>This allows to obtain a probability for each element (firm) on a base of variables introduced and analysed by network neurons.</sentence>
+    <sentence>Fig 2 represents how network works.</sentence>
+    <sentence>The initial dataset is subdivided into two groups: the training set (Xin) and the validation one (Vih where h = 1, … ,H).</sentence>
+    <sentence>Generally the second one is a little part of the first one, usually about 10%.</sentence>
+    <sentence>Neural network runs twice: in a first phase the model analysed the relationships among the data because input variables (Xin) but also outputs (targets, Tkn) are introduced in the model.</sentence>
+    <sentence>The network learns and collects this information into the weight matrixes (Wij and Wjk).</sentence>
+    <sentence>When the network is well trained to recognize inputs on a base of an error measure, the information saved is applied in the second phase on inputs of the validation set (Vih).</sentence>
+    <sentence>The main and fundamental difference between these two phases is that in the first one the unknown variables are the weight matrixes, whereas in the second phase the outputs are the real expected result.</sentence>
+    <sentence>In this study, during the training phase of the model are introduced the firms with their variables (Xin) and also the healthy state (Tkn): the network learns and when the error is quite little, the same framework and weight matrixes are applied to the validation set (Vih) for determining the healthy state of these firms.</sentence>
+    <sentence>The criterion employed to evaluate the accuracy of the model is the percentage of correct classifications (Olmeda, 1993; Olmeda &amp; Fernandez, 1997).</sentence>
+    <sentence>ANN process: the training and the validation phase Fig 2.</sentence>
+    <sentence>ANN process: the training and the validation phase.</sentence>
+    <sentence>The percentage error is done comparing the number of errors made by the network to the number of elements to classify.</sentence>
+    <sentence>The back-propagation algorithm works on errors generated from the network in terms of empirical outputs (ykn) too different from the expected ones (tkn).</sentence>
+    <sentence>The error signal at the output of the k neuron at the m iteration (i.e.</sentence>
+    <sentence>presentation of the nth training example) is defined by: Neuron k is the output node and the instantaneous value of the error energy for neuron k is defined as: Correspondingly, the instantaneous value ε(m) of the total error energy is obtained by summing the previous equation on all neurons in the output layer: these are the only “visible” neurons for which error signals can be calculated directly.</sentence>
+    <sentence>The following may be written: where set C includes all the neurons in the output layer of the network.</sentence>
+    <sentence>This algorithm allows to minimize the absolute error both in training and validation phase.</sentence>
+    <sentence>For improving the network generalization power in this study the Bayesian regulation is used.</sentence>
+    <sentence>This algorithm updates the weight and bias values according to Levenberg–Marquardt optimization.</sentence>
+    <sentence>It minimizes a combination of squared errors and weights, and then determines the correct combination so as to produce a network that generalizes well (MacKay, 1992).</sentence>
+    <sentence>In addition, a mean squared error with regularization performance function (Mreg) has been implemented in the model.</sentence>
+    <sentence>In this way network performance is measured as the weight sum of two factors: the mean squared error and the mean squared weight and bias values: where γ is the performance index.</sentence>
+    <sentence>At the end of this complex process, the explained tool allows to obtain outputs defining for each firm its probability of default.</sentence>
+    <sentence>Indeed the function used from the hidden layer to the output one is a logsig that has codomain comprised between 0 (the firm has best performances, its default probability is equal to 0%) and 1 (the firm is failed, its default probability is 100%).</sentence>
+    <sentence>The performances of the network are very good and we can provide a proof on Italian database of healthy/failed firms.</sentence>
+    <sentence>Balance-sheet data have been extracted from the AIDA database and they refer to Italian public societies failed in 2008.</sentence>
+    <sentence>The considered accounts date to 2006 because it is necessary to forecast the earliest possible the default event and because from the analyses of BvD and K-Finance4 the time period necessary for assessing correctly the bankruptcy is two years.</sentence>
+    <sentence>Notice that in this paper failed firms are those judged by the court.</sentence>
+    <sentence>Firms in bankruptcy procedures are not considered in this study.</sentence>
+    <sentence>Database used to test the ability of network to classify firms into healthy and failed has been extracted by AIDA and it is formed by micro and small Italian firms of manufacturing industry.</sentence>
+    <sentence>The initial sample was done by 631 companies whose economic-financial position in 2008 we know.</sentence>
+    <sentence>On a wake of suggestion of K-Finance 2006 balance-sheet variables have been extracted.</sentence>
+    <sentence>The problem of many works is that detailed variables are required for being able to forecast firm performance.</sentence>
+    <sentence>The strength of artificial neural networks is that they can learn the relationships among data from an initial dataset (training phase) and after, the acquired rules are applied to a validation sample.</sentence>
+    <sentence>This propriety allows to simulate results, also starting from different information regarding the initial ones.</sentence>
+    <sentence>The analysis of weight matrices built during the training of network allows to deduce the relevance of considered features.</sentence>
+    <sentence>Also if the goal of this work is not the feature selection, because firms studied have poor balance-sheet data, it is necessary to highlight this issue.</sentence>
+    <sentence>Literature studied largely the problem of feature selection because when a model is build, its performance is often determined by inputs introduced.</sentence>
+    <sentence>Researchers proposed many methods for choosing model variables: starting from simpler methodologies, as the ANOVA (Huang et al., 2004; Lin &amp; McClean, 2001) for extending the analysis of problem to more complex models as combined methodologies of Support Vector Machines and F-score or genetic algorithms (Huang et al., 2007; Ravi &amp; Pramodh, 2008; Huang, 2009).</sentence>
+    <sentence>Moreover, artificial neural networks have the interesting advantage that don’t require that Xin ∼ N(μ,σ2), as instead required by econometric models but too many information could be redundant and make difficult to perform model.</sentence>
+    <sentence>Nevertheless, a variable that alone is completely useless can provide a significant performance improvement when taken with others (Guyon &amp; Elisseeff, 2003).</sentence>
+    <sentence>For these considerations variable selection is a very decisive topic for providing good results.</sentence>
+    <sentence>The framework of a model can be perfect but if variables are unfit it could be very difficult to have performing outcomes.</sentence>
+    <sentence>In this study variables to introduce in the model are specified before but it could be interesting catches the relevance of each variable to the default problem.</sentence>
+    <sentence>In this sense many researchers (Chauhan et al., 2009; Huang et al., 2004, 2007; Mak &amp; Blanning, 1998; Nath et al., 1997) suggest the Garson index (Garson, 1991) as a tool able to represent the importance of each feature introduced in the model.</sentence>
+    <sentence>Let i input variables (where i = 1, … ,I),j hidden nodes (where j = 1, … ,J) and k output neurons (where k = 1, … ,K), matrices are signed with capital letters and their elements with minuscule ones, Garson index is a vector made by: where Wij is the weight matrix between input and hidden layer and Wjk is the weight matrix between hidden and output one.</sentence>
+    <sentence>The indexes used are only eight, built starting on very simple balance-sheet information: Receivables due from shareholders (called Share capital), Fixed assets, Total current assets, Equity, Total provisions for risks and charges, Total payables, Value of production, Costs of production and Financial interests.</sentence>
+    <sentence>In Table 1 balance-sheet variables and a short summary of database subdivided on a base of healthy state of firms is done.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Sample description for the default probability model sample size and mean values of input variables.</sentence>
+    <sentence>Type of firms Sample size Total payables on liabilities Total payables on value of production Return on sales (ROS) Return on asset (ROA) EBIT on total payables Fixed assets on value of production Financial interests on EBIT Fixed assets on equity Healthy 525 0.422 0.565 0.126 0.119 0.301 1.413 0.021 1.255 Failed 106 0.916 0.997 0.036 0.035 0.039 3.532 0.864 0.136 Total 631 0.505 0.638 0.110 0.105 0.257 1.571 0.025 0.527 Fig 3 shows the percentage weight of each variables in forecasting the default probability.</sentence>
+    <sentence>The result is not surprising because the ratio between Total payables and Liabilities represents a measure of financial dependence of a firm from external creditors.</sentence>
+    <sentence>From the analysis of statistics (Table 1) healthy companies are less dependent than the failed ones, that is that they are less leveraged and with less interests to paid.</sentence>
+    <sentence>Garson indexes for default probability model Fig 3.</sentence>
+    <sentence>Garson indexes for default probability model.</sentence>
+    <sentence>The sample for training the network was formed by 588 firms, whereas the validation set was of 43 elements.</sentence>
+    <sentence>The results on validation sample are shown in Fig 4 where blue stars (∗) are the outputs of network, that is probabilities of default, and red plus (+) represent the correct classification of a firm (targets).</sentence>
+    <sentence>Vertical red lines display shifts between empirical outputs and expected ones.</sentence>
+    <sentence>Feed-forward neural network – results on default probability Fig 4.</sentence>
+    <sentence>Feed-forward neural network – results on default probability.</sentence>
+    <sentence>The relevance of this model does not only show good ability of network to classify elements but a new cue is done by the green horizontal line in the figure.</sentence>
+    <sentence>Indeed this represents a threshold subdividing firms into healthy (network output &lt; threshold) and failed (network output &gt; threshold).</sentence>
+    <sentence>Many authors established 0.5 as the cut-off value (Olmeda &amp; Fernandez, 1997; Huang et al., 2007) of a model analysing similar problem but in this paper the optimal value of threshold is not defined by the user but it is calculated in the training phase so that performing the results.</sentence>
+    <sentence>Let s a vector of thresholds where s∈ [0, 1] with a step of 0.001, yn a vector of network outputs (where n = 1, … ,N) and tn a vector of targets, it is possible to define a vector as: In this manner for each threshold value a vector of approximated network outputs has been computed to compare with targets .</sentence>
+    <sentence>At the end of the process we will obtain the number of correct classification of n elements for each s. At this point the algorithm computes the optimal threshold as the mean of cut-off values with the lowest number of misclassifications.</sentence>
+    <sentence>This method of threshold selection takes into account the size of absolute errors ( yn − tn) made by network because the threshold is compared directly with the empirical output of network not approximated yet.</sentence>
+    <sentence>Notice that due to the fact that the threshold is fixed to 4 digit we will obtain a threshold measure that is an approximation of the optimal cut-off value.</sentence>
+    <sentence>At the end the percentage error (E) is: 3.2.</sentence>
+    <sentence>Second model: rating simulation After validating the feed-forward artificial neural network with back-propagation algorithm and having computed a performing algorithm for classifying firms into healthy and failed ones, this study shows as the previous tested network can be used for simulating rating values of firms.</sentence>
+    <sentence>The database used is extracted by AIDA for the year 2008 and for each firm K-Finance with Bureau van Dijk have provided the rating judgements.</sentence>
+    <sentence>For the prior considerations rating judgements are not available for all firms and we propose a model able to simulate them and to upload missing values in the database.</sentence>
+    <sentence>Ratings are judgements defined by accredited agencies that analysing economic and financial statements of firms issue a score representing the economic safety of companies.</sentence>
+    <sentence>The rating judgements are expressed as score, through an acronym.</sentence>
+    <sentence>In particular, for K-Finance the best performance rating class is the best performance KR7 and the worst KR1.</sentence>
+    <sentence>Default firms are assigned to D class whereas the firms with intermediate economic-financial performance are of KR6, KR5, KR4, KR3 and KR2.</sentence>
+    <sentence>The framework of the model proposed in this research is a three-layers structure: in each structure at least one neural network runs.</sentence>
+    <sentence>In the Fig 5 there is a scheme of the three-layer model.</sentence>
+    <sentence>Three-layer framework for simulating rating judgments Fig 5.</sentence>
+    <sentence>Three-layer framework for simulating rating judgments.</sentence>
+    <sentence>As shown in this figure, in the first layer the training sample is subdivided into two groups: 0 for KR7, KR6, KR5, KR4 firms and 1 for KR3, KR2, KR1, D companies.</sentence>
+    <sentence>Only one neural network runs, able to classify firms in correct group.</sentence>
+    <sentence>In the second layer, two artificial neural networks run.</sentence>
+    <sentence>The first one groups KR7 and KR6 as 0 and KR5 and KR4 as 1; the second network selects KR3 and KR2 firms as 0 and KR1 and D as 1.</sentence>
+    <sentence>At the end, in the third layer, 4 neural networks run.</sentence>
+    <sentence>Each model subdivides firms into two groups (0 an 1) and each firm will be classified in its correct class of rating.</sentence>
+    <sentence>The proposed model exploits the properties of artificial neural network and minimizes the potential error that should incur using the network with non dichotomous output.</sentence>
+    <sentence>The results are very surprising because they confirm the ability of a model to simulate correctly the rating also for firms with poor data.</sentence>
+    <sentence>The database used for testing the model is formed by all Italian manufacturing firms.</sentence>
+    <sentence>After introducing data into the model a pre-processing methodology has been adopted.</sentence>
+    <sentence>Input variables are the same considered in the previous model.</sentence>
+    <sentence>The steps of firm selection are the following three: (1) For each n-th firm the norm of indexes (Nn) introduced in the model has been calculated: (2) The mean and the variance of norms have been computed; (3) All firms with a norm value higher than the mean of norms plus once the variance are deleted from the database.</sentence>
+    <sentence>Nevertheless this procedure has been run not on the whole database but after a clustering on a base of firm size and rating judgement.</sentence>
+    <sentence>In this manner firms have been subdivided into 5 classes of size5 and inside these groups they are subdivided into the 8 rating classes.</sentence>
+    <sentence>This means that the procedure for deleting outliers has been run 40 times.</sentence>
+    <sentence>In this manner the spikes are deleted taking into account both the size effect and the economic-financial performance aspect and the outliers are dropped from the database.</sentence>
+    <sentence>In Fig 6a there is the plot of the norms for the group of big KR7 firms with spikes in red circles.</sentence>
+    <sentence>In Fig 6b the histogram of norms, the mean (red vertical line) and the median (yellow vertical line) are shown.</sentence>
+    <sentence>Green vertical lines in Fig 6b represent the mean of norm plus respectively once and twice the variance.</sentence>
+    <sentence>(a) Plot of norms and spikes – (b) histogram of norms, mean and variance [Big… Fig 6.</sentence>
+    <sentence>(a) Plot of norms and spikes – (b) histogram of norms, mean and variance [Big KR7 firms].</sentence>
+    <sentence>After the firm selection process and the elimination of firms with missing value in necessary variables, the training database is formed by 35,978 units.</sentence>
+    <sentence>For improving results, three models are performed, on a base of size of firm (Micro, Small and Other).</sentence>
+    <sentence>Table 2 represents statistics on the training sample and validation one, considering that elements of validation are not passed by pre-processing phase.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Descriptive statistics on training and validation sets.</sentence>
+    <sentence>Rating classes Training Validation Size Size Micro Small Other Total Micro Small Other Total D 521 255 79 855 67 7 8 82 KR1 744 154 34 932 80 17 3 100 KR2 2,267 871 139 3,277 248 96 15 359 KR3 2,863 1,623 509 4,995 284 180 56 520 KR4 3,872 3,002 1,757 8,631 321 330 195 846 KR5 2,495 2,043 1,502 6,040 235 220 166 621 KR6 3,947 2,944 2,034 8,925 405 320 226 951 KR7 1,058 719 546 2,323 120 80 60 260 Total 17,767 11,611 6,600 35,978 1,760 1,250 729 3,739 For simulating rating of presented firms the feed-forward artificial neural network with back-propagation tested in the previous section has been introduced in the proposed three-layer model including the threshold search algorithm in training phase.</sentence>
+    <sentence>This framework should minimize the number of big errors (more than one class) that could be very destructive for economic-financial evaluation of firms.</sentence>
+    <sentence>One-class errors are considered less incident because the difference in judgments between sequential classes are not very big.</sentence>
+    <sentence>A pre-test has been made on the whole database, not subdivided on a base of size and the results were good if two-or-more class errors are considered (0.41%) but one-class errors, also if less serious, are many still (37.63%).</sentence>
+    <sentence>Nevertheless another test has been made on the same data.</sentence>
+    <sentence>Subdividing the data on a base of three-size (Micro, Small and Other), for each dimensional class a specific model ran, providing more persuasive results, presented in Figs.</sentence>
+    <sentence>7–9.</sentence>
+    <sentence>In these figures empirical outputs (called “Network Outputs”) are depicted with black five-pointed stars (∂) whereas red square (o) are expected results (called “BvD Outputs”).</sentence>
+    <sentence>Yellow lines represent the errors made by models.</sentence>
+    <sentence>Three-layer artificial neural network for micro firms Fig 7.</sentence>
+    <sentence>Three-layer artificial neural network for micro firms.</sentence>
+    <sentence>Three-layer artificial neural network for small firms Fig 8.</sentence>
+    <sentence>Three-layer artificial neural network for small firms.</sentence>
+    <sentence>Three-layer artificial neural network for other firms Fig 9.</sentence>
+    <sentence>Three-layer artificial neural network for other firms.</sentence>
+    <sentence>Micro firms (Fig 7) are the largest and heterogeneous group and for this reason the number of errors is big but, the model does not commit two or more class mistake (0%), whereas 492 are firms not correctly classified (28%).</sentence>
+    <sentence>The second group of firms are Small sized.</sentence>
+    <sentence>This sample is both less numerous and less heterogeneous than that of Micro units and the effect on the network performance is that the number of one-class errors diminishes to 2.23% (29 non-correct classification, Fig 8) whereas two-or-more class errors are always 0.</sentence>
+    <sentence>The last sample is formed by firms of non-micro and non-small size (so that “Other”).</sentence>
+    <sentence>This is the smallest group of elements and the results are very good as Fig 9 shows (19 one-class error, 2.61% and 0 two-or-more class mistakes).</sentence>
+  </section>
+  <section name="Results and Final Remarks">
+    <sentence>The results we obtained confirm that artificial neural networks are very good tools in generalization and classification.</sentence>
+    <sentence>These proved characteristics allow to use neural network for solving problem in many different fields.</sentence>
+    <sentence>This paper proposes the well known methodology of artificial neural networks applied to financial problem of default of firms and rating judgements.</sentence>
+    <sentence>In particular, generalization property is exploited so that to provide good solution to financial problem.</sentence>
+    <sentence>The study concurs to economic literature proposing a first tool able to forecast the default event two years before the bankruptcy.</sentence>
+    <sentence>This model is used for validating the ability of network in generalization and in forecasting.</sentence>
+    <sentence>Moreover, a threshold search algorithm for minimising errors of network has been built.</sentence>
+    <sentence>A second model, the three-layer neural network framework, uses the previous tested model for simulating rating judgements of firms with scarce data and covering missing values that often pose a threat to significance of analyses.</sentence>
+    <sentence>This problem is frequent in Italy because firms are micro or small sized and it is difficult to study them.</sentence>
+    <sentence>The results are very good for both the models presented.</sentence>
+    <sentence>From these issues stems the possibility to propose the tool to banks, as internal rating system, or to micro and small firms for having a previous evaluation before asking for a loan.</sentence>
+    <sentence>Nevertheless, it is necessary to perform better the results because the test has been made only on manufacturing firms.</sentence>
+    <sentence>Moreover, it could be interesting to use cluster analysis in a previous phase and to see if results are different.</sentence>
+    <sentence>1 For a deeper illustration of techniques see Ravi Kumar and Ravi (2007).</sentence>
+    <sentence>2 Bureau van Dijk is a company born in 1991.</sentence>
+    <sentence>Its product range includes databases of company information and business intelligence for individual countries, regions and the world.</sentence>
+    <sentence>Its global database, ORBIS, combines information from around 100 sources and covers approaching 65 million companies.</sentence>
+    <sentence>3 AIDA is a database edited by Bureau van Dijk that contains comprehensive information on listed companies in Italy, with up to five years of history.</sentence>
+    <sentence>Provided information are about accessible accounts following the scheme of the 4th directive CEE, probabilities of default and rating assessments, over to provide information about identification number, address and trade description of collected firms.</sentence>
+    <sentence>4 K Finance is a consultancy firm that offers advisory on: mergers &amp; acquisitions, private equity deals, planning &amp; control, fairness opinions, structured finance deals, listings.</sentence>
+    <sentence>5 The firm size has been defined on a base of sales (S): Firm=ifS⩽€2mlnMicroif€2mln&lt;S⩽€10mlnSmallif€10mln&lt;S⩽€50mlnMeanif€50mln&lt;S⩽€290mlnBigifS&gt;€290mlnLarge</sentence>
+  </section>
+</article>

@@ -1,0 +1,238 @@
+<article>
+  <title>A semi-supervised learning approach for model selection based on class-hypothesis testing</title>
+  <abstract>
+    <sentence>This paper deals with the topic of learning from unlabeled or noisy-labeled data in the context of a classification problem.</sentence>
+    <sentence>In the classification problem the outcome yields one of a discrete set of values thus, assumptions on them could be established to obtain the most likely prediction model at the training stage.</sentence>
+    <sentence>In this paper, a novel case-based model selection method is proposed, which combines hypothesis testing from a discrete set of expected outcomes and feature extraction within a cross-validated classification stage.</sentence>
+    <sentence>This wrapper-type procedure acts on fully-observable variables under hypothesis-testing and improves the classification accuracy on the test set, or keeps its performance at least at the level of the statistical classifier.</sentence>
+    <sentence>The model selection strategy in the cross validation loop allows building an ensemble classifier that could improve the performance of any expert and intelligence system, particularly on small sample-size datasets.</sentence>
+    <sentence>Experiments were carried out on several databases yielding a clear improvement on the baseline, i.e., SPECT dataset with and .</sentence>
+    <sentence>In addition, the CV error estimate for the classifier under our approach was found to be an almost unbiased estimate (as the baseline approach) of the true error that the classifier would incur on independent data.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Statistical learning and decision theory</keyword>
+    <keyword>Semi-supervised learning</keyword>
+    <keyword>Support vector machines (SVM)</keyword>
+    <keyword>Hypothesis testing</keyword>
+    <keyword>Partial least squares</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Statistical learning theory (SLT) is a recently developed area in statistics that has been successfully applied to several fields including machine learning and artificial intelligence (Hastie, Tibshirani, &amp; Friedman, 2001; James, Witten, Hastie, &amp; Tibshirani, 2013; Vapnik, 1998).</sentence>
+    <sentence>From least squares methods for linear regression, proposed in the very beginning of the nineteenth century, to the novel advances in machine learning such as random forests, Support Vector Machines (SVM), bagging or boosting in the early 90s (Breiman, Friedman, Olshen, &amp; Stone, 1984; Hastie et al., 2001; Vapnik, 2000), SLT has become a new paradigm focusing on supervised and unsupervised modeling and prediction, i.e., the development of Computer-Aided Diagnosis (CAD) systems (Gur et al., 2004; Illán et al., 2010; Padilla, Lopez, Gorriz, &amp; 2012; Suzuki, Li, Sone, &amp; Doi, 2005).</sentence>
+    <sentence>On the other hand, decision theory is the application of statistical hypothesis testing to the detection of signals in noise (Kay, 1993).</sentence>
+    <sentence>Because under hypothesis testing we are essentially attempting to determine a desired pattern or to classify it as one of a set of possible patterns, it is also referred to as a pattern recognition or classification problem (Fukunaga, 1990).</sentence>
+    <sentence>The most common form of machine learning is the supervised learning (LeCun, Bengio, &amp; Hinton, 2015).</sentence>
+    <sentence>In this case, a quantitative response Yk and several predictors {Xk} for are observed, and the aim is to discover the relationship among them, which can be written in a general form where f is an unknown function of the predictors and ϵ is a random error term.</sentence>
+    <sentence>In this way, supervised learning refers to a set of approaches for estimating f based on a set of known predictors and responses (James et al., 2013).</sentence>
+    <sentence>When the supervised learning does not involve predicting a quantitative value but a qualitative response or class, this is known as a classification problem.</sentence>
+    <sentence>In the latter case, once a final classifier has been estimated, it can be used to predict the classes of the test samples.</sentence>
+    <sentence>Another field of research that have drawn the attention in the machine learning community is the semi-supervised learning (SSL) (Chapelle, Scholkopf and Zien, 2006).</sentence>
+    <sentence>SSL belongs to the supervised category but in this case we have access to an additional unlabeled sample for or samples with a few noisy initial labels (Lu, Gao, Wang, Wen, &amp; Huang, 2015).</sentence>
+    <sentence>In general, the solution to this subcategory is broadly based on two approaches: avoiding the use of unlabeled data or treating unobserved Y variables as a latent-class variables in the estimation of the system parameters (Chapelle et al., 2006).</sentence>
+    <sentence>In recent years, several feature selection methods have been proposed based on Information Theory, filter (the one used in this paper as a baseline), embedded and wrapper methods (Guyon, Gunn, Nikravesh, Zadeh, &amp; Eds, 2006) in fully-supervised data (Brown, Pocock, Zhao, &amp; Luján, 2012).</sentence>
+    <sentence>Under these approaches the features X are selected by quantifying the information that they share with the class variable Y.</sentence>
+    <sentence>However, on partially-labeled datasets surrogate variables can be introduced to derive ranking equivalent approaches using all available information in an entirely classifier-independent and inference-free fashion (Sechidis, 2015).</sentence>
+    <sentence>Some surrogate approaches assume the label of the unobservable variable Y and are found to be valid and informed to perform hypothesis testing for feature selection (Sechidis, Calvo, &amp; Brown, 2014).</sentence>
+    <sentence>General outline Before estimating the classifier f, relevant and non-redundant features are usually extracted from the raw data to facilitate the subsequent learning and generalization steps (Varol, Gaonkar, Erus, Schultz, &amp; Davatzikos, 2012).</sentence>
+    <sentence>Based on the previous ideas and feature extraction (FE) schemes, we investigate the possibility of using a semi-supervised model selection algorithm based on hypothesis testing applied to the responses or outcomes.</sentence>
+    <sentence>In Fig 1, we show the differences between our methodology (up) and the baseline (bottom) at the training stage to derive the classifier .</sentence>
+    <sentence>Learning from data samples involves, at this stage, model fitting by the use of observed variables and their labels (outcomes) that are grouped into two groups, the training and the validation sets.</sentence>
+    <sentence>The use of a validation set at the training stage allows to select the classifier whose actual risk S(x) is minimal, i.e., by parameter tuning.</sentence>
+    <sentence>Finally, a test set can be employed only to assess the performance (generalization) of a fully-specified classifier and to avoid overfitting (Ripley, 1996).</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Diagram of the model selection approach (up) versus the common supervised FE learning approach (bottom) on the training set.</sentence>
+    <sentence>FE may be applied to surrogate variables, shown in the latter figure as the class-information Y0, 1, within the Cross Validation (CV)-loop to obtain extended feature datasets by hypothesizing on the unknown outcomes of the validation patterns.</sentence>
+    <sentence>The statistical consequences in each hypothesis could be analyzed in terms of probability within a Bayesian framework as proposed in this paper (the likelihood ratio test (LRT) block in Fig 1), that is, in a classifier-independent fashion unlike embedded or wrapper methods.</sentence>
+    <sentence>Other possibility is to evaluate the classifier configuration derived from the feature datasets, i.e., probability map of the support vectors (Padilla, et al., 2012).</sentence>
+    <sentence>The influence of the validation pattern on the prediction models, i.e., a trained SVM, will depend on the relevance of the features that represent the validation samples in the feature space (Chapelle et al., 2006).</sentence>
+    <sentence>Assuming the feature to be relevant, a decision function can be formulated in terms of class-conditional probabilities following the Neyman–Pearson (NP) lemma.</sentence>
+    <sentence>The resulting LRT is similar to the one achieved by the classical linear discriminant (LDA) or quadratic DA analysis, but evaluated on two different feature datasets.</sentence>
+    <sentence>Finally, the overall system can be seen as a wrapper-type method since although the feature selection is classifier-independent the system builds the final ensemble classifier based on a maximization process on several feature subsets (Martinez-Murcia, Górriz, &amp; Ramírez, 1999).</sentence>
+    <sentence>This paper is organized as follows.</sentence>
+    <sentence>In Section 2, a background to the NP approach to signal detection is provided.</sentence>
+    <sentence>In the following Section 3 classical FE methods, such as Least Squares (LS) and Partial LS methods, are applied on semi-supervised datasets to obtain two feature extractions of the training database.</sentence>
+    <sentence>As a result, hypothesis testing theory is employed to provide a novel framework for model selection as a part of the general tools of assessing statistical accuracy, such as CV or Bootstrap methods (Varma &amp; Simon, 2006).</sentence>
+    <sentence>The resulting LRT is the optimal tradeoff between type errors which is employed for FE under certain assumptions.</sentence>
+    <sentence>The set of assumptions comprises Gaussian modeling for conditional probabilities, feature relevance, and statistical independence among feature components.</sentence>
+    <sentence>Finally, in Section 5, a fully experimental framework is provided to demonstrate the benefits of the proposed approach acting on baseline filter-based approaches, i.e., using LS and PLS FE methods and a SVM learning algorithm that minimizes the leave-one-out (LOO)-CV error.</sentence>
+    <sentence>In Section 6, conclusions are drawn.</sentence>
+  </section>
+  <section name="NP approach to signal detection: A background">
+    <sentence>Assume we observe a training set of random variables .</sentence>
+    <sentence>The realization of the outcome variable Y is modeled by normal distributions with mean μi and variance σi for where C denotes the number of outcomes or classes.</sentence>
+    <sentence>In general, we must therefore determine if for a single observation under a multiple C-ary hypothesis testing using a NP criterion.</sentence>
+    <sentence>However, this is hardly used in practice, and the minimum probability error criterion is used instead (Kay, 1993).</sentence>
+    <sentence>For a binary problem the test is defined as: (1) where every possible value of μ is thought as one of two competing hypotheses.</sentence>
+    <sentence>In terms of the observed variable x, the hypothesis can be reformulated as: (2) Thus, we are implicitly assuming that the hypothesis testing on the unobserved class Y can be reformulated in terms of the observed pattern value x, via the joint pdf, p(X, Y) or an unknown function, f: X↦Y, an issue that is common in signal detection problems (Gorriz, Ramirez, Lang, &amp; Puntonet, 2008).</sentence>
+    <sentence>Under the NP approach, we try to maximize the probability of detection of one of the hypotheses when it is true for a given significance level or probability of false alarm P(H1; H0).</sentence>
+    <sentence>In particular H1 is decided if the LRT holds: (3)</sentence>
+  </section>
+  <section name="Semi-supervised feature extraction based on P-LS">
+    <sentence>The process of model fitting at the learning stage depends on how the input patterns are related to their outcomes.</sentence>
+    <sentence>In neuroimaging, for example, the labeling process is performed via a careful examination by the physician, and affects how the learner is adjusted to obtain the best model, the one that provides the best estimation error, i.e., S(Z).</sentence>
+    <sentence>Linear methods for classification, such as LDA or QDA, are based on a LRT similar to the one shown in Eq (3), but evaluating hypothesis testing on the raw data, i.e., the input pattern X is assumed to be observed under the null alternative hypotheses in order to check which state is more likely.</sentence>
+    <sentence>In this paper, a different approach, the so-called case-based method for model selection (CMS), is considered by obtaining realizations of the input patterns under H0 and H1.</sentence>
+    <sentence>This is actually achieved through a supervised FE scheme on extended datasets, in which we consider all the possibilities, equal to the number of classes, for a single validation pattern.</sentence>
+    <sentence>In this sense, by performing FE on these datasets, we select the one that maximizes a discriminant function as defined in following sections.</sentence>
+    <sentence>An schematic representation of the general method for M input patterns is shown in Fig 2.</sentence>
+    <sentence>Fig 2.</sentence>
+    <sentence>Schematic of the database extension in the CMS approach.</sentence>
+    <sentence>The statistical accuracy of the quantity S(Z) is computed by selecting the most likely dataset Z*.</sentence>
+    <sentence>2M data sets Zk each of size are drawn by considering all the possibilities in the binary variable Y.</sentence>
+    <sentence>LS for the class-hypothesis-based FE Let be a training set, where S is the set of training samples xi, for with their respective outcomes .</sentence>
+    <sentence>In the LS method, we estimate a vector of parameters w, which determines the hyperplane by minimizing a squared error cost function (Theodoridis, Pikrakis, Koutroumbas, &amp; Cavouras, 2010).</sentence>
+    <sentence>Given the validation pattern [x, k] for the LS estimates for the extended training sets are related to each other as: (4) where (5) is the optimum LS hyperplane and are the extended datasets and outcomes, respectively.</sentence>
+    <sentence>stands for the logical “nor” operator on class k. Once a w is estimated, an x is classified to class k (), if the projection wTx &gt; 0( &lt; ).</sentence>
+    <sentence>This one-dimensional projection is used to extract novel feature datasets: (6) under the class-hypothesis k and then, a log-LRT, as shown in the following section, is evaluated for model selection (H0vs.H1).</sentence>
+    <sentence>Once this Bayesian Information Criterion (BIC)-type model selection is applied, features are then extracted accordingly and the final SVM model is fitted in the LOO-CV loop.</sentence>
+    <sentence>As an example, consider realizations from two Gaussians distributions with mean values and and covariance matrix an LS FE-based model selection provides two models w1, 2 and feature datasets depicted in Fig 3.</sentence>
+    <sentence>In the upper figure we represent the input data and the unlabeled test sample in red font (class 1).</sentence>
+    <sentence>The blue-shaded area represents the subspace between the two LS-estimators where they assign a different class to samples that fall in it.</sentence>
+    <sentence>In the lower figure the two one-dimensional extended feature datasets are depicted including the validation feature (black cross).</sentence>
+    <sentence>Fig 3.</sentence>
+    <sentence>CMS approach for LS-FE.</sentence>
+    <sentence>Note the blue-shaded region which defines the difference between models under the hypotheses (“xor” logical operation between them).</sentence>
+    <sentence>A false hypothesis on the validation pattern (up: red circle, bottom: black cross labeled by TP) results in a fault classification of the training samples s that fall in the margin.</sentence>
+    <sentence>(For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)</sentence>
+    <sentence>PLS for a class-hypothesis-based FE PLS (Helland, 2001) is a statistical method which models relationships among sets of observed variables by means of latent variables.</sentence>
+    <sentence>It includes regression analysis and classification tasks, and is intended as a dimension reduction technique or a modeling tool.</sentence>
+    <sentence>The starting point for PLS is the very simple assumption that the observed data is generated by a system or process which is driven by a smaller number of latent (not directly observed or measured) variables.</sentence>
+    <sentence>In its general form, PLS is a linear algorithm (i.e., SIMPLS (de Jong, 1993)) for modeling the relation between Xe and Yk by decomposing them into the form: (7) (8) where Xs, k, Ys, k are matrices of the Ncomp extracted score vectors (components or latent vectors), Xl, k, Yl, k are p × Ncomp matrices of loadings and Xr, k, Yr, k are matrices of residuals (or error matrices).</sentence>
+    <sentence>The xs, k-scores in Xs, k are linear combinations of the -variables and can be considered as good “summaries” of them.</sentence>
+    <sentence>Finally, we extract the novel feature datasets as .</sentence>
+  </section>
+  <section name="LRT under the class-hypothesis: The case-based approach">
+    <sentence>Let simplify notation by defining the feature training set as and the unlabeled feature realization as of the input feature pattern X, under the class-hypothesis for .</sentence>
+    <sentence>Assume the joint pdf p(X, S; Hk) is known under both hypothesis.</sentence>
+    <sentence>To maximize the power of the test for a given significance level, the NP approach is transformed into: (9) where γ is a constant threshold and, if the inequality holds, we decide H1.</sentence>
+    <sentence>Assuming the pdf of s does not depend on the hypothesis (or these joint distributions are equivalent) and the input pattern x is relevant to the detection problem, the LRT can be rewritten as: (10) The assumption of relevance is necessary to find Eq (10), since we have that the inequality p(x|s; Y1) ≠ p(x|s; Y0) holds (see Appendix).1 Suppose that we model each conditional-density as multivariate Gaussian: (11) where μk, Σk are the mean vector and the covariance matrix which are estimated using the training set Z.2 Computing the log-LRT, we finally get: (12) where (13) is a quadratic discriminant function similar to the one obtained in QDA but defined on the two competing hypotheses in Eq (2).</sentence>
+    <sentence>Moreover, notice how LDA is a particular case of this expression for and ∀k.</sentence>
+    <sentence>This slight alteration makes the method a completely novel approach, since this model allows us to select the most likely class when one of the two hypotheses is true.</sentence>
+    <sentence>When the dimension of the feature space is high, density estimation is unattractive, thus an independence assumption is usually employed (Naive Bayes model).</sentence>
+    <sentence>Given a class Yk, if the features xi are independent ( ), the quadratic discriminant function transforms into: (14) where μkj and σjk are the k-class mean and variance of the jth feature component.</sentence>
+    <sentence>The whole process comprising feature extraction and model selection is depicted in Fig 1 and summarized in the following algorithm.</sentence>
+    <sentence>Classification In this section, we propose a simple classification stage to adjust the statistical classifiers (model fitting) using the improved datasets, i.e., a linear SVM classifier.</sentence>
+    <sentence>In this sense, the LRT process is repeated in a CV-loop adjusting each classifier to the novel datasets, thus the predictions from all of them could then combined through a weighted majority vote to produce the final prediction (Hastie et al., 2001): (15) where N is the number of folds in the CV loop (the sample size in LOO-CV), fk is the linear SVM classifier which is tuned after model selection in each iteration and the selection of α gives higher influence to the more accurate classifiers in the sequence.</sentence>
+    <sentence>In the experiments was selected, assuming that no prior-knowledge on the validation labels is available, although they could be computed by means of a boosting-type algorithm as well.</sentence>
+    <sentence>This selection is also motivated by the aim to assess the optimization by means of the feature training sets defined in the previous section, avoiding the benefits of boosting to achieve this purpose.</sentence>
+  </section>
+  <section name="Experiments">
+    <sentence>In this section, a set of experiments are carried out on several image databases where the small sample size problem is typically an issue together with the presence of noisy-labeled data, i.e., a SPECT image database (Górriz, Segovia, Ramírez, Lassl, &amp; Salas-Gonzalez, 2011).</sentence>
+    <sentence>The motivation for analyzing such kind of datasets is double.</sentence>
+    <sentence>On the one hand, this is the typical scenario in biomedical datasets, i.e., structural/functional imaging, where the visual expert labeling is always prone to error.</sentence>
+    <sentence>On the other hand, these datasets usually consist of millions of variables/predictors and a limited sample size, thus the effect of the proposed approach can be detected just by using a LOO-CV strategy.</sentence>
+    <sentence>To this achieve this analysis, a fair comparison using the same FE and statistical validation schemes for the proposed CMS approach and the baseline filter-based methods is performed.</sentence>
+    <sentence>In both cases the error estimation is obtained by LOO-CV and a linear SVM classifier to avoid overfitting.</sentence>
+    <sentence>A naive-Bayes model is tested on the log-LRT decision rule that defines the CMS approach, while the number of extracted components for the PLS approaches are varied, i.e., from 1 to 10, showing average results and standard deviations.</sentence>
+    <sentence>Standard statistical measures are computed such as Accuracy (Acc), Sensibility (Sen), Specificity (Spe), positive likelihood (PL), negative likelihood (NL) and the confusion matrix (ConfM), although other measures could be analyzed as well (Liang, Liang, Li, Li, &amp; Wang, 2016), in order to assess the system performance.</sentence>
+    <sentence>Finally, the bias of the error estimation is also evaluated for both approaches.</sentence>
+    <sentence>SPECT image database Baseline SPECT data from 96 participants were collected from the “Virgen de las Nieves” hospital in Granada (Spain) (Górriz et al., 2011).</sentence>
+    <sentence>The patients were injected with a gamma emitting 99mTc-ECD radiopharmeceutical and the SPECT raw data was acquired by a three head gamma camera Picker Prism 3000.</sentence>
+    <sentence>A total of 180 projections were taken with a angular resolution.</sentence>
+    <sentence>The images of the brain volumes were reconstructed from the projection data using the filtered backprojection (FBP) algorithm in combination with a Butterworth filter for noise removal .</sentence>
+    <sentence>The SPECT images were spatially normalized, using the SPM software (Friston, Ashburner, Kiebel, Nichols, &amp; Penny, 2007), in order to ensure that the voxels in different images refer to the same anatomical positions in the brain.</sentence>
+    <sentence>After the spatial normalization a 95 × 69 × 79 voxel representation of each subject was obtained, where each voxel represents a brain volume of 2.18 × 2.18 × 3.56 mm3.</sentence>
+    <sentence>Finally, the intensities of the SPECT images were normalized with a maximum intensity value which is computed for each image by averaging over the 3% highest voxel intensities.</sentence>
+    <sentence>The SPECT images were visually classified by experts of the “Virgen de las Nieves” hospital using four different labels: normal (NOR) for patients without any symptoms of Alzheimer Disease (AD), and possible AD (AD1), probable AD (AD2) and certain AD (AD3) to distinguish between different levels of the presence of typical characteristics for AD.</sentence>
+    <sentence>Overall, the database consists of 41 NOR, 29 AD1, 22 AD2 and 4 AD3 patients, however they were classified considering the binary case NOR (41) vs.</sentence>
+    <sentence>AD (55).</sentence>
+    <sentence>Table 1 shows the demographic details of the database and in Fig 4 some examples of the dataset are depicted.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Demographic details of the SPECT dataset.</sentence>
+    <sentence>AD 1 = possible AD, AD 2 = probable AD, AD 3 = certain AD.</sentence>
+    <sentence>μ and σ stands for population mean and standard deviation, respectively.</sentence>
+    <sentence>samples Sex(M/F)(%) μ[range/σ] NOR 41 32.95/12.19 71.51[46-85/7.99] AD1 29 10.97/18.29 65.29[23-81/13.36] AD2 22 13.41/9.76 65.73[46-86/8.25] AD3 4 0/2.43 76[69-83/9.90] Fig 4.</sentence>
+    <sentence>Axial example slices ( 30) of four subjects of the SPECT database.</sentence>
+    <sentence>Left to right, top to bottom: NOR, AD1, AD2, AD3.</sentence>
+    <sentence>INRIA person dataset INRIA pedestrian database contains 1805 64 × 128 images of humans in any orientation and against a wide variety of background images including crowds (see some example in Fig 5).</sentence>
+    <sentence>Many are bystanders, taken from the image backgrounds, so there is no particular bias on their pose (Dalal &amp; Triggs, 2005).</sentence>
+    <sentence>In these applications, data preprocessing usually requires the computation of normalized histograms of image local gradient orientations (HOG) in a dense grid and then, a classification stage is applied, based on several paradigms such as Bayesian framework (Wu &amp; Nevatia, 2007), morphological analysis (Barnich, Jodogne, &amp; Van Droogenbroeck, 2006), ensemble learning (Viola &amp; Jones, 2001) or artificial neural networks (Geng et al., 2017; Zhao &amp; Thorpe, 2000), to categorize the visual features.</sentence>
+    <sentence>The detection window is decomposed into 50 % overlapping (7 × 15) blocks and (4 per block) cells (9 bins per cell) yielding positive and negative HOG feature vectors with size .</sentence>
+    <sentence>In our experiments, a randomly selected and balanced subset of this database is processed in order to extract the HOG features which are further processed by selecting the 7 out of 9 most discriminant bins per cell.</sentence>
+    <sentence>As a conclusion, a 42 × 2940 dataset is consider for FE, and classification containing 21 positive and 21 negative HOG features.</sentence>
+    <sentence>Although this is not the typical scenario in the problem of pedestrian detection, the database is well-suited to our purposes as it amounts to dealing with the problem of small sample sizes, and to analyzing the effect of a strongly correlated set of features.</sentence>
+    <sentence>Fig 5.</sentence>
+    <sentence>Negative and positive examples extracted from the INRIA dataset (Dalal &amp; Triggs, 2005).</sentence>
+    <sentence>Experimental analysis and discussion The statistical measures to assess the performance of the CMS approach on the above mentioned datasets are summarized in Table 2, where a linear SVM classifier in a LOO-CV loop is used for classification.</sentence>
+    <sentence>The synthetic dataset is drawn randomly from the two-dimensional Gaussian distributions, as described in the previous example with but with selected means and .</sentence>
+    <sentence>The aim of this selection is to highlight the benefits of the proposed method when dealing with overlapping classes, causing an increase of the blue-shaded area in Fig 3.</sentence>
+    <sentence>On this dataset, the number of PLS components is forced to be for obvious reasons.</sentence>
+    <sentence>Thus the strength of this FE method cannot be exploited on this low-dimensional dummy dataset for none of the evaluated methods.</sentence>
+    <sentence>In the latter case, the CMS using LS is the one that yields the best accuracy at the CV-stage, outperforming all other evaluated methods, as shown in Table 2.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Statistical measures of performance for the proposed methods and the baseline approaches (LS and PLS) for standardized databases.</sentence>
+    <sentence>The std values for Acc, Sen, Spe of the baseline and proposed methods are obtained varying the number of PCA-PLS components .</sentence>
+    <sentence>The std of these values are in the order of and (INRIA database), respectively.</sentence>
+    <sentence>LS C-LS PLS C-PLS Acc (%) 61.50 64.5 62 62.5 2D-Gaussians Spe (%) 63 68 65 66 Sen (%) 60 61 59 59 PL 1.62 1.90 1.68 1.74 NL 0.63 0.57 0.63 0.62 ConfM [60 37] [61 32] [59 35] [59 34] [40 63] [39 68] [41 65] [41 66] Acc (%) 90.48 94.52 92.86 96.67 INRIA Spe (%) 90.48 97.05 90.91 95.60 Sen (%) 90.48 93 95 98.21 PL 9.50 31.55 10.45 22.31 NL 0.11 0.07 0.05 0.019 ConfM [190 20] [193 6] [400 40] [412 20] [20 190] [17 204] [20 380] [8 400] Acc (%) 72.53 73.06 78.96 86.35 SPECT Spe (%) 63.12 63.22 73.35 81.11 Sen (%) 90.05 91.94 84.07 91.10 PL 2.45 2.49 3.15 4.82 NL 0.15 0.13 0.22 0.11 ConfM [1123 684] [1145 691] [329 121] [364 85] [107 966] [85 959] [81 429] [46 465] Nevertheless, LS approaches on high-dimensional databases (i.e., INRIA dataset) require the application of some additional FE scheme for dimensionality reduction, since the inversion of large matrices can be prohibitive.</sentence>
+    <sentence>For this purpose, the well-known Principal Component Analysis (PCA)-based FE method (López et al., 2011) is selected, analyzing the effect of varying the number of PCs for and averaging over the results, as shown in Table 2.</sentence>
+    <sentence>The maximum number of components is selected in terms of amount of explained variance; based on this, the chosen number of components should explain 80% of the data variance at least (see Fig 6).</sentence>
+    <sentence>The results provided by the PLS-based schemes are also averaged in terms of the number of components .</sentence>
+    <sentence>As clearly stated in the results, the application of the two versions of the CMS approach outperforms classical LS and PLS methods for feature extraction, although the standard deviation (std) of the approaches is slightly higher, as shown in Table 2.</sentence>
+    <sentence>Fig 6.</sentence>
+    <sentence>Criterium selection for the maximum number of components of FE-methods (INRIA dataset).</sentence>
+    <sentence>At least 80% of the total variance should be explained.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>7 and 8 shows the different subsets generated by applying a PLS-FE CMS approach to the extended INRIA datasets.</sentence>
+    <sentence>Observe how the different extended datasets provide different configuration of SVs.</sentence>
+    <sentence>In this example, it can be readily seen that the input pattern is more likely to belong to class 1 (right figure).</sentence>
+    <sentence>As a result, the number of SVs of the decision surface is increased when the false hypothesis (labeling the input pattern as class 0) is assumed for dataset generation.</sentence>
+    <sentence>As in the previous example, the improvement is based on the fact that the fitted model obtained in the CV-stage is well suited for the noisy-labeled data presented in the sample unlike the one that yields the CV baseline.</sentence>
+    <sentence>Fig 7.</sentence>
+    <sentence>PLS-FE method under the CMS approach (INRIA datasets) on hypothesis H0.</sentence>
+    <sentence>Fig 8.</sentence>
+    <sentence>PLS-FE method under the CMS approach (INRIA datasets) on hypothesis H1.</sentence>
+    <sentence>Finally, on a typical uncorrelated high-dimensional biomedical dataset (SPECT database), the proposed approaches clearly outperform the baseline methods within the same framework, i.e., the estimation of the CV prediction error using a linear SVM classifier.</sentence>
+    <sentence>In addition, the std of the results is lower in our proposed approaches, i.e., PLS-FE ; CMS PLS-FE .</sentence>
+    <sentence>A further analysis on the outcome of the proposed method reveals that the improvements for the CMS approach are mainly found in NOR and AD1 subjects (Górriz et al., 2011), an issue that is clearly motivated by the overlapping nature of both image patterns (from the confusion matrix: 35 NOR patterns and 36 AD1 patterns).</sentence>
+    <sentence>As a conclusion on this part, we have demonstrated that the CMS approach outperforms the standard filter-based approach for feature selection by including class-information in the validation pattern.</sentence>
+    <sentence>This improvement is achieved in several scenarios (balanced and unbalance/real and synthetic datasets with overlapping classes), sample sizes, number of predictors and feature extraction and classification schemes.</sentence>
+    <sentence>It is worth mentioning that the workbench of the proposed method for model selection is biomedical data sets, where the number of samples N is usually less than the data dimension d (predictors).</sentence>
+    <sentence>The application of the proposed method by a non-parametric implementation of the LRT to a large data set d ≪ N can be found in (Górriz et al., 2017).</sentence>
+    <sentence>Although the latter approach presents some limitations when d increases, i.e., the delimited regions by the wrongly classified support vectors are empty of samples, the performance of the system is preserved when the number of samples is increased in large synthetic 2D datasets.</sentence>
+    <sentence>Bias in error estimation Although it is reasonable to optimize parameters in the development of CAD systems by minimizing CV error rates, the resulting classification rates are usually biased estimates of the actual risk due to the small sample size problem.</sentence>
+    <sentence>This is a common setting in healthcare database studies, where LOO-CV-based error estimation is usually selected as validation method (Górriz et al., 2009).</sentence>
+    <sentence>The aim of this simulation is to compare bias and variance in the error estimation of the CMS approach with the ones obtained by the baseline approaches.</sentence>
+    <sentence>1000 simulations were run with 40 class-balanced samples per simulation, drawn from a multivariate Gaussian distribution with zero mean and random semi-positive definite covariance matrix.</sentence>
+    <sentence>Each sample consists of a 10,1000 dimensional feature vector.</sentence>
+    <sentence>In addition, an independent test set with 2 · 105 samples was generated with the same pdf.</sentence>
+    <sentence>To determine the amount of bias for each method, we compute the LOO CV error of the linear SVM classifier.</sentence>
+    <sentence>The system parameter to be optimized during the simulation is the number of selected components n of the feature vector, in order to obtain the mean LOO CV error estimate Sexp (n*).</sentence>
+    <sentence>This resulting classifier was used to predict the class of the samples, created independently, obtaining the distribution of the actual risk, i. e., the true error S(n*).</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>9 and 10 show the empirical distributions of Sexp (n*), the CV error estimate for the optimal n and S(n*), the actual risk, for the optimized SVM classifier at each method.</sentence>
+    <sentence>The resulting mean and variance values for the distributions are depicted in Table 3.</sentence>
+    <sentence>Fig 9.</sentence>
+    <sentence>Distribution of the experimental error estimate (LOO CV) and the actual risk (true error) for optimized Support Vector Machine (10-D feature vector).</sentence>
+    <sentence>Fig 10.</sentence>
+    <sentence>Distribution of the experimental error estimate (LOO CV) and the actual risk (true error) for optimized Support Vector Machine (1000-D feature vector).</sentence>
+    <sentence>Algorithm 1.</sentence>
+    <sentence>Case-based Model Selection Algorithm.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Statistical measures for the empirical distribution of the risk Sexp (n*).</sentence>
+    <sentence>10-D μ σ2 % bias CMS 0.5163 0.0088 3.25 Baseline 0.5132 0.0112 2.64 1000-D μ σ2 % bias CMS 0.5069 0.0051 1.39 Baseline 0.5115 0.0090 2.31 As a conclusion, the difference between empirical and true errors is lower than 5%, and both are statistically similar over this simulation, where the mean estimator was considered following the same strategy as in the experimental part.</sentence>
+    <sentence>Although the bias of the LOO CV error estimate is not significant for none of the aforementioned methods on this classification task, we could obtain a close to unbiased estimate of the actual risk by using the results of several resampling and optimization methods (Efron &amp; Tibshirani, 1997; Varma &amp; Simon, 2006).</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>In this paper, the notion of the CMS approach and some connections with previous approaches are presented and evaluated using several synthetic and real image datasets (Dalal &amp; Triggs, 2005; Górriz et al., 2011).</sentence>
+    <sentence>The CMS approach combines FE, hypothesis testing on a discrete set of expected outcomes and a cross-validated classification stage.</sentence>
+    <sentence>This methodology provides extended datasets (one per class-hypothesis) by means of FE methods, which are scored probabilistically using a NP approach inside a LOO-CV loop.</sentence>
+    <sentence>Our results demonstrate that, although the method only considers a binary classification problem and a LOO CV scheme (inherent bias similar to the baseline), the resulting minimum CV error estimate outperforms the one obtained by baseline methods using several FE methods (LS and PLS) that do not consider such FE/S optimization.</sentence>
+    <sentence>As an example, on a SPECT database the proposed method yields an with and clearly outperforming the baseline method.</sentence>
+    <sentence>As an ongoing research the evaluation of the proposed method will be conducted on Magnetic Resonance Imaging (MRI) datasets for the detection of abnormal neurological patterns such as AD or Autism.</sentence>
+    <sentence>The validation procedure will include complex classifiers (decision trees, random forest) in different statistical cross-validation and ensemble learning schemes (k-fold, bagging, boosting).</sentence>
+    <sentence>Appendix A.</sentence>
+    <sentence>The concept of relevance The definition of relevance to a set of variables with respect to their classes has been suggested in many works (Kohavi &amp; John, 1997).</sentence>
+    <sentence>As an example, Gennari, Langley, and Fisher (1989) define relevant features as those whose “values vary systematically with category membership”.</sentence>
+    <sentence>Another possible definition is the following: Definition: Let the set of all features except the remaining test pattern X. Denote by s a value-assignment to all features in S. X is relevant iff there exists some x, y, and s for which such that .</sentence>
+    <sentence>The latter definition is one of the degrees of relevance (a weak definition is also admissible) that allows the application of learning algorithms on optimal feature subsets with high rate of accuracy.</sentence>
+    <sentence>To assume Y to be conditionally dependent of X implies that probability of the label (given all features S) can change when we eliminate knowledge about the value of X.</sentence>
+    <sentence>If not, our LRT in Eq (12) would provide random behavior since both datasets would be equally probable.</sentence>
+    <sentence>In that case, in terms of machine learning, the SVM classification stage would solve this issue since the current input pattern is not a SV.</sentence>
+    <sentence>Bayes rule connects the definition of relevance with the discussion following Eq (10).</sentence>
+    <sentence>For relevant patterns the LRT is expressed as: (A.1) where is usually assumed.</sentence>
+    <sentence>Within the Bayesian paradigm the latent-class variables y is the hypothesis H, thus .</sentence>
+    <sentence>1 In terms of ability to classify, this ratio is equivalent to having the class posteriors for optimal classification (P(H|x)) (Hastie et al., 2001).</sentence>
+    <sentence>It is worth mentioning that the resulting Bayes factor in Eq (10) is connected to the BIC approach for model selection in Ripley (1996).</sentence>
+    <sentence>Here the selected model is expressed in terms of the conditional probability of the input pattern x given the training patterns s. 2 Again, this assumption follows the same line of reasoning as the Laplacian approximation proposed by Ripley (1996) for model selection.</sentence>
+  </section>
+</article>

@@ -1,0 +1,317 @@
+<article>
+  <title>Knowledge-based extraction of intellectual capital-related information from unstructured data</title>
+  <abstract>
+    <sentence>Nowadays, there is an increasing demand for the identification of an organization’s intellectual capital (IC) for decision support and providing important managerial insights in knowledge-intensive industries.</sentence>
+    <sentence>In traditional approaches, identification of an organization’s IC is usually done manually through interviews, surveys, workshops, etc.</sentence>
+    <sentence>These methods are labor and time intensive and the quality of the results is highly dependent on, among other things, the experience of the investigators.</sentence>
+    <sentence>This paper presents a Knowledge-based Intellectual Capital Extraction (KBICE) algorithm which incorporates the technologies of computational linguistics and artificial intelligence (AI) for automatic processing of unstructured data and extraction of important IC-related information.</sentence>
+    <sentence>The performance of KBICE was assessed through a series of experiments conducted by using publicly available financial reports from the banking industry as the testing batch and encouraging results have been obtained.</sentence>
+    <sentence>The results showed that, through the use of hybrid intelligent matching strategies, it is possible to extract commonly referred IC-related information from unstructured data automatically.</sentence>
+    <sentence>IC information analyst can rely on this method as an additional mean to identify and extract the commonly sought IC information from financial reports in a fast, systematic and reliable manner.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Intellectual capital management</keyword>
+    <keyword>Unstructured information management</keyword>
+    <keyword>Information extraction</keyword>
+    <keyword>Knowledge-based systems</keyword>
+    <keyword>Case-based reasoning</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Intellectual capital (IC) as a whole refers to the total resources and potential that determines the value and competitiveness of an enterprise (Magrassi, 2002).</sentence>
+    <sentence>The concept of IC has been associated with organizational knowledge and intangible resources.</sentence>
+    <sentence>Edvinsson and Malone (1997) refer IC as the cumulative value of an organization’s intangible assets.</sentence>
+    <sentence>The intangible assets are important today as knowledge and innovation are the key drivers to long-term business competitiveness.</sentence>
+    <sentence>Current research has found that there are significant relationships between the IC and value-added productivity, measuring IC can therefore strengthen ongoing productivity measurement efforts on a firm’s intangible assets (Phusavat, Comepa, &amp; Sitko-Lutek, 2013).</sentence>
+    <sentence>It has also been shown that IC is significantly positively associated with firm operating efficiency hence companies should invest and fully utilize IC to gain competitive advantage (Lua, Wang, &amp; Kweh, 2014).</sentence>
+    <sentence>According to the knowledge-based view of the firm (Grant, 1996; Spender, 1996), all intangible assets can be categorized into different types of knowledge.</sentence>
+    <sentence>Similarly, Brooking (1996) conceptualizes IC as combined intangible assets of market, intellectual property, human capital, and firm’s infrastructure that all together enable a company to function.</sentence>
+    <sentence>Prior research suggests that the development of IC resources creates value for organizations, especially since the majority of an organization’s assets are intangibles that are not shown on the balance sheet (Stewart, 1997).</sentence>
+    <sentence>IC is rapidly becoming a new instrument for gauging organizational hidden values; measuring the real value and the total performance of IC are essential to any corporate heads who know how high the stakes have become for corporate survival in the knowledge and information age (Khavandkar &amp; Khavandkar, 2009).</sentence>
+    <sentence>As a result, the identification of an organization’s IC is important as this provides insights on management action.</sentence>
+    <sentence>Such actions often relates to the goal of enhancing the transparency of the concerned organization and benefits both internal stakeholders and external investors and beneficiaries.</sentence>
+    <sentence>However, the identification of an organization’s IC is intrinsically difficult and is often subjective and inaccurate.</sentence>
+    <sentence>Such inaccuracies not only mislead the market’s observation over a corporation’s consistency in performance but may also cause legal issues.</sentence>
+    <sentence>This in turn leads to low business transparency in a knowledge-economy with a huge service-sector from which the most valuable assets are in fact intangibles.</sentence>
+    <sentence>The fundamental challenge for these quality variations is the knowledge related to intangible assets which is mostly represented in unstructured or semi-structured formats.</sentence>
+    <sentence>Due to the inherent nature of information, intangible assets account for a big proportion of a firm’s capital that are neither has properly refined nor structured.</sentence>
+    <sentence>In traditional approaches, the identification of an organization’s IC is done manually through interviews, surveys, workshops, etc.</sentence>
+    <sentence>(Yin, 2003).</sentence>
+    <sentence>These methods are not only labor and time intensive but the quality of the results is highly dependent on the experience of the investigators.</sentence>
+    <sentence>Up to now, there is still no uniform architecture available for intangible knowledge acquisition and elicitation.</sentence>
+    <sentence>As a result, there exist significant variations in the quality of reported intangibles by organizations.</sentence>
+    <sentence>On the other hand, the established eXtensible Business Reporting Language (XBRL) attempts to standardize financial reporting with a machine-interpretable format that makes corporate reports easier to consume (interpret) and integrate data (O’Riaina, Currya, &amp; Harth, 2012).</sentence>
+    <sentence>Since its inception, XBRL has become an important element of the financial reporting landscape (Vasarhelyi, Chan, &amp; Krahel, 2012).</sentence>
+    <sentence>However, there are also problems with the use of XBRL.</sentence>
+    <sentence>As XBRL has a highly structured format for exchanging business information, tedious initial manual efforts are required in filing XBRL-compliant documents.</sentence>
+    <sentence>Furthermore, prior research has revealed that XBRL documents often contain multiple errors in signage, amounts, labeling, and classification (Bartley, Chen, &amp; Taylor, 2010).</sentence>
+    <sentence>These are serious errors, since XBRL data is computer-readable and users are generally unable to visually recognize and correct these errors.</sentence>
+    <sentence>Although the value of manual approaches (e.g.</sentence>
+    <sentence>surveys and interviews) in identifying and collecting IC information is not to be under-estimated, there is also a considerable number of existing and alternative sources whereby an organization can tap into in order to retrieve IC-related information.</sentence>
+    <sentence>Some of these sources indeed are explicit knowledge assets which are routinely produced by an organization (e.g.</sentence>
+    <sentence>annual report) as part of its normal operation.</sentence>
+    <sentence>It is not uncommon that a lot of efforts has been expended on the compilation of such explicit assets though such efforts are generally not IC-directed.</sentence>
+    <sentence>In order to provide a fast, systematic, consistent and reliable way to identify IC, this paper illustrates how to extract the related information of organization’s IC from unstructured documents of an organization using an automatic and knowledge-based information extraction approach.</sentence>
+    <sentence>The amount of available electronic data of all kinds is increasing dramatically (Abiteboul, 1997).</sentence>
+    <sentence>It was found that most of the information or knowledge in an organization is unstructured or semi-structured (Waters, 2005) such as e-mails, office documents, PDF documents and many other text-based documents, which contain much human knowledge and details of customer relationships related to daily operations.</sentence>
+    <sentence>Many companies realize the value of the knowledge inherent in unstructured information which constitutes up to 80–98% of all the data, information and knowledge in an organization (Cheung, Lee, &amp; Wang, 2005).</sentence>
+    <sentence>In this paper, to address the challenge, a study has been conducted for efficient knowledge discovery and the extraction of intangibles by revealing IC-related information that are embedded mostly in unstructured data and partly in semi-structured data.</sentence>
+    <sentence>A Knowledge-based Intellectual Capital Extraction (KBICR) algorithm is presented; this algorithm incorporates a 2-tier filtration by applying Rule-Base Reasoning (RBR) and Case-Based Reasoning (CBR).</sentence>
+    <sentence>The KBICE algorithm has been evaluated by applying it to several publicly available financial reports from the banking industry.</sentence>
+  </section>
+  <section name="Related work">
+    <sentence>Maeques, Simon, and Caranana (2006) divide IC into three dimensions including human capital, structural capital, and relational capital, based on the knowledge source and structure.</sentence>
+    <sentence>Subramaniam and Youndt (2005) believe that IC consists of three highly interdependent facets of human capital, organizational capital, and social capital.</sentence>
+    <sentence>Human capital comprises of all individual knowledge, both tacit knowledge (knowing how) and explicit knowledge (knowing what).</sentence>
+    <sentence>Recently, Joshi, Cahill, Sidhu, and Kansal (2013) discovered that the value creation capability is highly influenced by human capital.</sentence>
+    <sentence>The paper addressed those factors affecting IC performance in to the process of maximizing value creation.</sentence>
+    <sentence>Structural capital composes of organization’s routines, procedures, strategies, and policies that are in charge of organization’s daily operations whereas organizational capital is the collective and institutionalized knowledge and experience residing within and utilizing through databases, patents, manuals, structures, systems, and processes of an organization.</sentence>
+    <sentence>In Pandey and Dutta (2013), they found that there is relevance between knowledge infrastructure capability and KM excellence.</sentence>
+    <sentence>They highlighted that the important role of a knowledge-sharing culture throughout management systems and routines.</sentence>
+    <sentence>Their findings also suggested that organizational structure (a principal part of an organization’s structural capital) plays both facilitating and steering roles in developing the culture of knowledge.</sentence>
+    <sentence>Relational capital refers to all knowledge acquired by organizations because of their interaction with the external environment such as competitors, partners, customers, regulators, etc.</sentence>
+    <sentence>Social capital, on the other hand, is defined as knowledge embedded within, available through and utilized by interactions among individuals and their social networks.</sentence>
+    <sentence>In particular, empirical results have revealed that the social capital has significant effects, directly or indirectly, on supply chain integration and performance (Yim &amp; Leem, 2013); it is suggested that supply chain integration among partners in the value chain can be improved by building up social capital.</sentence>
+    <sentence>Content analysis is the most popular method adopted to identify intellectual capital-related information (Guthrie, Petty, Yongvanich, &amp; Ricceri, 2004).</sentence>
+    <sentence>It is a manual method that involves in codifying qualitative and quantified IC-related information into the pre-defined IC indicator categories.</sentence>
+    <sentence>A list of IC indicators is prerequisite, which was first compiled by Guthrie, Petty, and Wells (1999) based on the literatures on government policy and professional policy pronouncements.</sentence>
+    <sentence>According to the context, culture as well as the environment changing, the list are modified by various scholars based on the various materials, such as the project results of US Financial Accounting Standards Board (FASB) (Bozzolan, Favotto, &amp; Ricceri, 2003), the extant IC academic articles (Abdolmohammadi, 2005), stakeholder consultation principles (Schneider &amp; Samkin, 2008), etc.</sentence>
+    <sentence>Then these indicators are put into different categories for coding IC-related information.</sentence>
+    <sentence>One of the most commonly used frameworks is derived from the Sveiby (1997) IC framework: internal structures, external structures; and employee competence.</sentence>
+    <sentence>Coders record the IC data in the materials such as annual reports (Bontis, 2003; Guthrie &amp; Petty, 2000; Guthrie et al., 1999), IPO prospectuses (Bukh, Nielsen, Gormsen, &amp; Mouritsen, 2005), sustainability reports (Cinquini, Passetti, Tenucci, &amp; Frey, 2012), etc.</sentence>
+    <sentence>Finally, other coders put the IC data that was recorded into the designated classification.</sentence>
+    <sentence>However, a completely manual method greatly limits the volume of process-able texts due to the labor-intensive data collection process (Beattie &amp; Thomson, 2007; Oliverira, Gowthorpe, Kasperskaya, &amp; Perramon, 2008).</sentence>
+    <sentence>Even though at least two researchers participate in the assessing process, the subjectivity is inevitably involved, thus the reliability of the extracted data is also affected by personal bias (Abeysekera, 2006; Beattie &amp; Thomson, 2007; Guthrie et al., 2004; Lee &amp; Guthrie, 2010).</sentence>
+    <sentence>Furthermore, multiple coders increase the risk of inconsistency due to the different coding rules (Abeysekera, 2006; Beattie &amp; Thomson, 2007; Lee &amp; Guthrie, 2010) being applied/interpreted.</sentence>
+    <sentence>Considering these disadvantages, some researchers turn to computers to solve the problem.</sentence>
+    <sentence>Bontis (2003) applied the electronic search to identify the IC-related information in the electronic database which contains approximately 11,000 Canadian Corporations annual reports.</sentence>
+    <sentence>Then a list of IC terminology was used as the IC disclosure reference.</sentence>
+    <sentence>Every term was searched individually in the database.</sentence>
+    <sentence>This computer-aided method makes it possible to identify IC items in huge volume of data.</sentence>
+    <sentence>However, the low level of IC disclosure demonstrates that this kind of electronic search was not an effective way to identify IC-related information.</sentence>
+    <sentence>Firstly, it failed to recognize the synonyms and words with multiple meanings that related to IC (Beattie &amp; Thomson, 2007).</sentence>
+    <sentence>Secondly, the context of the keywords cannot be understood by the computer, and therefore has greatly reduced the amount of the related information that can be matched.</sentence>
+    <sentence>Since the disappointing result reported by Bontis (2003), research on using the computer-aided methods to identify IC has subsided for quite a long period.</sentence>
+    <sentence>Oliverira et al.</sentence>
+    <sentence>(2008) used the software program “Concordance” to investigate the level of the IC disclosure in Spain.</sentence>
+    <sentence>“Concordance” is a kind of software that can help to study the text and analyze language in depth.</sentence>
+    <sentence>Even though the software program can increase the reliability, replicability and objectivity of the extracted data to some degree, the first experimental result by using the same framework as Guthrie and Petty (2000) is far from promising, the number of identified instances is even less than it was done manually.</sentence>
+    <sentence>Subsequently, the range of sub-terms was expanded based on the Guthrie and Petty (2000) in an attempt to net a wider net of IC information.</sentence>
+    <sentence>Moreover, with the function of the identifying the word frequencies within the context of sentences, “Concordance” has helped to successfully analysis 3 years’ of annual reports by leading Spanish firms.</sentence>
+    <sentence>Another method tried is to map IC-related information to off-the-shelf taxonomies/classifications.</sentence>
+    <sentence>Lee and Guthrie (2010) utilized Factiva to identify IC-related information in the business and analyst reports.</sentence>
+    <sentence>Factiva is an intelligent taxonomy tool that assists in classifying IC-related information automatically by using the fixed terms in their database.</sentence>
+    <sentence>Firstly, electronic search was conducted to extract the IC-related data.</sentence>
+    <sentence>Then, human reviews and corrects the gross errors.</sentence>
+    <sentence>Finally, a manual mapping was done between accepted IC terms and the Factiva intelligent taxonomy terms.</sentence>
+    <sentence>The mapping results of this project obviously show that the domain of Factiva taxonomy terms is larger than the terms used in the framework developed by Guthrie and Petty (2000), which greatly helps to identify the potential IC terms that do not emerge in the literatures.</sentence>
+    <sentence>However, the result of this project is very difficult to be replicated.</sentence>
+    <sentence>The Factiva intelligent taxonomy terms are commercial and proprietary products which cannot be used in the public domain.</sentence>
+    <sentence>Therefore researchers have few opportunities to study the design of the original taxonomy which greatly affects the accuracy and performance of the mapping.</sentence>
+    <sentence>Even though the personal biased in coding is eliminated by using Factiva, constant human interaction are still needed in other steps, thus introducing other types of subjectivities.</sentence>
+    <sentence>This approach has also demonstrated that it is impossible to cope with a huge volume data.</sentence>
+    <sentence>In this study, a Knowledge-based Intellectual Capital Extraction (KBICR) algorithm is presented; this algorithm incorporates a 2-tier filtration by applying Rule-Base Reasoning (RBR) and Case-Based Reasoning (CBR).</sentence>
+    <sentence>Case-based reasoning (CBR) is a technique to increase the learning capability of the algorithm.</sentence>
+    <sentence>CBR is a problem-solving approach that relies on past and similar cases to find solutions to new problems (Kolodner, 1993).</sentence>
+    <sentence>It simulates human decision making processes and enables the accumulation of previous experience.</sentence>
+    <sentence>A knowledge cycle consists of knowledge processes such as acquisition transfer, and retention of knowledge.</sentence>
+    <sentence>This is strongly correlated with the CBR cycle which includes retrieve, reuse, revise, and retain knowledge (Aamodt &amp; Plaza, 1994).</sentence>
+    <sentence>A case is often specified by a set of attributes.</sentence>
+    <sentence>This set of attributes is structured by the domain.</sentence>
+    <sentence>Each case has a unique key and the case description.</sentence>
+    <sentence>A new problem is solved by retrieving similar cases about similar situations from the knowledge repository (KR), reusing or revising the case in the context of the new situation, and retaining the new case in the KR (Aamodt &amp; Plaza, 1994).</sentence>
+    <sentence>One important advantage of CBR is its learning capability (Weber &amp; Aha, 2003).</sentence>
+    <sentence>Its problem-solving ability enhances with the increasing amount of accumulated cases.</sentence>
+    <sentence>By adopting a CBR system, organizations are able to gradually deal with new problems by referring to their past knowledge more effectively (Weber &amp; Aha, 2003).</sentence>
+    <sentence>As a result, CBR is some kind of experience mining (Richter, 2009).</sentence>
+    <sentence>The approach has been extended to more general situations where experience is retained.</sentence>
+    <sentence>Major examples are the “experience factory” (Althoff, Birk, von Wangenheim, &amp; Tautz, 1998) and the technique of “lessons learnt” (Weber, Aha, &amp; Becerra-Fernandez, 2001).</sentence>
+    <sentence>CBR has also been widely used in various studies and issues, including medical and the clinic industry (Chang, 2005), mental health (Wang, Cheung, Lee, &amp; Kwok, 2007), logistics (Cheung, Chan, Kwok, Lee, &amp; Wang, 2006), education (Chu, Chen, Lin, Liao, &amp; Chen, 2009), physical asset management (Wang, 2005) and customer service management (Cheung, Lee, Wang, Chu, &amp; To, 2003).</sentence>
+    <sentence>More examples can be found in the paper authored by Schmidt, Montani, Bellazzi, Portinale, and Gierl (2001).</sentence>
+    <sentence>They concluded that CBR is a suitable technology for retaining knowledge learned from experience for future reuse.</sentence>
+  </section>
+  <section name="Methodology for Knowledge-based Intellectual Capital Extraction (KBICE)">
+    <sentence>The proposed KBICE algorithm consists of a process of construction of knowledge repository and a process of IC information extraction.</sentence>
+    <sentence>The proposed method adapts the Case-based reasoning (CBR) approach with Rule-based reasoning (RBR) for enhancing the learning capability of the automatic extraction of IC related information.</sentence>
+    <sentence>As shown in Fig 1, pattern-based rules with the IC related key phrases are stored in the knowledge repository based on manually extraction for the initial setting, and review and revise of new IC information extracted by the system for continuous replenishment of the knowledge repository.</sentence>
+    <sentence>A schematic diagram of Knowledge-based Intellectual Capital Extraction Fig 1.</sentence>
+    <sentence>A schematic diagram of Knowledge-based Intellectual Capital Extraction.</sentence>
+    <sentence>The initial set of rules are extracted by an IC information analyst by reviewing a set of documents which is used as the initial set of training data for the construction of a knowledge repository.</sentence>
+    <sentence>A schematic diagram of the process is shown in Fig 2.</sentence>
+    <sentence>Firstly, the IC analyst identified IC elements by reviewing the seminal IC literature (Bontis, 2003; Bose, 2004; Guthrie &amp; Petty, 2000; Whiting &amp; Miller, 2008).</sentence>
+    <sentence>An IC checklist is then compiled according to the IC triple model (HC, SC and RC) as shown in Table 1.</sentence>
+    <sentence>Based on the significant IC elements, the analyst used sentence as the basic unit of analysis to identify the practical IC information from annual reports and IC reports.</sentence>
+    <sentence>This is a reasonable assumption as all such reports are mostly texts supplemented by tables and figures.</sentence>
+    <sentence>After the IC sentences are identified, patterns and key phrases are extracted from the sentences from both the semantic and syntax perspectives.</sentence>
+    <sentence>Considering IC key phrases and sentence patterns can be reused for identifying IC information, they are stored into the knowledge repository are further analysis.</sentence>
+    <sentence>A schematic diagram of the construction of knowledge repository Fig 2.</sentence>
+    <sentence>A schematic diagram of the construction of knowledge repository.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>A list of IC elements.</sentence>
+    <sentence>HC elements SC elements RC elements Employee profile Infrastructure and capability Customers, image and stakeholders Employee diversity Customer support function Company image and reputation Employee productivity Business procedure Public relation Employee development Quality management and improvements Public awareness Management development Corporate culture Publications Employee flexibility Management processes Customer relationships Employee capability Information systems (Technical Infrastructure) Relationship with suppliers Staff turnover Networking systems Relationship with stakeholders Education Process (quality and efficiency) Brands Commitment and Motivation Organizational structure Quality and customer satisfaction Training/competence development Technology Customer communication Value creation De-layering and transparency Investor relations Prevention of occupational hazards Flexibility Social action, social relationship Skills/Know-how/Expertise/Knowledge/Experience Management structure and strategic management Support for education, culture and innovation Knowledge acquisition Quality of pension summaries Corporation and networks In the process of IC information extraction, as shown in Fig 1, new document is firstly preprocessed by an ad hoc sentence boundary detection algorithm based on regular expressions (such as the new line character, full stop, and question mark) so as to determine the paragraphs and sentences.</sentence>
+    <sentence>The sentence is further divided into tokens by regular expressions such as space, comma, parentheses, etc.</sentence>
+    <sentence>The tokens are then tagged with its parts-of-speech (POS) using a POS tagger developed by Schmid (1994).</sentence>
+    <sentence>At the same time, using heuristics rules, certain specific data types are assigned to the tokens (e.g.</sentence>
+    <sentence>date, year, and numbers.</sentence>
+    <sentence>The flow of the parsing process is shown in Fig 3.</sentence>
+    <sentence>A process flow of the parsing process Fig 3.</sentence>
+    <sentence>A process flow of the parsing process.</sentence>
+    <sentence>The parsed text is then passed to the IC information extraction.</sentence>
+    <sentence>The pattern-based rules with IC-related key phrases in the knowledge repository are applied to the parsed texts.</sentence>
+    <sentence>A rule consists of two major parts – patterns, and key phrases.</sentence>
+    <sentence>The IC information extraction algorithm is shown in Figs.</sentence>
+    <sentence>4 and 5.</sentence>
+    <sentence>Two examples of the rules are given as follow: 1.</sentence>
+    <sentence>Rule No: 1 Pattern: a total of [NUMBER] Key Phrase: Business management centre 2.</sentence>
+    <sentence>Rule No: 2 Pattern: with an average of [NUMBER] Key Phrases: workforce, graduates A schematic diagram of the IC information extraction algorithm Fig 4.</sentence>
+    <sentence>A schematic diagram of the IC information extraction algorithm.</sentence>
+    <sentence>The IC information extraction algorithm Fig 5.</sentence>
+    <sentence>The IC information extraction algorithm.</sentence>
+    <sentence>As shown in Figs.</sentence>
+    <sentence>4 and 5, the results can be divided into 3 groups which are Group A, Group B and Group C. For Group A, sentences are extracted if the sentences are exactly matched with one or more than one existing rules.</sentence>
+    <sentence>Weights are assigned to the sentences based on the number of rules being matched by the sentences as shown in Eqs.</sentence>
+    <sentence>(1) and (2).</sentence>
+    <sentence>The sentences are then sorted by weights in a descending order.</sentence>
+    <sentence>The sentences of Group A have the highest priority for suggesting the IC related information (1) (2) where n is the total number of rules.</sentence>
+    <sentence>For Group B and Group C, sentences are extracted if the sentences are partially matched with one or more of the existing rules.</sentence>
+    <sentence>For Group B, sentences are extracted if the sentences are matched with at least one of the existing rules’ key phrases.</sentence>
+    <sentence>For Group C, sentences are extracted if the sentences are matched with at least one of the existing rules’ patterns.</sentence>
+    <sentence>A weight of each of the extracted sentences is determined by number of rules being matched and the similarity among the extracted sentences.</sentence>
+    <sentence>It is argued that the sentence that matched with more rules is more likely containing IC related information.</sentence>
+    <sentence>The calculation of weight of the ith paragraph is shown in Eqs.</sentence>
+    <sentence>(3)–(5) (3) (4) (5) where n is total number of rules, m is the total number of sentences, are the set of frequencies of words of the ith sentence, is the size of the intersection between the sets and , and is the size of the union between the sets and .</sentence>
+    <sentence>Hence, the sentences of Group B and Group C are also sorted in descending order by the weights of the extracted sentences as suggestions for users to review.</sentence>
+    <sentence>After review, new patterns and key phrases are stored into the knowledge repository for future reuse.</sentence>
+    <sentence>Following are two examples for suggesting new patterns and key phrases: 1.</sentence>
+    <sentence>Original Content: “As a public sector contractor, the OeNB is subject to the Federal Procurement Act, which prescribes a call for tenders for procurements exceeding a certain threshold.</sentence>
+    <sentence>In 2004, a total of 26 calls for tender were carried out, guaranteeing efficient, free and fair competition in the procurement process.</sentence>
+    <sentence>The OeNB succeeded in reducing costs massively in 2004 by continuously optimizing efficiency.</sentence>
+    <sentence>All corporate expenditure-related activity follows economic and ecological principles”.</sentence>
+    <sentence>Matched Pattern: a total of [NUMBER] Extracted Sentences:“In 2004, a total of 26 calls for tender were carried out, guaranteeing efficient, free and fair competition in the procurement process”.</sentence>
+    <sentence>Potential Key Phrase: calls for tender 2.</sentence>
+    <sentence>Original Content:“In order to get to know the perception of the suppliers and to identify the areas of improvement in their relationship with BBVA, two surveys were carried out on satisfaction, achieving a high response index and an overall satisfaction score of 3.7 out of 5”.</sentence>
+    <sentence>Matched Key Phrase: overall satisfaction score Extracted Sentences:“In order to get to know the perception of the suppliers and to identify the areas of improvement in their relationship with BBVA, two surveys were carried out on satisfaction, achieving a high response index and an overall satisfaction score of 3.7 out of 5”.</sentence>
+    <sentence>Potential Pattern: [NUMBER] out of [NUMBER]</sentence>
+  </section>
+  <section name="Experimental evaluation">
+    <sentence>Evaluation methodology The KBICE approach has been evaluated by using the financial reports of the banking industry that were found in the public domain.</sentence>
+    <sentence>22 English documents have been selected from 4 different banking companies for the experiment (which are obtained from the website of the companies: http://www.atp.dk, http://www.bbva.com, http://www.oenb.at, https://webcorporativa.bankinter.com).</sentence>
+    <sentence>The Banking industry is well known for having established structures for reporting tangible assets through decades of data refinements.</sentence>
+    <sentence>It is also partially capable of deriving semi-structured data of intangibles from banks’ financial reports.</sentence>
+    <sentence>Moreover, the selected companies are considered to be pioneers of creating IC reports in the industry.</sentence>
+    <sentence>Hence, the financial reports of the banking industry are considered to be a principal source of significant and reliable benchmarking data for evaluation.</sentence>
+    <sentence>Based on the document, a set of rules is extracted by an IC information analyst through reviewing the documents for the construction of the knowledge repository.</sentence>
+    <sentence>Some rules consist of both pattern and key phrase; some have key phrase only.</sentence>
+    <sentence>A list of rules is shown in Appendix A.</sentence>
+    <sentence>Among the documents, there are 110 pages that contain IC related information.</sentence>
+    <sentence>Among the 110 pages, 130 paragraphs contain IC related information, and 807 paragraphs do not contain IC-related information.</sentence>
+    <sentence>In other words, there are 937 paragraphs with 41,706 words which together constitute the base of the evaluation data.</sentence>
+    <sentence>The right answer set and the training set of rules were extracted by an IC information analyst by reviewing the set of documents.</sentence>
+    <sentence>As shown in Fig 6, leave-one-out method is used as the validation method for determining how accurately a learning algorithm is able to predict data that it was not trained on.</sentence>
+    <sentence>Leave-one-out cross validation is useful because it does not waste data.</sentence>
+    <sentence>It involves using a single observation from the whole sample as the validation data, and the remaining observations as the training data.</sentence>
+    <sentence>This process is repeated such that each observation in the sample is used once as the validation data.</sentence>
+    <sentence>The detail of the leave-one-out method is shown as Fig 7.</sentence>
+    <sentence>The experiment setup for measuring the performance of KBICE Fig 6.</sentence>
+    <sentence>The experiment setup for measuring the performance of KBICE.</sentence>
+    <sentence>Algorithm of leave-one-out method for the evaluation of KBICE Fig 7.</sentence>
+    <sentence>Algorithm of leave-one-out method for the evaluation of KBICE.</sentence>
+    <sentence>To verify the scalability of KBICE, experiments are carried out with different number of training cases.</sentence>
+    <sentence>In this paper, a paragraph is regarding as a single case.</sentence>
+    <sentence>Tests were conducted with 100 cases to 900 cases with a 100 cases increment.</sentence>
+    <sentence>Equal feature weightings are used in the KBICE analysis.</sentence>
+    <sentence>The results of KBICE are also benchmarked with RBR analysis and bag-of-words (BoW) model.</sentence>
+    <sentence>In RBR analysis, paragraphs are extracted if the paragraphs are exactly matched with at least one of the rules as described in Section 3.</sentence>
+    <sentence>The BoW model is a commonly used method in document classification.</sentence>
+    <sentence>Here are two simple texts: Peter likes to play football.</sentence>
+    <sentence>Tom likes too.</sentence>
+    <sentence>Peter also likes to watch football games.</sentence>
+    <sentence>Based on these two texts, a dictionary is constructed as: {“Peter”: 1, “likes”: 2, “to”: 3, “play”: 4, “football”: 5, “Tom”: 6, “too”: 7, “also”: 8, “watch”: 9, “games “: 10} which has 10 distinct words.</sentence>
+    <sentence>And using the indexes of the dictionary, each document is represented by a 10-entry vector: [1, 2, 1, 1, 1, 1, 1, 0, 0, 0] [1, 1, 1, 0, 1, 0, 0, 1, 1, 1] where each entry of the vectors refers to count of the corresponding entry in the dictionary.</sentence>
+    <sentence>This kind of representation has several successful applications, for example email filtering (Sivic, 2009).</sentence>
+    <sentence>It has an advantage that no prior knowledge is required for the classification.</sentence>
+    <sentence>In this evaluation, all the paragraphs are represented based on the BoW model and 2 categories are defined (i.e.</sentence>
+    <sentence>paragraph with IC-related information and paragraph without IC-related information).</sentence>
+    <sentence>Testing paragraphs are compared with the training paragraphs by using cosine similarity.</sentence>
+    <sentence>The cosine similarity is calculated as Eq (6) (6) where A and B are the term frequency vectors of the paragraphs.</sentence>
+    <sentence>A testing paragraph is classified by compared with each of the training paragraphs.</sentence>
+    <sentence>The category of training paragraph that has the highest similarity to the testing paragraph is selected as the category of the testing paragraph.</sentence>
+    <sentence>Precision, Recall and F-measure are used for the performance measurement by comparing the IC-related paragraphs suggested by the RBR, BoW and KBICE against the IC-related paragraphs selected by the IC analyst.</sentence>
+    <sentence>The Precision, Recall and F-measure are defined as Eqs.</sentence>
+    <sentence>(7)–(9), respectively (7) (8) (9) 4.2.</sentence>
+    <sentence>Result and discussions The results of the evaluations of different case numbers are shown in Figs.</sentence>
+    <sentence>8–10 and Table 2.</sentence>
+    <sentence>From the results, the proposed method KBICE has outperformed RBR and BoW in all the three measures (recall, precision, and F-measure), while the results of RBR is similar to that of BoW model.</sentence>
+    <sentence>The result showed that KBICE maintain a high recall rate with different number of training cases, and similar precision rate against RBR and BoW.</sentence>
+    <sentence>Evaluation result of RBR Fig 8.</sentence>
+    <sentence>Evaluation result of RBR.</sentence>
+    <sentence>Evaluation result of BoW model Fig 9.</sentence>
+    <sentence>Evaluation result of BoW model.</sentence>
+    <sentence>Evaluation result of KBICE Fig 10.</sentence>
+    <sentence>Evaluation result of KBICE.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Evaluation result.</sentence>
+    <sentence>No.</sentence>
+    <sentence>of cases 100 200 300 400 500 600 700 800 900 RBR Recall 0.500 0.474 0.500 0.527 0.583 0.529 0.500 0.491 0.524 RBR Precision 0.400 0.214 0.288 0.309 0.304 0.280 0.266 0.263 0.286 RBR F 0.444 0.295 0.365 0.389 0.400 0.367 0.347 0.343 0.370 BoW Recall 0.500 0.474 0.421 0.564 0.569 0.569 0.529 0.500 0.524 BoW Precision 0.267 0.281 0.254 0.320 0.336 0.336 0.320 0.298 0.310 BoW F 0.348 0.353 0.317 0.408 0.423 0.423 0.399 0.373 0.389 KBICE Recall 0.625 0.684 0.763 0.800 0.792 0.816 0.804 0.804 0.810 KBICE Precision 0.455 0.236 0.330 0.308 0.318 0.335 0.327 0.327 0.330 KBICE F 0.526 0.351 0.460 0.444 0.454 0.475 0.465 0.465 0.469 A summary of evaluation results of all approaches with 937 cases is provided in Table 3.</sentence>
+    <sentence>From the results, we can see that the proposed method KBICE has outperformed the other three methodologies in all the three measures.</sentence>
+    <sentence>High recall rate always sacrifices with low precision rate.</sentence>
+    <sentence>It is interesting to note that KBICE has a higher recall rate (around 0.8) against RBR and BoW (around 0.5), but KBICE continues to maintain a higher precision rate (around 0.33) against RBR (around 0.29) and BoW (around 0.3).</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Evaluation results of all approaches with 937 cases.</sentence>
+    <sentence>Approaches Recall Precision F-measure RBR 0.531 0.289 0.374 BoW 0.515 0.306 0.384 KBICE 0.815 0.330 0.470 Different statistical analysis and a series of student’s t-tests were conducted to compare the recall, precision and F-measure of different case numbers (i.e.</sentence>
+    <sentence>100, 200, 300, 400, 500, 600, 700, 800 and 900) in RBR and BoW with those in the proposed method, respectively.</sentence>
+    <sentence>The results are shown in Table 4.</sentence>
+    <sentence>Based on the results, one can see that nearly all the measures of the proposed approach were significantly better than those of the other approaches (p &lt; 0.05).</sentence>
+    <sentence>The exception is the comparison of precision in BoW with the proposed approach.</sentence>
+    <sentence>The result shows that the precision of proposed approach is not significantly better than that of BoW (p = 0.136).</sentence>
+    <sentence>However, the mean of precision of the proposed approach is better than that of BoW.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Statistical analysis among different approaches.</sentence>
+    <sentence>Measure type Analysis RBR BoW KBICE Recall Mean 0.514211873 0.516720376 0.766349317 Variance 0.001004415 0.002441958 0.004455682 Standard Deviation 0.031692507 0.04941617 0.066750898 Standard Error 0.010564169 0.016472057 0.022250299 p (t-test) 7.60379E−07 1.10145E−06 Precision Mean 0.290000884 0.30231798 0.329505701 Variance 0.002476143 0.000875173 0.003118895 Standard Deviation 0.049760859 0.029583322 0.055847067 Standard Error 0.016586953 0.009861107 0.018615689 p (t-test) 0.000401184 0.135743416 F-measure Mean 0.368896938 0.381343595 0.456688859 Variance 0.001715798 0.001329782 0.002091208 Standard Deviation 0.041422187 0.03646618 0.045729732 Standard Error 0.013807396 0.012155393 0.015243244 p (t-test) 5.39629E−06 0.001972817 To summarize, the proposed method enables the extraction of IC-related information and improves the performance of the existing algorithms.</sentence>
+    <sentence>Traditional methods extract the information by searching for lexico-syntactic patterns among the given documents.</sentence>
+    <sentence>The proposed approach applies further inferencing among the extracted patterns so as to deduce some hidden IC-related information.</sentence>
+    <sentence>The proposed approach can also be used as an automatic tool for suggesting new patterns thereby further improving the extraction process.</sentence>
+    <sentence>On the other hand, several limitations need to be overcome and cautions are needed in future work.</sentence>
+    <sentence>Similar to other research in text analysis, KBICE also requires tedious pre-processing work and data cleansing.</sentence>
+    <sentence>Furthermore, in this research there was an assumption of similar writing style being adopted from year to year in reports from the same industry.</sentence>
+    <sentence>Although the learning mechanism of KBICE can improve the performance of the extraction process, it still requires human intervention to review the suggestion of the system and provide feedback to the system.</sentence>
+    <sentence>In future work, the method should be also extended to different domains and data sets in order to find out more about the scope, limitations, and/or optimal point of the method.</sentence>
+    <sentence>The knowledge repository should maintain plenty of representative and rare case types.</sentence>
+    <sentence>By doing so, the system can help to record and retrieve cases which require different extraction strategies.</sentence>
+    <sentence>Another limitation of the paper is that the experiment was just done with annual reports.</sentence>
+    <sentence>Many other reports can also be explored.</sentence>
+    <sentence>For example, IPO prospectus, sustainability report, announcement and company website etc.</sentence>
+    <sentence>The rich IC information in these reports has greater impact on the capital market.</sentence>
+    <sentence>Besides reports, nowadays, internal and external social media are also commonly used as an important management tool (for marketing, communications, brand building purposes).</sentence>
+    <sentence>Such data may well contain IC-related information or even information that can predict changes in IC.</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>The identification of an organization’s IC is important to provide insights on management action.</sentence>
+    <sentence>This often relates to the goal of enhancing the transparency of the concerned organization and benefits both internal stakeholders and external investors and beneficiaries.</sentence>
+    <sentence>Traditional approaches based on manually methods through interviews, surveys, workshops.</sentence>
+    <sentence>These methods rely heavily on manpower, which are time consuming and costly.</sentence>
+    <sentence>This paper presents a Knowledge-based Intellectual Capital Extraction (KBICE) algorithm which allows for automatic extraction of important IC related information from massive amount of unstructured data.</sentence>
+    <sentence>In the present study, the capability and advantages of the KBICE are demonstrated through a successful pilot test conducted in banking industry.</sentence>
+    <sentence>Public financial reports were analyzed to extract the IC related information.</sentence>
+    <sentence>According to the results, it is shown that it is possible for extracting IC related information from unstructured data automatically and a high recall rate is achieved.</sentence>
+    <sentence>With the use of this method, the time, the cost and the workload on identification of an organization’s IC could be significantly reduced.</sentence>
+    <sentence>The present study contributes to the advancement of methods and tools for managing IC related information.</sentence>
+    <sentence>With appropriate customization of KBICE, it can be further applied in other industry for IC analysis.</sentence>
+  </section>
+  <section name="Managerial implication">
+    <sentence>With the growing awareness about the importance of IC, organizations are starting to define, track, measure and report on the growth of IC.</sentence>
+    <sentence>While no doubt many of the IC elements may be unique to organizations and as such, they need to be defined and specifically sourced, organizations nevertheless do not need to start from scratch.</sentence>
+    <sentence>Assuming an organization is routinely reporting on its performance hence generating various types of company reports, the automated technique outlined in this paper can be adapted and used to identify and extract information related to those commonly defined IC elements.</sentence>
+    <sentence>The derivation of the IC elements by the IC analyst in this research is based on seminal IC publications as well as a highly representative set of IC reports published by banks in the last decade.</sentence>
+    <sentence>IC management and reporting is still at an infancy stage in the business world but it is expected that organizations can rely on IC to 1.</sentence>
+    <sentence>Align corporate objective with business strategy and in particular identifying the growth in IC and progress towards accomplishment of defined goals with regard to corporate investments 2.</sentence>
+    <sentence>Track, grow and make refinements to any value creation process 3.</sentence>
+    <sentence>Communicate the “hidden potential” of an organization to various stakeholders, internal and external; and 4.</sentence>
+    <sentence>Analyze and predict the fluctuations in various elements of IC based on past data, events and activities.</sentence>
+    <sentence>Doing so can help an organization to avert a crisis or reduce the impact of an undesired incident Some organizations indeed are already leveraging IC for one or more of the above strategies (Gu, 2012).</sentence>
+    <sentence>Appendix A Examples of rule set.</sentence>
+    <sentence>IC category IC element Key phrases Patterns HC Employee diversity Women % Employee, women RC Customer communication (eg.</sentence>
+    <sentence>Telephone Platform, Internet) Member receiving a pension Receive a pension RC Customer relationships Number of attendees in membership meeting Held open meeting, meeting, number of participant RC Customer relationships ATP-Pensioners receiving current pension Pensioners, received current pension RC Customer communication (eg.</sentence>
+    <sentence>Telephone Platform, Internet) Number of attendees in membership meeting Member, participated, membership meeting RC Customers, image and stakeholders ATP-Pensioners receiving current pension Member paid contributions RC Customer communication (eg.</sentence>
+    <sentence>Telephone Platform, Internet) Number of attendees in membership meeting Members attended, information meeting RC Quality and customer satisfaction Proportion of satisfied/very satisfied attendees in membership meeting Attendees, satisfied SC Quality of pension summaries Customers find the summary to be written in an easy-to-understand language Members find the pension summaries, written in an easy-to-understand language HC Staff turnover Departed employees (staff turnover) Staff reduction HC Employee flexibility Number of employees people, working HC Employee flexibility Number of employees Originators of ideas HC Employee flexibility Number of employees Total, staff RC Corporation and networks Number of SME Management Centres SME segment, number of these branches RC Corporation and networks Number of SME Management Centres New centre specialising in SMEs, total, such centre HC Training (Competence development) Total number of courses taught Workforce, receive training, total, courses HC Training (Competence development) Average number of training hours per employee trained Training hours, per employee trained RC Corporation and networks Number of SME Management Centres Total number of SME branches RC RC upgrouped Transactions through channels other than branch network as % of total bank transactions %, transaction, remote channel SC Quality management and improvements Number of quality projects and initiatives carried out Quality, improvement project, started</sentence>
+  </section>
+</article>

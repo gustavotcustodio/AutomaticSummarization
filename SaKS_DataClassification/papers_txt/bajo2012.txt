@@ -1,0 +1,255 @@
+A multi-agent system for web-based risk management in small and medium business
+
+Abstract
+
+Business Intelligence has gained relevance during the last years to improve business decision making. However, there is still a growing need of developing innovative tools that can help small to medium sized enterprises to predict risky situations and manage inefficient activities. This article present a multi-agent system especially created to detect risky situations and provide recommendations to the internal auditors of SMEs. The core of the multi-agent system is a type of agent with advanced capacities for reasoning to make predictions based on previous experiences. This agent type is used to implement a evaluator agent specialized in detect risky situations and an advisor agent aimed at providing decision support facilities. Both agents incorporate innovative techniques in the stages of the CBR system. An initial prototype was developed and the results obtained related to small and medium enterprises in a real scenario are presented.
+
+Keywords
+Hybrid neural intelligent system
+CBR
+MAS
+Business intelligence
+Business risk prediction
+
+1. Introduction
+
+In the present financial context, it is relevant to provide innovative tools and decision support systems that can help the small-medium enterprises (SMEs) to improve their functioning (
+
+Khashman, 2009; Sun & Li, 2009a, 2009b). These tools and methods can contribute to improve the existing business control mechanisms, reducing the risk by predicting undesirable situations and providing recommendations based on previous experiences (Chi-Jie, Tian-Shyug, & Chih-Chou, 2009; Li & Sun, 2008; Sun & Li, 2008a, 2008b). As a consequence of this, the need of periodic internal audits has arisen. However, evaluating and predicting the evolution of these types of business entities, which are characterized by their great dynamism, tends to be a complicated process. It is necessary to construct models that facilitate the analysis of the work carried out in changing environments such as finance. The processes carried out inside a company are grouped into functional areas (Corchado, Díaz, Borrajo, & Fdez-Riverola, 2000) denominated “Functions”. A Function is a group of coordinated and related activities that are systematically and iteratively carried out during the process of reaching the company’s objectives (Li & Sun, 2009). The functions that are usually carried out within a company, as studied within the framework of this research, are: Purchases, Cash Management, Sales, Information Technology, Fixed Assets Management, Compliance to Legal Norms and Human Resources. Each one of these functions is broken down into a series of activities. For example, the Information Technology function is divided into the following activities: Computer Plan Development, Study of Systems, Installation of Systems, Treatment of Information Flows, and Security Management.
+
+This article proposes an innovative approach, based on multi-agent systems (Bajo, De Paz, De Paz, & Corchado, 2009), to propose a model for risk management and prediction in SMEs. Multi-agent systems are the most prevalent solution to construct Artificial Intelligence distributed systems. Agents are computational entities that can be characterized through their capacities in areas such as autonomy, reactivity, pro-activity, social abilities, reasoning, learning and mobility (Bajo et al., 2009). These capacities make the multi-agent systems very appropriate for constructing intelligent environments. An agent can act as an interface between the user and the rest of the elements of the intelligent environment. Moreover, intelligent agents can incorporate advanced artificial intelligence models to predict risky situations. In this study we propose a distributed approach where the components of a SME are modelled as intelligent agents that collaborate to create models that can evolve over the time and adapt to the changing conditions of the environment. Thus, making possible to detect risky situations for the SMEs and providing suggestions and recommendations that can help to avoid possible undesirable situations. The core of the multi-agent system are the evaluator and advisor agents, that incorporate new techniques to analyze the data from enterprises, extract the relevant information, and detect possible failures or inefficiencies in the operation processes.
+
+The evaluator and advisor agents are CBR-BDI agents (Corchado & Laza, 2003) that make use to past experiences to resolve new problems. CBR (Case-Based Reasoning) which uses past experiences to solve new problems (Kolodner, 1983), as such, it is perfectly suited for solving the problem at hand. In addition, CBR makes it possible to incorporate the various stages of expression analysis into the reasoning cycle of the CBR, thus facilitating the creation of strategies similar to the processes followed in small and medium enterprises. On one hand the evaluator agent is specialized in detecting risky situations. The recovery of information from previous experiences simplifies the prediction process by detecting and eliminating relevant and irrelevant patterns detected in previous analyses. The retrieve phase of the hybrid neural intelligent system incorporates the Expectation Maximization clustering technique (Dellaert, 2002). The reuse stage incorporates an innovative mixture of experts that makes use of multilayer perceptron, support vector regression and radial basis function neural network. The revise and retain stages implement a decision support system for experts. Moreover, the knowledge obtained during the prediction process is of great importance for subsequent predictions. On the other hand, the advisor agent is specialized in providing recommendations to avoid risky situations and improving the overall functioning of the SME. The retrieve phase recovers similar cases and their corresponding solutions. The reuse phase incorporates a novel approach based on decision trees and probabilistic gain functions to assess efficient and inefficient tasks. The revise and retain stages also implement a decision support system for experts. There are various artificial intelligence techniques such as artificial neural networks (Bianchia, Calogero, & Tirozzi, 2007; Sawa & Ohno-Machado, 2003), Bayesian networks (Baladandayuthapani, Ray, & Mallick, 2005), and fuzzy logic (Avogadri & Valentini, 2009) which have been applied to business failure prediction. While these techniques can be applied to failure detection and prediction, the knowledge obtained cannot be incorporated into successive tests and included in subsequent analyses. This article presents a hybrid neural intelligent system based on mixtures of experts and decision trees that have the ability to adapt to changes in the environment making use of past experiences. In this way, this article proposes an innovative approach where the knowledge acquired when resolving new problems is used for future situations.
+
+The approach presented in this article is an evolution of our previous works and proposes an innovative perspective (Borrajo, Corchado, Yanez, Fdez-Riverola, & Diaz, 2005; Corchado, Borrajo, Pellicer, & Yanez, 2005). The new approach proposes a multi-agent system to model the organizational structure of a SME. Moreover, the core of the system is a CBR-BDI agent type with the ability to adapt to the changes in the environment. In Borrajo et al. (2005), we presented a system composed of two case-based reasoning systems to detect the associate risk in the activities of SMEs in the textile sector and generate recommendations to improve the erroneous processes. In Corchado et al. (2005), we presented a decision support tool based on a case-based reasoning system that automates the internal control processes of a SME. The new approach proposes new methods for the retrieval stage of the CBR systems, as the Expectation Maximization clustering that notably improves the case’s recovery reducing the final quantity of cases retrieved and making it easier to recover the most similar cases to the problem introduced. Moreover, the approach proposes very innovative reuse mechanisms, based on mixture of experts and probabilistic decision trees.
+
+The article is structured as follows: the next section briefly introduces the problem that motivates this research. Section 3 presents the multi-agent system for managing small and medium enterprises. Section 4 describes the implementation of the multi-agent system, focusing on the internal structure of the Evaluator and Advisor agents. Section 5 and 6 presents the results obtained after testing the system and the conclusions of this study.
+2. Enterprise risk management
+
+“Risk Management” is a broad term for the business discipline that protects the assets and profits of an organization by reducing the potential for risks before it occurs, mitigating the impact of a loss if it occurs, and executing a swift recovery after a loss occurs. It involves a series of steps that include risk identification, the measurement and evaluation of exposures, exposure reduction or elimination, risk reporting, and risk transfer and/or financing for losses that may occur. All organizations practice risk management in multiple forms, depending on the exposure being addressed (Calderon & Cheh, 2002).
+
+The economic environment has increased the pressure on all companies to address risks at the highest levels of the organization. Companies that incorporate a strategic approach to risk management use specialized tools and have more structured and frequent reporting on risk management. As such, they are in a better position to ensure that risk management provides relevant and applicable information that meets the needs of the organization and executive team. But no matter what an organization’s approach is, the tools used must be backed up by solid, actionable reporting addressed (Calderon & Cheh, 2002). It is not always necessary for the risk managers to be conducting their own studies for their voices to be heard. Forging a strong relationship with internal auditors and other departments can allow risk practitioners to supplement their reports with the risk manager’s own analysis (Colbert, 1995).
+
+Enterprise Risk Management (ERM) is defined as “a process, effected by an entity’s board of directors, management and other personnel, applied in strategy-setting and across the enterprise, designed to identify potential events that may affect the entity, and manage risk to be within its risk appetite, to provide reasonable assurance regarding the achievement of entity objectives” (COSO, 2009).
+
+The managing of risks and uncertainties is central to the survival and performance of organizations. Enterprise risk management (ERM) is an emerging approach to managing risks across different business functions in an organisation that represents a paradigm shift from specialized approaches in managing specific risks (Ding, Song, & Zen, 2008; Huang, Tsai, Yen, & Cheng, 2008; Li & Sun, 2009; Lin, Wang, Wu, & Chuang, 2009; Ramamoorti, Bailey, & Traver, 1999). This paper provides a web intelligent model to ERM, which will subsequently lead to better organisational performance.
+
+ERM represents a revolutionary change in an organization’s approach to risk. ERM broadens the scope of risk management behaviours to include every significant business risk of the organization, comprehensively and systemically. It requires that all of these risks be considered in relation to each other to create a consolidated risk profile. It expands the scope of risk management practices beyond the physical and financial exposures to include issues such as long-term strategy, competitor response, human capital, and operational exposures, to name a few. In addition, ERM encompasses all aspects of an organization in managing risks and seizing opportunities related to the achievement of the organization’s objectives, not only for protection against losses, but for reducing uncertainties, thus enabling better performance against the organization’s objectives (Calderon & Cheh, 2002).
+3. Multi-agent web system for risk management
+
+Agent and multi-agent systems have become increasingly relevant during the last decades and have gained relevance in different areas (Bajo et al., 2009; Sun & Li, 2008a). Multi-agent systems are distributed organizations where the components (agents) collaborate to achieve a series of goals. The agents are autonomous entities that can be characterized through their capabilities: autonomy, proactivity, reactivity, social skills, organization, etc. (Pokahr, Braubach, & Lamersdorf, 2003; Corchado & Laza, 2003). These capabilities, make the agents very appropriated to be applied in business intelligence and risk management scenarios. In these scenarios the agents can play different roles and establish an organizational model where the human behaviours and the management processes can be emulated. In this sense, it is possible to obtain different agent types, specialized in concrete tasks and behaviours, that can collaborate together to increase the productivity of the business and provide an effective risk management. The agents can act as an interface between the human users and the systems, trying to provide advanced facilities and personalize the access to the system, but also can act as autonomous entities that are proactive and can make decisions independently.
+
+In this article we propose a multi-agent system aimed at providing advanced capacities for risk management in SMEs. The multi-agent system provides a web system interface to facilitate the remote interaction with the human users involved in the risk management process. The core of the multi-agent system is a type of agent so called CBR-BDI agent. This agent type integrates a case-based reasoning mechanism (CBR) in its internal structure to take advantage of the reasoning abilities of the CBR paradigm. CBR-BDI agents are characterized by their capacities for learning and adaptation in dynamic environments. These agent types are used to evaluate the business’ status and to generate recommendations that can help the business to avoid risky situations. CBR-BDI agents collaborate with other deliberative agents in the system to find optimum models for risk management.
+
+The agents in the system allow the users to access the system through distributed applications, which run on different types of devices and interfaces (e.g. computers, cell phones, PDA). Fig. 1 shows the basic schema of the proposed architecture, where all requests and responses are handled by the agents in the platform. The system is modelled as a modular multi-agent architecture, where deliberative BDI agents are able to cooperate, propose solutions on very dynamic environments, and face real problems, even when they have a limited description of the problem and few resources available. These agents depend on beliefs, desires, intentions (BDI) and plan representations to solve problems (Bratman, Israel, & Pollack, 1988). There are different kinds of agents in the architecture, each one with specific roles, capabilities and characteristics:
+
+–
+
+    Business agent: This agent was assigned for each firm in order to collect new data and allow consultations. The enterprise can interact with the system by means of this agent, introducing information and receiving predictions.
+–
+
+    Evaluator agent: It is responsible for the evaluation and predictions of potential risky situations. Every time that it is necessary to obtain a new estimate of the state of an activity, the agent evolves through several phases. On the one hand, this evolution allows the multi-agent system, to identify the latest situations most similar to the current situation in the retrieval stage, and to adapt the current knowledge in the reuse stage in order to generate an initial estimate of the state of the activity being analysed. On the other hand, it is possible to identify old situations that serve as a basis to detect the inefficient processes developed within the activity and to select the best of all possible activities. The activity selected will then serve as a guide for establishing a risk level for the activity, its function, and the company itself, to develop in a more positive way. The retain phase guarantees that the system evolves in parallel with the firm, basing the corrective actions on the calculation of the error previously made.
+–
+
+    Advisor agent: The objective of this agent is to carry out recommendations to help the internal auditor decide which actions to take in order to improve the company’s internal and external processes.
+–
+
+    Expert agent: This agent helps the auditors and enterprise control experts that collaborate in the project to provide information and feedback to the multi-agent system. These experts generate prototypical cases from their experience and they receive assistance in developing the Store agent case-base.
+–
+
+    Store agent: This agent has a memory that has been fed with cases constructed with information provided by the enterprise (through its agent) and with prototypical cases identified by 34 enterprises control experts, using personal agents who have collaborated and supervised the developed model.
+
+Multi-agent architecture basic schema
+
+    
+
+Fig. 1. Multi-agent architecture basic schema.
+
+The Evaluator and Advisor agents are CBR-BDI agents with advanced reasoning abilities that provided great adaptation and learning capacities. This agent type is the core of the multi-agent system and is presented in detail in Section 4.
+4. A practical implementation
+
+The application of agents and multi-agent systems provides the opportunity of taking advantage of the inherent capabilities of the agents. Nevertheless, it is possible to increase the reasoning and learning capabilities by incorporating a CBR (Kolodner, 1983) mechanism into the agents. In the case at hand, we will focus on the CBR-BDI agents (Bajo et al., 2009; Laza, Pavón, & Corchado, 2003), responsible for classifying the enterprise situation and predict possible risks as well as providing recommendations to manage risk situations. In the BDI model, the internal structure of an agent and its capability to choose is based on mental aptitudes: agent behaviour is composed of beliefs, desires, and intentions (Corchado & Laza, 2003). A BDI architecture has the advantage of being intuitive and capable of rather simply identifying the process of decision-making and how to perform it. Case-based Reasoning is a type of reasoning based on the use of past experiences (Kolodner, 1983; Aamodt & Plaza, 1994). The purpose of case-based reasoning systems is to solve new problems by adapting solutions that have been used to solve similar problems in the past. The fundamental concept when working with case-based reasoning is the concept of case. A case can be defined as a past experience, and is composed of three elements: A problem description which describes the initial problem, a solution which provides the sequence of actions carried out in order to solve the problem, and the final state which describes the state achieved once the solution was applied. The way in which cases are managed is known as the case-based reasoning cycle. This CBR cycle consists of four sequential steps: retrieve, reuse, revise and retain. A CBR engine requires the use of a database with which it can generate models such as the solution of a new problem based on past experience. A CBR system manages cases (past experiences) to solve new problems. The way in which cases are managed is known as the CBR cycle. The CBR cycle consists of four sequential phases: retrieve, reuse, revise and retain. The retrieve phase starts when a new problem description is received. Similarity algorithms are applied in order to retrieve from the case’s memory the cases with a problem description more similar to the current one. Once the most similar cases have been retrieved, the reuse phase begins. In this phase the solutions of the cases retrieved are adapted to obtain the best solution for the current case. The revise phase consists of an expert revision of the solution proposed. Finally, the retain phase allows the system to learn from the experiences obtained in the three previous phases and updates the case memory in consequence.
+
+The Evaluator and Advisor agent use the same type of case and share the same memory of cases. The data for the cases were obtained by surveys conducted with enterprise experts in the different functional areas of various enterprises, using the Expert agents. This type of survey attempts to reflect the experience of the experts in their different fields. For each activity, the survey presents two possible situations: the first one tries to reflect the situation of an activity with an incorrect activity state, and the second one tries to reflect the situation of an activity with a satisfactory activity state. Both situations will be evaluated by a human expert using a percentage (Yañez, 2003). Each activity is composed of tasks, and each task has an importance rate, and values of realization for both incorrect and satisfactory activity state. These parameters are explained below in the analysis of the case structure. The data acquired by means of surveys were used to build the prototype cases for the initial Store agent case base.
+
+Table 1 shows the case structure that constitutes the case base. Each case is composed of the following attributes:
+
+•
+
+    Case number: Unique identification: positive integer number.
+•
+
+    Input vector: Information about the tasks (n sub-vectors) that constitute an industrial activity: ((IR1, V1), (IR2, V2), ..., (IRn, Vn)) for n tasks. Each task sub-vector has the following structure (IRi,Vi):
+
+    –
+
+        IRi: importance rate for this task within the activity. It can only take one of the following values: VHI (Very high importance) with a numeric value of 5, HI (High Importance) with a numeric value of 4, AI (Average Importance) with a numeric value of 3, LI (Low Importance) with a numeric value of 2, VLI (Very low importance) with a numeric value of 1.
+    –
+
+        Vi: Value of the realization state of a given task: a positive integer number (between 1 and 10).
+
+•
+
+    Function number: Unique identification number for each function
+•
+
+    Activity number: Unique identification number for each activity
+•
+
+    Reliability: Percentage of probability of success. It represents the percentage of success obtained using the case as a reference to generate recommendations.
+•
+
+    Activity state: degree of perfection for the development of the activity, expressed by percentage. This is the solution of a problem case.
+
+Table 1. Case structure.
+Problem	Solution
+Case number	Input vector	Function number	Activity number	Reliability	Activity state
+
+The following sub-sections present the internal structure of the CBR-BDI Evaluator and Advisor agents used to predict and prevent crisis in medium-sized enterprises.
+4.1. Evaluator agent
+
+The evaluator agent is responsible for the evaluation and predictions of potential risky situations. This agent evaluates the status of a SME and makes predictions based on previous experiences. It is a CBR-BDI agent that incorporates innovative mechanisms in the retrieve and revise stage of the CBR cycle to detect risky situations. Fig. 2 shows the internal structure of the evaluator agent, focusing on the techniques employed on the retrieve and reuse phases of the CBR cycle.
+Internal structure of the CBR-BDI evaluator agent
+
+    
+
+Fig. 2. Internal structure of the CBR-BDI evaluator agent.
+
+As can be seen in Fig. 2, the evaluator agent incorporates a novel clustering technique in the retrieve phase and a mixture of experts in the reuse phase, that improve the prediction abilities obtained in previous works (Borrajo, Corchado, Corchado, Pellicer, & Bajo, 2010; Corchado et al., 2005; Borrajo et al., 2005),. The different techniques implemented in the CBR phases of the evaluator agent are explained in detail in the following sub-sections.
+4.1.1. Retrieve stage
+
+To retrieve similar cases the system can use traditional techniques as dendrograms (Saitou & Nie, 1987), PAM (Kaufman & Rousseeuw, 1990), k-mean (Hartigan & Wong, 1979), or neural networks such as self-organizing map (SOM) Kohonen, 1982, growing neural gas (Fritzke, 1995) resulting from the union of techniques, competitive hebbian learning (CHL) Martinetz, 1993 and neural gas (NG) Martinetz & Schulten, 1991, growing cell structure (GCS) Fritzke, 1995. The technique selected for this stage is a clustering technique: Expectation Maximization (EM). Expectation Maximization (EM) Dellaert (2002) obtains clusters based on the membership probability of the elements to each of the groups to calculate the probabilities it is necessary to perform a previous estimation of the parameters of the distributions, as well as the type of distribution for the data. The algorithm includes an iterative process that can be divided in two stages:
+
+1.
+
+    Looking at the proposed parameters Θt to calculate the value of the expression
+
+(1)
+
+2.
+
+    Maximize the following expression and calculate the following set or parameters
+
+(2)
+
+where U is the data set, J is the set of variables, Θ is the set of possible values for the parameters. The process is repeated iteratively and in each of the iterations, a new estimation for the parameters Θ is calculated. The output of the retrieve stage are the k cases of that cluster closer to the current problem case, and are used in the reuse stage to make decisions.
+4.1.2. Reuse stage
+
+The reuse phase is performed beginning with the information of the retrieved cases and the recovered models MLP (Multilayer Perceptron) and SVR (Support Vector Regression) associated to the set of cases retrieved. Nowadays mixture of experts is a technique used in several fields (Garvey & Lesser, 1993; Subasi, 2007). A mixture of experts provide advances capacities by fusing the outputs of various processes (experts) and obtain the response more suitable for the final value (Lima, Coelho, & Von Zuben, 2007; Nguyena, Abbassa, & Mckay, 2006). Mixtures of experts are also commonly used for classification and are usually called ensemble (Zhanga & Lu, 2010). Some examples are the Bagging (Breiman, Fried, Olshen, & Stone, 1984) or Ada-Boosting (Freund & Schapire, 1996) algorithms.
+
+This work proposes an innovative mechanism for the reuse stage of the evaluator agent, consisting of an artificial neural network that uses as inputs the values provided by two prediction techniques: MLP and SVR. SVR (Support Vector Regression) comes from Support Vector Machine (SVM) and is specialized in obtaining regression models by means of a change in the dimensionality of the data. The SVM technique is a supervised learning technique that is applied to the classification and regression of different elements. The SVM model is commonly used in different fields, as chemical (Li & Sun, 2009), modelling and simulation (Yang, Li, & Shi, 2008), data mining (Lessmann & Voß, 2009) or text mining (Lo, 2008), because it facilitates working with data that cannot be adjusted to linear models (Vapnik, 1999). Initially conceived to obtain classifications in linear separable problems, by means of finding a hyperplan able to separate the elements of a set. The SVM technique also allows separation of non-linear data. To obtain non-linear separation, SVM performs a mapping of the initial data into a high dimensionality space, where the data can be linearly separable using specific functions. Given that the dimensionality of the new space can be very high, most of the time it is not viable to use hyperplanes to obtain linear separation. As a solution, non-linear functions called kernels are used.
+
+The SVR technique is a variation of SVM to generate regressions (Smola & Scolköpf, 2003; Vapnik, 1995, 1999). The aim is to adjust the data. As in the case of SVM, there is a mapping of the input data into a high dimensionality space. In this new space the regression can be carried out without the initial limitations. MLP is a classical artificial neural network where the number of neurons in the hidden layer is 2n + 1, where n is the number of neurons in the input layer. Finally, there is one neuron in the output layer. The sigmoid activation function has been selected for the different layers. Taking into account the activation function fj, the calculation of output values is given by the following expression
+(3)
+The outputs correspond to
+
+. As the neurons exiting from the hidden layer of the neural network contain sigmoid neurons with values between [0, 1], the incoming variables are redefined so that their range falls between [0.2–0.8]. This transformation is necessary because the network does not deal with values that fall outside of this range. The outgoing values are similarly limited to the range of [0.2, 0.8]. The network training is carried out through the error Backpropagation Algorithm (LeCun, Bottou, Orr, & Müller, 1998). Fig. 3 shows the mixture obtained using the predictions provided by both experts SVR and MLP. The input values for the experts correspond to the ((IR1, V1), (IR2, V2), ... , (IRn, Vn), Reliability) input vector, and the output to the activity state.
+Mixture of experts used to predict the output values
+
+    
+
+Fig. 3. Mixture of experts used to predict the output values.
+
+In order to calculate the final output of the system, RBF networks are used (Bajo et al., 2009; Fritzke, 1994; Savitha, Suresh, & Sundararajan, 2009). The k cases retrieved in the previous phase are used by the MLP, SVR and RBFs network as a training group that allows it to adapt its configuration to the new problem encountered before generating the initial estimation. The system presented in this article has a RBF network for each of the activities that will be evaluated for a SME. Each of the RBF networks has as inputs the outputs estimated by the SVR and MLP evaluated for the activity.
+4.1.3. Revise stage
+
+The objective of this phase is to guarantee or refute the initial solution proposed by the RBF network, obtaining a final solution and working out, apart from this, the control risk.
+
+Faced with the initial estimation generated by the RBF network, the internal auditor will be responsible of deciding whether to accept the aforementioned solution. It will be based on the specific knowledge that he possesses about the company in which he is working. If the estimation provided by the system is considered to be valid, the system will take this solution as the final solution and, in the next phase of the CBR cycle, will store a new case in the case base, formed from the problem case and the final solution.
+
+The system will assign this new case with an initial reliability of 100%. If, on the contrary, the internal auditor considers that the solution provided by the system is not valid, they will provide their own solution that the system will take as the final solution. This, along with the problem case, will be stored as a new case in the case memory in the following phase. This new case will be assigned a reliability of 30%. This value has been determined bearing in mind the opinion of various auditors as to the importance that should be assigned to the personal opinion of the internal auditor.
+
+As of the final solution: the state of the activity, the system must work out the control risk associated with the activity. All developed activity in the enterprise sector has an associated risk that will indicate the negative influence that it exerts over the proper running of the enterprise. That is to say, the control risk of an activity measures the impact, on the whole on all of the managerial processes that the current state of the aforementioned activity represents. In this investigation it is considered that the risk level can assume one of these three possible values: low, medium and high. The calculation of the control risk level associated with an activity is based on the current state of the activity and on its level of importance. This last value is obtained after analysing the information obtained from a series of surveys (98 in total) answered by auditors all over Spain. In the previously mentioned surveys the auditors were asked to rank from 1 to 10 the importance that they gave the above-mentioned activity together with the function to which it belongs. The greater the importance is the greater weighting the activity will have within the internal control system.
+
+Then, as of the level of importance of the activity, and bearing in mind the final solution obtained after the revision phase, the control risk level can be worked out. The calculation of the control risk level is carried out using if-then rules (Cercone, Aijun, & Chan, 1999; Lee, 2008; Marling, Rissland, & Aamodt, 2006) in which the importance of the auditors have assigned to activity is compared to the final solution or state of the activity.
+4.1.4. Retain stage
+
+The retain phase is aimed at learning from the new past experience. As stated in the previous sub-section, a case together with its corresponding solution is stored in the memory of cases if it is considered as reliable, that is, a confidence level of 100%. Moreover, the system also stores those past experiences that are considered as not reliable by the expert. These past experiences are considered of interest by the CBR because they can be used as an indicator for invalid solutions, although this learning ability is not taken into consideration in this study. In this phase, the risk level associated with the case is also stored in the memory of cases, that is, the if-then rules that contain the know-how of the auditors.
+4.2. Advisor agent
+
+The second CBR-BDI agent in the system is the Advisor agent. The objective of this agent is to carry out recommendations to help the internal auditor to make decisions about which actions to take in order to improve the company’s internal and external processes. This agent can guide the internal auditor in his task of deciding the actions to be taken in order to improve the state of each activity analysed. This agent is totally dependent on the evaluator agent as it begins its work from the case (problem + solution). The advisor agent is a CBR agent, as well as the evaluator agent, and executes a CBR cycle to obtain recommendations. Fig. 4 shows the internal structure of the CBR-BDI Advisor agent. As can be seen in Fig. 4, the advisor agent executes a CBR cycle to provide recommendations, and it is composed of four sequential stages. These stages are explained in detail in the following sub-sections.
+Internal structure of the CBR-BDI advisor agent
+
+    
+
+Fig. 4. Internal structure of the CBR-BDI advisor agent.
+4.2.1. Retrieve stage
+
+In order to recommend changes in the execution of the business processes it is necessary to compare the current situation in the activity, represented by the problem case + solution, generated by the evaluator agent, with those cases from the case memory which best reflect the business management. Only cases most similar to the problem case are retrieved. Given that the k cases closest to the case problem were identified during the retrieval phase of the evaluator agent, these cases will be used by the retrieval step of the advisor agent. The process followed in this retrieval phase is based on the use of query relaxation (Gardingen & Watson, 1998), so that initially the cases retrieved from the case base meet the following conditions:
+
+1.
+
+    The solution or state of activity must be 15–20% superior to the final solution generated by the evaluator agent. If enough cases are not retrieved (25 is considered to be enough) the percentages are relaxed further, increasing in range by 5%.
+2.
+
+    Furthermore, they should possess a level of reliability of over 50%. This constant value has been established by the auditors.
+
+Fig. 5 shows the retrieval process adopted, where X stands for the case group which represents the knowledge of a determined activity that exists within the memory of the system, νp represents the vector of attributes that describes the problem case, sf is the final solution generated in the evaluator agent as a solution to the problem case, si is the solution to case i and K is the set of the most relevant retrieved cases.
+Pseudocode of the retrieval phase in the advisor agent
+
+    
+
+Fig. 5. Pseudocode of the retrieval phase in the advisor agent.
+4.2.2. Reuse stage
+
+Given that the objective of this agent is to generate a series of recommendations from the problem case, it is necessary to search for a case from the case base (or a combination of various cases) which serves as a guide to generate recommendations, comparing this/these case/s with the problem case. This comparison will allow the company to detect which processes need to be modified – in other words, which tasks need to be improved. As already explained above, in the retrieval phase, the cases obtained are those which reflect a most favourable state of the activity, when compared to the state presented by the analysed activity. From all these cases, in this phase of adaptation, the agent should select the case which maximises the value of each of the tasks (Vi) taking into account the activity state or weighting that each task has for the overall activity.
+
+This phase takes the activities with the different configuration of tasks obtained in the retrieval phase, the set of activities is divided as efficient or inefficient. Estimating the efficiency of each task is done according to the model defined by the decision trees for selecting significant nodes (Lo, 2008). This way, estimating the efficiency of each task is carried out according to the expression (4). This expression is referred to as the winning rate and depends on both node S and the selected condition B
+(4)
+where S represents a node that, in this case, will always be the root node of the tree, B is the condition for the existing task Vi, Si represents child node i from node S, |Si| the number of cases associated with the child node Si. The function I(S) represents gain and is defined as follows
+(5)
+where represents the frequency relative to class Cj in S,
+
+the number of elements from class Cj in S and NS the total number of elements. In this case, Cj = {efficient, inefficient}.
+
+The gain ratio G determines the level of importance for each task by distinguishing between an efficient and an inefficient activity. The values of the gain function are calculated from the root node.
+
+A table listing gain data is formed according to the values of the gain ratio calculated for the root node and the efficiency associated with each task. The gains table is created using the following formula to establish a value for the significance of each of the task carried out:
+(6)
+where
+
+contains the average value of efficiency for the activity with the task Vi.
+
+The objective is to detect the tasks that should be improved, establishing an order of priorities in terms of weighting of each task over the overall weighting of the activity. In other words, to identify the possible deviations of the activity and to appreciate the extent of deviations in terms of the activity state. In this way, the system generates recommendations related to the inconsistent processes found.
+
+Based on the predictions and recommendations generated by the system, the internal auditor may inform the company of inconsistent processes and the measures that should be adopted to resolve them. This is a decision support system that facilitates the auditing process for internal auditors.
+4.2.3. Revise and retain stages
+
+After the time necessary for correcting the errors detected, the firm is evaluated again. Auditing experts consider that three months are enough to allow the evolution of the company towards a more favourable state. If it is verified that the erroneous processes and the level of risk have diminished, the retain phase is carried out, modifying the case used to generate the recommendations. The reliability (percentage of successful identifications) of this case is thereby increased by 10%. In contrast, when the firm happens not to have evolved to a better state, the reliability of the case is decreased in 10%. Furthermore, those cases whose level of reliability is smaller than 15% are eliminated from the case base.
+5. Results
+
+A case study aimed at providing innovative web business intelligence tools for the management of SMEs was carried out in the Castilla y León region, in Spain. The experiment consisted on the construction of the initial prototype of cases memory and then in predicting potential risky situations for the enterprises taken into considerations and providing recommendations. The case study presented in this work was oriented to detect possible risky situations in SMEs, taken into account the crisis that affects the market. A multi-agent system was implemented and 22 SMEs participated in the experiment and were assigned a personal business agent. The enterprises were situated in different sectors of the Spanish market. The economic context is the same for all the SMEs. The system was tested during 24 months, from January 2008 to January 2010, tuned and improved taking into account the experience acquired using a total of 238 cases. Fig. 6a shows the web site of the project and the main page of an enterprise. The evolution of the enterprise is monitored through its internal activities and the predictions are made based on the previous experiences and on the status of the market (the possible crisis that affect the market). As can be seen in Fig. 6b, the experts complete a survey to provide information about the enterprise.
+Case study in the Spanish region of Castilla y León
+
+    
+
+Fig. 6. Case study in the Spanish region of Castilla y León. (a) Web site of the project, (b) survey about the enterprise.
+
+To validate the overall functioning of the system it was necessary to individually evaluate the Evaluator and Advisor agents. These agents provide predictions on the performance of the activities and detect those tasks that can be improved for each activity in order to get an overall improvement of the activity. In the following paragraphs we will focus on the evaluation of the CBR-BDI agents and their influence in the multi-agent system.
+
+To validate the performance of the Evaluator agent, an estimation of the efficiency of the predictions provided by this agent was carried out. To evaluate the significance of the different techniques integrated within the Evaluator agent, a cross validation was established, following the Dietterich’s 5 × 2-Cross-Validation Paired t-test algorithm (Dietterich, 1998). The value 5 in the algorithm represents the number of replications of the training process and value 2 is the number of sets in which the global set is divided. Thus, for each of the techniques, the global dataset S was divided into two groups S1 and S2 as follows: S = S1 ∪ S2 and S1 ∩ S2 = ϕ. Then, the learning and estimation processes were carried out. This process was repeated five times and had the following steps: the system was trained using S1 and then it was used to classify S1 and S2. In a second step, the system was trained using S2 and then it was used to classify S1 and S2. The results obtained by the evaluator agent using the mixture of experts, presented in Section 4, were compared to the results obtained using an individual RBF and an individual MLP to the same dataset and the same 5x2 Cross-Validation process. Table 2 shows the error rate obtained for each of the techniques, using the test in each of the 5 repetitions. As can be seen in Table 2, the estimated error was lower for the Evaluator agent than for the rest of the evaluated techniques.
+
+Table 2. Absolute error for the estimation of the status of the activities.
+Method	S2	S1	S2	S1	S2	S1	S2	S1	S2	S1
+Advisor agent	0.297	0.309	0.210	0.281	0.207	0.355	0.226	0.343	0.239	0.302
+MLP	0.677	0.669	0.489	0.507	0.513	0.806	0.530	0.696	0.506	0.485
+RBF	1.009	0.833	0.656	0.985	0.878	0.959	0.620	0.831	0.643	0.783
+
+A Paired t-Test was applied to check that the difference between the methods can be considered as significative if a value α=0.05 is established. To evaluate the Advisor agent it is necessary to take into account that the aim of this agent is to detect inefficient tasks by means of gain functions, as explained in Section 4. The evaluation of the functioning of the Advisor agent was carried out by selecting those tasks with higher values for the gain function. The selected tasks were used to estimate the different scenarios for different execution values for the task. The estimation was performed using the values provided by the Evaluator agent, obtaining a concrete value for the task. In this way, Fig. 7a presents the evolution of the system for the average status of 5 activities along 12 months. As shown in Fig. 7a, the evolution for the 5 activities can be considered as positive.
+(a) Evolution of the average status of five activities during 12months
+
+    
+
+Fig. 7. (a) Evolution of the average status of five activities during 12 months. (b) Evolution of the average status of two SMEs during 12 months.
+
+Looking at the evolution of the global efficiency for the activities analysed for two SMEs, shown in Fig. 7b, it is possible to observe a growing tendency in the average status of the business along the time, which indicates a reduction of inefficient tasks in each of the activities. The results obtained demonstrate that the multi-agent system caused a positive evolution in all enterprises. This evolution was reflected in the reduction of inefficient processes. The indicator used to determine the positive evolution of the companies was the state of each of the activities analysed. After analysing one of the company’s activities, it was necessary to prove that the state of the activity (valued between 1 and 100) had increased beyond the state obtained in the previous three month period. The system considers small changes in the tasks performed in the SMEs, and all the experts that participated in the experiments considered 3 months as a significant time to evaluate the evolution of a SME related to these changes. Fig. 8 shows two screenshots of examples of activities for an expert agent corresponding to activities for the same enterprise, Information Technologies and Inmobilized. Fig. 8a shows a global positive evolution of the different activities of the enterprise. Fig. 8b shows a set of recommendations for each of the activities, consisting of suggestions that try to improve the efficiency of the activities. We had certain problems implementing the system, partly because the management and experts were not familiar with the use of computational devices and multi-agent systems, so some courses were given to introduce them to these technologies and teach them how to use the system interface. The proposed multi-agent system can be considered asa unique system, since it is useful for dynamic environments and open enough to be used in other enterprise environments. The experts noted that the behaviour of the system improves as the number of cases in the memory of cases grows. This is a typical behaviour in CBR-based systems. We found some difficulties with the surveys, because some of the SMEs were reticent to complete surveys.
+Example of web interface for a company: (a) global activities for a company and…
+
+    
+
+Fig. 8. Example of web interface for a company: (a) global activities for a company and (b) evolution of the activities and recommendations.
+
+The users indicated that the use of a web-based interface facilitates the use of the new system. However, some of them were reticent about trusting the system because they were reluctant to facilitate their internal data and because updating the information about the enterprise requires specialized human resources and time. However, the auditors and experts believe that the CBR-BDI agents may favour their work and provide a highly appreciated decision support tool. They believe that this hybrid neural intelligent architecture has more advantages than disadvantages and that the system helped them to detect inconsistent processes in the enterprises. They tend to argue that the hybrid neural intelligent architecture should incorporate a shared memory of cases to compare data from different firms, but with the guarantee of data privacy.
+6. Conclusions
+
+As a conclusion, we can say that the use of innovative tools in business intelligence can notably help to detect potential risky situations and have a better understanding of their internal functioning. This article presented a multi-agent -based tool aimed at modelling the behaviour of SMEs and providing a decision support tool, that can contribute to detect potential risky situations and to avoid them by acting on the tasks that compose each of the activities of the business. The proposed approach is an evolution of previous works that incorporates innovative techniques for predicting risky situations and providing recommendations. Both strategies are based in the integration of intelligent BDI agents within CBR systems. The risk prediction is based on a mixture of experts that improves the previous approaches. Moreover the recommender system incorporates a new strategy based on the use of probabilistic gain functions of decision trees for the identification of inefficient tasks. The proposed approach was applied to different SMEs (taking into account the particular problem/casuistic of each SME), and we have shown a high percentage of success to improve the behaviour of the SMEs that participated in the experiments. However, it is not possible to extract general conclusions (i.e. All the SMEs should revise task X in Activity X), because this is not the aim of the proposed model. Although the defined model has not been tested in big enterprises, we believe that it could work adequately, although changes would take place more slowly than in SMEs. We are moving in this direction and expect that an evaluation of the system will soon be possible in a major international company from the textile sector. Moreover, additional work is still required to improve the adaptation of the CBR-BDI agents when the size of the memory of cases is very high and to learn from the cases with invalid solutions. Besides, it is necessary to increase the sample size by incorporating more SMEs to the experiments as well as explore different sets of samples. These are our next challenges.

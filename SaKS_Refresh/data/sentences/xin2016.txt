@@ -1,0 +1,258 @@
+With the change of lifestyle and interests, the people’s social activities have a dynamic changing tendency.
+Therefore, the static community could not reflect the real activities.
+For the ’community’ in the social network is the aggregate of people’s activities, thus the dynamic community could be detected by simulating the individual freewill.
+The individual tends to get in touch with the closest friends.
+By that a direction from one node to its closest nodes can be obtained, and the formed directed network could easily find out the communities.
+It is different from the traditional community detection policies, which only consider the global topological structure of the social network.
+Accord to the theory above, we designed the RWS (Random Walk Sampling) method to detect the overlapping communities, utilizing the random walk method to find the closest friends for each node.
+As the topological structure changing, the proposed ARWS (Adaptive Random Walk Sampling) could make the impacted nodes find out the new closest friends and the changed communities adaptively.
+The ARWS only update the impacted nodes and communities as the dynamic events occurring, while the traditional dynamic community detection methods need to break up and restructure the communities after the topology changing, because the tradition methods are based on the global topological structure.
+Therefore, the ARWS has a lower cost than the traditional methods.
+Furthermore, the ARWS focus on the individual, fitting to the decentralized computing framework, such as distributed computation and cloud computing.
+That is the trend of the artificial intelligence.
+The people’s social activities are variable, and the habits and hobbies are slowly changing, giving arise to the evolution of social network.
+Taking the case of social network sites, there exist many new registered users and disappear users, and the relationships of users appear to be dynamic, such as the establishment of new friendships and the blanking of old friendships.
+Kumar, Novak, and Tomkins (2010) designed three policies to simulate the evolution of social network.
+In the generative process, the users in social network are classified into three groups: passive, linker and inviters.
+The passive users join the network out of curiosity or at the insistence of a friend, but never engage in any significant activity.
+Inviters are interested in migrating an offline community into an online social network, and actively recruit their friends to participate.
+Linkers are full participants in the growth of the online social network, and actively connect themselves to other members.
+Various dynamic social network structures, such as Flickr and Yahoo!360, can be simulated by adjusting the mixture coefficient.
+Therefore, the research on the evolution of social networks is the practical needs on social computing, much research on community evolving (Cuzzocrea & Folino, 2013a; Cuzzocrea, Folino, & Pizzuti, 2013b; Konstantinidis, Papadopoulos, & Kompatsiaris, 2013), community tracing (Cuzzocrea & Folino, 2013a; Cuzzocrea et al., 2013b; Zhong, An, Gao, & Sun, 2014) and dynamic simulation (Takaffoli, Fagnan, Sangi, & Zaıane, 2011a; Takaffoli, Sangi, Fagnan, & Zäıane, 2011b) has been proposed.
+These methods evaluate the community evolution in terms of the communities’ variations , such as form, dissolve, survive, split and merge.
+Compared with the existing methods, we have considered the following two objectives.
+On one hand, need to guarantee the detected communities have a higher rationality (a higher modularity).
+On the other hand, need to guarantee the communities have a dynamic adaptability to deal with the dynamic events.
+For that, we proposed the ARWS to deal with the two problems above.
+Our main contributions in this paper can be summarized as the following: (1) The proposed RWS utilize the random walk as the local topological environment analyzing method, to find out the closest friends for the individual.
+By which, the global network could be simplified into the directed network, only containing the closest relationships.
+The directions of the nodes are the community clustering directions.
+By which, the global network could be clustered into the overlapping communities.
+The process only focuses on the individual, regardless of the global topological structure, which could reduce the complex of the community detection.
+(2) The ARWS is designed based on the RWS.
+The ARWS only update the closest friends of the nodes impacted by the dynamic events.
+Consequently, the impacted communities could be adjusted adaptively, by accepting or removing the impacted nodes.
+Compared with the traditional dynamic community detection methods needing to break up and restructure the communities after the dynamic events, the adaptive adjustment of the communities has a much lower cost.
+(3) The proposed RWS and ARWS detect the clustering directions of the nodes by analyzing the local topological environment.
+Therefore, the ARWS focusing on the individual has a decentralized computing manner, which could be applied into the distribution computing environment.
+Furthermore, the drawbacks of ARWS are the following: (1) The ARWS has too much input parameters, such as the sampling frequency s, the maximum walking step r, the overlapping threshold h, the favorable impact threshold e, and could not find out the accurate values for the parameters.
+That would lead to the inaccurate results.
+(2) The random walk method used by ARWS is homogeneous random process, implying the walking does not consider the impact of network characteristics on the walker, at each walking step, such as the weight, density, similarity.
+Currently, dynamic community detection methods can be classified into four categories: dynamic clustering, objective function optimization, representative node (community) detection, dynamic probability modeling.
+(1) Dynamic clustering methods.
+These methods are mainly based on the EC (Evolutionary Clustering) proposed by Chakrabarti, Kumar, and Tomkins (2006), seeing the time snapshot as clustering sample unit, integrated modeling the node distribution in time snapshot t and t-1.
+Chi, Song, Zhou, Hino, and Tseng (2007) proposed the PCQ (Preserving Cluster Quality) and (Preserving Cluster Membership) methods based on EC, where the PCQ emphasis on the cluster density and PCM on the node similarity in the same cluster.
+Lin proposed the FacetNet (Lin, Chi, Zhu, Sundaram, & Tseng, 2008) method based on EC, which established the snapshot cost function according to the community distribution in time snapshot t. Kim proposed the PDEM(Particle and Density based Evolutionary Clustering) (Kim & Han, 2009) improving the FacetNet, which took into account of the drawback of Facetnet on needing to preset the number of communities and not being allowed to change it.
+(2) Objective function optimization methods.
+These methods estimated the community evolution by the structure changes, the process of which is guided by the optimization of community density function or modularity.
+Blondel, Guillaume, Lambiotte, and Lefebvre (2008) applied the FN Newman (2004) into the dynamic community detection, which is the combination of local optimizing and hierarchical clustering.
+Dinh, Xuan, and Thai (2009) suggested the MIEN(Modules Identification in Evolving Networks), which employed the incremental modularity optimizing method, compressing the network into several representative communities.
+Nguyen proposed the AFOCS (Adaptive Finding Overlapping Community Structure) (Nguyen, Dinh, Tokala, & Thai, 2011a; Nguyen, Dinh, Xuan, & Thai, 2011b) and QCA(Quick Community Adaption) methods.
+These two methods designed four adjusting policies specific to the four dynamic events (node adding, node deleting, link adding, link deleting), and improved the community density function and modularity respectively, allowing for the dynamic community detection.
+Guo, Wang, and Zhang (2014) proposed the ECSD(Evolutionary Community Structure Discovery) aiming at weighted dynamic community detection.
+In the process of ECSD, as the dynamic events occurrence, the increment of merged communities is treated as the criterion on community merging decision.
+(3) Representative node (community) detection methods.
+These methods facilitated the adjusting process via tracing the representative nodes or communities.
+Zhang, Wang, Wang, and Zhou (2009) proposed the BSP (Bulk Synchronous Parallel), which established the similarity measurement using the number of common neighbors and the connections.
+Duan, Li, Jin, and Lu (2009) suggested the stream-group, which used the transition probability matrix to establish the relevance measurement between nodes, and proposed the compactness model to evaluate the local community tightness.
+Bourqui et al.
+(2009) measure the similarity of communities between the adjacent time snapshots, and merged the communities with a high similarity.
+Chen, Wilson, Jin, Hendrix, and Samatova (2010) proposed the representative-based community evolution tracing method, which made an assessment on the detected communities to find out the stable communities.
+When the network structure varies, it only traces the stable communities, by which the comparing times can be reduced.
+Takaffoli et al.
+(2011a, 2011b) gave an evolution analyzing method specific to the nodes, which adopts the steady-state model and impact model to recognize the stable nodes and representative nodes.
+Duan, Li, Li, and Lu (2012) gave an incremental K-clique community adjusting method utilizing the dynamic updating policy of DFS tree.
+Ma and Huang (2013) proposed the CUT(Community Update and Tracking) model, which detected the seed community (namely clique community) as the representative community.
+When the dynamic events occurrence, the CUT only updated the affected seed community to reduce the community detection cost.
+(4) Dynamic probability modeling methods.
+These methods assume the community distributions in each time snapshot as the samples of latent community distribution, and establish the probability model to associate the samples with latent community.
+Sarkar and Moore (2005) adopted the kernel method to construct the probability relation between nodes, then utilized probability relation between nodes and communities in each time snapshot to construct the Bayesian model between nodes and latent communities.
+Sun, Faloutsos, Papadimitriou, and Yu (2007) proposed the DPM (Dirichlet Process Mixture Model) which sampled the nodes in each time snapshot, constructing the Bayesian model between nodes in the adjacent time snapshot, thus the latent communities can be detected by LDA method.
+In addition to the above methods, Sun et al.
+(2007) proposed the GraphScope method, adopting the coding optimization.
+Tantipathananandh, Berger-Wolf, and Kempe (2007) translated the evolution modeling into graph coloring problem (GCP), and constructed the penalty function for the nodes changed their communities.
+Our work is inspired by the adaptive adjusting policy of AFOCS and QCA.
+We mainly combined the advantages of adaptive adjusting policy with local community detection like LFM.
+As the dynamic events occurrence, influenced nodes adaptively change their clustering directions to update the communities.
+Compared with the researches in recent 2 years, such as the HOCTTracker (Bhat & Abulaish, 2015), ANR (Xin, Xie, & Yang, 2016), and dynamic modularity method (Aktunc, Toroslu, & Ozer, 2015), the innovation of this paper is that we utilize the two characters of the random walk, containing the environmental awareness and the calculation process focusing on the node, to establish the decentralized adaptive method for the dynamic community detection.
+The description of RWS The communities are the collections of nodes, and the cohesion of community has an absorbing function on each node in which.
+Globally, the formation and evolution of communities can be seen as communities absorbing the nodes.
+Locally, it can be seen as the nodes choosing a proper community.
+Therefore, the community detection needs to consider the following two issues: 1) the cohesion of community to each internal node; 2) the tendency of nodes to choose a closest neighborhood.
+The notations used to descript the RWS are following: G is the social network, Gi is the node i, Lij is the directed connection from Gi to Gj, Ci represents the community i, Ni is the neighborhood collection of Gi.
+The network constituted by community C1 and C2 is shown in Fig 1, where G8 and G1 are the border nodes of C1 and C2.
+Fig 1.
+The Random walk example of Assume that the walker leaves the G1 towards the four directions L1, 2, L1, 3, L1, 7 and L1, 8 at random, then back to G1 from the L2, 1, L3, 1 and L7, 1 would have a higher frequency than L8, 1 within 6-step.
+As a reason that the node G1 and G2, G3, G7 belong to the same community C1, thus the possibility from G2, G3 and G7 to G1 is higher than G8.
+It implies that, when the walker walks into community C1 through L1, 2, L1, 3 and L1, 7, it is not easy to walk out the community, and vice versa it is not easy to return to G1 when the walker walks into C2 through L1, 8.
+It can be known from the analysis: 1) the return frequency of walkers departed from Gi reflects the topological environment of Gi.
+That means that, if the community of Gi has a more compact topological environment, the return frequency of walkers departed from Gi will be higher.
+2) the return frequency of walkers departed from Gi through Lji reflects the importance of Gj to Gi.
+That means that, if the Gj is more important to Gi than any other neighborhood, the frequency of walkers back from Lji would be the highest.
+We adopted the theory above to model the cohesion of local communities and the clustering tendency of nodes, proposing the Random Walk Sampling (RWS) method to detect the static communities.
+The procedure of RWS can be described as the following: (1) The walker depart from Gi choosing the Li, j as the direction for s times random walking with the maximum walking step r. Record the return frequency Fi, j(Gj ∈ Ni) and the global influence = of Gi.
+The Fi, j represents the frequency of the walker return to Gi through the link Lj, i, and the Ii, k represents the frequency of passing the node Gk during the s times random walking.
+(2) Calculate the clustering direction of Gi, such as Dir(Gi) =Gk representing the Gk is the clustering direction of Gi, according to Fi, j, where Gk= argmax(Fi, k, Gk ∈ Ni).
+(3) Calculate the clustering tendencies of all the nodes, according to 1) and 2), to obtain the clustering directions.
+(4) The clusters can be obtained by the clustering directions, and the clusters are the detected communities.
+For the RWS gives each node only one clustering direction, giving rise to the single community adscription for each node.
+In order to detect the overlapping nodes among the communities, it is needed to assign multiple directions to the nodes, thus the nodes belonging to multiple communities can be seen as overlapping nodes.
+For the Gi, the directions are Dirs(Gi)= where Gk=argmax(Fi, k, Gk ∈ Ni) and h is the overlapping threshold.
+Fig 2 illustrates the improved RWS with r=3, h=0.1, in which the arrows represent the clustering directions, such as Dirs(G1)={G2, G5}, Dirs(G3)=G4.
+Fig 2.
+The illustration of the improved RWS.
+The parameters analysis We utilize the experimental study to analyze the parameters of RWS.
+In the experiment data aspect, we utilized the LFR Benchmark (Lancichinetti ,2008) to generate the dataset.
+The parameters of LFR Benchmark consist of |G|, ad, dmax, cmin, cmax, on, om, mi, where |G| represents the number of nodes, ad and dmax represent the average degree and maximum degree of nodes, cmin and cmax represent the number of nodes in the smallest and biggest community, on represents the overlapping nodes, om represents the number of communities the overlapping nodes belonging to, mi is the mixing coefficient representing the possibility of a node linking to the other communities, for mi > 0.5 the community becoming indistinguishable.
+The experimental procedure of the parameters in RWS is as follows.
+In these experiments, the NMI (Danon, Diaz-Guilera, Duch, & Arenas, 2005) is used as the measurement to evaluate the efficiency of each parameter.
+(1) The sampling frequency s analysis The experimental purpose is to find out the optimal sampling frequency.
+Thus we utilize the number of nodes |G| and the maximum walking step r as the inputs, analyzing the influence of them on sampling frequency s. In the dataset aspect, seven datasets are generated by LFR Benchmark with the parameters (|G|={1000, 4000, ..., 19,000}, ad={4, 5, 10}, dmax={16, 18, 28}, cmin={15, 20, 45}, cmax={50, 65, 125}, on={80, 90, 140}, om={5, 6, 11}, mi=2.5), where each dataset containing 20 experimental networks.
+Carry out the Random Walking on the seven datasets, and record the sampling frequency s when all the return frequency gets stable.
+When the F get stable, It is means the s times walking is sufficient for each node, implying the optimal walking times is s for the network G. The boxplot of sampling frequency is shown in Fig 3, where each box represents the distribution state of 20 networks for each number of nodes.
+It can be known from Fig 3, for the number of nodes |G| < 10,000, the s is increasing with increasing the |G|, while for |G| > 10,000, the s gets convergence.
+The reason is that the random walking is affected by the local community scale.
+The region of random walking to be small when the number of nodes being small (less than 10,000), leading to the sampling frequency s getting small.
+When the number of nodes is large (larger than 10,000), the random walking region approaches to the upper limit.
+In that case, the increment of the |G| has a less influence on s. By the comparison of the maximum walking step r shown in Fig 3, the s is increasing with increasing the r. The reason why is that the maximum walking step reflecting the Random Walking path.
+If the r is bigger, the path is more complex and the return frequency is more difficult to get converge.
+Fig 3.
+The distribution of sampling frequency According to the theory of six degrees of separation (Newman, Strogatz, & Watts, 2001), the radius of community is less than three, therefore, the proper value of r is two times the radius, namely r closed to six.
+By the experimental analysis, for s > 100 the return frequency gets converge.
+(2) The maximum walking step r analysis The experimental purpose is to find out the maximum walking step.
+We utilize u the ratio of average degree to maximum degree as the structural measurement of network tightness, to analyze the influence of tightness on r. For the tightness reflects the density of network, the experiment could simulate the influence of network structure on r. In this experiment, four datasets with the number of nodes 2000, 6000, 12,000, 20,000 are generated by LFR Benchmark with the parameters (|G|={2000, 6000, 12,000, 20,000}, ad= ∥u × dmax∥, dmax ={30, 40, 50,60}, cmin={20, 30, 40, 50}, cmax={55, 80, 105, 130}, on={80, 105, 130, 150}, om={3, 5, 8,11}, mi=2.5).
+Each dataset is separated into 40 regions with u=(0.1 ∼ 0.12, 0.12 ∼ 0.14, 0.88 ∼ 0.9), and generate 10 networks at random in each region, namely each datasets consisting of 40 × 10 networks.
+In the process of the experiment, carry out the RWS on the four datasets, and record the frequency distribution of u against r for NMI >0.7 (the favorable results).
+The purpose of this experiment is to analysis the influence of network structure on the maximum walking step r, regardless the overlapping threshold h, thus the input of RWS is s=150, h=0.
+Fig 4 shows the performance of RWS for r={3, 4, 5, 6} with various network tightness, where the centralized ’frequency’ region could reflect the effective value of u.
+More details in Fig 4 can be obtained as follows: (a) When the number of nodes is different, the frequency of maximum walking step for r={3, 4, 5, 6} is closed to each other, implying that the number of nodes has a less influence on r. (b) When the number of nodes is same, the frequency of r has the relationship (r=3) < (r=4) < (r={5, 6}), implying the RWS has the highest reliability for r={5, 6}.
+(c) From the overall distribution, the RWS is suitable to the network structure with u ∈ {0.4 ∼ 0.7}.
+(d) When the network structure has a high tightness, the r is expectable to be large.
+Fig 4.
+The frequency distribution of u against r for NMI >0.7 on 4 datasets.
+(3) The overlapping threshold h analysis The experimental purpose is to find out the favorable overlapping threshold h. We carry out the RWS on the same networks and obtain the values of NMI for h ∈ {0 ∼ 0.9}, to analysis the effect of overlapping threshold h to RWS.
+In this experiment, four datasets with the number of nodes 2000, 6000, 12,000, 20,000 are generated by LFR Benchmark with the parameters (|G|={2000, 6000, 12,000, 20,000}, ad={15, 20, 25, 30}, dmax={30, 40, 50,60}, cmin={20, 30, 40, 50}, cmax={55, 80, 105, 130}, on={80, 105, 130, 150}, om={3, 5, 8,11}, mi=2.5), each datasets consisting of five networks.
+In the process of the experiment, carry out the RWS on the 4 datasets, recording the value of NMI for each h. According to the sampling frequency s analysis and the maximum walking step r analysis, the parameters of RWS are s=150, r=5 in this experiment.
+Fig 5 shows the trends of NMI against h, where the region with the high NMI could reflect the effective value of h. The following can be known from Fig 5.
+(a) The number of nodes has little effect on h. (b) The optimal interval of overlapping threshold h is (0, 0.33).
+(c) For h > 0.25, the NMI is decreasing with increasing the h, with the reason that the clustering directions is increasing with increasing the h and the scale of detected communities getting larger and fuzzier.
+Fig 5.
+Trends of NMI against overlapping threshold In summary, the parameters of RWS is expected to be that, the sampling frequency s=150, the maximum walking step r=5, the overlapping threshold h=0.15.
+The RWS is a static community detection method, which can be seen as a basic framework of the dynamic community detection.
+Based on the RWS, we proposed the ARWS (Adaptive Random Walk Sampling) method to deal with the dynamic community detection, in the following section.
+The ARWS treats the detected communities by RWS as the original communities.
+In the dynamic social network, the dynamic events contain node adding event, node removing event, link adding event and link removing event.
+The proposed ARWS utilizes the adaptive adjustment policy to deal with the four dynamic events to achieve the dynamic community detection.
+In this section we give the details on ARWS and analysis the parameter of which.
+The description of ARWS The principle of RWS is that, when the dynamic events occur, carry out the RWS to handle with the impacted nodes, changing the clustering directions of which, to adjust the impacted community.
+The procedure of the ARWS can be described as follows: (1) Establish the GAQ (Global Adaptive Queue).
+(2) Make a judgment for the occurred dynamic events, node adding event goto 3), node deleting event goto 4), link adding event goto 5), link deleting event goto 6).
+(3) For the node adding event, add the added node Gi and put all of its neighbors Ni into GAQ.
+(4) For the node deleting event, add the removed node Gi and put all of its neighbors Ni into GAQ.
+(5) For the link adding event, add the added link Li, j, Gi and put Gj (the vertices of Li, j) into GAQ.
+(6) For the link adding event, add the removed link Li, j, Gi and put Gj (the vertices of Li, j) into GAQ.
+(7) If the GAQ is empty, turn 10), else turn 8).
+(8) Select the first element of GAQ Gfirst as the origin node of RWS, carrying out the RWS and calculating the Dirs(Gfirst) and Ifirst(t).
+(9) Put into the tail of GAQ, remove the Gfirst from GAQ and return to 8) until GAQ is empty, where e is the impact threshold.
+(10) Cluster the nodes with the new directions.
+The processes of 8) and 9) are the adaptive clustering processes for the node impacted by the dynamic events.
+The ARWS only deal with the impacted nodes, as the dynamic events occurrence, avoid the global calculation.
+By which, the calculation cost cab be decreased.
+Fig 6 is the result of ARWS on Fig 2, for the four dynamic events (Add G11, Del G5, Add L1, 4, Del L7, 8), and the process of which is list in the Table 1.
+Fig 6.
+The process of ARWS for four dynamic events on the network in Fig 2.
+Table 1.
+The process of ARWS for four dynamic events.
+Dynamic events GAQ Communities Add G11 G1, G2, G5, G6, G7, G10, G11 C1={G1, G2, G3, G4, G5} C2={G1, G6, G10, G11} C3={G7, G8, G9, G10} Del G5 G1, G2, G3, G4, G6, G11 C1={G2, G3, G4} C2={G1, G6, G7, G8, G9, G10, G11} Add L1, 4 G1, G2, G3, G4, G11 C1={G1, G2, G3, G4} C2={G1, G6, G7, G8, G9, G10, G11} Del L7, 8 G6, G7, G8, G9, G10 C1={G1, G2, G3, G4} C2={G1, G6, G7, G10, G11} C3={G7, G8, G9} 4.2.
+The parameter analysis for ARWS The experimental purpose is to find out the favorable impact threshold e. We carry out the ARWS with four dynamic events and analyze the interval of NMI for e ∈ {5 ∼ 35}, to obtain the effective interval of e. According to the analysis of sampling frequency s, when the number of nodes is larger than 10,000, the sampling frequency s has little effect on the RWSb and the RWS gets stable.
+Therefore, we utilize the LFR Benchmark generating a G_10,000 dataset with 10,000 nodes, the parameters are (|G|=10,000, ad= 25, dmax=50, cmin=40, cmax=100, on=130, om= 6, mi=2.5), while the parameters of ARWS are (s=150, r=5, h=0.15).
+In the experimental process, record the NMI of four dynamic events with various e, where each dynamic event carried out 10 times on G_10,000.
+Furthermore, to facilitate the observation, each dynamic event contains 200 elements, such as add 200 nodes in node adding event.
+We use the EQ (Shen, Cheng, Cai, & Hu, 2009) to evaluate the detected communities to check the NMI based results.
+The EQ distribution of 10 times experiments of the four dynamic events is shown in Fig 7, while Fig 8 shows the boxplot of the four dynamic events.
+It can be seen from Fig 7, the impact threshold is increasing with decreasing the EQ, and the trends of the four dynamic events are similar to each other.
+As the reason that, as the e increasing, the nodes needed to be adjusted get less, leading to the detection getting ineffective.
+From Fig 8, when the e increase, the ratio of effected nodes gets shrinking, implying the nodes needed to be adjusted get less, verifying the result in Fig 7.
+Fig 7.
+The distribution boxplot of EQ for the four dynamic events.
+Fig 8.
+The distribution boxplot of impacted range for the four dynamic events.
+In summary, when the impact threshold e is small, the detection accuracy and computational complexity are both high.
+To trade off the accuracy and complexity, we select 10 as the reasonable value of e. Overall, the favorable parameters of ARWS can be set as s=150, r=5, h=0.15, e=10.
+In this experimental study, we choose QCA, AFOCS and MIEN, three adaptive community detection methods, as the contrast algorithm, utilizing the LFR Benchmark as the topology generating method, to make a comparison on the adjustment stability, static and the dynamic performance.
+The generated dataset is G_10,000 with 10,000 nodes, the LFR Benchmark parameters are (|G|=10,000, ad= 25, dmax=50, cmin=40, cmax=100, on=130, om= 6, mi=2.5).
+We also design eight dynamic event policies as follows: (1) Node adding event 1.
+Select the nodes belonging to the same community.
+Link the added node with the selected neighbors.
+(2) Node deleting event 1.
+Remove the nodes whose neighbors belonging to multiple communities.
+(3) Link adding event 1.
+Select the two nodes in the same community as the vertices, and link the two nodes.
+(4) Link deleting event 1.
+Remove the link whose two vertices belonging to different communities.
+(5) Node adding event 2.
+Select the nodes belonging to multiple communities as the neighbors of the added node.
+Link the added node with the selected neighbors.
+(6) Node deleting event 2.
+Remove the node whose neighbors are all in the same community.
+(7) Link adding event 2.
+Select the two nodes belonging to different communities as the vertices of the added link, and link the two nodes.
+(8) Link deleting event 2.
+Remove the link with the two vertices belonging to the same communities.
+For the eight dynamic events, 1)-4) would lead to the structural features of the communities become apparent, while 5)-8) become fuzzy.
+The comparison on adjustment stability To compare the adjustment performance, we utilize the eight policies to simulate the dynamic events, and record the MNI and EQ of four methods consisting of QCA, AFOCS, MIEN and ARWS at each time snapshot.
+In this experimental study, we carry out the four methods on each policy, in totally eight experiments.
+Each experiment contains 10 time snapshots, and each time snapshot contains the same 200 dynamic events from only one policy.
+For the application of only one policy will lead to the increasing (or decreasing) on NMI and EQ, the adjustment stability of four methods can be observed by the trends of NMI and EQ.
+The trend of MNI on each policy is shown Fig 9, where the NMI of QCA, AFOCS and MIEN tends to converge as the time snapshot increasing, implying that the three methods have a negative performance on dealing with the dynamic events.
+The QCA, AFOCS and MIEN become ’fatigue’, however, ARWS preforms better.
+Fig 10 shows the comparison of four methods on EQ, supporting the conclusion of Fig 9.
+Therefore, the ARWS has the better adjustment stability.
+Fig 9.
+The comparison of four methods on NMI.
+Fig 10.
+The comparison of four methods on EQ.
+The comparison on static performance In order to analyze the difference between dynamic and static community detection methods, we mix the eight policy into the G_10,000.
+In each time snapshot, we select 300 dynamic events from the eight policy at random.
+For the static method, the topology after the dynamic events selecting in each time snapshot is treated as the network structure, then carry out the representative static community detection methods, such as GN, RAK and LFM.
+For the static community detection methods do not consider the dynamic events, the results of which are more accuracy than dynamic community detection methods.
+Therefore, the results of static community detection methods can be utilized as the criteria for the dynamic methods.
+Fig 11 shows the absolute value of the difference between NMI and EQ for the dynamic community detection methods (ARWS, AFOCS, MIEN, QCA) and the static community detection methods (GN, RAK, LFM).
+The difference could reflect the stability of the dynamic community detection methods.
+It can be seen from Fig 11 that ARWS have a stable absolute value of the difference, while the absolute values of AFOCS, MIEN and QCA are increasing with increasing the time snapshot.
+That verifies the stability of ARWS is better than of AFOCS, MIEN and QCA, supporting the conclusion of the comparison on adjustment stability.
+Fig 11.
+The absolute value of the difference of EQ and NMI between static and dynamic community detection methods.
+The comparison on dynamic performance Unlike the static community detection methods, the dynamic community detection methods need to consider on the impacted local communities as the dynamic events occurrence, therefore, the adaptive process would lead to the bias on the community adjustment.
+In this experimental study, we simulate four kinds of community evolution, such as form, split, merge and survive, to analyze the adaptive accuracy and stability of dynamic community detection methods on the four evolutions.
+The four kinds of community evolutions are described as follows: (1) Form.
+Generate m communities utilizing the eight policies on G_10,000.
+(2) Split.
+Select m communities on G_10,000 and split them into 2m communities utilizing the eight policies.
+(3) Merge.
+Select m communities on G_10,000 and merge them into m/2 communities utilizing the eight policies.
+(4) Survive.
+Select m communities on G_10,000 and run the eight policies 1000 times on the nodes not belonging to the m communities.
+We utilize the correct detection rate of ARWS, AFOC, MIEN and QCA on the four evolutions to analyze the dynamic performance, which is the rate of the number of correct detected nodes to the number of nodes throughout the network.
+Fig 12 is the correct rate histogram of ARWS, AFOC, MIEN and QCA on the four evolutions, where the correct rate of them is similar and decreasing with increasing the number of evolved communities.
+The correct rate of split and form evolutions are high in ARWS, for QCA the form evolution correct rate is low, while for AFOCS the split evolution correct rate is low.
+Fig 12.
+The correct rate histogram of ARWS, AFOC, MIEN and QCA on the four evolutions.
+We designed an adaptive method to resolve the dynamic community detection problem.
+This method takes the tendency of individual communication as the community clustering direction.
+The proposed RWS utilize the Random Walk as the local topological environment analyzing method, to find out the closest friends for the individual.
+By which, the global network could be converted into the simple directed network, only containing the closest relationships.
+The directions of the nodes are the community clustering directions.
+By which, the global network could be clustered into the overlapping communities more easily.
+The ARWS is designed based on the RWS.
+The ARWS only update the closest friends of the nodes impacted by the dynamic events.
+Consequently, the impacted communities could be adjusted adaptively, by accepting or removing the impacted nodes.
+The advantages of RWS and ARWS are that, the process only focuses on the individual, regardless of the global topological structure, which could reduce the complex of the community detection.
+Compared with the traditional dynamic community detection methods needing to break up and restructure the communities after the dynamic events, the adaptive adjustment of the communities has a much lower cost.
+Furthermore, the drawbacks of ARWS are that, the ARWS has too much input parameters, such as the sampling frequency s, the maximum walking step r, the overlapping threshold h, the favorable impact threshold e, and could not find out the accurate values for the parameters.
+That would lead to the inaccurate results.
+And the random walk method used by ARWS is homogeneous random process, implying the walking does not consider the impact of network characteristics on the walker, at each walking step, such as the weight, density, similarity.
+Therefore, the research on the inhomogeneous, considering the local environment, is the further work of this paper, for instance, considering the weight, density and similarity of the nodes and links, at each walking step.
+And the simulation of individual communication could be extended into the semantic analysis region.
+That means that the semantic content could be taken as the communication tendency of the individual.
+Furthermore, the decentralized computing manner could be applied into the distribution computing environment, to resolve the computing resource clustering or task scheduling problem.

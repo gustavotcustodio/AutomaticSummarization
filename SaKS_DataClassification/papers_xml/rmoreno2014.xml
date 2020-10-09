@@ -1,0 +1,372 @@
+<article>
+  <title>Efficient Services Management in Libraries using AI and Wireless techniques</title>
+  <abstract>
+    <sentence>Radio Frequency IDentification (RFID) has been used in a wide variety of applications such as highway toll collection, building access control, animal tracking, remote keyless entry for automobiles and tracking assets.</sentence>
+    <sentence>For example, RFID in libraries, with a modest investment, can improve the capabilities of both librarians and users.</sentence>
+    <sentence>This paper presents a new use of RFID in libraries to help determining the physical location of a book within the library and to provide assistance to users to arrive to the desired locations.</sentence>
+    <sentence>Our initial prototype, named SIGUEME, has been extended and experimentally implemented in Meco’s Public Library (Madrid, Spain).</sentence>
+    <sentence>The application comprises three main systems: an electronic one – which detects users through a RFID sensors system; an AI-based system to plan and to monitor the users’ requests according to their interests; and finally a screen-based information system that communicates visually the directions the users have to follow.</sentence>
+    <sentence>We have developed a wireless communications system based on Zigbee technology to allow both, the information flow across the building and to connect the antennas to detect RFID users.</sentence>
+    <sentence>This eliminates the need for using wires.</sentence>
+    <sentence>The application not only helps users to easily locate the books or the reading rooms inside the building, but also automates tasks manually performed by the library staff (i.e.</sentence>
+    <sentence>generate statistics about books usage time, age-related usage, etc).</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Libraries</keyword>
+    <keyword>Orientation</keyword>
+    <keyword>Planning</keyword>
+    <keyword>RFID</keyword>
+    <keyword>Zigbee</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Ubiquitous computing contexts rely on the convergence of wireless technologies and advanced electronics.</sentence>
+    <sentence>Multiple sensor network applications can take advantage of the synergy resulting from the combined use of Radio Frequency IDentification (RFID) and Wireless Sensor Network (WSN) technologies.</sentence>
+    <sentence>ZigBee is a wireless communications standard designed by the ZigBee Alliance3 that fulfils most WSN requirements in a wide variety of applications (Zhang, Yang, &amp; Chen, 2009).</sentence>
+    <sentence>RFID systems and WSNs represent two key technologies for ubiquitous computing that have attracted considerable attention in recent years because their use revolutionizes diverse application areas.</sentence>
+    <sentence>RFID facilitates detection and identification of objects that are not easily detectable or distinguishable by using conventional sensor technologies.</sentence>
+    <sentence>However, RFID does not provide information about the condition of the objects it detects.</sentence>
+    <sentence>WSN on the other hand, not only provides information about the condition of the objects and the environment but they are also networks of small, cost-effective devices that can cooperate to gather and provide information by sensing environmental conditions such as temperature, light, humidity, pressure, vibration and sound.</sentence>
+    <sentence>It also enables multihop wireless communications.</sentence>
+    <sentence>Hence, the integration of these technologies expands their overall functionality and capacity.</sentence>
+    <sentence>An introduction to the taxonomy and challenges of this integration could be found in Liu, Bolic, Nayak, and Stojmenovic (2008).</sentence>
+    <sentence>The resulting integrated technology will have extended capabilities, scalability, and portability as well as reduced unnecessary costs.</sentence>
+    <sentence>There are a lot of examples of applications, from highway toll collection, supply chain management, public transportation, controlling building access, animal tracking, developing smart home appliances, to remote keyless entry for automobiles, for locating children, etc.</sentence>
+    <sentence>But, we can consider three big domains by the volume of applications: 1.</sentence>
+    <sentence>Healthcare: separation of Zigbee and RFID technologies has been very common in healthcare systems.</sentence>
+    <sentence>However, recent applications integrate both technologies what boost their potentials.</sentence>
+    <sentence>A healthcare example of this empowerment is the improvement of patient treatment quality.</sentence>
+    <sentence>The patients location can be tracked using RFIDs, while their condition can be monitored using sensors.</sentence>
+    <sentence>Critical errors such as those in treatments orders or inaccurate medical records, can be avoided with the use of an integrated RFID-sensor network (Mitsugi et al., 2007).</sentence>
+    <sentence>Another example is the development of prototypes of human-monitoring systems using active RFID tags, which are integrated with sensors.</sentence>
+    <sentence>These sensor-tags can be, for example, used to continuously monitor the temperature of the blood bank refrigerator as well as to track the location of a blood bag (Kim et al., 2006).</sentence>
+    <sentence>Logistics: RFID systems have widely been used in the supply chain for product tracking, inventory control, and asset monitoring, while WSNs are used for space and environment monitoring.</sentence>
+    <sentence>RFID–WSNs integrated sensors have also been adopted by the U.S. Navy (Roberti, 2004) to track valuable aircraft parts in storage.</sentence>
+    <sentence>The integrated sensors are able to measure humidity, temperature, and air pressure, and for a network with other RFID sensor-tags.</sentence>
+    <sentence>Another example of an integration scenario of RFID and WSNs, and for a tour group system, was proposed by Chen et al.. Each group’s guide holds a badge and each group’s member carries a ticket with a passive RFID tag in which the group’s ID is stored.</sentence>
+    <sentence>Libraries: RFID technology has been used originally in libraries to improve the available inventory of books (Ferrer, Dew, &amp; Apte, 2010; Coyle, 2005; Thornley, Ferguson, Weckert, &amp; Gibb, 2011; Wang, 2011) and to prevent theft (Young et al., 2004; Golding &amp; Tennant, 2007).</sentence>
+    <sentence>The first project implementing RFID in a library was deployed in 1998, in the Library of Rockefeller University in New York (Singh, Brar, &amp; Fong, 2006).</sentence>
+    <sentence>Shortly afterwards, in 1999, the Farmington Community Library was the first public library using RFID technology.</sentence>
+    <sentence>Although RFID was initially conceived to streamline the inventory management (Suda &amp; Rani, 2013), it can also help extending the library operating hours by means of the self-checkin and self-checkout stations (Singh et al., 2006).</sentence>
+    <sentence>This last domain is the focus of this paper.</sentence>
+    <sentence>The combination of RFID and WSN, in the libraries field, could solve other problems than the well-known one mentioned above.</sentence>
+    <sentence>For example, a common difficulty that users face in large libraries, which have multiple floors and rooms, is the correct location of the books and the orientation of people inside the building.</sentence>
+    <sentence>One way to solve this problem is to provide the building with an intelligent system to guide the users towards the reading rooms.</sentence>
+    <sentence>This also provides a way to know at any time the number of users in the building and the possibility of its localization within it.</sentence>
+    <sentence>This article presents the experiences and results of applying an extension of our initial prototype SIGUEME4 (R-Moreno et al., 2011) to the Meco’s Public Library (MPL) in Madrid.</sentence>
+    <sentence>This application combines Artificial Intelligence (AI) techniques, RFID and Zigbee.</sentence>
+    <sentence>RFID based indoor localization is a mature topic of research and researchers have proposed very interesting schemes to exactly locate the tags in a building with high accuracy (Hsu &amp; Yuan, 2011; Ni, Zhang, &amp; Souryal, 2011; Saab &amp; Nakad, 2011).</sentence>
+    <sentence>Our proposal does not pretend to propose any new method on how tags should be placed but how AI can be used to coordinate and monitor all the information about users, rooms and books.</sentence>
+    <sentence>Some approaches use Wi-Fi for people tracking (Zhoua et al., 2014) but instead, we have decided RFID as the indoor location system (Tesoriero, Tebar, Gallud, Lozano, &amp; Penichet, 2010).</sentence>
+    <sentence>The reason was mainly influenced by the RFID infrastructure already available in libraries for books, that could be extended also for people.</sentence>
+    <sentence>The paper is organized as follows.</sentence>
+    <sentence>Section 2 describes the new services provided by the system in the MPL.</sentence>
+    <sentence>Then, the different components of the architecture are described.</sentence>
+    <sentence>Section 4 presents the results derived from the experience and use of this system in a real environment.</sentence>
+    <sentence>Finally, conclusions and future work are outlined.</sentence>
+  </section>
+  <section name="Services provided in MPL">
+    <sentence>MPL is located 42 km Northeast of Madrid (Spain), in a small town with a population around 12,500 citizens.</sentence>
+    <sentence>The library has four rooms distributed on two levels as shown in Fig 1.</sentence>
+    <sentence>Map of MPL Fig 1.</sentence>
+    <sentence>Map of MPL.</sentence>
+    <sentence>On the ground floor, the first spot is the main entrance with the information and check-out front desk that gives access to Room 1.</sentence>
+    <sentence>Any user who wants to enter/exit the library has to go through this point where an RFID security gate is placed.</sentence>
+    <sentence>Fig 2 (left) shows the checkpoint of our application (set on the main entrance) and the RFID gate 1 along with the RFID security gate.</sentence>
+    <sentence>Fig 2 (right) shows the main entrance from the other side, where the users can search for the books thanks to a PC located before the front desk.</sentence>
+    <sentence>Additionally, they can delegate this task to the information desk staff.</sentence>
+    <sentence>In both cases, they can ask for the latest books or the availability of reading materials they are interested in and they can also obtain information about the availability and room location of particular books.</sentence>
+    <sentence>In the case of the users who want to borrow a book from the library, they can only pop by this desk and present the book(s) to borrow, together with the library card.</sentence>
+    <sentence>Overview of different MPL locations Fig 2.</sentence>
+    <sentence>Overview of different MPL locations.</sentence>
+    <sentence>Room 1 acts both as an entry and exit point to the library.</sentence>
+    <sentence>Once in this room, one can access the other three rooms where all the books are located.</sentence>
+    <sentence>Room 2 holds Children, shown in Fig 2 (center), and Juvenile’s literature and Room 3 hosts young adults books.</sentence>
+    <sentence>On the first floor we can find Room 4, which can be accessed either by using the stairs or the elevator.</sentence>
+    <sentence>This room holds Fiction and Non-Fiction books, Pamphlet/newspaper, local authors and regional collections books.</sentence>
+    <sentence>All these rooms have a reading area, where the user can find tables and chairs to read the books comfortably.</sentence>
+    <sentence>Hitherto, we have described the common operation of any library.</sentence>
+    <sentence>We have extended the functionality of the service by adding the following elements: four RFID gates to detect the people in the building, one for each room that we can access in the library, a Zigbee wireless communication network to transmit the information collected by the detection system to the central computer, an AI based system to provide and monitor the paths that the user should follow and a set of information screens, located along the building, to inform the users about the path they have to follow in order to reach their objectives.</sentence>
+    <sentence>Added to these elements also a collection of passive RFID tags are needed.</sentence>
+    <sentence>Some of these tags can be embedded in the user reader card and others can be alone.</sentence>
+    <sentence>In this implementation, the user can take advantage of the system in two different ways.</sentence>
+    <sentence>On the one hand, he can look for the reading room he wants to visit, and on the other hand, he can search a specific book.</sentence>
+    <sentence>In both cases, the system will guide him to the destination point.</sentence>
+    <sentence>Besides, the books can be automatically located at any room if the librarians have passed the book(s) through the RFID gates of that room.</sentence>
+    <sentence>Or they can manually incorporate the book details and room location into the central system that manages the library.</sentence>
+    <sentence>This information is always available when the user wants to read or borrow a book.</sentence>
+    <sentence>The book location instructions provided to the users are generated in the order in which the user has selected the book(s) or the reading room(s).</sentence>
+    <sentence>The goal is considered achieved if the user has reached the room where the book is or the reading room that has been selected.</sentence>
+    <sentence>We have not considered any optimization in the duration of the paths because we would need to take into account the physical conditions of the user, for example, if the user needs crutches, a wheelchair, etc.</sentence>
+    <sentence>But the system can generate plans for disabled people, so in case the user has to access Room 4, the system will suggest him to take the elevator instead of the stairs.</sentence>
+    <sentence>Once the user has decided what book(s) he wants to borrow or the reading room(s) he wants to visit, the system locates the room and generates a path from the user’s current location to the book/reading room location in the library.</sentence>
+    <sentence>Or in the case of a book, the system will also show the shelf and the row where it is placed in the room.</sentence>
+    <sentence>In addition, the visitor is assisted to find his destination thanks to the different screens located around the building.</sentence>
+    <sentence>The information shown in the screens takes into account the way the visitor got the screen and could be a sign, or an orientation symbol, showing the direction he has to follow, according his current position in the building, to get his destination.</sentence>
+    <sentence>All he has to do is follow this advice.</sentence>
+    <sentence>The users will get assistance as many times as needed in order to find the books/reading rooms he is interested in.</sentence>
+    <sentence>As the person walks through corridors, stairs and so on, he will pass through the different RFID gates unintentionally.</sentence>
+    <sentence>Each time he passes through the gate, the system will detect him (thanks to the RFID card he carries), determine his position, will check if the movement direction is adequate (he follows the originally designed route) or not and will send the orientation message to the corresponding screen.</sentence>
+    <sentence>If the user movement direction is not adequate, the system would have to calculate a new route from his new location.</sentence>
+    <sentence>Since the system knows, at any time, the user’s position, it can immediately provide the information needed to reach the destination.</sentence>
+    <sentence>This information appears on several screens located at strategic points.</sentence>
+    <sentence>When a person arrives at his destination (reading room), the system will inform him of the location of the book (if that was what he decided).</sentence>
+    <sentence>At this point, the system waits until the user leaves the room to guide him again to his next destination (reading room) or the exit.</sentence>
+    <sentence>The user will be guided as many times as necessary until he has finished all the searches.</sentence>
+    <sentence>After that, the system guides the user to the exit.</sentence>
+    <sentence>During the library visit, users can get lost.</sentence>
+    <sentence>In that case, the system will detect this situation and correct the error.</sentence>
+    <sentence>To solve the problem, the system will generate a new path considering the user’s new situation, and it will inform him in the usual way.</sentence>
+    <sentence>The possibilities of this system are not only limited to provide guidance but also to provide large amounts of data on the use of the library services.</sentence>
+    <sentence>For example, we can generate diverse information such as statistics of demanded/borrowed books, average time spent in the different rooms, busiest period of time or busiest room, among others.</sentence>
+    <sentence>All these data are extremely useful for internal management and for improving library facilities, since they allow the library staff to know the common paths that users follow, the average stay time in the different rooms, number of users in the library, etc.</sentence>
+    <sentence>More specifically, MPL (as we assume it will occur in other private or public libraries), should generate periodic reports to Madrid’s regional offices on the number of people using the service, sex, age, what is the demand of books, visit hours with more affluence, etc.</sentence>
+    <sentence>At present, this work is done manually.</sentence>
+    <sentence>For example, if the staff needs to know the average room occupancy or the busiest schedule they have to extract that information by hand from the books usage or number of loans.</sentence>
+    <sentence>In case of room occupancy is even more complicated since they have to check the books loaned in a room and extract the number of people that were reading those books.</sentence>
+    <sentence>Although this approach is tedious, they can get estimates, but they cannot take into account if, for example, a user was just trying to prepare an exam, and he was simply studying in the room.</sentence>
+    <sentence>If there are no presence sensors in each room, there is no way to automatically extract that information apart from counting them.</sentence>
+    <sentence>If they want to be precise, they have to ask the users that information or count them, while using SIGUEME, they can precisely and automatically do it.</sentence>
+    <sentence>In this respect, our application can enhance this process by automatically calculating the different statistics and generating those reports, saving time for the library staff, and thus justifying the use of this system.</sentence>
+    <sentence>Another application of the system could be to locate children, that are lost in the building, if they carry a RFID tag.</sentence>
+    <sentence>The system can automatically provide the location of the room in which the kid is by using the information from the RFID gates, i.e.</sentence>
+    <sentence>the kid has passed the gate and the system is notified accordingly.</sentence>
+    <sentence>With respect to the investment, the cost of this system in libraries or large buildings is directly related to the number of the RFID gates and screens required.</sentence>
+    <sentence>The rest of the elements: the central computer, the Zigbee communication system (routers and end-devices are cheap) and the control software have almost the same cost whatever the size of the library is.</sentence>
+    <sentence>However, with respect to the RFID gates, the price difference is significant.</sentence>
+    <sentence>For example, each of the gates (composed of two panels and the signal processing system) used in this case, require a medium to high investment.</sentence>
+    <sentence>There are other types of RFID detectors with less features that can be purchased for half of the price or less, but that are only recommended for much smaller spaces.</sentence>
+    <sentence>The dimensions of our RFID gates are: 71 cm width, 152 cm height and 8 cm deep.</sentence>
+    <sentence>Separation between doors where between 100–120 cm (following manufacturer’s specifications).</sentence>
+    <sentence>Considering that SIGUEME is an experimental system in which we primarily verify its operation and the validity of the monitoring and guiding process, we have not paid special attention to the measurement of the reading rate, but we can ensure that it was above 90%.</sentence>
+    <sentence>The main reason for not being 100% as the manufacturer aimed was because the users placed tags in a way that the gate could no read them (i.e.</sentence>
+    <sentence>wrong orientation).</sentence>
+    <sentence>In relation with the screens the cost is not too hight but at least the same number as the RFID gates is needed.</sentence>
+    <sentence>Obviously, if the building is large the cost of the screens could be important.</sentence>
+    <sentence>The cost of the tags, whether they are embedded in the reading cards or not, is insignificant.</sentence>
+    <sentence>Related to the privacy issues, SIGUEME complies with the Spanish legislation.</sentence>
+    <sentence>The users data have been also anonymized to be treated, managed and visualized by our application.</sentence>
+    <sentence>From the point of view of the application, the criteria big or small is mainly established according to the number of different rooms, because that affects, as discussed earlier, directly the cost of the application.</sentence>
+    <sentence>The number of users are, in this case, less critical as only has an impact on the flow of information through the ZigBee system, which is perfectly capable of handling high volumes of transmissions without collapsing.</sentence>
+    <sentence>In any case, the location and number of the gates and the screens must be optimized in order to keep the whole system cheap and simple but efficient.</sentence>
+    <sentence>The application is designed to assist all the users who are currently in the area where each screen is located.</sentence>
+    <sentence>To this aim, when the number of users is high, the information will be periodically refreshed, placing first those messages concerning those users that have just entered the area.</sentence>
+    <sentence>The information for each user will disappear from the screen when the user leaves the area and another RFID gate detects him.</sentence>
+    <sentence>The information about the book will be also shown in the screen.</sentence>
+    <sentence>If there are more than one book in the room in which the user is interesting in, the information of the location of each book will gradually pop up.</sentence>
+    <sentence>After 10 min, the messages will disappear or when the user leaves the room, whatever is first.</sentence>
+    <sentence>Obviously there is a dependency between screen size and the number of users who can be simultaneously informed.</sentence>
+    <sentence>In general, an information system like the one presented here should be sized for the average case of readers.</sentence>
+    <sentence>It is logical that in busy periods (large number of visitors) the system’s response time increases.</sentence>
+  </section>
+  <section name="The system architecture">
+    <sentence>The system deployed in MPL is based on the SIGUEME prototype (R-Moreno et al., 2011).</sentence>
+    <sentence>Until its installation in Meco, SIGUEME had only been tested in simulation environments, based on a prototype developed in the laboratory.</sentence>
+    <sentence>What we describe in this article is the usage of the system in an environment with real users.</sentence>
+    <sentence>There are important differences between the prototype and the implementation in the library like the guiding information display: in the prototype environment the information was printed on the main PC, while in Meco the information had to be displayed in the screen located closer to where the user was.</sentence>
+    <sentence>Additionally, when several users were waiting to read the information, the visualization system had to refresh it, placing first the messages to the users that have entered the area more recently, as well as identifying them anonymously.</sentence>
+    <sentence>We have also had to solve interference problems and communication issues between RFID and Zigbee that were not present in the prototypes developed in the laboratory.</sentence>
+    <sentence>It should be noted that the tandem RFID–Zigbee is new in this implementation since in the model developed in the laboratory, the communication between the different modules were through wires and the RS-232 protocol.</sentence>
+    <sentence>For this experiment, it was necessary to re-program the Communication Module among the different elements.</sentence>
+    <sentence>The system consists of four modules, each one with a clearly defined functionality, and which are combined into a global system that orchestrates and controls all the modules.</sentence>
+    <sentence>Detection Module The Detection Module is based on a RFID architecture that comprises RFID tags that are attached to the books and the users’ library card, RFID readers, and an Information Services server (ISs).</sentence>
+    <sentence>The tags incorporate a micro-antenna and a silicon microchip, which contains a unique identification code.</sentence>
+    <sentence>RFID readers have been located in the access points between reading rooms, loan areas or books access areas in the library.</sentence>
+    <sentence>Each RFID reader sends the radiofrequency waves to the electronic tag.</sentence>
+    <sentence>The waves emitted by the reader activate the microchip through the micro-antenna using radio waves and transmit the data back to reader, including a unique code.</sentence>
+    <sentence>The data within a tag provides identification of the users and the books, and in the last case, the storage location, loan status and history.</sentence>
+    <sentence>When the reader receives the transmitted data, it can check the unique code in the database, so that it becomes possible to know the identity of the object/person and any other information available in the database.</sentence>
+    <sentence>When a user searches for a book, either for reading or loaning, the application will know where to find the book and therefore, the associated RFID reader will detect if the user has arrived at the room where the book is.</sentence>
+    <sentence>The Detection Module identifies users passing through doors.</sentence>
+    <sentence>When that happens, the module collects and transmits some data to the Control Module.</sentence>
+    <sentence>More specifically, each user detection involves the transmission of an identifier of the type of transmitted data (2 characters), the gate number (4 characters), the date in DDMMYY format, time in hhmmss format and finally the RFID tag card bearing the user (16 characters).</sentence>
+    <sentence>In summary, each user detection generates a 34 characters long string that looks like RM7970040411180139E9AF220100000001.</sentence>
+    <sentence>The subsystem in charge of the string transmission and delivery is the Communication Module.</sentence>
+    <sentence>Communication Module This module manages the transmission of the information from the RFID readers to the main computer and from it to the screens.</sentence>
+    <sentence>Whenever a RFID gate detects a user or a book passing through it, the data it generates is sent to the to main computer.</sentence>
+    <sentence>There is processed by the Control Module (described later) and, in the case of a visitor moving through the building, the instructions to guide him are sent to the corresponding screen.</sentence>
+    <sentence>It is based on a ZigBee network (Willig, 2008) with nodes located throughout the building on the right places.</sentence>
+    <sentence>One of the main reasons for choosing Zigbee was to allow interoperability between devices manufactured by different companies.</sentence>
+    <sentence>That is, enabling interconnection and joint operation between different systems, in a consistent way.</sentence>
+    <sentence>Therefore, its main feature is its ability to connect several devices allowing them to work more efficiently together.</sentence>
+    <sentence>It enables RFID devices to communicate with each other as well as other networked devices, where RFID tags attached to objects are queried from RF transceivers and transmitted via ZigBee.</sentence>
+    <sentence>The usual way of using this technology is by setting up a wireless network (see Fig 3) in which there are three different types of items according to their role in the network: • ZigBee Coordinator (ZC).</sentence>
+    <sentence>It is the most comprehensive type of device.</sentence>
+    <sentence>There should be one per network.</sentence>
+    <sentence>Its main function is to control both the network and the paths to be followed by devices to connect to each other.</sentence>
+    <sentence>• ZigBee Router (ZR).</sentence>
+    <sentence>It configures the intermediate points of the network.</sentence>
+    <sentence>It is responsible for interconnecting separate devices in the network topology, and provides an application layer for user code execution.</sentence>
+    <sentence>• Final Device (ZED).</sentence>
+    <sentence>It has the functionality to communicate with its parent node (ZC or ZR) and perform the required actions but it cannot transmit information to other final devices.</sentence>
+    <sentence>MPL deployed architecture Fig 3.</sentence>
+    <sentence>MPL deployed architecture.</sentence>
+    <sentence>Another motivation, among others, on using Zigbee is its ease of installation, low cost and its ability to operate in dense networks.</sentence>
+    <sentence>This last characteristic improves the reliability of communication.</sentence>
+    <sentence>The use of this module also avoids wire building and facilitates the reposition of the network elements.</sentence>
+    <sentence>The first feature is very important since libraries are often set in old buildings and wiring the building is quite expensive.</sentence>
+    <sentence>Then, this module allows the Detection Module to communicate with the Control Module, and is responsible for transmitting data between the Visualization and the Control Modules.</sentence>
+    <sentence>Once the entire system (central computer, RFID gates, screens and routers) is placed and running, it is able to transmit data.</sentence>
+    <sentence>There are two sources that generate data: (i) RFID gates, which provide information about the detection of a user carrying a RFID card, and (ii) the central computer which implements the guidance system and sends guidance data to the information screens.</sentence>
+    <sentence>We should point out that in addition to the operational data, the Zigbee network has to send control data in order to keep the system running.</sentence>
+    <sentence>The information screens are handled by the Visualization Module.</sentence>
+    <sentence>Visualization Module One of the main problems that any user has to face when visiting a big surface is the lack of information and signs that can guide them.</sentence>
+    <sentence>To solve this situation, this module is responsible for displaying the information that each user must follow, using LCD screens located on strategic places such as bifurcations, where there are several possibilities and the user must make a decision.</sentence>
+    <sentence>Additionally, in libraries, we also need to find the location of the books.</sentence>
+    <sentence>The information displayed is the user ID as specified on the library card (a digit number, that for privacy reasons does not show the name or the last name) and a guidance instruction (which will differ depending on the point in which the visitor is).</sentence>
+    <sentence>MPL only had two floors, the lower level at the entrance of the library and a reading room on the first level.</sentence>
+    <sentence>The messages that will be displayed are: arrive to destination, straight, turn right, turn left, go backwards, take stairs up, take stairs down or take elevator, followed by the corresponding arrow/draw.</sentence>
+    <sentence>In the case of a book, when the user arrives to the room where is located, the screen will show the book ID (the alphanumeric string that appears in the spine of the book) followed by its position, i.e.</sentence>
+    <sentence>shelf and row.</sentence>
+    <sentence>This information was saved in the RFID tag of the book, so our system accesses and shows this information when it detects the user is in the same room as the book.</sentence>
+    <sentence>The performance of the screens depends on the number of display lines that they have.</sentence>
+    <sentence>If the number of users in a transition zone is bigger than the monitor capacity, the monitor will be properly refreshed so that all people can get their respective information.</sentence>
+    <sentence>Obviously, there is a compromise between the amount of information the screen shows for each visitor, the size of the screen and the number of people to deal with.</sentence>
+    <sentence>More experience with the system will get a better performance.</sentence>
+    <sentence>The information will disappear from the screen when the user leaves the area and another RFID reader detects him.</sentence>
+    <sentence>Control Module This module consists of an intelligent planning system, the Parallel Integration of Planning and Scheduling System (PIPSS) (Plaza, R-Moreno, Castaño, Carbajo &amp; Moreno, 2008) that calculates, on demand, the actions to reach the destination from a given starting point.</sentence>
+    <sentence>Planning is a subarea of the AI field that consists of a set of techniques which aim at providing efficient searches of problems’ solutions.</sentence>
+    <sentence>The two inputs of a planner are: • Domain theory.</sentence>
+    <sentence>First, we need to supply a domain description which comprises a set of operators, allowing the planner to go from a defined initial state to a state in which a set of goals is fulfilled.</sentence>
+    <sentence>It is based on the STRIPS representation (Fikes &amp; Nilsson, 1971) that has evolved into a standard language, the Planning Domain Definition Language (PDDL) (Gerevini, Long, Cumbria, Golding, &amp;Tennant,Tenn).</sentence>
+    <sentence>It was introduced to overcome what were seen as computational difficulties when using states to construct plans.</sentence>
+    <sentence>In PDDL, a world state is represented by a set of logical formulae, the conjunction of which is intended to describe the given state.</sentence>
+    <sentence>Actions are represented by the so-called operators.</sentence>
+    <sentence>An operator consists of pre-conditions (conditions that must be true to allow the action execution), and post-conditions or effects (usually constituted of an ‘add list’ and a ‘delete list’).</sentence>
+    <sentence>The ‘add list’ specifies the set of formulae that are true in the resulting state while the ‘delete list’ specifies the set of formulae that are no longer true and must be deleted from the description of the state.</sentence>
+    <sentence>For instance, in this domain, the operators would be the direction instructions to the users, that is: “go straight”, “turn right”, “turn left”, “go backwards”, “take stairs up”, “take stairs down” and “take elevator”, among others.</sentence>
+    <sentence>Fig 4 shows how the “turn right” operator is coded in PDDL.</sentence>
+    <sentence>For a person to move from room A (represented in the example by the variable ) to room B (represented by the variable ), it is necessary that the person (represented by the variable ?person) was in room A in the first place (represented by the predicate (person_in_room ?p ?origin) and after executing the action, the person will be in room B (represented by the predicate (person_in_room ?p ?destination) and therefore the person is not anymore in room A, that is, we have the delete effect (not (person_in_room ?p origin)).</sentence>
+    <sentence>Another important piece of information is how the different rooms are connected.</sentence>
+    <sentence>This type of information could range from sub-sections of the building map (e.g.</sentence>
+    <sentence>one room is on the right/left of another room) to the complete building map.</sentence>
+    <sentence>An example of an operator in PDDL Fig 4.</sentence>
+    <sentence>An example of an operator in PDDL.</sentence>
+    <sentence>This information is set by direction predicates.</sentence>
+    <sentence>In this case, we have used (on-right ?origin ?destination) to represent that the destination room is on the right of the origin.</sentence>
+    <sentence>• Problem.</sentence>
+    <sentence>It is described in terms of a set of states and goals.</sentence>
+    <sentence>Those states are represented by a logical formula specifying a situation for which one is seeking for a solution.</sentence>
+    <sentence>– Initial state.</sentence>
+    <sentence>In planning, one has to specify the starting situation of the posed problem.</sentence>
+    <sentence>In our application, a potential initial state would be the rooms in the library where the users – who are looking for either books or reading rooms – are located.</sentence>
+    <sentence>In Fig 5 we can see that the predicates belonging to the initial state are enclosed in the set :init.</sentence>
+    <sentence>As initial state we have the connections between the different rooms (i.e.</sentence>
+    <sentence>(on-right Room1 Room2), (on-left Room2 Room1)) from all the possible directions.</sentence>
+    <sentence>Also in this part of the file, we represent the locations of the different users registered in the library (i.e.</sentence>
+    <sentence>(person_in_room ID0001 Room1)).</sentence>
+    <sentence>An example of a problem in PDDL Fig 5.</sentence>
+    <sentence>An example of a problem in PDDL.</sentence>
+    <sentence>– Goals.</sentence>
+    <sentence>They are often viewed as specifications for a plan.</sentence>
+    <sentence>They describe what are considered successful behaviors after the execution of the plan: i.e.</sentence>
+    <sentence>specifying the targets that are desired to be true at the end of the solution of the problem.</sentence>
+    <sentence>In this application, one goal could be that each user arrives to the selected reading room.</sentence>
+    <sentence>In Fig 5 we have defined three goals enclosed in the set :goal.</sentence>
+    <sentence>In this example all of the users should arrive to Room 4.</sentence>
+    <sentence>Given these inputs, the planner provides a solution consisting of an ordered sequence of instructions for each user, who will reach the desired room given a particular initial location.</sentence>
+    <sentence>The Control Module is also responsible for supervising all the information coming from the RFID readers and translating it into the PDDL representation needed by the planner, in order to provide a plan.</sentence>
+    <sentence>It also monitors that the users execute the plans as expected.</sentence>
+    <sentence>Thus, the user will be guided as many times as necessary until all the queries are satisfied.</sentence>
+    <sentence>While the users are trying to find the selected room, they can get confused.</sentence>
+    <sentence>If that is the case, this module will detect it and it will provide more accurate instructions, by calling the planner and generating a new customized plan for the user.</sentence>
+    <sentence>The intelligent monitor system on top of the planner will check if the effects of the actions are satisfied.</sentence>
+    <sentence>If any of them is false, the system will generate a new plan from the actual position of the user, wich is determined by the information from the RFID readers.</sentence>
+    <sentence>The user will be informed in the usual way, i.e.</sentence>
+    <sentence>through the LCD screens.</sentence>
+    <sentence>Additionally, this module will translate the plan provided by the planner and send it to the Visualization Module.</sentence>
+    <sentence>The Control Module also manages which screen has to display the message.</sentence>
+  </section>
+  <section name="Experimental results">
+    <sentence>Although the MPL is a small building, it meets the basic conditions for testing the system, its installation, commissioning and data collection.</sentence>
+    <sentence>Its size, with around 5,500 users and 23,000 books, is small enough to keep a limited deployment complexity, but it is sufficient to test the system benefits.</sentence>
+    <sentence>The library layout (shown in Fig 1) has helped the deployment of the system.</sentence>
+    <sentence>Additionally, the good engagement of the library managers and authorities was also a key point to select this library for the experimental evaluation of our system.</sentence>
+    <sentence>In order to evaluate the data collecting system and to test the software, we gathered data for one week and analyzed the results.</sentence>
+    <sentence>We used this data to feed the different modules and show the capabilities of this solution.</sentence>
+    <sentence>We have collected data in three experiment types: 1.</sentence>
+    <sentence>System evaluation.</sentence>
+    <sentence>In this experiment we assessed the proper functioning of the system and its capacity to transmit messages correctly through the different RFID gates.</sentence>
+    <sentence>For this test, the testers, equipped with RFID cards, passed several times through each RFID gate and then verified the right operation of the system analyzing the logs.</sentence>
+    <sentence>One important thing we checked, in this first test, was the ability of the RFID gates to detect two different tags passing almost at the same time across the same reader.</sentence>
+    <sentence>We found that if two tags pass very close in time the RFID detector is not capable of distinguish one from the other or even it does not recognize one of both.</sentence>
+    <sentence>To establish the minimum separation between two tags to be detected is an important issue that must be addressed in the future.</sentence>
+    <sentence>Another important topic is the case when a user stops inadvertently just in the middle of a RFID gate.</sentence>
+    <sentence>In this situation the system will generate a continuous flow of useless signals, in that case, an option could be cut the stream of data after a certain number of detections.</sentence>
+    <sentence>However, the most important problem arises when a only tag passes, without stopping, through a RFID gate in such an orientation that the magnetic field flow across the tag circuit is so small that it has no enough energy to give a detectable electrical response.</sentence>
+    <sentence>This challenge is very difficult to tackle if we only use flat tags and it means that some user-system interactions will be undetected.</sentence>
+    <sentence>Nevertheless, most of the experimental data collected in this test were very satisfactory and we could check the whole system was working very well.</sentence>
+    <sentence>Unguided real users.</sentence>
+    <sentence>This experiment was performed to collect data from real users, who were moving freely across the library rooms without any prior instruction.</sentence>
+    <sentence>The users’ destinations were not considered.</sentence>
+    <sentence>This way, we gathered information about the occupation of each room by time, average occupation and average time spent by users in each room of the library.</sentence>
+    <sentence>For instance, Fig 6 shows the density plot of the time that the users have spent in each of the rooms.</sentence>
+    <sentence>Looking at the diagram, it is clear that in Room 1 the users tend to stay a longer time in comparison to the other rooms.</sentence>
+    <sentence>On the contrary, users in other rooms tend to stay a similar time.</sentence>
+    <sentence>In addition, it can be seen that the users, on average, stay uniformly between 400 and 900 s in Rooms 2, 3 and 4; nonetheless, the user profile is different in Room 1, users there stay typically between 400 and 1200 s. This difference is consistent with the special role that the Room 1 plays in the library.</sentence>
+    <sentence>On the one hand, this room is a transient one and all the visitors going to any other room have to pass through it to get their destination.</sentence>
+    <sentence>They also have to pass through it when they change rooms and when they are on their way out.</sentence>
+    <sentence>Room 1 also has its own function because it holds the newest library purchases and the books of general interest.</sentence>
+    <sentence>So that, many readers spend an important amount of time inside that room exclusively.</sentence>
+    <sentence>Kernel plot with the time spent by the users in each one of the library rooms Fig 6.</sentence>
+    <sentence>Kernel plot with the time spent by the users in each one of the library rooms.</sentence>
+    <sentence>During this test some of the problems detected in the System evaluation check were found.</sentence>
+    <sentence>That is: two people passing together by the same gate, a person going across the RFID gates with a book or tags that do not give any signal because of its orientation when passing through the gates.</sentence>
+    <sentence>Some of these problems are unavoidable but can be reconstructed, in some cases, with the rest of the signals given by the other detectors.</sentence>
+    <sentence>On top of that, in this second test some new problems showed up.</sentence>
+    <sentence>Most of them related to the users behavior, that is: people losing their tags, ruining them or even people swapping inadvertently their reader cards.</sentence>
+    <sentence>The whole data we collect in this stage is also very useful even if we do not want to help or guide the users.</sentence>
+    <sentence>Because at that point, we are able to follow a complete user behavior along all the time he has been at the library and we can do it for most of the visitors in the experiment.</sentence>
+    <sentence>In addition, all the data we gather allow us to have a lot of information about the use people are doing of the library and help us to improve the performance of the service.</sentence>
+    <sentence>Guided real users.</sentence>
+    <sentence>The users, in this case, were guided through the various rooms in the library.</sentence>
+    <sentence>The main goal of this experiment was to assess the guidance sub-system and its capacity to help users to find their itinerary.</sentence>
+    <sentence>In most cases it has been found that the system provided all the information needed to direct visitors and shows this information in the right screen and in the proper time.</sentence>
+    <sentence>However, this third experiment (when the users have to interact with the system) showed a very interesting fact, that is: users need some kind of training before they can take full advantage of the system and use its different facilities.</sentence>
+    <sentence>This training means, at least, two things: knowledge and confidence.</sentence>
+    <sentence>Of course, the main aim of this work was not to teach the library visitors how to fully interact with SIGUEME but we realize that this is an important issue that should be addressed in the future.</sentence>
+    <sentence>As example, we can mention the relevance of the set of symbols, or signs, to indicate the orientation a user should follow when he ask for it looking at the screens.</sentence>
+    <sentence>In general, in this third test, the causes of malfunctions or errors were the same that in the previous checks.</sentence>
+    <sentence>From a general point of view, when SIGUEME fully works, it provides reporting functionalities to support decision-making processes that, in simpler systems, would be much more difficult, if not impossible, to generate.</sentence>
+    <sentence>Other important information is shown in Fig 7.</sentence>
+    <sentence>It contains a mosaic plot that visualizes the number of users per day and room during the whole week.</sentence>
+    <sentence>The surface of each square in the plot is proportional to the number of users in that room and day.</sentence>
+    <sentence>The variance of room occupancy during the week is pretty small, the number of users in each room is almost constant.</sentence>
+    <sentence>At the same time, we can see that Room 1 is the most used one.</sentence>
+    <sentence>This plot is also consistent with the library usage and, in some sense, confirms that the system is working well.</sentence>
+    <sentence>For instance, it is clear that anyone counting among the visitors of Rooms 2, 3 and 4 has to count among the ones visiting transient Room 1, so that, this last room has to show bigger numbers that the other three added.</sentence>
+    <sentence>Mosaic plot representing the number of users per week, day, and room Fig 7.</sentence>
+    <sentence>Mosaic plot representing the number of users per week, day, and room.</sentence>
+    <sentence>It is also possible to capture a time series showing the number of users in each room.</sentence>
+    <sentence>Actually, Fig 8 represents a time series (week period) that shows the number of users in each room.</sentence>
+    <sentence>Rush hours are clearly shown in the picture, and when the library is closed as well.</sentence>
+    <sentence>Again, we do not appreciate significant differences among the rooms by the day of the week.</sentence>
+    <sentence>Time serie representing the library occupancy by room Fig 8.</sentence>
+    <sentence>Time serie representing the library occupancy by room.</sentence>
+    <sentence>During the testing, the library staff found an interesting but unplanned application: it allows to locate any individual reader, anytime, inside the library.</sentence>
+    <sentence>This feature is very useful specially at closing time when they have to know who, and where, still remains in the library.</sentence>
+    <sentence>Before concluding the description of this application it should be noted that, besides the processes management, guided movements and library users monitoring, the system provides files which include all the interactions of the visitors with the system every day.</sentence>
+    <sentence>These data will constitute a database which will allow, in a subsequent studies, to establish how the library is used by providing information about most used rooms, busiest schedules, capacity to longer opening hours, and so on.</sentence>
+    <sentence>We highlight that the availability of this information would not be possible with conventional systems guided by signposts or other passive signaling.</sentence>
+  </section>
+  <section name="Conclusions and future work">
+    <sentence>This article has demonstrated the potential and advantages of using RFID technology to boost and optimize the services offered by libraries.</sentence>
+    <sentence>The developed prototype combines wireless technology (RFID and Zigbee) with AI techniques (automatic planning) to detect, guide and monitor users through the library.</sentence>
+    <sentence>It also facilitates the process of locating the books or reading rooms the user is interested in.</sentence>
+    <sentence>But the benefits are not only limited to users, but also to those providing the service, i.e.</sentence>
+    <sentence>the library staff.</sentence>
+    <sentence>With this system, librarians can automatically generate facility usage statistics, books usage time, age-related usage, etc.</sentence>
+    <sentence>In summary, data that are periodically required by the competent bodies.</sentence>
+    <sentence>The affordances of the system could be enhanced if it was integrated into the self-checking and self-checkout stations.</sentence>
+    <sentence>From a practical point of view, some of the most important problems found in the real experiment of the systems must to be fixed or, at least, taking into account in the future.</sentence>
+    <sentence>That is: the minimum separation between two tags passing through a RFID gate in order to detect both of them, how to recover lost data using the rest of the available data, the communication messages and the training of the users.</sentence>
+    <sentence>In addition to what is described in this paper, the system can also be used to find people, especially children, who are in the building but whose location is unknown.</sentence>
+    <sentence>This can be done through the information sent by the RFID gates and assuming that the person has with him the library card with the RFID tag.</sentence>
+    <sentence>Another application, that could be developed in the future, is the efficient evacuation of building users in case of an emergency that requires it.</sentence>
+    <sentence>Since we know the total number of users and the rooms in which they are, one could implement a system to manage the movement of people, globally, by building up their complete evacuation process.</sentence>
+    <sentence>1 Tel.</sentence>
+    <sentence>: +34 91 885 49 01; fax: +34 91 885 49 51.</sentence>
+    <sentence>2 Tel.</sentence>
+    <sentence>: +34 91 885 6502; fax: +34 885 6923.</sentence>
+    <sentence>3 http://www.zigbee.org 4 The letters stand for Sistema Inteligente de GUiado para Entornos Multiusuario Extensos – Intelligent Guidance System for multiuser extensive environments – that means FOLLOW ME</sentence>
+  </section>
+</article>

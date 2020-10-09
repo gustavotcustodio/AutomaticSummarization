@@ -1,0 +1,459 @@
+<article>
+  <title>Estimating available supermarket commodities for food bank collection in the absence of information</title>
+  <abstract>
+    <sentence>Food insecurity is a widespread concern in the United States.</sentence>
+    <sentence>Addressing this concern is a chief goal of many non-profit organizations including food banks.</sentence>
+    <sentence>Understanding the availability of donations is beneficial when addressing the demand in local communities, especially when their collection requires food bank-managed vehicles.</sentence>
+    <sentence>High-volume donors such as supermarkets, however, do not provide information in regards to what items are available.</sentence>
+    <sentence>This can negatively impact inventory management capabilities and cause unnecessary transportation costs.</sentence>
+    <sentence>This research evaluates four approximation methods based on their ability to estimate food availability at supermarkets including the multiple layer perceptron artificial neural network, multiple linear regression, and two naïve estimates for the average collection amount.</sentence>
+    <sentence>Using a subset of the historic data provided by the Food Bank of Central and Eastern North Carolina (FBCENC), the four approximation methods are evaluated in terms of their ability to estimate collection amounts in the next planning period.</sentence>
+    <sentence>Transportation cost estimates are then calculated using projections made using each approximation method and compared to those calculated using the actual transportation costs.</sentence>
+    <sentence>Results suggest that the MLP-NN models provide the best approximations for each food type and provide closer estimations for transportation cost than other approximation methods.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Artificial neural networks</keyword>
+    <keyword>Forecasting</keyword>
+    <keyword>In-kind donations</keyword>
+    <keyword>Data mining</keyword>
+    <keyword>Food bank operations</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Food banks collect, store, and distribute food donated by local businesses (i.e.</sentence>
+    <sentence>food producers/manufacturers, food distributors, and supermarkets) and community-serving organizations.</sentence>
+    <sentence>These commodities are processed, stored, and eventually dispatched to charitable agencies.</sentence>
+    <sentence>The charitable agencies, in turn, distribute the items that they receive to individuals and families experiencing food insecurity.</sentence>
+    <sentence>Their warehousing capabilities, interest in providing unbiased service to the agencies, and cooperative approach to counteracting hunger make food banks an attractive non-profit agency to high-volume donors.</sentence>
+    <sentence>Supermarkets are one of the high-volume donation sources for food banks.</sentence>
+    <sentence>Commodities that are generated from supermarkets include food items that are usable yet for various reasons, unsellable in local markets.</sentence>
+    <sentence>Examples of these edible food items include dented canned goods, bruised fruit, and non-perishable items approaching manufacturer-recommended sell by dates.</sentence>
+    <sentence>The donation of these items is both good-hearted and practical because their disposal would otherwise be managed by the supermarket branch and/or franchise.</sentence>
+    <sentence>Food banks welcome these items, as tight funding limits the amount of food that can be purchased in local markets.</sentence>
+    <sentence>One of the obstacles to scheduling food bank operations is the uncertainty in available supply.</sentence>
+    <sentence>Food banks must make collections at supermarkets with no indication as to whether desired food items are available, and if so, how much.</sentence>
+    <sentence>Unlike typical for-profit supply chains, suppliers (i.e.</sentence>
+    <sentence>supermarkets) have a different objective than their downstream recipients (i.e.</sentence>
+    <sentence>food banks, charitable agencies, and hunger victims).</sentence>
+    <sentence>While interested in aiding the food insecure, these donors are in business to make a profit.</sentence>
+    <sentence>This profit is realized by selling food items rather than donating them.</sentence>
+    <sentence>Furthermore, supermarkets typically elect not to share information regarding product availability because it is either difficult to forecast Meulstee and Pechenizkiy (2008) or kept confidential.</sentence>
+    <sentence>Without having knowledge of what items are available for collection at different stores, the degree to which food banks can make cost-effective transportation schedules is limited.</sentence>
+    <sentence>The goal of this research is to identify an approximation method that is useful when estimating the amounts of different in-kind food types available for collection at a supermarket branch.</sentence>
+    <sentence>This extends the work of Brock and Davis (2012) to address instances where there is no information shared between supermarket branches and the regional food banks.</sentence>
+    <sentence>As specified in the preceding investigation, quantifying food availability is complicated because (1) there is no definite time interval between food collections; (2) the availability of surplus food at supermarket branches is dependent upon product sales, internal forecast accuracy, and donations given to other non-profit organizations; and (3) food is perishable and must be collected before disposal.</sentence>
+    <sentence>Given the dynamics associated with collection frequency and food availability, approximation methods must have the ability to generalize what is received in a specific collection event.</sentence>
+    <sentence>Therefore, knowledge discovery and supervised machine learning approaches are used to predict food availability.</sentence>
+    <sentence>In particular, multi-layer perceptron neural network (MLP-NN) models are proposed to determine the amounts of food available for a specific collection event.</sentence>
+    <sentence>The models incorporate information related to the observable characteristics of a collection event, the financial wellness of communities served, and past operational decisions made by the food bank.</sentence>
+    <sentence>The MLP-NN models are compared to traditional approximation methods which are not based on a uniform time step.</sentence>
+    <sentence>Specifically, we consider multiple linear regressions, the overall average collection amount received from a supermarket branch, and the overall average collection amount received from a supermarket branch when collected by personnel from a specific warehouse affiliated with the regional food bank.</sentence>
+    <sentence>The results of a computational study show that MLP-NN models are more effective than the traditional forecasting methods at accounting for supply uncertainty.</sentence>
+    <sentence>The results also show that the improved forecasts lead to better estimates for transportation costs.</sentence>
+    <sentence>The remainder of this chapter is organized as follows.</sentence>
+    <sentence>Section 2 provides a review of literature related to the forecasting problem.</sentence>
+    <sentence>Section 3 provides a description for food collection events and provides a brief description for each forecasting method.</sentence>
+    <sentence>Section 4 provides a detailed description for the MLP-NN model selection process.</sentence>
+    <sentence>Section 5 presents a case study implemented using historic data from a food bank in the southeastern region of the United States.</sentence>
+    <sentence>Section 6 compares the four approximation methods based on both prediction error and the impacts of using each method to schedule food collections.</sentence>
+    <sentence>Section 7 discusses managerial insights that are concluded from the results.</sentence>
+    <sentence>Section 8 summarizes the key findings of this research and identifies opportunities for future research extensions.</sentence>
+  </section>
+  <section name="Related literature">
+    <sentence>Aspects of food insecurity have been addressed in literature.</sentence>
+    <sentence>Topics studied include food quality and food bank workforce (Tarasuk &amp; Eakin, 2005; Teron &amp; Tarasuk, 1999), hunger studies (Mosley &amp; Tiehen, 2004; Vinopal &amp; Cooper, 2011; Weinfield et al., 2014; Winter, 2009).</sentence>
+    <sentence>Quantitative research which identifies strategies to counteract food insecurity is more limited.</sentence>
+    <sentence>Topics addressed include pre-positioning, food collection and distribution (Bartholdi, Platzman, Collins, &amp; Warden, 1983; Ghoniem, Solak, &amp; Scherrer, 2012; Gunes, van Hoeve, &amp; Tayur, 2010; Lien, Iravani, &amp; Smilowitz, 2008).</sentence>
+    <sentence>Phillips, Hoenigman, and Higbee (2011) perform a quantitative study to suggest how the average supply amount generated from donor sources is sufficient to satisfy demand.</sentence>
+    <sentence>While there is considerable research that is relevant to forecasting organ donation (see e.g.</sentence>
+    <sentence>Darwiche, Feuilloy, Bousaleh, &amp; Schang, 2010; Lee &amp; Cheng, 2011; Moore, 1971) and monetary donations (see e.g.</sentence>
+    <sentence>Britto &amp; Oliver, 1986; Malthouse, 2010) few researchers have addressed the challenge of quantifying in-kind food donations.</sentence>
+    <sentence>Jiang, Davis, De Mleo, and Terry (2013) study the historic donation receipts obtained by the Food Bank of Central and Eastern North Carolina (FBCENC) using different data mining and visualization techniques.</sentence>
+    <sentence>The researchers identify the change in donation patterns, and classify donors based on the number of times they contribute food items.</sentence>
+    <sentence>Their results indicate an increase in total monthly donation receipts.</sentence>
+    <sentence>The results also show that most one-time donors make low-volume contributions, whereas repeat donors make high-volume contributions.</sentence>
+    <sentence>Davis, Jiang, Morgan, and Harris (2013) and Davis, Jiang, and Terry (2013) present quantitative models for estimating the average amount of food supply received from monthly from different donation sources.</sentence>
+    <sentence>The idea of using data mining for planning purposes is not new.</sentence>
+    <sentence>In fact it has been utilized in a number of applications including engineering design (Feng &amp; Wang, 2003; Feng, Yu, &amp; Kusiak, 2006) and production and maintenance scheduling (Luxhoj, Williams, &amp; Shyur, 1997; Sha &amp; Liu, 2005).</sentence>
+    <sentence>While there is little work published in the context of in-kind donations forecasting, there is considerable work published that is relevant to demand forecasting.</sentence>
+    <sentence>A partial review of recent work addressing demand forecasting is provided.</sentence>
+    <sentence>For a comprehensive review of demand forecasting methods, the reader is referred to Zhang, Patuwo, and Hu (1998).</sentence>
+    <sentence>Meulstee and Pechenizkiy (2008) address the challenges associated with wholesale food suppliers estimating demand for food items sold.</sentence>
+    <sentence>This problem posed in their investigation is similar to this research in that the forecasted outcome (i.e.</sentence>
+    <sentence>product sales) is perceived as affected by some unknown context (i.e.</sentence>
+    <sentence>consumer preference, habits, interests, etc.).</sentence>
+    <sentence>The problem is motivated by the need for food suppliers to improve forecasting ability.</sentence>
+    <sentence>The researchers incorporate ensemble learning approaches to predict product sales.</sentence>
+    <sentence>The ensemble model incorporates sales for different product types, past weather conditions, and school holidays as inputs for estimating future demand.</sentence>
+    <sentence>Gutierreza, Solisb, and Mukhopadhyay (2008) evaluates forecasting methods that are appropriate for products with intermittent demand.</sentence>
+    <sentence>Such forecasts are used when there may be long periods when items are not demanded followed by periods when demand is elevated.</sentence>
+    <sentence>In their investigation, they compare MLP-NN models, simple exponential smoothing and the smoothing approximations of Croston (1972) and Syntetos and Boylan (2005).</sentence>
+    <sentence>Shahrabi, Mousavi, and Heydar (2009) evaluates different forecasts when determining long-term demand for car components.</sentence>
+    <sentence>In their investigation, the moving average, exponential smoothing, exponential smoothing with trend, support vector regressions, and MLP-NN models are compared.</sentence>
+    <sentence>Forecasting methods are also utilized to assess demand for limited resources including water (Adamowski, 2008; Firat, Yurdusev, &amp; Turan, 2009; Pulido-Calvo, Montesinos, Roldán, &amp; Ruiz-Navarro, 2007), energy consumption in buildings (Ekici &amp; Aksoy, 2009), and energy consumption by communities (Geem and Roper, 2009; Murat and Ceylan, 2006; Wang &amp; Liang, 2009).</sentence>
+    <sentence>To our knowledge, only Brock and Davis (2012) consider the need to differentiate between food quantities received from donors based on observable characteristics of the collection event.</sentence>
+    <sentence>The researchers propose the use of feed-forward neural networks which fits the description of the MLP-NNs.</sentence>
+    <sentence>The model is used to approximate the amounts of different food types available for collection assuming that food banks to know with certainty which food types are available for collection.</sentence>
+    <sentence>A single neural network model is selected to model the relationship between the observable characteristics of food collection events and the amount of food received from the supermarket.</sentence>
+    <sentence>The data used in this investigation reflect collection outcomes, the financial wellness of supermarket customers, and operational decisions made prior to the collection event.</sentence>
+    <sentence>The selected neural network is compared to a multiple linear regression model using data reflecting supermarket receipts collected by FBCENC.</sentence>
+    <sentence>Results show that the neural network provides acceptable estimates for food collection and is noticeably more effective at estimating food availability than the regression model.</sentence>
+    <sentence>The problem presented in this study is one where food banks must be able to estimate how much of each in-kind food type is available for collection on specific collection days.</sentence>
+    <sentence>Each of the aforementioned forecasting methods is limited for this problem.</sentence>
+    <sentence>The stated problem is one where unlike demand forecasting problems, time series methods are not appropriate, as past and future food collections may not have pre-determined intervals of time between collections.</sentence>
+    <sentence>When attempting to schedule vehicles for food collection, it is necessary to focus on the anticipated amount of food received through an isolated collection event.</sentence>
+    <sentence>In addition, Davis, Jiang, Morgan, et al.</sentence>
+    <sentence>(2013) and Davis et al.</sentence>
+    <sentence>(2013) give some estimate for what can be received from different donors; however, estimates are limited to the average monthly collection amount.</sentence>
+    <sentence>Lastly, the contribution of Brock and Davis (2012) is limited to situations where the types of food that supermarket branches have on-hand is known.</sentence>
+    <sentence>This is unlikely the case for many systems because there is no coordination mechanism that allows food banks to know with certainty which items will be available for collection upon arrival.</sentence>
+  </section>
+  <section name="Methodology">
+    <sentence>This study compares four forecasting methods that may be utilized to estimate the amount of different in-kind food types available for collection.</sentence>
+    <sentence>These forecasting methods are (1) the overall average amount received from a supermarket branch (SM Average), (2) the overall average amount received by a specific warehouse from a supermarket branch (SMWH Average), (3) the predicted amount received by a regional food bank as determined using multiple linear regressions (MLR), and (4) the predicted amount received by a regional food bank as determined by the selected MLP-NN models.</sentence>
+    <sentence>The first two forecasting methods are based strictly on the commodities received from past collections.</sentence>
+    <sentence>MLR and MLP-NN models are based on a number of event-related characteristics.</sentence>
+    <sentence>Event-related characteristics considered are observable system characteristics, the financial wellness of supermarket customers, and past operational decisions made by the food bank.</sentence>
+    <sentence>All four approximation methods are evaluated to determine which is most appropriate to estimate the amount of food available in the next planning period.</sentence>
+    <sentence>While making predictions, the MLR and MLP-NN models are evaluated to determine whether they identify the system as stationary or non-stationary.</sentence>
+    <sentence>System stationarity implies that in separate observations, there is no change in the overall impacts of system inputs.</sentence>
+    <sentence>In relation to this problem, system stationarity would be implied by approximations methods presented in this research producing similar predictions in different planning periods.</sentence>
+    <sentence>When systems are non-stationary, it suggests that models are more limited in their prediction abilities.</sentence>
+    <sentence>Consequentially, the reliability of these models decreases when used for future projections.</sentence>
+    <sentence>Assumptions The system characteristics outlining food collection events are as follows.</sentence>
+    <sentence>Parties directly involved include supermarket locations and regional food bank affiliates.</sentence>
+    <sentence>Supermarket branches generate usable, yet unsellable in-kind food items on a nightly basis as a result of customer purchasing decisions.</sentence>
+    <sentence>It is assumed that customers can be generalized to the county in which they reside.</sentence>
+    <sentence>Neither information regarding the amount of food generated nightly nor the total amount on-hand is shared with the regional food bank.</sentence>
+    <sentence>Food items generated remain on-hand until either a non-profit agency collects them or they are disposed.</sentence>
+    <sentence>While the food disposal day for supermarket branches is not known, it is assumed that all commodities that remain uncollected after 7 days are disposed.</sentence>
+    <sentence>A regional food bank receives unusable food items through on-site collections performed by personnel at one of its affiliate warehouses.</sentence>
+    <sentence>Each warehouse maintains its own refrigerated vehicles and records information regarding each collection.</sentence>
+    <sentence>These records indicate the date of food collection, the supermarket branch where food is collected, what food is received, and which warehouse collects the food.</sentence>
+    <sentence>It is assumed that warehouses process all commodities on the day they are collected, classifying each as a specific food type.</sentence>
+    <sentence>Planning activities for food collections occur prior to the start of the operating week.</sentence>
+    <sentence>Variables and representation The dependent variable (DV) in this system is the amount of a particular in-kind food type that is available for receipt at a particular supermarket.</sentence>
+    <sentence>This amount is represented by the term Output_Amount.</sentence>
+    <sentence>Independent variables (IV) considered in this study are classified as indicating (1) the observable characteristics of a collection event, (2) the financial wellness of targeted supermarket customers, or (3) past operational decisions.</sentence>
+    <sentence>Observable characteristics provide essential information regarding the contributing supermarket branch, the communities which this branch serves, food bank warehouse which receives branch donations, and when donations are received.</sentence>
+    <sentence>Observable system characteristics included in this study include the week of the calendar year (Week_of_Year), weekday (Weekday), contributing supermarket branch (SM), receiving food bank warehouse (WH), and the zip code (zip).</sentence>
+    <sentence>Variables selected to reflect financial wellness include the Real GDP performance (Real_GDP), the consumer sentiment index (Cons_Confid), and unemployment (Unemploy_Rate).</sentence>
+    <sentence>Real_GDP is a measure of the purchasing power of communities in a state.</sentence>
+    <sentence>As the purchasing power increases, it is expected that consumers would be more likely to purchase more store items.</sentence>
+    <sentence>Cons_Confid provides an indication for how individuals in the state feel about the overall financial health of the economy.</sentence>
+    <sentence>The assessment is measured statewide on monthly basis.</sentence>
+    <sentence>Unemploy_Rate provide a measure for the percentage of supermarket customers residing in the state that are currently unemployed.</sentence>
+    <sentence>It is expected that purchasing power or confidence in the strength of the economy both affect supermarket sales.</sentence>
+    <sentence>Factors selected for this study are motivated by research which indicates that supermarket sales are affected by extended periods of unemployment or widespread recession (Kumcu &amp; Kaufman, 2011).</sentence>
+    <sentence>Past operational decisions are reflected by identifying the recency, frequency, and value added by customers.</sentence>
+    <sentence>Selection of these variables is based on the impact of using similar variables for direct marketing (see e.g.</sentence>
+    <sentence>McCarty &amp; Hastak, 2007; Ngai, Xiu, &amp; Chau, 2009) and business management (see e.g.</sentence>
+    <sentence>Li, Shue, &amp; Lee, 2008).</sentence>
+    <sentence>Given the success of using these factors in that context, historic donation records are manipulated to express the recency, frequency, and value of supermarket donors measured from prior donations.</sentence>
+    <sentence>This measurement is recorded with respect to both overall receipts by the regional food bank and those collected by the receiving warehouse.</sentence>
+    <sentence>Recency The recency of past collections is measured through the number of days which have elapsed since the last collection.</sentence>
+    <sentence>CW_Rec_SM measures the number of elapsed days since a collection at the supermarket has been attempted by any warehouse affiliated with the regional food bank.</sentence>
+    <sentence>CW_Rec_SMWH measures the number of elapsed days since a collection at the supermarket has been attempted by the warehouse performing the current collection.</sentence>
+    <sentence>Recency is defined by integers in the range [0, 8], where a value of 8 represents that there has not been a collection in the past 7 days.</sentence>
+    <sentence>Frequency CW_Freq_SM and CW_Freq_SMWH indicate the number of collections at the contributing supermarket branch that have occurred over the past 7 days which (a) have been received by any warehouse of the regional food bank and (b) have been received by a specific warehouse, respectively.</sentence>
+    <sentence>Ttl_Freq_SM and Ttl_Freq_SMWH indicate the total number of recorded collections at the contributing supermarket (a) received by any warehouse of the regional food bank and (b) received by a specific warehouse, respectively.</sentence>
+    <sentence>Value Week_Amt_SM and Week_Amt_SMWH indicate the amount of a specific food type that has been generated from a supermarket branch in the past 7 days which (a) has been received by any warehouse affiliated with the regional food bank and (b) has been received by a specific warehouse, respectively.</sentence>
+    <sentence>Ttl_Amt_SM and Ttl_Amt_SMWH express the total amount of a specific food type that has been generated from the supermarket branch which (a) has been received by any warehouse affiliated with the regional food bank and (b) has been received by a specific warehouse, respectively.</sentence>
+    <sentence>All variables indicating donation value are based on receipts prior to the current collection.</sentence>
+    <sentence>A complete listing of the representation for system variables is given in Table 1.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Representation for system variables.</sentence>
+    <sentence>Classification Sub-classification Variable Role Representation Observable characteristics Collection date Week_of_Year IV [1-of-m] Weekday IV [1-of-m] Transaction parties WH IV [1-of-m] SM IV [1-of-m] Financial wellness Real_GDP IV [0, 1] scaling Unemloy_Rate IV [0, 1] scaling Cnsmr_Confid.</sentence>
+    <sentence>IV [0, 1] scaling Past operational decisions Recency CW_Rec_SM IV [1-of-m] CW_Rec_SMWH IV [1-of-m] Frequency CW_Freq_SM IV [0, 1] scaling CW_Freq_SMWH IV [0, 1] scaling Ttl_Freq_SM IV [0, 1] scaling Ttl_Freq_SMWH IV [0, 1] scaling Value Week_Amt_SM IV [0, 1] scaling Week_Amt_SMWH IV [0, 1] scaling Ttl_Amt_SM IV [0, 1] scaling Ttl_Amt_SMWH IV [0, 1] scaling Collection amount Output_Amount DV [0, ∞) The one-of-m encoding is used for independent variables that are discrete with nominal values.</sentence>
+    <sentence>This encoding scheme uses a set of m dummy variables to represent each possible value.</sentence>
+    <sentence>Variables such as Week_of_Year, Weekday, and WH are represented through this scheme.</sentence>
+    <sentence>Recency is also treated as a discrete value.</sentence>
+    <sentence>Independent variables that have continuous values are normalized and scaled to the range of [0, 1].</sentence>
+    <sentence>The decision was made to scale continuous variables to the range [0, 1] instead of [−1, 1] so that both discrete and continuous variables are maintained within the same interval.</sentence>
+    <sentence>This approach is preferred to bucketing for two reasons.</sentence>
+    <sentence>First, a considerable amount of time is required to identify the most effective bins.</sentence>
+    <sentence>Second, system characteristics are prone to change in subsequent scheduling periods, which could cause bins selected for a variable for one planning period inappropriate for the next planning period.</sentence>
+    <sentence>Crone, Lessmann, and Stahlbock (2006) suggest that scaling continuous variables to this range promotes improved neural network performance as opposed to no pre-processing.</sentence>
+    <sentence>The decision was made not to scale the dependent variable, as doing so did not affect model accuracy.</sentence>
+    <sentence>Forecasting methods Each of the forecasting methods is now discussed.</sentence>
+    <sentence>The SM Average and SMWH Average are based solely on outcomes from historical collections as they are based on the naïve assumption that the collection amount from a supermarket branch in the next period is expected to the same as the average collection amount received previously.</sentence>
+    <sentence>The MLR and MLP-NN incorporate all of the independent and variables discussed previously (see Table 1).</sentence>
+    <sentence>It should be noted that the naïve forecasts and MLR models represent approaches that might be implemented in practice whereas MLP-NN models represent a more sophisticated alternative.</sentence>
+    <sentence>Model #1: SM Average The average amount of food generated from a specific supermarket is defined in Eq (1).</sentence>
+    <sentence>Given a specific food type l, gives the amount of food collected at supermarket branch in collection event .</sentence>
+    <sentence>The total number of collections at branch is given by .</sentence>
+    <sentence>(1) 3.3.2.</sentence>
+    <sentence>Model #2: SMWH Average The average amount of food generated from a specific supermarket when collected by a food bank warehouse is defined in Eq (2).</sentence>
+    <sentence>Given a specific food type l, gives the amount of food collected from supermarket branch by personnel at warehouse in collection event o.</sentence>
+    <sentence>The total number of collection events occurring from branch is given by Sn,a.</sentence>
+    <sentence>(2) 3.3.3.</sentence>
+    <sentence>Model #3: MLR Model MLR creates an approximation for the amount of food collected based on the linear combination represented by a set of weighted system inputs.</sentence>
+    <sentence>MLR is approximated by Eq (3) where Xi represents system input , reflects the number of system inputs, and represents the coefficients assigned to each input.</sentence>
+    <sentence>Model bias is represented by wo.</sentence>
+    <sentence>(3) The coefficient values are identified by solving for the least squared error among all observations.</sentence>
+    <sentence>In the case of this modeling approach, this is approximated using a linear function.</sentence>
+    <sentence>MLR models are sufficient for representing systems when multiple co-linearity among system inputs does not occur and the represented system is not subject to noise.</sentence>
+    <sentence>Model #4: MLP-NN MLP-NN models present approximate food donations based on a multi-echelon network of connected nodes.</sentence>
+    <sentence>The multi-echelon structure is designed to allow the model to represent interactions among independent variables through a non-linear formulation.</sentence>
+    <sentence>A detailed explanation for MLP-NN models follows.</sentence>
+  </section>
+  <section name="Multi-Layer Perceptron neural network models">
+    <sentence>Model structure Artificial neural networks are inspired by what is known about the human brain.</sentence>
+    <sentence>Given a stimulus, a set of neurons propagate electric signals to multiple layers of neurons through synoptic pathways.</sentence>
+    <sentence>These signals result in both voluntary and involuntary responses to the stimulus.</sentence>
+    <sentence>Over time, the brain has the capability of learning and generalizing responses different stimuli with impressive accuracy.</sentence>
+    <sentence>In a similar manner, artificial neural networks utilize a connected network of neurons (i.e.</sentence>
+    <sentence>nodes) and synoptic pathways (i.e.</sentence>
+    <sentence>weighted arcs) to learn complex systems.</sentence>
+    <sentence>Feed-forward neural networks are a type of neural network utilized when the system being learned contains both independent and dependent variables.</sentence>
+    <sentence>MLP-NN models are a classification of feed-forward neural network that is more commonly utilized in demand forecasting.</sentence>
+    <sentence>A visual representation of a MLP-NN with layers is provided in Fig 1.</sentence>
+    <sentence>To remain consistent with the study, the output layer is reflected as having only one node.</sentence>
+    <sentence>A visual representation of an L-layered MLP-NN Fig 1.</sentence>
+    <sentence>A visual representation of an L-layered MLP-NN.</sentence>
+    <sentence>The representation for MLP-NN models is discussed in detail by Rumelhart, Hinton, and Williams (1985).</sentence>
+    <sentence>The standard formulation is based on Eq (4).</sentence>
+    <sentence>(4) For this formulation, represents a neuron in layer and represents a neuron in layer .</sentence>
+    <sentence>The output neuron is based on the neurons in a preceding layer and weighted inputs .</sentence>
+    <sentence>In this equation represents input bias and f represents an activation function, and mk indicates the number of neurons in the layer k. This activation function allows the composite signal received by each neuron in layer k from neurons in layer k − 1 to be represented using a linearly separable function.</sentence>
+    <sentence>In this study, the logistic sigmoid activation function is used when and a linear activation function when k = L. For MLP-NN models, the number of layers is given by L ⩾ 3.</sentence>
+    <sentence>The logistic sigmoid activation function is calculated by Eq (5).</sentence>
+    <sentence>(5) The weighted linear activation function is calculated by Eq (6).</sentence>
+    <sentence>(6) Using the actual system outcome, the predictive error is calculated.</sentence>
+    <sentence>In this study, the mean square error (MSE) is used as a measure for the predictive error based on the average difference in the actual collection amount and the predicted collection amount in each of observations.</sentence>
+    <sentence>This calculation is given by Eq (7).</sentence>
+    <sentence>(7) After making model projections, a back-propagation approach is implemented to correct the model by adjusting signal weights.</sentence>
+    <sentence>A variety of algorithms have been proposed to execute backpropagation.</sentence>
+    <sentence>This research uses the scaled conjugate gradient algorithm of Moller (1993).</sentence>
+    <sentence>This method is recommended by Demuth and Beale (1993) due to it being effective for approximation problems with larger data sets.</sentence>
+    <sentence>While a MLP-NN model with a reasonable number of hidden nodes in one hidden layer is capable of making good approximations for continuous functions (Cybenko, 1989; Hornik, 1991), the characteristics of the optimal MLP-NN model in terms of generalization error continues to be an open area of research.</sentence>
+    <sentence>A review of some of the prior research related to this problem is provided by Lawrence, Giles, and Tsoi (1997).</sentence>
+    <sentence>Since there is no consistent estimation, a trial-and error approach is commonly to determine model configuration (Zhang et al., 1998).</sentence>
+    <sentence>Modeling considerations When training MLP-NN models, three concerns are considered.</sentence>
+    <sentence>These include preventing generalization errors, model configuration selection, and the interpretation of system stationarity.</sentence>
+    <sentence>Preventing generalization errors Some of the challenges in MLP-NN model selection include the preventing generalization errors, determining the most appropriate model configuration, and accounting for system stationarity.</sentence>
+    <sentence>Generalization errors occur when a model is trained to match the observations of a data set so well that it makes poor projections for system observations not used in training.</sentence>
+    <sentence>A common method of preventing generalization errors is to use an early stopping criteria based on the partitioning of system data into a training set and a test set.</sentence>
+    <sentence>The training set is used to update model features through epochs of the feed forward/backpropagation process.</sentence>
+    <sentence>After each training epoch, models are used to make projections for the test set, recording the associated predictive error.</sentence>
+    <sentence>In earlier epochs, the predictive error for model projections is the result of empirical errors.</sentence>
+    <sentence>After a number of training epochs, a point of convergence is identified, after which continued model training results in inferior projections for test set values.</sentence>
+    <sentence>Due to the non-linear nature of the approximation method, the epoch of convergence is identified after a user-specified number of consecutive epochs where there is no improvement to the best predictive error for test set projections.</sentence>
+    <sentence>Model configuration selection The selection of MLP-NN model configurations is impacted by a number of random events.</sentence>
+    <sentence>These events include the initial arc weights and observations assigned to different data partitions.</sentence>
+    <sentence>These models are also a function of the selected back-propagation method and neural network configuration.</sentence>
+    <sentence>Model selection methods should take these factors into consideration.</sentence>
+    <sentence>This study performs the supervised training process by initializing multiple models with the same configuration and exploring 50/50, 60/40, and 67/33 partitions for the training and test sets, respectively.</sentence>
+    <sentence>System stationarity System stationarity is determined for selected MLP-NN models using an additional data set (i.e.</sentence>
+    <sentence>validation set) to provide observations for the next collection period.</sentence>
+    <sentence>Much like the test set, projections are made for validation set observations after each training epoch.</sentence>
+    <sentence>Accordingly, when the epochs of minimum generalization error for test and validation sets are the same, the system is interpreted as stationary.</sentence>
+    <sentence>When the epochs are different, the system is interpreted as non-stationary.</sentence>
+    <sentence>A visual representation of supervised machine learning and system stationarity process is given in Fig 2.</sentence>
+    <sentence>Supervised machine learning and system stationarity evaluation process Fig 2.</sentence>
+    <sentence>Supervised machine learning and system stationarity evaluation process.</sentence>
+    <sentence>Quasi-greedy algorithm for MLP-NN model selection A quasi-greedy algorithm is created to automate the testing of different training parameters, comparing constructed MLP-NN, and selecting non-dominated MLP-NN models for each food type.</sentence>
+    <sentence>Parameters controlled by the algorithm include (1) different data partitions for training/test sets, (2) the number of hidden layers explored, (3) the number of hidden nodes in each layer, and (4) the number of different MLP-NN model structures with the same configuration that are evaluated.</sentence>
+    <sentence>The algorithm is classified as quasi-greedy because it permits more complex model structures to be exploration when a local optimal solution (i.e.</sentence>
+    <sentence>minimum MAE) is obtained from a less complex model.</sentence>
+    <sentence>The algorithm is initialized by evaluating models constructed using the set of inputs and the output.</sentence>
+    <sentence>The pseudocode provided summarizes the algorithm.</sentence>
+    <sentence>Algorithm 1.</sentence>
+    <sentence>Pseudocode for the quasi-greedy algorithm Notation 01 : the number of layers 02 : the number of nodes in each layer 03 : the MLP-NN model that produces the lowest MAE of all structures evaluated where there are and the network configuration if given by 04 : MAE associated with 05 : best model for layer 06 : represent the number of consecutive model structures that are inferior to 07 : maximum value for i allowed 08 : binary variable reflecting the satisfaction of termination condition for algorithm Initialization 09 10 11 Calculate ZL associated with 12 if then 13 else 14 if then 15 else if , then 16 else 17 A visual representation of this algorithm is illustrated in Fig 3.</sentence>
+    <sentence>The search process is initialized with k = 3 and the number of hidden nodes in the hidden layer given by m2 = 1.</sentence>
+    <sentence>The algorithm explores multiple model structures with one hidden layer containing one hidden node (3a), each of which is based on different data partitions and/or initial weights.</sentence>
+    <sentence>The incumbent model structure selected to represent the network is given by where .</sentence>
+    <sentence>The associated predictive error is given by .</sentence>
+    <sentence>This process is repeated for model configurations with incrementally of increasing complexity until the layer termination condition given by is satisfied.</sentence>
+    <sentence>Models configurations evaluated in the example have , and structures.</sentence>
+    <sentence>Configurations explored that do not improve the predictive error are represented by a black node, while those that do are not shaded.</sentence>
+    <sentence>After evaluating with the five configurations, the layer termination condition is met for k = 3 layers with the as the new incumbent model (3b).</sentence>
+    <sentence>The algorithm continues by evaluating model structures with k = 4 layers.</sentence>
+    <sentence>The first model evaluated has the same structure as the non-dominated MLP-NN with an additional hidden layer containing one node (3c).</sentence>
+    <sentence>The structure for the second hidden layer is executed as specified for the first hidden layer.</sentence>
+    <sentence>The search process for the second hidden layer terminates after evaluating the first two model configurations (3d).</sentence>
+    <sentence>Since both configurations evaluated where k = 4 (i.e.</sentence>
+    <sentence>and ) are inferior to the incumbent, the quasi-greedy heuristic selects the MLP-NN model to make forecasts (3e).</sentence>
+    <sentence>Diagram of the quasi-greedy algorithm model selection process Fig 3.</sentence>
+    <sentence>Diagram of the quasi-greedy algorithm model selection process.</sentence>
+    <sentence>A complete list of model training parameters for the MLP-NN models selected using the quasi-greedy algorithm is given in Table 2.</sentence>
+    <sentence>One should note that these parameters are user-specified.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Training Parameters for the quasi-Greedy algorithm.</sentence>
+    <sentence>Training parameter Value Layer search termination condition 5 consecutive inferior model configurations Hidden nodes added to per configuration 1 Data partitions considered [50/50, 60/40, 67/33] Number of structures evaluated per data partition 5 Maximum training time per model structure 10 min Early stopping criteria 150 consecutive epochs without improvement Maximum training epochs 1000 Activation function characteristics Connection to hidden node Logistic sigmoid Connection to output node Weighted linear BP algorithm Scaled conjugate gradient</sentence>
+  </section>
+  <section name="Computational study">
+    <sentence>Data A computational study is conducted using data provided by the Food Bank of Central and Eastern North Carolina (FBCENC).</sentence>
+    <sentence>FBCENC operates out of 6 warehouses.</sentence>
+    <sentence>The historical data used in this study reflect food collections received from select supermarket branches between July 1, 2006 and April 30, 2011.</sentence>
+    <sentence>The data consists of a total of 17,555 records.</sentence>
+    <sentence>The collection amounts range from 1 to 19,585 lb.</sentence>
+    <sentence>Each collection record indicates the date of collection, supermarket branch, commodity type, receiving warehouse, and zip code of the contributing supermarket.</sentence>
+    <sentence>There are a total of 70 zip codes, 124 supermarkets, and 15 different in-kind food types represented in the data.</sentence>
+    <sentence>Although the data set contains no missing values, some food types are received rarely and some food collection occurrences generate an exceptionally large amount of food.</sentence>
+    <sentence>Data preprocessing The pre-processing, model training, and experimentation processes implemented in this study are described in Fig 4.</sentence>
+    <sentence>Transactions reflecting receipts from supermarket branches are extracted and matched with financial indicators based on the date of collection and county in which the donating supermarket resides.</sentence>
+    <sentence>Records pertaining to food types received in less than 5% of all collections are then removed.</sentence>
+    <sentence>Additionally, outlier collection amounts are reduced to the lower 95th percentile of what had been reported for the food type in historic records.</sentence>
+    <sentence>Next, past operational decisions are interpreted based on the dates when one of the remaining in-kind food types is received.</sentence>
+    <sentence>Having incorporated all variables and addressed outliers, data are divided by date to reflect a known collection history and future receipts obtained in the next collection period.</sentence>
+    <sentence>Data pre-processing, model training, and experimentation processes implemented… Fig 4.</sentence>
+    <sentence>Data pre-processing, model training, and experimentation processes implemented for the computational study.</sentence>
+    <sentence>Observations from the known history are used to calculate SM Averages and SMWH Averages for each food type.</sentence>
+    <sentence>These estimates are used as the basis for next period collections.</sentence>
+    <sentence>Accordingly, the estimates are compared to the actual collections amounts.</sentence>
+    <sentence>Prior to making predictions using MLR or MLP-NN models, variables are converted to the representation described in Table 1.</sentence>
+    <sentence>MLR and MLP-NN models are created using all observations from the known history.</sentence>
+    <sentence>Experiments Two experiments are performed to evaluate the accuracy of the proposed forecasting approaches.</sentence>
+    <sentence>In the first experiment, the predictive errors of the four forecasting models are compared.</sentence>
+    <sentence>The second experiment evaluates the impact supply forecasting can have on operations decisions.</sentence>
+    <sentence>Transportation costs are evaluated when vehicles are scheduled for food collection using predicted collection amounts verses estimates based on perfect information.</sentence>
+    <sentence>This experiment is motivated by transportation savings that can be realized by reducing uncertainty in supply availability.</sentence>
+    <sentence>If the food bank had perfect information (i.e.</sentence>
+    <sentence>food availability at supermarket branches known with certainty), planners could conceivably develop schedules that minimize transportation costs and maximize vehicle utilization more readily than when they there is greater supply uncertainty.</sentence>
+    <sentence>Experiment #1: forecasting efficacy Each of the four forecasting methods is constructed using observations that occur prior to April 25, 2011.</sentence>
+    <sentence>For the MLP-NN, the complete list of training conditions is given in Table 2.</sentence>
+    <sentence>The next planning period is represented by observations in the period April 25–30, 2011.</sentence>
+    <sentence>While useful for training, the MSE does not give an accurate assessment of overall predictive error, as it overestimates predictive error (Willmott &amp; Matsuura, 2005).</sentence>
+    <sentence>Instead, the mean absolute error (MAE) and coefficients of determination (R2) are used to evaluate forecasts efficacy over future collection periods.</sentence>
+    <sentence>The MAE, as shown in Eq (8), gives an estimate for the expected difference between predicted and actual system outcomes.</sentence>
+    <sentence>(8) R2 measures the proportion of the variation in the actual collection amount that can be attributed to the observed characteristics defining a collection event.</sentence>
+    <sentence>This measurement is bound by 0 ⩽ R2 ⩽ 1.</sentence>
+    <sentence>Models that are more effective at accounting for variation in food availability are assigned an R2 which is closer to 1.</sentence>
+    <sentence>Models that are less effective at accounting for variation in food availability are assigned an R2 which is closer to 0.</sentence>
+    <sentence>Experiment #2: impacts of forecasts on transportation decisions Food collections for the data set are grouped by the date of their occurrence and the collecting warehouse.</sentence>
+    <sentence>After grouping data, aggregate collection amounts are estimated for each food type using each of the forecasting methods.</sentence>
+    <sentence>Lastly, the saving heuristic of Clarke and Wright (1964) is used to determine appropriate routing solutions for a set of capacity constrained vehicles.</sentence>
+    <sentence>For this experiment, the rental cost per vehicle use is $1000.</sentence>
+    <sentence>The high rental cost is used to promote the reduction of vehicles whenever possible.</sentence>
+    <sentence>This allows the resulting assignments to only be impacted by the aggregate collection amount, tour duration, and limitations of load capacitated vehicles.</sentence>
+    <sentence>The fuel cost associated with a vehicle travel is $.40 per mile.</sentence>
+    <sentence>The refrigeration cost is $4 per hour.</sentence>
+    <sentence>The collection time at each supermarket is negligible.</sentence>
+    <sentence>The tow capacity for each vehicle is set at 10,000 lbs.</sentence>
+    <sentence>Both experiments are executed using customized MATLAB code.</sentence>
+    <sentence>The first experiment uses code based on the Neural Network Toolbox.</sentence>
+    <sentence>The second experiment is developed without the use of an additional toolbox.</sentence>
+    <sentence>Both are run on a computer with a processing speed of 2.99 GHz, and 3.00 GB of RAM.</sentence>
+  </section>
+  <section name="Results">
+    <sentence>After completing all preprocessing, four food types remain: grains, frozen meats, frozen mixed foods, and produce.</sentence>
+    <sentence>The average, standard deviation, and coefficient of variation for each food type are shown in Table 3.</sentence>
+    <sentence>After preprocessing, 10,464 records remain.</sentence>
+    <sentence>There are 10,336 records that reflect known history.</sentence>
+    <sentence>The remaining 128 observations reflect the future planning period.</sentence>
+    <sentence>These food collections were performed by personnel at 4 of the 6 food bank warehouses.</sentence>
+    <sentence>The maximum collection amounts of grains, frozen meats, frozen mixed foods, and produce are 2500, 360, 2200, and 2500 lb, respectively.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Summary statistics for data set after preprocessing (by food type).</sentence>
+    <sentence>Parameter In-kind food type Grains Frozen meats Frozen mixed foods Produce Maximum collection amount 2500 360 2200 2500 Average collection amount 414.17 117.94 358.70 321.41 Standard deviation 987.27 149.26 935.03 973.00 Coefficient of variation 2.38 1.27 2.61 3.03 6.1.</sentence>
+    <sentence>Performance of forecasting methods The characteristics of the selected MLP-NN models are summarized in Table 4.</sentence>
+    <sentence>The selected model configuration is read from left to right.</sentence>
+    <sentence>The model selected for grains, for example, has 288 nodes in the input layer, 4 nodes in the first hidden layer, 2 nodes in the second hidden layer, and 1 node in the output layer.</sentence>
+    <sentence>The 60/40 partition yielded the best MLP-NN models for each food type.</sentence>
+    <sentence>Readers should not conclude that this partition is the most effective in all situations, as different partitions may be selected based on the initial conditions for model structures.</sentence>
+    <sentence>Three of the four selected models are constructed using only a single hidden layer.</sentence>
+    <sentence>This supports the idea that neural networks with a single hidden layer containing a sufficient number of neurons can effectively represent any function (Gallant &amp; White, 1988; Hornik, 1991; Hornik, Stinchcombe, &amp; White, 1989; Lippmann, 1987).</sentence>
+    <sentence>While the model selected for grains does not reject this idea, it does suggest that model configurations that have more than one hidden layer should be considered.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Model characteristics for selected MLP-NN models.</sentence>
+    <sentence>Performance measure In-kind food type Grains Frozen meats Frozen mixed foods Produce Selected model [288-4-2-1] [288-2-1] [288-7-1] [288-8-1] Best epoch – test set 177 389 230 246 Best epoch – validation set 151 30 254 321 Total epochs 327 539 380 396 Test set partition % 0.4 0.4 0.4 0.4 Training set partition % 0.6 0.6 0.6 0.6 The total number of epochs required to train each model is less than the maximum permitted.</sentence>
+    <sentence>Similarly, the termination conditions for training were reached before the maximum number of permitted training epochs.</sentence>
+    <sentence>This indicates that the models were terminated as a result of obtaining what is perceived as the minimum MSE for test set observations.</sentence>
+    <sentence>The table also shows the best epoch for the test set is different from that of the validation set.</sentence>
+    <sentence>This may suggests that system is non-stationary.</sentence>
+    <sentence>Table 5 shows the predictive error for each approximation method.</sentence>
+    <sentence>The most difficult to forecast food type is frozen meats.</sentence>
+    <sentence>This is also the food type with the lowest collection amount and the smallest coefficient of variation.</sentence>
+    <sentence>The least difficult food type to forecast is frozen mixed foods.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Model approximation performance (By food type).</sentence>
+    <sentence>Model Data set Measure In-kind food type Grains Frozen meats Frozen mixed foods Produce MLP-NN Known history (training) R2 0.7815 0.6136 0.8543 0.8378 MAE 165.59 46.38 101.40 6.69 Known history (test) R2 0.7896 0.5711 0.8720 0.8301 MAE 168.50 47.28 103.88 6.64 Next period (validation) R2 0.6936 0.5380 0.7375 0.7948 MAE 331.84 47.52 253.80 12.92 MLR Known history R2 0.5067 0.2654 0.6605 0.6574 MAE 230.53 52.69 155.66 8.62 Next period R2 0.6907 0.4280 0.7441 0.6979 MAE 366.72 55.63 315.62 14.65 Averages SM – next period R2 0.6285 0.3509 0.7043 0.4623 MAE 366.87 56.15 264.24 559.84 SMWH – next period R2 0.6430 0.3572 0.7095 0.4787 MAE 353.09 55.45 260.20 555.44 Based on the values for R2, most of the variability in the collection amounts of each food type can be attributed to the set of independent variables when using the MLP-NN models, although the R2 for frozen meat is only slightly above 0.5.</sentence>
+    <sentence>In terms of MAE, MLP-NN models are superior to each of the other forecasting methods.</sentence>
+    <sentence>This supports the idea that the relationship between observable system characteristics and the amount of each food type collected is best approximated through non-linear functions.</sentence>
+    <sentence>The MAE appears to be relatively consistent for the training and test set observations.</sentence>
+    <sentence>In contrast, there is a noticeable change in the MAE associated with model projections for the next period.</sentence>
+    <sentence>Similarly, the R2 values for the training and test set are very similar, whereas the R2 value for the validation set is much lower.</sentence>
+    <sentence>This is expected of forecasting models, as one would expect more accurate estimates when assessing known history than when assessing estimates for the future.</sentence>
+    <sentence>MLR models make poorer projections for the known history than MLP-NN models.</sentence>
+    <sentence>The R2 values for model projections for grains, frozen mixed foods and produce pertaining to the known history are each less than 0.67.</sentence>
+    <sentence>A very interesting finding is that MLR models appear to make much better projections for the next period than for the known history.</sentence>
+    <sentence>This is concerning because one would expect model accuracy to either remain the relatively unchanged or decrease when used to make estimates for the future.</sentence>
+    <sentence>Given the unexpected behavior of MLR models, one can confidently conclude the MLR models evaluate non-stationary systems.</sentence>
+    <sentence>Since such a drastic improvement in is observed, one can also conclude that MLR models are inappropriate for forecasting food availability.</sentence>
+    <sentence>The MAE obtained using the SM Average or SMWH Average to estimate future receipts of grains and frozen meats yields similar to MLR.</sentence>
+    <sentence>Both naïve estimations have lower MAE for frozen mixed foods than the regression model.</sentence>
+    <sentence>Furthermore, the MAE for SMWH Average estimates for grains, frozen meats, and frozen mixed foods are each better than those projected for MLR.</sentence>
+    <sentence>Nonetheless, the R2 value for each averaging method is inferior to its MLR counterpart.</sentence>
+    <sentence>This is believed to indicate that the variability in the observed collection amount is related to factors which SM Average and SMWH Average do not consider.</sentence>
+    <sentence>The superiority of the MLP-NN models compared to MLR and the two naïve averages suggests that non-linear interactions between different inputs can have a dramatic impact on food availability.</sentence>
+    <sentence>Their hierarchical structure and S-shaped sigmoid activation functions allow the MLP-NN models to approximate convex, interactions between two or more variables.</sentence>
+    <sentence>It is understandable why such interactions would affect donations.</sentence>
+    <sentence>For example, seasonal demand for a certain food type at one supermarket to be different than it would at another.</sentence>
+    <sentence>This may be reflected in the amount available for collection, especially since forecasts may overestimate consumer demand.</sentence>
+    <sentence>Since they assume a linear relationship, MLR estimates could be greatly affected by multi-collinearity when such interactions occur.</sentence>
+    <sentence>The occurrence of such relationships may explain why the MLR models are perceived as having a better fit for the relationship between independent variables and the actual collection amount over the future planning period.</sentence>
+    <sentence>This is further supported by the generalization error over that future planning period being much higher than the known history.</sentence>
+    <sentence>The existence of such relationships would also indicate that naïve forecasting methods would also be inferior since they do not account for many of the characteristics that can affect food availability.</sentence>
+    <sentence>The existence of such impacts can be observed by noticeably poor estimates for grains collected over the future planning horizon.</sentence>
+    <sentence>In light of there being a non-linear relationship between the observed system events and the collection amount received, MLP-NN models should be expected to consistently outperform MLR and the naïve forecasting methods.</sentence>
+    <sentence>Impacts on transportation costs When scheduling food collections using the aggregate collection amounts predicted by each forecasting method, only estimates made for the Greenville and Wilmington branches result in inflated transportation costs.</sentence>
+    <sentence>For the Greenville branch, when provided with perfect information, only 10 vehicles are required and transportation costs are $18073.87.</sentence>
+    <sentence>When using MLP-NN or MLR projections as the basis for scheduling, 11 vehicles are required.</sentence>
+    <sentence>The associated transportation cost is $19416.28.</sentence>
+    <sentence>Three additional vehicles are required when schedules are based on estimates obtained using SM Average or SMWH Average.</sentence>
+    <sentence>The transportation cost estimates using the SM average are $22493.35.</sentence>
+    <sentence>The costs using the SMWH average are $22386.46.</sentence>
+    <sentence>Fig 5 shows both the number of customers visited on each scheduled delivery day (see line graph) as well as the cost increases that would be experienced using one of the approximation methods rather than having perfect information (see bar graph).</sentence>
+    <sentence>The figure also identifies the number of supermarkets visited on each day.</sentence>
+    <sentence>While all of the forecasting models results in inflated transportation costs, collection estimates determined from MLP-NN and MLR result in lower costs than a more naïve approach.</sentence>
+    <sentence>Food collections and percentage change in estimated transportation costs for… Fig 5.</sentence>
+    <sentence>Food collections and percentage change in estimated transportation costs for Greenville branch.</sentence>
+    <sentence>For the Wilmington branch, both SM Average and SMWH Average result in the scheduling of 19 vehicles for food collection on Saturday.</sentence>
+    <sentence>This is believed to be the result of both an increased number of supermarkets visited on Saturday and inflated demand estimates for SM and SMWH averages.</sentence>
+    <sentence>Only 10 vehicles are required on Saturday when using the selected MLP-NN or MLR models.</sentence>
+    <sentence>Fig 6 gives the total number of supermarkets visited and the difference in transportation cost estimates when using perfect information verses each forecasting method.</sentence>
+    <sentence>The estimates for the MLP-NN and MLR models do not appear because they match the costs obtained under the perfect information case.</sentence>
+    <sentence>Based solely on the transportation costs incurred for each system, the results show that MLP-NN models or the MLR models produce results closer to the perfect information case.</sentence>
+    <sentence>Food collections and percentage change in estimated transportation costs for… Fig 6.</sentence>
+    <sentence>Food collections and percentage change in estimated transportation costs for Wilmington branch.</sentence>
+  </section>
+  <section name="Managerial impacts">
+    <sentence>No forecasting method is perfect.</sentence>
+    <sentence>The results for this computational study show that all forecasting methods overestimated total collections for the future planning period.</sentence>
+    <sentence>However, the amount for which the supply is overestimated is less for the MLP-NN models.</sentence>
+    <sentence>Furthermore, the operational impact from using MLP-NN is no more than 10% in terms of additional transportation costs.</sentence>
+    <sentence>While not considered in this investigation, operational impacts would also result from underestimating supply.</sentence>
+    <sentence>Among these impacts are lost food replenishment opportunities.</sentence>
+    <sentence>Underestimating supply could result in one or more vehicles reaching their tow capacity before completing their tour.</sentence>
+    <sentence>When vehicle tours are developed off-line, which is the case for the second experiment, the vehicles return to the depot prior to collecting food from the remaining supermarket branches.</sentence>
+    <sentence>The receipt of these additional supplies may be helpful in some instances, especially when inventory is very low.</sentence>
+    <sentence>In addition, when inventory replenishment is less critical, underestimated supply suggests that operating funds may be allocated more effectively.</sentence>
+    <sentence>Nonetheless, the findings of this research suggest that MLP-NN models are more appropriate for forecasting in-kind donations than other forecasting methods considered in this study because it is superior at minimizing the overestimation and underestimation of supply.</sentence>
+    <sentence>Despite providing better results than other approximation methods, each of the selected MLP-NN models interprets the system representing food availability as non-stationary.</sentence>
+    <sentence>This non-stationarity suggests that models may not accurately account for system variability as a result of some unobserved trend.</sentence>
+    <sentence>It is recommended that planners limit the planning horizon to one calendar week when using the MLP-NN models to forecast food availability.</sentence>
+    <sentence>Including the most recent system data allows the models to include data that may be pertinent in capturing some degree of system variability.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>This research explores different forecasting methods that can be used to overcome the supply uncertainty experienced by regional food banks and food recovery organizations when attempting to estimate available supplies at supermarket locations.</sentence>
+    <sentence>This study evaluates the impacts of using different forecasting methods to approximate the amounts of different in-kind food types collected in isolated collection events when information is not shared by supermarket branches.</sentence>
+    <sentence>Forecasting methods considered are the average amount received by the regional food bank from a supermarket branch; the average amount received by a specific food bank warehouse from a supermarket branch; the predicted amount when all attributes of the collection event are evaluated MLR models; and the predicted amount received when all attributes of the collection event are evaluated using selected MLP-NN models.</sentence>
+    <sentence>The MLP-NN models are selected using a quasi-greedy heuristic.</sentence>
+    <sentence>In addition, the MLR and MLP-NN models are constructed using historic collection records along with indicators of financial wellness for counties in which the donations are generated.</sentence>
+    <sentence>Results from our investigation suggest that the selected MLP-NN models are superior to each of the other forecasting methods both in terms of prediction accuracy and impacts on transportation costs.</sentence>
+    <sentence>The results also suggest that with respect to forecasting, the two methods utilizing supermarket averages outperform the MLR models when trends may not be observed through linear models.</sentence>
+    <sentence>These averages, however, can greatly inflate the projected collection amount.</sentence>
+    <sentence>The findings of this study should promote further research into in-kind donation estimation.</sentence>
+    <sentence>The system representation developed for this study is based on available collection records, discussions with food bank and supermarket personnel, and public information maintained by government agencies.</sentence>
+    <sentence>Similarly, while not inclusive of all forecasting methods, this study evaluates both traditional and artificial intelligence approaches that are relevant to the research problem.</sentence>
+    <sentence>While this research does not make the assertion that the prescribed MLP-NN models produce the most accurate predictions possible, it does make a strong case for using more advanced forecasting methods when predicting the amounts of food type available for receipt in the next planning period.</sentence>
+    <sentence>There are a number of supervised machine learning methods which can be utilized for regression modeling.</sentence>
+    <sentence>In this study, we limited the study to the MLP-NN because it is capable of representing a system with multiple inputs.</sentence>
+    <sentence>There are other machine learning methods which are appropriate for such problems including support vector regressions (Smola &amp; Schölkopf, 2004) and generalized regression neural networks (Specht, 1991).</sentence>
+    <sentence>Both these methods may require large amounts of memory to make approximations for the data set which has more than 200 inputs, 10,000 records, and a dependent variable value ranging from 0 to 2500 lb.</sentence>
+    <sentence>Furthermore, neither supervised machine learning approach is assured of being superior to the other.</sentence>
+    <sentence>A similar investigation, therefore, may select one supervised machine learning method to estimate food donations for a food type one week and another method to the next week.</sentence>
+    <sentence>Future research should identify methods for approximating food availability at donors with different characteristics than those considered in this study.</sentence>
+    <sentence>Research extensions should also develop inventory management strategies that complement food bank operations.</sentence>
+  </section>
+</article>

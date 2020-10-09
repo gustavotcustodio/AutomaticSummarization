@@ -1,0 +1,176 @@
+RL agent that supervises the WWTP 24 h/day. ► RL agent that adapts to each particular WWTP by itself. Better performance than standard BSM1 control strategy. Control strategy learned autonomously adapted to different locations.
+
+0.038369 - One of the main problems in the automation of the control of wastewater treatment plants (WWTPs) appears when the control system does not respond as it should because of changes on influent load or flow.
+0.079110 - To tackle this difficult task, the application of Artificial Intelligence is not new, and in fact, currently Expert Systems may supervise the plant 24 h/day assisting the plant operators in their daily work.
+0.036697 - However, the knowledge of the Expert System must be elicited previously from interviews to plant operators and/or extracted from data previously stored in databases.
+0.078098 - Although this approach still has a place in the control of wastewater treatment plants, it should aim to develop autonomous systems that learn from the direct interaction with the WWTP and that can operate taking into account changing environmental circumstances.
+0.035088 - In this paper we present an approach based on an agent with learning capabilities.
+0.035088 - In this approach, the agent’s knowledge emerges from the interaction with the plant.
+0.051643 - In order to show the validity of our assertions, we have implemented such an emergent approach for the N-Ammonia removal process in a well established simulated WWTP known as Benchmark Simulation Model No.1 (BSM1).
+0.055202 - Since water pollution is one of the most serious environmental problems today, control of wastewater treatment plants (WWTPs) is a crucial issue nowadays and stricter standards for the operation of WWTPs have been imposed by authorities (Stare, Vrecko, Hvala, & Strmcnik, 2007).
+0.077670 - WWTPs should be controlled so as to minimize the plant operating costs (OC) while the effluent standards are maintained (Samuelsson, Halvarsson, & Carlsson, 2007).
+0.027491 - Traditionally, in this context, methods of control based on PID controllers (Olsson, Nielsen, Yuan, Lynggaard-Jensen, & Steyer, 2005) have been used.
+0.044025 - Nevertheless, these control systems in WWTPs do not always respond as they should when the quality of the influent changes in load or flow.
+0.046709 - In these cases, setpoints in the control loops should be modified in order to lead back the process to the normal state and, thus, to avoid the evolution towards states that diminish the quality of the effluent (Olsson et al., 2005).
+0.062893 - In this context, the traditional PID controllers are able neither to predict this problematic situation nor to lead back the process towards optimal conditions.
+0.063830 - Therefore, it is an indispensable requisite to have a more intelligent control to modify the setpoints of the PID controllers.
+0.070175 - Currently, this role (of control or intelligent agent) is mainly played by plant operators.
+0.037453 - In the next section, Section 2, we review some Artificial Intelligence Systems that have appeared over the years to help plant operators in their decisions, how these proposals could benefit from using an emergent approach and how reinforcement learning techniques can be applied to implement this emergent approach.
+0.052493 - In Section 3, we present an experience with an autonomous reinforcement learning agent in a simulation of a wastewater treatment plant for the oxygen control in the N-ammonia removal process.
+0.104361 - Next, in Section 4, we describe the results obtained related to the agent’s ability to adapt to changing situations (influent, location, etc.).
+0.000000 - Finally, in Section 5, we will remark in a detailed way what we have achieved.
+0.083333 - Artificial Intelligence in the control of WWTP Artificial Intelligence (AI) has been widely applied to assist plant operators in the control of wastewater treatment plants (WWTPs).
+0.014652 - In fact, waste treatment is a relevant area were ESs have been applied over the last decade (Liao, 2005).
+0.000000 - Usually, however, because of its helper nature, these systems are usually known as Decision Support Systems (Cortes, Sanchez-Marre, Ceccaroni, R-Roda, & Poch, 2000).
+0.054422 - According to Cortes et al.
+0.006231 - (2000), some of the AI methods, often used in the development of Decision Support Systems in environmental domains in past years are: Rule-Based Reasoning (Sánchez, Cortés, Lafuente, Roda, & Poch, 1996; Serra, Sánchez-Marre, Lafuente, Cortés, & Poch, 1994), Planning (Krovviddy et al., 1994), Case-Based Reasoning (Krovviddy & Wee, 1993) or Model-Based Reasoning (Wen & Vassiliadis, 1998).
+0.036782 - Focusing on the area of WWTPs and among the various AI techniques used in the development of intelligent control systems, are especially relevant fuzzy logic (Huang et al., 2009) and artificial neural networks (Huang et al., 2010).
+0.050125 - For example, fuzzy logic has been applied to supervise a pilot-scale WWTP (Carrasco, Rodriguez, Punyal, Roca, & Lema, 2002) or to diagnose acidification states in a WWTP (Carrasco, Rodriguez, Punyal, Roca, & Lema, 2004).
+0.039216 - Moreover, artificial neural networks have been applied, for example, to provide better predictions of nitrogen contents in treated effluents (Chen, Chang, & Shieh, 2003) or to predict plant performance (Belanche, Valdes, Comas, Roda, & Poch, 2000).
+0.039548 - Regardless of the underlying AI techniques used to build an expert system, the assistant nature implies that the ES acts indirectly on the plant through the plant operator.
+0.049246 - In other words, ESs are not free to act directly on the WWTP actuators, avoiding the direct interaction with the plant and, lastly, avoiding the autonomous learning of the ES with its own environment.
+0.036697 - Thus, the designing and building of the traditional ESs requires interviews to experts in order to extract the knowledge in which these systems are based.
+0.027491 - The main disadvantage of this approach is that the expert knowledge does not evolve once extracted and placed into the ES.
+0.028070 - Some proposals (Carrasco et al., 2002) have started to overcome these difficulties by providing the expert system with the ability to both (i) upgrade its knowledge base, in a somewhat automatic way by using an automatic data acquisition system, and (ii) send the relevant orders to the actuator system of the plant.
+0.011594 - However, among other things, in this case the knowledge base never starts/emerges from the scratch, which has its pros and cons as we will see later.
+0.056338 - In line with the creation of more adaptive decision support systems, it has been recently proposed the use of fuzzy neural networks to implement an adaptive software sensor for an WWTP (Huang et al., 2009, 2010).
+0.056225 - Fuzzy neural networks are hybrid systems that combine the theories of fuzzy logic and neural networks so as to make an effective use of the easy interpretability of the fuzzy logic as well as the superior learning ability and adaptive capability of neural networks.
+0.078947 - In this paper, we present a somewhat different approach for the control of WWTPs.
+0.035320 - We are looking for a technique that: (i) provides a direct interaction with the environment, (ii) allows to act in this environment without the need of an initial model and finally, (iii) allows to react to changing environmental conditions.
+0.050314 - It could be questioned that this is such a wide objective, it could be applied also to other domains (not only those of WWTPs).
+0.000000 - This is true.
+0.016260 - In fact, the authors have been working in other domains looking for similar objectives (i.e.
+0.000000 - Gaudioso & Talavera, 2006; Gaudioso, Montero, Talavera, & Hernández del Olmo, 2009; Hernández del Olmo, Gaudioso, & Boticario, 2004, 2009).
+0.051282 - Finally, we consider the emergent approach we propose for the control of WWTPs as part of the emergent branch (vs cognitivist) from the two branches proposed by Vernon, Metta, and Sandini (2007).
+0.020833 - We see more details about this in the next section.
+0.043011 - The emergent approach Many could say that an intelligent system is designed either to help an expert in their decisions or to replace the expert in some of its functions.
+0.029762 - These two facets of an intelligent system are well represented by two branches (Vernon et al., 2007): (i) the cognitivist approach and (ii) the emergent approach.
+0.027132 - Each one of these two paradigms possesses its own pros and cons: • The Expert Systems based on the cognitivist approach, have the advantage of being able to operate at the moment, once the knowledge of the expert has been elicited (usually in the form of rules).
+0.086074 - In other words, the motivation behind an ES is not the adaptation to its environment, but to execute expert knowledge.
+0.044118 - Therefore, in principle, these ESs do not possess autonomous learning, although they can have certain Machine Learning (Langley, 1996; Mitchell, 1997) mechanisms to make the knowledge more accurate or up to date (i.e.
+0.000000 - Carrasco et al., 2002).
+0.023256 - Since they do not learn directly from their environment, the data employed for this learning are static (normally coming from databases previously frozen: with non-updatable data) and they must be previously (pre) processed by an expert (in fact, this process is sometimes called data-mining).
+0.040580 - In conclusion, in this approach, the work of a knowledge engineer is always required to obtain the rules that finally will be executed into the inference engine.
+0.016878 - • The AI Systems based on the emergent approach acquire their knowledge actively from their environment.
+0.027491 - The fundamental problem (and also the fundamental advantage) they have is that their knowledge emerge from the interaction with their environment.
+0.000000 - Therefore, they start without a complete and proven knowledge of their environment.
+0.017544 - This implies, with all probability, numerous errors during the first stages of the process.
+0.025157 - In fact, the system could never acquire the necessary knowledge, since, if it does not learn quickly enough, its substitution will be more profitable.
+0.027397 - A substitution by, for example, a cognitivist ES that already has this knowledge.
+0.021858 - Nevertheless, the advantages of this approach are also many.
+0.029412 - We emphasize some of them: – The system’s learning emerges in a natural way from the interaction with its environment, which implies a more robust learning than in the case of a cognitivist ES.
+0.016260 - – The system’s knowledge emerges directly from the observation of and the interaction with its environment.
+0.047059 - This implies that the system could detect situations previously not perceived by the human (operator, engineer, etc.
+0.039801 - ), thus, being able to generate a new behavior, possibly more efficient.
+0.070922 - – The system learns continuously, which, among many other things, implies a better answer due to fast changes in its environment.
+0.016260 - – As a final conclusion, the emergent approach implies necessarily autonomy of the system in its environment.
+0.021858 - This is not the case of the cognitivist ESs.
+0.050125 - Following some previous experiments (Hernández del Olmo & Llanes, 2009, 2010), in this paper we present an experience with an agent based on the emergent approach for the intelligent control of a WWTP.
+0.031373 - Specifically, we have built an agent whose learning capability is achieved through model-free reinforcement learning techniques.
+0.046667 - Emergent approach by means of reinforcement learning techniques Reinforcement learning (RL) algorithms are based on an agent’s interaction with its environment.
+0.044077 - The environment is defined as any external condition that cannot be changed directly by the agent (Sutton & Barto, 1998), they can only be changed through the agent’s actions.
+0.000000 - In fact, this interaction is usually represented as in Fig 1.
+0.021858 - General schema of a reinforcement learning task Fig 1.
+0.024242 - General schema of a reinforcement learning task.
+0.042553 - The usual way the environment is modeled in RL is by means of Markov Decision Processes (MDP) (Sutton & Barto, 1998).
+0.023656 - Here, the MDP environment is modelled as (i) a space of states S, (ii) a space of actions A(s) that can be done over this environment, given that the environemnt is in state s, and (iii) a set of transition probabilities from one state s to another state s′ once the agent has executed action a over this environment P(s′∣s, a) besides (iv) the expected reward to be obtained from this environment E{r∣s′, a, s} when changing from state s to state s′ having executed action a.
+0.034783 - Once the agent has got this model of the environment, it can resolve the optimal policy π(s, a) by several methods, for instance dynamic programming (Bertsekas, 2007).
+0.055138 - However, if the model of the environment is not provided to the agent, it still can learn this model by means of the so called model-free RL methods (Kaelbling, Littman, & Moore, 1996).
+0.065728 - Now, with these model-free RL methods, the agent must interact with its environment so as to get, step by step, the model of the environment as well as the optimal policy to act upon it.
+0.060606 - More specifically, the agent interacts with its environment making decisions according to its observations, via perception and action.
+0.061856 - At each step t, the agent observes the current state of the environment st and chooses an action to execute, at.
+0.044025 - This action causes a transition between states and the environment provides a new state st+1 and a reward rt+1 to the agent.
+0.057971 - The ultimate goal of the agent is to choose those actions that tend to increase its return: the long-term sum of the future reward values rt.
+0.000000 - This return, in a continuous environment, is usually set as , where 0 < γ < 1 stands for a kind of Optimization Horizon (OH, as we will see later).
+0.045455 - In other words, the higher γ (up to 1), the further the future time considered into the return Rt.
+0.081159 - Therefore, a model-free reinforcement learning agent learns (i) the model of its environment and (ii) how to best behave on it by systematic trial and error.
+0.061162 - To summarize, by means of Model-Free Reinforcement Learning, the model of the environment emerges into the agent as this agent interacts with its environment.
+0.034364 - We can therefore state that this agent’s knowledge emerges directly form the observation of and the interaction with its environment.
+0.033898 - Overview Active sludge process (ASP) is the most relevant and extended technique in the biological treatment of WWTPs, being the biological treatment the main process of a WWTP.
+0.033970 - The ASP was developed on 1914 at England by Andern and Lockett and was so called because it consists of the production of an activated mass of microorganisms able to digest the wastage by aerobic (oxygen) means (Metcalf-Eddy Inc, 1998).
+0.000000 - A benchmark simulation model of an ASP was developed in two COST Actions (624 & 682) (Copp, 2002).
+0.036146 - This benchmark, widely known in the water research area as BSM1 (Benchmark Simulation Model n 1), is a simulation protocol defining, besides the ASP, the WWTP plant layout and several influent dataset.
+0.065400 - Each influent dataset: dry weather, rain weather, storm weather; contains, in the form of different solids concentrations, the different weather conditions the water (the influent) that arrives at the WWTP is to endure.
+0.048780 - In this context, we implemented our intelligent agent as another simulated device for the BSM1 plant.
+0.035088 - The simulation model and the agent were implemented in the Modelica language (Fritzson, 2004).
+0.056180 - The instructions given to the agent were: (i) keep the ammonia low and, the best you (agent) can, try not to violate the ammonia limit (according to the BSM1 parameters, it must be lower than 4 g N/m3), (ii) keep the energy consumption as low as possible.
+0.051282 - In order to communicate accurately these instructions to the agent, we employed as a metric the plant operation cost.
+0.054983 - The Operation Cost (OC) that we used for this experiment blends the most relevant quantities that inform about the process performance.
+0.034014 - Therefore, since in this study we focus just on the oxygen control for the N-ammonia removal process (see Fig 2), we use the OC as the function that quantifies the aeration energy (AE) costs and the effluent fines (EF) costs caused by an excess of ammonia in the effluent (Samuelsson et al., 2007).
+0.065934 - Notice that, in a real (no simulated) setting, this OC is something to be configured by the plant operator.
+0.122807 - Experimental setting: the BSM1 WWTP schema and the Agent (AgentV) that controls… Fig 2.
+0.096220 - Experimental setting: the BSM1 WWTP schema and the Agent (AgentV) that controls the DO setpoint in the N-ammonia removal process.
+0.068241 - Description of the agent The agent proposed for the intelligent control of this BSM1 WWTP is integrated as another device of the plant, as it can be seen in Fig 2.
+0.065934 - In this WWTP, the blower of the tank 5 is controlled, as usual, by means of a PI controller.
+0.031496 - The feedback loop of this PI is closed by an error signal which consists of the difference between the dissolved oxygen (DO) level (of the tank 5) and the DO setpoint.
+0.034783 - The agent has two inputs: the measures of NH4 and O2 obtained from two sensors placed at the tank 5 (see BSM1 (Copp, 2002) and Fig 2).
+0.041667 - The agent also has a single output: the DO setpoint1.
+0.059701 - The agent acts on the plant by changing this DO setpoint.
+0.024465 - In fact, the agent must choose among 1.5 mg/l,1.7 mg/l or 2.0 mg/l DO setpoints every 15 min.
+0.067511 - The agent’s goal is to lower the operation costs (OC) as much as possible.
+0.039216 - In other words, to lower the energy costs while keeping the effluent fines as low as possible.
+0.047244 - In more specific terms, our model-free reinforcement learning agent’s goal is to lower its return (see Section 2.3), this objective was set as the minimization of (Eq (1)).
+0.040580 - In this equation, the parameter γ defines the time interval to be considered in the agent’s return, we also called Optimization Horizon (OH, see Section 2.3).
+0.038095 - In this setting, we chose to consider an OH of one month.
+0.031373 - In other words, the agent’s return takes into account a whole month of instantaneous OC(t).
+0.000000 - (1)
+0.047059 - In this section we show the behavior of the agent on the BSM1 plant in two scenarios.
+0.034783 - First notice that OC is defined as a function of the aeration energy AE and the effluent fines EF, the latter from now on parametrized by f0.
+0.016260 - The first scenario is developed in a (simulated) city which imposes a fine f0 = 0.5.
+0.018265 - In the second scenario, the city imposes a higher fine f0 = 1.5.
+0.009390 - In both cities, the weather vary in the same following way: it rains (randomly) 20% of the time and it storms (also randomly) 10% of the time; thus, the weather is dry 70% of the time.
+0.052632 - In Fig 3 is shown the weather day by day over the first year.
+0.024242 - Weather over the first year Fig 3.
+0.027211 - Weather over the first year.
+0.000000 - Notes: 0, dry weather; 1, rain weather; 2, storm weather.
+0.141702 - In each city, we compare the behavior of the agent against the standard BSM1 control strategy: constant DO setpoint 2 mg/l.
+0.041667 - We compare each behavior by means of OC (Eq (1)).
+0.049645 - Each scenario was run over 30 years (11000 days) so that we could see the long term agent’s evolution.
+0.000000 - However, because of clarity reasons, we show only 1 out of these 30 years.
+0.054054 - Moreover, we chose to show the first year (the first 365 days) because we wanted to highlight the agent’s quick learning, although the results were better the longer the learning time (the closer to the 30th year).
+0.024242 - The results are shown in Fig 4.
+0.022989 - Operation cost over the first year Fig 4.
+0.025641 - Operation cost over the first year.
+0.053030 - We show -OC instead of OC in order to show the best behavior on top of the graph.
+0.041667 - On the left, the city that imposes f0 = 0.5.
+0.041667 - On the right, the city that imposes f0 = 1.5.
+0.039216 - Finally, in order to see the detailed behavior of the agent, we show in Fig 5 the (variable that, in the model, indicates the NH4 ammonia concentration) and SO (variable that, in the model, indicates the dissolved oxygen DO concentration) over the intervals with dry weather, rain weather and storm weather.
+0.048485 - Agent vs BSM1 detailed behaviors Fig 5.
+0.054422 - Agent vs BSM1 detailed behaviors.
+0.041667 - On the left, the city that imposes f0 = 0.5.
+0.041667 - On the right, the city that imposes f0 = 1.5.
+0.000000 - First row, dry weather.
+0.000000 - Second row, rain weather.
+0.000000 - Third row, storm weather.
+0.070175 - Notice how the agent tries to set the DO setpoint as low as possible.
+0.029304 - However, in the city with a higher fine the agent cannot keep the DO setpoint so low so often.
+0.026667 - Notice that the higher is the Solved Oxygen (SO) (because a higher DO setpoint), the higher will be the Aeration Energy consumed.
+0.027491 - In this paper we have presented an emergent approach in an important real problem: the automation of wastewater treatment plants (WWTPs).
+0.022989 - Also, we compared it versus the cognitivist approach.
+0.028169 - On the one hand, Expert Systems based on the cognitivist approach, have the advantage of being able to operate straight away, once the knowledge of the expert has been elicited (usually in the form of rules).
+0.080851 - In other words, the motivation behind a cognitivist ES is not the adaptation to its environment, but the execution of expert knowledge.
+0.015152 - On the other hand, AI systems based on the emergent approach acquire their knowledge actively from their environment.
+0.000000 - Therefore, they start without a complete and proven knowledge of their environment.
+0.029851 - Artificial intelligence techniques employed in WWTPs usually follow the cognitivist approach.
+0.038835 - In this paper we have shown an experiment with an agent following an emergent approach by means of model-free reinforcement learning techniques.
+0.078947 - This approach was applied to the N-ammonia removal process in the BSM1 WWTP.
+0.167655 - Also, we compared it with the standard BSM1 control strategy, which was outperformed.
+0.181429 - Notice that this standard BSM1 control strategy is the one most commonly implemented in real WWTPs.
+0.054637 - In addition, it must be realized that our goal here was not to outperform the latest experimental state-of-the-art control strategy for this process (such as Nitrate and ammonia PI control, Nitrate PI and ammonia FF-PI control (Olsson et al., 2005), or even Model Predictive Control (MPC) (Stare et al., 2007)).
+0.067511 - On the contrary, we wanted to illustrate how this emergent approach works in different scenarios.
+0.123573 - We showed that the control strategy performed by our agent emerged in a different way for each scenario (city) without having to count on a plant operator or engineer during the process.
+0.000000 - In fact, in this approach there is no a priory model.
+0.020833 - Instead, the model emerges from the interaction with its environment.
+0.053333 - Particularly, in the study shown in this paper, we changed nothing on the agent when we simulated it in each different city.
+0.137796 - However, it developed a new behavior by itself in order to adapt to each scenario.
+0.000000 - This approach seems even worthier when we focus on small wastewater treatment systems (Hernández del Olmo & Llanes, 2010).
+0.041667 - Notice that we invest just once in a single agent.
+0.213095 - Afterwards, this agent will adapt to each location (country/city) by itself.
+0.054902 - Moreover, by means of this approach, the agent will also supervise and modify the plant (i.e.
+0.000000 - setpoints) in case of environmental changes.
+0.130651 - Thus, we get for free an autonomous agent that tries to optimize the processes of the plant 24 h/day without human intervention.
+0.030303 - 1 Notice that the higher is set this DO setpoint, the higher will be the Aeration Energy consumed
+
+[Frase 5] In this paper we present an approach based on an agent with learning capabilities.
+[Frase 124] In each city, we compare the behavior of the agent against the standard BSM1 control strategy: constant DO setpoint 2 mg/l.
+[Frase 159] We showed that the control strategy performed by our agent emerged in a different way for each scenario (city) without having to count on a plant operator or engineer during the process.

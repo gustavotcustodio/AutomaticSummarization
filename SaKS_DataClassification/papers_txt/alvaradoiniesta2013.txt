@@ -1,0 +1,249 @@
+Optimization of the material flow in a manufacturing plant by use of artificial bee colony algorithm
+
+Abstract
+
+To survive in today’s competitive global market, companies must perform strategic changes in order to increase productivity, eliminating wasted materials, time, and effort. This study will examine how to optimize the time and effort required to supply raw material to different production lines in a manufacturing plant in Juarez, Mexico by minimizing the distance an operator must travel to distribute material from a warehouse to a set of different production lines with corresponding demand. The core focus of this study is similar to that of the Vehicle Routing Problem in that it is treated as a combinatorial optimization problem. The artificial bee colony algorithm is applied in order to find the optimal distribution of material with the aim of establishing a standard time for this duty by examining how this is applied in a local manufacturing plant. Results show that using this approach may be convenient to set standard times in the selected company.
+
+Keywords
+Material flow
+Continuous improvement
+Standard time
+Vehicle routing problem
+Artificial bee colony algorithm
+
+1. Introduction
+
+Lean manufacturing is a production strategy that is being applied to virtually every industry worldwide. A lean environment can minimize waste by eliminating, combining, or simplifying unnecessary movements (Meyers & Stewart, 2001). Waste can be found everywhere: staff waiting for an indication, material waiting to be processed, labor waiting for tools, defective raw material, processes without defined time standards, etc. The competitive nature of global competition forces manufacturing companies to always look for innovative approaches to improve and optimize their processes. It is imperative for companies to stay up to date with the latest methodologies and technological advances in order to remain competitive (Nemhauser, 1994).
+
+Today’s executives require constant vigilance from their employees in terms of cost savings and productivity. Businesses should continually strive to make process improvements, regardless of how small, or risk becoming obsolete.
+
+One of the key factors in manufacturing facilities that are in constant improvement is the optimization of the process flow. It is considered that the flow is the most important parameter of a production system (Meyers & Stewart, 2001); almost all improvements are reflected directly into the flow through a plant which directly impacts the costs of the organization. Thus, it is necessary to have mechanisms to coordinate the development of production activities with distribution in order to achieve efficient production systems. Planning of material flow through a company organizes and optimizes the flow of raw materials into production systems in order to optimize operations. Minimizing flow costs means minimizing overall production costs.
+
+Material flow may be defined as the structured and organized movement of material from point X to point Y in the entire production system taking into account the efficient use of space and cost savings such as energy and human resources (Meyers & Stewart, 2001). Material flow is a complex process in the production system and cannot be optimized without planning. The optimization of material flow can be carried out in the planning of a new plant or in an existing production site. It is likely to occur in different areas depending on the organization. For instance, optimizing the flow of material coming from the warehouse to various existing production lines, among other areas of the company where might be optimized the flow of material or information. Therefore, if it is consider the optimization of material flow from a warehouse to certain production lines, it can be done an analogy of this problem with the Vehicle Routing Problem (VRP).
+
+For this problem, many researchers have explored various methods that can be classified as either exact algorithms or metaheuristics but for this type of problems (combinatorial optimization) the use of metaheuristics is considered a reasonable approach to find ideal solutions in a considerable time. Research in combinatorial optimization problems based on metaheuristics algorithms has gained popularity since the 1990s. These algorithms seek approximate solutions in polynomial time instead of exact solutions which require an extreme computational power and time which sometimes is inefficient in real life problems. In order to find the solution of the VRP, a large variety of algorithms have been applied such as Tabu search (Gendreau, Hertz, & Laporte, 1994; Osman, 1993; Tang-Montane & Dieguez-Galvao, 2006), Simulated Annealing (Chiang & Russell, 1996; Van Breedam, 1995; Woch & Lebkowski, 2009), Genetic Algorithms (Baker & Ayechew, 2003; Berger & Barkaoui, 2003; Daza, Montoya, & Narducci, 2009; Ombuki, Ross, & Hanshar 2006; Prins, 2004; Torres, Serrato, & Rayas, 2011), and Swarm intelligence algorithms (Bell & McMullen, 2004; Marinakis, Marinaki, & Dounias, 2011; Ai & Kachitvichyanukul, 2009; Ding, Hu, Sun, & Wang, 2012; Kanthavel & Prasad, 2011; Shen, Zhu, Liu, & Jin, 2009; Tan, Lee, Majid, & Seow, 2012; Venkatesan, Logendran, & Chandramohan 2011; Yu, Yang, & Yao 2009).
+
+While the above metaheuristics have been used widely and successfully applied to the VRP, Artificial Bee colony (ABC) algorithm (part of the swarm intelligence algorithms) is a fairly new approach which was introduced few years ago by Dervis Karaboga (2005). When it was applied to similar problems it has been found to produce excellent results as well as reducing computational time (Bhagade & Puranik, 2012; Brajevic, 2011; Ji & Wu, 2011; Shi, Meng, & Shen, 2012; Szeto, Wu, & Ho, 2011). The main objective of this study is twofold: first, to plan the material flow in order to establish a standard time by implementing the Artificial Bee Colony algorithm since the material leaves the warehouse and it is distributed to each production line. This is carried out within a manufacturing plant located in Ciudad Juarez, Chihuahua, Mexico. Second, as it was stated above, not only new technologies have emerged recently but also new algorithms have arisen. Thus, there is a question every manufacturing plant in Mexico should ask themselves: is it necessary to start to invest in new methodologies, and not only in advanced manufacturing technologies, in order to improve productivity? The answer to this question is straightforward: Yes. Many companies around the world are developing and implementing techniques such as heuristics, however this type of approaches seem far away in this region of the country (Juarez, Mexico), which is one of the primary manufacturing zones in the country. It is important to mention that this sector (Juarez), represents 50% of the exports of the manufacturing automotive sector in Mexico and the assembly plants association AMAC (Asociación de maquiladoras A.C.) has in its records 352 enterprises as members in different areas, this data indicates the economic importance of this region (INEGI, 2010). Therefore, this work might help to demonstrate that it is time to evolve to different approaches than the typical ones implemented so far, specifically in the industry located in Juarez, Chihuahua, Mexico.
+
+This paper is distributed as follows: Section 2 presents a brief background about VRP and ABC based on codification of permutations. Section 3 presents an experimental case applied to a manufacturing plant in Ciudad Juarez Mexico. The final section provides the corresponding conclusions.
+2. Background
+2.1. Vehicle routing problem
+
+The Vehicle routing problem (VRP) is a classical combinatorial optimization problem and belongs to the type NP-hard, for which there is no polynomial time algorithm that can provide an optimal solution. In the classical VRP, the objective is to minimize the total traveled distance from a central depot to a set of different points (customers, stores, warehouses, production lines, etc.), where the distance between points and depot is known in advance Cij. Each point is serviced exactly once by a single vehicle which has a limited capacity q and the demands of each point di are known in advance. Capacity constraint is violated if the total sum of the point demands in a given route exceeds the vehicle capacity. Hence, vehicles must go back to the depot to load and continue the route. Fig. 1 shows a simple graphical representation of the VRP and a possible solution. In this example, there are 11 points that have to be visited once; there are 3 routes, route 1 with 5 points, route 2 with 4 points, and route 3 with 2 points.
+Routing solution for VRP
+
+
+Fig. 1. Routing solution for VRP.
+2.2. Artificial bee colony algorithm
+
+Artificial bee colony (ABC) algorithm is an optimization algorithm based on the intelligent behavior of honey bees developed by Dervis Karaboga in 2005 Karaboga (2005). In the ABC algorithm, the colony of artificial bees is composed of three groups of bees: employed, onlooker, and scout bees. The first half of the colony consists of employed bees and the second half is composed of onlookers. An onlooker bee is the one waiting in the dance area for making a decision of choosing a food source. Each food source is represented by an employed bee. Once a food source is exhausted, the employed and onlooker bees become scout bees.
+
+Basically, the ABC algorithm consists of three steps:
+
+(1)
+
+    Sending the employed bees into the food sources and evaluating their nectar amounts
+(2)
+
+    Selecting the food sources by the onlooker bees after sharing the information of the employed bees
+(3)
+
+    Selecting the scout bees and sending them into possible food sources
+
+Mathematically, in the ABC algorithm a food source corresponds to a possible solution of an optimization problem and the nectar amount represents the objective function of the solution. The number of employed bees or onlooker bees represents the number of solutions in the population (SP). A random initial solution is generated in the ABC algorithm with SP solutions (food sources positions). Each solution is a D-dimensional vector xi (i = 1,2, … ,D), where D is the number of optimization variables in the problem. The population of solutions is subject to iterative cycles, C = 1,2, … ,Cmax, of the search processes of the employed, onlooker, and scout bees. A new solution (new food source) is generated when an employed or onlooker bee produces probabilistically a variation in the current food position (current solution) for finding a new food source (new solution). If the nectar amount (objective function value) of the new food source is higher than the old one, then the bee memorizes the new food position and forgets the previous one. Once the search process performed by the employed bees is completed, they share the nectar amount and position of the food sources with the onlooker bees within the dance area. The onlooker bees then evaluate the information and selects a food source depending on a probability value associated with that food source, pi, which is computed by,
+(1)
+where fiti is the objective value of the solution i evaluated by its employed bee. In other words, it is the nectar amount of the food source at position i. SP represents the number of food sources which is equal to the number of employed bees (BP). A new solution is produced when probabilistically a modification in the current solution is performed. Thus, a new possible solution is generated by,
+(2)Ø
+where k ∈ (1,2, … ,BP) and j ∈ (1,2, … ,D) are randomly chosen indexes; k index has to be different from i. Ø
+
+is a random number between [−1,1]. When a food source is abandoned by the employed bees, this is replaced with a new food source randomly generated by the scouts. In the ABC algorithm, if a food source position cannot be improved after a fixed number of cycles named limit, then that food source is abandoned.
+
+In general, in the ABC algorithm there are three control parameters used: the number of food sources, value of limit, and the maximum number of cycles.
+2.3. Artificial bee colony algorithm for the vehicle routing problem
+
+This section explains the details about how to represent a solution for the VRP, objective function evaluation, and neighborhood operators for the VRP in terms of the ABC.
+2.3.1. Solution representation
+
+In the ABC algorithm, each food source (possible solution) is transformed into a route. To clarify, assume that N points are to be visited by M vehicles. Thus, a route that might be a possible solution to the problem is shown in Fig. 2 if N = 10 and M = 1. In this solution, 0 represents the depot; hence, vehicle 1 leaves the depot and delivers to points 2, 6, and 8; then, the vehicle must return to the depot (assuming that vehicle capacity is exhausted) to load and then visits points 1 and 3 and goes back to the depot. Finally, the vehicle visits points 4, 5, 7, 9, and 10 in that respective order. This might be a candidate solution to the problem, which is to minimize total traveled distance, assuming that capacity constraint is not violated.
+Solution representation
+
+
+Fig. 2. Solution representation.
+2.3.2. Objective function
+
+An optimization problem is seen as a search problem, where x represents a possible solution to the problem, which is within the search space X, x ∈ X. When it comes to the VRP, the search space is restricted if only it is considered the feasible region when trying to find the best answer via heuristics. Hence, it is necessary to allow the search in either the feasible or infeasible region (at least a restriction is violated). In this case, a solution x is infeasible if the capacity constraint is violated. Therefore, the objective function, f(x), for a given solution x, is,
+(3)
+where
+(4)
+
+where Cij represents the traveled distance from point j to i, and xij if the route from point j to i is chosen.
+
+For a given solution, q(x), denotes the total violation of the capacity constraint (penalty factor). The capacity constraint is,
+(5)
+
+where di represents the demand of each point, and q the current capacity of the vehicle.
+
+The coefficient α is a self-adjusting parameter that is modified in each iteration. The parameter α is adjusted as follows: if the number of solutions with no violation of the capacity constraint is greater than SP/2, the value of α is divided by 1 + δ, otherwise, it is multiplied by 1 + δ, where δ is a positive parameter.
+2.3.3. Neighborhood operators
+
+A neighborhood operator is applied in order to obtain a modification in the current solution
+
+. Next, some of the neighborhood operators are listed. A more detailed list may be found in [8].
+
+(1)
+
+    Random swaps: This operator randomly chooses two positions from a possible solution, i ≠ j, and swaps the positions i and j. Fig. 3 shows an example, i = 2, j = 10
+    Random swaps
+
+        
+
+    Fig. 3. Random swaps.
+(2)
+
+    Random swaps of subsequences: This operator is an extension of random swaps. Two subsequences of points and depot are selected and swapped. The length of the subsequences may be different. Fig. 4 shows an illustration.
+    Random swaps of subsequences
+
+        
+
+    Fig. 4. Random swaps of subsequences.
+(3)
+
+    Reversing a subsequence: This operator selects a subsequence of consecutive customers and depot of random length, and then the order is reversed. Fig. 5 illustrates an example.
+    Reversing a subsequence
+
+        
+
+    Fig. 5. Reversing a subsequence.
+(4)
+
+    Random swaps of reversed subsequences: This operator is a combination of two operators: random swaps and reversing a subsequence. Two subsequences of points and depot are chosen and swapped in reversing order. Fig. 6 shows an instance.
+    Random swaps of reversed subsequences
+
+        
+
+    Fig. 6. Random swaps of reversed subsequences.
+
+3. Experimental case: optimization of material flow in a manufacturing plant
+
+Material flow planning organizes and optimizes production systems in order to increase productivity and reduce waste. This section presents a case in a manufacturing plant located in Ciudad Juarez, Chihuahua, Mexico, where the main objective is to optimize the material flow from the warehouse to the different production lines. This manufacturing company is focused in telecommunication products. The firm is expanding and works closely with other plants in USA and China. Due to insufficient space for an upcoming new product line, the facility had to change locations. The new facilities’ layout was different from the previous one in that all product numbers were not considered correctly in the new arrangement. Therefore, some production lines were not considered in the planning of the material flow through the whole plant. Thus, the need arose to plan the routes to deliver the raw material to the different production lines for each operator in charge of this task, with the aim of minimizing time and human effort. A common problem this company faced was the time these operators used to take to come back to the warehouse to perform the next duty cycle. As a result, a standard time was established for each operator delivering material to a specific number of production lines.
+
+This section of this paper presents a single case from the plan implemented in this company. A unique operator is considered, M = 1, and 10 production lines, N = 10. The demands are given in the Table 1. In this case, material is homogeneous for each one of the lines, and operator capacity q = 15. The distances between warehouse and lines are known in advance. Fig. 7 shows a graphical representation of the warehouse and production lines, considering 0 as warehouse.
+
+Table 1. Demand of each production line.
+Line	1	2	3	4	5	6	7	8	9	10
+Demand	7	5	4	6	7	6	5	4	3	3
+Warehouse and production lines
+
+    
+
+Fig. 7. Warehouse and production lines.
+
+Observing Table 1 and Fig. 7, the question arises: What should be the optimal route to deliver the raw material to each one of the production lines, satisfying the demand to each one, without violating the capacity constraint of the operator?
+
+ABC has some advantages over other metaheuristic algorithms in terms of design; it has fewer control parameters, and it has proved to being efficient in problems such as the proposed in this paper (Bhagade & Puranik, 2012; Brajevic, 2011; Ji & Wu, 2011; Shi et al., 2012; Szeto et al., 2011).
+
+All experiments were performed on a modern quad core CPU, and the metaheuristic algorithm was coded in Java. The parameters of the ABC algorithm are presented next,
+
+    Colony size = 40
+
+    Employed bees = 20
+
+    Onlooker bees = 20
+
+    Limit for scout = 20
+
+    Maximum number of cycles per run = 10,000
+
+    Number of runs = 20
+
+    α = 0.1
+
+    δ = 0.001
+
+    Neighborhood operator = Random swaps of reversed subsequences
+
+The steps of the ABC algorithm are summarized as follows,
+
+(1)
+
+    Randomly generate a set of possible solutions xi, i = 1, … ,employed bees
+(2)
+
+    Evaluate objective function f(xi) of each one of the possible solutions
+(3)
+
+    Set Cycles = 1 and Limits for scouti = 0
+(4)
+
+    Repeat
+(a)
+
+    For each possible solution
+(i)
+
+    Apply neighborhood operator on xi to generate 
+
+(ii)
+
+    Evaluate objective function 
+
+(iii)
+
+    If 
+, then replace xi with
+
+    and Limits for scouti = 0, else Limits for scouti = Limits for scouti + 1
+(b)
+
+    For each onlooker
+(i)
+
+    Select best current solution 
+
+    by using Eq. (1)
+(ii)
+
+    Apply neighborhood operator on 
+to generate
+
+(iii)
+
+    Evaluate objective function 
+
+(iv)
+
+    If 
+, then replace with
+
+    and Limitsforscouti = 0, else Limits for scouti = Limits for scouti + 1
+(c)
+
+    For each solution
+(i)
+
+    If Limits for scouti = Limits, then replace xi with a randomly generated solution
+(d)
+
+    Cycles = Cycles + 1
+(5)
+
+    Until Cycles = Max Number of cycles
+
+In order to evaluate the effectiveness of the program, this was run 20 times for 10,000 iterations. This is not standard practice in the industry where fast and accurate solutions are necessary, however, the intention was to validate the program and put it in practice. Fig. 8 shows the plot of the best objective function value for the best run.
+Best objective function run
+
+    
+
+Fig. 8. Best objective function run.
+
+Fig. 9 illustrates the best route found by the ABC algorithm. Thus, the optimal route is: 0-5-0-6-2-3-0-8-10-9-7-0-4-1-0 with an objective function value of 18820 inches.
+Best route found by ABC
+
+    
+
+Fig. 9. Best route found by ABC.
+
+According with results, the total traveled distance should be 18820 inches. Therefore, it is consider the standard time in [1], which establishes that takes 1 min to walk 3168 inches (3 miles per hour), the standard time to walk 18820 inches should be approximately 6 min. It is added a tolerance of 10%; thus, it is established a standard time of 7 min approximately for walking. Of course, this time must be added to other standard times such as the ones for picking and delivering material, which may be easily calculated by doing a time study or by using a predefined time standard system.
+4. Conclusions
+
+Modern companies must continually strive for process improvement regardless of the scope to maintain a competitive advantage in today’s world... The purpose of this paper was to show how an application of the classical VRP could be applied to provide such an advantage by establishing a standard time for delivering raw material from a warehouse to various production lines. This idea was implemented in a manufacturing plant located in Ciudad Juarez, Mexico. By successfully establishing standard times, the use of human capital was used in an optimal manner. Closely examining the material flow, one can determine not only when an operator should be back at the warehouse for the next duty cycle but also the specific number of personnel required. At this point, a route can be determined for delivery of raw material. While this route may not be the optimal solution in terms of the traveled distance it acts as a starting point for developing a lean environment by optimization of the material flow. Furthermore, this paper shows how manufacturing plants in Juarez, Mexico have begun to implement techniques as heuristics in their systems with the aim of improving productivity. It is essential to clarify that these techniques should not substitute the current methods if they are working properly. In conclusion, it is important to keep in mind in that there are viable alternatives to the current methods used which could provide increased benefit to the manufacturing sector in Mexico.

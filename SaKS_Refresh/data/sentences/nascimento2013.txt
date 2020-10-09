@@ -1,0 +1,241 @@
+Breast cancer is the most common cancer among women.
+In CAD systems, several studies have investigated the use of wavelet transform as a multiresolution analysis tool for texture analysis and could be interpreted as inputs to a classifier.
+In classification, polynomial classifier has been used due to the advantages of providing only one model for optimal separation of classes and to consider this as the solution of the problem.
+In this paper, a system is proposed for texture analysis and classification of lesions in mammographic images.
+Multiresolution analysis features were extracted from the region of interest of a given image.
+These features were computed based on three different wavelet functions, Daubechies 8, Symlet 8 and bi-orthogonal 3.7.
+For classification, we used the polynomial classification algorithm to define the mammogram images as normal or abnormal.
+We also made a comparison with other artificial intelligence algorithms (Decision Tree, SVM, K-NN).
+A Receiver Operating Characteristics (ROC) curve is used to evaluate the performance of the proposed system.
+Our system is evaluated using 360 digitized mammograms from DDSM database and the result shows that the algorithm has an area under the ROC curve Az of 0.98 ± 0.03.
+The performance of the polynomial classifier has proved to be better in comparison to other classification algorithms.
+Breast cancer is the most common cancer among women with ages of 40–55 years worldwide (Jemal, Siegel, Xu, & Ward, 2010).
+Studies have shown that early detection is the key to improve breast cancer prognosis (Elter & Horsch, 2009).
+Screen/film mammography is the most clinically accepted imaging modality to aid the radiologists in the early detection of occult breast cancers in asymptomatic women.
+A number of important signs of breast cancer, which radiologists look for, are clusters of microcalcifications, masses, and architectural distortions.
+Mass detection is a more complex task because it is frequently indistinguishable from adjacent tissues.
+Mass detection poses a more difficult problem because it is often: (a) very pronounced in size, shape and density; (b) poor in image contrast; (c) highly connected to the surrounding parenchymal tissue density, particularly for speculated lesions and (d) surrounded by no uniform tissue background with similar characteristics (Hong & Sohn, 2010).
+That makes progress to be considerably slow for mass detection.
+As a result, detection sensitivity and specificity of screening mammography is not optimal (Fenton et al., 2006).
+Second reading of the mammograms by a human reader can increase cancer detection rates (Thurfjell, Lernevall, & Taube, 1994; Warren & Duffy, 1995).
+Obviously, this procedure is expensive and it is not a practical task in the clinical procedures of most countries around the world.
+Hence, Computer-Aided Diagnosis (CAD) have been applied as a second reader to assist radiologists when interpreting screening mammograms.
+Because of the growing interest in applications for mammography, computerized texture analysis has been utilized to extract clinical meaningful information from various medical imaging modalities (Li et al., 2005).
+Texture is characterized by a set of local statistical properties of pixel intensities.
+In mammographic image processing, these features have been used to distinguish density patterns that indicate different levels of risk to develop lesions.
+Texture has shown to be a promising technique in analyzing mammographic lesions caused by masses (Gupta & Markey, 2005).
+Textural informations are important to outline the performance of CAD system, being required for the classification that distinguishes masses from normal tissues (Qian, Sun, Song, & Clark, 2001).
+Over the years, researchers have studied different texture analysis approaches.
+The multiresolution analysis has proved to be useful in feature extraction.
+The common task is to decompose the original image into sub-bands that preserve high and low frequency information.
+Several studies have investigated the use of wavelet transform as multiresolution analysis tool for texture analysis and classification (Liu & Sako, 2006; Masotti, Lanconelli, & Campanini, 2009; Ramos, Nascimento, & Pereira, 2012).
+When applied to images, wavelet transform produces a low resolution image and several detail images.
+The low resolution image is obtained by iteratively blurring the image; the detail images contain the information lost during this operation.
+These coefficients could be interpreted as inputs to a classifier.
+The classifier is a tool that receives as inputs the values of the features extracted and provides as output the risk degree related to the available tissue.
+The challenge is to define a classification algorithm that can provide the most appropriate response to the problem, being statistical, artificial intelligence, support vector machines, or polynomial methods commonly consider the prediction of the breast cancer pattern (Pendharkar, Rodger, Yaverbaum, Herman, & Benner, 1999, 2000; Ramirez-Villegas & Ramirez-Moreno, 2012).
+Our decision for the polynomial classification was conditioned not only by its capacity of learning complex patterns that could be linearly inseparable, but also by the success reached in various applications of pattern recognition (Park, Oh, & Kim, 2008).
+A polynomial classification is a parameterized nonlinear map which nonlinearly expands a sequence of input vectors to a higher dimension and maps them to a desired output sequence.
+The purpose of this expansion is to improve the separation of the different classes in the expanded vector space.
+The polynomial expanded vectors are used to define an ideal output sequence by minimizing a criterion function and we describe a strategy to define weights to separate classes considering algebraic values.
+This strategy presents the advantages of providing only one model for optimal separation of classes and to consider this as the solution of the problem, which does not occur with the models presented in Campbell, Assaleh, and Broun (2002), Ajmera and Holambe (2010) and Park et al.
+(2008).
+Therefore, the proposed system consists of two major stages: texture analysis and lesion classification.
+Multiresolution analysis features are extracted to focus the texture points in the region of interest (ROI).
+In this study, each ROI is decomposed using the different wavelets separately.
+For multiresolution analysis tools, these features were computed based on three different wavelet functions, Daubechies 8 (db8), Symlet 8 (sym8) and bi-orthogonal 3.7 (bior3.7) (Meselhy Eltoukhy, Faye, & Belhaouari Samir, 2010; Rashed, Ismail, & Zaki, 2007).
+Then a set of the corresponding coefficients of each mammogram is extracted.
+For feature selection and classifier we used the polynomial classification algorithm to define the ROI as normal, benign or malignant.
+In this study, we also present a comparation with three classification algorithm (Decision Tree, SVM, and K-NN).
+We chose those three algorithms because they have diverse characteristics (Zhang, Tomuro, Furst, & Raicu, 2012a).
+A ROC curve is used to evaluate the performance of the proposed system.
+This paper is organized as follows: in Section 2.1, we present a subset of mammography cases selected from a publicly available database, the Digital Database for Screening Mammography.
+In Section 2.2, it is described the algorithm employed on feature extraction, computed with three different wavelet functions.
+Next, in Section 2.3, we explain the polynomial algorithm for classifying the mammographic images.
+Section 3 presents experimental results obtained with the developed algorithm for classification.
+Section 4 shows results discussions and conclusions of the work.
+A schematic block diagram of our proposed methods for classification of masses using multiresolution analysis features and polynomial classifier is shown in Fig 1.
+Block diagram of the proposed approach for classification of masses using… Fig 1.
+Block diagram of the proposed approach for classification of masses using multiresolution analysis features and polynomial classifier.
+Data set The database used in this work encompasses mammographic screen/film digitized images taken from the Digital Database for Screening Mammography (DDSM) (Heath et al., 1998).
+The DDSM project is a joint effort of researchers from the Massachusetts General Hospital (D. Kopans, R. Moore), the University of South Florida (K. Bowyer), and the Sandia National Laboratories (P. Kegelmeyer).
+The DDSM database has been widely used as a benchmark for numerous articles on the mammographic area, for being free of charge and having a vast and diverse quantity of cases.
+It is constituted of mammographic images and its corresponding technical and clinical information, including exam dates, age of patients, digitalization equipment (as well as resolution, number of rows, pixels per row and bits per pixel of the acquired images), lesion types (according to BI-RADS (2003)®), and existent pathologies.
+The dataset is composed of 360 mammographic images in cranio-caudal (CC) view randomly selected from the DDSM database, where 120 were diagnosed as malignant (M), 120 as benign (B) and 120 as normal (N).
+We selected digitized images with a Lumisys laser film scanner at 50 μm.
+In these experiments only the images obtained by the Lumisys scanner were selected because of questions related to standardisation of resolution.
+Each image has a resolution of 4096 gray level tones.
+The location and size of a mass, when it exists, were taken from the code-chain of the.ics file available at the DDSM project and were used to automatically extract square sub-images called regions of interest (ROIs) from the original image.
+ROIs of the group N were extracted from mammograms without the presence of lesions defined manually by specialist.
+In mass CAD approaches, texture analysis is not always performed on the full ROI but often only on special regions within the ROI.
+Therefore, the images used in the experiments were cuttings of size 128 × 128 pixels done in the sub-image, whose centers correspond to the centers of the presented abnormalities.
+Some examples of ROIs are presented in Fig 2.
+Some ROI samples from the dataset: Normal class ((a) A-0339, (b) A-0358),… Fig 2.
+Some ROI samples from the dataset: Normal class ((a) A-0339, (b) A-0358), benign class ((c) B-3102, (d) B-3368) and malignant class ((e) C-0034, (f) C-0064).
+Multiresolution analysis Image analysis in multiple scales allows image resolution to be changed so as to process as little data as possible by selecting relevant details for a given visual task (Mallat, 1996).
+The basic idea of multiresolution analysis is to represent an image on several sub-images, from coarse to fine resolution, and analyze them in the frequency domain.
+Broadly speaking, multiresolution allows for the zooming in or out on an image, when this is necessary.
+When processing texture extraction algorithms, it is frequently necessary to measure texture features on neighborhoods of different sizes.
+Once multiresolution analysis evaluate image properties over domains of varying sizes, its zooming capacity makes the process not to be affected by the size of the pixel neighborhood.
+In this article, it is used wavelet multiresolution transforms for texture extraction.
+The task is to decompose the original image into sub-bands that preserve high and low frequency information.
+This process is made recursively by high-pass and low-pass filtering the image.
+In Mallat (1999), Mallat proved that a DWT of a signal is equivalent to its decomposition on a series of high-pass and low-pass filter banks, followed by a downsampling of two samples, one bank for each desired resolution.
+The low-pass filters outputs give the approximation coefficients and the high-pass filters outputs the details.
+In respect to images (bidimensional signals), the DWT can be computed as given by Fig 3, which shows an image decomposition from the j-th level to the (j + 1)-th level of the DWT.
+The coefficients cAj represents the pixel values of the original image.
+Firstly, the image is passed through a pair of filters on each row, followed by a downsampling of 2.
+The results are used as inputs of two filter banks, which are applied at the columns of the image, followed by downsampling.
+Four sub-images are generated in this process: the approximation cAj+1, which represents the original image with a smaller resolution, and the details , , which represent the horizontal, vertical and diagonal directions, respectively.
+Filter bank representing one DWT stage Fig 3.
+Filter bank representing one DWT stage.
+Nonlinearity and smoothing operators Implementation of discrete wavelet transformation involves linear convolution of images with coefficients of mean filter for the wavelet basis function considered (Selvan & Ramakrishnan, 2007).
+However, linear convolution increases the size of sub-band images.
+This causes distortions at boundaries of the image, when the image is reconstructed.
+To overcome this problem, we applied the method proposed by Selvan and Ramakrishnan (2007) to make the sub-band coefficients less sensitive to local variations.
+In this technique, each row and column of a Q × Q image is periodically extended by R/2 pixels on both sides, where R is the number of filter coefficients.
+That results in a (Q + R) × (Q + R) image.
+Addition of any value lower than R/2 will not yield the required core samples, after removing excess samples on the boundaries.
+An addition of any value higher than R/2 will lead to more number of samples than required.
+Hence, R/2 pixels are added on all four sides of the image.
+Convolution of the (Q + R) × (Q + R) image with a filter of length R yields ((Q + R) + R − 1) samples in one dimension.
+Out of these samples, core (Q + 2R − 1 − 2(R − 1)) = (Q + 1) samples are considered for decimation, which results in [(Q + 1)/2] core samples after decimation.
+Hence, after one level of wavelet decomposition, a Q × Q image yields four (Q/2) × (Q/2) sub-bands, resulting in nonexpansive samples.
+In this case, the coefficient matrices were adjusted to the size 64 × 64 for one decomposition level.
+For two decompositon level, this method yieds sub-band matrices of size 32 × 32.
+In order to make the sub-band coefficients less sensitive to local variations, nonlinearity and smoothing operators must be applied on wavelet transform coefficients, before extracting the parameters.
+For nonlinearity and smoothing operations, the total energy of wavelet transformation coefficients in each sub-band was calculated using the Equation: (1) where Ei is the overall energy in the ith sub-band, wi(j, k) is the wavelet transformation coefficient at locations (j,k) in the ith sub-band, and P and Q are the number of rows and columns of the ith sub-band, respectively.
+Here, parameters P and Q have similar values.
+In the present work, we also consider 3 × 3 neighborhoods to calculate the average, and normalize the average, as proposed by Selvan and Ramakrishnan (2007).
+At each location Li(j, k), the local energy was computed in a 3 × 3 neighborhood by: (2) where the local energies Li(j,k) were normalized by: (3) The central wavelet coefficient from the 3 × 3 neighborhood was then replaced by the corresponding normalized energy.
+Fig 4 represents the process of wavelet decomposition for each ROI to obtain the wavelet tranform coefficients.
+Ilustration Wavelet decomposition of a mammographic image Fig 4.
+Ilustration Wavelet decomposition of a mammographic image.
+This process produced 12,288 wavelet coefficients for the first decomposition (64 × 64 in 3 sub-images) and 3072 coefficients for the second decomposition (32 × 32 in 3 sub-images).
+Gathering together all detail coefficients from the sub-bands resulted on a feature vector of 15,360 attributes.
+For multiresolution analysis features, we used four different decomposition levels based on three different wavelet functions, Daubechies-8 (db8), Symlet 8 (sym8) and bi-orthogonal 3.7 (bior3.7).
+The used levels of decomposition and wavelet functions are selected based on previous works (Meselhy Eltoukhy et al., 2010; Rashed et al., 2007).
+Singular value decomposition In this work, the number of wavelet coefficients is very large and the estimation of model parameters is computationally demanding.
+Singular value decomposition (SVD) based method is a very powerful mathematical tool which is mainly used here to reduce a large dataset to a dataset with significantly fewer values, still containing a large fraction of the variability present in the original data.
+The SVD method is extraordinarily useful and has many applications such as data analysis, signal processing, pattern recognition and image compression (Pedrini & Schwartz, 2008).
+It is a linear algebra tool that allows for the decomposition of a matrix into the product of three more simple matrices (Ramakrishnan & Selvan, 2007a, 2007b; Selvan & Ramakrishnan, 2007).
+To explain the aplication of SVD based method, consider the matrix Ii with size P × Q, whose entries are the sub-band wavelet coefficients after the introduction of nonlinearity.
+The application of the SVD based method decomposes matrix Ii into the product of three matrices given by: (4) where Ui, with size P × Q, and Vi, with size Q × Q, are orthogonal matrices whose columns are the eigenvectors of matrices and , respectively, and Si, with size Q × Q, is a diagonal matrix whose non-zero entries are the singular values (square roots of the eigenvalues) of matrix , defined by: (5) where σi are the non-zero singular values, with σ1 ⩾ σ2 ⩾ ⋯ ⩾ σQ.
+Once the SVD is unique for each matrix, the singular values completely represents the sub-band images.
+A method of truncation of the lower singular values, which is equivalent to a filter based approach, was applied to matrix Si for dimensionality reduction with images with noise.
+In Selvan and Ramakrishnan (2007), the authors have shown that the effect of noise is more intense on singular values with lower magnitudes.
+Therefore, the diagonal matrix can be truncated to a dimension K × K, where K is given empirically by: (6) where σn is the nth singular value and σ1 is its highest value.
+Since the wavelet transform in this work was considered for 2 resolution levels, there are sub-band images with sizes 64 × 64 and 32 × 32, what leads to a different number of truncated singular values (different K) for each ROI.
+Therefore, Eq (6) was used to get a value of Kr for each resolution level, and the overall K was obtained by averaging the number of truncated singular values.
+Having defined the average value K, singular values were extracted from each of the eight wavelet sub-images, resulting in a feature vector of 6K elements representing texture characteristics of the original mammograms.
+Classifier structure 2.4.1.
+Discriminant function In order to obtain good separation between classes for the proposed algorithm, we used discriminant functions gi(x), i = 1,2, … , m, where m is the number of classes.
+In this case, the features vector, defined by x = [x1 ⋯ xd]T, where d represents the number of features and T is the transpose operation, belongs to class ωi if (7) Thus, the classifier calculates m discriminant functions and selects in the group of functions the highest discriminant value.
+In the classification procedure, when only two classes are employed, the classifier is named dichotomizer (Duda et al., 2001).
+The most used technique in a dichotomizer procedure is defined with only one discriminant function g(x), given by: (8) Equation g(x) = 0 determines a decision surface that separates the classes ω1 and ω2.
+Thus, the linear discriminant function g(x) can be described according to the following equation (9) where the parameters wi are the components of a weight vector w. Adding to Eq (9) the product of pairs of feature vector components x, it is obtained the quadratic discriminant function given below.
+(10) Then, polynomial discriminant functions can be generalized by the following equation: (11) where a is an L-dimensional weight vector, pn(x) is an L-dimensional vector whose entries are arbitrary functions of x and n represents the order or degree of the polynomial function.
+Polynomial classifier For the classification of different groups of images, the wavelet coefficients vectors were passed as inputs defined by x = [x1 ⋯ xd]T, and they were expanded in terms of the vector-based polynomial pn(x).
+This process allowed for the mapping of an d-dimensional feature vector into an L-dimensional vector.
+For example, given a two-dimensional input vector x = [x1x2]T, the elements of p2(x) result in parameters similar to those shown in Campbell et al.
+(2002) (12) Therefore, the dimensionality of the expanded vector pn(x) can be expressed in terms of the polynomial order and the dimensionality of the input vector x.
+Finally, the classifier output yi was obtained after a linear combination of the expanded vector pn(x) as (13) where ai is a coefficient vector of the polynomial discriminant function for the class ωi.
+Note that the classifier output was not averaged as presented in Campbell et al.
+(2002) and Ajmera and Holambe (2010), and it was not also applied the two optimal models proposed in Hassan, El-Tarhuni, and Assaleh (2010).
+There are also differences to the model proposed in Park et al.
+(2008) because we only use the polynomial classifier to solve the problem.
+The model was divided into two stages, namely training and testing, which are detailed in the sequel.
+Training In the training phase, we used two input classes (m = 2) considering the following combinations of mammographic images: normal versus malignant (NxM), normal versus benign (NxB), and malignant versus benign (MxB).
+The classes were identified as ω1 and ω2 for each combination of ROIs.
+We also considered N samples {x1,x2, … , xN} of the d-dimensional space, with N1 being the number of samples of class ω1, N2 the number of samples of class ω2 and N = N1 + N2.
+Thus, the N samples were used to determine the coefficients of the polynomial function in Eq (12), and the polynomial expansion for all features vectors were concatenated as: (14) Suppose the vector b = [b1b2 ⋯ bN] is the ideal output.
+Therefore, there exists a solution in matrix form given by: (15) We must find an optimal weight vector a∗ that minimizes the mean-squared error criterion: (16) The minimum value of the criterion function can be calculated as: (17) 2.4.4.
+Test In the test phase, a new feature vector v must be expanded in terms of the polynomial basis according to Eq (12).
+We apply the inner product with the vector determined by Eq (17) and then define yi as the output: (18) Based on this result, we applied to v the class ωi according to the algebraic sign obtained, i.e., if yi > 0, vector belongs to the class ω1, otherwise, it belongs to ω2.
+Performance evaluation The proposed algorithms were used to classify the objects from the sets M × N, B × N and M × B, as stated before.
+We used each feature matrix obtained from the feature selection approach described earlier as the input data to the classifier.
+We then employed a 10-time 10-folded cross-validation method to evaluate the proposed classifier accuracy as well as its generalization capability.
+In this experiment, the feature vectors were divided into 10 disjoint groups containing 90% of the data for training and the remaining 10% for validation.
+This process is repeated 10 times (Moayedi, Azimifar, Boostani, & Katebi, 2010).
+In the application of the 10-fold cross-validation, the groups of data used in the training and testing procedure were randomly defined.
+The overall performance of the algorithms can be evaluated by means of examining the ROC area index, Az, over the testing output values.
+In this work, we also present a comparison with three classification algorithm (Decision Tree, SVM, and K-NN).
+These algorithms were chosen for their distinct characteristics, e.g., Decision Tree is based on information gain; SVM are known to be robust to noise; K-NN decides the classification based on local information, as described in Zhang, Tomuro, Furst, and Raicu (2012b).
+The experiments have also been conducted using 10-fold cross-validation for the classification based on the polynomial classifier.
+The results are presented in Tables 1–3 for diferents classes of ROIs using the Biorthogonal 3.7, Daubechies 8 and Symlet 8 wavelet functions, respectively.
+In these tables, we show the confusion matrices for each wavelet function, with the notations true-positive (TP), false-negative (FN), false-postive (FP) and true-negative (TN).
+Data were evaluated for each set of images M × N, B × N and M × B.
+Table 1.
+Classification results using polynomial classifier and Biorthogonal 3.7 wavelet function, in terms of Az and confusion matrix.
+Wavelet Biorthogonal 3.7 Folds M × N B × N M × B TP FN FP TN Az TP FN FP TN Az TP FN FP TN Az Fold 1 1.00 12 0 0 12 0.96 12 0 1 11 0.96 11 1 0 12 Fold 2 1.00 12 0 0 12 0.92 11 1 1 11 0.96 11 1 0 12 Fold 3 1.00 12 0 0 12 0.92 11 1 1 11 1.00 12 0 0 12 Fold 4 1.00 12 0 0 12 0.92 11 1 1 11 0.96 11 1 0 12 Fold 5 1.00 12 0 0 12 1.00 12 0 0 12 1.00 12 0 0 12 Fold 6 1.00 12 0 0 12 0.96 12 0 1 11 0.88 10 2 1 11 Fold 7 1.00 12 0 0 12 0.92 12 0 2 10 0.88 10 2 1 11 Fold 8 1.00 12 0 0 12 1.00 12 0 0 12 1.00 12 0 0 12 Fold 9 0.92 12 0 2 10 0.92 11 1 1 11 0.88 10 2 1 11 Fold 10 0.92 11 1 1 11 0.92 11 1 1 11 0.96 11 1 0 12 Table 2.
+Performance of the proposed polynomial algorithm with Daubechies 8 wavelet function and confusion matrix.
+Wavelet Daubechies 8 Folds M × N B × N M × B Az TP FN FP TN Az TP FN FP TN Az TP FN FP TN Fold 1 0.96 12 0 1 11 0.92 11 1 1 11 0.96 11 1 0 12 Fold 2 1.00 12 0 0 12 1.00 12 0 0 12 1.00 12 0 0 12 Fold 3 1.00 12 0 0 12 0.96 11 1 0 12 1.00 12 0 0 12 Fold 4 1.00 12 0 0 12 0.92 10 2 0 12 0.96 11 1 0 12 Fold 5 1.00 12 0 0 12 1.00 12 0 0 12 1.00 12 0 0 12 Fold 6 0.96 11 1 0 12 1.00 12 0 0 12 0.92 10 2 0 12 Fold 7 1.00 12 0 0 12 0.92 10 2 0 12 0.92 11 1 1 11 Fold 8 1.00 12 0 0 12 1.00 12 0 0 12 1.00 12 0 0 12 Fold 9 0.92 12 0 2 10 0.92 11 1 1 11 0.96 12 0 1 11 Fold 10 0.96 11 1 0 12 0.92 10 2 0 12 0.92 11 1 1 11 Table 3.
+Classification results, in terms of Az, using polynomial classifier and Symlet 8 wavelet function and confusion matrix.
+Wavelet Symlet 8 Folds M × N B × N M × B Az TP FN FP TN Az TP FN FP TN Az TP FN P TN Fold 1 1.00 12 0 0 12 0.92 11 1 1 11 1.00 12 0 0 12 Fold 2 1.00 12 0 0 12 0.92 12 0 2 10 0.96 12 0 1 11 Fold 3 1.00 12 0 0 12 0.92 11 1 1 11 1.00 12 0 0 12 Fold 4 1.00 12 0 0 12 1.00 12 0 0 12 0.92 11 1 1 11 Fold 5 1.00 12 0 0 12 1.00 12 0 0 12 1.00 12 0 0 12 Fold 6 0.96 12 0 1 11 0.92 11 1 1 11 0.92 11 1 1 11 Fold 7 0.96 11 1 0 12 0.92 11 1 1 11 0.92 10 2 0 12 Fold 8 1.00 12 0 0 12 1.00 12 0 0 12 1.00 12 0 0 12 Fold 9 0.92 12 0 2 10 0.96 12 0 1 11 0.92 10 2 0 12 Fold 10 0.92 10 2 0 12 0.92 11 1 1 11 0.96 12 0 1 11 For Biorthogonal 3.7, the mean values and standard deviation were 0.98 ± 0.04, 0.94 ± 0.04 and 0.95 ± 0.05 for the sets M × N, B × N and M × B, respectively (Table 1).
+In this case, the recognition rate has the greater variation for the data set B × N of folds evaluated with this function; on the average, we get a value of 0.95 ± 0.05.
+This represents a difference of about 3% compared to the best data set, M × N. Using the Daubechies 8 function (see Table 2) the values were 0.98 ± 0.03, 0.95 ± 0.04 and 0.96 ± 0.04, respectively for the sets M × N, B × N and M × B.
+For this wavelet function, the mean values were superior to the results obtained with the Biorthogonal 3.7 wavelet function for the sets B × N and M × B.
+Also, it is noticeable that the standard deviation values were lower in some cases using this function.
+The results showed similar behaviors between Daubechies 8 and Symlet 8.
+The average values of 0.98 ± 0.04, 0.95 ± 0.04 and 0.96 ± 0.04 (Table 3).
+However, for the set M × N, the standard deviation with Symlet wavelet was higher compared to Daubechies 8.
+Note that major disparities of Az values between different folds occur for the Biorthogonal 3.7 wavelet function on set M × B, with differences of about 0.12, as is the case for folds 8 and 9 on Table 1.
+As mentioned earlier, an ideal system should have a value close to 1.0 for Az.
+The proposed polynomial classifier was able to provide relevant results with Az values near the ideal case.
+As an example, for the set M × N with different wavelet functions, the proposed algorithm was able to provide relevant results with a small difference of 0.02 from the ideal system.
+Tables 4–6 present the results obtained with the SVM, K-NN and Decision Tree classifiers.
+Table 4.
+Classification of ROIs using information obtained with the function Biorthogonal 3.7.
+Sets Classifiers SVM Decision tree K-NN M × N 0.78 ± 0.08 0.72 ± 0.18 0.72 ± 0.17 B × N 0.60 ± 0.11 0.62 ± 0.16 0.63 ± 0.21 M × B 0.66 ± 0.13 0.62 ± 0.22 0.66 ± 0.19 Table 5.
+Results of Az with the use of classification algorithms and Daubechies 8 function.
+Sets Classifiers SVM Decision tree K-NN M × N 0.75 ± 0.09 0.69 ± 0.18 0.75 ± 0.18 B × N 0.64 ± 0.11 0.60 ± 0.26 0.62 ± 0.16 M × B 0.67 ± 0.10 0.67 ± 0.22 0.71 ± 0.21 Table 6.
+Classification with Symlet 8 wavelet function and Decision Tree and K-NN, SVM algorithms.
+Sets Classifiers SVM Decision tree K-NN M × N 0.75 ± 0.09 0.70 ± 0.17 0.73 ± 0.21 B × N 0.57 ± 0.12 0.63 ± 0.23 0.61 ± 0.22 M × B 0.67 ± 0.11 0.64 ± 0.19 0.76 ± 0.21 Those results demonstrate the performance of wavelet functions for the different sets of images.
+By using the values of Az, we note that the set M × N using the Biorthogonal 3.7 function and SVM classifier provided the most relevant results, Az = 0.78 ± 0.08 (Table 4).
+The SVM classifier applied to the other wavelet functions, Daubechies 8 and Symlet 8, resulted in lower values, e.g., Az = 0.75 ± 0.08.
+In the evaluation of the Decision Tree and K-NN classifiers with the function Biorthogonal 3.7, it is noted that the results were also lower.
+This is not the case for the set B × N, where we observe in Table 5 that the most relevant values were obtained with the K-NN classifier.
+In comparison with the other functions, we noted that Daubechies 8 wavelet provided more significant information using the SVM classifier, where Az = 0.64 ± 0.11.
+For the set M × B, the most important result was obtained with Symlet 8 wavelet and K-NN classifier (Az = 0.76 ± 0.21).
+In Figs.
+5–7, we have plotted the ROC curves with its corresponding Az values, considering the proposed classifier and the classic algorithms, for the sets mentioned earlier.
+ROC curves for Biorthogonal 3 Fig 5.
+ROC curves for Biorthogonal 3.7 wavelet function.
+ROC curves using the wavelet function Daubechies 8 Fig 6.
+ROC curves using the wavelet function Daubechies 8.
+ROC curves for Symlet 8 wavelet function Fig 7.
+ROC curves for Symlet 8 wavelet function.
+The results presented in Figs.
+5–7 show that the proposed classifier performance is meaningful compared to the classical algorithms.
+For the set M × N, the use of polynomial classifier causes significant improvement on Az value.
+It provided an Az value 0.20 greater than the one obtained with the SVM algorithm (a difference of 25.6%).
+The proposed classifier correctly identifies a value greater than 10 malignant tumors and 9 normal ROIs for each evaluated fold (Table 1).
+The algorithm also obtained significant results for the set B × N. In this case, the difference was 0.31 between the Az values of the proposed algorithm and the SVM classifier (a difference of 48.4%).
+For the set M × B, where abnormalities are considered complex in the separation of classes due to the similar characteristics of structures (Nanni, Brahnam, & Lumini, 2012), the proposed method also provided relevant values when compared to the other techniques.
+In this case, we found a difference of 0.19 between the proposed algorithm and K-NN, which represents an improvement of 25%.
+Finally, in Table 7, we present a qualitative comparison in terms of Az values for the most representative approaches reported in literature.
+We detail the number of ROIs and texture method used in the original works.
+We also include the results obtained with our method.
+Note that for some works the standard deviation is not available.
+Table 7.
+Qualitative comparison of the present work with the most representative approaches of the state of the art, in terms of Az values.
+Reference Informations ROIs Technique Az Soltanian-Zadeh et al.
+(2004) 103 Genetic algorithm and K-NN algorithm 0.79 Tourassi et al.
+(2007) 1820 Entropy-based similarity measures and Fishers linear discriminant 0.81 ± 0.02 Lladó et al.
+(2009) 1792 Local Binary Patterns and SVM 0.94 ± 0.02 Wang et al.
+(2009) 300 Co-occurrencematrix, curvilinear features, Gabor features, wavelet transform and SVM 0.97 Our method 360 Wavelets and polynomial classifier 0.98 ± 0.03 Table 7 presents a comparison of several studies employing different techniques for the classification of lesions in digital mammograms.
+In many cases, the comparison between the proposed system and the classical algorithms is not an easy task because many factors can affect the accuracy of a classification system.
+Some have proposed algorithms that were tested on masses and microcalcifications.
+It is also present in the table the number of classes used to evaluate each of these systems.
+Furthermore, the number of folds and samples used for the training phase may influence the performance of the system.
+The results obtained from the proposed work showed much better than the other researches as shown in Table 7.
+In general, the polynomial classifier has reached better results in the classification of different kinds of abnormalities.
+In this study, we present an investigation of an efficient diagnostic system using a polynomial classifier and wavelet coefficients to differentiate normal from abnormal tissues (malignant and/or benign).
+The images obtained from the public set DDSM were evaluated in this study.
+A subset of 360 images was randomly selected for different classes (benign, malignant and normal).
+The textural features, obtained by means of sub-images detail wavelet functions, were used in the classification procedure.
+The polynomial classifiers, SVM, Decision Tree and K-NN, using sub-matrices of wavelet detail coefficients, were used for classification of breast tissues from selected ROIs.
+Comparing the classifiers, we observed that the proposed methodology has shown better accuracy for the classification of breast tissues evaluated.
+The proposed method provided better performance than the compared algorithms which were commonly used in the context explored here.
+The best values of Az with the proposed polynomial algorithm were 0.98 ± 0.03, 0.95 ± 0.04 and 0.96 ± 0.04 for the evaluated sets.
+Based on these relevant values for Az, we can state that the proposed technique using textural descriptors based on wavelet domain and polynomial algorithm is an efficient tool for classification of breast tissue on digital mammography.

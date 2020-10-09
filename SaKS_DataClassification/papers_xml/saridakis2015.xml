@@ -1,0 +1,366 @@
+<article>
+  <title>Optimizing differentiation and commonality levels among models in car line-ups: An empirical application of a nature-inspired heuristic mechanism</title>
+  <abstract>
+    <sentence>The product life cycle of cars is becoming shorter and carmakers constantly introduce new or revised models in their lines, tailored to their customer needs.</sentence>
+    <sentence>At the same time, new car model design decisions may have a substantial effect on the cost and revenue drivers.</sentence>
+    <sentence>For example, although a new car model configuration with component commonality may lower manufacturing cost, it also hinders increased revenues that could have been achieved through product differentiation.</sentence>
+    <sentence>This paper develops and illustrates a state of the art, nature-inspired approach, to design car lines that optimize the degree of differentiation vs commonality among models in the line.</sentence>
+    <sentence>More specifically, we apply a swarm intelligence mechanism to stated preference data derived from a large-scale conjoint experiment that measures consumer preferences for passenger cars in a sample of 1164 individuals.</sentence>
+    <sentence>The proposed two-step methodology is also incorporated into a prototype system, which has been developed in an attempt to facilitate managerial decision making.</sentence>
+    <sentence>Our approach provides interesting insights into how new and existing car models can be combined in a product line and identifies the desired balance between differentiation and commonality levels among models within a product line, which elevates customer satisfaction.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Car line design</keyword>
+    <keyword>Differentiation</keyword>
+    <keyword>Commonality</keyword>
+    <keyword>Swarm intelligence</keyword>
+    <keyword>Conjoint analysis</keyword>
+    <keyword>Prototype system</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>In technology and capital-intensive industries product lines need to constantly evolve in response to market and technology changes.</sentence>
+    <sentence>In the automotive industry the process of designing a line of cars is extremely costly and requires extended investments in R&amp;D, whilst product variety within the line is a critical marketing-mix decision that may determine a firm’s survival (Jan &amp; Hsiao, 2004).</sentence>
+    <sentence>Industry practice and research to date suggest that product line design decisions in the car industry range between two options, namely, differentiation and commonality.</sentence>
+    <sentence>Differentiation among car models in a line enables the manufacturer to charge price premiums, due to greater product variety, but is criticized for escalating product design, development, and manufacturing costs (Heese &amp; Swaminathan, 2006).</sentence>
+    <sentence>Commonality and component sharing among car models in the line has been suggested as a means to lower design and manufacturing cost, but is criticized for hindering price premiums and revenues.</sentence>
+    <sentence>A product configuration with commonality may distort the perceived value of the product to consumer when the component sharing among products in the line is visible or is known to the consumer (Robertson &amp; Ulrich, 1998).</sentence>
+    <sentence>For example, General Motors was negatively criticized for its look-alike car line-up and Honda lost significant market share for its Acura model which was considered to be nothing more than a Honda Accord.</sentence>
+    <sentence>Even the best hidden common components will diminish perceived valuation, especially when shared attributes are highly valued by the consumers (Desai, Kekre, Radhakrishnan, &amp; Srinivasan, 2001).</sentence>
+    <sentence>The vast majority of research on commonality vs differentiation in operations management has investigated the cost effects associated with scale economies, risk pooling effects, and reductions in product and process complexity, but has mostly neglected the substantial impact that commonality can have on market shares of a product line (Baker, Magazine, &amp; Nuttle, 1986; Lee, 1996).</sentence>
+    <sentence>For a detailed review on the above research streams the interested reader is advised to see the work of Swaminathan and Lee (2003).</sentence>
+    <sentence>The conventional paradigm in the automobile industry is that, while enabling potentially substantial cost reductions, commonality generally reduces the attractiveness of a car line and, ceteris paribus, leads to lower revenues.</sentence>
+    <sentence>However, a manufacturer should also consider commonality decisions in determining optimal product configurations within lines, as a means to reduce escalating manufacturing costs.</sentence>
+    <sentence>Evidently, the balance between differentiation and commonality among models in a car line-up represents a considerable dilemma for car manufacturers.</sentence>
+    <sentence>The automobile industry is capital-intensive and has received much attention in the literature.</sentence>
+    <sentence>Several topics have been examined so far, both from an administrative and a customer preference perspective, including automobile sales forecasting through network-based fuzzy inference systems (e.g.</sentence>
+    <sentence>Wang, Chang, and Tzeng (2011)), customer segmentation in the automobile market through genetic algorithms (e.g.</sentence>
+    <sentence>Chan (2008)), automobile price formation through artificial neural networks (e.g.</sentence>
+    <sentence>Iseri and Karlık (2009)), product diffusion in the automobile market through agent-based models (e.g.</sentence>
+    <sentence>Kim, Lee, Cho, and Kim (2011)), and estimation of customer satisfaction indexes for automobile manufacturers (e.g.</sentence>
+    <sentence>Chiu, Cheng, Yen, and Hu (2011)).</sentence>
+    <sentence>On the other hand, the issue of designing car line-ups that optimize the degree of differentiation vs commonality among models in the line has received much less attention, despite its importance from a managerial perspective.</sentence>
+    <sentence>All existing studies have so far examined the typical optimal product line design problem, which (a) disregards commonality and differentiation design aspects, and (b) considers product attributes which are treated as discrete variables (see e.g.</sentence>
+    <sentence>Kuzmanovic and Martic (2012), Lin, Shih, Cheng, and Lee (2011)).</sentence>
+    <sentence>Optimizing the degree of commonality vs differentiation among models in a car line-up is an important design problem for every car manufacturer, especially if we also take into consideration that in the automobile industry, most of the car attributes that drive customer satisfaction can take values from a continuous range (e.g.</sentence>
+    <sentence>horsepower, fuel consumption, maximum speed, etc).</sentence>
+    <sentence>Against this background, the present paper tries to address these crucial design issues through the application of a state of the art, nature inspired mechanism.</sentence>
+    <sentence>Several alternative heuristic procedures that could potentially handle such highly complex optimization problems have been proposed in the literature, including Dynamic Programming (Kohli &amp; Sukumar, 1990), Beam Search (Nair, Thakur, &amp; Wen, 1995), and Lagrangian Relaxation with Branch and Bound (Belloni, Freund, Selove, &amp; Simester, 2008).</sentence>
+    <sentence>Recently, nature-inspired approaches have been also introduced, including genetic algorithms (Steiner &amp; Hruschka, 2003) and Ant Colony Optimization (Albritton &amp; McMullen, 2007).</sentence>
+    <sentence>For the latest review, see Tsafarakis and Matsatsinis (2010).</sentence>
+    <sentence>Contrary to existing approaches, our mechanism can assist manufacturers in designing car lines that optimize the degree of differentiation vs commonality among car models in the line, whilst allowing product configurations to take on any value from a continuous design solution space.</sentence>
+    <sentence>Evidently, the contribution of this study is twofold and resides in both the managerial problem and the research methodology.</sentence>
+    <sentence>The present study follows a two-step methodology: First, consumer preferences for car attributes have to be determined.</sentence>
+    <sentence>To do that, stated preference data are derived from a large conjoint experiment involving preferences for automobiles.</sentence>
+    <sentence>In the second stage, the derived measures of individual preferences are utilized to predict the valuation for any new concept car configuration that was not originally assessed by the respondents.</sentence>
+    <sentence>The nature of the problem demands product attributes to vary over both a continuum range of values and a set of predetermined discrete levels.</sentence>
+    <sentence>To deal with this issue we apply Particle Swarm Optimization (PSO), a state of the art optimization algorithm inspired from natural intelligence, which has excellent compatibility with continuous, nonlinear functions, and thus can simultaneously handle both continuous and discrete data.</sentence>
+    <sentence>The proposed mechanism, which is also integrated into a prototype system, provides important implications for managers in the automotive and other capital-intensive industries who attempt to reduce manufacturing and design costs, whilst maintaining their ability to charge price premiums through variation in key product characteristics.</sentence>
+    <sentence>The rest of the paper is organized as follows.</sentence>
+    <sentence>In the next section, we provide an overview of the literature on product variety, with a particular emphasis on the studies focusing on the automotive industry.</sentence>
+    <sentence>Section 3 illustrates the conjoint experiment which was carried out to analyze consumer preferences for car attributes.</sentence>
+    <sentence>Section 4 provides an overview of the Particle Swarm Optimization algorithm and introduces our approach to the car market.</sentence>
+    <sentence>Section 5 discusses the empirical results, whilst in Section 6 a prototype system is presented, which supports the proposed two-step methodology and facilitates decision making.</sentence>
+    <sentence>Finally, a concluding section summarizes the paper and provides useful implications for managers and researchers.</sentence>
+  </section>
+  <section name="Theoretical background">
+    <sentence>Research on product variety: Insights into the automotive industry Enhancing product variety is a trend in many industries and as a result, several aspects of the topic have been examined in the literature.</sentence>
+    <sentence>For example, Ramdas and Sawhney (2001) focused on the dimensions of product variety by examining how an assembled product manufacturer can use components to differentiate and variegate its products.</sentence>
+    <sentence>Krishnan and Gupta (2001) focused on the broad topic of product architectures and tried to identify the design resources that must be shared across product platforms.</sentence>
+    <sentence>In the same direction, Ulrich and Ellison (1999) examined the factors that drive different degrees of customization within a single industry, whilst Bhattacharya, Krishnan, and Mahajan (2003) tried to examine how to time the introduction sequence for related products.</sentence>
+    <sentence>Finally, Singhal and Singhal (2002) examined the impact of product variety on manufacturing operations, whilst Randall and Ulrich (2001) examined the impact of supply chain structure on product variety management (see also Ramdas (2003), for a detailed review of the literature on product variety).</sentence>
+    <sentence>Cars are very complex products, and thus, this sector has attracted considerable attention in the literature of product variety.</sentence>
+    <sentence>The aim of these studies is to examine how variety in a car-line can be best managed.</sentence>
+    <sentence>For example, Pil and Holweg (2004) explored the link between external variety (i.e., the variety offered the customer) and internal variety (i.e., the variety involved in creating the product), and found that these two dimensions can be independent of each other.</sentence>
+    <sentence>Scavarda, Schaffer, Schleich, Winkler, and Hamacher (2007) and Schleich, Schaffer, and Scavarda (2007) examined product variety on the basis of the different variants offered by car manufacturers, whilst Scavarda, Schaffer, Schleich, da Cunha Reis, and Fernandes (2008) attempted to describe the development of an automobile product variety analysis, by also taking into consideration platforms, models and dealer fitted options.</sentence>
+    <sentence>Finally, Stäblein, Holweg, and Miemczyk (2011) proposed and empirically tested a set of novel measures of product variety (i.e., the average repetition ratio and a specification Pareto curve), in an attempt to enhance the understanding of product variety.</sentence>
+    <sentence>Most of the product variety literature in the automotive sector has long emphasized the fact that reduced product variety may decrease manufacturing costs, but also reduces revenues by limiting the range of options in the marketplace (Pil &amp; Holweg, 2004).</sentence>
+    <sentence>In the automotive domain, although some manufacturers are beginning to build vehicles tailored to customer orders, such a transition is extremely costly, and thus, the issue of product variety becomes extremely challenging (Holweg &amp; Pil, 2001, 2004).</sentence>
+    <sentence>As a result, a key strategic problem in this situation is to identify the optimum level of attribute variety among cars in a line that can provide differentiation in the marketplace, whilst keeping manufacturing and design costs at reasonable levels (Lancaster, 1990).</sentence>
+    <sentence>As noted earlier, most of the existing studies in operations management that focus on commonality vs differentiation in car line-ups, have investigated the cost effects associated with scale economies, risk pooling effects, and reductions in product and process complexity, but have neglected the substantial impact that commonality can have on market shares of a product line (Baker et al., 1986; Lee, 1996; Swaminathan &amp; Lee, 2003).</sentence>
+    <sentence>Evidently, the identification of the optimal balance between differentiation and commonality among models in a car line-up represents a considerable dilemma for car manufacturers, which remains quite neglected in the existing literature.</sentence>
+    <sentence>Product line design and recent variations of the problem Our paper also builds on the growing body of literature on product line design.</sentence>
+    <sentence>This literature has grown at an impressive rate and reflects two main research streams, namely, marketing and engineering (Ramdas, 2003).</sentence>
+    <sentence>According to the engineering perspective, researchers focus on platform management and strive for balance between the commonality of the product platform and the individual product’s engineering performance (e.g.</sentence>
+    <sentence>Farrell and Simpson (2003), Rai and Allada (2006)).</sentence>
+    <sentence>According to the marketing perspective, researchers usually employ simulated data and search for an optimal or near-optimal product line, based on discrete levels of attributes (e.g.</sentence>
+    <sentence>Balakrishnan, Gupta, and Jacob (2006), Selove and Hauser (2010)).</sentence>
+    <sentence>Although the problem of product line design has been heavily studied in the literature over the past 30 years (a detailed review can be found in Tsafarakis and Matsatsinis (2010)), it still remains an exciting area of research and several new variations of the problem have been published in recent years.</sentence>
+    <sentence>For example, Lin and Okudan (2013) proposed a model to forecast the introduction timings of new multiple-generation product lines, while Lennon, Farr, and Besser (2013) investigated the design of new microplasma devices in order to create metrics that evaluate the efficiency, effectiveness, and overall utility of representative multi-attribute decision making systems.</sentence>
+    <sentence>A similar approach was also implemented by Hu, Lu, and Tzeng (2014), who developed a hybrid multiple criteria decision making model as a means to improve the design and functionality of smart phones.</sentence>
+    <sentence>Furthermore, Naranje and Kumar (2014) developed a knowledge based system which was capable to facilitate all major activities for the design of deep drawing die, while Boudjelaba, Ros, and Chikouche (2014) presented a novel hybrid genetic algorithm for the design of digital filters.</sentence>
+    <sentence>In the same direction, Xiao, Shao, Gao, and Luo (2015) focused on the design optimization problem and proposed a new method based on gene expression programming and Nash equilibrium.</sentence>
+    <sentence>Evidently, the literature on product (line) design has presented various heuristic procedures over the last decades to address the optimization problem, such as Dynamic Programming (Kohli &amp; Sukumar, 1990), Beam Search (Nair et al., 1995), Lagrangian Relaxation with Branch and Bound (Belloni et al., 2008;), genetic algorithms (Balakrishnan, Gupta, &amp; Jacob, 2004), and Ant Colony Optimization (Albritton &amp; McMullen, 2007).</sentence>
+    <sentence>Although PSO has been extensively implemented in various research fields since its original introduction by Kennedy and Eberhart in (1995), the algorithm has just recently been implemented to the optimal design problem.</sentence>
+    <sentence>For example, a handful of relevant PSO applications can be found in the areas of production planning (Wang &amp; Yeh, 2014), retail services (Baltas, Tsafarakis, Saridakis, &amp; Matsatsinis, 2013) and industrial products (Tsafarakis, Saridakis, Baltas, &amp; Matsatsinis, 2013).</sentence>
+    <sentence>However, contrary to the existing few relevant applications of PSO, this study utilizes a large dataset of actual consumer stated-preferences, derived from a large-scale conjoint experiment, in order to identify the desired levels of commonality and differentiation among models in car line-ups.</sentence>
+    <sentence>Furthermore, it also considers product attributes which can take any value from a continuous range, contrary to the existing applications that mainly focus on discrete design domains.</sentence>
+    <sentence>To the best of our knowledge, this is the first study to address these important issues.</sentence>
+    <sentence>The present paper illustrates a tool for the automotive and other capital-intensive industries which can be very useful in dilemmatic situations concerning the degree of differentiation and commonality within product lines.</sentence>
+    <sentence>The proposed two-step methodology is also incorporated into a prototype system, which has been developed in an attempt to facilitate managerial decision making.</sentence>
+  </section>
+  <section name="The conjoint experiment: estimating heterogeneous preferences for car attributes">
+    <sentence>Conjoint analysis is a multivariate technique used specifically to understand the way in which consumers trade-off between alternative products or services and develop preferences.</sentence>
+    <sentence>A basic assumption of conjoint analysis is that every product or service can be viewed as a bundle of attributes and thus consumers evaluate products and services (real or hypothetical) based on the combination of the separate value that each of the attributes provide (e.g.</sentence>
+    <sentence>Hair, Anderson, Tatham, and Black (1998), Orme (2005)).</sentence>
+    <sentence>Other methods that belong to the research tradition, which view products as bundle of attributes are also Lancastrian analysis (Lancaster, 1991), hedonic methods (Baltas &amp; Saridakis, 2010; Saridakis &amp; Baltas, 2014), multidimensional scaling (Cooper, 1983) and random utility models (Baltas &amp; Doyle, 1999; Tsafarakis, Grigoroudis, &amp; Matsatsinis, 2011).</sentence>
+    <sentence>More specifically, conjoint analysts develop descriptions of alternative offerings and by the use of econometric models they try to calculate respondents’ part-worth utilities of attribute levels.</sentence>
+    <sentence>By the term attribute levels, conjoint analysts refer to the alternative descriptions that each attribute can have (e.g., the attribute “color” could include the levels “yellow”, “black”, “blue” etc).</sentence>
+    <sentence>At a later stage, the researcher could enter these attribute level part-worths into different combinations of product or service bundles in order to predict how buyers will choose among different options (Green, Krieger, &amp; Wind, 2001).</sentence>
+    <sentence>The assumption of this approach is that consumer chooses such products or services that maximize their utility.</sentence>
+    <sentence>In conjoint analysis, utility is formulated on the basis of the value that the respondent places on each of the attribute levels.</sentence>
+    <sentence>Products or services with higher utility values are more preferred and have a better chance of choice (Hair et al., 1998).</sentence>
+    <sentence>So far, this methodology has been extensively applied to a number of key marketing areas, such as product development, pricing and positioning decisions (Wittink &amp; Cattin, 1989; Wittink, Vriens, &amp; Burhenne, 1994).</sentence>
+    <sentence>Data and variables In order to decide on the optimal configuration of models in a product line, car manufacturers must first understand the manner in which consumers evaluate product alternatives.</sentence>
+    <sentence>In this direction, a large scale conjoint experiment was carried out to estimate consumer preferences for certain car characteristics.</sentence>
+    <sentence>The car market consists of several car-type segments, for example mini cars, executive cars, and multi-purpose vehicles.</sentence>
+    <sentence>This market structure allows carmakers to serve better their customers, as different car types match different customer needs (Baltas &amp; Saridakis, 2009).</sentence>
+    <sentence>The present conjoint experiment considers attribute levels that describe vehicles belonging to the super-mini market segment.</sentence>
+    <sentence>We focused on this segment as this is a most familiar and commercially successful car-type segment.</sentence>
+    <sentence>It includes cars that are larger than a mini car but smaller than a small family car (e.g., Ford Fiesta, Toyota Yaris, and VW Polo).</sentence>
+    <sentence>The advantage of focusing on one car-type segment during the conjoint experiment is that each respondent evaluates a reasonable number of full profiles (i.e., car models) that are directly competitive with each other and have sensible attribute differences.</sentence>
+    <sentence>This makes the decision tasks assigned to each respondent more manageable and realistic.</sentence>
+    <sentence>After a set of in-depth interviews with consumers, car-dealers and the editorial team of BBC’s Top Gear car magazine that sponsored our study, the following six attributes ranging across two levels each (levels in brackets) were selected: (1) engine horsepower units [75; 100], (2) price in euros [11,000 euros; 15,000 euros], (3) maximum speed measured in km/h [170 km/h; 180 km/h], (4) acceleration measured in seconds required to accelerate from 0 to 100 km/h [11 s; 13 s], (5) fuel consumption measured in litres/100 km [5 lt/100 km; 6.5 lt/100 km], (6) the existence of ESP, automatic air-conditioning and alloy wheels in the standard equipment [No; Yes].</sentence>
+    <sentence>The attribute selection is also in line with the broad literature on vehicle type choice, which has long emphasized the importance of observable vehicle characteristics, related to purchasing and operating costs, technical and performance characteristic, safety, comfort and luxury features, as determinants of vehicle type choice (e.g.</sentence>
+    <sentence>Adjemian, Lin, and Williams (2010), Baltas and Saridakis (2013), Bhat and Sen (2006), Bhat, Sen, and Eluru (2009), Fang (2008), Hess, Train, and Polak (2006), Whelan (2007), Yamamoto and Kitamura (2000)).</sentence>
+    <sentence>In constructing the full profile descriptions for the conjoint tasks, several important questions may arise (e.g., how many stimuli does each respondent have to evaluate?</sentence>
+    <sentence>What should be the range of attribute variation in constructing the stimuli?).</sentence>
+    <sentence>Evidently, the number of stimuli (i.e., full profiles) that each respondent has to evaluate dependents on the number of estimated parameters.</sentence>
+    <sentence>If a large number of attributes is considered, the number of stimuli that each respondent has to evaluate quickly becomes very large as well, resulting in lengthy and impractical questionnaires (Green, 1974; Hair et al., 1998).</sentence>
+    <sentence>Having that in mind, we decided to group together the three equipment features (ESP, automatic air-conditioning and alloy wheels) in one binary variable (existence of all three features or not).</sentence>
+    <sentence>This treatment significantly reduced the complexity of our conjoint experiment, both in terms of the number of stimuli that each respondent had to evaluate, and in terms of the number of attributes that could vary independently within each stimuli.</sentence>
+    <sentence>The number of attributes included in a conjoint experiment also affects the statistical efficiency and reliability of the results.</sentence>
+    <sentence>As attributes and levels are added, the increased number of parameters to be estimated requires either a larger number of stimuli or a reduction in the reliability of parameters.</sentence>
+    <sentence>Additional attributes may significantly increase the number of stimuli that each respondent has to evaluate; especially in cases that the analysis is performed at the individual level and the researcher wants to retain the statistical efficiency and reliability of the results (Hair et al., 1998).</sentence>
+    <sentence>At the same time, literature suggests that long and complex conjoint analysis questionnaires pose practical and theoretical problems.</sentence>
+    <sentence>Response rates tend to decrease with increasing questionnaire length, and more importantly, academic evidence indicates that long questionnaires may induce response biases (Lenk, DeSarbo, Green, &amp; Young, 1996).</sentence>
+    <sentence>We believe that treating the three equipment features as one binary variable reduces the complexity of our conjoint experiment to a great extent, without significant loss of information.</sentence>
+    <sentence>Furthermore, this treatment has managerial relevance as well.</sentence>
+    <sentence>Most car manufacturers extend their lines to introduce full-extra versions of their standard car models.</sentence>
+    <sentence>These full-extra versions integrate collective sets of equipment features that are priced together as a bundle.</sentence>
+    <sentence>The binary variable of our three equipment features is in essence an efficient way to discriminate between a standard and a full-extra model version.</sentence>
+    <sentence>The fractional factorial design Factorial design is the method of designing full profile stimuli for evaluation by generating all possible combinations of attribute levels (Hair et al., 1998).</sentence>
+    <sentence>However, in most cases, the researcher has to reduce the number of multifactor stimuli combinations that the respondent has to evaluate to a more manageable number of full profile descriptions.</sentence>
+    <sentence>This is the purpose of fractional factorial designs.</sentence>
+    <sentence>Such designs use only a subset of all the possible combinations (Hair et al., 1998).</sentence>
+    <sentence>In our case, we examine the impact of 6 attributes ranging across 2 levels each, resulting to a total of 26 = 64 different concept cars.</sentence>
+    <sentence>Therefore, it was necessary to reduce the number of multifactor stimuli combinations.</sentence>
+    <sentence>Green (1974) has suggested orthogonal fractional factorial designs to narrow down the number of alternatives that consumers have to evaluate.</sentence>
+    <sentence>More specifically, we generated a symmetric (as all attributes range across 2 levels) and orthogonal (as only main effects were considered) fractional factorial design (Green, 1974; Hair et al., 1998).</sentence>
+    <sentence>Respondents evaluate 16 concept cars and assign a number between 0 and 100 points to reflect purchase probability.</sentence>
+    <sentence>In total, 1164 individuals participated in the study.</sentence>
+    <sentence>Our dataset was treated as a balanced panel, in which we observe a large number of panellists (N = 1164) responding to the same number of stimuli (T = 16).</sentence>
+    <sentence>As noted earlier, we decided to group together the three equipment features (ESP, automatic air-conditioning and alloy wheels) in one binary variable (i.e., existence of all three features or not), as a means to reduce the complexity and length of the conjoint experiment.</sentence>
+    <sentence>If a separate binary variable for each equipment feature had been considered, the factorial design would then contain 28 = 256 hypothetical car concepts and each respondent would have to evaluate at least twice as many stimuli in order to achieve an equivalent degree of statistical efficiency and reliability of the results.</sentence>
+    <sentence>A more detailed elaboration on the two-level fractional factorial designs is beyond the purposes of this paper, however, for a useful summary of such designs for up to 11 attributes, the interested reader is advised to see the seminal work of Box, Hunter, and Hunter (1978) and Montgomery (2000).</sentence>
+    <sentence>Alternative methods to model consumer preferences in conjoint experiments: the vector model Through years, different types of conjoint analysis have been developed (e.g., ranking, rating, choice based), alternative data collection techniques have been proposed (e.g., compositional, decompositional and hybrid approaches), as well as, different techniques to estimate parameters and model consumer preferences have emerged (Gustafsson, Herrmann, &amp; Huber, 2003; Saridakis, 2009).</sentence>
+    <sentence>Most conjoint analysts fit what is known as the part-worth model to respondents’ evaluations.</sentence>
+    <sentence>However, the literature also suggests two alternative models, namely, the vector and ideal-point models (Green et al., 2001).</sentence>
+    <sentence>The so-called part-worth model uses dummy variables to estimate part-worths at discrete levels for each attribute.</sentence>
+    <sentence>The so-called vector model treats product attributes as linear variables (Green et al., 2001).</sentence>
+    <sentence>The vector model is used in this study since product attributes of the optimal derived configurations are allowed to take on any value from a continuous range.</sentence>
+    <sentence>To illustrate the vector model, we assume that there are I attributes and T stimuli used in a study design.</sentence>
+    <sentence>The vector model assumes that the respondent’s n preference or utility for the t stimulus is given by (1) where denotes the respondent’s importance weight for each of the I attributes and xit the amount of each of the I attributes.</sentence>
+    <sentence>In other words, the vector model estimates a single coefficient for each attribute.</sentence>
+    <sentence>As a result, although the participants in our conjoint experiment evaluate profiles belonging to the super-mini car segment, the later learnt model can derive optimal solutions which are not restricted within the limited attribute ranges of super-mini cars.</sentence>
+    <sentence>More specifically, as we show below, our PSO algorithm allows the estimation of optimal solutions that can take any value from the following continuous ranges: engine horsepower units [55–200], maximum speed measured in km/h [160–200 km/h], acceleration measured in seconds required to accelerate from 0 to 100 km/h [7.5–14 s], fuel consumption measured in litres/100 km [4.5–7.5 lt/100 km].</sentence>
+    <sentence>Model development: estimation of attribute coefficients Individual attribute coefficients are estimated by the application of a random coefficients (RC) regression model.</sentence>
+    <sentence>Our econometric model allows variation in parameters across respondents and permits heterogeneity of individual preferences (Beck, 2001; Beck &amp; Katz, 2007; Western, 1998).</sentence>
+    <sentence>The random coefficients can be considered outcomes of a common mean plus an error term representing a mean deviation for each individual n (Hsiao, 1995).</sentence>
+    <sentence>More formally the following model was estimated, (2) where is the utility (evaluation) of product profile t by individual n, α is a common mean intercept, βij is a common mean attribute coefficient of level j of attribute i, and δ(n) and are individual deviations from mean intercept α and mean preference parameter βij.</sentence>
+    <sentence>Both δ(n) and are random variables.</sentence>
+    <sentence>Thus, the RC model has a unique set of coefficients (both slope and intercept) for each individual n. Finally, ɛt is the group-wise heteroscedastic error term which allows a different variance for each individual, .</sentence>
+  </section>
+  <section name="The Particle Swarm Optimization Algorithm">
+    <sentence>Particle Swarm Optimization was introduced by Kennedy and Eberhart (1995) and has its roots in two main component methodologies.</sentence>
+    <sentence>The first is artificial life and swarming theory, that is, analogs of social behavior found in nature, such as fish schooling and bird flocking.</sentence>
+    <sentence>The second is evolutionary computation, genetic algorithms and evolutionary programming in particular.</sentence>
+    <sentence>PSO possesses some unique advantages.</sentence>
+    <sentence>First, it comprises a very simple concept that can be implemented in a few lines of computer code, second, it requires only primitive mathematical operators, and third, it does not require excessive computer memory and speed.</sentence>
+    <sentence>The algorithm is population based, meaning that it works with a group (swarm) of agents (particles) that collectively move in the d-dimensional real space, where d is the number of the problem’s dimensions.</sentence>
+    <sentence>The location of each particle in the real space corresponds to a potential solution to the problem and it is represented by a vector : where n is the number of particles in the swarm (population size).</sentence>
+    <sentence>The algorithm works as follows.</sentence>
+    <sentence>The particles are placed on specific locations of the problem space if there is prior information about potential good solutions; otherwise the particles are placed in a random manner.</sentence>
+    <sentence>The performance of each particle in the objective function is evaluated and an iterative process begins.</sentence>
+    <sentence>During the process each particle “moves” in the search space by following both its current personal best location (solution) as well as the location of the best particle of the entire swarm with some random permutations.</sentence>
+    <sentence>The rate of the particle’s location change is represented by its velocity .</sentence>
+    <sentence>In each algorithm’s iteration the location and the velocity of a particle i are adjusted for each dimension d using the following functions: (3) (4) where t is the iteration number, rnd1 and rnd2 are two random numbers in the range [0, 1], and pbestid and pbestgd are dimension’s d values of the and respectively.</sentence>
+    <sentence>The weights of the “cognition” part that simulates the private thinking of the particle itself, and the “social” part, which simulates the collaboration among particles are controlled by the two positive constants c1 and c2 (Kennedy, 1997).</sentence>
+    <sentence>They are both usually set to 2, which on average makes the two weights to be 1.</sentence>
+    <sentence>After all particles have completed their move, their fitness score is evaluated, the values of and are updated, and the algorithm proceeds to the next iteration.</sentence>
+    <sentence>The iterative process terminates when a convergence criterion is met, or after a pre-selected number of iterations.</sentence>
+    <sentence>Binary PSO In order to extend the application of the algorithm to discrete domains Kennedy and Eberhart (1997) developed a binary version of PSO.</sentence>
+    <sentence>In this version, the velocity vik represents the probability of particle’s dimension xik taking the value 1.</sentence>
+    <sentence>If for instance, vik = 0.6 then there is a 60% likelihood that xik = 1 and a 40% likelihood that xik = 0.</sentence>
+    <sentence>Since the velocity calculated in Eq (3) plays now the role of a probability threshold, it should be limited to the range [0, 1].</sentence>
+    <sentence>A sigmoid function is used: (5) The particle’s location is now updated as follows: (6) where rnd3 is a random number drawn from a uniform distribution in [0, 1].</sentence>
+    <sentence>A PSO algorithm for designing optimal lines of cars We now turn to deal with our optimization problem (i.e., designing car lines that optimize the degree of differentiation vs commonality among car models in the line).</sentence>
+    <sentence>If we allow the car attributes to take any real value with two decimal points in the specified ranges, then we will have 14,500 possible values for the engine horsepower units [55–200], 4000 values for the maximum speed measured in km/h [160–200 km/h], 650 values for the acceleration measured in seconds required to accelerate from 0 to 100 km/h [7.5–14 s], and 300 values for the fuel consumption measured in litres/100 km [4.5–7.5 lt/100 km].</sentence>
+    <sentence>This results in more than 1013 candidate solutions to the problem.</sentence>
+    <sentence>Even the fastest computer will require more than a week to completely enumerate the whole solution space (exhaustive search), if it does not run out of memory.</sentence>
+    <sentence>In order to find a good approximation of the global optimal solution in tractable time we use the Particle Swarm Optimization algorithm.</sentence>
+    <sentence>Possible solutions to the problem, i.e., lines of cars, are represented by particles that move in a search space of d = l * m dimensions, where l is the number of cars in the line and m is the number of attributes per car.</sentence>
+    <sentence>As noted above, each car profile consists of six attributes, from which the attributes 1–5 are real numbers and the sixth attribute is a binary variable.</sentence>
+    <sentence>The velocity for each attribute is updated using Eq (3).</sentence>
+    <sentence>The dimensions of the particle’s location are updated using Eqs.</sentence>
+    <sentence>(3) and (4) for attributes 1–5 and Eqs.</sentence>
+    <sentence>(5) and (6) for the sixth attribute.</sentence>
+    <sentence>Hence, if we are looking for a single-car line, then the location of each particle corresponds to a single car profile, and is represented by a vector = (xi1, …, xi5, xi6), where xk for k = 1, …, 5 and x6 = 0/1.</sentence>
+    <sentence>Each location’s dimension represents the value of the corresponding car attribute.</sentence>
+    <sentence>If we are looking for a multiple-car line, then we aggregate the different car profiles into a single particle with a size of d = m * 6, represented by a vector = (xi1, …, xik, …, xid), where xk = 0/1 for k = j * 6, j = 1, …, m, and otherwise.</sentence>
+    <sentence>To illustrate, consider a two-car line that is represented by the particle x = (191.44, 21000.5, 180.54, 8.2, 7.1, 1, 58.78, 12500.8, 130.12, 13.15, 5.63, 0).</sentence>
+    <sentence>The first candidate car profile represented by this particle has the following characteristics: engine horsepower is 191.44 horsepower units, price is 21,000.5€, maximum speed is 180.54 km/h, acceleration is 8.2 s to reach a speed of 100 km/h, fuel consumption is 7.1 liters per 100 km, and the car includes ESP, automatic air-conditioning and alloy wheels in the standard equipment.</sentence>
+    <sentence>As noted earlier, the algorithm begins with the creation of an initial population P(0) of n particles, that is, P(0) = { x1(0), …, xn(0)}, where xi(0), i = 1, …, n, corresponds to the ith particle of the initial population (iter = 0).</sentence>
+    <sentence>We generate the particles at random, since there is no prior knowledge about potential good solutions that should be included in the initial population.</sentence>
+    <sentence>Then, we evaluate each particle according to an objective function, and assign the derived value as the particle’s fitness.</sentence>
+    <sentence>To calculate the fitness score of a particle that represents a car profile x, we first estimate the utility value of x for each respondent y.</sentence>
+    <sentence>The utility value (U) is the sum of the partworths (u) of y that correspond to the values of the attributes that form the x, that is, Uyx = ∑ kuyk, where k = 1, …, 6.</sentence>
+    <sentence>Next, we aggregate the utility values of x across the entire sample of respondents to get a degree of the overall customer satisfaction fx provided by x, that is fx = ∑jUjx, where j = 1, …, 1164 is the number of respondents.</sentence>
+    <sentence>When the solution contains more than one car profiles, we assume that a respondent will deterministically select the car that provides him/her with the maximum utility.</sentence>
+    <sentence>Hence, in a solution that includes three car profiles, each respondent will be assigned the car that maximizes his/her utility.</sentence>
+    <sentence>After each respondent is assigned a single car profile, the utilities of all respondents are aggregated and the overall utility value is assigned as the particle’s fitness.</sentence>
+    <sentence>The process is then repeated from the evaluation step, until a pre-specified number of iterations are completed.</sentence>
+    <sentence>We selected a deterministic First choice/Maximum utility rule instead of a probabilistic choice model, because cars are considered “high involvement products”.</sentence>
+    <sentence>Furthermore, probabilistic choice models suffer from the Independence from Irrelevant Alternatives (IIA) property, which overestimates the market shares of similar products in the line.</sentence>
+    <sentence>More specifically, assuming that there were three look-alike profiles in the initial population, a probabilistic choice model will estimate the cumulative probability of consumer choosing all three look-alike profiles, as the sum of the partial choice probabilities of these three profiles if each of them had been included on its own in the line.</sentence>
+    <sentence>The use of a deterministic choice rule eliminates the IIA property, since only the highest utility product receives a probability to be chosen.</sentence>
+    <sentence>Hence, the proposed mechanism derives optimal lines of cars whilst compensating for look-alike profiles that may have been randomly included in the initial population.</sentence>
+    <sentence>The algorithm has been implemented using the MATLAB programming platform.</sentence>
+    <sentence>Different population sizes, as well as different values for the maximum number of iterations were tested in the three-car line problem.</sentence>
+    <sentence>The results indicated that for maximum number of iterations more than 600, there is no gain in performance, while the best performance was achieved for a population size of 60 particles.</sentence>
+  </section>
+  <section name="Results">
+    <sentence>Consumer preferences for car attributes Tables 1 and 2 present the aggregate estimates of the RC model for the whole sample, assuming part-worth and vector relationship of consumer preferences, respectively.</sentence>
+    <sentence>It can be seen that all parameters in both tables are highly significant at the 0.01 level and intuitively signed.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Estimates of the RC model assuming part-worth relationship of consumer preferences.</sentence>
+    <sentence>Attribute level RC model Intercept 35.409a (42.065) 100 engine horsepower units 11.319a (21.644) 13 s required to accelerate from 0 to 100 km/h −5.717a (−13.436) 180 km/h max speed 1.663a (4.444) 6.5 lt/100 km fuel consumption -6.461a (-15.943) ESP, auto air-conditioning and allow wheels in the standard equipment 15.224a (25.435) 15,000 euros price −12.386a (−22.806) a Coefficient significant at or below the 0.01 level.</sentence>
+    <sentence>t-values in parentheses.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Estimates of the RC model assuming vector relationship of consumer preferences.</sentence>
+    <sentence>Attribute RC model Intercept 60.223a (8.298) Engine horsepower units 0.453a (21.644) Acceleration (in seconds required to accelerate from 0 to 100 km/h) −2.859a (−13.436) Maximum speed (in km/h) 0.166a (4.444) Fuel consumption (in litres/100 km) −4.307a (−15.943) ESP, auto air-conditioning and allow wheels in the standard equipment 15.224a (25.435) Price (in euros) −0.003a (−22.806) a Coefficient significant at or below the 0.01 level.</sentence>
+    <sentence>t-values in parentheses.</sentence>
+    <sentence>The estimated part-worth values of the attribute levels for the part-worth model are shown graphically in Fig 1.</sentence>
+    <sentence>It is easily verified that all of them are intuitively signed.</sentence>
+    <sentence>Attribute importances are presented in Fig 2.</sentence>
+    <sentence>Aggregate part-worth utility charts Fig 1.</sentence>
+    <sentence>Aggregate part-worth utility charts.</sentence>
+    <sentence>Attribute importances Fig 2.</sentence>
+    <sentence>Attribute importances.</sentence>
+    <sentence>Attribute importances have been calculated with the usual transformation formula based on the attribute level part-worth utilities.</sentence>
+    <sentence>The relative importance of each attribute is measured by the proportionate range between maximum and minimum level utilities within each attribute (Wind, 1976).</sentence>
+    <sentence>The relative importance is computed in percentage terms to reflect its weighted importance and can take the following general form (Gustafsson et al., 2003; Hair et al., 1998).</sentence>
+    <sentence>(7) where, wi = relative importance of attribute i, max (βij) = maximum level’s j estimated part-worth utility in attribute i and min (βij) = minimum level’s j estimated part-worth utility in attribute i.</sentence>
+    <sentence>It can be seen that the combination of extra equipment (ESP, automatic air conditioning, and alloy wheels) has the greatest importance (0.288).</sentence>
+    <sentence>Price comes second in importance (0.235), followed by technical characteristics such as horsepower (0.214), fuel consumption (0.122), acceleration (0.108) and maximum speed (0.032).</sentence>
+    <sentence>It should be emphasized that the derived importances are intuitively sized given the nature of the specific car-type segment on which our conjoint experiment focused.</sentence>
+    <sentence>Assessing the conjoint model’s overall fit A model’s predictive validity refers to the degree of correlation between the current scores that, for example, a respondent allocates to a given criterion variable and future estimated scores of some relevant criterion variables (Leigh, MacKay, &amp; Summers, 1984).</sentence>
+    <sentence>In other words, validity measures provide an indication as to how consistently the model can predict a set of evaluations given by a group of respondents.</sentence>
+    <sentence>We followed a standard procedure to assess our conjoint RC vector model’s predictive validity, by estimating Pearson’s and Spearman’s correlation coefficients between actual and predicted full profile evaluations (see also, Hair et al.</sentence>
+    <sentence>(1998)).</sentence>
+    <sentence>Table 3 shows the estimated individual-level attribute coefficients for five illustrative respondents who participated in our experiment, as well as the respective estimated mean values for the overall sample.</sentence>
+    <sentence>Examination of the results suggests that the measures of the model’s predictive accuracy for the estimation of attribute coefficients are all within the acceptable range for both the aggregate results and for each of the five individuals.</sentence>
+    <sentence>More specifically, Pearson’s and Spearman’s coefficients reveal a statistically significant and highly positive relationship between the actual and predicted scores for the overall sample (rpearson = 0.816, p &lt; 0.01; rspearman = 0.840, p &lt; 0.01) and the five illustrative respondents as well.</sentence>
+    <sentence>We can therefore conclude that our approach gives an accurate fitted model, which is useful in practice and has high statistical consistency.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Predictive accuracy of the conjoint experiment results.</sentence>
+    <sentence>Attribute coefficient estimates (vector model) Predictive accuracya Engine horsepower units Acceleration (in seconds required to accelerate from 0 to 100 km/h) Maximum speed (in km/h) Fuel consumption (in litres/100 km) ESP, auto air-conditioning and allow wheels in the standard equipment Price (in euros) Pearson Spearman Overall sample (mean values) 0.450 −3.130 0.199 −4.793 16.157 −0.003 0.816 0.840 Selected respondents 0.408 −3.059 0.189 −4.799 11.192 −0.003 0.718 0.618 0.489 −3.107 0.205 −4.877 7.722 −0.003 0.832 0.929 0.432 −3.185 0.205 −4.759 41.559 −0.004 0.859 0.819 0.493 −3.084 0.259 −4.763 17.439 −0.002 0.857 0.765 0.491 −3.126 0.199 −4.758 23.047 −0.003 0.899 0.845 a All estimated coefficients of Pearson’s correlation and Spearman’s rho are statistically significant at the 0.01 level.</sentence>
+    <sentence>Derived optimal car line-ups Based on the estimations of the RC model assuming vector relationship of consumer preferences, we run our PSO algorithm to find the optimal solutions for a car line consisting of one, two, or three different car models.</sentence>
+    <sentence>Twenty replications are performed in each case.</sentence>
+    <sentence>A final population of 60 particles along with their fitness scores is provided in each replication, from which we can choose the best or any other solution with fitness close to the best.</sentence>
+    <sentence>In the single-car line, as well as the two-car line, the algorithm reaches approximately the same solution (global optimum) in all replications.</sentence>
+    <sentence>In the three-car line case the algorithm provides several different solutions throughout the 20 replications, of which we chose the solution with the highest fitness score.</sentence>
+    <sentence>Table 4 reports the derived car lines, the utility for each car profile, the line fitness indices (overall portfolio utility) and the percent of customers assigned to each car profile.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Empirically derived optimal lines of cars for the different scenarios.</sentence>
+    <sentence>Single-car line Two-car line Three-car line 1st 1st 2nd 1st 2nd 3rd Horsepower 200 200 55 200 55 92.35 Price (in €) 23653 23653 10607 23653 10607 13919 Maximum speed (in km/h) 197.9 197.9 164.3 197.9 164.3 172.4 Acceleration (in s) 7.83 7.83 13.44 7.83 13.44 11.27 Fuel consumption (in lt/100 km) 7.12 7.12 4.95 7.12 4.95 6.53 Extra equipment (ESP, air-conditioning, alloy wheels) 1 (Yes) 1 (Yes) 0 (No) 1 (Yes) 0 (No) 1 (Yes) Car utility 35.76 34.95 7.71 34.13 6.35 2.53 Choice share 100% 80.07% 19.93% 78.35% 15.89% 5.76% Car line fitness index 35 42.66 43.01 Inspection of Table 4 reveals some interesting patters.</sentence>
+    <sentence>First, all the derived car portfolios share some common models, suggesting that such optimization algorithms are necessary in identifying how to combine new and existing car models.</sentence>
+    <sentence>Second, models within each car line are sufficiently heterogeneous with respect to some characteristics and more homogenous with respect to some others, suggesting that our approach could be particularly useful in balancing the degree of differentiation vs commonality among models in a car line.</sentence>
+    <sentence>We remind our reader that optimal car model configurations are derived based on consumer preferences for car attributes and thus look-alike model configurations within a car line-up reduce consumer’s utility and thus result in lower fitness scores.</sentence>
+    <sentence>Third, the derived utility levels suggest that variation–differentiation among car models of a product line elevates customer satisfaction.</sentence>
+    <sentence>Fourth, the choice shares for the two and three-product portfolios reveal that choice shares differ markedly.</sentence>
+    <sentence>Thus the distribution of demand across the elements of a product portfolio is asymmetric.</sentence>
+  </section>
+  <section name="Prototype system development">
+    <sentence>To support the proposed methodology, a prototype system has been also developed.</sentence>
+    <sentence>Upon starting the prototype application, a graphical user interface becomes visible to the user.</sentence>
+    <sentence>The application uses the tabbed pane philosophy, as it employs a distinct windowpane for each type of action that the user would perform.</sentence>
+    <sentence>In the prototype version, three conceptual sections are identified, namely, “Scenario building”, “Solutions’ population”, and “Adjusting an individual solution”.</sentence>
+    <sentence>An additional menu is available at the top of the window, to control some general actions.</sentence>
+    <sentence>The application window is split in two vertical parts (see Fig 3): A windowpane that contains all the necessary controls for each tab (buttons, textboxes etc.)</sentence>
+    <sentence>and a quite large white area, on the left of the window.</sentence>
+    <sentence>That area is visible for every tab and is used to capture the evaluated scenarios and the related cars.</sentence>
+    <sentence>Scenario building Fig 3.</sentence>
+    <sentence>Scenario building.</sentence>
+    <sentence>Scenario building The scenario building features are quite straightforward.</sentence>
+    <sentence>In order to define a new scenario, the user must specify the number of the products in the car line-up, as well as the minimum and maximum values for each attribute.</sentence>
+    <sentence>Solutions’ population and adjustment The “Solutions” Tab provides the user with the top-ranked solutions (i.e., particles) of the selected scenario.</sentence>
+    <sentence>The user first selects the scenario which he/she prefers to evaluate and then the “Run” menu item under the “File” Item of the main menu.</sentence>
+    <sentence>The prototype invokes the MATLAB® computing software via the Jmatlink tool (Müller &amp; Waller, 1999) and returns the top-ranked particles of the population, as described in the previous sections.</sentence>
+    <sentence>The users can also illustrate the results in a table or a bar chart format.</sentence>
+    <sentence>The table presents the solution in one car per row (i.e., in the 3 car-line scenario, there are 3 rows per solution) while the bar chart presents the fitness per solution (see Fig 4).</sentence>
+    <sentence>Population of solutions Fig 4.</sentence>
+    <sentence>Population of solutions.</sentence>
+    <sentence>The proposed algorithm recommends a population of solutions to the user.</sentence>
+    <sentence>However, frequently it is a business requirement to go on with a single solution.</sentence>
+    <sentence>In an optimistic case, the single recommended solution could be the one with the highest fitness.</sentence>
+    <sentence>Nevertheless, it is possible that this is not the case.</sentence>
+    <sentence>Users could bring into the table, a posteriori, additional factors that could influence their decision, besides the cars’ attributes or the corresponding utilities.</sentence>
+    <sentence>For instance, a manager would like to stick with the proposed values of 5 out of 6 attributes and modify the values of the 6th one (e.g., the price due to emerging economic situations, or the maximum speed due to additional production limitations).</sentence>
+    <sentence>In order to support this business requirement, the prototype will provide the user with the ability to adjust the proposed solution for a specific car (evaluated under a specific scenario).</sentence>
+    <sentence>The user can graphically adjust the values to any of the car attributes and get a visualization of the new results (Fig 5): A gauge with two needles will plot the new fitness and compare it with the past one (one needle corresponds to the new value and one to the past one).</sentence>
+    <sentence>Adjusting a solution Fig 5.</sentence>
+    <sentence>Adjusting a solution.</sentence>
+    <sentence>This way, the user can visualize the difference between the two solutions or else, the trade-off between imposing the new factors under consideration and the primary solution.</sentence>
+    <sentence>Moreover, the prototype displays a pie chart with the re-calculated utility shares for all the cars in line.</sentence>
+  </section>
+  <section name="Discussion–conclusions">
+    <sentence>Competition in the car market pressures for low costs and prices, whilst customer demand pressures for high product variety.</sentence>
+    <sentence>This situation presents a considerable dilemma for many car manufacturers.</sentence>
+    <sentence>Industry practice suggests that although approaches based on component commonality can substantially lower the costs of proliferated car lines, the manufacturer’s overall profits may decline as well, due to reduced differentiation among models in the car line.</sentence>
+    <sentence>Evidently, car manufacturers face a considerable dilemma regarding the balance between differentiation and commonality among models in a line-up.</sentence>
+    <sentence>Strategies based on component commonality have been widely used by many manufacturers of assembled goods.</sentence>
+    <sentence>The proposed framework has direct and important implications for managers in the automotive and other capital-intensive industries.</sentence>
+    <sentence>Component sharing among models in a line results in economies of scale and thereby direct savings in manufacturing and design costs, whilst differentiation in key car characteristics enhances firm’s ability to charge price premiums and thereby increases overall profits.</sentence>
+    <sentence>This paper presents a novel probabilistic approach for designing car lines that optimize the degree of differentiation vs commonality among models in the car line and provides valuable insight into how to combine new and existing car models.</sentence>
+    <sentence>To the best of our knowledge, this issue has received limited attention in the existing literature.</sentence>
+    <sentence>Some illustrative car lines are constructed directly from consumer preferences using the Particle Swarm Optimization Algorithm.</sentence>
+    <sentence>Our approach was applied to stated preference data derived from a large conjoint experiment involving preferences for automobiles.</sentence>
+    <sentence>Contrary to the existing few PSO applications in the area of design optimization, this study utilizes a large dataset of actual consumer stated-preferences and also considers product attributes which can take any value from a continuous range.</sentence>
+    <sentence>Evidently, our tool can be particularly useful in the automotive and other capital-intensive industries where products are often specified in terms of continuous variables such as weight, length, speed, capacity, power, energy, time etc.</sentence>
+    <sentence>The results are promising and generally demonstrate that variation within the product line elevates customer satisfaction.</sentence>
+    <sentence>In an integrated fashion, we provide optimal car model configurations for a car manufacturer offering a line that consists of one, two, or three models.</sentence>
+    <sentence>These models consist of components that can be common or unique across configurations in the line depending on the estimated consumer preferences.</sentence>
+    <sentence>The manufacturer chooses the components and based on customer-driven data derived from a conjoint experiment, a decision if a component is used commonly across models in the line or if several distinct variants are used can be made.</sentence>
+    <sentence>The proposed methodology is also incorporated into a prototype system, which is an incipient version of an expert system where the user can acquire a concrete impression of the system’s capabilities.</sentence>
+    <sentence>Such prototypes are extremely useful as they may serve as a basis for deriving a system specification, and facilitate rapid software development to validate business logic requirements.</sentence>
+    <sentence>Furthermore, our proposed prototype system can operate as an experimental test-bed to test specific algorithms and/or provide the general context to test the integration of supplementary modules and services.</sentence>
+    <sentence>The analysis presented in this paper yields several interesting and direct insights, which can provide important guidelines to car manufacturers and designers.</sentence>
+    <sentence>At a very broad strategic level, our results show that close coordination among design, manufacturing and marketing departments is needed to effectively balance the degree of commonality and differentiation in car line-ups and make sound decisions regarding configuration and component sharing from a customer preference perspective.</sentence>
+    <sentence>While manufacturing costs always decline with the use of commonality, the firm’s overall profits and market shares may decline as well because of reduced differentiation.</sentence>
+    <sentence>Based on empirical consumer data derived from a large-scale conjoint experiment, our results provide specific guidelines for manufacturers regarding those components that should be made common among car models in the line, in terms of their attractiveness as candidates for commonality.</sentence>
+    <sentence>Our findings provide firms with important insight for managing product variety, and our conclusions reach beyond the automotive industry.</sentence>
+    <sentence>Contrary to common perception, no direct link lies between the level of choice a firm offers its customers and complexity in manufacturing (Pil &amp; Holweg, 2004).</sentence>
+    <sentence>Evidently, the success of any strategy regarding the amount of product variety a firm should offer must depend upon the extent to which a firm is aware of and willing to accommodate the needs of its customer base.</sentence>
+    <sentence>A misaligned strategy may be futile or may even hurt the firm’s revenues.</sentence>
+    <sentence>Our approach which utilizes customer-based data and is also incorporated into a prototype system can offer useful advice and facilitate relevant managerial decisions to a great extent.</sentence>
+    <sentence>Our study, however, is not without limitations, which suggest some directions for future research.</sentence>
+    <sentence>First, the literature in the area of conjoint analysis has grown significantly over the last thirty years and different types of conjoint analysis techniques have been proposed (see e.g.</sentence>
+    <sentence>Kuzmanovic, Savic, Andric Gusavac, Makajic-Nikolic, and Panic (2013), Wu, Liao, and Chatwuthikrai (2014)).</sentence>
+    <sentence>It would be desirable to extend the current framework to other conjoint techniques such as hybrid conjoint analysis and Hierarchical Bayes choice-based conjoint techniques.</sentence>
+    <sentence>Second, our examination of product variety in car line-ups provides a static picture of the problem.</sentence>
+    <sentence>However, the dynamic aspect of product variety remains open.</sentence>
+    <sentence>It is true that the more product generations a firm offers over time, the more effective variety it offers to its customers.</sentence>
+    <sentence>In the automotive sector, the average life cycle from the introduction of a car model to replacement or major facelift has been steadily declining.</sentence>
+    <sentence>Future studies might want to consider such aspects and provide a more dynamic view of the problem.</sentence>
+    <sentence>Third, to keep the scope of the study within reasonable limits, our analysis does not consider the cost structure of a multi-product car line.</sentence>
+    <sentence>The extension one might consider is to include cost variables and provide a more collective examination of the factors shaping optimal product line decisions.</sentence>
+    <sentence>Fourth, strategies based on component commonality have been widely used by many manufacturers of assembled goods and consequently have also received substantial attention in the research community.</sentence>
+    <sentence>As a result, the application of such methods to physical product design seems straightforward.</sentence>
+    <sentence>On the other hand, similar applications should be also extended to the service sector as well.</sentence>
+    <sentence>For example, an important question would be to examine which service dimensions should be used to differentiate between customer segments and which service components must be held constant and shared across all service variants.</sentence>
+    <sentence>The proposed framework could be extended to service contexts as a means to jointly consider experiential design areas (e.g., back-office support, physical environment, service employees, service delivery process, and fellow customers).</sentence>
+    <sentence>Useful extensions may also include different service sectors where success depends heavily on customer experience, utility, and satisfaction such as hotels, restaurants, and health care.</sentence>
+    <sentence>Studying the commonalities as well as the differences among products or services in a portfolio could be a valuable venue for future research.</sentence>
+    <sentence>We view the present effort as a first step to integrate such important decisions from a design standpoint and hope that such issues will be further analyzed in future research efforts.</sentence>
+  </section>
+</article>

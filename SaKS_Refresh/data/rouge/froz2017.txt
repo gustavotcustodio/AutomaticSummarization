@@ -1,0 +1,564 @@
+We develop a methodology to classify lung nodule and non-nodules. 833 lung scans were extracted from LIDC-IRDI database. Three methods used was artificial crawlers, rose diagram and hybrid model. The artificial crawlers was adapted to work on 3D images. The best result was achieved from hybrid model, with accuracy of 94,3%.
+
+0.056848 - Lung cancer is the major cause of death among patients with cancer throughout the world.
+0.070364 - The main symptom that indicate the lung cancer is the presence of lung nodules.
+0.179185 - This work proposes a methodology to classify lung nodule and non-nodule using texture features.
+0.120283 - The state-of-art of the presented work are the adaption of the Artificial Crawlers and Rose Diagram techniques for representing patterns over 3D images.
+0.075199 - Several information are extracted based on the texture behavior of these methods, allowing the correct classification of lung nodules candidates using Support Vector.
+0.152913 - Objective: This work proposes a methodology to classify lung nodule candidates and non-nodule candidates based on computed tomography (CT) images.
+0.082687 - Methodology: The Lung Image Database Consortium (LIDC-IDRI) image database is employed for our tests.
+0.056738 - Three techniques are employed to extract texture measurements.
+0.086863 - The first technique is artificial crawlers (ACs), an artificial life algorithm.
+0.099978 - The second technique uses the rose diagram (RD) to extract directional measurements.
+0.163765 - The third technique is a hybrid model that combines texture measurements from artificial crawlers and the rose diagram.
+0.050420 - The support vector machine (SVM) classifier with a radial basis kernel is employed.
+0.112903 - Results: In the testing stage, we used 833 scans from the LIDC-IDRI database.
+0.085011 - For the application of the methodology, we decided to divide the whole database into two groups, training and testing.
+0.047962 - We used partitions of training and testing of 20/80%, 40/60%, 60/40% and 80/20%.
+0.070922 - The division was repeated 5 times at random.
+0.042339 - We reached a mean accuracy (mACC) of 94.30%, a mean sensitivity (mSEN) of 91.86%, a mean specificity (mSPC) of 94.78%, a coefficient of accuracy variance (CAv) of 1.61% and a mean area under the receiver operating characteristic (mROC) curves of 0.922.
+0.067146 - Conclusion: Lung cancer has the highest mortality rate and one of the smallest survival rates after diagnosis.
+0.040404 - An early diagnosis increases the survival chance of patients.
+0.069892 - The proposed methodology is a useful tool for specialists in the detection of nodules.
+0.090536 - We believe we contribute for the expert system field because 1) the adaption of the Artificial Crawlers and Rose Diagram methods as 3D texture descriptors is innovative and contains great potential; 2) we adapted and developed measurements from the 3D texture descriptors; and 3) the simplicity and discriminative power of the methodology can be extended to applications based on images with other contexts.
+0.037634 - Cancer is an uncontrolled growth of cells in a specific region of the body.
+0.060606 - Lung cancer has the highest mortality rate after diagnosis because of its late detection and treatment (Wood et al., 2012).
+0.035794 - The high mortality rate is associated with its late diagnosis, which normally occurs at advanced stages of the disease.
+0.091869 - The presence of lung nodules suggests cancer and indicates the stage of the disease.
+0.069444 - The detection of nodules is essential to patient prognosis and an early diagnosis increases the chance of survival.
+0.042553 - Additionally, increased information increases the precision of diagnosis.
+0.068966 - Interest in the development and use of digital image processing techniques applied to CT, with the goal of enhancing diagnosis precision, has increased recently.
+0.043393 - The combination of these techniques has led to the development of computer-aided detection (CAD)/computer-aided diagnostic systems (Polakowski et al., 1997).
+0.081913 - A CAD system typically consists of four stages: 1) image acquisition; 2) segmentation of nodule candidates; 3) extraction of features from the candidates; and 4) reduction of false positives (classification into nodules and non-nodules).
+0.061162 - All stages are fundamental to the success of a CAD system.
+0.079511 - In this work, we examine the feature extraction and classification stages.
+0.067183 - In these stages, we obtain the necessary information to reduce the number of false results.
+0.053640 - In CAD methodologies, the feature extraction stage depends on: 1) geometry (for example, how round the candidate is); and 2) texture (grey level distribution).
+0.028369 - In this work, we only use texture features.
+0.111802 - The goal of this work is to analyze lung nodules, classifying the candidates into nodules or non-nodules.
+0.057692 - The features used for classification are extracted in three ways.
+0.117444 - The first technique uses an artificial life model, called artificial crawlers.
+0.070738 - The curves extracted from it use the candidate CT scans as environments.
+0.097825 - The second technique uses gradient vectors to extract texture features from the candidates based on a circular histogram called the rose diagram.
+0.107518 - The third technique is a hybrid model that combines the texture features extracted from the other two methods.
+0.057692 - The support vector machine classifier is used in this methodology.
+0.029963 - In Section 2, we describe related work.
+0.101354 - In Section 3, the three proposed methods (ACs, RD and hybrid) are described.
+0.088356 - In Section 4, we outline the proposed methodology for classification of nodule candidates using the three methods and the support vector machine (SVM) classifier.
+0.080808 - In Section 5, we present and discuss the results.
+0.064103 - In Section 6, we report the conclusions of this work.
+0.048859 - As previously explained, a lung nodule detection system is commonly divided into several steps.
+0.038462 - Each of these steps has its own challenges to overcome.
+0.045855 - In nodule segmentation, one of the biggest difficulties is in isolating the nodule when connected with a vessel (juxtavascular) or with pleura (juxtapleural), without loss of texture.
+0.064677 - With such losses, the whole system can be prejudiced, leading to wrong conclusions about the nodules.
+0.043011 - After segmentation, wrong candidates to be nodules may be generated, known as false positives.
+0.050420 - One big challenge is to reduce the false positives without losing actual nodules.
+0.055866 - Determining which measurements of texture and/or form should be used in combination with a computational intelligence system is the main difficulty of any system.
+0.075028 - Over the years, several researchers have been making efforts to develop methodologies to overcome these challenges.
+0.039216 - We briefly present some works that aim to contribute solutions to these problems.
+0.117584 - Mousa and Khan (2002) used SVM to classify lung nodules and non-nodules in CT exams using circular features and the mean variance of the detected edges.
+0.089158 - They used 50 nodule and non-nodule candidates for training and 16 images for testing.
+0.076586 - An 87.5% increase in sensitivity was achieved by the SVM classifier.
+0.120607 - The cases of training and test was manually chosen for both nodule and non-nodule candidates.
+0.087581 - Jing, Bin, and Lianfang (2010) presented a methodology that classifies lung nodules in CT scans based on shape, geometry, grey level and texture features using SVM.
+0.077922 - They used a rule-based approach to exclude blood vessels from the images before acquiring the region of interest (ROI).
+0.057554 - The extracted shape feature is the invariant moment (ellipticity and major and minor axis of the ROI).
+0.061162 - The geometric features are: area, circularity, slenderness and degree of rectangularity.
+0.056022 - The grey-level features are the mean and variance of the grey levels.
+0.051282 - The texture features are: energy, entropy, contrast and adverse moment.
+0.082397 - The highest accuracy obtained was 85.44%.
+0.106259 - This work used 50 slice CT images, including 50 lung nodules candidates and 204 non-nodules candidates.
+0.054507 - The authors explain that the small sized candidates and the irregular shapes of the nodules caused a few omissions and misclassification.
+0.067436 - Lee, Kouzani, and Hu (2010b) used a Random Forest based classification aided by clustering for detection of lung nodule.
+0.186487 - This method used a hybrid random forest algorithm to classify the lung nodules and non-nodules.
+0.105825 - The images were obtained from 32 patient scans in the LIDC-IRDI.
+0.064103 - The authors achieved 98.33% sensitivity and 97.11% specificity.
+0.075269 - The clustering techniques chosen was k-means and expectation maximization algorithms, which requires parameterization.
+0.081117 - The number of clusters used was 2 in the classification aided by clustering method.
+0.068964 - Namin, Moghaddam, Jafari, Esmaeil-Zadeh, and Gity (2010) present a methodology with two steps, segmentation and classification of lung nodules in malign and benign using fuzzy k-nearest neighbour (FKNN).
+0.015873 - FKNN is used in both steps.
+0.067146 - The extracted features are textures based on the intensities of the voxels (Hounsfield units) and the geometry.
+0.067183 - An 88% accuracy and a mean of 10.3 false positives per exam were reported.
+0.069106 - The author also presented that the nodules with small size and/or irregular shapes were the main shortcomings of the segmentation method.
+0.093284 - Tartar, Kilic, and Akan (2013) suggest an approach that classifies lung nodules in CT scans using hybrid features.
+0.042146 - Four techniques are explored: principal component analysis (PCA) and minimum redundancy maximum relevance (mrMR), statistical features extraction, geometrical features extraction and an hybrid method.
+0.053763 - They evaluated statistical values from PCA in two dimensions and mrMR with geometrical features.
+0.078431 - The results were 90.7% accuracy, 89.6% sensitivity and 87.5% specificity.
+0.095171 - The methodology adopts a dataset of 2D CT slices evaluated by radiologists, divided in 95 nodules and 75 non-nodules from 63 patients.
+0.049566 - The use of two dimensional images for shape-based features extraction may raises the sensitivity, but prejudice the specificity of the third and fourth method because of the limited analysis of the whole nodule property on the original 3D CT. Zhang et al.
+0.098259 - (2013) proposed an approach to classify lung nodules in four categories: well-circumscribed, vascularized, juxtapleural and pleural tail.
+0.060083 - The method describes both the lung nodule and the surrounding context information to perform the characterization in two distinct ways: 1) superpixel labelling, which labels the pixels as foreground or background, and 2) context curve calculation.
+0.083333 - The image database resource was the early lung cancer action program (ELCAP), which contains 50 low-dose scans.
+0.044944 - This method resulted in 82.5% accuracy.
+0.059042 - Their database contained 379 unduplicated lung nodules with locations indicated by annotations.
+0.086331 - The nodules images was cropped with a 31 x 31 pixels window for extracting the context curves.
+0.049808 - As superpixel labelling results in texture characteristics, there is no guarantee that the nodule image sliced comprises all fundamental features of the nodule texture.
+0.074627 - The methodology developed by Choi and Choi (2014) uses Hessian matrices to calculate two angular histograms.
+0.096593 - The angular histograms of the normal surface are used as features to eliminate structures linked to lung parenchyma and to classify the remainder as nodules or non-nodules.
+0.087963 - Using 84 exams from the LIDC, they achieved 97.4% accuracy, 97.2% sensitivity and 97.7% specificity.
+0.041929 - The method multi-scale dot enhancement filtering is applied into 3D shape of the object, but lacks of pre-processing techniques.
+0.098191 - It was used 84 exams with a total of 148 isolated, juxtapleural and juxtavascular nodules.
+0.000000 - Carvalho Filho et al.
+0.136295 - (2014), proposed the classification of lung nodules and non-nodules using taxonomic diversity indices.
+0.090909 - The computation of the indices was based on phylogenetic trees, which were applied to the characterization of the nodule candidate.
+0.076023 - The SVM classifier and the radial-basis funcion (RBF) kernel were used.
+0.076063 - The LIDC (833 scans) resulted in 97.55% mean accuracy, 85.91% mean sensitivity and 97.7% mean specificity.
+0.056738 - In the work developed by Pu et al.
+0.068841 - (2008a) the authors use adaptive borders algorithms to delimit the area of the juxtapleural nodules without selecting lung external tissue together with the region of interest.
+0.044944 - The methodology is divided into two steps.
+0.042553 - The first one is the image pre-processing.
+0.044818 - The second one corrects the defects caused by the exclusion of juxtapleural nodules.
+0.092361 - The experiments used 20 datasets and obtained an accuracy of 90%.
+0.078704 - This work uses an Adaptive Border Marching method to segments the lung region, reducing the over-segmentation problem.
+0.022409 - However, this algorithm, although adaptive, requires some parameters, assigned arbitrarily in this work.
+0.095539 - The methodology proposed by Shen, Bui, Cong, and Hsu (2015) presents a lung nodule segmentation method, focused on juxtapleural nodules.
+0.056738 - The authors separated the methodology into three steps.
+0.050420 - First, the image pre-processing generates one initial mask with an adaptive threshold.
+0.055556 - Secondly, the inflexion point detection (horizontally and vertically) is realized using chain-code algorithm, to find inflexion points.
+0.070513 - Lastly, correction of the lung edge is done using SVM.
+0.093043 - The methodology achieved an accuracy of 92.6%.
+0.050314 - The chain-code technique to detect inflexion points is highly sensitive to noises, which is the main challenge of this work.
+0.067019 - Depending on the scans quality, this technique strongly depends on the adaptive threshold method and SVM performance to not raise the over-segmentation and under-segmentation ratios.
+0.082483 - Tan, Deklerck, Jansen, Bister, and Cornelis (2011) presents a CAD system to detect lung nodules in CT images using nodule and vessel enhancement filters and a computed divergence feature for cluster the nodules.
+0.123566 - To classify, invariant features were extracted, defined on a gauge coordinates system, that separates nodules from non-nodules structures, using SVM and Artificial Neural Network.
+0.028369 - This methodology reached an sensitivity of 87.5%.
+0.047138 - 235 cases of LIDC database were selected for evaluation.
+0.098208 - The work of Pu, Zheng, Leader, Wang, and Gur (2008b) proposes a method to achieve lung nodule detection based on geometric analysis of the signed distance field in CT images.
+0.067340 - The methodology achieved an maximum sensitivity of 95.1%.
+0.085627 - The methodology was evaluated with 52 low-dose screening CT exams.
+0.085627 - The related works have been described with their highlights and shortcomings.
+0.055664 - In this work, we proposed a methodology that overcomes those inconveniences.
+0.056022 - The majority of those works, with the exception of Carvalho Filho et al.
+0.000000 - (2014), Shen et al.
+0.033755 - (2015) and Tan et al.
+0.000000 - (2011), utilized few exams for their study cases.
+0.041667 - This work takes the advantage of use a relevant number of exams, inspired by Carvalho Filho et al.
+0.020833 - (2014) work.
+0.000000 - Shen et al.
+0.086284 - (2015) chain-code approach is very sensitive to noises, differently from the proposed method of Artificial Crawlers, which is low sensitive to them, due to its evolutionary properties.
+0.101473 - The work of Mousa and Khan (2002) uses manually segmented nodules and non-nodules candidates, in contrast of the proposed methodology.
+0.088332 - The nodules candidates are segmented using markers by the radiologists and the non-nodules are obtained from Carvalho Filho et al.
+0.073343 - (2014) methodology, since the non-nodule separation in this work is automatically generated.
+0.000000 - Jing et al.
+0.033755 - (2010) and Namin et al.
+0.069892 - (2010) presented a sensitivity reduction due to the irregular shapes of the nodules candidates.
+0.067227 - Our work uses extraction methods fully based on texture to overcome this situation.
+0.000000 - Lee et al.
+0.033755 - (2010b) and Pu et al.
+0.000000 - (2008a) their approaches utilize techniques that require parameterization, empirically obtained.
+0.094282 - The original AC method was adapted in this work to not need any parameterization, as well as RD method.
+0.000000 - Finally, Tartar et al.
+0.033755 - (2013) and Zhang et al.
+0.088290 - (2013) methods are adapted to extract features from two-dimensional slices from the CT exams.
+0.061536 - This may reduce the natural characteristics of the lung nodules, if the chosen slices do not comprise all information necessary to recognize the object.
+0.059701 - This work uses all the three-dimensional properties of the CT scans in both proposed techniques.
+0.033755 - Table 1 summarizes the approaches.
+0.000000 - Table 1.
+0.059072 - Summary of the related works.
+0.093466 - Works Objective Database Cases Key differences Mousa and Khan (2002) Nodule classification Proprietary 50 Circular features and mean variance to classify lung nodules and non-nodules using SVM Jing et al.
+0.063174 - (2010) Nodule classification LIDC 50 Lung nodule classification using SVM and shape, geometry, grey level and texture features Lee et al.
+0.031008 - (2010b) Nodule classification LIDC 32 Classification aided by clustering using random forest Namin et al.
+0.047962 - (2010) Nodule segmentation and classification LIDC 63 FKNN classification using texture and geometry features Tartar et al.
+0.070053 - (2013) Nodule classification Proprietary 63 Lung nodules classification using PCA and mrMR features Zhang et al.
+0.074238 - (2013) Nodule classification ELCAP 50 Lung nodule classification using superpixel labelling and context curve Choi and Choi (2014) Nodule classification LIDC 84 Nodule and non-nodule classification using angular histograms of the normal surface Carvalho Filho et al.
+0.085977 - (2014) Nodule classification LIDC-IRDI 833 Nodule Classification and non-nodule structures using taxonomic diversity indices Pu et al.
+0.053763 - (2008a) Lung segmentation Proprietary 20 Adaptive borders algorithms to delimit lung Shen et al.
+0.041344 - (2015) Nodule segmentation LIDC 233 Bidirectional chain-code and SVM for classification Tan et al.
+0.053691 - (2011) Nodule segmentation LIDC 235 Invariant features extraction and SVM and Artificial Neural Network for classification Pu et al.
+0.078433 - (2008b) Nodule detection Proprietary 52 Progressive clustering and Shape similarity analysis for lung nodule detection These studies contributed to the construction of the proposed methodology.
+0.071279 - A number of techniques are explored and the testing methods we use are identical to those of Carvalho Filho et al.
+0.000000 - (2014).
+0.058480 - These methods were chosen because they are rigorous and yielded reliable results.
+0.126744 - This section describes the techniques used in the feature extraction step of both the artificial crawlers and the rose diagram.
+0.079459 - Artificial crawlers Artificial Life are models that imitate life in nature Langton (1989).
+0.056437 - The individuals that compose these models attempt to behave in similar ways to real organisms, and their behaviours, actions and lifespan are abstracted in a logical form.
+0.087033 - Based on the Artificial Life concept, evolutionary algorithms and ACs were originally designed as models that use two-dimensional images as the environment.
+0.088999 - The individual, called the artificial crawler (AC), lives in the pixels of grey-level images (Zhang & Chen, 2004).
+0.038369 - Throughout evolution, some actions (movement, improvement, competition, stability, survival and death) are observed in the AC individuals.
+0.030581 - Spatially close individuals are labelled as participants of the identical colony.
+0.044818 - The colonies, as well as the numbers of participants, change as evolution occurs.
+0.035354 - Each AC has certain characteristics: t is the time or iterator of the ACs algorithm, e(t) is the energy of the individual in time t; δ(t) is the colony the individual belongs to in time t; and β(t) is the location
+0.055227 - They move to the nearest pixel with the highest intensity (local maximum) as they absorb energy from the environment to achieve this goal.
+0.032258 - The higher the intensity of the pixel, the greater the amount of energy absorbed.
+0.026936 - There are seven rules that the ACs must follow.
+0.046296 - The rules are applied to every time t until the end of the cycle for every AC i.
+0.000000 - ∀i, .
+0.042553 - The initial value of every AC is e0.
+0.000000 - ∀i, t, if ei(t) < emin, then ACi dies.
+0.037037 - At each cycle, if the energy of any AC is less than a minimum value emin, it dies.
+0.074906 - The AC is removed from the image.
+0.000000 - ∀i: ei(t) ≥ emin, .
+0.047962 - At each time t, the ACs will move according to three possible conditions, presented in Eq (1).
+0.024353 - (1) (a) If the maximum pixel intensity of the 8-pixel neigbourhood of βi(t) of the AC i is lower than the pixel intensity of βi(t), the AC does not move.
+0.031898 - (b) If the maximum pixel intensity of the 8-pixel neigbourhood of βi(t) of the AC i is higher than the pixel intensity of βi(t) and it is unique
+0.031153 - (c) If the maximum pixel intensity of the 8-pixel neigbourhood of βi(t) of the AC i is higher than the pixel intensity of βi(t) and it is not unique
+0.000000 - ∀i: ei(t) ≥ emin, .
+0.010336 - When an AC i moves, it will lose one unit of energy defined by emin.
+0.036036 - ∀i, j: and dies.
+0.037244 - When ACs i and j occupy the same location at the same time, the one with the higher energy survives and the other one dies.
+0.000000 - ∀i, .
+0.027778 - The AC i absorbs λ percent of the pixel intensity it lies in at time t, if it moved.
+0.000000 - This amount is converted into energy.
+0.000000 - ∀i, j: ei(t) ≥ emax, .
+0.024465 - The maximum energy the ACs can retain is defined as emax.
+0.051282 - The rules are applied to all ACs at all times.
+0.070175 - We can observe the state of emergency and balance of the population.
+0.019900 - With evolution, no individual will die or regroup in a colony (emergency) at a certain time.
+0.033573 - Certain ACs will move to areas of high intensity to absorb energy, losing a unit simultaneously (balance).
+0.074906 - The result is a state of balance.
+0.057554 - By recording the steps taken in the evolution of the ACs, we can later extract useful information.
+0.058480 - The numbers of iterations and colonies in the ACs algorithm reach equilibrium.
+0.041344 - These properties characterize the texture features of the environment through a series of evolution curves.
+0.039801 - The curves are: agent evolution, inhabitant settlement, colony formation and scale distribution (Zhang et al., 2013).
+0.036697 - The agent evolution curve represents the number of ACs per epoch.
+0.041237 - The number of ACs drops at each iteration because of the depletion of energy, and depends on the placement of valleys and peaks of intensity in the environment.
+0.046784 - The second curve, inhabitant settlement, is similar to the agent evolution curve.
+0.040404 - It represents the number of extant ACs per iteration.
+0.037037 - The curve of colony formation depicts the number of colonies formed by elements within a radius of distance.
+0.046512 - The increment of the radius size results in fewer colonies with more individuals per colony.
+0.033613 - The scale distribution depicts the statistical representation of the colonies at different scales.
+0.029963 - Different textures lead to varied scale distributions.
+0.000000 - This curve is an important technique for discerning texture.
+0.065078 - Rose diagram The RD is a circular histogram with bars that represent sectors (Mardia & Jupp, 2009).
+0.064103 - The RD resembles a flower, and the sectors resemble petals.
+0.047962 - The number of sectors in the RD is determined by the user and the group angle intervals.
+0.064103 - The RD extracts information based on angular features of objects.
+0.025641 - Many directional measurements, such as local gradients, can be used.
+0.051680 - The Sobel filter is commonly used to calculate the gradients (Lee, Seo, Ryoo, & Yoon, 2010a).
+0.067896 - Some features may be extracted using the Sobel gradients (Mardia, 1972).
+0.043290 - One of these features is the mean direction of the gradient angles (X), which can be calculated using Eq (2).
+0.047337 - (2) in which θ is the representative angle of the sector,1n is the total number of angles and λ is represented by Eq (3).
+0.040268 - (3) The complement of the mean direction, which is called the circular variance (S0 ), is computed using Eq (4).
+0.017897 - (4) The circular standard variation (s0) is calculated by Eq (5): (5) in which S0 is the circular variance.
+0.043290 - The mean resulting length (F) is computed using Eq (6): (6) in which n is the total number of angles.
+0.034364 - The kurtosis (K) is computed by Eq (7): (7) in which X is the mean direction of the gradient angles and n is the total number of angles.
+0.109396 - The skewness (A) can be extracted from the RD and is computed using Eq (8).
+0.043290 - (8) in which X is the mean direction of the gradient angles and n is the total number of angles.
+0.056738 - In this section, we describe the proposed methodology.
+0.085630 - The main goal of this work is to construct a consistent methodology for the classification of candidates into nodules or non-nodules.
+0.048930 - There are four phases: image acquisition, feature extraction, classification and validation.
+0.111446 - In the first phase, nodule candidates are extracted from LIDC-IRDI and the non-nodule candidates are extracted from Carvalho Filho et al.
+0.000000 - (2014).
+0.177881 - The second phase is feature extraction, which is performed using three methods: artificial crawlers, the rose diagram and a hybrid model from both models.
+0.051282 - The third phase is the classification using the SVM classifier.
+0.052758 - The last phase is the validation of the classification, intended to measure the efficacy of the methodology.
+0.047619 - Fig 1 illustrates the proposed methodology.
+0.000000 - Fig 1.
+0.019324 - Proposed methodology flowchart.
+0.079946 - Image acquisition The lung images used in this work are available in the public database LIDC-IRDI (Armato et al., 2011).
+0.052758 - Some principles, such as identity protection, patient consent and lung cancer diagnosis, are defined by the publisher.
+0.064327 - The database contains 1012 CT scan series and 290 radiography scan series.
+0.059140 - Each image contains information regarding the nodules, such as location, size, quantity and malignancy.
+0.049751 - The scans are diagnosed by four specialists and all diagnostics are indicated in the auxiliary files.
+0.067227 - Some scans contain conflicting information between the image header and the auxiliary files.
+0.091869 - Therefore, only 833 CT scans were chosen to be part of the candidate database.
+0.124494 - The images are divided into two databases: nodule and non-nodule candidates.
+0.121019 - A CT scan, provided by the LIDC-IRDI database, contains lung nodules markers from the four specialists.
+0.051282 - The scan may have one or more nodules marked individually.
+0.044944 - Sometimes the specialists disagree on the diagnosis.
+0.062640 - These markers contain the coordinates and the slices of the 3D CT exam in which the nodules are found.
+0.093567 - The size of the nodule varies from 3 mm to 30 mm.
+0.040968 - The database does contain nodule markers that are less than 3 mm, but they are represented by a single coordinate, not by a bounding box.
+0.026936 - These smaller nodules are not included in this work.
+0.056022 - Fig 2 depicts some examples of nodule candidates used in the proposed methodology.
+0.000000 - Fig 2.
+0.033755 - 2D view of nodule candidates.
+0.026936 - We utilize all regions marked by specialists as nodules.
+0.060606 - For example, if the image has four markings, we use them in the training and test as four distinct nodules.
+0.053872 - The idea is to use all the specialist expertise.
+0.104662 - The non-nodule candidates were extracted from the methodology described by Carvalho Filho et al.
+0.000000 - (2014).
+0.161471 - Their work uses the quality threshold algorithm followed by a growing region to segment lung nodule and non-nodule candidates from the LIDC-IRDI database.
+0.084015 - We used non-nodule candidates from Carvalho Filho et al.
+0.015873 - (2014) because their work is consistent.
+0.084978 - Non-nodules are excluded from the detection step and can be reused in the proposed methodology.
+0.088572 - Their nodule candidate database is not employed in the present work because the database is small (and may thus result in misclassification) compared to the specialist markers from LIDC-IRDI.
+0.057582 - Fig 3 demonstrates examples of non-nodule candidates.
+0.020833 - Fig 3.
+0.056628 - 2D view of non-nodule candidates.
+0.051282 - Feature extraction The extraction of features occurs in this phase.
+0.014184 - This is a necessary step for posterior classification.
+0.074074 - The proposed methodology uses three techniques for feature extraction.
+0.053640 - The first one is the ACs model, the second is the RD model, and the third combines features from the ACs and the RD.
+0.076862 - Directional texture (the rose diagram model) exploits the advantages of both the directional and the intensity information in the images (Rivera, Castillo, & Chae, 2015).
+0.046901 - Analyzing that information in a local neighbourhood diminishes the influence of noise in the feature extraction because the gradient works with the edges, regardless of single pixel intensity variation.
+0.078704 - The use of artificial life concept in image classification resulted in promising results by Zhang and Chen (2004).
+0.047962 - The ACs method provided high level statistical features that represent consistencies in the textures of the images.
+0.032051 - Both techniques utilize different types of analyses inside the texture.
+0.069652 - If used together, they may reduce weaknesses and the classifier has the advantages of both methods.
+0.112501 - Artificial crawlers The ACs model and the steps necessary to extract the feature vectors are presented in Fig 4.
+0.000000 - Fig 4.
+0.048309 - ACs model diagram.
+0.102418 - Step 1 uses both nodule and non-nodule candidates and retrieves the corresponding evolutionary curves from the ACs algorithm for all images.
+0.048780 - In step 2, the templates are chosen to aid in posterior feature extraction, which is based on the differences between the curves.
+0.067183 - The templates of nodule candidates are the CT scans that best represent the entire database.
+0.047101 - The more similar the curves of the nodule templates are to the candidate analyzed, the higher the probability of the candidate belonging to the nodule class.
+0.046122 - Step 3 uses the differences between the candidates and the template curves and the area under the candidate curves as features.
+0.063315 - Step 1: The extraction of the evolutionary curves (the ACs algorithm is applied to every candidate from the two separate databases) generates four evolutionary curves.
+0.086022 - We added some modifications to the ACs method developed by Zhang and Chen (2004).
+0.095238 - We adapted the ACs to CT scans because they are 3-dimensional images.
+0.048930 - ACs individuals may move in the x, y and z axes.
+0.032258 - The ACs perceive the 26-neighbourhood space instead of the previous 8-neighbourhood plane.
+0.053872 - Fig 5 demonstrates the AC adaptation for this work.
+0.000000 - Fig 5.
+0.000000 - An AC’s perceived neighbourhood.
+0.028369 - The black cube is the AC’s voxel.
+0.029963 - The transparent cubes are the neighbourhood voxels.
+0.064103 - (a) 2D 8-pixel neighbourhood from Zhang and Chen (2004).
+0.044944 - (b) The proposed 3D 26-pixel neighbourhood.
+0.030651 - The new ACs assign the number of initial ACs using the voxels not in the background as the location for the new-born individuals.
+0.053872 - The old ACs approach assigns random positions to individuals.
+0.082818 - This approach is not effective for lung nodule and non-nodule candidate images because elements born in background voxels will not interact with texture variations.
+0.062016 - Individuals will be isolated and the curve extraction will contain irrelevant information regarding the environment.
+0.051680 - We can observe the behaviour of each candidate curve at the end of the extraction.
+0.084015 - Fig 6 depicts the curves extracted from one nodule candidate.
+0.000000 - Fig 6.
+0.072501 - Curves extracted from one nodule candidate.
+0.010753 - Step 2: In this step, one or more nodule candidates are chosen as templates.
+0.059701 - Templates represent the entire nodule candidate database for further comparison between the templates and other candidates.
+0.069444 - We choose templates only from the nodule candidates because of the inferior number of candidates in this database.
+0.054726 - It is easier to find elements that best represent the entire set using a smaller base.
+0.067061 - The nodule candidate database contains extra information regarding the size of the nodules, which is used to facilitate the choice of the template.
+0.065359 - We chose three templates (3 mm to 10 mm, 11 mm to 20 mm and 21 mm to 30 mm) because of the variation in the size of the nodules.
+0.040404 - After choosing the template, the evolutionary curves are extracted.
+0.033670 - Step 3: The final step creates the feature vector.
+0.040968 - With the evolutionary curves of the candidates and the templates obtained, the features are calculated in two ways: curve differences and area under the curve.
+0.043011 - The curve distance will calculate the similarity between all candidates and all templates individually.
+0.043290 - The sizes of the images in the database are different because of the diversity of the candidates in the samples.
+0.056848 - This diversity may lead the ACs algorithm to create a variable number of initial ACs.
+0.037037 - The distance between curves may vary too much, even when curves acquired from similar textures have identical behaviour.
+0.051282 - The candidate curves are normalized between 0 and 1 in the y-axis (maintaining the shape of the curves) to reduce this inconvenience.
+0.031898 - The distances used are the Euclidean (Danielsson, 1980), Jaccard (Shameem & Ferdous, 2009), simple matching (Paragios, Rousson, & Ramesh, 2002), Chebyshev (Klove, Lin, Tsai, & Tzeng, 2010) and Manhattan (Chang, Desoky, Ouyang, & Rouchka, 2009).
+0.043011 - For each template, the five distances are calculated and put into the features vector.
+0.031008 - The area under the evolutionary curve of each candidate is included in the feature vector.
+0.090150 - Features from rose diagram model The RD model is presented in Fig 7.
+0.108961 - The model contains the method diagram and the steps necessary to extract the feature vector.
+0.000000 - Fig 7.
+0.048309 - RD model diagram.
+0.055866 - In step 1, the Sobel filter is applied to every candidate, generating the derivatives Gx and Gy, a pair (Gx, Gy) for each candidate image.
+0.041344 - These pairs of derivatives are used in step 2 for the computation of the gradients.
+0.058700 - The Sobel gradients are analyzed through the RD perspective in order to extract the features and to create the feature vector.
+0.051282 - Step 1: The Sobel filter is applied to the candidates.
+0.011204 - One pair of derivatives (Gx,Gy) is obtained for each candidate (Fig 8).
+0.108961 - The model contains the method diagram and the steps necessary to extract the feature vector.
+0.000000 - Fig 8.
+0.042553 - Sobel filter applied to one nodule candidate slice.
+0.051282 - (a) The original image (b) Gx derivative (c) Gy derivative.
+0.028777 - This operation is executed in every slice of a candidate because it is a two-dimensional method.
+0.036697 - The gradients are grouped together into a single RD per candidate.
+0.043290 - Step 2: The Sobel gradients are computed for every pair of derivatives (Gx,Gy) in all non-background image pixels.
+0.030303 - There is no texture variation in background pixels, so it is irrelevant to use the gradient information at these locations.
+0.056848 - Step 3: The last step uses all gradients and creates one RD perspective per candidate.
+0.062350 - Fig 9 depicts one RD from the gradients computed from the identical nodule candidate to Fig 8a.
+0.052846 - The following features are calculated from the populated RD: mean direction, circular variance, circular standard variation, mean resulting length, kurtosis and skewness.
+0.028369 - These calculations are entered into the feature vector.
+0.000000 - Fig 9.
+0.044944 - RD of a nodule candidate (Fig 8a).
+0.120166 - Features from hybrid model The hybrid model is composed of the ACs and RD models.
+0.051948 - It results in one feature vector which is a combination of the feature vectors produced by the other two models.
+0.106765 - Fig 10 depicts the hybrid model scheme.
+0.000000 - Fig 10.
+0.109555 - Hybrid model diagram.
+0.070175 - Table 2 summarizes all features present in the ACs and RD models.
+0.097717 - These features will be combined into a single feature vector in the hybrid model.
+0.000000 - Table 2.
+0.000000 - Features list.
+0.067711 - Artificial crawlers Rose diagram Features agent evolution mean direction inhabitant settlement circular variance colony formation circular standard variation scale distribution mean resulting length curves areas kurtosis skewness 4.3.
+0.096780 - Classification The nodule and non-nodule candidates are treated as two separate classes.
+0.069652 - We used the support vector machine (SVM) classifier with the features extracted in Section 4.2.
+0.031008 - SVM is a group of supervised learning algorithms used for classification or regression Joachims (1998).
+0.042553 - It is straightforward to change kernels with SVM.
+0.040404 - This property allows the description of complex data relationships.
+0.042146 - An implemented version of SVM, the open source library LIBSVM (Chang & Lin, 2011), is used in this work through the tool Weka 3.6.
+0.037736 - The chosen kernel is the RBF, and the parameters c and γ are estimated using the grid search algorithm (Bergstra & Bengio, 2012).
+0.043011 - Validation The last phase demonstrates the consistency of the methodology, measuring its predictive value.
+0.040201 - It computes the accuracy, specificity, sensitivity (Fielding & Bell, 1997), variation coefficient of accuracy (Soliman, Abd Ellah, Abou-Elheggag, & Abd-Elmougod, 2011) and receiver operating characteristic (ROC) curve (Bradley, 1997).
+0.075269 - The entire database of candidate images is partitioned into two groups: training and test.
+0.074074 - The features are extracted using the three proposed methods.
+0.096154 - The results are evaluated and compared to other related works.
+0.080893 - Database separation We used the LIDC-IDRI (Armato et al., 2011) image database which is available on the Internet as a result of the association between the Lung Image Database Consortium and the Image Database Resource Initiative.
+0.043011 - All images are in DICOM format and have up to 16 bits per voxel.
+0.080003 - The computed tomographies (CT) were acquired using various protocols, which complicates the detection of lung nodules.
+0.067039 - In this database, each exam is assigned to a file containing information regarding the contour and features of each nodule, supplied by four specialist physicians.
+0.048930 - The contour indicates the points (x,y,z) of the nodule.
+0.029851 - The entire region inside the contour is taken into consideration during the evaluation by our methodology.
+0.044693 - The features indicate the properties of the nodule, including: degree of difficulty at detection, calcification level, sphericity level, degree of spiculation and degree of malignancy.
+0.044743 - However, this information is only valid for nodules with diameters larger than 3 mm and smaller than 30 mm.
+0.046512 - For nodules smaller than 3 mm, the specialists indicate only the centre of the mass.
+0.038462 - Regions larger than 30 mm are considered to be masses.
+0.052434 - The LIDC-IDRI contains 1012 CT scans.
+0.024465 - Some (179) scans contain two factors that make our methodology impossible.
+0.064815 - The first factor is related to scans that have no nodules larger than or equal to 3 mm.
+0.026936 - These files do not contain the properties cited above.
+0.031558 - The second factor is related to divergences in the marking file, when it does not match the information contained in the DICOM header.
+0.104593 - Therefore, we only applied the methodology to the remaining 833 scans.
+0.093567 - We used the 833 scans as training and testing samples for classification.
+0.084034 - We extracted 6415 nodule candidates from these scans based on the specialists’ markings.
+0.033755 - From Carvalho Filho et al.
+0.050490 - (2014), we retrieved 17,742 non-nodule candidates.
+0.056687 - Even with nearly three times as many non-nodules as nodules, the SVM classifier is able to optimize the separation of these two datasets due to the distinct characteristics vectors between the two samples.
+0.097859 - The candidate database was proportionally divided into training and testing subgroups.
+0.029112 - Four types of proportions were used: 20% for training and 80% for testing, 40% for training and 60% for testing, 60% for training and 40% for testing and 80% for training and 20% for testing.
+0.000000 - Each proportion is permuted five times.
+0.024465 - There are five distinct distributions for the candidate training/testing proportions.
+0.061625 - The goal of this approach is to demonstrate that the results are consistent.
+0.038314 - All training/testing groups provide the mACC, the mSEN, the mSPC, the CAv and the mROC of the five distributions evaluated for each proportion.
+0.067436 - Curves analysis The slope of the evolution curves extracted from the ACs method can be interpreted in several ways.
+0.090664 - Fig 11 depicts two samples of slices, a nodule and a non-nodule.
+0.084015 - We compare the curves extracted from these two sample slices.
+0.000000 - Fig 11.
+0.000000 - Sample slices.
+0.106765 - (a) Nodule and (b) Non-nodule example.
+0.035088 - The agent evolution curve illustrates the number of living ACs per iteration.
+0.062350 - Curves with a steep initial downward trend represent the fast ascending of ACs to high intensity locations.
+0.071560 - The non-nodules do not have a specific behaviour because there is no texture pattern related to high and low intensity.
+0.048387 - However, the nodules normally display high densities in a few locations because of calcification.
+0.057554 - Fig 12 shows a visual representation of this curve with the two sample slices from Fig 11.
+0.000000 - Fig 12.
+0.089055 - Comparison of non-nodule and nodule agent evolution curves.
+0.062016 - The inhabitant settlement curve has a smooth behaviour, similar to the nodule agent evolution curve.
+0.039801 - Images with locations of diffuse high intensity may have more deceased ACs for the initial cycles.
+0.029963 - However, the number decreases in subsequent iterations.
+0.038401 - This phenomenon is common for non-nodules.
+0.036697 - Fig 13 demonstrates the behaviour of the curves in both cases.
+0.000000 - Fig 13.
+0.089055 - Comparison of non-nodule and nodule inhabitant settlement curves.
+0.061303 - We can interpret the colonies with smaller radius as diffuse peaks with high intensities isolated and spatially distant through the texture of the image.
+0.055475 - Curves with a high number of colonies with a small radius are found at the final process of ACs in non-nodule samples.
+0.052758 - Fig 14 demonstrates this behaviour in comparison to the slope of the colony formation curve for nodules.
+0.000000 - Fig 14.
+0.089055 - Comparison of non-nodule and nodule colony formation curves.
+0.078858 - The scale distribution of non-nodules is irregular.
+0.033613 - There are large groups of ACs at the end of the ACs process.
+0.050926 - This behaviour is uncommon in the scale distribution of nodules because few ACs remain close to one another.
+0.039216 - This phenomenon is because of the low number of peaks with high intensity.
+0.036697 - Fig 15 depicts the slope of both cases of scale distribution.
+0.000000 - Fig 15.
+0.089055 - Comparison of non-nodule and nodule scale distribution curves.
+0.067278 - Tests The features are extracted using the three previously described methods.
+0.053872 - The first extraction is provided by the ACs method.
+0.111055 - The second extraction uses the RD method and the third extraction is performed using the hybrid model.
+0.092199 - The classification was performed using the SVM classifier.
+0.120205 - Each method was tested separately and the best results are compared to the literature and discussed.
+0.063116 - The parameters estimated through the grid search technique to the RBF kernel of SVM were c equal to 512 and γ equal to 2.
+0.075269 - The results of the ACs method for feature extraction are presented in Table 3.
+0.071081 - The best result achieved by this method was with the proportion of 40% for training/60% for testing, with mACC of 93.4%, mSEN of 91.82%, mSPC of 93.9%, CAv of 1.67% and mROC of 0.909.
+0.020833 - Table 3.
+0.055556 - Results obtained by the ACs method.
+0.017590 - Training/testing mACC mSEN mSPC CAv mROC % % % % % 20/80 93.28 91.48 93.82 1.39 0.901 40/60 93.4 91.82 93.9 1.67 0.909 60/40 92.46 91.74 93.62 2.18 0.905 80/20 93.27 91.34 93.38 2.5 0.908 The results achieved with RD are reported in Table 4.
+0.083556 - The best results were observed with the proportion of 60% for training/40% for testing.
+0.044657 - The values obtained are lower than the ACs method, with mACC of 66.9%, mSEN of 61.82%, mSPC of 70.46%, CAv of 4.33% and mROC of 0.661.
+0.000000 - Table 4.
+0.055556 - Results obtained through the RD method.
+0.023993 - Training/testing mACC mSEN mSPC CAv mROC % % % % % 20/80 64.18 65.24 65.04 7.71 0.651 40/60 65.82 56.38 71.02 5.31 0.637 60/40 66.9 61.82 70.46 4.33 0.661 80/20 66.72 68.26 66.96 2.14 0.676 The results achieved with the hybrid method are listed in Table 5.
+0.093284 - The best results were achieved in this approach with a proportion of 60% for training/40% for testing.
+0.055723 - We report mACC of 94.3%, mSEN of 91.86%, mSPC of 94.78%, CAv of 1.61% and mROC of 0.922.
+0.000000 - Table 5.
+0.079365 - Results obtained through the hybrid method.
+0.025425 - Training/testing mACC mSEN mSPC CAv mROC % % % % % 20/80 93.54 90.58 94.46 1.5 0.908 40/60 94.2 91.7 94.84 1.14 0.918 60/40 94.3 91.86 94.78 1.61 0.922 80/20 94.22 92 94.52 1.94 0.921 The methodology proposed in this work demonstrated consistent results for the nodule classification problem.
+0.095923 - There was a notable discrepancy between the results obtained in tests between the AC and RD models.
+0.079511 - However, the results were improved by the combination of these models.
+0.064103 - The performances of the methods imply some very useful information.
+0.053763 - The test cases separated by different proportions showed very similar results in each model.
+0.065160 - That means the randomly chosen partitions are well balanced even with more non-nodules candidates than nodules candidates.
+0.064103 - The RD method performs better on true negative rate (mSPC).
+0.076628 - Its power to correctly designate true negatives candidates is clearly observed on Hybrid method, because in comparison to AC model, the mSPC was improved.
+0.070175 - This is the main contribution of the RD features on Hybrid method.
+0.150540 - The best results were achieved with the hybrid model with a training/testing proportion of 60%/40%.
+0.107744 - The worst results were from the RD model tests.
+0.136190 - The RD model approach is not able to classify lung nodules consistently.
+0.062350 - However, the combination of the ACs and RD models is more reliable than the two models alone.
+0.068255 - The best result for the mROC curve can be observed in Fig 16.
+0.071588 - The mROC curve demonstrates the good performance of the hybrid method in comparison with the ACs and RD approaches.
+0.023392 - Any increase in sensitivity will be accompanied by a decrease in specificity.
+0.044743 - We observe that the optimal true positive rate is achieved near the lowest value of the false positive rate.
+0.030581 - Fig 16. mROC curve visualization from 60%/40% training/testing results.
+0.062640 - As can be observed from the hybrid mROC curve, the hybrid method performance benefits mainly from the ACs method.
+0.067227 - However, the RD method also benefits the hybrid performance, although with less influence.
+0.052846 - The reason for this is the adaptation of the SVM classifier with a radial basis in scenarios with characteristics of undetermined relevance.
+0.038462 - The most beneficial features are also the most relevant ones.
+0.078704 - So the classifier is responsible for using the relevant features of both methods to optimize the hybrid performance.
+0.049217 - Tests of the methodology were implemented on an Intel i5-3230M CPU @2.60 GHz on-board personal computer.
+0.049808 - The total average execution times of the extraction of features, training and testing steps were recorded and are presented in Tables 6 and 7.
+0.000000 - Table 6.
+0.000000 - Computational costs for training step.
+0.030441 - Method Mean elapsed time (seconds) Feature extraction Model evaluation Total ACs 13,764 47.64 13811.64 RD 358.46 129.14 487.6 Hybrid 14122.5 215.98 14338.48 Table 7.
+0.000000 - Computational costs for testing stage.
+0.035211 - Method Mean elapsed time (seconds) Feature extraction Model testing Total ACs 8.2 0.5 8.7 RD 0.3 0.25 0.55 Hybrid 8.5 0.7 9.2 Table 6 reports the mean average time consumed during the training stage for each method.
+0.040404 - The feature extraction is the most time-consuming stage.
+0.064677 - The hybrid method is the most time-consuming because it combines the ACs and RD methods.
+0.090909 - This stage uses the entire database to retrieve the necessary information for feature extraction and the classification for model evaluation.
+0.081871 - This evaluation is performed using the SVM classifier and the extracted features.
+0.050926 - The training stage can be performed only one time and is recorded in a file for later testing.
+0.022409 - Table 7 reports the mean elapsed time, in seconds, for the testing stage.
+0.031008 - This is the least time-consuming stage because it is performed on only one sample.
+0.080460 - With the trained database, the feature extraction and the model testing (classification) are fast enough to fit in a CAD system with acceptable performance.
+0.056022 - Comparison with related works Table 8 lists the results achieved in the literature.
+0.078431 - These results can be compared to the results obtained using the proposed methodology.
+0.078431 - The comparison is approximate because some works used different databases and test scenarios.
+0.000000 - Table 8.
+0.067340 - Comparison between our results and results of related works.
+0.046296 - Works Database Cases Sensitivity Specificity Accuracy ROC % % % Mousa and Khan (2002) Proprietary 50 87.5 – – – Jing et al.
+0.014184 - (2010) LIDC 50 – – 85.44 – Lee et al.
+0.011696 - (2010b) LIDC 32 98.33 97.11 – 0.9786 Namin et al.
+0.014981 - (2010) LIDC 63 – – 88 – Tartar et al.
+0.000000 - (2013) Proprietary 63 89.6 87.5 90.7 – Zhang et al.
+0.025157 - (2013) ELCAP 50 – – 82.5 – Choi and Choi (2014) LIDC 84 97.2 97.7 97.4 – Carvalho Filho et al.
+0.031442 - (2014) LIDC-IRDI 833 85.91 97.7 97.55 0.8062 Pu et al.
+0.000000 - (2008a) Proprietary 20 – – 90 – Shen et al.
+0.014184 - (2015) LIDC 233 – – 92.6 – Tan et al.
+0.014184 - (2011) LIDC 235 87.5 – – – Pu et al.
+0.086837 - (2008b) Proprietary 52 95.1 – – – proposed work LIDC-IRDI 833 91.86 94.78 94.30 0.922 Our results are obtained from the hybrid model in the proportion of 60% for training and 40% for testing.
+0.038462 - The only accurate comparison is with Carvalho Filho et al.
+0.000000 - (2014).
+0.085106 - Their methodology was evaluated with the identical conditions.
+0.060606 - Compared to the work by Carvalho Filho et al.
+0.037453 - (2014), our methodology achieved a smaller specificity.
+0.074012 - It is less capable of correctly classifying the non-nodule cases.
+0.060606 - Sensitivity measures the capability of correct classification in nodule cases (patients with the illness) and our methodology is more efficient.
+0.076023 - Achieving a good balance between the sensitivity, specificity and accuracy is important.
+0.038462 - This balance was not found in Carvalho Filho et al.
+0.000000 - (2014).
+0.065160 - It is preferable for the methodology to have the smallest number of errors in the cases with cancer.
+0.055227 - Other works use smaller or proprietary databases, which reduces the reliability of the results in comparison to the results in the present study.
+0.052910 - Inasmuch some works use different study cases, we implemented three classical techniques for texture analysis using our tests scenarios for a righteous comparison of the proposed method.
+0.028986 - The first one is the Histogram, the second one is the Gray-Level Co-Occurrence Matrix and the last one is the Gray Level Run Lengths.
+0.059925 - The results are presented on Table 9.
+0.000000 - Table 9.
+0.037453 - Comparison between classical techniques and proposed method.
+0.044559 - Method Accuracy % Sensitivity % Specificity % Histogram 81.91 72.4 84.44 Gray-Level Co-Occurrence Matrix 84.26 75.54 86.18 Gray Level Run Lengths 85.34 81.55 86.56 Proposed method (Hybrid) 94.30 91.86 94.78 Through Table 9, it can be observed that the proposed methodology is superior to the classical methods, with the same database, classification method and evaluation conditions.
+0.053872 - The proposed work demonstrates great potential with this comparison.
+0.135987 - This work presented a method that uses ACs, RD and SVM for classifying lung nodules and non-nodules.
+0.070100 - The tests performed with the hybrid model yielded 94.3% mean accuracy, 91.86% mean sensitivity, 94.78% mean specificity, 1.61% coefficient of variation of the accuracy and 0.922 mean area under the ROC curve.
+0.084034 - These results were obtained using the proportion of 60% training and 40% testing.
+0.106383 - Some adaptations were made to the ACs model.
+0.058480 - The first adaptation enables the use of CT scans as the environment.
+0.070922 - The original ACs methodology used only 2D images.
+0.039801 - The other change is the elimination of the random factor in image location for newborn ACs.
+0.089695 - In the RD model, the use of a Sobel gradient as directional data extracted from the texture of the candidates was designed.
+0.081565 - The directional statistical measurements were extracted using this method.
+0.089636 - The changes to the ACs model are the main contribution of this work.
+0.079511 - These changes adapted the model for the classification of medical images.
+0.062016 - Although the good results presented in this article, we believe this methodology can be improved.
+0.048930 - For this purpose, we propose the following as future work: 1.
+0.064103 - The methodology uses the original intensity values of the voxels.
+0.061162 - However, related works use some techniques to accentuate the images qualities.
+0.052758 - That means the classification results should improve if any pre-processing method fits well in the methodology.
+0.083122 - The Rose Diagram method use fixed size for the sectors to extract the gradient features.
+0.072351 - An adaptive way to choose the size of the sector may optimize the method result.
+0.059611 - The templates used by AC method used the nodule size for defining the templates.
+0.051282 - Several characteristics can be used to determining templates, i.e.
+0.054054 - the nodules malignancy features.
+0.047962 - This can embrace new opportunities for others classification goals, like the distinctions between benign and malign nodules.
+0.086245 - There can be used related methods in the artificial life context.
+0.071588 - Other evolutionary algorithms and genetic algorithms may be used to confront or support the AC method for better performance.
+0.058179 - This approach may also be adapted for temporal series images of Cancer CT exams for recognize nodules and its behavior over time, a four-dimension analysis.
+0.077519 - Both the ACs and RD methods were not widely used in the nodule classification problem.
+0.082251 - The evaluation of both techniques, and the creation of a hybrid method represent an important contribution to the scientific community.
+0.058374 - 1 Each rose diagram sector groups a range of angles.
+0.044743 - The larger the range, the larger the size of each section, and the total number of sections is decreased.
+
+[Frase 3] This work proposes a methodology to classify lung nodule and non-nodule using texture features.
+[Frase 71] This method used a hybrid random forest algorithm to classify the lung nodules and non-nodules.
+[Frase 21] We believe we contribute for the expert system field because 1) the adaption of the Artificial Crawlers and Rose Diagram methods as 3D texture descriptors is innovative and contains great potential; 2) we adapted and developed measurements from the 3D texture descriptors; and 3) the simplicity and discriminative power of the methodology can be extended to applications based on images with other contexts.
+[Frase 465] The best results were achieved with the hybrid model with a training/testing proportion of 60%/40%.

@@ -1,0 +1,218 @@
+Intelligent modeling , prediction and control of the braking process are not an easy task if using classical modeling techniques , regarding its complexity .
+In this paper , the new approach has been proposed for easy and effective monitoring , modeling , prediction , and control of the braking process i.e .
+the brake performance during a braking cycle .
+The context based control of the disc brake actuation pressure was used for improving the dynamic control of braking process versus influence of the previous and current values of the disc brake actuation pressure , the vehicle speed , and the brake interface temperature .
+For these purposes , two different dynamic neural models have been developed and integrated into the microcontroller .
+Microcontrollers are resource intensive and cost effective platforms that offer possibilities to associate with commonly used artificial intelligence techniques .
+The neural models , based on recurrent dynamic neural networks , are implemented in 8-bit CMOS microcontroller for control of the disc brake actuation pressure during a braking cycle .
+The first neural model was used for modeling and prediction of the braking process output ( braking torque ) .
+Based on such acquired knowledge about the real brake operation , the inverse neural model has been developed which was able to predict the brake actuation pressure needed for achieving previously selected ( desired ) braking torque value in accordance with the previous and current influence of the pressure , speed , and the brake interface temperature .
+Both neural models have had inherent abilities for on-line learning and prediction during each braking cycle and an intelligent adaptation to the change of influences of pressure , speed , and temperature on the braking process .
+Active safety and comfortability of modern cars has become a major concern of many research activities ( Aleksendrić & Duboka , 2006 , 2007 ) .
+It is especially related to the dynamic control of the braking process and accordingly the brake performance .
+The dynamic behavior of the brakes should be subjected to further investigation in the sense of modeling , prediction , and better control of their performance during a braking cycle .
+It is important because the disc brake performance is strongly dependent on the wide mechanical and chemical diversity in properties of the pad ’ s constituents ( Cetinel , Ozturk , Celik , & Karlik , 2006 ; Eriksson , Bergman , & Jacobson , 2002 ; Mutlu , 2009 ) , and highly nonlinear phenomena involved in the field of tribological interactions between the brakes friction pair .
+It provokes highly dynamic braking process and stochastic change of braking torque .
+Significant research has been conducted in order to control braking process and braking forces ( Aleksendrić & Barton , 2009 ; Boada , Boada , Muñoz , & Dı´az , 2006 ; Wang & Zhuo , 2008 ; Yi & Chung , 2001 ) , as well as the wheel slip ( Lee , Hedrick , & Yi , 2004 ; Rajamani , Phanomchoeng , Piyabongkarn , & Lew , 2011 ) .
+It imposed complex requirements to the expert system and a controller of the braking system operation ( Davis , Puskorius , Yuan , & Feldkamp , 1992 ) .
+The controller abilities in the case of highly nonlinear process , such as the braking process , are very important .
+An automotive controller must be able to cope with multiple unknown parameters , which can not be readily measured and may change during controlled process .
+The most important controller ability is related to its prediction capabilities .
+Intelligent control methods are seen as a modeling and control tool in various industrial areas , offering new possibilities for intelligent control and extension of the expert knowledge about the controlled processes .
+Artificial intelligence and expert systems have been used successfully in optimizing the development phase of some new products ( Lolas & Olatunbosun , 2008 ) .
+For example , the paper ( Lolas & Olatunbosun , 2008 ) demonstrates how a tool like neural networks can be designed and optimized for use in reliability performance predictions .
+Providing possibilities for dynamic prediction and control of output variables are very important today .
+In Peng et al .
+( 2011 ) , a complex electromechanical system operation has been controlled using neural network PID control mode enhancing the safety and stability of the system .
+Furthermore , a multilayer perceptron ( MLP ) neural network is employed in Park , Hwang , Kim , Lee , and Gi Jung ( 2010 ) to classify the pedestrians and the vehicles that have different reflection characteristics for a microwave or for development of the engine parameter predictive model ( Kean Yap & Karri , 2012 ) .
+Predictive capabilities of neural networks have been shown in Wu and Liu ( 2012 ) , for prediction of a car fuel consumption and for modeling unknown or unspecified functional relationships between the input and output ( Pintér , 2012 ) .
+The neural network abilities are particularly important for designing the expert system , through their combination with the micro – processing technology ( Lin , Horng , & Lin , 2009 ) , offering a new space for development of intelligent solutions in the area of modeling , prediction , and control .
+According to researches ( Civera et al. , 2011 ; Saeks , Cox , Neidhoefer , Mays , & Murray , 2002 ; Turkoglu , 2007 ; Zhang , Xue , Wang , Wang , & Ren , 2009 ) , it is possible to implement the complex ANN based adaptive/predictive control algorithms using single chip computers – microcontrollers .
+Dynamic modeling , prediction , and control of the braking process and accordingly braking torque are very important for further improving of motor vehicles performance during a braking cycle and their active safety .
+The main problem is related to the control of the brake actuation pressure and its adaptation to the different demands .
+The current value of the brake actuation pressure should be set on the level which corresponds to the driver demands and/or demands imposed by electronically controlled systems , such as ABS , ASR , EBS , ESC , and/or demands dictated by the road surface ( wheel slip ) .
+The hydraulic pressure generated by a driver often needs to be corrected during the brake actuation .
+Those corrections have to be done in order to achieve wanted braking torque .
+Due to complex tribological processes generated in the contact of the brakes , setting of the brake pressure level , which provides wanted brake performance , is hard-to-predict .
+The pressure generated for the brake actuation by a driver and the pressure , which provides desired brake performance or a wheel slip , often are not the same .
+It occurs due to different brake performance against synergistic influence of the brake actuation pressure , current vehicles speed , and the brake interface temperature , especially during ABS intervention .
+Accordingly , the pressure used for the brake actuation should be better and more intelligently controlled .
+This paper focuses on development an intelligent control strategy of the brake actuation pressure during a braking cycle and consequently the brake performance .
+It was done through dynamic control of the brake actuation pressure according to the demands imposed by driver and/or ABS/ESC system .
+In order to achieve this goal , we have modeled the complex dynamic influence of the braking regimes ( applied pressure , sliding speed and brake interface temperature ) versus change of the brake performance ( braking torque ) using dynamic artificial neural networks .
+The established functional relationship between inputs/output , represented by the developed neural model , provides possibilities for full-context adjusting of the brake actuation pressure according to the driver demands as well as current and previous values of : ( i ) the vehicle speed , ( ii ) the brake applied pressure , and ( iii ) braking torque .
+Based on developed the neural model of the brake performance , we have developed an inverse neural model of the brake performance that is able to predict the pressure for the brake actuation according to the wanted change of braking torque and the current dynamic influence of vehicle speed and the brake interface temperature .
+In order to be cost effective and acceptable for wider use , the control system has been implemented in low cost microprocessor platforms and can be used in the real time .
+In order to show the implementation feasibility and capacities of the control algorithm proposed in this paper , we have implemented it in the 8-bit CMOS microcontroller .
+This microcontroller was employed for dynamic control of the brake actuation pressure during a braking process in different braking conditions .
+The prediction abilities of the controller have been tested in different braking situations .
+The wanted brake performance of a vehicle is specified by a driver through the brake pedal force and its travel .
+The brake pedal force and its travel depend on the driver brake pedal feel and current braking situation .
+The brake pedal feel gives to the driver a perception of the vehicles braking dynamics and braking performance .
+Change in the brake pedal feel during subsequent brake applications lies in the fact that braking torque is not exclusively correlated to the instantaneous value of the brake actuation pressure , which is generated by a driver , at the moment t. It is because a number of braking phenomena could be induced during a braking process .
+Therefore , for the same pressure , the braking torque could be significantly changed depending on the current speed , the brake interface temperature and condition of the brake friction pair contact surfaces .
+The current value of the brake actuation pressure and such generated braking torque should be observed in the wider context .
+The values of the previous braking torques at the instants t − Δt , t − 2Δt⋯ are very important for control of the overall braking performance regarding the values of pressure , speed , and temperature at those moments .
+The control system of the brake performance should take into consideration the entire history ( i.e .
+context ) of the pedal force , such generated pressure instantaneous value , and achieved braking performance .
+The context based observation of the braking process enables the intelligent control system to perceive the actual desire of the driver regarding the braking performance and compare it with the actual brake performance .
+In order to improve the control strategies of the braking process , we introduce a new algorithm for the brake actuation pressure control , see Fig 1 .
+This control algorithm is consisted by two models based on dynamic artificial neural networks .
+The network N1 was used for dynamic modeling of the real brake performance versus driver demands during a braking cycle .
+The network N2 was further used for prediction of the brake actuation pressure which should provide the wanted ( selected ) brake performance ( braking torque ) , based on the model N1 and such modeled the real brake behavior under specific braking regimes .
+The architecture of control algorithm Fig 1 .
+The architecture of control algorithm .
+The relation between the real braking torque Mbd , for the actual brake actuation pressure p0 , the current speed v and the current brake interface temperature T ( see Fig 1 ) has been established in the moment t and preceding moments t − Δt … Mbd = Mbd ( p0 , v , T , t − Δt ) .
+It is important in order to develop the model of the real brake performance versus influence of p0 , v , T , and to predict the real brake responses ( the neural model N1 ) .
+The brake at its input does not have the desired braking torque but the level of actuating pressure p0 .
+This value of actuating pressure p0 , often needs to be corrected in order to achieve the wanted braking torque Mba .
+It means that the brake pressure p should be controlled variable as a function of the current and previous values of the brake actuation pressure , speed v , the brake interface temperature T , and braking torque Mbd .
+Furthermore , such functional correlation should enable prediction of the brake actuation pressure , for wanted braking torque values , in the case when the current brake performance has to be changed ( see Fig 1 , the neural model N2 ) .
+That is why , the current value of braking torque Mbd should be correlated with the brake actuating pressure , trough relation p = p ( Mbd , v , T , t − Δt ) .
+Such an inverse neural model ( the neural model N2 , see Fig 1 ) of the brake operation will provide the functional relationship between p0 , v , T and desired or wanted braking torque .
+The inverse model approximates the current brake performance versus influence of p0 , v , T. It was used for prediction of the brake actuation pressure p in order to transform the current braking torque into wanted brake performance .
+Wanted braking torque and its change could be differently defined according to the actual braking conditions ( ABS or ESC intervention , panic braking , normal braking , etc . ) .
+In this paper , the wanted braking torque has been set in such a way to provide stable , and at the same time , maximum performance during a braking cycle at the observed moments of the brake operation .
+The relation between Mbd and p0 , v and T ( see Fig 1 ) , as well as the relation between wanted brake actuating pressure p and Mbd , v and T , are highly nonlinear .
+That is why the dynamic neural networks have been used for modeling of these influences regarding their context ( history ) during a braking cycle .
+Neural networks represent a tool that is especially suitable for nonlinear systems modeling .
+NARX neural networks are a special kind of the dynamical neural networks convenient for dealing with this problem .
+In general , they belong to recurrent dynamic networks with feedback connections enclosing several layers of the network .
+Recurrent networks are built in such a way that the outputs of some neurons are fed back to the same neurons or to neurons in the preceding layers .
+They have a dynamic memory such that their outputs at a given instant reflect the current input , as well as previous inputs and outputs that are gradually quenched .
+The NARX ( p , r ) model equation can be represented by Eq ( 1 ) : ( 1 ) where regression order is p for the state , and r for the control ( Dreyfus , 2005 ) .
+An input of the NARX network consists signal values from time t to time t − p + 1 ( output of the process of interest ) , and control values from time t to time t − r + 1 ( input of the process of interest ) .
+In that case , p is the order of model with respect to the state , and r is the order of the model with respect to the control .
+The estimation is based on the minimization of the modeling error , i.e .
+the difference between the output of the process y ( t + 1 ) and the prediction x ( t + 1 ) that has been produced by the model .
+The pressure specified by driver , using the brake pedal – p0 , speed of the vehicle – v , and the brake interface temperature–T are the input variables in the neural network denoted as N1 .
+At the output of the control system is the level of pressure p , which should be used for the brake actuation in order to achieve wanted braking torque .
+The control algorithm ( see Fig 1 ) consists of two serially connected NARX neural networks .
+The first neural network N1 models the actual brake performance and has the value of actual braking torque at output .
+This value is the function not only of the current value of p0 , but also of the previous value of the braking torque Mbd ( t − Δt ) .
+Mbd ( t − Δt ) contains the whole history of the braking system operation in all of the previous braking cycles .
+This history refers not only to the previous values of the braking torques , but also , implicitly , to the history of the applied pressure p0 and braking system performance .
+The functional relation between actual braking torque Mbd and inputs ( p0 , v , and T ) was used for creating the inverse neural network model of the brake performance .
+The inverse neural network model N2 was used for prediction of the brake actuation pressure p. This neural network calculates the pressure p , based on the model of the real brake performance Mbd , for the brake activation in order to achieve wanted braking performance .
+It offers possibility , knowing the real brake responses ( braking torque ) , for calculation of the brake pressure actuation in order to control braking torque during a braking cycle on the desired level ( see Fig 1 ) .
+The block diagram of the procedure used for the development of the intelligent microcontroller based control system , in accordance with the architecture given in Fig 1 , is presented in Fig 2 .
+Procedure for development of microcontroller based control system Fig 2 .
+Procedure for development of microcontroller based control system .
+The training and test data for development of the artificial neural network models are obtained by testing the disc brake using a single-end full-scale inertial dynamometer .
+The disc brake has been tested under strictly controlled conditions and versus different operation conditions regarding pressure , speed , and temperature .
+The brake applied pressure has been varied between 20 and 100 bar .
+For each pressure value , the speed has been varied between 20 and 100 km/h .
+The brake testing has been done for the case of so-called cold brake , where the brake interface temperature was kept below 100°C .
+Based on acquired data , networks N1 and N2 are trained and tested .
+These networks with such evaluated weights and biases make a basis for creation of routines that are implemented in the microcontroller for real time operation .
+Implemented real time control algorithm is tested in Matlab using data acquisition .
+These routines are carefully created in order to minimize computational requirements and to make real time application of the control algorithm feasible .
+The special attention is paid to the routines used for neurons activation function where the trade off between calculation expense and numerical error is present .
+The performance of implemented real time algorithm is tested using data acquisition .
+The same set of data is presented as input to microcontroller and to Matlab routine for control algorithm simulation .
+Acquired output from microcontroller is compared to output obtained from Matlab in order to verify the performance of implemented system .
+Dynamic artificial neural networks have shown to be an effective method for prediction of time series events .
+Nonlinear autoregressive network with exogenous inputs ( NARX neural network ) has been used for modeling of the functional relationship between the brake applied pressure , the speed , the brake interface temperature , and the braking torque .
+Total amount of 45 different NARX recurrent neural networks have been investigated against influence of three widely used training algorithms : Levenberg–Marquardt ( LM ) , Bayesian regularization ( BR ) , and resilient backpropagation ( RP ) .
+Since the proper combination of neural network ’ s architecture and learning algorithm are unknown in advance , a trial and error method has been employed to select the neural model with the best characteristics .
+That is why several NARX network architectures with one , two and three hidden layers have been investigated .
+For the each network architecture , the number of neurons within the hidden layers has been progressively increased .
+The neural model having three hidden layers with 10 , 6 , and 4 neurons and one output layer was selected as one with the best prediction performance ( see Fig 3 ) .
+To simplify development procedure , both neural models , one for modeling the disc brake performance ( denoted as N1 ) , and other for inverse modeling of the braking process ( denoted as N2 ) , have been developed in the completely same way .
+As a result , both neural networks ( N1 and N2 ) introduced in Fig 1 have the same architecture presented in Fig 3 .
+These models are trained with resilient backpropagation algorithm .
+They are employed for predicting of the output versus different control input signals .
+For better network performance , the input data are normalized to the range [ -1 , 1 ] .
+The activation function used for the hidden neurons is hyperbolic tangent represented by Eq ( 2 ) .
+The ‘ purelin ’ activation function has been used between the last hidden and the output layer .
+( see Fig 4 ) .
+( 2 ) The input delay of pressure , speed , and temperature during training process of neural networks was 0.1 s. Thus , past values of input parameters , carrying information about their dynamic changes , have been considered .
+In addition , delay of the output was the same as this input delay .
+The influence of previous on current output values is represented through feedback connection enclosing hidden and output layer .
+The delay of 0.1 s has been chosen to provide enough previous input/output states , based on what the model can be able to make a good prediction and generalization capabilities about further change of the output .
+The architecture of NARX neural networks N1 ( i=1 ) and N2 ( i=2 ) Fig 3 .
+The architecture of NARX neural networks N1 ( i = 1 ) and N2 ( i = 2 ) .
+The flow of data in microcontroller based control system Fig 4 .
+The flow of data in microcontroller based control system .
+The input/output mappings of neural networks , N1 for i = 1 and N2 for i = 2 , are given in ( 3 ) : ( 3 ) where xi ( t ) represents the normalized input vector and yi ( t ) the normalized output of the neural network Ni at moment t. The weight matrices , and bias arrays are obtained during ANN training .
+The input vector for network N1 is given by x1 ( t ) = [ p0 ( t ) ; v ( t ) ; T ( t ) ] , while for network N2 it is x2 ( t ) = [ Mbd ( t ) ; v ( t ) ; T ( t ) ] .
+At the output of N1 the level of desired braking torque : y1 ( t ) = Mbd ( t ) , and at the output of N2 the level of actuating pressure : y2 ( t ) = p ( t ) are obtained .
+In accordance to ANN performance , both output variables are normalized to the range [ -1 , 1 ] .
+Although the relations ( 2 ) seem to be quite simple for implementation , note that the dimensions of matrices and arrays ( ) are high ( e.g .
+IWi are 10 × 12 matrices , Xi are 10 × 1 – see Fig 3 ) .
+Besides , hyperbolic tangent function – Eq ( 1 ) can be computationally expensive .
+This could be the limiting factor for real time operation of developed algorithm in low cost microcontroller .
+The control system shown in Fig 1 is implemented in Atmel Atmega 16 ( Atmel , 2010 ) microcontroller .
+This is a low power 8-bit CMOS microcontroller with 16 Kbytes of in-system programmable flash program memory capable of memorizing the extensive list of instructions .
+These instructions carry out the developed control algorithm , which is composed of two serially connected NARX neural networks .
+1 Kbyte of SRAM is sufficient for storing the data about weights , biases and other relevant constants and variables .
+Three of eight available 10-bit ADC ( Analog to Digital Converter ) channels are used for acquisition of input variables ( p0 , v , T ) .
+The shortcoming of this microcontroller , regarding the desired application , is that it does not have DAC ( Digital to Analog Converter ) .
+The oscillator frequency of up to 16 MHz with throughput approaching 1 MIPS per MHz allows the implementation of such a complex computation procedure as presented in ( 2 ) and Fig 3 with frequency of 20 Hz in real time .
+The flow of data between microcontroller based control system , sensors , and actuator is shown in Fig 4 .
+The flowchart of microcontroller program is shown in Fig 5 .
+Flowchart of interrupt procedure that carries out ADC and implements two NARX… Fig 5 .
+Flowchart of interrupt procedure that carries out ADC and implements two NARX neural networks on acquired data in controlled time instants .
+The sensor signals carrying information about p0 , v , and T are amplified to the range 0–5 V and connected to microcontroller pins ADC0 , ADC1 and ADC2 respectively .
+The actuating pressure is calculated using the program that will be explained in the sequel .
+At the output of the system is the voltage in the range 0–5 V that corresponds to actuating pressure p. DAC is performed by Microchip MCP4921 12-bit DAC ( Microchip , 2007 ) .
+Microcontroller and DAC communicate via SPI interface .
+Only three wires are used since there is no need for microcontroller to receive any data from DAC .
+Serial clock ( SCLK/SCK ) is output from microcontroller that performs as master .
+Using SPI the 12-bit word containing information about the voltage desired at DAC output is sent from microcontroller to DAC .
+The lower nibble of MSB is sent first and the LSB afterwards .
+At the beginning of the microcontroller program , the weight and bias constants are defined .
+Besides , the subroutine for computation of exponential function used in tansig activation function is implemented .
+The frequency of data sampling and computation of actuating pressure level is controlled using Timer1 overflow interrupt .
+Proper adjustment of the initial value of Timer1 gives the cycle frequency of 20 Hz .
+ADC , normalization of acquired data , as well as , all necessary ANN computations are carried out in interrupt routine whose flowchart is given in Fig 5 .
+In the main program in infinite cycle , the 12-bit value corresponding to the level of actuating pressure is sent to DAC via SPI .
+The performance of program implemented in microcontroller is verified using Matlab .
+The same time series of data ( p0 , v , T ) that are put into microcontroller along with the voltage level of actuating pressure p output from control system ( DAC ) are acquired to PC using DAQ ( data acquisition ) .
+The 20 Hz , 12-bit DAQ is used .
+Performance of the microcontroller is presented in Fig 6 .
+Fig 6 shows verification of the neural network models performance through comparison between changes of the real pressure ( normalized values ) and predicted by the microcontroller for the same change of speed , the brake interface temperature , and torque in a braking cycle .
+The microcontroller well predicted the brake actuation pressure change for the case when the wanted change of braking torque was the same as the real one .
+The microcontroller prediction abilities for controlling of the brake pressure actuation are also confirmed in Figs .
+7 and 8 , for initial speeds of 92 km/h and 17 km/h , respectively .
+According to Figs .
+6–8 , the dynamic neural models integrated into the microcontroller learned and generalized the dynamic influence of the current and previous values on the brake performance .
+Comparison between the real pressure and predicted by the microcontroller… Fig 6 .
+Comparison between the real pressure and predicted by the microcontroller during a braking cycle ( maximum value of p signal corresponds to the real pressure of 40 bar for initial speed of 71 km/h ) .
+Comparison between the real pressure and predicted by the microcontroller… Fig 7 .
+Comparison between the real pressure and predicted by the microcontroller during a braking cycle ( maximum value of p signal corresponds to the real pressure between 60 and 70 bar for initial speed of 92 km/h ) .
+Comparison between the real pressure and predicted by the microcontroller… Fig 8 .
+Comparison between the real pressure and predicted by the microcontroller during a braking cycle ( maximum value of p signal corresponds to the real pressure between 40 and 50 bar for initial speed of 17 km/h ) .
+The abilities of implemented control system to predict change of the brake actuation pressure in the case when the real braking torque is different from the wanted braking torque are very important .
+That is why the control system prediction and generalization abilities were tested in the case when the real brake actuation pressure , selected by a driver , should be corrected .
+The microcontroller , based on the inverse neural model of the brake performance , found the brake actuation pressure that will provide wanted change of braking torque .
+Fig 9 shows the braking cycle with the relatively moderate initial speed of 53 km/h .
+It can be observed that the real brake performance is very sensitive to the speed change during a braking cycle .
+According to Fig 9 , braking torque was constantly increased with the speed decreasing , for the mean maximum value of the brake pressure of 40 bar .
+Implemented control system , based on known the brake behavior ( modeled by neural model denoted as N1 ) and recognized influence of previous values of the braking parameters ( p0 , v , T , Mbd ) , predicted the level of brake pressure signal increasing in order to achieve wanted braking torque change ( see Fig 9 ) .
+Based on the microcontroller prediction , the braking torque increasing at the end of a braking cycle was suppressed .
+At the same time , the brake performance has been improved .
+The maximized and stable the brake performance , achieved with the new the brake actuation pressure will provide the shorter braking distance .
+Comparison between the real pressure and the microcontroller correction of the… Fig 9 .
+Comparison between the real pressure and the microcontroller correction of the pressure signal in order to achieve wanted braking torque-initial speed 53 km/h .
+Fig 10 shows a similar braking cycle for the case when the initial speed has been increased on 70 km/h .
+In order to provide stable brake performance ( see doted line in Fig 10 ) , the control system suggested correction of the real brake actuation pressure values .
+The brake pressure was firstly increased , at the start of braking , and after that , it was slowly decreased to avoid sudden increasing of the braking torque at the end of a braking cycle .
+Although , the braking regimes have been changed , the microcontroller , based on dynamic modeling and prediction of the brake performance , has shown good context sensitive abilities .
+Comparison between the real pressure and the microcontroller correction of the… Fig 10 .
+Comparison between the real pressure and the microcontroller correction of the pressure signal in order to achieve wanted braking torque – initial speed 70 km/h .
+In the case when the initial speed was 35 km/h , ( see Fig 11 ) , the real brake performance has been very sensitive to speed decreasing for the real mean maximum pressure of 40 bar .
+Simulation in Fig 11 shows how the control system intelligently adapted the brake activation pressure to the new braking regimes and wanted brake performance .
+The pressure signal predicted by the control system again provided stable brake performance by an appropriate selection of the brake activation pressure .
+Comparison between the real pressure and the microcontroller correction of the… Fig 11 .
+Comparison between the real pressure and the microcontroller correction of the pressure signal in order to achieve wanted braking torque – initial speed 35 km/h .
+In this paper , the intelligent control of the disc brake actuation pressure during a braking process has been designed and developed .
+The proposed approach offers advanced abilities in the dynamic control of highly nonlinear process such a braking process .
+The key advance of the control system is that the current and previous values of influencing factors have been taken into consideration along with braking torque values .
+Using proposed context sensitive intelligent algorithm , the brake activation pressure was adjusted to the level that provides the desired brake performance in different braking situations .
+It was shown that this control system can learn from the real brake performance that enabled a dynamic transformation i.e .
+change of the real brake performance .
+It can significantly increase the passenger car active safety , to provide shorter braking distance , and better braking forces distribution between axles .
+Furthermore , such approach can improve an operation of the electronically controlled system such as ABS or EBS and provides preconditions for setting different brake pedal feel by a driver .
+Dynamic adaptation of the brake actuation pressure can short the time and the number of iterations in order to harmonize the braking force and wanted longitudinal and/or lateral wheel slip for different road surfaces .
+The proposed control system is implemented and experimentally verified using low cost Atmel Atmega 16 microcontroller .

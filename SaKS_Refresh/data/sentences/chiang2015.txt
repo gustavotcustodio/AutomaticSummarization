@@ -1,0 +1,287 @@
+Recently, associative Petri nets (APNs) have been attracted in knowledge representation and modeling of expert systems.
+However, it is a challenge in transferring from a complex system to an APNs model.
+Moreover, the domain knowledge and relationship finding between processes has increased in difficulty and complexity in expert and intelligence systems.
+This paper addresses this issue by proposing a novel systematic procedure to guide the analyst in creating decision support models.
+The proposed construction algorithm can not only reduce the effort of construction but also can easily implement for knowledge representation.
+It can give a summary to describe all states but also simplify the reasoning process.
+An example of malicious email detection is presented to provide empirical evidence in the utility of the systematic procedure of associative Petri net model construction.
+Experimental result shows that our constructed APN model outperforms than other methods.
+Recently, Petri nets (PNs) have been used as a mathematical, graphical tool for modeling and analyzing information processing systems (Peterson, 1981).
+However, it is difficult to plan and model a complex system to a knowledge-based system (KBS) with PNs.
+Problems include structures, relationships between propositions, degree of association between propositions, inconsistency, deadlocks and circularity, reachability, boundedness and liveness are hard to resolve (Chandra & Varghese, 2009; Pathak, Day, Nair, Sawaya, & Kristal, 2007; Peterson, 1981; S’lezak, 2009).
+The tradeoff between complexity of structure and the fitness of the network model is also a key issue (Brin, Motwani, & Silverstein, 1997).
+Therefore, constructing an appropriate network model is really a challenge.
+Many studies of PNs have been proposed to deal with the modeling and verification of the knowledge based systems lately (Hagalisletto, Bjørk, Yu, & Enger, 2007; Huang & Kirchner, 2013; Motallebi & Azgomi, 2012).
+For instance, fuzzy Petri nets (FPNs) and fuzzy neural Petri nets (FNPNs) have been proposed to represent a fuzzy knowledge base and fuzzy reasoning system (Ashon, 1995).
+Gao et al.
+used a fuzzy reasoning Petri net (FRPN) model to represent a fuzzy production rule-based system and decision making rules in a disassembly process (Gao, Zhou, & Tang, 2004).
+A modified fuzzy Petri net (MFPN) for the automated modeling and verification of knowledge-based systems (KBSs) was also proposed (Koriem, 2000).
+Agarwal and Tanniru (1992) have used an incidence matrix of Petri nets to detect structural errors and maintaining rule base integrity.
+Wang, Zhang, Dou, and Hu (2013) defined a fuzzy colored time Petri net and termination analysis for fuzzy rules.
+Konar and Mandal (1996) proposed two different models of fuzzy Petri nets (acyclic and cyclic) for reasoning expert systems.
+Cao and Sanderson (1995) used fuzzy Petri nets to plan task sequences for a robotics system Bugarin and Barro (1994) proposed a knowledge base of fuzzy production rules to process incremental reasoning.
+Shih, Chiang, and Lin (2007) had also proposed a generalized associative Petri net (APN) for reasoning in decision making.
+Moreover, many studies have attempted to model the specific application domain with the different modified Petri net (PN) formalisms.
+The modified Petri net (PN) formalism such as stochastic Petri nets, object-oriented Petri nets (OOPNs), & colored Petri net (CPN) are used in modeling and the implementation of a flexible manufacturing system (FMS) for scheduling and control problems (Tüysüz & Kahraman, 2010; Basak & Albayrak, 2014; Baruwa & Piera, 2015).
+Ou-Yang and Winarjo (2011) proposed a PN integration approach to support multi-agent process mining and then to create the PN based process models.
+A Petri nets-based model is used to understand the dissemination of disruptions and to trace the operational performance in supply chain (Zegordi & Davarzani, 2012).
+The domain-related reference architecture and mapping rules are proposed to guide the analyst in building Petri net models (van der Zee, 2011).
+Shen et al., presented reduction approach to solve the state explosion problem in Petri nets by using matching theory.
+It is addressed to label a weight value on a transition according to the relationship between a place and a transition (Shen, Chung, Chen, & Guo, 2013).
+Besides, a knowledge representation scheme based on Fuzzy petri nets (FPNs) called DRFK (Dynamic Representation of Fuzzy Knowledge) is proposed for dynamic knowledge representation and inference (Wang, Peng, Zhu, Hu, & Peng, 2014).
+However, constructing an appropriate network model for decision making is a challenge because it is hard to systematically transfer from a complex system.
+Thus, most current work related to modified PNs have focused on applying reasoning mechanisms over production rules, rather than proposing a systematic construction method in building PNs (Chandra & Varghese, 2009; García-Pedrajas & Ortiz-Boyer, 2007; Gulati & Tanniru, 1993; S’lezak, 2009; Zahid, Mittal, & Joshi, 2006).
+Over the past few years, several studies have addressed this modeling problem with little progress (Chandra & Varghese, 2009; García-Pedrajas & Ortiz-Boyer, 2007; Liu, Li, Barkaoui, & Al-Ahmari, 2013; Hajdasz, 2014; Faghihi, Reinschmidt, & Kang, 2014).
+The state explosion or problem or state space reduction are addressed to solve in building a Petri nets model process (Shen et al., 2013; Baruwa & Piera, 2015).
+Many authors, however, argue that the use of Petri nets in decision support for the decision making and expert and intelligent systems could be further improved if the model’s size and complexity could be reduced.
+Recently, Shih et al.
+had constructed a generalized APN decision model for reasoning subjectively without doctrine (Shih et al., 2007).
+This study aims to propose a step-by-step systematic way in constructing a decision support model of APN for malicious email detection.
+The remainder of this paper is organized as follows.
+Following the introduction and definition of our proposed APN model, Section 3 proposes an algorithm for APN model construction.
+Section 4 presents an experiment of APN model construction for malicious e-mail detection.
+The evaluation, analysis and discussion of constructed APN models are described in Section 5.
+Finally, conclusions summarized in Section 6.
+An APN is a directed graph containing three types of nodes: places, squares and transitions, where circles represent places, squares represent thresholds of association degree and bars represent transitions.
+Each place contains a token associated with a truth-value between zero and one.
+Each transition is associated with a certainty factor (CF) value between zero and one.
+Directed arcs represent the relationships between places.
+A generalized APN structure, as shown in Fig 1, is defined as a 13-tuple (Shih et al., 2007): where is a finite set of places, is a finite set of transitions, is a finite set of supports, is a finite set of propositions, is a finite set of thresholds of the supports, is a finite set of thresholds of the confidences, is an input function, a mapping from transitions to bags of places, is an output function, a mapping from transitions to bags of places, is an association function that assigns a real value between zero to one to each transition, is an association function, a mapping from places to real values between zero and one, is an association function, a bijective mapping from places to propositions, is an association function that assigns a real value between zero to one to each support, is a function that assigns both threshold of support and confidence.
+A generalized APN structure Fig 1.
+A generalized APN structure.
+Let A be a set of directed arcs.
+If then there exists a directed arc from place to transition .
+If then there exists a directed arc from transition to place .
+If [0,1], then the support is said to be associated with a real value .
+If [0,1], then transition is said to be associated with a real value ci.
+If then place is said to be associated with proposition .
+An associative Petri net with some places containing tokens is called a marked associative Petri net.
+In a marked associative Petri net, the token in a place is represented by a labeled dot .
+The token value in a place is denoted by where [0,1].
+If and then the degree of truth of proposition is .
+Let A and B be two sets of items.
+The support and confidence of an implication of the form are defined as Eqs.
+(1) and (2) with probability and conditional probability (Agrawal, Imielinski, & Swami, 1993).
+Which are, (1) (2) Typically, association rules in APNs are considered if they both satisfy a minimum support threshold , [0,1], and a minimum confidence threshold , [0,1].
+These thresholds are usually assigned according to previous experience or by domain experts (Han & Kamber, 2001).
+In an APN model, if both value of support and confidence are higher than their threshold τ and γ, then the transition is enabled with its confidence (CF = ), else the relationship does not exist (CF = 0).
+The general formulation of the certainty factor is shown in Eq (3): (3) where is the confidence, γ is a threshold of confidence,s is the support and τ is a threshold of support.
+By carefully reserving related places and assigning certainty factors to transitions, we can come up with a live APN that facilitates APN model construction.
+According to the definition of APN and Fig 1, pi is represent a place in APNs model, pi ∈P and di is represent a proposition di ∈D.
+If = di then place pj is said to be associated with proposition dj.
+Therefore, the APNs models of basic devices are obtained directly from considering the variables that match to the places of the net and considering the associative degree between places and places that match to the transitions based on the Eqs.
+(1) and (2).
+For example, the following is an associative production rule: R1: IF email with Attachment THEN Attachment file type is exe..etc (CF = 0.8).
+Let λ be a threshold value, where λ = 0 ∈ [0, 1].
+λ = 1 shows that the proposition exists and λ = 0 shows the proposition does not exist.
+If the λ = 1 of place p1 and p2 are repress that they exit in an APN model, β(pi) and β(pj) are “email with Attachment” and “Attachment file type is exe..etc.”.
+It indicates that the degree of truth of the proposition , is * ci.
+If the degree of truth of the proposition “email with Attachment” is 0.90 and the threshold value λ = 1, then the rule R1 can be fired, and the degree of truth of the proposition “Attachment file type is exe..etc” is 0.9 * 0.8 = 0.72.
+It indicates that the possibility of Attachment file type is exe..etc is 0.72.
+APNs can provide the visualization of the dynamic behavior of rule-based system.
+However, building an APN model for decision making is a challenge.
+How to choose association rules that may conflict or different with each other?
+How to avoid cycle-structures during model construction?
+To resolve these problems, a novel APN-mesh model construction algorithm is proposed.
+To express most of association rules and relationship between two places in APNs, idea of leaving all the connecting relations and avoiding cycle-structures during model construction is necessary.
+The flowchart of an APN-mesh model construction is shown in Fig 2 and described as follows: Construction flowchart of an APN-mesh model Fig 2.
+Construction flowchart of an APN-mesh model.
+First of all, Chi Square Test of Independence is used to determine the strength of dependence between a pair of places and (Brin et al., 1997).
+The Chi Square Test of independence proceeds in two stages: 1.
+Hypotheses H0:Two variables are independent in the population.
+H1:Two variables are related in the population.
+Statistic Test: (4) where , and denotes the chi-square statistics.
+N is the total number of observations, is the number of observations with in state k and in state is the number of observations with in state is the number of observations with in state l, denotes the probability that is in state k, denotes the probability that is in state and are two variables or features where one is a column variable while the other is row variable in a contingency table.
+f is large enough, a strong dependency exists between places and .
+After computing the Chi-square statistics between every pair of the places, we can set a significance α for p-value filtering where p-value is defined as P( ∣ Degrees of Freedom).
+If p-value is less than α, we reject the null hypotheses H0 and establish a link between two places.
+In step 2, the association rule concept is applied to determine the structure of the APN-mesh.
+The support value between and are measured with Eq (1) in given data set.
+If the support is greater than predetermined threshold , then this link is left between pairs.
+After checking every pair and connecting goal places to all other places with support , we can obtain an intermediate network in APN-mesh model construction.
+In step 3, we should identify the antecedent-consequence relationship in the mesh.
+In many situations, it is hard to confirm the existence of an antecedent-consequence relationship between the propositions and .
+Therefore, we compare the confidence value and between proposition and .
+The antecedent-consequence relationship with a directed link is then determined based on which is the higher confidence value between a pair of places and .
+In the event of a tie, its direction is randomly chosen.
+Thus, a directed mesh structure is obtained.
+Usually, an APN-mesh structure has four types of places: Starting places: A place is the antecedent proposition of other places and no other places are its antecedent proposition.
+Temporal places: A place is the consequence proposition of other places and no other places are its consequence proposition.
+Intermediate places: A place is not only the antecedent proposition of other places but also the consequence proposition of other places.
+Island places: A place has no antecedent-consequence relationship.
+The starting places are used as input places to model the antecedent propositions of connected places.
+The intermediate places are responsible for connecting starting places with temporal places.
+We assume that island places have a direct influence on the goal place, thus the arrows emanating from island places point directly to a final goal place.
+On the other hand, the temporal places also point directly to a final goal place.
+Likewise, some antecedent-consequence relationships may be pruned if the strength of their relationships does not meet a predefined threshold.
+In other words, if a confidence value between places and is lower than its threshold , an antecedent-consequence relationship is pruned.
+On the other hand, a cycle-structure is not allowed in PNs since it may cause an oscillation.
+Thus, we should avoid cyclic structures, as shown in Fig 3, during the construction of APN-mesh in step 4.
+A cycle-structure search algorithm is used from the starting places.
+These cycle-structures are broken by pruning the link with minimal confidence.
+If two or more links have the same minimal confidence level, one of them is chosen randomly for pruning.
+The cyclic structures (a) Three places (b) Four places Fig 3.
+The cyclic structures (a) Three places (b) Four places.
+Step 5, the certainty factor of a transition in an APN-mesh can confirm the existence of an antecedent-consequence relationship from proposition to proposition if .
+To measure the association degree between the antecedent and consequence portion in an APN, confidence in Eq (2) is assigned as a transition between the antecedent and consequence portions in an APN- mesh.
+Confidence value represents the strength between a pair of propositions and (place and ).
+Thus, the CF() function of each transition can be identified.
+Finally, an APN-mesh model is accomplished.
+A detailed construction algorithm of proposed APN-mesh model is shown in Fig 4.
+Construction algorithm of an APN-mesh model Fig 4.
+Construction algorithm of an APN-mesh model.
+An example of constructing APN-mesh model for malicious email detection is illustrated in this section.
+The sampled emails include 1859 benign and 96 malicious emails.
+All these emails were downloaded from various FTP sites and audited by a commercial virus scanner.
+Malicious emails discovered from 1999 to 2004 were used to decision model construction, and malicious emails after 2004 were adopted for the APN model evaluation in Section 4.3.
+These malicious email samples could be referenced at <http://smartlab.mis.yuntech.edu.tw/research/Data_emcode.htm>.
+The malicious email gathered consisted of Internet worms (IW), Trojans, macros, scripts and file-infectors.
+A detailed description of the behavior of these malicious e-mails can be found in our previous studies (Shih & Chiang, 2004; Shih, Chiang, Chan, & Lin, 2004; Shih et al., 2007; Shih, Chiang, & Yen, 2005).
+Features were extracted to compose a feature vector from the email format which is shown in Table 1.
+Table 1.
+Extracted feature from email format.
+Feature Content Attachment Intrusion with Attachment MIME Format Intrusion with MIME Format Embedded Intrusion with Embedded Attachment file type exe, vbs, scr, pif, bat, chm, com… Attachment size Attachment size is less than 111 KB Attachment file No.
+Number of attachments Varying file extension The extension of attachment is varying and questionable Changing subject line and message Subject line is usually very attractive and the message is camouflaged to seduce the users to run the attachment.
+Mail content type Text/plain, text/html, other Mail size The size of mails less than 150 KB 4.1.
+APN-mesh model building This section illustrates an example of APN-mesh model construction.
+The construction algorithm, from Fig 2, provides a step-by-step approach to build an APN-mesh model as follow: Step 1: Determine components and communication structure Assume a set of variables, as in Table 1, with undirected links between places constructed from the dataset by the Chi-square test of independence.
+If the value exceeds α = 0.05, then the link between places and is reserved.
+The chi-square test of independence of all places is shown in Table 2.
+A case of Chi-square test of independence for and is as follows: 1.
+State the Hypotheses : Two variables are independent in the population.
+: Two variables are related in the population.
+Find the Test Statistic Table 2.
+Chi-square test result of independence.
+– 1.938 – 1.938 – 3.432 – 1.018 – 0.023 – 1.661 0.132 – 2.314 – 1.661 0.241 3.566 – 1.072 1.072 1.899 0.08 1.654 0.004 0.327 – (*, ** and *** are all reserved).
+The test statistic of the Pearson Chi-square for and is 1.661 and the p-value is 0.197.
+After computing the Chi-square statistics between and , we can obtain p-value = 0.197 which is greater than α = 0.05.
+Thus, we accept the null hypotheses H0 and these two variables are independent.
+Therefore, there is no link between and .
+Step 2: Determine support structure The associative support between variables and in the given data set is calculated by Eq (1) and marked in the initial structure of network, as shown in Fig 5.
+Those links for which support is less than predetermined thresholds ( = 0.05) are then pruned.
+The resulting structure is given in Fig 6.
+By connecting goal place to all places and calculating their support , an intermediate network structure is shown in Fig 7.
+Initial structure of network Fig 5.
+Initial structure of network.
+Pruned network Fig 6.
+Pruned network.
+Intermediate network structure Fig 7.
+Intermediate network structure.
+Step 3: Antecedent-consequence relationship identification The antecedent-consequence relationship between each pair of places is identified based on their association degree with each other.
+Each directed line is determined by choosing the higher confidence value between each pair of places.
+For example, there are two directed lines between and The confidence values and are calculated, and a directed line emanates from and is determined by pointing to since confidence () = 0.9011 is greater than confidence () = 0.8817.
+Step 4: Acyclic structure establishment Once all the antecedent-consequence relationships are identified, relationships with confidence scores lower than predetermined threshold (0.5) are pruned.
+In this example, , and are the starting places and is a temporal place.
+There are no island places.
+Then, we connect the temporal place to the goal place.
+Fortunately, there are no cycle-structures in this example and it does not require the cycle reduction process.
+Thus, a directed acyclic structure establishment is obtained as shown in Fig 8.
+In step 5, we then identify the CF() function of each transition by confidence with Eq (2).
+Finally, we incorporate the transitions into the network structure and obtain an APN-mesh model, as shown in Fig 9.
+Directed acyclic structure Fig 8.
+Directed acyclic structure.
+APN-mesh model for email viruses’ behavior Fig 9.
+APN-mesh model for email viruses’ behavior.
+Our constructed APN-mesh model for malicious email reasoning has three inputs, seven middle states and one final state.
+The threshold values and are set base on experience and all the values of support and confidence in the APN are calculated by Eqs.
+(1) and (2) which are shown in Table 3.
+The IRS and RS for each place are shown in Table 4 also.
+The knowledge of this constructed APN-mesh model contains the following APRs: R1: IF THEN R6: IF THEN R2: IF THEN R7: IF THEN R3: IF THEN R8: IF THEN R4: IF THEN R9: IF THEN R5: IF THEN R10: IF THEN Table 3.
+Support and confidence values of APRs in Fig 9.
+APR Frequency Support () Confidence() 83 0.7981 1.0 84 0.8077 1.0 85 0.8173 1.0 82 0.7885 0.9011 11 0.1058 0.9167 9 0.0865 0.75 12 0.1154 0.9231 13 0.1250 1.0 76 0.7308 0.9157 77 0.7404 0.9277 75 0.7212 0.9036 80 0.7692 0.9524 76 0.7308 0.9048 77 0.7404 0.9059 24 0.2308 1.0 24 0.2308 1.0 20 0.1923 0.8333 92 0.8846 1.0 63 0.6058 0.7875 61 0.5865 0.7625 74 0.7115 0.8132 Table 4.
+IRS and RS for each place in Fig 9.
+Place IRS() RS() {} {} {} {} {} {} {} {} {} {} {} {} {} { } {} {} {} {} {} {} ϕ ϕ Assume that an email is encoded as [] [1,0,0,1,1,1,1,1,0,1] where λ = 1 shows that the proposition exists and λ = 0 shows that the proposition does not exist.
+Let be the respective ten propositions of places .
+The IRS and RS for each place are shown in Table 4.
+The APRs become active when their input places receive tokens.
+The CF() functions of each rule are used to determine the degree of truth of the proposition based on their antecedent propositions.
+Each rule uses the operator ‘OR’ to combine its antecedent propositions.
+These combined processes give the firing strength value for each APR.
+Fig 10 shows the reasoning process of an APN-mesh model: Reasoning example of a marked APN-mesh model Fig 10.
+Reasoning example of a marked APN-mesh model.
+Since the propositions of place and are both zeros, place is the starting place for reasoning.
+Step1: Starting place : a token is moved from to .
+Transition is enabled, because place exists.
+Step2: Tokens are moved from and to and from to Transitions and are enabled, because places and exist.
+Step3: Tokens are moved from to and from to The transition is not enabled, because does not exist.
+Transition and are enabled, because places and exist.
+Step4: Tokens are moved from to and from to Transition and are enabled, because places and exist.
+Step5: Token is moved from to .
+Transition is enabled, because place exists.
+Step6: Tokens are moved from to and from to Thus, after reasoning, the degree of truth of the proposition is 0.9059, and it could be a virus in this example.
+Evaluation of constructed APN models Detection issues are among the most active research areas in artificial intelligence.
+The email dataset used in this paper was taken from our previous study (Shih et al., 2004; Shih et al., 2005; Shih et al., 2007).
+Emails in our dataset are encoded in a vector which contains 10 features labeled as benign or malicious.
+Email viruses were collected from 1999 to 2004, and the dataset contains no duplicate email viruses.
+Commercial virus scanners were used to confirm every email virus in the dataset.
+These 1859 benign and 96 malicious emails were trained and recalled with APN-mesh model, APN-tree model (Shih, Chiang, Yen, & Huang, 2013) and other data mining methods.
+The confusion matrix is used as a basis for comparison, with performance metrics of true positive rate (sensitivity) (TP-rate = TP/(TP + FN)), true negative rate (sensitivity) (TN-rate = TN/(FP + TN)), false positive rate (FP-rate = FP/(FP + TN)) and false negative rate (FN-rate = FN/(TP + FN)).
+F-measure combines precision TP/(TP + FP) and recall TP/(TP + FN) for the prediction of a positive class (F-measure = 2 × precision × recall/precision + recall).
+G-mean is the product of the prediction accuracies for both classes, and is expressed as .
+AUC is the area under the ROC (receiver operating characteristic) curve (Fawcett, 2006) calculated with MedCalc (http://www.medcalc.org/index.php).
+Comparison results with different data mining methods such as Naïve Bayes, Kohonen’s Self-Organizing Map (SOM), Decision tree (C5.0) and Support vector machine (SVM) (Tang, Zhang, Chawla, & Krasser, 2009) are shown in Table 5.
+Naïve Bayes, SOM and Decision tree (C5.0) are running at default settings by SPSS Clementine 12.0.
+SVM is evaluated with MATLAB 2012a.
+The Naïve Bayes algorithm computed the probability that a given feature was either malicious or benign through statistical computations of the training data (Shih et al., 2005).
+The Kohonen’s SOM is used to organize benign email behavior into a two-dimensional 99 map according to the features extracted from the emails.
+In the decision tree algorithm (C5.0), the information gain for each candidate attribute can be computed through measuring information gain (Shih et al., 2004).
+SVM maps the extracted vectors from emails into an N-dimensional space and uses an (N-1)-dimensional hyper plane as a decision plane to classify benign and malicious emails.
+Table 5.
+Performance of email virus dataset.
+Method TP TN FP FN AUC F-measure G-mean Naïve Bayes 1830 89 7 29 0.963 0.990 0.955 SOM 1849 87 9 4 0.967 0.996 0.951 Decision tree 1848 89 7 5 0.975 0.997 0.962 SVM 1858 89 7 7 0.974 0.996 0.961 APN-tree 1801 96 0 58 0.974 0.984 0.984 APN-mesh 1817 96 0 42 0.980 0.989 0.989 Table 5 shows that although TP-rates are very similar with each other, but the APNs outperform than other models in terms of TN-rate and FP-rate.
+APNs have a good detection rate for malicious email, while other data mining methods have a lower FN-rate in detecting benign emails.
+In order to investigate the capability of constructed APN models (APN-tree and APN-mesh) in infer unseen email viruses, we inherited some new email viruses to see if our constructed APN models could discover them.
+These new email viruses were found after December 2004 and they were not included in our training dataset during APN model construction.
+Table 6 shows the testing results of our proposed APN models in comparison with other data mining methods.
+Table 6.
+Testing results of new email viruses (“”= detected).
+Virus profile APNM APNT SOM Naive bayes Decision tree SVM NETSKY.P MYTOB.A MYTOB.K – – MYTOB.R MYDOOM.O NETSKY.Q SOBER.U – – – – MYTOB.KQ MYTOB.LL LOOKSKY.A RONTOKBRO.C RONTOKBRO.J AHKER.J – YABE.A YABE.B BAGLE.CZ – SOBER.AA – WONKA.A – – – AGENT.GKS – – – – AKINI.A – – – – – PBOT.A – – – – – PSYME.FP – – – – – From Table 6, our proposed APN models show a better performance than other data mining methods in the detection of the new malicious email viruses.
+These new email viruses represent totally different types of malicious behavior such as fooling users into clicking a fraudulent website URL or downloading infected script files.
+Real-world data sets often encounter problems of class imbalance or skewed class distribution in which the examples of the majority class outnumber those of the minority examples.
+Mining highly unbalanced datasets is one of the leading challenges for knowledge discovery and data mining (Chawla, Japkowicz, & Kotcz, 2004).
+The class imbalance problem arises when the class of interest is relatively rare.
+With such imbalanced data sets, supervised classifiers have difficulty predicting data with the minority class label.
+Hong et al., Huang et al.
+and Tang et al.
+proposed modifications to the classifier to tackle the problem of class imbalance with F-measure, G-mean and AUC metrics (Hong, Chen, & Harris, 2007; Huang, Yang, King, & Lyu, 2006; Tang et al., 2009).
+In our sample, the malicious emails are far outnumbered by benign emails.
+From Table 5, a higher F-measure value indicates that the model performs better on positive class balancing of FP and FN.
+Even if a model classifies the negative examples correctly, a poor performance in prediction of the positive examples will lead to a low G-mean value.
+In fact, the G-mean is quite important in measuring the avoidance of over fitting to the negative class and the degree to which the positive class is ignored.
+In contrast to the difficulty of identifying clear advantages in multiple crossed ROC curves, the order of the AUC values on the classification results is proved to be equivalent to the order of their significances in the statistical tests, including Wilcoxon’s test.
+A higher AUC value indicates that a classifier (such as our proposed APNs) has a better classification performance in imbalanced data set problems.
+The fivefold cross validation ROC curves of our proposed APN models, APN-tree and APN-mesh, are shown in Fig 11.
+The results suggest our approach to using the imbalanced data set seems promising.
+ROC curves of email virus detection Fig 11.
+ROC curves of email virus detection.
+In summary, the two types of construction algorithms, APN-tree and APN-mesh, can help users to build a reasonably APN decision model.
+Their effectiveness for applying in artificial intelligence domain is not inferior to other data mining methods.
+To compare our proposed APNs construction algorithm with other PN studies, criteria are adopted as following: • Systematic construction: A structural step or method is used to build a PNs model.
+• Verifiability: Is a safe, live PNs structure verified?
+• Construction effort: Build a PN consumes effort and resources.
+• Negation: Is the negation form and concept of production rules allowed to exist in PNs?
+• Disassembly: Is the disassembly concept of model or production rules supported for PNs?
+Given these criteria, we summarize the comparison results as shown in Table 7, which compares the advantages and disadvantages of our proposed APN construction algorithms against other methods such as FNPN (Ashon, 1995), FRPNs (Gao et al., 2004), MFPNs (Koriem, 2000), CPN (Baruwa & Piera, 2015), OOPNs (Basak & Albayrak, 2014) and PNs reduction (Shen et al., 2013).
+Table 7.
+Characteristic comparison with other modeling methods.
+Characteristic APNM APNT FRPNs MFPNs FNPN CPN OOPNs PN Systematic construction Yes Yes Yes Yes No Yes Yes Yes Verifiability Yes Yes Yes Yes No Yes Yes Yes Construction effort Low Low Ave. High Ave. Ave. High High Negation No No Yes Yes No No No No Disassembly No No Yes No No No Yes No As shown in Table 7, even if most existing modified PNs formalisms can provide structural representation for modeling, all modified PNs also use their simplified concepts to minimize construction effort.
+However, our proposed APN model construction can provide a step by step construction algorithm to reduce the effort and complexity of models construction.
+In this paper, we emphasize on formal aspects of the methodology to construct an expert system or decision support model based on the associative Petri net.
+APNs are a powerful method for knowledge representation in the domain of decision support systems and can be translated into rule-based systems easily.
+Moreover, the reasoning path of expert systems can be reduced into a simple sprouting tree if APN-based reasoning algorithms are applied.
+However, constructing a model for decision making is a challenge since it is hard to systematical (Zahid et al., 2006).
+The purpose of this article is try to propose a systematic construction algorithm to guide the analyst in building decision support models for their own specified applications.
+Our proposed construction algorithm can provide a step-by-step systematic approach to construct a decision model objectively.
+The APN-mesh model considers the main association between propositions and delete unnecessary and redundant relationships.
+It not only can give a summary to describe all states but also simplify the reasoning process.
+The effectiveness for applying in artificial intelligence domain is not inferior to the other data mining methods.
+An experimental result in Table 5 for malicious email detection shows that our proposed APN-mesh model has good detection rate, FP rate and overall accuracy than other methods.
+However, our construction algorithms also have other limitations.
+In order to reduce construction effort, our construction algorithms do not reveal ”AND” connectors in the antecedent part or consequence part.
+Attempts to use APN in practice may have the same drawbacks as PNs, including state explosions and lack of hierarchy concepts.
+We plan to resolve these drawbacks which incorporate with the concepts and operations of Colored Petri Nets (CPNs) (Huang & Kirchner, 2013; Wang et al., 2013) in the future.
+In addition, the construction of an appropriate network structure is a tradeoff problem.
+Complexity of execution or simplicity that may loss some of information should have a choice.
+An adjustable or operational network construction mechanism is needed in the construction of rule-base expert system.
+Nevertheless, the antecedent-consequence relationship and CF function building may be improved by referencing the concepts of causal relationship.
+We will consider the causal inference method to enhance reasoning algorithm of APN model in the future.

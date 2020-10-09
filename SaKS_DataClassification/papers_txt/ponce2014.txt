@@ -1,0 +1,459 @@
+Adaptive noise filtering based on artificial hydrocarbon networks: An application to audio signals
+
+Abstract
+
+Many audio signal applications are corrupted by noise. In particular, adaptive filters are frequently applied to white noise reduction in audio. Recent work provides that there exist some insights on using an artificial intelligence method called artificial hydrocarbon networks (AHNs) for filtering audio signals. Thus, the scope of this paper is to design and implement a novel approach of artificial hydrocarbon networks on adaptive filtering for audio signals. Three experiments were developed. Results demonstrate that AHNs can reduce noise from audio signals. A comparison between the proposed algorithm and a FIR-filter is also provided. The short-time objective intelligibility value (STOI) and the signal-to-noise ratio (SNR) were used for evaluation. At last, the proposed training method for finding the parameters involved in the AHN-filter can also be used in other fields of application.
+
+Keywords
+Artificial organic networks
+Artificial hydrocarbon networks
+Audio signal processing
+
+1. Introduction
+
+One of the problems in audio signal applications is the addition of noise signals that interfere with the original ones arriving in poor performance of audio. For human ears, this causes non-intelligibility of audio and for signal analysis it causes imprecise data information that blinds important features; which it implies a tradeoff between noise supression and signal distortion. In order to face it, different audio filters have been developed in audio signals (Parks & Burrus, 1987; Smith, 1997; Winder, 2002).
+
+In general, audio filters are analog or digital (Winder, 2002). The following work considers digital audio filters, e.g. filters implemented in software. In digital signal processing, audio filters can be classified into finite impulse response (FIR) filters and infinite impulse response (IIR) filters. The first one uses a filter kernel that reaches a finite zero frequency response while the second one uses a filter kernel that responds in frequency with infinite exponential decaying sinusoidal functions (Smith, 1997). In practice, convolution implements FIR filters and recursion implements IIR filters. In advance, FIR filters use convolution of the input signal while IIR filters uses convolution of the input but also of the output signals (Smith, 1997). In so many cases, FIR filters are more used than IIR filters, primary based on their phase response in frequency domain (Clark, 2005). For instance, FIR and IIR filters can be compared (in frequency domain) in their magnitude and phase responses. As an example, consider the filter response of a sinc function as an input signal like both FIR and IIR filter responses shown in Fig. 1. Ideally, the frequency response in magnitude corresponds to a rectangular-shaped function (Clark, 2005). However, as shown in Fig. 1, the response of the IIR filter is smooth while the response of the FIR filter contains ripple, and both filters try to exhibit a rectangular-shaped function. As observed, IIR filters might be better used, but in phase response FIR filters present a desired linear characteristic as shown in Fig. 2. Notice that FIR filters (Fig. 2(a)) present a linear phase response while IIR filters (Fig. 2(b)) do not. This behavior is crucial when choosing for FIR or IIR filters because nonlinear phase responses might not be demodulate correctly (Clark, 2005).
+Comparison between FIR and IIR responses in magnitude
+
+    
+
+Fig. 1. Comparison between FIR and IIR responses in magnitude.
+Comparison between FIR and IIR responses in phase
+
+    
+
+Fig. 2. Comparison between FIR and IIR responses in phase.
+
+Several audio filtering applications consider two interests: improving either time domain response or frequency domain response. Smoothing, noise reduction and DC removal are typical problems in time domain while separating frequencies is typical in frequency domain (Smith, 1997). However, it is very difficult to improve time and frequency responses with the same filter. Thus other techniques have been proposed. For example, the moving average and windowed-sinc filters are widely used in time domain like reported in Khan, Okuda, and Ohba (2003), Smith (2007) and Thede (1996). In contrast, the single pole filter and Chebyshev’s filter are used in frequency domain (Bai & Lu, 2005; Smith, 1997).
+
+The above examples fall into linear filters. These kinds of filters have a linear response from the input signal. However, there are other prominent filters that respond in a nonlinear way from the input signal. Classical nonlinear filters are based on the time-varying Wiener’s filter (Chen, Benesty, Huang, & Doclo, 2006), probabilistic filters (Burnshtein & Gannot, 2002; Huda, Yearwood, & Togneri, 2009; Vermaak & Niranjan, 1998) and homomorphic filters (Smith, 1997). Examples of these algorithms can be found in Comon and Laocume (1986), Manolakis, Kalouptsidis, and Carayannis (1983), Smith (1997) and Diniz (2008).
+
+Consider a special kind of noise so-called white or uniform noise. In particular, white noise reduction cannot be handled easily in audio signals because it contains similar low magnitude components in all the spectrum of frequencies that is typically confusing or overlapping with mainly voice signals and musical signals (Smith, 1997, 2007; Thede, 1996). In that sense, linear filters cannot clean the signal efficiently and nonlinear filters for these purposes have been proposed (Diniz, 2008; Ling, 2007). For example, Baravdish, Evangelista, Svensson, and Sofya (2012) reported an audio denoising using a singular value decomposition (SVD) matrix to determine the most significant components in audio and then to eliminate the less significant ones. In fact, their approach also considers the usage of the inverse of partial differential equations that actually smooth the signal, resulting in a good performance denoising signal in a nonlinear fashion. However, computational effort increases for nonlinear cases. On the other hand, LeRoux and Vincent (2013) proposed a consistent Wiener filtering for audio denoising and source separation. Their proposal considers to improve the Wiener filtering applied as a short-time Fourier transform (STFT) in order to relate short-time responses of STFT of different bins such that the redundancy present in STFT responses will act as a hard constraint or as a soft penalty. They found that this technique can improve source separation, and that it can be exploited in audio denoising. Other example applications can be found in Chen and Benesty (2013), Sprechmann, Bronstein, Bronstein, and Sapiro (2013) and Leutnant, Krueger, and Haeb-Umbach (2013).
+
+Recent tendencies fall into adaptive nonlinear filters. Those are primary nonlinear filters that react to segments of audio signals. Depending on the time and/or frequency responses in these intervals, the filter provides different actions. Most recent studies have improved audio signals using a set of previous clear-of-noise waveforms to reconstruct them, like the corpus-based speech enhancement reported in Nickel, Astudillo, Kolossa, and Martin (2013). In contrast, most of adaptive filters are covered by artificial intelligence techniques like artificial neural networks or fuzzy systems. Literature reports adaptive nonlinear filters based on artificial intelligence techniques like Asif and Hasnain (2004), Giura, Serina, and Rizzotto (1997), Prasad and Prasanna (2008) and Seng, Hui, and Ming (2003).
+
+In this work, a novel adaptive filter for audio signals is proposed using the artificial hydrocarbon networks (AHNs) algorithm, firstly developed for modeling problems (inference and clustering) in 2011 by Ponce and Ponce (2011) with significant improvements published in Ponce and Ponce (2012) and Ponce, Ponce, and Molina (2013, 2012), is a supervised learning method inspired on chemical organic compounds that preserves stability and convergence in the algorithm as well as it builds an organized structure that encapsulates important information of a given system that can be used as metadata for improving analysis. In addition, some insights on employing AHNs to audio filters have been highlighted (Ponce et al., 2012). Thus, this paper introduces a modified adaptive noise filtering for audio signal based on the artificial hydrocarbon network algorithm originally proposed in Ponce et al. (2012), applying the organized structure of metadata to develop a noise reduction method with a novel adjustment of molecular behaviors, i.e. basic units of information in AHNs.
+
+The paper is organized as follows. First, Section 2 presents a brief review of artificial organic networks (AONs), the formal technique in which artificial hydrocarbon networks are based. In Section 3, the AHN-algorithm is described focusing on their components and interactions, and properties of the algorithm. Section 4 describes the proposed adaptive noise filtering for audio signals. Next, Section 5 reports the results of a case study for denoising an audio signal corrupted with three different sources of noise: environmental, hardware and software. Finally, The last section concludes the paper.
+2. Artificial organic networks
+
+Observations to chemical organic compounds provide enough information to inspire a relatively new technique called artificial organic networks (AONs), first proposed by Ponce and Ponce (2011). In organic chemistry theory, chemical organic compounds are the most stable ones in nature. In fact, this stability is primary due to the energy minimization and the geometry of chemical structures (Brown, Foote, Iverson, & Anslyn, 2011). Artificial organic networks only takes into account the energy minimization and it is considered as the central observation from chemical organic compounds for inspiring AONs.
+
+In chemistry, the relationship of elements makes possible molecules, two or more atoms interacting among them. Thus, different atoms and different arrangement of those make different molecules providing physical (structural features) and chemical (behavioral features) properties. As a metaphor, the artificial organic networks technique mimics molecules as basic units with information, those built with a set of structural units called atoms. Since molecules can be seen as packages, they can be used for encapsulation and potential inheritance of information. Chemically, relationships among atoms are performed by two possible interactions, i.e. chemical bonds and chemical reactions. For instance, artificial bonding allows the formation of basic and complex molecules, while artificial chemical reactions allow the formation of mixtures of molecules. Artificial organic networks called compounds to complex molecules, in order to distinguish them, and mixtures to any linear combination of molecules or compounds. It is clear from the latter that it is easy to span structures of compounds (creation and addition of molecules to previous structures). At last, these artificial organic compounds are stable via energy minimization. Moreover, in artificial organic networks, each atom, molecule, compound or mixture unit tends to minimize the energy (Ponce & Ponce, 2011, 2012).
+
+In fact, the artificial organic networks technique is designed for solving the modeling problem and it is used in inference and clustering applications. It provides stability in algorithms and partial understanding of the model behavior, resulting in an organized structure, i.e. chemically-inspired structure. In fact, the artificial organic network technique provides a framework of components and interactions to use, the chemically-inspired energy rule to follow at each step, as well as its mathematical representation. A brief review of AONs is presented in the following subsections (Ponce & Ponce, 2011, 2012).
+2.1. Components and interactions
+
+An artificial organic network is a set of graphs (Ponce & Ponce, 2012), each one representing a molecule with atoms (vertices) and chemical bonds (edges). From the global point of view, the set of graphs represents a mixture of compounds, as shown in Fig. 3. This technique uses four components: atomic units, molecules, compounds, and mixtures; and two interactions: covalent bonds and chemical balance interaction.
+
+•
+
+    Atomic units. This is the simplest structural component of artificial organic networks. It parameterizes molecules in structure; thus, this component does not implement any behavior. However, chemically, atoms follow the ground-state principle –electron configuration inside the atom with the lowest energy–; then, atomic units in AONs are described with a number of valence electrons (i.e. the degree of freedom representing all possible connections that an atom has) under an 
+
+-rule in which
+
+    refers to the maximum number of valence electrons that a set of atomic units must have. At last, two atomic units are referred as similar atoms, if two atoms have the same number of valence electrons. Otherwise, they are different atoms.
+•
+
+    Molecules. This is the basic unit with information in AONs. It is built using the general ground-state principle stated in the 
+-rule, in order to minimize the energy in the structure. Molecular units are physically and chemically characterized. For instance, the structure of a molecule is described as a graph with two or more atomic units connected with a set of covalent bonds. If the number of the free valence electrons of all atoms in the molecule is full, then the molecule is stable. Otherwise, it is unstable. Notice, that stable molecules are preferred than unstable molecules in order to follow the ground-state principle. However, unstable molecules are considered for connecting other molecules to them to perform complex behaviors. On the other hand, the behavior of a molecule is characterized by a -function with a mapping that transforms input (excited) signals to output (response) signals. In addition, it is remarkable to say that molecules encapsulate information via the
+
+    -function. Then, two important types of molecules are identified. The first one refers to a functional group that is used as a basis structural molecule (kernel of molecules) that spans other molecules. The second one refers to primitive molecules that are unstable molecules primary used for interacting with other unstable molecules (linked with nonpolar covalent bonds) in order to build a stable molecule with minimum energy in structure.
+•
+
+    Compounds. This is a special molecule formed when two or more primitive molecules interact among them to increase the complexity of its behavior. In particular, the union of primitive molecules is done via nonpolar covalent bonds. Notice that compounds represent information using the inherited behaviors of primitive molecules. In fact, a compound is a big, unified and sophisticated unit that exploits inherited behaviors in a nonlinear way due to nonpolar covalent bonds. At last, stable compounds as well as molecules are more preferred than unstable ones.
+•
+
+    Mixtures. This is a relationship between two or more molecules (or compounds) without sharing valence electrons for combining. In fact, a set of molecular behaviors 
+forms a linear combination with definite ratios so-called stoichiometric coefficients. The resultant response
+
+    of the mixture of molecules due to excited signals X is represented as Eq. (1).
+•
+
+    Covalent bonds. These are interactions between two or more atoms in order to create or span molecules. Two different covalent bondings are used in artificial organic networks: polar and nonpolar. If two similar atomic units interact each other the relationship is referred to a nonpolar covalent bonding while if they are two different atomic units the interaction is called a polar covalent bonding. Significantly, nonpolar covalent bonds are the most important bonds because they are used for connecting primitive molecules. In that sense, a nonpolar covalent bonding 
+that links a molecule with a molecule is characterized by a mapping with interesting properties to a real value in ; where, refers to the order of bond that is the number of pair of electrons shared in the interaction, refers to the length of bond defined as the distance between two linked atoms, and
+
+    refers to the minimum energy of bond and it is the required energy that a bond needs to be applied to separate the linked atoms.
+•
+
+    Chemical balance interaction. It refers to the process of finding the best real values of stoichiometric coefficients that minimize the energy loss in mixtures of molecules.
+
+(1)
+
+The basic structure of an artificial organic network
+
+    
+
+Fig. 3. The basic structure of an artificial organic network.
+3. Artificial hydrocarbon networks
+
+In this section, the artificial hydrocarbon networks (AHNs) algorithm is presented as an instantiation approach of artificial organic networks. Firstly, its specific components and interactions are described. After that, the AHN-algorithm is presented. Lastly, there is a comparison of the artificial hydrocarbon networks algorithm among other supervised learning algorithms.
+3.1. Components and interactions
+
+The artificial hydrocarbon network algorithm is inspired on chemical hydrocarbon compounds and it is under the artificial organic networks framework. For instance, the AHN-algorithm restricted the number of different atomic units to two: hydrogen atoms H and carbon atoms C. In addition, the number of valence electrons (i.e. the degrees of freedom) of H is equal to
+and for C is . Moreover, H has associated a hydrogen value as well as C has associated a carbon value
+
+, both of them representing a parameter value of artificial hydrocarbon networks.
+
+Then, the AHN-algorithm defines a special type of molecules called CH-molecules (Ponce & Ponce, 2011, 2012), written as
+, with molecular behavior due to an input signal x of the form as Eq. (2); where, is the ith value of a hydrogen atom and d is the maximum number of hydrogen atoms associated to C bounded to .
+(2)
+
+In order to generate complex molecules, i.e. compounds, artificial hydrocarbon networks defines three primitive molecules
+and , coming directly from Eq. (2) because a primitive molecule has at least two atoms and one free valence electron allowing an interaction with other molecules. In particular, these interactions are modeled by nonpolar covalent bonds (Ponce et al., 2013) with behavior as expressed in Eq. (3); where, and are two behaviors of interacting molecules, and are properties of covalent bonds (see Section 2.1), and and are constants that parameterize the molecular behaviors involved in the interaction.
+(3)
+
+At last, the resultant compound has behavior
+equal to the composite behaviors of molecules, such that . In practice, the most common behavior is simply a linear chain of CH-primitive molecules stated as Eq. (4); where, n is the number of CH-primitive molecules in the compound, and represents the kth bound in the input signal x that determines the limits at which a molecule performs a behavior . In that sense, the set of bounds L are the set of constants in Eq. (3).
+(4)
+
+Finally, an artificial hydrocarbon network may contain more than one compound. Then, a set of compounds
+performs a linear combination (mixtures of compounds) like Eq. (5); where, the set is a collection of stoichiometric coefficients and S is the resultant mixture of compound behaviors in (Ponce & Ponce, 2011).
+(5)
+
+Fig. 4 shows an abstraction of a simple artificial hydrocarbon network based on the above components and interactions described.
+The basic structure of an artificial hydrocarbon network based on linear…
+
+    
+
+Fig. 4. The basic structure of an artificial hydrocarbon network based on linear compounds.
+3.2. The AHN-algorithm
+
+For instance, suppose that there exists any given system
+. Moreover, there is a set of observations of input signals X and output signals Y extracted from . Then, an artificial hydrocarbon network AHN can model , such that, like Eq. (5) and the loss function E in Eq. (6) is minimized until it meets a small value of tolerance ∊; where, is the ith observation over , and q is the number of observations.
+(6)∊
+
+It is remarkable to say that each compound minimizes the loss function E with a slight modification over each molecular behavior
+, , and it is expressed in Eq. (7); where, is the ith observation over the subset like Eq. (8) that contains only observations in the range , and is the number of observations in .
+(7)
+(8)
+
+Without loss of generalization, this paper considers
+to be a single-input and single-output (SISO) system with an input signal and an output signal . Thus, in order to build and train the artificial hydrocarbon network AHN, Algorithm 1 shows the supervised learning algorithm, namely the SIMPLE-AHN algorithm, to compute the structure and parameters of the artificial hydrocarbon network AHN (Ponce & Ponce, 2011, 2012). In particular, it assumes that each compound is a saturated linear chain of n CH-primitive molecules, i.e. two molecules and molecules, of the form as Eq. (9). In practice, the indices of these molecules are used to determine the maximum number of hydrogen atoms d in Eq. (2).
+(9)
+
+3.3. Properties of artificial hydrocarbon networks
+
+The artificial hydrocarbon networks algorithm is a supervised learning method for solving inference and classification problems. In particular, AHNs act as regression methods but also as smoothers, as highlighted in Ponce et al. (2012). In addition, as noted in Algorithm 1, the artificial hydrocarbon networks algorithm is non-probabilistic. Some references (Ponce & Ponce, 2012; Ponce et al., 2013, 2012) present experimental results in nonlinear, continuous and static problems.
+
+Artificial hydrocarbon networks can be compared with artificial neural networks (ANNs). For instance, the AHN-algorithm can be expressed in a more compact structure than ANNs, it cannot handle with initialization parameters as ANNs, and AHN-structures determine how molecules affect the overall result in contrast with ANNs in which neurons are not capable to determine the effects in the overall neural network.
+
+On the other hand, since AHNs have basic units of information called molecules, the AHN-algorithm encapsulates information in molecular behaviors aiming to inherit data to other compounds or AHN-structures. This characteristic also allows to mix properties of modeled systems (creating mixtures of different compounds) increasing the complexity of models to better explain systems (Ponce & Ponce, 2012).
+
+Artificial hydrocarbon networks are organized structures primary due to the levels of topology, i.e. molecules, compounds and mixtures. Moreover, hydrogen parameters, stoichiometric coefficients and bounds parameterize the AHN-structure, also giving a partial understanding of the modeled system (i.e. gray box). At last, an artificial hydrocarbon network structure is stable (Ponce & Ponce, 2011) in terms of the connections between molecules due to heuristics inspired on chemical rules (e.g. the degrees of freedom in molecules or the compound based on saturated linear chains).
+Algorithm 1. The SIMPLE-AHN algorithm for modeling a SISO-system.
+Input: The training set
+, the number of molecules per compound n, and the number of compounds c.
+Output:The set of stoichiometric coefficients
+, the collection of parameters , and the structure
+.
+Note:LSErefers to the least squares estimates optimization method.
+;
+for
+do
+ Generate a saturated linear chain of n CH-primitive molecules like Eq. (9).
+ Initialize the set of bounds L such that the input domain of
+is equally partitioned.
+ Split observations
+into n subsets
+using Eq. (8).
+ for each partition
+do
+  Obtain the hydrogen parameters
+and
+of Eq. (2) using LSE over Eq. (7).
+  Update
+.
+  Build a CH-molecular behavior
+using
+like Eq. (2).
+ end
+ Build a compound
+like Eq. (4) using all
+behaviors.
+ Update
+.
+ Mix all compounds in
+to find the set of
+using LSE over Eq. (5).
+ Override
+.
+ Calculate the value
+in Eq. (5) using and
+.
+ Compute
+.
+end
+return
+and
+
+.
+4. Description of the proposed AHN-filter
+
+This section introduces the description of the proposed adaptive artificial hydrocarbon network filter, namely the modified AHN-filter, that can be used for reducing white noise from audio signals. In fact, this filter is based on the AHN-filter previously described in Ponce et al. (2012). The proposal of the following modified AHN-filter contributes in two aspects: first, it introduces a novel approach of Algorithm 1 based on the adjustment of n molecular behaviors acting on unequal intervals; and second, it implements the latter adjustment of molecular behaviors in order to filter audio signals corrupted with white noise better than the AHN-filter reported in Ponce et al. (2012).
+4.1. Adjustment of n molecular behaviors on unequal intervals
+
+As noted, Algorithm 1 fixes intervals equally at which molecules act over the input domain. For example, if there are three molecules in a compound, then each molecule will act over a third of the input domain. However, it does not assure that compounds will cover the input domain optimally, as shown in Fig. 5(a); where molecules cannot cover the input domain optimally as noted in the overall loss function
+. In that sense, it would be better if each molecule finds the best interval at which it can act, getting unequal intervals, as shown in Fig. 5(b); where molecules cover the input domain optimally, minimizing the overall loss function
+
+.
+Example of the influence of intervals in AHNs
+
+    
+
+Fig. 5. Example of the influence of intervals in AHNs. (dashed lines) bounds of molecules.
+
+The above example shows that unequal intervals offer better performance in artificial hydrocarbon networks than equal intervals. It is remarkable to say that unequal intervals will require a complex training strategy of building and finding parameters in artificial hydrocarbon networks in comparison with the training procedure of Algorithm 1. Thus, the objective of the following improvement of Algorithm 1 is to find the best partition (possibly unequal) of the input domain in which n CH-primitive molecules will model any given system accurately.
+
+For instance, suppose that an artificial hydrocarbon network AHN is built using the number of molecules
+and the number of compounds . Let and be the two molecular behaviors of the CH-primitive molecules in AHN. Also, let be the behavior of the compound such that Eq. (10) holds. Moreover, suppose that any given system has an input domain in the overall interval ; then, and .
+(10)
+
+In that sense,
+might be interpreted as the length of bond r (i.e. the distance between two linked molecules) centered at , such that , as shown in Fig. 6. In fact, the value has to be optimized in order to minimize the overall loss function of AHN. Then, Eq. (3) can be used as the objective function in the optimization problem, as suggested in Ponce et al. (2013); where, is the order of bond (in this case is fixed to as expected in a saturated linear chain, see Eq. (9)), is a transformation of the length of bond r in terms of the loss function of Eq. (7) for all (the molecule number), and
+
+is a constant value referred to the minimum energy of bond.
+Two bonded CH-primitive molecules separated by the length of bond r=L1-L0
+
+    
+
+Fig. 6. Two bonded CH-primitive molecules separated by the length of bond
+
+.
+
+Using a gradient descent method to minimize Eq. (3) with respect to r and calculating the change of length
+, the update rule of Eq. (11) is found; where, is a small real value called the step size, and and are the loss function values of Eq. (7) for both molecular behaviors and , respectively.
+(11)
+Until now, the optimization procedure to find the best value of is done with two CH-primitive molecules (Ponce et al., 2013). In that sense, the current proposal defines an extension of the two molecules to find
+
+length of bonds between n CH-primitive molecules, as follows.
+
+Suppose that there are n molecular behaviors
+forming a compound with behavior as Eq. (4) with a set of bounds ; where, and , and the subset is the set of length of bonds, relative to an arbitrary origin set at , between two adjacent linked molecules with molecular behaviors and . Moreover, since the loss function of Eq. (7) can be computed for each molecular behavior , the update rule of Eq. (11) can be extended to an update rule like Eq. (12) of n molecular behaviors assuming that each pair of linked molecules has a length of bond , and this pair of molecules can be treated as an isolated one; where, is the step size of the ith length of bond. For simplicity, this paper will consider a step size for all lengths of bond, i.e. .
+(12)
+Finally, in order to obtain the subset of bounds relatively measured from , each bound can be calculated as Eq. (13).
+(13)
+
+Using the above information, this paper proposes Algorithm 2, the PROPOSED-AHN algorithm, to compute the structure and parameters of an artificial hydrocarbon network AHN with n CH-primitive molecular behaviors over optimal (and possibly unequal) intervals.
+4.2. Design of the modified AHN-filter
+
+For instance, consider an audio signal sample vector
+over time t corrupted with white noise; where, y is the set of samples of one channel. The idea of the following proposal is to design an adaptive filter based on artificial hydrocarbon networks using optimal intervals for molecular behaviors, namely the modified AHN-filter.
+Algorithm 2. The PROPOSED-AHN algorithm for modeling a SISO-system using optimal intervals for molecular behaviors.
+Input: The training set
+, the number of molecules per compound n, the number of compounds c, the step size , and the tolerance value ∊
+.
+Output:The set of stoichiometric coefficients
+, the collection of parameters , and the structure
+.
+Note: LSE refers to the least squares estimates optimization method.
+;
+for
+do
+ Generate a saturated linear chain of n CH-primitive molecules like Eq. (9).
+ while overall loss function ∊
+do
+  Initialize randomly the set of bounds L over the input domain of
+.
+  Split observations
+into n subsets
+using Eq. (8).
+  for each partition
+do
+  Obtain the parameters
+and
+of Eq. (2) using LSE over Eq. (7).
+  Calculate the loss function
+using Eq. (7).
+ end
+ Update the set of bounds L using Eq. (12) and Eq. (13).
+ end
+ Update
+.
+ Build all CH-molecular behaviors
+using
+like Eq. (2).
+ Build a compound
+like Eq. (4) using all
+behaviors.
+ Update
+.
+ Mix all compounds in
+to find the set of
+using LSE over Eq. (5).
+ Override
+.
+ Calculate the value
+in Eq. (5) using and
+.
+ Compute
+.
+end
+return
+and
+
+.
+
+First, the audio signal
+is divided into batches, so-called windows. Each window has a finite time size measured in seconds, i.e. milliseconds. Then, each window is also divided into n partitions, each partition i with time size . In order to determine the set of optimal time size values for all partitions, an artificial hydrocarbon network AHN is built and trained in order to use the resultant lengths of bonds over the time domain t of , such that, each time size is equal to the distance between two CH-primitive molecules, i.e. . Moreover, suppose that a window starts in time . Then, the set of bounds L of AHN is determined with and the subset is completely defined using Eq. (13). At last, this process is repeated window by window until
+
+is totally covered.
+
+In order to simplify the structure of AHN, Algorithm 2 is restricted to one compound (
+) with n CH-primitive molecules initially set. Also, it is known that there is a stoichiometric coefficient trivially set to . Thus, the resultant AHN is an adaptive structure that only modifies its parameters in presence of each window of
+
+. In fact, it is easy to check that increasing the number of sample points inside a partition i, the AHN-structure will perform a lowpass filter with a small value of the cut-off frequency. Since that, the smaller the number of molecules n is, the smaller the value of the cut-off frequency is performed by AHN.
+
+To this end, the overall application of AHN over the audio signal
+
+corrupted with white noise performs the proposed modified AHN-filter. Fig. 7 shows the block diagram of the modified AHN-filter.
+Block diagram of the proposal: the modified AHN-filter for noisy audio signals
+
+    
+
+Fig. 7. Block diagram of the proposal: the modified AHN-filter for noisy audio signals.
+
+In order to measure the performance of the modified AHN-filter three evaluations are used. The first one considers a comparison between the modified AHN-filter and the classical FIR-filter. For instance, the FIR-filter is expressed as a finite weighted sum as Eq. (14); where,
+is a finite sequence of data representing the input signal over is a set of filter coefficients found by designing methods like windowing, is the finite sequence representing the output signal over t, and N represents the order of the FIR-filter. See Antoniou (2005), Parks and Burrus (1987) and Smith (1997) for detailed information of FIR-filters and methods for designing parameters.
+(14)
+
+The second evaluation considers the short-time objective intelligibility (STOI) value which it represents a monotonic relation with the average intelligibility of filtering signals (Taal, Heusdens, & Jensen, 2011). In fact, the STOI metric offers an objective, non-qualitative way to measure the intelligibility of filtered signals with respect to original signals, ranging from
+to
+
+; where, small values represent poor intelligibility and large values represent high-quality intelligibility.
+
+The last evaluation considers the signal-to-noise ratio (SNR) which it measures the ratio between the average power of the interested signal
+and the average power of the noise signal as shown in Eq. (15). If the SNR-value is greater than , then the signal contains much more meaningful information than noise (Smith, 1997).
+(15)
+
+5. Experimental results
+
+In order to prove the performance of the modified AHN-filter, three experiments were designed. The first experiment uses an audio signal digitally contaminated with white noise; the second experiment was run on a DSP hardware; and the third experiment considers a naturally contaminated audio signal coming from a recording using a mobile phone.
+5.1. Experiment 1: filtering audio signal digitally corrupted with white noise
+
+This experiment is based on the previous work of Ponce et al. (2012). In particular to the current paper, the experiment considers a five-second mono-channel audio signal segment sampled at
+ kHz of a popular rock band. In addition, it was normalized and corrupted with white noise of
+
+SNR. Fig. 8 shows the original and the corrupted signals.
+Audio segment of Experiment 1: (black) corrupted audio signal, (gray) original…
+
+    
+
+Fig. 8. Audio segment of Experiment 1: (black) corrupted audio signal, (gray) original audio signal.
+
+In fact, the proposed AHN-filter was built using 10 CH-primitive molecules (
+) and trained with Algorithm 2. The size of the window was fixed to
+
+ ms. Fig. 9(a) presents the response of the modified AHN-filter in time domain. In order to compare it, a classical 30-th order FIR-filter was implemented and its response is presented in Fig. 9(b). As notice in Fig. 9, the modified AHN-filter can achieve noise reduction in audio signals.
+Audio segment filtered in Experiment 1
+
+    
+
+Fig. 9. Audio segment filtered in Experiment 1.
+
+To better analyze the performance of the modified AHN-filter, Fig. 10 depicts a comparison in frequency domain of the original signal (Fig. 10(a)), the response of the modified AHN-filter (Fig. 10(b)) and the response of the FIR-filter (Fig. 10(c)). Notice that the cut-off frequency (
+) is approximately at  Hz in the modified AHN-filter response and  Hz in the FIR-filter response, qualitatively proving that AHN-filters can achieve lowpass responses. It is important to remark that the cut-off frequency of the FIR-filter was set at  Hz because important data of original audio signal is removed at the same cut-off frequency of the modified AHN-filter. In addition, the STOI-value was measured in both responses obtaining for the AHN-filter and for the FIR-filter. Thus, a FIR-filter is more intelligible than the proposed filter. Finally, the SNR-value of the filtered signal applying the modified AHN-filter is of and
+
+when applying the FIR-filter.
+Analysis of signals in frequency domain (Experiment 1)
+
+    
+
+Fig. 10. Analysis of signals in frequency domain (Experiment 1).
+
+Since the above evaluation, a filter based on artificial hydrocarbon networks can reduce considerably the noise in audio signals. However, the STOI-value suggests that the filtered signal via the modified AHN-filter is not much intelligible, but in terms of noise reduction, the SNR-value reveals that the AHN-filter has better performance than the classical FIR-filter. In fact, Fig. 10 shows that a non-adaptive filter, i.e. FIR-filter, has poor performance of filtering white noise, while the proposed adaptive filter can reach a better performance. Table 1 summarizes the results of all experiments.
+
+Table 1. Summary of experimental results.
+Description	Experiment 1	Experiment 2	Experiment 3
+Time size of audio signal	5 s	3 s	5 s
+Number of channels	mono-channel	mono-channel	mono-channel
+Sample rate	44.10 kHz	44.10 kHz (mic)	44.10 kHz (mobile)
+Noise corruption	15% SNR	20% SNR	∼15% SNR
+
+AHN-filter specifications	10 CH-molecules	10 CH-molecules	10 CH-molecules
+	tw = 10 ms	tw = 10 ms	tw = 10 ms
+	fc = 5000 Hz	fc = 5000 Hz	fc = 4500 Hz
+
+FIR-filter specifications	30-th order	30-th order	30-th order
+	fc = 7000 Hz	fc = 5000 Hz	fc = 5000 Hz
+
+STOI-value	0.6628 AHN	0.6404 AHN	0.3514 AHN
+	0.8083 FIR	0.6648 FIR	0.4918 FIR
+
+SNR-value	2.3318 AHN	8.3917 AHN	6.1314 AHN
+	0.8609 FIR	1.4556 FIR	1.9239 FIR
+5.2. Experiment 2: filtering audio signal on DSP hardware
+
+This experiment considers the implementation of the modified AHN-filter on DSP NI-Speedy 33 hardware; an educational board for signal processing that can be easily programmed using the LabVIEW platform. In this case, the audio signal was obtained via a microphone connected to the analog input of the hardware. Then, the audio signal was corrupted programmatically with white noise of
+
+SNR. The response of the modified AHN-filter is then obtained and finally the filtered signal is reproduced on headphones connected to the analog output port of the hardware.
+
+Fig. 11(a) shows a 3-s audio signal collected from the hardware sampled at
+ kHz. Fig. 11(b) shows the response of the modified AHN-filter and Fig. 11(c) shows the response of the FIR-filter, both in time domain. The AHN-filter was built using molecules trained with Algorithm 2. The size of the window was fixed to
+
+ ms. Notice that offline performance is needed for calculating all hydrogen parameters in the adaptive structure. If online filtering is required, real-time techniques may be used; but presetting parameters is mandatory.
+Audio segment of Experiment 2
+
+    
+
+Fig. 11. Audio segment of Experiment 2.
+
+In can be seen in Fig. 11 that classical FIR-filter achieves lowpass filtering but does not attenuates noisy signal while voiceless, in comparison with the response of the AHN-filter (Fig. 11(b)). In addition, Fig. 12 shows the comparison of the modified AHN-filter and the FIR-filter, both in frequency domain. Fig. 12(b) reveals that the proposed AHN-filter can eliminate most of the white noise in the corrupted signal, but it does not cancel all white noise after
+ Hz. Actually, the FIR-filter can deal with high frequencies, e.g. after  Hz; but it cannot filter white noise in low frequencies, as revealed in Fig. 12(c) in the interval from  Hz to  Hz. The qualitative comparison is also complemented with the quantitative STOI metric; in which, the response of the AHN-filter has of STOI value and STOI value obtained from the filtered audio signal using the FIR-filter. Thus, FIR-filter is relatively more efficient than the AHN-filter, in terms of intelligibility. Finally, applying the SNR metric, the response of the AHN-filter obtained and the FIR-filter
+
+, showing that the modified AHN-filter reduces white noise better than the FIR-filter. All results are summarized in Table 1.
+Analysis of signals in frequency domain (Experiment 2)
+
+    
+
+Fig. 12. Analysis of signals in frequency domain (Experiment 2).
+5.3. Experiment 3: Filtering Audio Signal Naturally Corrupted with White Noise
+
+The last experiment considers an audio segment corrupted with noise from the environment. In that case, a mobile phone was used for recording the audio signal from an audio CD track. In fact, this is a real-world application in mobile devices to recognize audio segments. Examples of these applications can be found in Golik et al. (2012) and Zhong and Xiang (2011). Actually, in order to compute the results of the artificial hydrocarbon network based filter and the FIR-filter; the same segment of audio signal was extracted from the audio CD. At last, five-second mono-channel audio segment sampled at
+ kHz was used in the experiment as shown in Fig. 13(a). Analyzing Fig. 14(a), the recorded audio signal is corrupted with approximately
+
+SNR.
+Audio segment of Experiment 3
+
+    
+
+Fig. 13. Audio segment of Experiment 3.
+Analysis of signals in frequency domain (Experiment 3)
+
+    
+
+Fig. 14. Analysis of signals in frequency domain (Experiment 3).
+
+Fig. 13(b) shows the response of the modified AHN-filter and Fig. 13(c) shows the response of a 30-th order FIR-filter, both in time domain. In addition, Fig. 14 shows a comparison between the responses of both filters in frequency domain. The cut-off frequency of the AHN-filter is approximately
+ Hz, and  Hz in the FIR-filter. In fact, Fig. 14(c) reveals that some of white noise could not be removed by the FIR-filter in low frequencies, but it is very efficient in high frequencies. In contrast, the AHN-filter has a better performance in low frequencies eliminating white noise. In terms of intelligibility, the STOI-value of the AHN-filter is and for the FIR-filter. At last, the SNR-value for the modified AHN-filter and the FIR-filter are and
+
+, respectively.
+5.4. Practical implications
+
+As shown in experimental results, the proposed AHN-filter can achieve high performance in audio filtering as measured with the signal-to-noise ratio values (2.33-SNR experiment 1, 8.39-SNR experiment 2, 6.13-SNR experiment 3); but it is less competitive in intelligibility as determined with the short-time objective intelligibility values (0.66-STOI experiment 1, 0.64-STOI experiment 2, 0.35-STOI experiment 3). In that sense, the proposed AHN-filter can be use as an alternative method for audio filtering in contrast with the FIR-filter.
+
+Also, the proposed AHN-filter (Algorithm 2) exhibits a better response than a previous work of Ponce et al. (2012) where Algorithm 1 was used. For instance, Ponce et al. (2012) reports that the response of the FIR-filter over the same experiment, as Experiment 1, is more intelligible (
+) than the response of the AHN-filter. In contrast, the proposed modified AHN-filter of the current paper demonstrates a reduction of this comparison stating that the FIR-filter is better in intelligible more than the response of the modified AHN-filter. In a similar fashion with Experiment 2, Ponce et al. (2012) reports an efficiency of in the response of the FIR-filter in comparison with the AHN-filter. However, the modified AHN-filter reduces this ratio to
+
+. In both cases, the modified AHN-filter improved the performance of its response in terms of intelligibility.
+
+Furthermore, the proposed AHN-filter can be used in other audio applications more than noise filtering, such as: system identification, prediction and channel equalization. For example, in system identification, an AHN-filter might be act as the model of an unknown audio system using the information of a broadband signal corrupted with white noise. As a prediction model, an AHN-filter might be used for determining future values in an input signal in order to prevent undesired signals. Lastly, AHN-filters might also be used for channel equalization by acting as the inverse model of the channel using a noisy signal with a delayed version of it.
+
+In addition, the AHN-filter has some practical implications. For instance, it is an adaptive filter that computes the output-filtered signal in more steps than a classical FIR filter. Also, the randomization of Algorithm 2 causes variation in computational time at each window frame, in contrast with FIR filters. In that sense, real-time techniques have to be used to improve the computational time of the AHN-filter. This implies a tradeoff between timing and filtering computations. But as shown in the results, the proposed AHN-filter presents high performance that can be efficiently used in audio filtering.
+6. Conclusions
+
+This work introduces an adaptive filtering based on artificial hydrocarbon networks that can reduce white noise from audio signals. In fact, this work contributes in two aspects. First, it introduces an improvement of artificial hydrocarbon networks algorithm (Algorithm 1) based on adjustment of n molecular behaviors acting on unequal intervals as developed in the proposed Algorithm 2; and second, it implements the latter Algorithm 2 in order to filter audio signals corrupted with white noise better than the response of Algorithm 1.
+
+Actually, it can be seen from the experiments above that the proposed AHN-filter can achieve its goal of denoising audio signals. In particular, the modified AHN-filter has a better performance in terms of the signal-to-noise ratio (SNR) value than the classical FIR-filters employed. However, FIR-filters produce more intelligible audio segments than AHN-filters, as shown by STOI-values.
+
+On one hand, the performance in terms of the SNR-value can be explained by the fact that adaptive filters deal with white noise much better than non-adaptive filters, because white noise is normally distributed along all frequencies. On the other hand, the intelligibility in audio signals are better in FIR-filters than AHN-filters because FIR-filters do not reduce several low frequencies that provide information to audio signals. In contrast, AHN-filters reduce few low frequencies. In that sense, future research includes analysis of the cut-off frequency in AHN-filters to improve their performance.
+
+In addition, this paper presented some implementations of the modified AHN-filter that prove practicability of the proposed filter in different contexts. In particular, three different sources of noise were experimented: programmatically, DSP hardware, and mobile devices. Similar results were found and reported through Section 5.
+
+Actually, the modified AHN-filter is inspired in the work of Ponce et al. (2012). The latter reported that the response of the FIR-filter in a similar experiment as Experiment 1 is more intelligible (
+) than the response of the AHN-filter. In contrast, the proposed modified AHN-filter of the current paper demonstrates a reduction of this comparison stating that the FIR-filter is better in intelligible more than the response of the modified AHN-filter. In a similar fashion with Experiment 2, Ponce et al. (2012) reports an efficiency of in the response of the FIR-filter in comparison with the AHN-filter. However, the modified AHN-filter reduces this ratio to
+
+. In both cases, the modified AHN-filter improved the performance of its response in terms of intelligibility.
+
+Future directions in audio signals consider the implementation of Algorithm 2 in applications like system identification, prediction, and channel equalization. Furthermore, the proposed Algorithm 2 is not limited to be used in audio filtering applications. Since, the algorithm performs an optimal training of the intervals at which molecular behaviors act, the artificial hydrocarbon networks technique can implement Algorithm 2 in future applications to improve the performance of inference and classification problems, like: engineering system identification, prediction, and pattern recognition.

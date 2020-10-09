@@ -1,0 +1,327 @@
+A syntactic algorithm of a two-dimensional object vectorization is introduced. A syntactic algorithm of a two-dimensional object recognition is proposed. An algorithm of two-dimensional map recognition is introduced. The algorithms have been tested by using both artificial data and real data – the satellite image.
+
+0.096880 - In this paper the problem of a vision system implementation for autonomous flying agents is considered in the context of industrial inspection tasks performed by unmanned aerial vehicles.
+0.537093 - A syntactic algorithm of a two-dimensional object vectorization and recognition is proposed.
+0.357330 - An algorithm of two-dimensional map recognition has been introduced as well.
+0.325316 - The algorithms have been tested by using both artificial data and real data – the satellite image.
+0.035556 - They have turned out to be effective.
+0.029419 - Robot vision systems have been studied for over twenty years (Bonin-Font, Ortiz, & Oliver, 2008; Tadeusiewicz, 1992).
+0.036125 - Such systems have special meaning for autonomous robots, including autonomous flying robots (also referred to as autonomous flying agents or unmanned aerial vehicles-UAV for abbreviation) which are the class of unmanned mobile robots that operate in the air.
+0.018141 - They are equipped with sensors that are used to collect information about the surrounding environment (Muratet, Doncieux, Briere, & Meyer, 2005; Sinopoli, Micheli, Donato, & Koo, 2001).
+0.043011 - Beside the need to collect mission-specific data such information enables the robot to find a collision-free path between obstacles (Hrabar, Sukhatme, Corke, Usher, & Roberts, 2005).
+0.048048 - Identifying their location in space is another typical challenge for the mobile agents (Filliat & Mayer, 2003).
+0.039716 - Though Global Positioning System (GPS), coupled with other sensors or by itself, has also been extensively used for this purpose, it may not be applicable in environments where there is no satellite visibility, such as under water, in caves, indoors, or on Moon and Mars (Siagan, 2009).
+0.045977 - In those places vision system should be a viable alternative.
+0.055125 - Furthermore, complex tasks performed by a robot such as inspection (Metni & Hamel, 2007) or an unknown environment exploring require not only the agent positioning but also the object recognition (Flasiński, 1993; Tadeusiewicz & Flasiński, 1991) and both the scene analysis (Bielecka, Skomorowski, & Bielecki, 2007; Flasiński, 1988; Skomorowski, 1998; Skomorowski, 1999; Skomorowski, 2007) and understanding (see Bielecka et al., 2010; Bielecka et al., 2011; Tadeusiewicz, 2004; Tadeusiewicz, 2006 in the context of medical image understanding).
+0.055885 - Therefore, systems of pattern recognition and scene analysis based on vision systems have been studied intensively in robotics in the context of the scene understanding and the agent positioning (Filliat & Mayer, 2003; Katsev, Yershova, Tovar, Ghrist, & LaValle, 2011; Muratet et al., 2005; Siagan, 2009; Sinopoli et al., 2001).
+0.040404 - The mentioned tasks are difficult as they have to be solved on-line.
+0.021680 - During the robot flight it has to process information quickly to operate confidently in complex and sometimes changing environment.
+0.043011 - The computational power limitation of the board computer causes additional problems especially in the case of flying agents, where the mentioned limitations frequently are crucial (Tadeusiewicz, 2008).
+0.063315 - These problems could be solved efficiently if the possibility of application of GPU (Graphical Processing Unit), which enables us to process many tasks in parallel (Dally, 2010; Owens et al., 2007), is considered.
+0.012461 - UAVs, as devices with no pilot on board, can be remote controlled aircraft, e.g.
+0.045351 - flown by a pilot at a ground control station, or can fly autonomously, based on pre-programmed flight plans or more complex dynamic automation systems.
+0.090615 - UAVs are currently used for a number of missions, including reconnaissance and attack roles.
+0.060952 - As the capabilities grow for all types of UAVs, nations continue to subsidize their research and the development which leads to further advances and enables them to perform a multitude of missions.
+0.010499 - UAV not only perform intelligence, surveillance, and reconnaissance (ISR) missions any longer, but also this still remains their predominant type.
+0.017778 - Their roles have expanded to other areas.
+0.064611 - UAVs range in cost is from a few thousand dollars to tens of millions of dollars, and the aircraft used in these systems range in size from a Micro Air Vehicle (MAV) weighing less than one pound to large aircraft weighing over 18,000 lb.
+0.058700 - In order to be able to complete their task, UAVs are equipped with sensors that gather data from the environment which is then used in the control system.
+0.065041 - The objectives of these control systems are very different, like locating the drone in the space, or avoiding collisions.
+0.029304 - Different solutions with different characteristics are used depending on the mission.
+0.070175 - For example the Predator (Wilson, 2002), performing ISR missions is its objective.
+0.064957 - This can be achieved thanks to his long endurance (35 h) even when having a considerable size: 17 m wing span, 8 m in length, max takeoff weight 1157 kg, 147 kg of it is payload capacity.
+0.086514 - The ceiling of the studied model is over 7500 m and it can work autonomously for simple tasks and semi autonomously.
+0.074766 - The second one is a combat aircraft, the Arcturus T-20 (Yakimenko et al., 2009).
+0.032520 - The original idea was to design it for ISR missions too, but it was transformed into a combat aircraft.
+0.069930 - This model is much smaller than Predator, with 5.2 m wingspan, 2.8 m long body and a maximum payload of 80 kg.
+0.038835 - It also has a lower working range, around 90 km and 16 h endurance.
+0.062305 - Its ceiling is over 4500 m and it can work both autonomously and semi autonomously.
+0.072562 - The third example is also a combat model, but in this case, it is a helicopter, the MQ-8B Fire Scout (Downs et al., 2007).
+0.093458 - This is an example of autonomous solution, with a good lifting capacity, around 270 kg.
+0.080620 - On the other hand, the endurance of this model is lower than the ones in the previous examples, 8 h and it has a ceiling of 6000 m. The fourth design has a completely different application, transporting materials is its main task.
+0.067511 - It is the CQ-10 SnowGoose (Dalamagkidis, 2009).
+0.089127 - This small UAV is able to carry a payload of 75 lb with a maximum ceiling of almost 5500 m and a maximum endurance of 16 h, depending on the load the UAV is carrying.
+0.075362 - Our next example is one of the most controversial UAVs, the Nano hummingbird (Watts, Ambrosia, & Hinkley, 2012).
+0.015326 - This semi-autonomous UAV was created for surveillance and reconnaissance.
+0.076628 - The difference with the Predator example is clear, its size.
+0.078561 - This UAV has the size and form of a real hummingbird and can move at a maximum speed of 11 mph, being able to go forwards, backwards, sideways and rotate around its axis.
+0.051613 - The last example is the newest and more advanced solution for UAV, the HALEs (High altitude, long endurance), and one example is the Phantom Eye (Harrington, 2010).
+0.024024 - This model has been designed for gathering advanced intelligence and reconnaissance work, driven in combat conditions.
+0.054201 - It has a very large size, with a 46 m wingspan and it can carry up to 200 kg.
+0.044990 - The main advantages of this model are the almost 20,000 m service ceiling and its 4 days endurance, what makes this design suitable for new types of missions.
+0.046122 - As we have seen, there are diversified specifications for every kind of UAV depending on the mission and technology, but there are many problems to solve e.g.
+0.092754 - complexity of the cooperation: depending on how strong the cooperation is, faster or slower responses are necessary.
+0.025890 - There are also some barriers that prevent a higher investment, mainly in civil applications.
+0.077193 - The main one is that UAVs do not have an airspace authorization.
+0.061069 - But there are also technological problems like the lack of methodology to test the capacity of avoiding collisions (Shima & Rasmussen, 2009).
+0.081720 - The mobile robot, used at AGH University of Science and Technology, is able to carry up to 10 kg of electronic systems and is used for tests.
+0.061069 - The robot is equipped with full airside and groundside UAV system components, the MP2128 MicroPilot’s autopilot package with HORIZON software.
+0.047904 - This software enables the operator to monitor the autopilot, change waypoints, upload new flight plans, initiate holding patterns and adjust feedback loop, which is accessible during all the UAV flight.
+0.071942 - HORIZON Company, the producer of the MicroPilot, allows both the UAV developer and the end-user to access critical information in real-time.
+0.026490 - Up to eight user-defined sensors can be configured and displayed in three formats: • Current Sensor values are displayed in an easy to read gauge format.
+0.022989 - Warning and danger levels can be set for each gauge.
+0.016064 - • The Strip Chart graphs sensor specific variations over time.
+0.040404 - • The Trace Route displays sensor data variations along the UAV’s flight path.
+0.029304 - Data from the autopilot are also recorded for post-flight analysis.
+0.026936 - The MicroPilot system can support four external analog data to digital converters (ADC).
+0.054416 - By using ADCs, you can display data from external sensors.
+0.012461 - Additionally it has analog input channels enhanced data collection capabilities for up to 32 channels.
+0.088670 - The sensors, for example, a three dimensional compass is useful when flying in high winds as it gives an accurate direction of the nose of the plane unlike the GPS heading which is the direction the plane is heading.
+0.084034 - For such operations it is necessary to describe a dynamic model of the system presented in Fig 1.
+0.056140 - Computational model of the UAV with assumed system of coordinates Fig 1.
+0.061303 - Computational model of the UAV with assumed system of coordinates.
+0.072235 - Research on the construction of on-board flight control systems, designed for unmanned aerial vehicle applications have been executed since the early 70s.
+0.076739 - The contemporary state of technology did not allow us for the development of autopilot to control the UAV based on a model helicopter.
+0.043551 - The development of MEMS (Micro Electro-Mechanical Systems) in later years helped to build gyroscopes, accelerometers and other sensors that were used in Inertial Navigation System-INS (Hong, Chun, Kwon, & Lee, 2008) with parameters suitable for UAV applications.
+0.089980 - The modern flight control system is a combination of several sensors, GNSS (Global Navigation Satellite System), software whose primary task is the estimation of the position, velocity and orientation.
+0.046620 - To make estimation of these parameters possible, several smaller systems providing information on these parameters of the flight should be integrated in one system.
+0.077710 - The first system, called Inertial Measurement Unit (IMU), is a combination of gyro sensors and accelerometers to measure angular velocity and acceleration, respectively around the axes X, Y, Z.
+0.077710 - The second one, named Attitude and Heading Reference System, is a combination of IMU with the Earth’s magnetic field sensor that provides information about the direction of flight.
+0.028986 - The third system, called GNSS, provides information about the position, speed and altitude (Kaniewski, 2006; Kaniewski, 2007).
+0.079254 - The use of GNSS in the INS system can be implemented in two configurations as loosely coupled INS/GPS or tightly coupled INS/GPS.
+0.055728 - The difference between the configurations is that in the loosely coupled system configuration INS with GPS, for the visibility of less than four satellites, the most widely used Kalman filter is not able to estimate sufficiently good estimate of the position and speed of the system, while in tightly coupled INS/GPS configuration, even data from a single satellite is taken into account in the Kalman filter work process.
+0.066225 - Flight control systems can be categorized in two groups, the first group includes systems operating in open loop and the second one in a closed loop.
+0.036036 - The first group includes all the civilian uses, where the pilot always makes the final decision.
+0.096692 - The second group is a military application and use of UAVs, where the final decision always belongs the flight control system.
+0.076789 - On the basis of the presented data, concerning units used in UAV to set position and orientation, it can be noticed that it is significant to turn on the visual system for correcting the UAV position.
+0.060215 - Such attempts of using visual systems are made in SLAM (Simultaneous Localization and Mapping) technique, however, due to the complexity of calculations, they are difficult to interpret.
+0.061192 - On the other hand, the lack of using vision systems significantly influences lowering of technical abilities concerning UAV control as this forces the usage of the tightly coupled INS-GPS system, which is less exact and prone to external interruptions.
+0.084291 - The usage of the visual system supporting positioning and orientation.
+0.039216 - i.e., connected with INS-GPS via involving interpretation data in the process of Kalmans filter correction (Hide, Moore, & Smith, 2003; Sasiadek, Wang, & Zaremba, 2000), shall improve the estimation of the robots position in space.
+0.087432 - Additionally, the usage of the scene analysis shall enable it to interpret objects in a more exact way, which is a significant argument in favor of integrating the visual system with the control unit.
+0.052545 - Another important argument for applying the extended functionality of the visual system in UAV is the fact that it improves the autonomy of this type of units, which is very important from the point of view of UAVs application.
+0.102039 - In this paper the problem of a vision system implementation for autonomous flying agents is considered in the context of industrial inspection tasks performed by UAVs.
+0.055914 - The construction industry is one of the most appropriate for robotization due to its current low level of automation (Balaguer, Giménez, Pastor, Padrón, & Abderrahim, 2000).
+0.017316 - Inspection operations of civil infrastructures such as buildings, bridges, building skeletons, complex roofs, factory chimneys, offshore platforms, wind turbines towers etc., are very important tasks (Balaguer et al., 2000; Balaguer, Giménez, & Jardon, 2005; Ciang, Lee, & Bang, 2008; Liu, Tang, & Jiang, 2010; Sattar, Rodriguez, & Bridge, 2009).
+0.016461 - On the one hand such constructions as elevated panels or long-span suspension bridges (Briassoulis, Mistriotis, & Giannoulis, 2010; Øiseth, Rönnquist, & Sigbjörnsson, 2010) are exposed to damages made by wind-caused vibrations, which are destructive according to the chaotic wind speed variability (Barszcz, Bielecka, Bielecki, & Wójcik, 2012).
+0.012012 - On the other hand they are inaccessible so flying agents are proper tools to inspect them.
+0.065268 - The high complexity of construction sites and environments must be taken into consideration in the operational aspects of the tasks performed by autonomous agents.
+0.061538 - The development of autonomous robots is very important from different points of view-safety of the infrastructure, safety of the human operators, quality of the inspections and increment of the periodicity of inspection (Balaguer et al., 2005).
+0.026936 - Aerial autonomous vehicles can be used effectively for such inspections (Metni & Hamel, 2007).
+0.108844 - The first part of the UAV’s mission is the navigation from an initial position to a final position in an unknown three-dimensional environment.
+0.059590 - Then the robot has to recognize the object, that will be inspected, and understand the environment and the object spatial structure in the context of the mission, particularly in aspects of trajectory planning.
+0.086514 - Let us consider an UAV which is aimed at performing an inspection of an urban object-building, chimney, bridge, tower etc.
+0.079602 - The robot is autonomous one.
+0.043185 - It has to plan out the trajectory from the starting point to the mission area, then to analyze the mission scene-to locate the recognized object and to plan out the performing of the inspection task in the context of the structure of the investigated object and the scene properties.
+0.129789 - The agent’s memory contains the map which is given a priori, for instance as a preprocessed satellite image of an urban environment.
+0.053170 - The robot is equipped with the mobile camera which is able to point to the ground in order to take the pictures of the surface that it flies above.
+0.062028 - The map that the robot carries presents the buildings extracted from the base satellite image (see Fig 2).
+0.105516 - The problem of preprocessing which, beside other problems, consists of object extraction from the image, is out of the scope of this paper.
+0.114879 - By referring to the given two-dimensional map and the two-dimensional image from its senses-camera, radar-the agent orients itself in the environment, also by using other pieces of information, for instance GPS.
+0.057743 - More precisely, in order to find its location on the map the robot takes successive pictures of the ground below.
+0.075881 - Then it compares the extracted shape of the building from the picture and locate it in the bigger map.
+0.122605 - The example of the picture is shown in Fig 2.
+0.087802 - The method of the objects recognition has to be rotation and scale invariant as the pictures of the ground are taken from different altitudes and various directions of the robot’s flight.
+0.088300 - This problem belongs to the group of tasks that consist in recognition and representing polygonal-type objects by a robot sensory systems (Katsev et al., 2011).
+0.105263 - The method is extended with the recognition of the group of buildings.
+0.060527 - Then, the robot descends in order to explore the environment directly by using camera and sensors.
+0.087542 - This allows the agent to create the three-dimensional representation of the environment.
+0.080808 - Then, the environment should be understood and the desired object should be found.
+0.043956 - Thus, the studies can be divided in the following stages: 1.
+0.176507 - Creation a single, two-dimensional object representation, based on the camera image taken from high height.
+0.177452 - Creation of two-dimensional scene representation based on the high height camera image.
+0.112150 - Then, the videoed scene should be recognized as a fragment of the previously given map.
+0.071111 - The single desired object should be recognized.
+0.175688 - Creation of a representation of the three-dimensional scene, based on the worked out two-dimensional scene representation.
+0.163247 - The two-dimensional representation allows us to locate the buildings.
+0.070461 - When their localization is known, the robot can investigate individual objects in order to create their three-dimensional representation.
+0.079602 - Understanding the three-dimensional scene.
+0.064257 - (a) Preprocessed satellite map with extracted buildings Fig 2.
+0.071111 - (a) Preprocessed satellite map with extracted buildings.
+0.063492 - (b) The recognized object.
+0.087912 - The points 1 and 2 are the topics of this paper.
+0.186489 - In this section the algorithm based on syntactic methods for raster picture vectorization and object recognition is presented.
+0.084034 - The tests were carried out with the use of similar maps to these shown above in Fig 2.
+0.071247 - In the big map one building that is supposed to be similar to the one from the small map is outlined.
+0.092730 - In a real test data the building was not outlined.
+0.139564 - To perform the action of objects recognition the new representation of the picture has to be introduced.
+0.098246 - Every extracted building is turned into a vector representation of its shape.
+0.103560 - Vectorization algorithm The vectorization algorithm works on prepared data based on the raster picture.
+0.158958 - It is a tabular, two dimension data in which 0 represents the background pixels and 1 represents the pixels of the building.
+0.058608 - This algorithm searches through matrix until it finds first unmarked building.
+0.053601 - It processes the shape of the building, turning it into vector representation and marking its space by changing values 1 into other number to avoid running into it while searching again for the next building to be vectorized.
+0.092218 - It is worth mentioning that each unmarked point that is found while searching through the matrix is a corner of a building or a point very close to the corner.
+0.149332 - Complex contour creating is the first step of vectorization of a single object.
+0.152472 - The contour of a building is found and its representation in the form of short vectors is created.
+0.109459 - Beginning from the first point of the contour (corner of a building) the next point is found using the window-a square used to define a sub-matrix.
+0.071942 - It is required for the window to have the size expressed with an odd value as it needs to have a central point.
+0.078750 - If starting point of the window lies outside the contour of a building the search of the border point is conducted clockwise; in the other case counter-clockwise-see (Bielecki, Buratowski, & Śmigielski, 2012) for details.
+0.025890 - The search conducted in such manner leads to circling around the building contour clockwise.
+0.132647 - It is important for the object recognition algorithm to build the list of points in the same direction in all cases.
+0.084084 - Each encountered point in the border of processed building is turned from value 1 to 2.
+0.061350 - As a result, after collecting all the points around the building its border in the matrix representation consists of the sequence of groups of values 1 separated by 2.
+0.073260 - The length of groups depends on the size of the window.
+0.095923 - A presence of values 2 along the border is detected while searching for another building to determine if one has already been processed.
+0.067511 - It is accomplished in the following manner: 1.
+0.128538 - The algorithm iterates through matrix while the current value is 0 (the background).
+0.079012 - If the value encountered is 2 (building already processed) iteration continues in the row of the matrix until 0 is reached again.
+0.053333 - Search for another building is continued then.
+0.079012 - If the value encountered is equal to 1 the close surrounding of that point is checked for the presence of value 2.
+0.062992 - The surrounding is represented by the window with central point located in the point that is found on the border.
+0.035556 - The values in the window are checked.
+0.090615 - If value of 2 is found it indicates that the building was already processed.
+0.117379 - Then iteration in the row of the matrix is continued until 0 is reached and the algorithm searches for another building.
+0.057971 - If 2 is not present in the window it means that the building was not processed yet.
+0.073511 - The output of building processing described in this step is the sequence of points which can be interpreted as a sequence of vectors located around the building contour (a point that is not the first or last in the sequence is the end of the one vector and the beginning of the next one).
+0.124993 - After obtaining the long sequence of points in the contour it is vital to simplify that representation before running the object recognition algorithm.
+0.190920 - The algorithm of the final list obtaining is described in Bielecki et al.
+0.000000 - (2012).
+0.089636 - The results of the vectorisation algorithm for the data sets from Fig 2 are presented in Fig 3.
+0.079602 - (a) Vectorized map Fig 3.
+0.090395 - (a) Vectorized map.
+0.065728 - (b) Vectorized picture of one building.
+0.206614 - Object recognition algorithm The input for the object recognition algorithm consists of two vectorized maps.
+0.053170 - One is the map presenting large area filled with buildings and the other has only one building, similar to one placed in the big map, but scaled and rotated.
+0.120197 - The algorithm takes each vector representation of the building and compare it to the vector representation of the building from the small map.
+0.080321 - The comparison is conducted in the following way: 1.
+0.128514 - The number of corners of both buildings is compared.
+0.076628 - If it is different the buildings are not the same.
+0.067797 - Process is stopped.
+0.110596 - If it is the same the algorithm moves to another step.
+0.095923 - The representation of the building which is the list of corners is turned into representation which uses angle and length of the walls.
+0.048193 - This can be considered as a nominal feature representation.
+0.079665 - To change the corner representation into nominal features each wall (pair of points representing the vector) of the building is taken and its length and angle is calculated.
+0.083857 - The nominal feature is described directly by the angle and the number of features is obtained by dividing the length of the wall by length of the feature.
+0.077973 - Finally each wall of the building is described by the pair (F, N), where F is the nominal feature sign (angle of the wall) and N is the number of features.
+0.072072 - Finally, as a result we obtain the list of form ((F1, N1), (F2, N2), … , (Fm, Nm)).
+0.067340 - This is the first form which needs to be transformed for further computations.
+0.112045 - For both representations of the buildings that are compared a new list containing pairs of values is created.
+0.032129 - The first value expresses the angle between successive walls.
+0.066158 - The second value is the length of the wall preceding the corner (the number of nominal features that creates the wall).
+0.049383 - Actually the angle has the symbolic value as it is calculated as αi = (Fi+1 − Fi) mod 360; i ∈ 1, … , m − 1.
+0.057971 - The last angle (with apex in the first corner) is calculated as αm = (F1 − Fm) mod 360.
+0.042105 - That representation makes the difference in buildings rotation on the map irrelevant.
+0.028070 - The resulting list has the form: ((α1, N1), (α2, N2), … , (αm, Nm)).
+0.107744 - Having such representation one list (representing one of the compared buildings) is doubled.
+0.076739 - Then the substring similar to the sequence of nominal features of the second building is searched in the doubled list (see Fig 4).
+0.107744 - If the match is found the quotients of matching wall lengths is calculated.
+0.079530 - If all the quotients are similar (the standard deviation is below the given threshold) the buildings are treated as similar and the algorithm quits.
+0.070640 - If the quotients differ significantly (the lengths of the paired walls are different with respect to the scale) the search for the matching substring is continued.
+0.132599 - The maximum number of checks is equal to m. Representaions used in object recognition Fig 4.
+0.110802 - Representaions used in object recognition.
+0.189736 - The single object recognition algorithm constitutes the basics of the map recognition method.
+0.103560 - The aim of this method is to localize the submap in the overall picture.
+0.144309 - The submap consists of a group of buildings that is part of a big map.
+0.142791 - The method of a map recognition allows the picture to be scaled and rotated with relation to the big map.
+0.138103 - In further discussion, a center of an object (building) is treated as the center of mass of the vertex defined by the vector representation of a building.
+0.100393 - The algorithm can be divided into following parts: 6.1.
+0.044990 - Preparing the data structure This step requires parsing both pictures and identifying all the buildings from the big map (B) that are similar to those from the submap (b).
+0.142395 - For each object b a list of matching objects from big map is created.
+0.086845 - There are also two values that describe relation between objects b and B which are obtained during single object recognition process.
+0.035556 - Those values are the scale and rotation.
+0.088889 - Scale is calculated as a quotient of matching wall lengths (which is similar for each walls pair when the match is found).
+0.064725 - Rotation is obtained as an angle between matching walls when the match is found.
+0.080321 - The final data structure is presented in Fig 5.
+0.085339 - Data structure used in map recognition Fig 5.
+0.095089 - Data structure used in map recognition.
+0.078103 - Searching through data structure to find the matching objects After parsing both maps and obtaining the proper data structure, algorithm iterates through the data structure in order to find the complete set of buildings located in the big map, that represent the relations between buildings from the submap.
+0.128403 - The first row in the data structure plays the role of the list of a steering objects.
+0.117710 - The attributes of a steering object (scale and rotation) will be searched in further steps among the rest of the lists.
+0.057260 - Once the steering object i is picked the next matching element is searched in the second list (the list with elements similar to the object b in Fig 5).
+0.062016 - The element is matching when all conditions below are fulfilled (k-index of steering object in the first list, i-index of the list of similar objects that is actually processed, j-index of element in the list of similar objects): 1.
+0.088353 - - where Δr is the threshold of calculated rotations; 2.
+0.088353 - - where Δs is the threshold of calculated scales; 3.
+0.070588 - -where ΔD is the threshold of the distance between buildings, D (x, y) is a metric that, for a pair of buildings representations, returns an euclidean distance between their centers; Of course the calculation of the third condition may be omitted when the scales in compared objects are different (the second condition).
+0.115070 - If the submap consists only of two buildings the above calculations are sufficient.
+0.121212 - Otherwise, starting from the third list of matching objects, another calculation is required.
+0.061350 - Its aim is to check if relations on the plane between objects in the submap are similar (correct to scale and rotation) to those selected from the big map.
+0.053333 - To accomplish this, two angles are calculated.
+0.072562 - First (α1) is the one with the vertex in the center of building b1 and sides determined by centers of buildings bi−1 and bi.
+0.091408 - Second (α2) has vertex in the center of building and sides determined by centers of buildings and (where l is an index of a building in the previous list for which match was found).
+0.049911 - If condition − Δα ⩽ α1 − α2 ⩽ Δα (where Δα is the given threshold) is fulfilled it means that relations between three buildings on the submap and the big map are preserved and the match in step i is found.
+0.014652 - Fig 6 shows which elements are chosen for the relation check.
+0.064725 - Elements of the data structure which take part in calculation of angles Fig 6.
+0.070175 - Elements of the data structure which take part in calculation of angles.
+0.088578 - The match between submap and the big map is found when on each list of matching elements at least one matching building is found.
+0.067227 - The search is stopped and the match between submap and the overall picture is not found when: 1.
+0.133644 - Any of the list with matching objects is empty (in this case the algorithm is finished without creating the data structure) 2.
+0.121088 - Or the algorithm encounters the first list where the match (with relation to the previously found objects) is not found.
+0.080000 - This section is divided into two parts.
+0.131044 - First will show the capabilities of single object recognition method.
+0.157936 - The aim of the second section is to present the performance of the map recognition (multiple object recognition) algorithm.
+0.074074 - Each section is divided into two parts presenting results for two data sets.
+0.105340 - First is based on the set of artificial buildings which was mentioned above while discussing the algorithm (see Fig 2).
+0.073233 - The second one is based on the satellite picture which was taken from GoogleMaps service (see Fig 7a).
+0.073260 - The picture shows the area of Harvard College in Cambridge, Massachusetts.
+0.102564 - A group of buildings that were extracted for tests are highlighted.
+0.073260 - The actual map with extracted shapes is presented in Fig 7b.
+0.051282 - (a) Satellite picture with marked buildings that were extracted Fig 7.
+0.056225 - (a) Satellite picture with marked buildings that were extracted.
+0.000000 - (b) Extracted buildings.
+0.144611 - Single object recognition In this section tests of the vectorisation and object recognition algorithm are presented.
+0.110596 - For the tests the algorithm parameters were taken as follows: 1.
+0.000000 - Window size
+0.000000 - Angle threshold T (for vectorisation)
+0.000000 - Nominal feature length
+0.037559 - Their shapes were scaled and rotated.
+0.000000 - In Figs.
+0.086845 - 8 and 9 the extracted buildings are shown along with their vector representation obtained in the first step of the algorithm.
+0.073260 - Test case I, (a)-extracted image, (b)-vectorized image Fig 8.
+0.080321 - Test case I, (a)-extracted image, (b)-vectorized image.
+0.073260 - Test case II, (a)-extracted image, (b)-vectorized image Fig 9.
+0.080321 - Test case II, (a)-extracted image, (b)-vectorized image.
+0.034783 - The Fig 10 shows the extracted overall map with marked buildings for which the match was found.
+0.029630 - The matching buildings are marked with numbers I and II which correspond with test cases I and II presented above-see Figs.
+0.021164 - 8 and 9 respectively.
+0.018779 - Map with matching buildings Fig 10.
+0.021164 - Map with matching buildings.
+0.073966 - Let us turn to the test results based on real data.
+0.086957 - The testing data consists of four extracted images of buildings that can be found in Fig 7.
+0.024242 - The Figs.
+0.110589 - 11–14 present both extracted images of buildings and their vector representation obtained after the first step of the algorithm.
+0.073260 - Test case I, (a)-extracted image, (b)-vectorized image Fig 11.
+0.080321 - Test case I, (a)-extracted image, (b)-vectorized image.
+0.073260 - Test case II, (a)-extracted image, (b)-vectorized image Fig 12.
+0.080321 - Test case II, (a)-extracted image, (b)-vectorized image.
+0.073260 - Test case III, (a)-extracted image, (b)-vectorized image Fig 13.
+0.080321 - Test case III, (a)-extracted image, (b)-vectorized image.
+0.073260 - Test case IV, (a)-extracted image, (b)-vectorized image Fig 14.
+0.080321 - Test case IV, (a)-extracted image, (b)-vectorized image.
+0.095923 - The Fig Fig 15 shows the vectorized map of the extracted buildings obtained after vectorisation algorithm run and the map with extracted buildings.
+0.030030 - The buildings for which the match with test examples was found are marked with equivalent number.
+0.079602 - (a) Vectorized map Fig 15.
+0.090395 - (a) Vectorized map.
+0.019900 - (b) Map with extracted buildings.
+0.143806 - Map recognition In this part the test results of the map recognition algorithms are presented.
+0.110596 - For the tests the algorithm parameters were taken as follows: 1.
+0.000000 - Scale threshold Δs – 0.2 2.
+0.000000 - Distance threshold ΔD – 30 (value expressed in pixels) 3.
+0.000000 - Rotation threshold Δr – 6° 4.
+0.086256 - Threshold of angle between buildings Δα – 10° The artificial data set consists of the image (see Fig 16a) being the part of the large map-see Fig 2.
+0.068966 - This small map shows the group of three extracted buildings.
+0.091228 - The group is scaled and rotated with relation to the large map.
+0.099617 - (a) Small map presenting the group of buildings Fig 16.
+0.109705 - (a) Small map presenting the group of buildings.
+0.075949 - (b) Full map presenting the group of buildings.
+0.073260 - In Fig 16b the map with extracted buildings is presented again.
+0.095238 - The group of buildings for which the match with test example was found is marked with grey dots.
+0.054201 - The grey lines expresses the sides of the angles that took part in calculations of the relations between buildings.
+0.109105 - The real data set consists of the image (see Fig 17a) which is the part of the large map of Harvard College (see Fig 7b).
+0.119298 - There is a group of four adjacent buildings in the small map.
+0.091228 - The group is scaled and rotated with relation to the large map.
+0.099617 - (a) Small map presenting the group of buildings Fig 17.
+0.109705 - (a) Small map presenting the group of buildings.
+0.075949 - (b) Full map presenting the group of buildings.
+0.073260 - In Fig 17 the map with extracted buildings is presented again.
+0.095238 - The group of buildings for which the match with test example was found is marked with grey dots.
+0.054201 - The grey lines expresses the sides of the angles that took part in calculations of the relations between buildings.
+0.137189 - In this paper the algorithm, based on syntactic methods for raster picture vectorization and single object recognition, has been presented.
+0.312565 - The algorithm of recognition of a two-dimensional scene consisting of such object has been introduced as well.
+0.156264 - Both the algorithms turned out to be effective, which has been pointed out by using both the created artificial objects and maps and the maps, based on satellite images.
+0.115070 - In particular the algorithm are insensitive to scale changing and the map rotations.
+0.038710 - It should be stressed that the obtained results, including the performed experiments, have only computer scientific aspect-the software has not been implemented on an embodied agent.
+0.123249 - The three-dimensional scene representation is necessary to test an UAV equipped with the module of vision analysis.
+0.124556 - So far only polygonal shapes have been taken into account in the part of studies concerning two-dimensional scene-stages 1 and 2 in the schedule presented in Section 4.
+0.067039 - In the closer perspective, apart from the realization of the points 3 and 4 (see Section 4), the class of objects consisting of both line segments and arcs should be taken into consideration.
+0.058480 - In such a case the shape languages should be a good starting point for creating the system for the scene analysis and understanding- (Jakubowski, 1982; Jakubowski, 1985; Jakubowski, 1986; Jakubowski, 1990).
+0.065041 - This formalism seems to be useful also for creation the three-dimensional scene representation-see (Jakubowski & Flasiński, 1992).
+0.046377 - In the further perspective fully autonomous robots are planned to be used for the unknown environment exploration.
+0.130081 - The inspection of industrial and urban objects is a relatively simple task in the context of the scene analysis.
+0.052356 - If the robot is used for exploring un unknown natural environment, for instance, the Moon or planets (Pederson, Kortencamp, Wettergreen, & Nourbakhsh, 2003), the agent’s scene understanding capabilities have to go far beyond syntactic scene analysis.
+0.056140 - In a such case the agent should be equipped with cognitive abilities.
+0.027855 - Cybernetic models of human cognitive structures (Bielecki, Kokoszka, & Holas, 2000; Kokoszka, Bielecki, & Holas, 2001) and models of the nervous system, that are their support (Barlow, 1999;Bielecki, 2001; Bielecki, Jabłoński, & Ke¸dzierski, 2004;Bielecki & Kalita, 2008; Bielecki & Kalita, 2012;Bielecki, Kalita, Lewandowski, & Siwek, 2010; Bielecki, Kalita, Lewandowski, & Skomorowski, 2008;Bielecki & Ombach, 2004; Bielecki & Ombach, 2011;Fiori, 2006), seem to be a good starting point for studies of agent’s cognitive module based on its vision system.
+
+[Frase 4] The algorithms have been tested by using both artificial data and real data – the satellite image.
+[Frase 2] A syntactic algorithm of a two-dimensional object vectorization and recognition is proposed.
+[Frase 308] Both the algorithms turned out to be effective, which has been pointed out by using both the created artificial objects and maps and the maps, based on satellite images.
+[Frase 3] An algorithm of two-dimensional map recognition has been introduced as well.

@@ -1,0 +1,353 @@
+We proposed a novel stock market conceptual model with the financial information. We proposed investment strategy and learning algorithm for fundamentals investors. We constructed a prototype implementation for the artificial stock market. We done some experiments for trading mechanism innovation.
+
+0.013889 - Agent-based computational economics (ACE) has received increased attention and importance over recent years.
+0.133172 - Some researchers have attempted to develop an agent-based model of the stock market to investigate the behavior of investors and provide decision support for innovation of trading mechanisms.
+0.098346 - However, challenges remain regarding the design and implementation of such a model, due to the complexity of investors, financial information, policies, and so on.
+0.135521 - This paper will describe a novel architecture to model the stock market by utilizing stock agent, finance agent and investor agent.
+0.118012 - Each type of investor agent has a different investment strategy and learning method.
+0.138377 - A prototype system for supporting stock market simulation and evolution is also presented to demonstrate the practicality and feasibility of the proposed intelligent agent-based artificial stock market system architecture.
+0.045406 - The financial turmoil triggered by the US subprime mortgage crisis has swept the world since 2007.
+0.038095 - Many banks, real estate investment trusts (REIT) and hedge funds have suffered significant losses as a result of mortgage payment defaults or mortgage asset devaluation.
+0.026667 - Some even collapsed, such as Bear Stearns and Lehman Brothers (Sorkin, 2008; White & Anderson, 2008).
+0.031008 - Jan Hatzius estimates that in the past year, financial institutions around the world have already written down $408 billion worth of assets and raised $367 billion worth of capital (Hilsenrath, Ng, & Paletta, 2008).
+0.030303 - The crisis has severely shaken people’s faith in traditional economic theory.
+0.118056 - “We have had a massive failure of the dominant economic model”, Eric Weinstein said.
+0.052670 - In 2009, Nature journal published two articles on agent-based modeling to study the economics and prevent the financial crisis (Buchanan, 2009; Farmer & Foley, 2009).
+0.026882 - Agent-based computational economics (ACE) is the computational study of economies modeled as evolving systems of autonomous interacting agents (Wu, 2001).
+0.051282 - ACE is a bottom-up culture dish approach to the study of economic systems (Tesfatsion, 2011).
+0.072344 - It has been applied to research areas such as asset pricing, stock market simulation, industry dynamics, and macroeconomics.
+0.031746 - China’s economy has developed rapidly in the past 30 years.
+0.140783 - The healthy development of the stock market is very important for the national economy.
+0.120580 - However, changes in the stock trading mechanism may have a greater impact on the market.
+0.063725 - Thus, the Shanghai Stock Exchange launched China’s first innovation R&D and experimental platform based on finance simulation and modeling technology in 2011.
+0.091769 - The short-term goal of the innovation experimental platform is to construct a table-top exercises environment for business innovation research.
+0.088508 - The long-term goal is to build an open and professional R&D experimental environment that can provide support and service for continuous trading mechanism innovation.
+0.052083 - To achieve this goal, we need to build an innovation experimental platform by designing an adaptive simulation system based on intelligent agents.
+0.066277 - In practice, some researchers have already developed agent-based simulation systems of the stock market in past years (LeBaron, 2002; Nadeau, 2009; Wang, Wang, Xu, Wan, & Vogel, 2004).
+0.000000 - However, there are still two limitations in today’s practical simulation systems that need to be addressed.
+0.069444 - These are: (1) The simulation of market news in the investment decision-making process.
+0.062847 - In general, investors make investment decisions through comprehensive analysis of various information in which the financial magazine is an important information source.
+0.075138 - However, little work has been done about the utilization of such information in the decision process of fundamentals investors.
+0.081311 - Thus, how to simulate the decision-making process of fundamentals investors based on financial information is one major challenge.
+0.128758 - (2) The learning mechanism of fundamentals investors.
+0.057692 - In the long practice of investing, each investor will continue to learn to improve their profitability.
+0.041667 - Investors improve and optimize their strategies based on investment return.
+0.015152 - Everyone is willing to believe information sources that have strong predictive power.
+0.055556 - Thus, the predictive ability evaluation of the various information sources is a key problem.
+0.118687 - How to design and implement the learning mechanism of fundamentals investors is another challenge.
+0.168406 - To address these challenges, we studied the conceptual model of the stock market in-depth.
+0.136591 - It includes stocks, investors, financial information, trading mechanisms and other participants.
+0.095238 - We use a different agent to represent each type of participant.
+0.031746 - The relationships among the agents are embodied using the agent hierarchy.
+0.111111 - We describe in detail the design of the stock agent, investor and financial agent, which shows how market news is used in the decision-making process.
+0.201389 - We study the investment strategy and learning algorithm of fundamentals investors and other types of investors.
+0.106421 - Finally, we design and implement one system to simulate the real stock market, i.e., Intelligent Agent-assisted Order Simulation System (IAOSS), and evaluate the reasonableness of the system design through some technical indicators.
+0.035088 - The rest of the paper is organized as follows.
+0.000000 - Section 2 discusses related work.
+0.062222 - Section 3 describes the system design, including the conceptual model, agent hierarchy, agent design, and system architecture.
+0.102139 - Section 4 describes system implementation, including agent implementation and the investor learning algorithm.
+0.053333 - Section 5 describes the application and evaluation of the system and conducts short selling experiments.
+0.074074 - Finally, we draw conclusions to end this paper.
+0.098978 - The research of stock market simulation originated from the first artificial stock market established by the Santa Fe Institute.
+0.000000 - Many researchers have subsequently undertaken very effective work.
+0.116220 - These efforts are concentrated in several areas: agent-based stock market model, investor trading strategies, market trading mechanisms, etc.
+0.041667 - The related work is reviewed below.
+0.081890 - Intelligent agent and artificial stock market Intelligent agents can be seen as software agents with intelligent behavior, that is, they are a combination of software agents and intelligent systems.
+0.010417 - Intelligent agents have been successfully applied to many domains, such as decision support systems (Wang, 1997), e-Learning (Xu, Wang, & Wang, 2005), supply chain management (Wang, Liu, & Wang, 2008), and personnel finance (Gao, Wang, Wang, Shen, & Yeung, 2005).
+0.091631 - The artificial stock market originated from Holland’s complex adaptive system (Holland, 1992), which posited that a finance system is also a complex adaptive system.
+0.111111 - Various researches have been conducted into applying intelligent agent-based technology to the artificial stock market.
+0.079131 - For example, the Santa Fe Institute used intelligent agents to build the first artificial stock market in the world (Arthur, Holland, LeBaron, & Palmer, 1997), which introduced “incomplete rationality”, “non-linearity”, “non-equilibrium”, “non-effective” and enabled the modeling to be closer to the real market.
+0.102830 - LeBaron also developed an agent-based model of the stock market (LeBaron, 2002).
+0.033333 - In his model, several hundred agents attempt to profit by buying and selling stock, basing their decisions on patterns they perceive in past stock movements.
+0.050926 - Because the agents can learn from and respond to emerging market behavior, they often shift their strategies, leading other agents to change their behavior in turn.
+0.037037 - As a result, prices do not settle down into a stable equilibrium, as predicted by standard economic.
+0.036585 - In the late 1990s, the NASDAQ stock exchange planned to cease listing its stock prices as fractions such as 12 1/4 and instead to list them as decimals (Buchanan, 2009).
+0.046875 - Before making this risky change, NASDAQ hired the BiosGroup to develop an agent-based model of the market to test the idea.
+0.049242 - The tests revealed that if the stock exchange reduced its price increment too much, traders would be able to exploit strategies that would make them quick profits at the expense of overall market efficiency.
+0.038005 - Thus, when the exchange went ahead with the changeover in 2001, it was able to take steps to counter this vulnerability.
+0.052381 - Such work in designing and implementing practical stock simulation system is crucial to our research in the sense that their results provide solid pragmatic technology.
+0.077020 - However, not all existing work considers the specific effect of financial information on investors.
+0.161172 - In this paper, we design a finance agent and investor agent, and proposed the corresponding fundamentals investment strategy.
+0.089286 - Investor trading strategy In finance, a trading strategy is a predefined set of rules for making trading decisions.
+0.068966 - An investor uses trading strategy to assist in making wiser investment decisions and eliminating the emotional aspect of trading.
+0.065476 - Generally, the trading strategy styles include technical analysis, fundamentals analysis, quantitative trading, trend following, mean reversion, and more.
+0.063492 - Chen proposed trading strategy based on genetic programming design (Chen, 2001).
+0.149136 - Yang proposed trading strategy in an artificial double auction stock market with neural learning agents (Yang, 2002).
+0.000000 - Zhu et al.
+0.083333 - proposed strategic learning in a sealed-bid bargaining mechanism by particle swarm optimization algorithm (Zhu, Wang, & Yu, 2006).
+0.076389 - Lu and Li proposed the mixed tactics-based dynamic offering algorithm (Lu & Li, 2006).
+0.019608 - Most existing work concerns technical analysis strategy.
+0.058661 - However, less work has been done in fundamentals analysis strategy and other strategies.
+0.099356 - In this paper, we not only consider the trading strategies of fundamentals investors, but also take into account the trading strategies of noise investors and momentum investors.
+0.110766 - Stock market trading mechanism China’s stock market is still an emerging market.
+0.068939 - Many trading mechanism are not the same as those of other countries.
+0.012346 - There is much controversy in academia and industry about whether China should adopt international practices or not.
+0.041667 - Short selling is a typical example.
+0.040913 - In finance, short selling is the practice of selling securities that have been borrowed from a third party with the intention of buying identical securities back at a later date to return to the lender.
+0.058824 - It is a form of reverse trading.
+0.060606 - Mathematically, it is equivalent to buying a “negative” amount of the assets.
+0.074142 - One view about short selling is that allowing short selling affects the stability of the stock market and increases market volatility (Allen & Gale, 1991).
+0.051724 - Allen and Gale found that in the case of restricted short selling, the market is perfectly competitive and balanced.
+0.048387 - However, in allowing unrestricted short selling, the market is not perfectly competitive and permitting short selling will therefore affect economic stability.
+0.040000 - Bemardo and Welch studied the relationship between finance crisis fears and crisis (Bernardo & Welch, 2004).
+0.052846 - They believe that once investors have concerns about liquidity, they will tend to immediately sell the stock on hand to prevent them being the last people to stay in the market.
+0.074074 - To limit short selling helps prevent public panic caused by a small group of investors, thereby reducing the incidence of financial crisis and stabilizing financial markets.
+0.065359 - The second view is that allowing short selling will not exacerbate the volatility of the stock market, but rather will help to stabilize the stock market.
+0.030000 - Charoenrook and Daouk used panel regression analysis and event study to examine the impact of short selling constraints on the volatility of overall market earnings based on data from 111 countries from December 1969 to December 2002 (Charoenrook & Daouk, 2005).
+0.040404 - Empirical results show that the overall market volatility of the countries allowing short selling is smaller than that in countries banning short selling.
+0.000000 - Cai et al.
+0.066277 - used event study to analyze the Hong Kong stock market (Cai, Li, & Xia, 2006) and found no evidence to show that allowing short selling increases stock price volatility.
+0.058333 - On the contrary, short selling may reduce stock price volatility.
+0.036458 - The third view is that allowing short selling or relaxing short selling constraints has uncertain impact on the stability of the market.
+0.067568 - Kraus and Rubin set up a theoretical model which illustrates the impact of relaxing short selling restrictions on the volatility of stock price gains (Kraus & Rubin, 2003).
+0.061905 - Their model indicates that the volatility of stock prices may increase or reduce depending on the value of model information parameters and economic exogenous variables.
+0.035088 - This section describes the design of the IAOSS system.
+0.146274 - First, we investigate the conceptual model of the stock market, which describes the participants in the stock market and their interaction.
+0.128968 - Based on the conceptual model, we propose the agent hierarchy, which shows the classification and inheritance relationship among different agents.
+0.064103 - The design of subject agents is then introduced, including investor agent, stock agent and finance agent.
+0.100000 - Finally, we describe the design of the IAOSS running architecture.
+0.122393 - Conceptual model of the stock market The conceptual model of our artificial stock market is shown in Fig 1.
+0.128676 - As can be seen, the participants in the stock market include stock, investor, trading mechanism, buy and sell orders, financial information, and so on.
+0.062500 - According to classical financial theory, if there is no market trading, the stock price depends only on the stock fundamentals, as shown in the top dashed line of Fig 1.
+0.055556 - In other words, the stock price strictly depends on a listed company’s future cash flow discount.
+0.101159 - However, the stock price will depend on its supply and demand in the stock market.
+0.046296 - Investors’ buy and sell orders will determine real-time stock prices through the exchange orders matching system, as shown on the right side of Fig 1.
+0.172619 - Stock market conceptual model Fig 1.
+0.198413 - Stock market conceptual model.
+0.076852 - Investment strategies include fundamentals analysis strategy and technical analysis strategy.
+0.054054 - Technical analysis strategy places orders based on the trading volume and price, and fundamentals analysis strategy places orders based on the value judgment of the listed companies.
+0.063320 - Generally speaking, investors interpret the value of the listed companies primarily through financial information, including various types of financial news, listed company announcements, stock research reports, etc.
+0.030303 - However, judgment of the future value of listed companies carries great uncertainty.
+0.083772 - As shown in Fig 1, each piece of financial information reporting stock fundamentals may have a “report error”; similarly, each investor interpreting the financial information will have an “interpret error”.
+0.068182 - Moreover, investors’ learning and evolution is the key to investor behavior simulation.
+0.054029 - Investors evaluate their investment strategies based on historical trading income, which enables them to gain more investment experience.
+0.044118 - Specifically, investors constantly learn from two aspects, i.e., technical analysis, fundamentals analysis, as shown in the other two dashed lines in Fig 1.
+0.088889 - From the above discussion we can see that the conceptual model basically achieves the design goals of the adaptive order simulation system.
+0.028986 - Agent hierarchy The adaptive order simulation system operates by interaction among different agents.
+0.000000 - Its hierarchy is shown in Fig 2.
+0.014493 - All agents can be divided into two categories: Function Agent and Subject Agent.
+0.039216 - Function Agent implements a basic business function.
+0.086914 - Subject Agent corresponds to an entity in the real world, e.g., stock, financial information, investor, etc.
+0.052632 - Agent hierarchy for adaptive order simulation system Fig 2.
+0.058824 - Agent hierarchy for adaptive order simulation system.
+0.035088 - Function Agent can be seen as a simplified agent.
+0.027778 - It is not required to have all the properties described in Section 2.1.
+0.000000 - There are three Function Agents in our system.
+0.064103 - Match Agent is used to implement investor orders, matching function for call auction and continuous auction.
+0.043210 - Evaluate Agent is used to evaluate the prediction accuracy of each Finance Agent after the stock transaction.
+0.035714 - Adjust Agent is used to adjust the trust value of each Investor Agent to its concerned Finance Agents.
+0.045977 - Subject agent has all the capacities of a normal agent, i.e., autonomy, co-operability, reactivity and pro-activity.
+0.057971 - It is used to simulate the state and behavior of a real entity.
+0.050725 - In our system, subject agent contains investor agent, stock agent and finance agent.
+0.091235 - As the name implies, investor agent represents an investor, stock agent represents a stock and finance agent represents a kind of financial information.
+0.031746 - Generally, investors can be divided into irrational investors and rational investors.
+0.030303 - Irrational investors can be further divided into noise investors and momentum investors.
+0.057971 - Noise investors place their orders randomly regardless of stock fundamentals and price trends.
+0.087963 - Momentum investors make buy-and-sell decisions at least in part on the basis of increases and declines in the trading momentum for a given stock.
+0.075138 - Rational investors place their orders by relying on financial information, stock price and trend, trading volume and other information.
+0.032629 - Rational investor agent can be further divided into fundamentals investor agent, technical investor agent, noise investor agent and momentum investor agent.
+0.035354 - Subject agents As described above, there are three types of subject agents in an IAOSS system: investor agent, stock agent and finance agent.
+0.072464 - This section will provide a more detailed description for each type of them.
+0.047619 - Investor agent Each investor is represented by a stand-alone agent.
+0.013889 - An investor agent has attributes: cash amount, investor type (retail investor, petty investor, etc.
+0.051282 - ), concerned stock list.
+0.043011 - Each concerned stock is an object, which contains a stock agent ID, number of held stock, buy price, earned money, etc.
+0.052431 - The investor agent base class has four sub-classes: fundamentals investor agent, technical investor agent, noise investor agent and momentum investor agent.
+0.000000 - Each sub-agent has special attributes.
+0.114394 - For example, the fundamentals investor agent has one attribute: concerned finance list.
+0.023810 - The concerned finance is also an object, which contains the finance agent ID, composite score, trust value, etc.
+0.058661 - At each step, different types of investors submit orders with different investment strategies.
+0.072574 - For fundamentals investors, the stock price change will be predicted using the information provided by the finance agent, and then the stock that is expected to fall will be sold out and the stock that is expected to rise will be bought in.
+0.028986 - The cash allocation ratio is decided by the size of the price limit.
+0.086207 - For technical investors, the stock price change will be predicted using technical analysis approaches, such as K line graph.
+0.086022 - For noise investors, it will randomly select a few stocks to buy and then randomly select a few stocks to sell.
+0.119048 - For momentum investors, the stock history price data will be analyzed.
+0.052083 - The stock that rose continually will be bought in and the stock that descended continually in the past period will be sold.
+0.045455 - Many investors prefer the opposite operation to obtain greater but riskier benefits.
+0.122807 - To simulate such facts, we defined the reverse investors.
+0.100577 - The trading rules for the reverse investor are just exactly the opposite of those of the regular investor, thus we do not describe them here.
+0.066667 - Moreover, it is important to note that investors’ positions should be kept at a reasonable level during the trading process.
+0.092105 - For individual investors, the cash accounted for 2/3 of the held stock market value; for institution investors, the cash accounted for 1/4 of the held stock market value.
+0.047619 - Stock agent Each stock is represented by a stand-alone agent.
+0.104938 - The attributes of a stock agent include the total circulation capital, fundamentals information sequences and stock type.
+0.065217 - Total circulation capital determines the current number of stocks that can be traded.
+0.049383 - The fundamentals information sequence should be pre-defined to generate the value sequence of the listed companies.
+0.037037 - However, the fundamentals value is very difficult to define because of a wide range of factors, e.g., P/E ratio, industry policies, macro policies, etc.
+0.142469 - To simplify the system design, we adopted the history data of fundamentals value for the stock agent.
+0.083333 - On each day, the macro policy, industry policy and company information will change a little, causing the stock fundamentals value to change.
+0.127778 - This coincides with the changes of the actual stock market.
+0.056187 - Finance agent Each kind of financial information is represented by a stand-alone agent.
+0.061728 - The finance agent receives the fundamentals value change of all stocks and makes stock fluctuation predictions accordingly.
+0.092805 - In an actual stock market, each financial analyst would be bullish on some stocks and bearish on other stocks.
+0.155220 - Thus, we add a preference attribute for the finance agent which has a different value for each stock.
+0.159259 - We also add an error attribute for the finance agent.
+0.064103 - Assume that the fundamentals value of a stock agent is BasicV and the report error is ReportEr, then the fundamentals value generated from the finance agent ReportV = BasicV + ReportEr.
+0.064516 - ReportEr is a Gaussian distribution with mean value equal to the preference attribute and standard deviation equal to the error attribute.
+0.083681 - According to current stock prices, the finance agent can compute and output the predicted fluctuation of each stock for the next day.
+0.066667 - Running architecture for IAOSS The system running architecture of IAOSS is shown in Fig 3.
+0.045455 - There are two kinds of users in the system, administrator and analysts.
+0.041667 - Administrator can set the system parameters through the console and start the simulation process.
+0.067568 - Analysts can view the market information such as stock price trend, trading volume, five order tape, stock transaction records, or investor holding stocks, through the user interface.
+0.057971 - All trading orders, transaction and other data are stored in a TimesTen database.
+0.027027 - The solid line in Fig 4 denotes the data flow and the dashed line denotes the internal execution order among the agents in the orders simulation system.
+0.034483 - The circle denotes the subject agents and the rectangle denotes the function agents as described in Section 3.2.
+0.097222 - These agents are invoked sequentially and endlessly to simulate the running of the real stock market.
+0.058824 - System running architecture for IAOSS Fig 3.
+0.066667 - System running architecture for IAOSS.
+0.066667 - Comparison of artificial market and real market volatility Fig 4.
+0.074074 - Comparison of artificial market and real market volatility.
+0.034722 - This section describes the implementation of IAOSS based on our architecture framework discussed earlier.
+0.171296 - The contents include investment strategies and learning algorithms.
+0.132659 - Due to space limitation, we only described one kind of investment strategy of technical analysis investors and the learning mechanism of fundamentals analysis investors.
+0.087246 - Investment strategy implementation The concrete implementation of each kind of agent is complex and diverse.
+0.089744 - To save space, we focus on only one kind of investor agent, the Technical Investor Agent.
+0.083333 - Even for technical investors, there are multiple technical analysis strategies based on the stock trading price and trading volume history, such as K line chart, moving average, etc.
+0.069444 - The moving average approach is relatively simple, thus we will introduce it in detail.
+0.038462 - The moving average rule can be divided into the simple average rule and complex average rule.
+0.083333 - The computation of a real time average contains the current stock price.
+0.068376 - For example, the real time average value of a 5-day average is the average of the current price and the closing price of the former four trading days.
+0.023810 - The simple moving average rule can be described as follows: (1) Buy when the price is above average.
+0.037037 - (2) Sell when the price is below average.
+0.050000 - Suppose that an investor is tracking a 5-day average.
+0.040541 - We define the current price as P, and the 5-day average value as MA5, and the trading algorithm can be defined as follows: IF (P > MA5) THEN Buy; ELSE Sell; Complex moving average rule can be described as follows: (1) Buy when the rising short-term moving average goes through the rising long-term moving average from down-top, i.e., Golden Cross.
+0.019608 - (2) Sell when the falling short-term moving average goes through the falling long-term moving average from top-down, i.e., Dead Cross.
+0.013333 - Short-term moving averages include 5-day average, 10-day average and 30-day average.
+0.011905 - Long-term moving averages include 60-day average, 120-day average, 250-day average and 500- day average.
+0.038462 - Thus, a simple moving average contains 7 combinations, and a complex moving average contains 12 combinations.
+0.048611 - Suppose that an investor is tracking a 5-day average and 60-day average.
+0.044444 - We define the current 5-day average value as MA5, the 60-day average value as MA60, the 5-day average value at the closing time of the previous trading day as PMA5, and the 60-day average value at the closing time of the previous trading day as PMA60.
+0.048714 - The trading algorithm for the 5–60-day combination can be defined as follows: IF (MA5 > PMA5 AND MA60 > PMA60 AND MA5 > MA60 AND PMA5 < PMA60) THEN Buy; ELSE IF (MA5 < PMA5 AND MA60 < PMA60 AND MA5 < MA60 AND PMA5 > PMA60) THEN Sell; 4.2.
+0.060458 - Investor learning and evolution The investors’ learning algorithm is one of the most important factors in determining the intelligence and simulation degree of the investor agent.
+0.068395 - There are many algorithms for technical analysis strategies, including Genetic Algorithm (GA), Neural Network (NN), and others.
+0.059259 - However, little work has been done on other investment strategies.
+0.219444 - In this paper, we investigate the learning algorithms for fundamentals.
+0.062436 - Assume that there are n Learning Fundamentals Investor Agents.
+0.100397 - Due to the limitation of knowledge and time, no investor can concern themselves with all the stocks and financial information.
+0.065476 - Generally, each investor agent will have a concerned stock pool, and buy/sell stocks in that stock pool.
+0.152778 - We define the concerned stock pool for investor agent i as {Stocki1, Stocki2, … , Stockip}.
+0.126667 - Similarly, we define the concerned finance pool for investor agent i as {Financei1, Financei2, … , Financeiq}.
+0.083333 - In each day of the simulation process, the finance agent f will generate a predicted fluctuation for each stock agent s: FPfs.
+0.073333 - Moreover, investor agent i stores a trust value for each concerned finance agent f: Trustif.
+0.055556 - The trust value is between 0 and 1.
+0.041667 - If trust = 0, then investor agent does not trust the finance agent at all.
+0.047619 - If trust = 1, then investor agent trusts the finance agent completely.
+0.057214 - In the initialization phase, we assume that the investor agent i trusts all concerned finance agents completely, i.e., (1) At tick 1, the predicted fluctuation of the stock agent s for investor agent i (denoted as IPis) can be computed by the sum of all concerned finance agent predicted fluctuation multiplied by their weights (trust value).
+0.047619 - Formally: (2) According to the predicted fluctuation of the stock price, investor agent i can sort all the concerned stocks into descending order, and make investment decisions based on the sort result.
+0.048148 - If investor agent i only wants to invest one stock and the predicted fluctuation of the top-ranked stock is positive, it will naturally spend all the available capital to buy the top-ranked stock.
+0.056604 - If investor agent i would like to invest in multiple stocks to diversify the risk, it can select a few top-ranked stocks with a positive predicted fluctuation to invest in and distribute its capital according to the size of the predicted fluctuation.
+0.040741 - After the orders matching transaction, investor agent i computes the actual fluctuation (AC) of the concerned stocks, evaluates the prediction accuracy of each finance agent in the last tick, and then adjusts their trust value.
+0.026667 - The prediction accuracy is defined as the overall prediction error (PE) of the finance agent.
+0.023810 - Formally: (3) The concerned finance agents should be re-sorted into descending order based on their prediction accuracy.
+0.017857 - The trust value of investor agent i can be adjusted as follows: increase the trust value of the top five finance agent by 5%, 4%, 3%, 2%, 1% respectively; decrease the trust value of the bottom five finance agents by 5%, 4%, 3%, 2%, 1% respectively.
+0.023810 - Formally: (4) The function rank denotes the position of the finance agent f in the above sorted result.
+0.022989 - This method is very simple because prediction error in different periods has the same effect on the trust value.
+0.061404 - In practice, we can define an attenuation factor to modify the time factor, and the trust value will be adjusted as follows: (5) Here, α is the attenuation factor.
+0.106061 - We can assign an appropriate value for it, e.g., 0.1.
+0.046667 - After adjustment of the trust value, the investor agent learning is completed at tick u.
+0.057971 - Step by step, the investor agent will achieve the fundamentals learning process successfully.
+0.095583 - This section describes the application of IAOSS in the real stock market environment.
+0.033333 - Our primary purpose is to test the simulator’s results.
+0.150183 - If the simulation result is good, we will use it as an experimental platform for trading mechanisms innovation.
+0.156296 - Here, we select short selling as the demonstration application after first introducing the artificial stock market scenario.
+0.127714 - Artificial stock market scenario We take the top 50 stocks of the Shanghai Stock Exchange as our study objects.
+0.044892 - Assume that there are 20 kinds of financial information.
+0.048780 - In order to simulate the real market operation, the total number of investors, investor distribution, initial market values distribution, and investors’ cash distribution are taken from the real market statistical data.
+0.055556 - The number of investors is approximately 2 million.
+0.047619 - Some of the major configuration parameters are shown in Table 1.
+0.000000 - Table 1.
+0.025641 - Investors distribution statistics.
+0.025253 - Investor type Retail Petty Middle Pit Large Institution Amount of money (¥) ⩽100,000 100,000–1000,000 1000,000–5000,000 5000,000–10,000,000 10,000,000–100,000,000 100,000,000–10,000,000,000 Distribution of account number 88.1% 10.8% 0.4% 0.2% 0.1% 0.4% Distribution of market value 17.11% 24.22% 10.22% 4.44% 4.67% 39.33% At the beginning of each trading day, there are ten minutes for investors to concentrate on placing orders.
+0.040000 - After the call auction, inverters can place orders at any time during normal trading hours.
+0.077381 - Due to the limitation of computing power and time constraint, we can only simulate the order process approximately.
+0.043478 - Our strategy is as follows: at the first step in a day, 5% investors will participate in the call auction; at each following step that denotes 1 min, 3‰ investors will participate in the continuous auction.
+0.022222 - The Match Agent will compute the price that enables the largest number of orders to be executed at each step.
+0.033333 - The simulation process is automatically driven by the system clock.
+0.094841 - To be able to compare the simulation results with the real market, we tried to use the real market signal.
+0.066667 - However, direct collection of stock fundamentals information is very difficult.
+0.090580 - To simplify system design and implementation, we used the market fundamentals and industry fundamentals history data as the major fundamentals information source, and used the statistical data of individual stocks fundamentals as the secondary fundamentals information.
+0.019048 - Because our system used an analog signal rather than the real fundamental signals, it is meaningless to compare first-order volume such as price change.
+0.119048 - Thus, we select second-order volume, market volatility, as the indicator.
+0.051282 - The market volatility is calculated using the Exponential Weighted Moving Average (EWMA) approach (Crowder & Hamilton, 1992).
+0.058333 - The formula is as follows: (6) σ is the market volatility.
+0.047619 - λ is the attenuation factor.
+0.071429 - According to the well-known risk management institution’s RiskMetric recommendations, we take the value 0.94 for λ. r is the logarithmic return rate, also known as the continuous compounding return rate.
+0.062500 - and denotes the average return rate.
+0.041667 - The return rate of the tth day can be obtained as follows: (7) Pt is the stock price of the tth day.
+0.069444 - The entire market volatility is computed through the weighted average of individual stocks volatility.
+0.049020 - Here, the weight is the market value of each stock, which is calculated through the total stock lots multiplied by the stock closing price.
+0.037037 - The formula is as follows: (8) 5.2.
+0.065657 - IAOSS evaluation and application In order to verify the effectiveness of the adaptive order simulation system, we have conducted four groups of experiments.
+0.083868 - One group is designed to compare the similarity of the artificial market and the real market.
+0.112089 - The other three group experiments are to analyze and predict the effects of different economic situations and trading mechanisms on the stock market.
+0.130719 - Artificial stock market evaluation To evaluate the simulation effect of the artificial stock market, we simulated a one-year stock trading process (240 valid trading days).
+0.055556 - The experiment result is shown in Fig 4.
+0.109722 - We use Pearson’s product-moment coefficient to calculate the similarity between the artificial market and the real market (Rodgers & Nicewander, 1988).
+0.028986 - The formula is as follows: (9) ρX,Y is the population correlation coefficient.
+0.080741 - X is the volatility of the real market, and Y is the volatility of the artificial market.
+0.045455 - μX and μY is the expected value of X and Y respectively.
+0.045455 - σX and σY is the standard deviation of X and Y respectively.
+0.075269 - E is the expected value operator, cov means covariance, and corr is a widely used alternative notation for Pearson’s correlation.
+0.062847 - The calculated correlation coefficient is equal to 0.994, which shows that the artificial market and real market have very similar characteristics.
+0.092424 - Thus, it can serve as the experimental platform of trading mechanisms innovation.
+0.071047 - Moreover, the volatility of the artificial market is slightly less than that of the real market.
+0.048611 - This is because the statistical data is used instead of the real market signals.
+0.115278 - Trading mechanism innovation experiment We studied the volatility change in different economic conditions (normal, overheating and crisis) and in short selling conditions.
+0.000000 - Overheating of an economy is generally characterized by an above-trend rate of economic growth, where growth is occurring at an unsustainable rate.
+0.046667 - In the case of an overheating economy, the value of stock will commonly be overvalued.
+0.100000 - To carry out this simulation, we increase the stock price limit expectation by 0.4%.
+0.029762 - Economic crisis is generally characterized by financial institutions or assets suddenly losing a large part of their value.
+0.046667 - In the case of an economic crisis, the value of stock will commonly be undervalued.
+0.100000 - To carry out this simulation, we decrease the stock price limit expectation by 0.4%.
+0.055556 - The experiment result is shown in Fig 5.
+0.045977 - As can be seen, the different economic conditions have little impact on market volatility in the current market environment.
+0.028986 - The impact of economic condition on the volatility (no short selling) Fig 5.
+0.031746 - The impact of economic condition on the volatility (no short selling).
+0.129630 - How should we study the impact of the short-selling mechanism for China’s securities market volatility?
+0.044444 - Simulation is a good choice.
+0.101010 - In the simulation platform, we can artificially enlarge the current trading volume and then examine the impact on China’s securities market volatility.
+0.055556 - The short-selling strategy is designed as follows.
+0.016667 - In each round, only 10% of investors will sell short.
+0.016667 - Investors that can sell short will be set in advance.
+0.053571 - The stock lots of each order submitted by investors allowing short sell will be automatically increased by 50%.
+0.076923 - After the short period, investors automatically do a reverse trading repayment of short-selling pre-orders.
+0.077154 - For example, if an investor plans to sell X lots in accordance with the original trading strategy, he or she will sell 1.5X lots at the same price.
+0.044444 - Assume that the short period is 15 days, after 15 days, investors need to automatically increase a reverse buy order.
+0.026667 - The order price is up 10% of yesterday’s closing price to ensure buy-back.
+0.055556 - The experiment result is shown in Fig 6.
+0.080460 - As we can see, if short selling is permitted, economic overheating and economic crisis will increase market volatility remarkably.
+0.028986 - The impact of economic condition on the volatility (allow short selling) Fig 6.
+0.031746 - The impact of economic condition on the volatility (allow short selling).
+0.037037 - The graphs in Fig 7 represent three economic conditions: normal, overheating and crisis, from left to right.
+0.090909 - As we can see, short selling has great impact on market volatility.
+0.037037 - On average, market volatility was increased by 20%.
+0.046667 - Therefore, whether short selling restrictions can be liberalized needs careful consideration by the stock exchange.
+0.027778 - The impact of short selling on the volatility in different economic conditions Fig 7.
+0.030303 - The impact of short selling on the volatility in different economic conditions.
+0.147688 - The artificial stock market is becoming a hot topic in the finance domain.
+0.036232 - It allows us to test the feasibility of the reform with minimum cost.
+0.125949 - The adaptive order simulation system is the core of the artificial stock market.
+0.145153 - This paper has identified two key issues, namely, that financial information simulation and the learning mechanism of fundamentals investors are crucial to the artificial stock market.
+0.093750 - We have proposed an intelligent agent-based novel architecture, IAOSS, which takes advantage of the intelligent, autonomous aspects of intelligent agent technology.
+0.130886 - In particular, the IAOSS architecture has the following novel features: (1) It introduces financial information to the stock market conceptual model.
+0.094097 - The process of financial information acquirement and utilization has been implemented through the interaction among stock agents, finance agent and investor agents.
+0.121711 - Because the Chinese stock market is dominated by fundamental investors, the rational and effective use of stock fundamentals reported in the financial information is very important for stock market simulation.
+0.159959 - (2) It introduces the learning mechanism for fundamentals investors.
+0.040000 - Fundamental investors can adjust their trust against different finance agents based on the earning rate.
+0.065217 - Through learning and evolution, fundamental investors can determine the most appropriate finance agents.
+0.073264 - Thus, market news can be received by the fundamentals investor through the finance agent, and eventually be embodied by their investment behaviors.
+0.186908 - To demonstrate the technical feasibility of the proposed IAOSS architecture and to serve as an experimental platform for trading mechanism innovation, a prototype implementation of the IAOSS framework for the artificial stock market was constructed.
+0.102313 - Results from preliminary prototype evaluations have shown that: (1) The artificial stock market has the macro-economic characteristics of the real stock market.
+0.114927 - Their volatility curves are very similar; thus, the artificial stock market can serve as an innovation experimental platform.
+0.040000 - (2) The overheating of the economy and the economic crisis has little effect on volatility.
+0.031746 - If short selling is allowed, the effects will be relatively bigger.
+0.114493 - (3) Short selling will have a great impact on volatility in the Chinese stock market.
+0.043478 - In other words, our experiments support the first view in Section 2.3.
+0.057505 - It should be noted that as our experiment scenario is setup based on Chinese stock market statistics, these conclusions do not necessarily apply to other countries’ stock markets.
+0.106349 - Overall, IAOSS provides the means for policy makers to predict the consequence of trading mechanisms innovations and take corresponding precautions.
+0.000000 - It will thus have great application value.
+0.075758 - In future research, we still have much work to do in certain aspects, such as investor learning evolution, investor interaction, and investor psychology.
+
+[Frase 336] To demonstrate the technical feasibility of the proposed IAOSS architecture and to serve as an experimental platform for trading mechanism innovation, a prototype implementation of the IAOSS framework for the artificial stock market was constructed.
+[Frase 327] This paper has identified two key issues, namely, that financial information simulation and the learning mechanism of fundamentals investors are crucial to the artificial stock market.
+[Frase 41] We study the investment strategy and learning algorithm of fundamentals investors and other types of investors.
+[Frase 6] A prototype system for supporting stock market simulation and evolution is also presented to demonstrate the practicality and feasibility of the proposed intelligent agent-based artificial stock market system architecture.

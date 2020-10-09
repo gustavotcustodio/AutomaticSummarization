@@ -1,0 +1,352 @@
+A comparative study on base classifiers in ensemble methods for credit scoring
+
+Abstract
+
+In the last years, the application of artificial intelligence methods on credit risk assessment has meant an improvement over classic methods. Small improvements in the systems about credit scoring and bankruptcy prediction can suppose great profits. Then, any improvement represents a high interest to banks and financial institutions. Recent works show that ensembles of classifiers achieve the better results for this kind of tasks. In this paper, it is extended a previous work about the selection of the best base classifier used in ensembles on credit data sets. It is shown that a very simple base classifier, based on imprecise probabilities and uncertainty measures, attains a better trade-off among some aspects of interest for this type of studies such as accuracy and area under ROC curve (AUC). The AUC measure can be considered as a more appropriate measure in this grounds, where the different type of errors have different costs or consequences. The results shown here present to this simple classifier as an interesting choice to be used as base classifier in ensembles for credit scoring and bankruptcy prediction, proving that not only the individual performance of a classifier is the key point to be selected for an ensemble scheme.
+
+Keywords
+Credit scoring
+Ensembles of classifiers
+Base classifier
+Decision trees
+Imprecise Dirichlet model
+Uncertainty measures
+
+1. Introduction
+
+The sub-prime mortgage crisis of 2007 caused a ripple effect throughout the economy and it was the trigger (Longstaff, 2010) for the global financial crisis of 2008 (also called great credit crisis), which is considered by many economists the worst financial crisis since the Great Depression of the 1930s (Almunia, Bénétrix, Eichengreen, O’Rourke, & Rua, 2010; Temin, 2010). Therefore, the analysis of credit risk has become more essential than ever before.
+
+Furthermore, since the Basel second accord from 2004, known as Basel II and released by the Basel Committee on Banking Supervision, the supervised financial institutions are required to use internal ratings to measure credit risk. The need to control the credit risk has led to the banks and financial institutions to enhance the methods for this purpose. Prediction of credit risk can be performed through procedures of credit scoring. According to Hand and Henley (1997) : “Credit scoring is the term used to describe formal statistical methods used for classifying applicants for credit into ‘good’ and ‘bad’ risk classes”.
+
+As a result, the credit scoring systems are of great interest to banks and financial institutions, not only because they must measure credit risk, but because any small improvement would produce great profits (Hand & Henley, 1997), including cost reduction of credit analysis, delivery of faster decisions, guaranteed credit collection, and risk mitigation. For this task, a broad amount of methodologies have been developed (García, Marqués, & Sánchez, 2015), beginning with statistical techniques (Hand & Henley, 1997) and using mainly Artificial Intelligent methods nowadays (Lessmann, Baesens, Seow, & Thomas, 2015; Louzada, Ara, & Fernandes, 2016).
+
+The classical statistical models assume a previous knowledge that it is not necessary when more modern artificial intelligence tools are applied. This last tools extract information directly from data without any previous conditions. In the last years, many studies have appeared showing that these techniques in the artificial intelligence, principally from the data mining area, present some improvements in the results obtained when they are compared with the ones obtained from classical statistical approaches.
+
+Among artificial intelligence techniques, the most popular methods and the ones that show the best results are ensemble of classifiers (Ala’raj & Abbod, 2016; Hung & Chen, 2009; Marqués, García, & Sánchez, 2012; Nanni & Lumini, 2009; Sadatrasoul, Gholamian, Siami, & Hajimohammadi, 2013; Wang, Ma, Huang, & Xu, 2012; Xiao, Xiao, & Wang, 2016); Support Vector Machines (SVM) (Chen, Ma, & Ma, 2009; Harris, 2015; Hens & Tiwari, 2012; Huang, Chen, & Wang, 2007; Schebesch & Stecking, 2005; Tomczak & Zieba, 2015); and Artificial Neural Networks (ANN) (Lee & Chen, 2005; West, 2000; Zhao et al., 2015). However the most outstanding are the ensembles (Marqués et al., 2012; Xiao et al., 2016). Another Artificial Intelligence methodologies that have been also used for this kind of research are decision trees (DT) (Bijak & Thomas, 2012; Makowski, 1985; Yap, Ong, & Husain, 2011); Bayesian networks (BN) (Zhu, Beling, & Overstreet, 2002; Wu, 2011); k-nearest neighbors (KNN) (Henley & Hand, 1996); and many others (Lessmann et al., 2015; Louzada et al., 2016).
+
+Decision trees (DTs) (Quinlan, 1993) also known as classification trees or hierarchical classifiers are a fast type of classifiers with a simple structure which is easy to interpret. One important characteristic of this classifier is that few variations of the data, used to learn, produces important differences in the model, this is know as instability or diversity (Tsymbal, Pechenizkiy, & Cunningham, 2005). It is important to highlight that some schemes to create ensembles of classifier do not need to be based on very complex and accurate individual classifiers, such as ANNs or SVMs. For example, Bagging scheme (Breiman, 1996) is a well known procedure for creating ensembles of classifiers that performs best when the base classifier are not only accurate, but also unstable. Hence, DTs encourage diversity for the combination of classifiers (Breiman, 1996) and provide an excellent model for the Bagging ensemble scheme, being used advantageously for scoring problems (Abellán & Mantas, 2014; Marqués et al., 2012; Nanni & Lumini, 2009; Xiao et al., 2016). In this paper, it is shown that a single classifier is, normally, a good choice to be used in a ensemble scheme when it is accurate and presents high degree of diversity when the data vary.
+
+On the other hand, until a few years ago, the classical theory of probability (PT) has been the fundamental tool to construct a method of classification. Many theories to represent the information have arisen as a generalization of the PT, such that: theory of evidence, measures of possibility, intervals of probability, capacities of 2-order, etc. Each one represent a model of imprecise probabilities, see Walley (1996).
+
+The recent model of Credal Decision Tree (CDT) of Abellán and Moral (2003), uses imprecise probabilities and uncertainty measures (Klir, 2005) to build a decision tree. The CDT model represents an extension of the classical ID3 model of Quinlan (Quinlan, 1986), replacing precise probabilities and entropy with imprecise probabilities and maximum of entropy. This last measure is a well accepted measure of total uncertainty for some special type of imprecise probabilities (Abellán, Klir, & Moral, 2006).
+
+The CDT model could be interpreted as a parametric extension of classical decision tree methods, but the use of the maximum entropy measure represents an important difference with the classical methods. The use of that measure implies a lower level of overfitting on the data used to learn. This characteristic makes the CDT model different than the classical ones.
+
+In the paper of Marqués et al. (2012), a thorough study was performed on the use of different ensemble methods (AdaBoost, Bagging, Random Subspace, DECORATE and Rotation Forest) with the following base classifiers: 1-nearest neighbor (1-NN), naïve Bayes classifier (NBC), logistic regression (LogR), multilayer perceptron (MLP), radial basis function (RBF), Support Vector Machine (SVM) and C4.5 decision tree. Even though we do believe it is an excellent work, we think that there is some room for improvement and that is the aim of this proposal.
+
+In this work we have made a comparison of the different ensemble procedures studied in Marqués et al. (2012). Here, we only have taken into account the base classifiers with the better results, and we have added the CDT procedure to the set of base classifiers. In the recent work of Abellán and Mantas (2014) it has been shown that the CDT model has a good performance when it is applied on credit scoring problems. This result has motivated us to analyze its behaviour when it is applied in a study as the one of Marqués et al. (2012).
+
+In order to improve the contrast between the different procedures, the area under the ROC curve (AUC), that was not considered in Marqués et al. (2012), is now taken into account because it is more appropriate, that even the direct accuracy, for imbalanced data sets with different misclassification costs.1 Although the AUC is less used than the type-I and type-II error rates in scoring problems (García et al., 2015), in the general machine learning literature it is acknowledged as one of the best measures for comparing classifiers in two-class problems (see Beck & Shultz, 1986; Fawcett, 2003).
+
+Via an experimental study, it is shown that the CDT model presents a general better performance than the other methods analyzed here, when it is applied in different ensemble schemes on credit scoring. It obtains the best results in accuracy and AUC, showing that to be a good choice to use in a ensemble scheme, the individual accuracy is not the most important characteristic. We will also see that the C4.5 presents a good performance too in the aspects measured here. But the SVM method, that appears as the second best in the study of Marqués et al. (2012), suffers a worsening when it is compared here only with the best ones. Now, the LogR method appears as a very good alternative to be used in ensembles, with similar results to the ones obtained by the C4.5 method.
+
+The rest of the paper is organized as follows. Section 2 begins with the necessary previous knowledge about the credal decision tree procedure: its differences with respect to the classic procedures, and its algorithm; following with a description of the ensemble schemes used. Section 3 describes and contains the experiments carried out. Section 4 comments the results obtained from the experiments. Finally, Section 5 is devoted to the conclusions.
+2. Previous knowledge
+2.1. Classic DTs vs DTs based on imprecise probabilities
+
+Decision trees, or classification trees, are simple structures that can be used as classifiers. In situations where elements are described by one or more attribute variables (also called predictive attributes or features) and by a single class variable, which is the variable under study, classification trees can be used to predict the class value of an element by considering its attribute values. In such a structure, each non-leaf node represents an attribute variable, the edges or branches between that node and its child nodes represent the values of that attribute variable, and each leaf node normally specifies an exact value of the class variable.
+
+The process for inferring a decision tree is mainly determined by the followings aspects:
+
+(1)
+
+    The split criterion, i.e. the method used to select the attribute to insert in a node and branching.
+(2)
+
+    The criterion to stop the branching.
+(3)
+
+    The method for assigning a class label or a probability distribution at the leaf nodes.
+
+An optional final step in the procedure to build DTs, which is used to reduce the overfitting of the model to the training set, is:
+
+(4)
+
+    The post-pruning process used to simplify the tree structure.
+
+In classic procedures for building DTs, where a measure of information based on PT is used, the criterion to stop the branching (above point (2)) is when the measure is not improved or when a threshold of gain in the measure of information is attained. With respect to the point (3), the value of the class variable inserted in a leaf node is the one with more frequency in the partition of the data associated with that leaf node (also the distribution of probabilities associated with that partition set can be inserted). Then the principal difference among all the procedures to build DTs is the point (1), i.e. the split criterion used to select the attribute variable to be inserted in a node (the variable for branching).
+
+Considering classic split criteria and split criteria based on imprecise probabilities, a basic point to differentiate them is how they obtain probabilities from data. We will compare a classical procedure using precise probabilities with the one from Abellán and Moral (2003) based on imprecise probabilities, using the the Imprecise Dirichlet model (IDM) of Walley (1996).
+
+The classical criteria use normally, as base measure of information, the Shannon’s measure; and the one that we use here, based on imprecise probabilities, uses the maximum entropy measure. This measure is based on the principle of maximum uncertainty (Klir, 2005), widely used in classic information theory, where it is known as maximum entropy principle (Jaynes, 1982). This principle indicates that the probability distribution with the maximum entropy, compatible with the available restrictions, must be chosen. The maximum entropy measure verifies an important set of properties on theories based on imprecise probabilities that are generalizations of the probability theory (see Klir, 2005).
+
+Let C be the class variable with states {c1, ⋅⋅⋅, ck}; and X be a general feature whose values belong to
+. Let be a data set. The Info-Gain (IG) criterion was introduced by Quinlan as the basis for his ID3 model (Quinlan, 1986), and it is explained as follows:
+
+–
+
+    The entropy of C for the data set 
+
+is the Shannon’s entropy (Shannon, 1948) and it is defined as:
+(1)
+where p(ci) represents the probability of the class i in
+
+    .
+–
+
+    The average entropy generated by the attribute X is:
+    (2)
+where represents the probability that in . is the subset of where
+
+    .
+
+Finally we can define the Info-Gain as follows:
+(3)
+
+The feature that represents the greatest gain in information is selected for branching.
+
+The Imprecise Info-Gain (IIG) (Abellán & Moral, 2003) is based on imprecise probabilities and the application of uncertainty measures on credal sets.2 It was introduced to build the called Credal Decision Tree model (CDT). Probability intervals are obtained from the data set using Walley’s Imprecise Dirichlet Model (IDM) (Walley, 1996) (a special type of credal sets (Abellán, 2006)). The mathematical basis applied is described below.
+
+With the above notation,
+defined for each value cj of the variable C, is obtained via the IDM:
+(4)
+with as the frequency of the set of values in the data set, N the sample size and s a given parameter. The value of the parameter s regulates the convergence speed of the upper and lower probability when the sample size increases. Higher values of s produce an additional cautious inference. Walley (1996) does not give a decisive recommendation for the value of the parameter s, but he proposes two candidates: or nevertheless he recommend the value
+
+. It is easy to check that the size of the intervals increases when the value of s increases.
+
+This representation gives rise to a specific kind of credal set on the variable C,
+(Abellán, 2006). The set is defined as
+(5)
+
+In the Example 1 we can see a practical case where a credal set associated with the IDM is shown.
+
+Example 1
+
+Let C be a class variable with three possible states {c1, c2, c3}. We consider a data set,
+where we have the following frequencies {c1: 1,  c2: 2, c3: 4}. Then the associated credal set from the IDM, for is the following set of probability distributions:
+
+Hence,
+
+where with CH we express the convex hull of those probability distributions.
+
+This credal set can be seen in Fig. 1, where we use a simplex 2-dimensional representation of a credal set on the 3-dimensional space
+
+.
+
+Fig. 1. Simplex representation of the credal set from Example 1. One point in the triangle of height one represents a probability distribution
+
+such that p(ci) is the distance of this point to the opposite side of the vertex ci.
+
+On this type of sets (really credal sets (Abellán, 2006)), uncertainty measures can be applied. The procedure to build CDTs uses the maximum of entropy function on the above defined credal set. This function, denoted as H*, is defined as follows:
+(6)
+The procedure to obtain H* for the special case of the IDM reaches its lowest computational cost for s ≤ 1 (see Abellán, 2006 for more details). That procedure is simple and treats to share a mass of 1 (the one the s parameter) among on all the cases of the class variable with minimum frequency. In the Example 1, this value is attained on the probability distribution
+
+.
+
+The scheme to induce CDTs is like the one used by the classical ID3 algorithm (Quinlan, 1986), replacing its Info-Gain Split criterion with the Imprecise Info-Gain (IIG) split criterion which can be defined by the following way:
+(7)
+where is calculated via a similar way than
+
+in the IG criterion.3 Here, the feature with the greatest gain of information is selected to branching as with the IG criterion.
+
+It must be taken into account that for a variable X and a data set
+can be negative. This situation does not occur with the Info-Gain criterion. This important characteristic allows that the IIG criterion discards variables that worsen the information on the class variable. This is an important property of the CDT model, which uses the IIG criterion, that can be considered as an additional criterion to stop the branching of the tree. In the Example 2 we can see a case where both criteria give us different type of situation for branching.
+
+Example 2
+
+Let C be a class variable with two possible states {c1, c2}. We consider that in a node J, for a DT, we have the following frequencies {c1: 9,  c2: 4}. In this node, we also consider that we have only 2 attribute variables X1, X2, with possible values
+and . The frequencies of each combination of states in the node J are the following ones:
+
+Considering the IG criterion, we always have an improvement in the gain of information. The values obtained with this criterion are the following ones (using the natural logarithm):
+
+Then the feature X2 is inserted in the node J, because it produces the greater gain of information by the IG criterion.
+
+But with the IIG criterion we have the following values:
+
+Now, with this criterion, there is no branching in the node J and a leaf node is produced.
+
+The original CDT procedure of Abellán and Moral (2003) uses the IIG criterion without a threshold in the gain of information to stop the branching, i.e. it is applied as simple as possible. The stop for branching is produced when there is no gain of information or there is no more features to insert in the node.
+2.2. Algorithm to build credal decision trees
+
+The algorithm to build a CDT is very similar to the one of the ID3. It is taken into account that each node No in a decision tree, produces a partition of the data set, that we named to simplify as
+.4 Each node No has an associated list
+
+of feature labels (that are not in the path from the root node to No). The procedure for building a CDT is explained in the algorithm in Fig. 2.
+
+
+Fig. 2. Procedure to build a CDT.
+
+In the above algorithm, when an Exit situation is attained, i.e. when there are no more features to introduce in a node, or when the uncertainty is not reduced (steps 1 and 4 of the algorithm, respectively), a leaf node is produced. Then in that node, the most probable state or value of the class variable for the partition associated with that leaf node is inserted.
+
+Considering the similitude between this algorithm with the one used by the ID3 and the principal differences between the IG and the IIG split criteria, we can say that the CDT procedure can be considered as a parametric extension of the ID3 procedure.
+2.3. Ensemble of classifiers
+
+A second opinion, sometimes even more, is often sought when we have to take an important decision. Afterwards, the different opinions are weighted to ponder a decision that should be better than the resolution taken from a single point of view. In machine learning, the same idea is applied using several classifiers and it is known by different names such as multiple classifier systems, committee of classifiers, mixture of experts or ensemble based systems.
+
+It has been proven that the combination or fusion of the information obtained from several classifiers can improve the final process of the classification (Dietterich, 2000), this can be represented via an improvement in the classification task in terms of accuracy and robustness. In a ensemble scheme, there is no gain combining equal classifiers, so the improvement of the ensemble relies on the diversity of the base classifiers, provided that this diversity does not diminish the accuracy of the ensemble members. Let us briefly describe the different ensemble schemes used in this work.
+
+–
+
+    Bagging (Breiman, 1996) (or Bootstrap Aggregating) is an intuitive and simple method which shows a good performance while reduces the variance and avoids overfitting. Despite the fact that it is mainly implemented with decision trees, it can be used with any type of classifier. Diversity in bagging is obtained by generating replicated bootstrap data sets of the original training data set: different training data sets are randomly drawn with replacement from the original training set and, in consequence, the replicated training data sets have the same size as the original data, but some instances may not appear in it or may appear more than once. Afterwards, a single classifier is built with each new instance of the training data set using the standard approach (Breiman, Friedman, Olshen, & Stone, 1984). Thus, building each classifier from a different data set, we usually obtain several classifiers usually different from each other. Finally, their predictions are combined by a majority vote.
+–
+
+    Boosting is an ensemble method based on the work of Kearns (1988). This procedure can be described in the following steps: (i) applying a weak classifier (such as a decision tree) to the learning data, where each observation is assigned an initially equal weight; (ii) applying weights to the observations in the learning sample that are inversely proportional to the accuracy of the classification of the computed predicted classifications; (iii) going to the step (i) M-times (M previously fixed); and (iv) combining predictions from individual models (weighted by accuracy of the models). In the Boosting procedure: for misclassified samples the weights are increased, while for correctly classified samples the weights are decreased. Thus, the principal idea of this method is that it uses a sequence of successive classifiers where each one depends upon its predecessors; and that classifier considers the error of the previous classifier in order to decide what to focus on during the next iteration of the data. A special type of Boosting is the algorithm of Adaboost (Freund & Schapire, 1996) which has demonstrated excellent experimental performance on benchmark data sets and real applications. AdaBoost is an adaptive algorithm in the sense that classifiers built subsequently are tweaked in favor of instances misclassified by previous classifiers. It is a feature selector with a principled strategy: minimization of upper bound on empirical error.
+–
+
+    Random Subspace (Ho, 1998) uses several classifiers built on randomly chosen subspaces of the original input space, and combine them into a final decision rule via a simple majority vote procedure. Each single classifier uses only a subset of all features available in the data set for training and testing. These features are chosen uniformly at random from the full set of features. The standard number of features used to obtain good results is the half of the total number of features (as empirical studies have suggested).
+–
+
+    DECORATE (Melville & Mooney, 2003) (Diverse Ensemble Creation by Oppositional Relabeling of Artificial Training Examples) iteratively generates an ensemble by learning a new classifier at each iteration. In the first iteration the base classifier is built from the given training data set and each successive classifier is built from an artificially generated training data set which is the result of the union of the original training data and artificial training examples, known as diversity data. The classifier built from the new training data set is added to the ensemble only if it reduces the ensemble training error, otherwise it is rejected and the algorithm continues iterating. Artificial training examples are generated from the data distribution and they are obtained by probabilistically estimating the value of each attribute (see Melville and Mooney, 2003, 2005 for a more thorough discussion about the construction of artificial data). The labels for the new examples are selected with a probability that is inversely proportional to the prediction of the current ensemble. DECORATE tries to maximize the diversity of the base classifiers by adding new artificial examples and re-weighting the training data.
+–
+
+    Rotation Forest (Rodriguez, Kuncheva, & Alonso, 2006) separates the features into K non-overlapping subsets of equal size, being K a parameter of the algorithm. Bootstrap of the data is made, as in bagging. A principal component analysis (PCA) is applied separately to each K subset of features and a new set of features is constructed by integrating all principal components. Hence, K axis rotations happen to obtain the new features used to build the base classifier. Note that each ensemble member is built from the whole data set in a rotated feature space.
+
+3. Experimentation
+
+In this section we shall describe the experiments carried out and show the results obtained. As a reference, we use the paper of Marqués et al. (2012) maintaining the same experimental setting.
+
+Six credit scoring data sets were used to compare the performance of different base classifier in several ensemble schemes. A brief description of these data sets can be found in Table 1, where “N” is the number of instances in the data sets, column “Features” is the number of features or attribute variables, column “Good” is the percentage of instances labeled as good/positive, column “Bad” is the percentage of cases classified as bad/negative. All the data sets have two states for the class variable.
+
+Table 1. Data set description.
+Data set	N	Features	%Good	% Bad
+Australian	690	14	44.5	55.5
+German	1000	24	70.0	30.0
+Iranian	1000	27	95.0	5.0
+Japanese	653	15	45.3	54.7
+Polish	240	30	53.3	46.6
+UCSD	2435	38	75.4	24.6
+
+The known credit data sets Australian, German and Japanese data sets are obtained from the UCI repository of machine learning (Lichman, 2013). The Iraniandata set was presented in the work of Sabzevari, Soleymani, and Noorbakhsh (2007) and comes from the corporate client data of a small private bank in Iran. The Polish data set comes from the work of Pietruszkiewicz (2008) about companies bankruptcy forecast. The UCSD data set is a reduced version of a very large database used in the 2007 Data Mining Contest of the University of California, San Diego.
+
+The base classifiers considered in this experimental study are: logistic regression (LogR), multilayer perceptron (MLP), support vector machines (SVM), C4.5 decision tree (C4.5) and credal decision tree (CDT). We remark again that only the best base classifiers in the study of Marqués et al. (2012) are the ones used now, join with the CDT method. The ensemble schemes analyzed are the ones described in Section 2.3, i.e. AdaBoost, Bagging, Random Subspace, DECORATE and Rotation Forest. In total, 25 different classifiers haven been taken into account for the mentioned 6 scoring data sets.
+
+The Weka software (Witten & Frank, 2005) has been used for the experimentation. The procedure of the CDT method was implemented using data structures of Weka and the IDM parameter was set to
+
+i.e. the value used in the original method of Abellán and Moral (2003). The reasons to use this value were principally the following ones: (1) it was the value recommended by Walley (1996); and (2) the procedure to obtain the maximum entropy value reaches its lowest computational cost for this value (see Abellán, 2006). The CDT classifier has been used as simple as possible without a post-pruning process, i.e. as was used in Abellán and Moral (2003, 2005), but with the same procedure to treat with missing data and continuous variables than the one used in the C4.5 algorithm, implemented in Weka. The rest of classifiers, which are provided by Weka, were used with their default configurations.5
+
+We repeated 50 times a 5-fold cross validation procedure for each data set as in Marqués et al. (2012). Table 2 presents a summary of the average accuracy results where the best algorithm for each ensemble and for each data set is emphasized using bold fonts; the second best is marked with gray fonts; and the global best for each data set is noted also with italic and bold fonts.
+
+Table 2. Average result of the accuracy for each base classifier and data set grouped by ensemble.
+
+Following the recommendation of Demšar (2006), we used the Friedman test to compare all the methods.6 The Friedman test (Friedman, 1937, 1940) is a non-parametric test that ranks the algorithms separately for each data set, to the best performing algorithm being is the rank of 1; to the second best, rank 2, etc. This test is based on a Friedman statistic which is distributed according to a Chi-square with
+degrees of freedom, where n is the number of algorithms used. This value is based on the individual rank of each algorithm on each data set with and ; with m the number of data sets. It can be expressed on the following way:
+
+The null hypothesis is that all the algorithms are equivalent. When the null-hypothesis is rejected, we can compare all the algorithms to each other using a post-hoc test as the one of Holm (Demšar, 2006). This test is a multiple comparison procedure that can work with a control algorithm and compares it with the remaining methods, but it can be used to compare all the methods to each other. The statistics test for comparing the j-th and t-th method using this procedure is:
+
+where the z value is used to find the corresponding probability in a table of the Normal distribution.
+
+Holm’s test is a step-up procedure that sequentially tests the hypotheses ordered by their significance . Each p-value pi (
+) is compared with
+
+with nc the number of pairwise comparisons. When a certain null hypothesis cannot be rejected, all the remain hypotheses are retained as well.
+
+In our experiments, on all the tests carried out, the level of significance has been of
+
+. On the accuracy, the Friedman’s test finds significant differences only with the Random Subspace ensemble, but always it is significant for the AUC measure.
+
+Table 2 also shows Friedman’s ranks in accuracy placed in the column “Rank”. The best algorithm for each ensemble is emphasized using bold fonts, the second one is marked with gray fonts. Table 3 shows the average Friedman rank value for each base classifier about the accuracy. The base classifiers with the best average rank value is marked with bold fonts and the second best is noted with gray fonts. When there are significant differences, we have carried out a Holm’s test comparing all the methods with each other. The results on both measures are in Table 6
+
+Table 3. Results of the Friedman’s ranks about the accuracy for each base classifier.
+
+We must take into account that the accuracy measure is not aware of the nature of the scoring problem where a false positive is worse than a false negative. Hence, the area under the ROC curve (AUC) for each data set is considered to compare the results for each ensemble. Table 4 shows the results obtained about the AUC measure for each ensemble; and Table 5 shows the Friedman rank values. The base classifier with the best average rank for the AUC is distinguished with bold fonts and the second best is identified with gray fonts. The best procedure for each data set is marked in bold and italic.
+
+Table 4. Average result of the AUC measure for each base classifier and data set grouped by ensemble.
+
+Table 5. Results of the Friedman’s ranks about the AUC measure for each base classifier and ensemble scheme.
+4. Comments on the results
+
+In this study, principally we have considered the values of the Friedman’s ranks for each measure: accuracy and AUC. Those values represent an important reference about the performance when several methods are compared and can be considered as an order of their performing. Our approach is to present a study where the base classifiers are ordered with respect to that order, but also we consider the cases where the differences are significant. It is clear that, in some cases, the differences among the methods are small. But, as we said in previous sections, small gains in performance can represent great gains in economical benefits, that is our principal aim here.
+
+In the Fig. 3 we can see the compared values of the averaged Friedman’s ranks, for the accuracy and AUC measures, for each base classifier in a direct way. From a general point of view and considering those values, we can say that the general winner in this experimental study is the more simplest single procedure, i.e. the CDT method. It obtains the lowest values in the Friedman’s ranks for the accuracy and the AUC measure. In the second position we have two methods: the C4.5 method, which is in 2nd position on the accuracy and in 3rd position on the AUC measure; and the LogR method, which is in 3rd and 2nd positions on those measures respectively. The worse methods in this study are the MLP and SVM methods, being some worse the results of the SVM method.
+
+
+Fig. 3. Results of the averaged Friedman’s ranks about the accuracy and the AUC measure for each base classifier.
+
+With respect to the results presented in Marqués et al. (2012), we can observe some differences about the positions of the base classifiers. In that study, the winner method was the C4.5, following by the MLP and in the third position was the LogR method. Now, we have not considered the worse methods in that study, that were 1-nearest neighbor (1-NN), naïve Bayes classifier (NBC) and radial basis function (RBF). Those methods introduced some type of “noise” in the results of the test carried out in Marqués et al. (2012). That situation can appears when a bad method, with only some good result, is inserted in a comparative study. In our opinion, the study presented here is more appropriate to see real differences.
+
+Taking into account Table 2 about the accuracy, we compare method by method in each ensemble scheme:
+
+1.
+
+    CDT: It is the winner method in 3 of the 5 ensemble schemes, and the second best in the rest. The greatest differences in favor of the CDT with respect the rest are obtained when the Random Subspace ensemble is applied. When Bagging ensemble is used, this method is the winner but with similar result than the MLP method. The CDT method obtains 8 of the best results by ensemble-dataset. We can remark, as a detail, that it always has very good result when it is applied on the UCDS data set.
+2.
+
+    C4.5: It is the winner method only in the Rotation Forest ensemble, and the second one in the Adaboost ensemble. It obtains 7 of the best results by ensemble-dataset. Iranian and Polish are the data sets where it obtains its better results.
+3.
+
+    LogR: This method obtains similar results than the C4.5 method. It is the winner in the Decorate scheme and the worse in the Bagging scheme. It has 7 of the best results by ensemble-dataset. LogR obtains good results when it is used on Japanese and German data sets in any ensemble scheme.
+4.
+
+    MLP: It is the winner in the Bagging ensemble but tied with the CDT method. It is a very bad method when Adaboost or Decorate ensembles are applied. It has 4 of the best results by ensemble-dataset. We cannot say that this method obtains good results on a concrete data set in a ensemble.
+5.
+
+    SVM: It is the worse method in this experimental study about accuracy. It is a bad method when Random Subspace or Rotation Forest are used. It has 4 of the best results by ensemble-dataset but also many of the worse ones. The data set where it obtains better results is the German data set.
+
+Now, taking into account Table 4, with respect to the AUC measure we can observe the following results:
+
+1.
+
+    CDT: It is the winner method taking into account the averaged AUC, but we can observe that could be not considered the only winner one if we compare it with the LogR method by the particular results. It is the best method for 2 of the ensembles (ties with the LogR in the Bagging ensemble), and the second best for 3 of the ensembles. It is the best method for 6 of the combinations of ensemble-dataset; and the second best for 15 of them. We can say that it is the more stable method for this measure when it is applied in an ensemble scheme. Again it has always very good result when it is applied on the UCDS data set.
+2.
+
+    LogR: This method has the second best result in the averaged AUC, but could be considered the best one for this measure join with the CDT method. The problem is its application in the Adaboost ensemble, where it is the worse method with very bad results. It is the winner method for 3 of the ensembles (ties in one of them with the CDT method, and in other one with the MLP method), and it is the second best in the other one. It is the best method for 16 of the combinations of ensemble-dataset; and the second best for 1 of them. It has good results when it is applied on the Australian, Japanese and German data sets with any ensemble except with the mentioned Adaboost.
+3.
+
+    C4.5: It is a bad method when the Random Subspace ensemble is applied, but normally it is the 3rd one with the rest of ensembles. It is the best method for any of the combinations of ensemble-dataset; and the second best for 8 of them. Now, we cannot say that a data set give us good results with this method in a ensemble.
+4.
+
+    MLP: It has similar results than the C4.5 method. It is the best method for the Random Subspace method tied with the LogR method, and obtains 3rd and 4rd position in the majority of the rest of ensembles. It is the best method for 6 of the combinations of ensemble-dataset; and the second best for 6 of them. Now, the Iranian data set is the one where this method obtains its better results.
+5.
+
+    SVM: It is the worse method in this experimental study about AUC measure, being the worst one on 4 of the ensembles. It obtains its best result with Adaboost, where it has 4 of the best results by ensemble-dataset. The rest of results are normally the worst.
+
+From the results about the Holm’s test (Table 6) we can see that with respect to the accuracy only the SVM method is statistically worse than the CDT and the MLP, when the Random Subspace ensemble is applied. But, about the AUC measure there are more significant differences that can be described as follows:
+
+–
+
+    LogR is statistically better only with respect to the MLP method (the worst method in this study) when any ensemble is used.
+–
+
+    MLP is statistically better than SVM whit Bagging and Random Subspace.
+–
+
+    SVM is the worst method in this comparative but, it is statistically better than LogR when AdaBoost is applied.
+–
+
+    C4.5 is not statistically better than any other base classifier via the Holm’s test.
+–
+
+    CDT has the better results with this test. It wins to the rest of the base classifiers in some ensemble, except to C4.5. It has 6 wins in the pairwise comparisons.
+
+Table 6. Results of the post-hoc Holm’s test on the AUC measure for
+
+. The base classifier in each column is statistically better than the ones in the rows using the ensembles that are in each cell. If the name of the ensemble is underlined, then the differences are significant also on the accuracy.
+	LogR	MLP	SVM	C4.5	CDT
+LogR	—		AdaBoost		AdaBoost
+MLP		—			Rotation Forest
+SVM	Bagging DECORATE Random Subspace Rotation Forest	Bagging Random Subspace	—		Bagging DECORATE Random Subspace Rotation Forest
+C4.5				—	
+CDT					—
+5. Conclusions and future works
+
+As was pointed out in previous sections, banks and financial institutions have the need to improve their scoring methods. In this paper, we have presented an experimental study where several base classifiers are used in different ensemble schemes for credit scoring tasks. This work completes a previous one where other more complex base classifiers are used.
+
+We have shown that a simple classifier based on imprecise probabilities, called CDT, improves to other more complex ones when it is used as base classifier, in a ensemble scheme, for credit risk assessment. In our experimental study, we have taken into account as comparative measures the direct accuracy and the AUC measure, that can be considered as an important complementary measure for this type of problems where the different type of errors have different costs. In this cases, the AUC measure can be considered as more important than the accuracy. By the results obtained from both measures, the CDT method can be considered as a good choice in this setting. Though the differences among the base classifiers analyzed here are not too large, we can observe that the CDT is always with the best procedures for each ensemble and data set. We could conclude saying that, for credit scoring, with the use of the CDT procedure in a ensemble scheme we avoid mistakes.
+
+The CDT procedure treats the imprecision in a different way than the classic procedures do. It represents a decision tree and then it is a very unstable classifier. These two reasons make the CDT classifier very suitable to be used in ensemble schemes. The results presented in this paper reinforce this assertion.
+
+As future works we would like to study the value of the s parameter of the CDT method, depending on the characteristics of the data set where it is used. In the literature there are other few known ensemble methods, as the recent one of Zieba, Tomczak, and Tomczak (2016), that we would like to study and apply. With the aim of obtain the best possible results, the dynamic selection procedures (see Britto, Sabourin, & Oliveira, 2014) could be a good solution using the best combinations of base classifier-ensemble presented here.
+
+1
+
+    The cost for a false positive in credit scoring is usually much more expensive than for a false negative (Caouette, Altman, Narayanan, & Nimmo, 2008).
+
+2
+
+    Closed and convex sets of probability distributions.
+
+3
+
+    For a more extended explanation see Mantas and Abellán (2014).
+
+4
+
+    For the root node, D is considered to be the entire data set.
+
+5
+
+    We do not use the C4.5 without a post pruning process because it obtains worse results, in the ensemble schemes used here, that the ones presented in the work of Marqués et al. (2012), where it is used with its configuration by defect which includes a post pruning process.
+
+6
+
+    All the tests were carried out using Keel software (Alcalá-Fdez et al., 2009).

@@ -1,0 +1,476 @@
+Functional networks as a new data mining predictive paradigm to predict permeability in a carbonate reservoir
+
+Abstract
+
+Permeability prediction has been a challenge to reservoir engineers due to the lack of tools that measure it directly. The most reliable data of permeability obtained from laboratory measurements on cores do not provide a continuous profile along the depth of the formation. Recently, researchers utilized statistical regression, neural networks, and fuzzy logic to estimate both permeability and porosity from well logs. Unfortunately, due to both uncertainty and imprecision, the developed predictive modelings are less accurate compared to laboratory experimental core data. This paper presents functional networks as a novel approach to forecast permeability using well logs in a carbonate reservoir. The new intelligence paradigm helps to overcome the most common limitations of the existing modeling techniques in statistics, data mining, machine learning, and artificial intelligence communities. To demonstrate the usefulness of the functional networks modeling strategy, we briefly describe its learning algorithm through simple distinct examples. Comparative studies were carried out using real-life industry wireline logs to compare the performance of the new framework with the most popular modeling schemes, such as linear/nonlinear regression, neural networks, and fuzzy logic inference systems. The results show that the performance of functional networks (separable and generalized associativity) architecture with polynomial basis is accurate, reliable, and outperforms most of the existing predictive data mining modeling approaches. Future work can be achieved using different structure of functional networks with different basis, interaction terms, ensemble and hybrid strategies, different clustering, and outlier identification techniques within different oil and gas challenge problems, namely, 3D passive seismic, identification of lithofacies types, history matching, rock mechanics, viscosity, risk assessment, and reservoir characterization.
+
+Keywords
+Functional networks
+Data mining
+Feedforward neural networks
+Fuzzy logic
+Statistical regression
+Permeability
+Porosity
+Carbonate reservoir
+Minimum description length
+
+1. Introduction
+
+The process of oil exploration has been drastically improved by the availability of information technology, especially artificial intelligence with data mining modeling, as well as advances in seismic technology. Advances have pushed the envelope of what is feasible, both in terms of finding the oil and figuring out how to extract it once an oil and gas company has identified a location. Cutting edge advances in information technology and computational intelligence represent a breakthrough in oil and gas exploration and production. They have helped transform the business of exploration and production, increasing its production efficiency; and generating significant environmental benefits.
+
+Permeability is defined as the ability of porous rock to transmit fluid. It is one of the most crucial reservoir properties and is very difficult to calculate accurately. Generally, permeability is directly measured in a laboratory on rock samples. Last two decades, numerous efforts have been made to forecast permeability using well log data and available core data. The field of permeability prediction is vast, and incorporates many years of effort by expert petrophysicists, geologists and reservoir engineers. The problem with computational methodologies for permeability prediction from logs is the inherent inability of this method to integrate the geological and petrophysical controls on single phase flow. Carbonate reservoirs in particular are characterized by a very wide range of measured permeability for a given porosity, which reflects heterogeneity in pore size, geometry and connectivity.
+
+The relationships for forecasting permeability using wireline logs and core permeability data are based on statistical regression, feed-forward neural networks (FFNs), and fuzzy logic (FL) or adaptive neuro-fuzzy inference systems (ANFISs). Based on these approaches, better estimates have been reported compared to that of conventional techniques. Nevertheless, the application of neural networks to reservoir characteristics prediction is quite limited. Attempts were made to apply neural networks and fuzzy logic to permeability prediction, reservoir characteristics, pressure–volume–temperature prediction, and flow regimes and liquid-hold-up (Abdulraheem et al., 2007; Bhatt & Helle, 2002; El-Sebakhy, 2009; El-Sebakhy, Hadi, & Faisal, 2007; Fangming, Zhongyuan, Aming, & Xiaoxia, 2009; Lucia, Ruppel, Jennings, & Laubach, 2001; Nikravesh & Aminzadeh, 2000, 2003). The findings of these works clearly indicate the potential of neural networks, which generally produces better results than those empirical formulae, derived from conventional multiple regression analysis.
+
+The results obtained from neural networks models are reasonably accurate. However, there is a need for further improvement when this method is applied to a complex structure.
+
+The use of combination of neural networks and fuzzy logic has also been reported in literature (Abdulraheem et al., 2007; Balan, Mohaghegh, & Ameri 1995; Bhatt & Helle 2002; Chen & Lin, 2006; Cross et al., 2010; Cuddy 1997; El-Sebakhy, 2009; El-Sebakhy et al., 2007; Fangming et al., 2009; Jeirani & Mohebbi 2006; Kadkhodaie-Ilkhchi, Rezaee, & Moallemi, 2006; Kamali & Mirshady, 2004; Lim, 2005; Lucia, 2008; Lucia et al., 2001; Nikravesh & Aminzadeh, 2000; Nikravesh & Aminzadeh, 2003; Sears & Lucia, 2006; Tamhane, Wong, Aminzadeh, & Nikravesh, 2000). Unfortunately, both neural networks and fuzzy logic inference systems are heuristic modeling approaches and suffer from a number of drawbacks, such as overfitting and local optima. In some cases, these techniques do not perform well, because the parameters in a training algorithm are based on initial guess of random weights, learning rate, and momentum. Therefore, there is a need for predictive modeling framework to estimate permeability and lithofacies from well logs in a carbonate reservoir.
+
+Recently, functional network has been proposed as a new intelligence data mining predictive model in solving numerous of prediction/classification problems, namely, pattern recognition, bioinformatics, engineering, software engineering, and business applications (Bruen & Yang, 2005; Castillo, Cobo, Gutierrez, & Hadi, 1999; Castillo, Gutiérrez, Hadi, & Lacruz, 2001, 2008; El-Sebakhy, 2004; El-Sebakhy, 2009; El-Sebakhy, 2010; El-Sebakhy et al., 2007; El-Sebakhy et al., 2010). It has been only utilized in solving two oil and gas industry problems, namely, predicting reservoir fluids PVT properties, Al-Bokhitan (2007) and rock mechanical parameters for hydrocarbon reservoirs, El-Sebakhy et al. (2010). The main motivation of this research is to investigate the strengths and capabilities of functional networks in forecasting the permeability from well logs in a hydrocarbon reservoir and compares its performance with the one of the most common statistics and artificial intelligence modeling techniques.
+
+The workflow of this research is designed as follows: Section 2 of this paper provides a brief literature review. Functional networks intelligent data mining system methodology and examples are described in detail in Section 3. The most common statistical quality measures in predictive modeling are proposed in Section 4. The use of functional networks in identifying the permeability from well logs implementations process and comparative studies are carried out in Section 5. Section 6 contains discussions of results, while Section 7 presents conclusions and recommendations.
+2. Literature review
+
+Recently, researchers in both petroleum engineering and computer science have achieved considerable success in forecasting permeability from wireline logs based on statistical regression, standard neural networks, and fuzzy logic (FL) inference systems (see Abdulraheem et al., 2007; Bhatt & Helle 2002; Chen & Lin, 2006; Cross et al., 2010; El-Sebakhy, 2009; El-Sebakhy et al., 2007; Fangming et al., 2009; Jeirani & Mohebbi, 2006; Kadkhodaie-Ilkhchi et al., 2006; Kamali & Mirshady, 2004; Lim, 2005; Lucia, 2008; Lucia et al., 2001; Nikravesh & Aminzadeh 2000; Nikravesh & Aminzadeh, 2003; Sears & Lucia, 2006 for more details). Most of these empirical and computational correlations are often determined using log-derived parameters, such as, porosity, density and Gamma ray. Bruce et al. (2000) and Nikravesh and Aminzadeh (2000), Nikravesh and Aminzadeh (2003) presented state-of-the-art reviews of the use of neural networks for predicting permeability from well logs. They had also developed a nonlinear regression tool to obtain transformation between well logs and core permeability. The tool can be used for estimating permeability in un-cored intervals of the well. Though the results that obtained from neural networks and regression models are reasonably accurate, there is room for further improvement in both efficiency and stability, especially in regions with complex geology. In addition, both neural networks and fuzzy logic inference systems are heuristic modeling approaches and suffer from a number of drawbacks, such as overfitting and local optima. Furthermore, in some cases, these techniques do not perform well because the parameters in the training algorithm are based on initial guess of random weights, learning rate, and momentum. Therefore, there is a need for new intelligence predictive modeling frameworks to estimate both permeability and lithofacies from well logs in a carbonate reservoir.
+
+In the last decade, application of fuzzy logic in petroleum engineering field has received considerable attention and it has been successfully applied to address problems on various oil and gas reservoirs such as estimation of lithofacies and permeability using wireline logs (see Abdulraheem et al., 2007; Cuddy, 1997; Tamhane et al., 2000 for more details). For predicting these properties, generally Gaussian membership and fuzzy clustering algorithm are applied. Based on these approaches, better estimates have been reported compared to that of conventional techniques. The use of a combination of neural networks and fuzzy logic has also been reported in the literature by Nikravesh and Aminzadeh (2000), Nikravesh and Aminzadeh (2003). This combined approach can be utilized in developing an optimum set of rules for nonlinear mapping between various input parameters. Such rules developed for the training set can be used to predict permeability for a new dataset and are very useful in the case when some of the inputs are missing. Predictive modeling techniques based on fuzzy logic were successful for most of the cases, but were not satisfactory in some cases due to the heuristic approach in dealing with the data.
+2.1. Statistical linear/nonlinear regression
+
+Multiple linear regression attempts to model the relationship between two or more explanatory variables and a response variable by fitting a linear equation to observed data. Every value of the independent variable x is associated with a value of the dependent variable y. The regression line for p explanatory variables x1, x2, … , xp is defined to be μy = β0 + β1x1 + β2x2 + 
+ + βpxp. This equation describes how the mean response μy changes with the explanatory variables. The observed values for y vary about their means μy and are assumed to have the same standard deviation, σ. Formally, the model for multiple linear regression given n observations is yi = β0 + β1xi1 + β2xi2 + 
+
+ + βpxip + εi, for i = 1, … , n, where εi is the model deviation. One approach to simplifying multiple regression equations is to use the stepwise procedures. These include forward selection, backwards elimination, and stepwise regression, which add or remove variables one-at-a-time until some stopping rule is satisfied.
+2.2. Multilayer perceptron and feedforward neural networks
+
+Artificial neural network is an information processing system that simulates the human brain. The topology of neural networks is a graphical structure in which the nodes are the predictors and directed edges with weights are connections between neuron outputs and neuron inputs of the next layer. Neural networks are characterized by the network architecture, that is: the number of layers, the number of nodes in each layer, and how the nodes are connected.
+
+Multilayer perceptron (MLP) network is the most popular form of neural networks, where all nodes and layers are arranged in a feedforward manner. The first layer is called the input layer, where external information is received. The last layer is called the output layer, where the network produces the model solution. In between, there are one or more hidden layers, which are critical for the performance of the neural network. All nodes in adjacent layers are connected by acyclic arcs from a lower layer to a higher layer.
+
+There are numerous books and review papers in the Computer Science, Engineering, and Business communities which summarize the multilayer perceptron and feedforward neural networks, most commonly used with the backpropagation (BP) algorithm (see Arbogast & Franklin, 1999; Badarinadh, (2002); Duda, Hart, & Stock, 2001, and the references therein for more details). An example of such neural networks with two hidden layers is shown in Fig. 1.
+Multilayer feedforward neural networks
+
+    
+
+Fig. 1. Multilayer feedforward neural networks.
+
+In the multilayer perceptron neural networks, the basic predictive model that provides a nonlinear transformation of a pattern x ϵ Rp to g(x) ϵ R or g(x) ϵ {1, … , c} can be written as:
+
+where m represents the number of hidden nodes, wjk and wki are weights on links, wj0 and wk0 are biases on nodes. The nonlinear function f(•) is usually of the form of the sigmoid (s-curve) function: (1 + e(−αz))−1, where z ϵ R and α > 0 is a constant called the gain parameter. Often in practice, the number of outputs, c, is taken as the number of classes, with each output corresponding to one class. A test sample is assigned to the class with the largest output value.
+
+In the multilayer perceptron neural networks model, the optimal weights and biases are found by optimizing a criterion function. Least squared error is often used to minimize the function in Eq. (1):
+(1)
+
+where g(xi) is the output vector for the input xi and ti = (ti1, … , tic)T is the corresponding target vector. In the MLP model, the procedure is to find the optimal weights and biases using a backpropagation optimization algorithm. Since the objective function is not convex with respect to its parameters, the backpropagation algorithm often gets trapped at a local optimum. Often in practice, to find a good solution the backpropagation algorithm needs to be run several times, each time with different initial weights. This creates a heavy computational load and is often considered to be the major drawback of the multilayer perceptron networks model.
+
+The feedforward multilayer perceptron network is composed of layers of interconnected neurons. Usually, for sufficient number of hidden units, it can approximate any continuous static input–output mapping to any desired degree of approximation, as documented by Simon (1994) and White and Stinchcombe (1989). The learning process involves updating networks architecture and connection weights; so that a network can do both prediction and classification tasks using some efficient learning algorithms, such as, back propagation algorithm (Hopfield, 1982; Jacob, 1988; Simon, 1994; White & Stinchcombe, 1989). Several improvements of the backpropagation algorithm were proposed in the literature, e.g. Delta–Bar–Delta algorithm, quick-propagation, Fahlman (1988), and more recently the resilient back-propagation, Riedmiller and Braun (1993). Several types of neural networks have also been proposed for function approximation, forecasting, and classification, such as radial basis function networks, probabilistic neural network, and abductive (polynomial) neural networks. For the sake of simplicity, we propose only the radial basis function networks and its implementation process for predictions.
+2.3. Radial basis function networks
+
+Radial basis function (RBF) network is similar to the multilayer perceptron model, the basic RBF model provides a nonlinear transformation of a pattern x ϵ Rp to g(x) ϵ R or g(x) ϵ {1, … , c}, that is,
+(2)
+where m is a constant representing the number of basis functions, ωji is a weight, bj is a bias, (·) is a radial symmetric basis function, μi ϵ Rp is called a center vector, and h ϵ R is a smoothing parameter. We note that RBF based on Eq. (2) has almost the same mathematical form as that of MLP networks, the key difference being that the logistic function is replaced by a radial basis function, which is often taken to be the Gaussian function , where
+
+. The RBF adopted least-squared errors optimization criterion to estimate the weights ωji within the selected architecture of the RBF networks. Unlike the multilayer perceptron model, where all parameters are optimized at the same time, in the radial basis function networks model, both center vectors and weights are found in two separate steps (Hopfield, 1982; Jacob, 1988; White & Stinchcombe, 1989). In the first step, the center vectors are found using some existing pattern recognition techniques (such as k-means clustering or the Gaussian mixture). In the second step, a set of linear equations is solved to find the optimal weights and biases. Consequently, the training of the RBF networks model does not run into the problem of local optima as with the MLP model. Therefore, the training time for RBF networks models is reported to be shorter. However, since there is often some correlation between the locations of center vectors and the weights, the RBF approach may lead to a suboptimal solution.
+2.4. Neuro-fuzzy inference systems
+
+Fuzzy logic is an excellent tool for modeling the kind of uncertainty associated with vagueness, imprecision, and/or a lack of information regarding a particular element of the problem at hand. It performs well on uncertain information, very similar to the way human reasoning does. Brief details and the most common basic concepts, such as concepts of fuzzy set theory, including: fuzzy relations, fuzzification and defuzzification, construction of membership functions, and fuzzy arithmetic are given in Duda et al. (2001) and LeCun et al. (1995). Fuzzy sets are defined through their membership functions, μ which map the elements of the considered universe to the unit interval [0, 1] as in Eq. (3) (see Amabeoku et al., 2005 for more details). The membership of an element x in the crisp set A is represented by the characteristic function μA of A, that is
+(3)
+
+Generally, the rule-based fuzzy modeling technique can be classified into three categories, namely the linguistic (Mamdani-type), the relational equation, and the Takagi, Sugeno and Kang (TSK) (see Abdulraheem et al., 2007; Cuddy, 1998; El-Sebakhy, 2009; Hambalek & Reinaldo, 2003; Mizutani & Jang, 1997). In linguistic models, both the antecedent and the consequence are fuzzy sets, while in the TSK model the antecedent consists of fuzzy sets but the consequence is made up of linear equations. We are going to focus on the developed neuro-fuzzy permeability systems with the TSK model, because TSK needs fewer rules and its parameters can be estimated from numerical data using optimization methods such as least-square algorithms (see Abdulraheem et al., 2007; El-Sebakhy, 2009; Liu, Nakashimam, Sakom, & Fujisawam, 2003).
+
+The basic architecture of a type-1 FLS with crisp inputs and output is shown in Fig. 2. The TSK fuzzy modeling method was proposed by Takagi and Sugeno as a framework for generating fuzzy if-then rules from numerical data. A TSK fuzzy model consists of a set of fuzzy rules, each describing a local linear input–output relationship:
+where RELi is the ith rule; x1, … , xp are the input variables; Ai1, … , Aip are the fuzzy sets assigned to corresponding input variables; yi represents the value of the ith local output; and ai0, … , aip are the model consequent parameters. The final global output of the TSK fuzzy model for a crisp input vector x = (x1, … , xp) is calculated using the fuzzy mean-weight formula , where βi(xi) represents the degrees of firing (DOF) of the fuzzy rule and is defined as
+
+Neuro-fuzzy inference system: Two rules Sugeno with crisp inputs and output…
+
+    
+
+Fig. 2. Neuro-fuzzy inference system: Two rules Sugeno with crisp inputs and output architecture.
+
+The construction of the TSK fuzzy model from numerical data proceeds in three steps: fuzzy clustering, setting the membership functions, and parameter estimation, see Mizutani and Jang (1997), Liu et al. (2003), and El-Sebakhy (2009) for more details about the Type 1 Fuzzy logic architecture and the corresponding Gustafson Kassel clustering schemes with numerous distance forms. Let X denote the matrix whose ith row is the input vector xi and let Y denote the column vector with yi as its ith component. Let Wk(xi) denote the n × n real diagonal matrix that represents normalized firing strength of the kth rule for the ith observation or sample,
+, where k = 1, … , K; i = 1, … , n. Suppose that Θi ≡ [ai0, … , ain] denotes the vector of consequent parameters of the ith rule. In order to estimate the off-set term, ai0, a unitary column I is appended to the matrix, X, to produce the extended matrix Xe ≡ [X, I]. Therefore, the unknown parameters Θi are calculated via least-square criterion,
+
+.
+3. Functional networks intelligence paradigm: methodology and implementations
+3.1. Introduction and overview
+
+The functional network is a generalization of the standard neural network; it deals with generalized functional models instead of sigmoidal standard types. The initial architecture of functional networks is problem driven, i.e., it is designed based on the problem at hand. The final topology of the functional network is chosen according to knowledge expertise, data domain, and information about the other properties of the neuron function (associativity, commutativity, and invariance). In functional networks the neuron functions associated with each neuron are not fixed but are learned from the available data. Hence, there is no need to include weights associated with links, since the neuron functions subsume the effect of weights. In addition, functional networks allow neurons to be multi-argument, multivariate, and different learnable functions, instead of fixed functions. Furthermore, functional networks allow converging neuron outputs, forcing them to be coincident. This leads to a system of functional equations, which requires some compatibility conditions on the neuron functions (see Bruen & Yang, 2005; Castillo, Hadi, Lacruz, & Pruneda 2008; Castillo et al., 1999; Castillo et al., 2001; El-Sebakhy, 2004; El-Sebakhy, 2009; El-Sebakhy, 2010; El-Sebakhy et al., 2007; El-Sebakhy et al., 2010 for more details).
+
+The functional networks modeling scheme has been utilized in solving numerous prediction/classification problems, such as regression, interpolation, pattern recognition, medical, function approximation, flood forecasting, bioinformatics, engineering, software engineering, and business applications. Functional network outperforms the most common existing data mining schemes with stable and reliable performance, see Castillo, Cobo, Gutierrez, and Hadi (1999), Castillo, Gutiérrez, Hadi, and Lacruz (2001), Castillo, Hadi, Lacruz, and Pruneda (2008), El-Sebakhy (2004), El-Sebakhy (2009), El-Sebakhy (2010), and El-Sebakhy et al. (2007), (2009), and the references therein for more details.
+
+Yet, functional networks intelligence system framework has been only utilized in some specific oil and gas industry applications, namely, predicting reservoir fluids PVT properties, Al-Bokhitan (2007) and rock mechanical parameters for hydrocarbon reservoirs, El-Sebakhy et al. (2010). The motivation behind this paper is to propose functional networks as a new intelligence paradigm for permeability prediction from well logs in a hydrocarbon reservoir. The built calibration model will be developed and tested based on the use of distinct known reservoir characteristics databases. The methodology and implementation processes of the functional networks framework and the related notions with explanatory examples are briefly summarized below:
+3.2. Functional networks predictive modeling: methodology and implementations
+
+The goal of predictive data mining is to develop an intelligent dynamical model for either continuous or categorized outcomes to determine the relationship among the set of input and output variables of a given dataset [X1, X2, … , Xp; Y], where X is n-by-p matrix of input variables and Y is n-by-1 vector of the output variables. Let us consider the nonlinear model, g(Y) = f(X1, X2, … , Xp). Assuming that g is an invertible (one-to-one and onto) function, then this nonlinear model can be written as: Y = g-1(f(X1, X2, … , Xp)) = h(X1, X2, … , Xp). Therefore, we are interested in (i) Discovering the structure of both functions: f and g in the first part or (ii) Modeling Y as a nonlinear function of [X1, … , Xp] in the second part.
+
+The objective in the case of developing a predictive model for a continuous outcome, is to model Y using a nonlinear function of numerous predictor variables, which is equivalent to approximate the functions f(X1, … , Xp) or h(X1, … , Xp) by linear combinations of set of basis (set of independent families), that is,
+(4)
+where are the parameters in the model;
+
+are families of independent families, and qs is the number of elements in Φs for s = 1, 2… , p.
+
+To design a functional network that is corresponds to the problem at hand, we define the neuron functions as: Assume that we have a set of nodes, X = {X1, … , Xp} and each node Xi is associated with a variable Xi. The neuron function over a set of nodes X is a tuple U = 〈X, f, Z〉, where X is a set of the input nodes, f is a processing function and Z is the set of output nodes, such that Z = f(X), where X and Z are two non-empty subsets of X.
+
+To make it simple to the reader, we discuss the functional networks example in Fig. 3. This graph illustrates the representation of a functional network for data set X = {X1, … , X7} of seven nodes, see Castillo et al. (1999), Castillo et al. (2001), Castillo et al. (2008), El-Sebakhy et al. (2007), El-Sebakhy et al. (2010), and El-Sebakhy (2004), El-Sebakhy (2009), El-Sebakhy (2010) for more details. This functional network consists of the following:
+
+•
+
+    Several layers of storing units, like a layer having the input data set (xi; i = 1, 2, 3, 4) while another contains the output data (x7). There can be one or several layers for storing intermediate information (x5 and x6).
+•
+
+    One or several layers for the processing units that evaluate the set of input values and deliver a set of output values (fi).
+•
+
+    A set of directed links.
+
+Typical functional networks architecture
+
+    
+
+Fig. 3. Typical functional networks architecture.
+
+In general, functional networks extend the standard neural networks by allowing neuron functions fi to be not only true multi-argument and multivariate functions, but to be different and learnable, instead of fixed functions. In addition, the neuron functions in functional networks can be any basis functions (family of linearly independent functions), namely, polynomial, Voltera polynomial, exponential, radial basis, B-spline, and Fourier, that have to be estimated during the learning process. According to the universal approximation theorem, Haykin (1994), there are a finite number of linearly independent functions (basis), so that functional networks can approximate the nonlinear function precisely. Furthermore, functional networks allow connecting neuron outputs, forcing them to be coincident, Castillo et al. (1999), Castillo et al. (2001), Castillo et al. (2008), El-Sebakhy (2004), El-Sebakhy (2009), El-Sebakhy (2010), and El-Sebakhy et al. (2007), El-Sebakhy et al. (2010). The functional networks use two types of learning: (a) structural learning and (b) parametric learning. In the structural learning, the initial topology of the networks based on some properties available to the designer is arrived at, and finally a simplification is made using functional equations. In parametric learning, usually the activation functions are estimated considering the combination of ‘‘basis’’ functions based on the least square, steepest descent and mini-max methods, Cuddy (1997). In this study, the least square method for estimating activation functions has been used. One can choose different optimization criteria based on his interest. Development of a typical model based on functional networks involves several steps described below:
+
+•
+
+    Define the problem by specifying the initial topology based on the domain of the problem in hand.
+•
+
+    Simplify the chosen initial architecture using functional equations and the equivalence concept. Check the uniqueness condition of the desired architecture, Castillo et al. (1999), Castillo et al. (2001), Castillo et al. (2008), and El-Sebakhy (2004), El-Sebakhy (2009), El-Sebakhy (2010).
+•
+
+    Gather the required data and handle multicollinearity problem along with quality control checks.
+•
+
+    Develop the learning procedures and training algorithm based either on structure or on parametric learning by considering the combinations of linear independent functions, 
+
+, s = 1, … , p to approximate the neuron functions, , for all t; where the coefficients are the parameters of functional networks needed to be estimated. The most popular linearly independent functions in literature are: Φ = {1, X, … , Xm}, or Φ = {1, eX, e−X, … , emX, e−mX}, or Φ = {1, Sin(X), Cos(X), … , Cosl(X), Sinl(X)}, m = 2l; where m is the number of elements in the combination of sets of linearly independent function. The unknown parameters,
+
+    can be learned using one of the known optimization (loss criterion) techniques, such as least squares, conjugate gradient, iterative least squares, minimax, or maximum likelihood estimation.
+•
+
+    Select the best model and validate it. The selection is based on the minimum description length and some other quality measurements, such as correlation coefficients and root-mean-squared errors. One can use the well known selection schemes, such as exhaustive selection, forward selection, backward elimination, backward forward selection, and forward backward elimination. Once the performance of functional networks model is satisfactory, the model is ready for use in predicting unseen datasets from real-world applications.
+
+If we use the lower case letters xi ≡ (xi1, … , xip)to refer to the values of the ith observation of the input variables and the desired output may be: (i) Y ϵ R for continuous prediction (forecasting problems) and (ii) Y ⊆ R for classification problems, then for predictor variables, Xj ≡ (x1j, … , xnj)T for j = 1, … , p, and the response variable, Y = (y1, … , yn)T, the goal is one of the following main problems:
+
+1.
+
+    Forecasting continuous outcome is to determine the linear/nonlinear relationship among the output and the input variables using one of the following equations:
+    (5)
+
+or
+(6)
+
+2.
+
+    Classification problem, we use yi = k to refer to group Ak, where the symbol πik is used as the probability that observation i falls in group Ak, πik = P(xi. ϵ Ak|xi1, … , xip) or πik = P(yi = k|xi1, … , xip), where πik ⩾ 0; k = 1, … , c; i = 1, … , n; and 
+. The goal in estimating the category outcome is to determine the linear/nonlinear relationship among the output and the input variables, that is,
+(7)
+or
+(8)
+
+Therefore, in predictive data mining modeling for continuous prediction, we are interested in two different problems, namely, (i) Discovering the structure of transformations f and g in Eq. (5) and (ii) Modeling Y as a nonlinear function, f(xi1, … , xip) in (6) or (8). If we propose some simple mathematical calculus, the function f(xi1, … , xip) in model (6) can be rewritten as:
+(9)
+
+For illustrative purposes, but without loss of generality, we consider the explanatory (predictor) variables (p = 2) and using polynomial families,
+; s = 1.2 (where number of functions in these families, qs = q + 1); then . Therefore, model (6) can be written as:
+(10)
+where h12(xi2) = 1 and h21(xi1) = 1. Fig. 6a shows the architecture of the functional networks that is corresponding to model (10) with two explanatory variables. Suppose that each one of the neuron functions is approximated using the polynomial functions,
+
+, such that the neuron function h11(xi1) is the only neuron that contains the constant term. The rest of the neurons do not contain the constant term.
+(a) General separable functional networks architecture and (b) general…
+
+    
+
+Fig. 6. (a) General separable functional networks architecture and (b) general functional networks model (17) involving transformation of the response target.
+
+Assuming that in the range of the observation studies, the nonlinear Eq. (4) provide an acceptable approximation to the true relation between the response and predictor variables, then each observation in D and model (6) can be written as:
+(11)
+where are the parameters in the model, are families of linearly independent functions, and qs is the number of elements in Φs for s = 1, 2, … , p. If the families of linearly independent functions are known, we only need to learn the coefficients . Since the errors in models (11) are additives, then we use a discrepancy measure to minimize the errors function, such as least squares and minimax. In this research, we apply the least squares optimization technique, that is
+(12)
+
+The minimum is obtained by solving the following linear system of equations, where
+are the unknowns, for rs = 1, 2, … , qs and s = 1, 2, … , p:
+(13)
+
+We note that the number of parameters in the model (11) is
+. In order to reduce the number of parameters, we substitute the formula (7) for the function h(xi1, … , xip) in model (6). Therefore, model (6) can be rewritten as:
+(14)
+
+In this research, we present two distinct types of functional networks: (i) Generalized Associativity and (ii) Separable models to approximate the unknown functions, f(xi1, … , xip). A brief description of these two types of functional networks is given below; Castillo et al. (1999), and El-Sebakhy (2004), El-Sebakhy (2009).
+
+1.
+
+    The Generalized Associativity: 
+
+which makes model (5) to lead to the additive model:
+(15)
+
+    The corresponding architecture is shown in Fig. 4.
+    Additive functional networks architecture
+
+        
+
+    Fig. 4. Additive functional networks architecture.
+2.
+
+    The Separable Functional Networks Model is a more general form for the unknown function, f(xi1,…,xip) in the form 
+which makes model (6) to lead to the additive model:
+(16)
+where are unknown parameters expressed in terms of functions φs, where
+
+    and s = 1, 2… p, are linearly independent. An example of the functional network for p = 2 and q1 = q2 = q is shown in Fig. 5. Eqs. (15) and (16) are functional equations since their unknowns are functions and their corresponding functional networks in Figs. 4 and 5 are their graphical representations.
+    Separable functional networks model with two inputs and q neuron functions
+
+        
+
+    Fig. 5. Separable functional networks model with two inputs and q neuron functions.
+3.
+
+    The General functional networks model: Several other alternatives are possible for selecting the initial topology of functional networks; see Castillo (1998) for more details. Nevertheless, when the user has no information about the problem at hand, a general model is model (5) with 
+, which leads to the model:
+(17)
+where
+
+    in (17) are the unknown parameters of the functional networks modeling system. The corresponding functional network architecture for p = 2 and q1 = ··· = qp = q, is shown in Fig. 6b. Note that since there are no converging arrows in the functional networks associated with the general models (see Figs. 5 and 6), simplification is not possible in these cases.
+
+In order to obtain h1, h2, … , hp in (15) or (17), g(yi) and each hj(xj) for j = 1, 2, … , p is approximated by a linear combination of sets of linearly independent functions
+js defined above, that is
+(18)
+
+The problem is then reduced to estimate the parameters,
+and ajs, for all j and s. Parameters
+
+are linked with ajs and evaluated subsequently; see Castillo et al. (1999), (2008), El-Sebakhy et al. (2007), and El-Sebakhy (2009), El-Sebakhy (2009) for more details. In general, by feeding appropriate input data and applying system identification to study the defect prone classes identification, one can customize the characteristics of input values according to the desired output. In this paper, the least squares criterion is used to estimate the parameters. However, an additive model requires additional constraints to guarantee uniqueness. Alternatively, one can choose a different optimization criterion based on his interest. The main advantage in choosing the least squares method is that it leads to a linear system of equations.
+3.3. Non-Polynomial fitting example based on functional networks
+
+Suppose that we generate data of size 200 from the model log (y) = x1 + x2 + ε, where x1 and x2 are uniformly distributed in [0, 1], x1 ∼ U[0, 1], x2 ∼ U[0, 1], and ε is normal with zero mean and 0.01 scatter, ε ∼ N[0, 0.01] or ε ∼ N[0, 0.1]. The scatter plot of y against x1 + x2 is shown in Fig. 7a with 50 observations for both models. To determine the estimated model using functional networks using the proposed training algorithm with separable functional networks model, we choose the polynomial families of linearly independent functions
+1 = {1, y, y2}, , and , and tolerance values equal to 0.1 or 1. Therefore, by applying the proper training algorithm on the initial architecture of the corresponding functional networks, we obtain the estimated functional networks model with ε ∼ N[0, 0.01] with backward selection criterion:
+
+. The value of the mean-squared errors is 0.00000672.
+(a) Generated data for the given model with noise: ε∼N[0,0
+
+    
+
+Fig. 7. (a) Generated data for the given model with noise: ε ∼ N[0, 0.1] and ε ∼ N[0, 0.01]and (b) Actual and predicted models versus x1 + x2.
+
+When data are simulated without error (no uncertainty associated with the data sample), the true functional networks model is selected at the end of backward procedure if tolerance = 1. The predictive functional networks model with polynomial function is written as: −0.8280 + 1.1930y − 0.2071y2 + 0.0141y3 = x1 + x2. Fig. 7b shows the scatter plots of both log(y) and the predicted model: − 0.8280 + 1.1930y − 0.2071y2 + 0.0141y3 against x1 + x2. We note that both graphs are identical.
+
+We conclude that the estimated form of the functional networks is simpler than its given model. The output values layer does not utilize all the input nodes. This is reasonable because if additional different terms are considered in these models, then the tolerance value would influence the results significantly.
+4. Statistical and quality measures
+4.1. Initialization
+
+To implement the functional networks or any other statistics and data mining modeling techniques, the available dataset has to be divided into two subsets (training and the testing), which can be achieved using either leave one out or k-fold cross validation or random selection procedures. Through the implementation, a stratified sampling technique is used to make sure that the same pattern is applied as in the original data, Hush and Horne (1993). The training set is used to build up the networks model while the testing set is used to evaluate (deploy) the predictive modeling capabilities in forecasting new unseen data. The predictive performance of functional networks, statistical regression, neural networks, and fuzzy logic systems were tested using real-world permeability data.
+
+Through the implementations we utilized three distinct functional network architectures, namely: associativity, separable or general functional networks model explained above with polynomial of degree at most two or three (family of linearly independent functions (basis)). The multilayer perceptron feed-forward networks is used with pure linear and sigmoid activation neuron functions and two or three hidden layers. The adaptive neuro-fuzzy inference system is utilized with both subtractive grid partition and with both Gaussian and triangular membership functions of at most two rules. The initial parameters for radial basis functions are the centers and distances:
+
+; where dmax is the maximum of Euclidean distances between the centers and each observation and k = n3/8 is the number of clusters for n observations.
+
+The input datasets were normalized to interval of [0, 1] using the formula:
+
+; which leads to a set of input variables that are independent of their measurement units. The normalized inputs are then used for functional networks and the utilized data mining techniques. Different quality measures can be used to judge the performance of the developed data mining models.
+4.2. The common quality measures
+
+To evaluate the developed models, we compute several quality measures, namely, the absolute residual (AbsRes) which is the absolute difference between the actual and desired target values, the magnitude of relative error (MRE), sum of the absolute residuals (SumAbsRes), the median of the absolute residuals (MedAbsRes), and the standard deviation of the absolute residuals (SDAbsRes). These measures have been chosen because they provide the user with significant quality assessment tools in developing a proper predictive permeability model. For instance, the MedAbsRes measures the central tendency of the residual distribution and is chosen to be a measure of the central tendency because the residual distribution is usually skewed in most of the core and wireline datasets used in reservoir characterization. In addition, the SDAbsRes measures the dispersion of the residual distribution. The most common statistical quality measures can be written mathematically as follows:
+
+•
+
+    Root mean squares error (RMSE): It measures the data dispersion around zero deviation:
+
+(19)
+where Ei is a relative deviation of an estimated value from an experimental input data sets.
+(20)
+
+•
+
+    Correlation coefficient: It represents the degree of success in reducing the standard deviation by regression analysis, defined as:
+
+(21)
+where
+
+.
+
+•
+
+    Mean absolute percentage error: The mean absolute percentage error (MAPE) of the forecasted values with respect to the actual core permeability:
+
+(22)
+
+where (y)est is the forecasted value of permeability and (y)act is the actual core permeability; n is the number of cases used in the test sample.
+
+•
+
+    Standard deviation: The standard deviation is a measure of how widely values are dispersed from the average value (the mean). Standard deviation is based on the entire population given as arguments. The standard deviation is calculated using the “biased” or “n” method. It is defined by:
+
+(23)
+
+4.3. Feature selection techniques
+
+To maximize the performance of the developed predictive modeling schemes, we utilized different feature selection criteria. The following is a brief description of each one of these utilized feature selection procedures:
+
+•
+
+    Forward selection: It starts with an empty model. The variable that has the smallest P value when it is the only predictor in the regression equation is placed in the model. Each subsequent step adds the variable that has the smallest P value in the presence of the predictors already in the equation. Variables are added one-at-a-time as long as their P values are small enough, typically less than 0.05 or 0.10.
+•
+
+    Backward elimination: It starts with all of the predictors in the model. The variable that is least significant that is, the one with the largest P value is removed and the model is refitted. Each subsequent step removes the least significant variable in the model until all remaining variables have individual P values smaller than some value, such as 0.05 or 0.10.
+•
+
+    Stepwise regression: This approach is similar to forward selection except that variables are removed from the model if they become non significant as other predictors are added.
+
+The backwards elimination technique has an advantage over forward selection and stepwise regression because it is possible for a set of variables to have considerable predictive capability rather than any individual subset. Forward selection and stepwise regression will fail to identify them because sometimes variables do not predict well individually. Given that backward elimination starts with everything in the model, the joint predictive capability will be seen.
+5. Implementations and comparative studies
+
+Based on the investigated literature, there is no established correlation for permeability with the wireline log data. Therefore, it is mandatory to develop a predictive intelligence modeling scheme to forecast such relationship using data mining from the available input data. The functional networks (FunNets) system associated with a proper topology was utilized to build the predictive model from well log data. A combination of the least-squares method, Lagrangian multipliers, and conjugate gradient descent technique for training different sets of linearly independent families (polynomials, exponential, Fourier, etc.) is applied to emulate a given training data set. In addition to grid partitioning, clustering of the input data was also done.
+5.1. Handling core and wireline data: Cleaning data and preprocess implementations
+
+The core data file is given in a txt file with extension .las format containing the depth and permeability information of the cores. We refine the data into two sets: one contains header text depth and permeability and the other contains the corresponding numeric values. The wireline data was of .las format as well with 11–13 predictors (input variables) apart from depth. Similarly, to acquire the data from the given wireline files, we divide the data into two sets containing header text and the numeric values; filter out the header information from the text data; arrange the numeric data according to the headers; segregate the relevant parameters along with its header information; read data from the given tops file (data containing the information regarding the layers and the number of core data points in that layer); and divide the data as per the tops. An intelligence cleaning strategy was created to extract and clean the noise/missing values in the provided input predictors within wireline data. We developed an intelligent data cleaning mechanism to remove the negative values (−9999.9999 for instance) within each of the provided predictors. This is to ensure that we do not lose too much data for developing the predictive permeability model. We interpolated the positive data for missing log values at the depths, where core data is available using both linear/nonlinear and k-nearest neighbor fitting mechanisms.
+
+We utilized (i) an outlier identification process to extract the abnormal behavior record; (ii) principal component analysis to handle the collinearity among predictors; (iii) different clustering algorithms to investigate the data trend and accumulations; and (iv) determine and investigate the correlations between permeability and the provided predictor (logs) variables, and investigate the mutual correlations among all the provided predictor (logs) variables. Based on the correlation results shown in Table 1, out of these parameters only six predictors were chosen for predicting permeability based on numerous statistical and data mining predictive modeling schemes. For the sake of simplicity and space, we recorded the results of the most common predictive modeling approaches, namely: statistical regression, multilayer feedforward neural networks, adaptive neuro-fuzzy logic inference system, and the new intelligence paradigm (functional networks intelligence system). The implementations were carried out through our developed intelligence predictive data mining intelligence system, utilizing a friendly graphical user interface (GUI) for: (i) input and clean data; (ii) data modeling; and (iii) data deployment.
+
+Table 1. Correlation of both core permeability (k) and log10 (k) with wireline parameters.
+Well#	Well-1	Well-2	Well#	Well-1	Well-2
+Kcore	1	1	Log10 (kcore)	1	1
+phi-core	0.53	0.36	phicore	0.89	0.86
+CT	0.14	0.32	CT	0.27	0.57
+log10 (CT)	0.16	0.25	log10 (CT)	0.19	0.4
+DRHO	−0.32	−0.17	DRHO	−0.44	−0.33
+DT	0.46	0.38	DT	0.76	0.83
+GR	−0.06	−0.12	GR	−0.09	−0.08
+MSFL	−0.23	−0.35	MSFL	−0.5	−0.76
+log10 (MSFL)	−0.4	−0.48	log10 (MSFL)	−0.74	−0.8
+NPHI	0.48	0.34	NPHI	0.82	0.83
+PHIT	0.49	0.38	PHIT	0.83	0.85
+RHOB	−0.47	−0.39	RHOB	−0.8	−0.84
+RT	−0.13	−0.03	RT	−0.13	−0.04
+SWT	−0.17	−0.14	SWT	−0.52	−0.53
+
+A correlation analysis was carried out on the wireline data by correlating the core permeability (k) with individual wireline logs, namely, CT, DRHO, DT, DR, MSFL, NPHI, PHIT, RHOB, RT, SWT. As usual in the community of geoscientists and on the basis the correlation results, we take the logarithm (base 10) for CT, MSFL and permeability (K or core permeability values), since their range were found to be of several orders of magnitude. Taking logarithm gives better correlation between log10 (MSFL) and log10 (K) rather than with only MSFL. The correlation results are tabulated in Table 1. Significant improvement was observed in the correlation coefficients as shown in Table 1. Therefore, the wireline logs having correlation values greater than 0.5 were chosen as inputs for permeability prediction. The six wireline log input parameters chosen are DT, MSFL, NPHI, PHIT, RHOB, and SWT. Log10 was applied to MSFL and k throughout the modeling implementation process.
+
+The provided data of each well was divided into two separate subsets, one for ‘training’ and the other for ‘testing’ using different criteria: (i) leave-one-out, (ii) ten-fold cross-validations, and (iii) random selection procedures for distributing the data points among training and testing sets (say for instance 70% of the data was used for training while the remaining 30% was used for testing).
+
+We use the following abbreviations for the wireline log parameters for the sake of simplicity during the implementations, that is,
+
+•
+
+    N: NPHI or Neutron porosity log; P: PHIT or Total porosity log.
+•
+
+    M: MSFL or Micro-spherical formation resistivity log.
+•
+
+    R: RHOB or Bulk density log; S: SWT or Water saturation log.
+•
+
+    D or DT: Compressional velocity travel time for one foot of depth.
+•
+
+    PR: Combination of logs for P and R (as listed above).
+•
+
+    PM: Combination of logs for P, and M; PMR: Combination of logs for P, M, and R.
+•
+
+    PMRS: Combination of logs for P, M, R, and S; PMRSD: Combination of logs for P, M, R, S, and D.
+•
+
+    DMNPRS: Combination of logs for D, M, N, P, R, and S.
+
+The implementation studies were conducted using three well log data sets, where we had only core data for two data sets to build the predictive data mining modeling approaches. Next, deploy and validate the built model on the new unseen wireline logs. We carry out comparative studies to check the efficiency of the new intelligence paradigm (FunNets) model versus the performance of statistical regression, multilayer feedforward neural networks, and adaptive fuzzy inference system.
+
+We used different statistical quality measures to evaluate the built model and investigate its trend. We compare the trend of both predicted ‘k’ and actual ‘k’; and compute R2, RMSE, standard deviations between both (ka = actual permeability) and (kp = predicted permeability). We detect and identify outliers (predicted values that lie far away from the actual data); a predicted point is considered to be an outlier if its value is out of range (maximum or minimum) of the actual data. Fig. 8a and b shows the actual permeability versus the predicted permeability using both functional networks with polynomial family of degree at most 2, ANFIS with subtractive clustering, and 10-fold cross validations using ‘DMNPRS’ logs. From the figures it is clear that the predictions of an entire well based on a functional networks intelligence system were found to be close to the actual core values.
+‘kcore’ and ‘kpred’ for Well-1 and Well-2 based on (a) neuro-fuzzy logic system…
+
+    
+
+Fig. 8. ‘kcore’ and ‘kpred’ for Well-1 and Well-2 based on (a) neuro-fuzzy logic system with subtractive clustering and (b) functional networks with the second degree polynomial family using ‘DMNPRS’ logs with 10-fold selection criterion.
+5.2. Deployment and validation on different wells
+
+We next consider the deployment field to investigate the capabilities of the functional networks intelligence system in predicting the permeability of new unseen wells based on the developed predictive models. Here, the entire well was considered for training. Testing was done using a new unseen well log within the same or different reservoir. The training well was selected as that having the maximum number of core data points, (Well No.1 in the present study) and the log combination ‘DMNPRS’ selected for the present study included six different well log inputs ‘DT’, ‘MSFL (log10)’, ‘NPHI’, ‘PHIT’, ‘RHOB’ and ‘SWT’. These log combinations were chosen based on their correlation coefficients performance.
+
+We built a predictive model using multiple wireline wells and tested it on a new unseen well. In addition, the number of input logs was reduced from six input variables, (DMNPRS) to four input variables; (NPRS) and FunNets were developed with two combined wells as a single input during the training, and then tested it on unseen new well data. In the beginning the effects of individual logs ‘N’, ‘R’ and ‘S’ on the predictions were investigated, followed by for the combination ‘NRS’. Reduction in the errors, outliers and also in the abnormal behavior of the predicted trend generated was observed with these combinations as input during the model development.
+
+Observing that the predictor variable “SWT” is too dependent on both restively and porosity, we decide to exclude it from the chosen list. In addition, as both “NPHI” and “PHIT” are highly correlated, to avoid the ill-conditioning (collinearity problem), we applied principal component analysis to exclude one of them. We excluded ‘RHOB’ when we have a model that have “DT” or “PHIT” as shown in Fig. 9a and b. We have investigated the functional networks intelligence predictive model versus feedforward neural networks, ANFIS, and statistical regression using different sets of combination of significant inputs, such as, “MSFL, DT, and PHIT (MDP)”; “MSFL, DT, and NPHI (MDN)”; and “MSFL and RHOB (MR)”. The performances were improved, but not as accurate as with six or the entire set of inputs. We display some results in Fig. 9a and b. From the figures, it is clear that the individual wireline log input ‘RHOB’ gives better predictions than other input combinations. From these results it can be concluded that, we can estimate the permeability of any unknown new well based on the developed functional networks predictive models using a combination of data from other known wells as shown in Fig. 15.
+‘kcore’ and ‘kpred’ for Well-1 and Well-2 based on functional networks with the…
+
+    
+
+Fig. 9. ‘kcore’ and ‘kpred’ for Well-1 and Well-2 based on functional networks with the second degree polynomial family using (a) ‘PHIT’ log and (b) ‘RHOB’ log with 10-fold selection criterion.
+Permeability prediction for a new wall (Well-W2) based on the developed…
+
+    
+
+Fig. 15. Permeability prediction for a new wall (Well-W2) based on the developed functional networks with polynomial of degree at most 2 and 10-cross validation using well log data.
+6. Results and discussion
+
+As stated in the previous section, the performance of functional networks intelligence system, and the other statics and data mining approaches were investigated based on two wells (Well-W1 and Well-W2). These wells were drilled in a Middle-Eastern Carbonate reservoir. Wireline logs from these wells included CT (electrical conductivity), DRHO (density), DT (sonic travel time), MSFL (Micro spherically Focused Log), NPHI (Neutron porosity), PHIT (total porosity), RHOB (bulk density), RT (Resistivity), and SWT (water saturation). Laboratory based permeability values obtained from rock cores were used for both training and testing of the models. The total numbers of available core data points for Well-W1 were 471 and for Well-W2 were 431.
+
+For sake of simplicity, the criteria used for evaluating the predicted values include the agreement between the predicted and the actual core permeability; the correlation between the predicted and the actual core permeability; and the root mean square of error (RMSE) between the actual and the predicted value.
+
+The plots within Fig. 10a shows the scatter plot of statistical regression model results for the training and testing data, while the plots within Fig. 10b provides the corresponding functional networks model results. It can be noticed from these two plots that the functional networks prediction curve seems to pass through most of the target data points compared to its statistical regression counterpart, demonstrating the ability of functional networks with polynomial family of degree at most 2 with 10-fold cross validation to predict relatively more accurately. This is true for both training and testing as is evident from these plots.
+Prediction of permeability based on (a) statistical regression and (b)…
+
+    
+
+Fig. 10. Prediction of permeability based on (a) statistical regression and (b) functional networks with the second degree polynomial family with 10-fold cross validations using the specified six input variables.
+
+Similar variations but with increased input variables are shown in Fig. 11a and b for statistical regression techniques and functional networks, respectively. During the training phase, both of these approaches predicted the permeability values reasonably close to the actual. But for the testing phase, the prediction trend shown by functional networks was more in agreement with the target data compared to that of statistical regression. Also with an increasing number of input parameters, the prediction using functional networks seems to improve significantly during the testing phase as shown in Fig. 11b, while no such improvement is noticed with the statistical regression approach, Fig. 11a. It is clear that the number of inputs has a much more significant effect on the performance of functional networks than on that of statistical regression.
+Prediction of permeability based on (a) statistical regression and (b)…
+
+    
+
+Fig. 11. Prediction of permeability based on (a) statistical regression and (b) functional networks with the second degree polynomial family with 10-fold cross validations using the specified all input variables.
+
+Fig. 12a and b show the cross plots between predicted and core permeability for statistical regression and functional networks during training and testing processes using all input data from all the available logs. It is clear from the cross plots that the functional networks provide a slope close to 1 (straight line) compared to that of statistical regression. Furthermore, increasing the number of input variables helps the functional networks to give more accurate prediction both during the training and the testing phase.
+Actual versus estimated permeability: (a) Statistical regression and (b)…
+
+    
+
+Fig. 12. Actual versus estimated permeability: (a) Statistical regression and (b) functional networks (second degree polynomial families) with 10-cross validation using all input variables.
+
+The overall performance of these two approaches was evaluated based upon the root mean square error (RMSE) and correlation factor (R2). These values are listed in Table 2 for both training and testing using functional networks with polynomial families of degree at most 2 (basis), adaptive neuro-fuzzy logic inference systems with subjective clustering, multilayer feedforward neural networks with sigmoid activation function and three hidden layers, and statistical regression based on 10-fold cross validation for well W-1 data.
+
+Table 2. The correlation coefficient and RMSE values for the two models.
+Set of input data	Training	Testing	Training	Testing
+R2 (%)	RMSE	R2 (%)	RMSE	R2 (%)	RMSE	R2 (%)	RMSE
+	Functional networks	Adaptive neuro-fuzzy logic inference
+	Functional networks	Adaptive neuro-fuzzy logic inference
+Six Variables	92	0.5	90.6	0.53	91	0.55	89	0.57
+Entire wireline log	96	0.35	93.2	0.54	95	0.45	92	0.59
+
+	Neural networks	Nonlinear regression
+Six Variables	90	0.6	88	0.6	86	0.64	82	0.65
+Entire wireline log	93	0.5	91	0.62	87	0.65	85	0.66
+
+From the table it is clear that higher R2 and lower RMSE values were obtained under all conditions with functional networks intelligence system technique. Furthermore, higher correlation and lower error values were obtained when the input variable of functional networks predictive model were increased during the training and testing phase. This reason for functional networks to perform better with more input data is due to its basic architecture. This basic architecture can deal with multiargument functions, unlike statistical regression, which deals only with a single argument. Moreover, this kind of multiargument performance is like a clustering scheme which minimizes the computational time and provides better prediction. Graphs in Fig. 13a and b shows the R2 and RMSE values obtained during training and testing of the data of well W-1 using functional networks and the other statistics and data mining predictive modeling schemes, respectively.
+(a) Correlation coefficients and (b) root mean-squared errors: Training and…
+
+    
+
+Fig. 13. (a) Correlation coefficients and (b) root mean-squared errors: Training and testing for both functional networks and statistical regression with 10-fold cross validation selection criterion.
+
+To check the performance of the functional networks intelligence system paradigm, an input dataset containing the same input variables on which the functional networks calibration predictive model has been built on, was chosen from another well. We combined the wireline logs and core data of both wells solving the problem within the differences between the depth scale in both core and wireline logs using the internal interpolations with 0.5 cm or 0.5 f nearest neighbors. Therefore, we have a unique depth scale within both core and wireline data diameter core plugs and then we have a good match between the entire core and wireline data before, we build the functional networks model. In addition, we concatenated numerous of different layers of wireline logs together to have more uncertain regions with complexities associated with desired permeability prediction in carbonate reservoirs combined together. We accomplished the required assessment for pre-process (more quantitative assessment) to have a stable and unique input wireline logs and then build the data mining predictive model based on functional networks with polynomial family of degree at most 2 as a basis and apply 10-fold cross validation criterion.
+
+Fig. 14 shows the ‘kcore’ and ‘kpred’ for Well-1 and Well-2 individually based on combined Well-1 and Well-2 using ‘NRS’ logs. Moreover, we investigated the developed model on new unseen wells to see how much the performance of this model is reliable and proper for real-time and daily life use.
+‘kcore’ and ‘kpred’ for Well-1 and Well-2 individually based on combined Well-1…
+
+    
+
+Fig. 14. ‘kcore’ and ‘kpred’ for Well-1 and Well-2 individually based on combined Well-1 and Well-2 using ‘NRS’ logs based on Functional networks and 10-fold selection criterion.
+
+We concluded that the predicted permeability falls and agreed with the expectations of petrophysist, geoscientist, and reservoir engineers prior expert knowledge that they had using state of equations as it is shown in Fig. 15. In addition, results obtained through the developed data mining predictive model based on functional networks is reliable and lay within the acceptable range of permeability values. Because of the strength of the functional networks intelligence system, it is expected that the proposed approach will perform equal to, if not better than, the other state of equations and statistical methods.
+7. Conclusion and recommendation
+
+We have utilized numerous real-life databases of well logs to investigate the capabilities of functional networks intelligence predictive models to forecast permeability from well logs. Results have shown that the performance of the new functional networks intelligence paradigm with polynomial basis outperforms the most common existing statistical and data mining approaches with stable and reliable output permeability, especially in uncertain regions. Based on the above study, the following conclusions can be drawn.
+
+•
+
+    The proposed computational intelligence scheme helps to overcome the limitations of the common soft-computing techniques, such as neural networks and statistical regression.
+•
+
+    The developed functional networks predictive model has been applied with real-time new unseen wells. The obtained results show that the performance of this model is reliable and proper for real-time and for regular use. Furthermore, because of the strength of the functional networks intelligence system, it is expected that the proposed approach will perform equal to, if not better than, the other analytical and/or statistical methods.
+•
+
+    The performance of functional networks with only second order degree basis polynomial families provides a reliable indicator to use it in different oil and gas industry applications such as multiphase flow regimes, history matching problems and risk analysis.
+
+The work can be extended to include more complex non-linear basis and ensemble learning mechanism, which may lead to better accuracy and more reliable real-time results in new reservoirs.

@@ -1,0 +1,248 @@
+<article>
+  <title>On-line learning of a fuzzy controller for a precise vehicle cruise control system</title>
+  <abstract>
+    <sentence>Usually, vehicle applications need to use artificial intelligence techniques to implement control strategies able to deal with the noise in the signals provided by sensors, or with the impossibility of having full knowledge of the dynamics of a vehicle (engine state, wheel pressure, or occupants’ weight).</sentence>
+    <sentence>This work presents a cruise control system which is able to manage the pedals of a vehicle at low speeds.</sentence>
+    <sentence>In this context, small changes in the vehicle or road conditions can occur unpredictably.</sentence>
+    <sentence>To solve this problem, a method is proposed to allow the on-line evolution of a zero-order TSK fuzzy controller to adapt its behaviour to uncertain road or vehicle dynamics.</sentence>
+    <sentence>Starting from a very simple or even empty configuration, the consequents of the rules are adapted in real time, while the membership functions used to codify the input variables are modified after a certain period of time.</sentence>
+    <sentence>Extensive experimentation in both simulated and real vehicles showed the method to be both fast and precise, even when compared with a human driver.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Intelligent Transportation Systems</keyword>
+    <keyword>Autonomous vehicles</keyword>
+    <keyword>Fuzzy control</keyword>
+    <keyword>On-line learning</keyword>
+    <keyword>Speed control</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Intelligent Transportation Systems (ITS) constitute a broad range of technologies applied to transportation to make systems safer, more efficient, more reliable, and more environmentally friendly, without necessarily having to physically alter existing infrastructure (Jones, 2001).</sentence>
+    <sentence>In the automotive industry, sensors are mainly used to give the driver information.</sentence>
+    <sentence>In some cases, they are connected to a computer that performs certain control actions such as attempting to avoid collisions and, if unavoidable, to minimise injuries (Milanés, PTrez, Godoy, &amp; Onieva, 2012).</sentence>
+    <sentence>Autonomous vehicle guidance represents one of the most important challenges of ITS.</sentence>
+    <sentence>It involves two different controls, one associated with the steering wheel, termed lateral (Pérez, Milanés, &amp; Onieva, 2011) control, and the other associated with the control pedals (and in some cases the gear shift) (Onieva et al., 2010).</sentence>
+    <sentence>Excessive or inappropriate speed is one of the main causes of traffic accidents (Eurobarameter, 2006).</sentence>
+    <sentence>That is one of the main reasons why automatic speed control is presently one of the most popular research topics throughout the automotive industry.</sentence>
+    <sentence>The goal of this automation is to improve safety by relieving the human drivers of tasks that could distract their attention, as well as making the traffic flow more efficient.</sentence>
+    <sentence>There are different approaches to speed regulation.</sentence>
+    <sentence>Cruise control (CC) systems have the capability of maintaining a pre-set speed.</sentence>
+    <sentence>Adaptive cruise control (ACC) systems add the capability of maintaining a safe distance from a preceding vehicle (Naranjo, Gonzalez, Reviejo, Garcia, &amp; de Pedro, 2003) by using information coming from on-board devices.</sentence>
+    <sentence>Other approaches are ACC with communications (CACC) (Desjardins &amp; Chaib-Draa, 2011; Peng, 2010) which incorporates the capability of interchanges of information between cars so as to improve performance and safety, or ACC with Stop &amp; Go capability (SGACC) (Martinez &amp; Canudas-de Wit, 2007) to manage situations in which the car must be stopped.</sentence>
+    <sentence>Automation of both the throttle and the brake pedals is needed before installing these features in a vehicle.</sentence>
+    <sentence>Some manufacturers incorporate CC or ACC systems in their cars, but in many cases they do not operate at low speeds.</sentence>
+    <sentence>These systems have been widely studied in the specialist literature, usually in simulated environments (Chronopoulos &amp; Johnston, 1998, 2002; Marques &amp; Neves-Silva, 2005).</sentence>
+    <sentence>The focus, both in industry and in academic research, has generally been on application to highway driving (Gallione, Murdocco, &amp; Campo, 2003; Wolf &amp; Burdick, 2008).</sentence>
+    <sentence>The reason that low-speed contexts have generally not been considered is that actions on the pedals more strongly affect the car’s dynamics (Davis, 2004) making the system hard to model, simulate, or control.</sentence>
+    <sentence>In urban environments, it is quite usual that the speed must be reduced and then kept low even when there is no vehicle in front due, for example, to the presence of school zones where time must be allowed to react to unpredictable or other sudden events (a pedestrian crossing in front of the car or a traffic light turning red).</sentence>
+    <sentence>Indeed, the typical speed limit in urban environments is 50 km/h, for which the various forms of CC speed management systems are inappropriate.</sentence>
+    <sentence>The objective of this work is to create a system capable of allowing the evolution of fuzzy rules for the management of the pedals of a vehicle in urban driving contexts.</sentence>
+    <sentence>The use of fuzzy logic (Zadeh, 1965) for control systems has two main advantages.</sentence>
+    <sentence>(i) Fuzzy logic obviates the need to use complex approximate models that are either computationally inefficient if they are realistic, or unrealistic if they are computationally efficient.</sentence>
+    <sentence>(ii) The aim is not to represent the system mathematically, but to emulate the behaviour and experience of human drivers.</sentence>
+    <sentence>There is no systematic approach to the design of fuzzy controllers (Rajapakse, Furuta, &amp; Kondo, 2002).</sentence>
+    <sentence>Instead, how they are designed depends on the knowledge available about the system to be controlled.</sentence>
+    <sentence>The system’s evolution must be on-line in order for the controller to adapt to changing road or vehicle conditions such as slopes, gear changes, weight of the occupants, or other unpredictable parameters.</sentence>
+    <sentence>To this end, one defines a zeroth-order TSK fuzzy controller (Takagi &amp; Sugeno, 1985) with trapezia for codifying inputs and singletons as consequents.</sentence>
+    <sentence>An initial fuzzy controller with all consequents located at zero (with the meaning that the pedals are not acted upon) evolves over time, adapting both the position of the singletons and the granularity of the trapezia.</sentence>
+    <sentence>For the initial empty controller to evolve, a first module is designed that adapts the positions of the singletons defining the consequents of the system depending on the speed and the acceleration of the vehicle.</sentence>
+    <sentence>After a certain amount of time, a second, structural learning module takes responsibility for adding or modifying the trapezia that codify the input variables of the system.</sentence>
+    <sentence>Finally, a third module is in charge of filtering the pedal actions, with the aim of emulating human actions.</sentence>
+    <sentence>One line of work on on-line fuzzy tuning has been based on the Controller Output Error Method (Andersen, Lotfi, &amp; Tsoi, 1997).</sentence>
+    <sentence>Most of the published contributions in this line present variations of the method, combined with the modifications of the membership functions (Karasakal, Güzelkaya, Eksin, &amp; Yesil, 2011; Pomares, 2004) or the addition of new membership functions (Cara, Pomares, &amp; Rojas, 2011; Zhuang &amp; Wu, 2001).</sentence>
+    <sentence>In the present work, the acceleration (derivative of the error) is also considered to be responsible for the controller’s adaptation since, for vehicles in urban environments, the desired speed is supposed not to change continuously in all cases.</sentence>
+    <sentence>Instead, abrupt modifications may occur due to the occurrence of unpredictable events that mean the vehicle has to make a stepwise change in speed.</sentence>
+    <sentence>The evolution of the speed of the vehicle in such cases should be: (i) safe for the vehicle’s occupants, guaranteeing comfortable acceleration, and (ii) as precise as possible.</sentence>
+    <sentence>The system was tested under stepwise changes of the desired speed of the vehicle in two different experiments: (i) over 30 different vehicles’ in a simulated environment, and (ii) in a real vehicle.</sentence>
+    <sentence>The simulations showed that the system is able to provide similar behaviour in different vehicles.</sentence>
+    <sentence>The real environment results showed the suitability of the system for real applications, that it had remarkable precision, and was comparable with a human driver.</sentence>
+    <sentence>The rest of this communication is structured as follows.</sentence>
+    <sentence>A formal statement of the problem and the initial structure of the fuzzy system that will evolve are presented in Section 2. the proposal is presented in detail in Section 3 with its division into three sub-systems.</sentence>
+    <sentence>Section 4 presents the experimental simulation and real vehicle results, comparing the latter with a human driver.</sentence>
+    <sentence>Finally, Section 5 presents some concluding remarks and discusses possible future lines of work.</sentence>
+  </section>
+  <section name="Problem statement">
+    <sentence>From a theoretical point of view, a plant to be controlled may be expressed in terms of differential equations or difference equations, provided that these are obtained from the former using a short enough sampling period (Andersen et al., 1997).</sentence>
+    <sentence>The aim of a controller is to make the plant’s output track a reference signal r(k): (1) where y(k) is the system’s output at time k, f is an unknown function, u is the control input, and p and q are constants which determine the order of the system.</sentence>
+    <sentence>In this context, the aim of many practical control problems is to produce a controller which will drive the plant’s output towards a given reference speed representing the desired speed at which the vehicle should travel.</sentence>
+    <sentence>To this end, in the present work we define a zeroth-order Takagi–Sugeno–Kang (TSK) fuzzy system with a complete AND-composed rule base defined as: (2) where are the membership functions used to codify the input inv, which has nv different membership functions, and Ri is a numerical value representing the location of the singleton that acts as rule consequent.</sentence>
+    <sentence>The membership functions used to codify input variables are trapezoidal, defined by four real values (a, b, c, d) such that the degree of membership of an input value x is calculated as: The t-norm minimum is used to implement the AND operator.</sentence>
+    <sentence>Mamdani-type inference (Mamdani, 1974) is used, and the defuzzification operator is the weighted average.</sentence>
+    <sentence>In the system, all output membership functions are singletons.</sentence>
+    <sentence>Therefore, the crisp value of the output variable (out) is calculated as: (3) where wi represents the degree of truth of the ith rule, and Ri is the value of the singleton inferred by the ith rule.</sentence>
+    <sentence>The weight of a rule represents its contribution to the overall control action (calculated as the minimal degree of current crisp input value membership of its respective fuzzy partitions).</sentence>
+    <sentence>Sugeno (1999) proved that a fuzzy system modelled with singleton consequents is a special case of a fuzzy system modelled with trapezoidal consequents, and can do almost everything the latter can.</sentence>
+    <sentence>To quote from that paper: From a theoretical point of view, we do not need a type-I controller (trapezoidal consequents) unless we want to use fuzzy terms in the consequents of fuzzy rules, which is not our case.</sentence>
+    <sentence>They also state that such a fuzzy system is simple for identification and yet has a good approximation capability.</sentence>
+    <sentence>Fuzzy rule based systems with singleton consequents are very commonly used in practical control system applications (Jahanshahi, Salahshoor, &amp; Sahraie, 2008; Jinju, Minxiang, &amp; Weidong, 2008; Juang, Chiou, &amp; Lai, 2007; Simon &amp; Hungerbuehler, 2008).</sentence>
+    <sentence>In the present case, the use of singletons instead of more complex shapes to codify output variables allows fast calculation and straightforward interpretation of consequents.</sentence>
+    <sentence>Our ultimate goal with the present work is to control the speed of a vehicle in a precise way independently of its dynamics or the road conditions (slopes).</sentence>
+    <sentence>Hence, given an initial fuzzy controller with all the consequents (singletons) located at zero (Ri = 0, ∀i), our immediate objectives were: (i) to learn on-line the appropriate position of the singletons, and (ii) to determine whether it is necessary to add a new membership function or to modify an existing one.</sentence>
+    <sentence>The fuzzy controller consisted of two input variables: 1.</sentence>
+    <sentence>Error: codify the difference between the actual speed of the controlled car and the desired speed in km/h.</sentence>
+    <sentence>Acceleration1: codify the variation of the speed in km/h/s.</sentence>
+    <sentence>Both variables were codified with an initial number of trapezia (that can be modified during the process).</sentence>
+    <sentence>The initial trapezia were generated by uniformly distributing their centres and displacing the top points 10% of the size of the base, as shown in Fig 1.</sentence>
+    <sentence>They overlapped to ensure that every input combination would be covered by more than one rule.</sentence>
+    <sentence>Values outside the range were assumed to be equal to the corresponding limit, thereby offering maximum coverage.</sentence>
+    <sentence>Distribution of the initial trapezia Fig 1.</sentence>
+    <sentence>Distribution of the initial trapezia.</sentence>
+    <sentence>Examples for 2, 3, 4, and 5 trapezia.</sentence>
+    <sentence>Initial and displaced top points marked by dashed lines.</sentence>
+    <sentence>The output is codified by as many singletons as AND-composed rules exist in the rule base.</sentence>
+    <sentence>The singletons are limited to the interval [−1, 1].</sentence>
+    <sentence>Negative values represent actions on the brake while maintaining the throttle at zero, and positive values actions on the throttle with no brake action.</sentence>
+    <sentence>At the beginning of the process all the singletons are located at zero.</sentence>
+  </section>
+  <section name="The solution">
+    <sentence>The proposal is divided into three stages.</sentence>
+    <sentence>(i) In the singleton learning stage, the positions of the singletons that define the output variable are adapted according to the activation of the rules involved, as well as to the current error and acceleration of the vehicle.</sentence>
+    <sentence>(ii) In the structure learning stage, the structure of the fuzzy controller is modified by adding a new trapezium to an input variable or modifying an existing one.</sentence>
+    <sentence>(iii) In the pedal adjustment stage, the control actions are filtered to make them more human-related.</sentence>
+    <sentence>Fig 2 shows an overview of the proposed solution.</sentence>
+    <sentence>Schematic view of the three stages in the proposed solution Fig 2.</sentence>
+    <sentence>Schematic view of the three stages in the proposed solution.</sentence>
+    <sentence>Example for a 2 × 2 controller.</sentence>
+    <sentence>Singleton learning This stage adapts the consequents of the rule base, with the aim of reaching and tracking the reference more precisely.</sentence>
+    <sentence>The adaptation process is based on evaluating both the error and the acceleration.</sentence>
+    <sentence>It is done in this way since the desired speed signal is assumed to be stepwise up-dated in the system rather than continuously.</sentence>
+    <sentence>At each instant, only the rules that were triggered are modified.</sentence>
+    <sentence>Since not all the rules contributed to reaching the current state, this modification is proportional to the activation of the rules: where Ri denotes the position of a singleton, μi(k − 1) represents the activation of the rule at previous instant, and e(k) and a(k) are the current error and acceleration, respectively.</sentence>
+    <sentence>The rewards direct the controller to maintaining a constant acceleration equal to some comfortable value when the error is large, and reduce the acceleration linearly down to a value of zero when the speed error reaches e = 0.</sentence>
+    <sentence>For this purpose, the nine cases listed in Table 1 were considered: • The set {C1, C2, C3, C4} represents situations in which the vehicle is travelling more slowly than desired.</sentence>
+    <sentence>In particular: – The set {C1, C2} describes the situation when the vehicle is travelling very slowly with respect to the desired speed.</sentence>
+    <sentence>In this case the vehicle is expected to accelerate with positive constant acceleration equal to the comfort value : ∗ C1: the acceleration is greater than the comfort value plus a threshold, so singletons must be reduced.</sentence>
+    <sentence>∗ C2: the acceleration is less than the comfort value minus a threshold, so singletons must be augmented.</sentence>
+    <sentence>– {C3, C4} describes the situation when the vehicle is travelling slowly but near the desired speed.</sentence>
+    <sentence>In this case, the vehicle is expected to reduce the acceleration linearly until reaching the reference speed: ∗ C3: the acceleration is greater than the error plus a threshold, so singletons must be reduced.</sentence>
+    <sentence>∗ C4: the acceleration is less than the error minus a threshold, so singletons must be augmented.</sentence>
+    <sentence>• The set {C5, C6, C7, C8} represents situations where the vehicle is travelling faster than desired.</sentence>
+    <sentence>The cases are described and rewards are applied mirroring those for {C1, C2, C3, C4}, but considering a different constant negative comfort acceleration .</sentence>
+    <sentence>• Finally, C9 represents the case when no change must be applied to the singletons since the speed and acceleration of the vehicle are within the desired range.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Cases to consider in implementing the singleton learning.</sentence>
+    <sentence># Case conditions Reward C1 e &gt; 0 −C · ∣e∣ C2 C · ∣e∣ C3 a &gt; e + T −C · ∣e∣ C4 a &lt; max(0, e − T) C · ∣e∣ C5 e &lt; 0 C · ∣e∣ C6 −C · ∣e∣ C7 a &lt; e − T C · ∣e∣ C8 a &gt; min(0, e + T) −C · ∣e∣ C9 Otherwise 0 The cases are dependent on the following parameters.</sentence>
+    <sentence>First, represents the comfort acceleration when the vehicle is increasing in speed, i.e., the desired maximum acceleration when the vehicle’s speed is far from the reference value.</sentence>
+    <sentence>The value used for the experiments was fixed at 4 km/h/s.</sentence>
+    <sentence>Second, represents the comfort acceleration when the vehicle is braking.</sentence>
+    <sentence>In this case, −8 km/h/s was set for the experiments.</sentence>
+    <sentence>Third, T represents a threshold used to mitigate the possible effect of noise in the measurements.</sentence>
+    <sentence>We set T = 2 km/h/s for experiments.</sentence>
+    <sentence>And fourth, C = 0.01 is used as a normalisation constant.</sentence>
+    <sentence>With this configuration of the parameters, the cases used in the learning of the singletons define the zones shown in Fig 3, where the red and green zones indicate cases when rewards are negative ({C1, C3, C6, C8}) or positive ({C2, C4, C5, C7}), respectively, and the grey zone represents the desired situation where no reward is applied to the singletons (Case C9).</sentence>
+    <sentence>Cases covered by the singleton learning Fig 3.</sentence>
+    <sentence>Cases covered by the singleton learning.</sentence>
+    <sentence>Red area: zone where singletons are reduced; green area: zone where singletons are augmented; and grey area: zone where singletons are unmodified.</sentence>
+    <sentence>(For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)</sentence>
+    <sentence>Structure learning This stage evaluates the behaviour of the current controller during a certain amount of time (cycle = 100, in seconds), and decides whether it is necessary (i) to add a new trapezium, or (ii) to modify an existing one.</sentence>
+    <sentence>To decide which, if any, modification is applied, first the histogram of the input values is generated, and then an analysis is made of how the commonest values are covered by the current trapezia.</sentence>
+    <sentence>This process is carried out as follows: • If the most repeated value in the histogram is covered with an activation degree less than 0.75 then a new membership function is inserted into the variable.</sentence>
+    <sentence>The trapezia are reinitialized (Fig 1), and singletons are reset to zero.</sentence>
+    <sentence>This process is illustrated in Fig 4.</sentence>
+    <sentence>Example of label addition Fig 4.</sentence>
+    <sentence>Example of label addition.</sentence>
+    <sentence>Original labels with superimposed histogram (left) and resulting labels (right).</sentence>
+    <sentence>• If both of the two most repeated values are covered with an activation degree greater than 0.75 then the shorter base of the trapezium is reduced by 80%.</sentence>
+    <sentence>Singletons are not reset after this.</sentence>
+    <sentence>This process is illustrated in Fig 5.</sentence>
+    <sentence>Examole of label modification Fig 5.</sentence>
+    <sentence>Examole of label modification.</sentence>
+    <sentence>Original labels with superimposed histogram (left) and resulting labels (right).</sentence>
+    <sentence>Adding a new trapezium is designed to cover the most repeated input range to a greater degree so as to generate a clear control action, while reducing the shorter base is aimed at obtaining a controller that is more specific leading to better differentiation in the commonest input range.</sentence>
+    <sentence>Pedal adjustments Three aspects are taken into account to provide a more human-like control of the pedals: 1.</sentence>
+    <sentence>When the sign of the control signal changes, the system returns zero for 0.5 s in order to simulate the delay of the foot changing from one pedal to the other.</sentence>
+    <sentence>When the reference speed changes, the singleton learning process is deactivated for 1 s, to allow the controller to act without any disturbance produced by possible modifications of the singletons.</sentence>
+    <sentence>The pedal is set to zero when its absolute value is less than 0.02, since at this low level it has no real effect.</sentence>
+    <sentence>With these modifications, the system is expected to emulate the actions of a human driver more precisely, as well as to smooth out any potential abrupt modifications of the singletons produced by large changes in the reference speed.</sentence>
+  </section>
+  <section name="Experimentation and results">
+    <sentence>Experiments were carried out in two phases: (i) in a simulated environment in order to analyse the system without risk and for a broad set of vehicle dynamics; and (ii) in a real vehicle both to study the performance in real driving situations and to compare it to a human driver.</sentence>
+    <sentence>Tests in the simulated environment For the experiments in a simulated environment, TORCS2 (The Open Racing Car Simulator) was used as testbed.</sentence>
+    <sentence>This is one of the most popular car racing simulators for academic research due to its various advantages: (i) it lies between an advanced simulator and a fully customizable environment, such as those used by computational intelligence researchers; (ii) it features a sophisticated physics engine; and (iii) it implements an ample set of tracks and vehicles with different physical behaviour.</sentence>
+    <sentence>There are 30 models of vehicles implemented in TORCS, all of them differing in their longitudinal behaviour.</sentence>
+    <sentence>To illustrate this, Fig 6 gives the values for some of the parameters that affect the longitudinal dynamics of all TORC’s vehicles.</sentence>
+    <sentence>In this figure, the red lines and the blue boxes represent the values of the mean and standard deviation.</sentence>
+    <sentence>The values are normalised with respect to the minimum and maximum values found.</sentence>
+    <sentence>Comparison between some of the longitudinal attributes of the vehicles in TORCS Fig 6.</sentence>
+    <sentence>Comparison between some of the longitudinal attributes of the vehicles in TORCS.</sentence>
+    <sentence>Red line: mean value and blue box: mean ± standard deviation.</sentence>
+    <sentence>(For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)</sentence>
+    <sentence>All the vehicle models were used in the experiments in order to test the robustness of the control system for different dynamics.</sentence>
+    <sentence>The experiments consisted of giving the vehicles the following reference speeds: {20, 35, 30, 20, 40} km/h, for 20 s each, and repeated 8 times.</sentence>
+    <sentence>The track was an oval comprising two straights of 1.6 km joined by semi-circles, with the aim of not conditioning the system’s behaviour to managing the steering.</sentence>
+    <sentence>Since the gear must also be controlled, a simple policy was implemented which shifts up the current gear if the revolutions per minute (rpm) of the vehicle’s engine are over 4000, and shifts down when rpm &lt; 2500.</sentence>
+    <sentence>The parameters of the learning system were set as follows: • Ranges of [−25, 25] km/h for the Error and [−8, 8]km/h/s for the Acceleration.</sentence>
+    <sentence>• The controller started with 2 trapezia per input (4 rules).</sentence>
+    <sentence>Fig 7 shows the speed results of the 30 vehicles superimposed in the top graph, and in the bottom, zoomed zones of the graph with only the fastest, the slowest, and the averaged speeds shown.</sentence>
+    <sentence>The results seem to reflect good precision: one observes in the zoomed plots the effect of learning, since the difference between the highest and the lowest speeds decreases over time (until t he maximum error ⩽1 km/h).</sentence>
+    <sentence>Execution of the learning process in 30 vehicles (top) Fig 7.</sentence>
+    <sentence>Execution of the learning process in 30 vehicles (top).</sentence>
+    <sentence>Zooms showing the highest, lowest, and averaged speeds (bottom).</sentence>
+    <sentence>Given the promising results in the simulated environment, we proceeded to test the system in a real vehicle, as will be described in the next subsection.</sentence>
+    <sentence>Tests in the real environment A Citroën C3 (Fig 8, top) modified to permit autonomous control of the pedals, was used for these trials (Milanés, González, Naranjo, Onieva, &amp; De Pedro, 2010).</sentence>
+    <sentence>The gear is unknown to the controller since the control implemented by Citroën was used.</sentence>
+    <sentence>In particular, there was no knowledge about the current gear, or how or when it changed.</sentence>
+    <sentence>Fig 8 (bottom) shows an aerial view of the path to follow over the test zone.</sentence>
+    <sentence>It has slopes of up to 3%, and a long straight segment of about 200 m. The points marked are references for experimenting with variable speeds.</sentence>
+    <sentence>Vehicle (top), and test zone with path to follow (bottom) Fig 8.</sentence>
+    <sentence>Vehicle (top), and test zone with path to follow (bottom).</sentence>
+    <sentence>Some modifications were made to the configuration used in the simulated environment: • The input ranges were reduced to [−20, 20] km/h for the Error and to [−5, 5] km/h/s for the Acceleration.</sentence>
+    <sentence>• The starting controller codified Error with 4 trapezia instead of the 2 used in the simulation experiments, thereby obtaining an initial controller with 8 rules.</sentence>
+    <sentence>• Finally, singletons were restricted to [−0.3, 0.5] since values outside that range could cause damage to the vehicle’s equipment.</sentence>
+    <sentence>At first, the system was tested using two constant reference speeds – 15 and 5 km/h.</sentence>
+    <sentence>The results are shown in Figs.</sentence>
+    <sentence>9 and 10 in which the speed, pedal action, and evolution of the consequents over time are shown.</sentence>
+    <sentence>The speed results are compared with the behaviour of a human driver, who was helped by being shown on a screen the vehicle’s real speed, since the speedometer was insufficiently accurate for adequate control.</sentence>
+    <sentence>Results maintaining a fixed reference speed of 15km/h Fig 9.</sentence>
+    <sentence>Results maintaining a fixed reference speed of 15 km/h.</sentence>
+    <sentence>Evolution of the speed (top), pedal action (centre), and singletons (bottom).</sentence>
+    <sentence>Results maintaining a fixed reference speed of 5km/h Fig 10.</sentence>
+    <sentence>Results maintaining a fixed reference speed of 5 km/h.</sentence>
+    <sentence>Evolution of the speed (top), pedal action (centre), and singletons (bottom).</sentence>
+    <sentence>In both tests, the structure learning was executed at t = 100 s, converting a 4 × 2 controller into a 5 × 3 one, so that resetting the singletons produced the speed reduction.</sentence>
+    <sentence>Furthermore, at t = 200 s the central labels of both variables were stretched without any significant effect.</sentence>
+    <sentence>At the top of each figure, two Mean Absolute Error (MAE) values are shown.</sentence>
+    <sentence>The one after t = 25 s (transitory state) and the overall value.</sentence>
+    <sentence>It is important to remark that most of the singletons seem to reach a state of stability once the granulation of the controller has been modified.</sentence>
+    <sentence>In both experiments, only one singleton significantly varied over time, and in both cases corresponding to the rule that covered both the error and the acceleration equal to zero.</sentence>
+    <sentence>The oscillations of this singleton occur to adapt the system to the variations in the road or the vehicle’s dynamics.</sentence>
+    <sentence>In both cases, the speed management provided by the learning system outperformed that of the human driver.</sentence>
+    <sentence>It is important to remark that 15 km/h was selected because it represented a frontier between first and second gear in the case that the vehicle is accelerating rapidly.</sentence>
+    <sentence>During the test, the vehicle maintained first gear, indicative of the quality of the acceleration given to the vehicle.</sentence>
+    <sentence>The speed of 5 km/h was an interesting challenge since at this speed the slightest slope or variation on the pedal can induce major changes in speed.</sentence>
+    <sentence>The controller maintained MAE ≈ 0.5 km/h, which not only reflects good accuracy but is also insignificant for the vehicle.</sentence>
+    <sentence>A second experiment was conducted in which the reference speed was changed over time.</sentence>
+    <sentence>The vehicle started at Point A (Fig 8), and the reference speed was changed at each marked point.</sentence>
+    <sentence>The evolution of the speed is shown in Fig 11.</sentence>
+    <sentence>During the experiment, at t = 100 s the 4 × 2 controller was converted into a 5 × 3 one, which is the reason for the poor behaviour around that instant.</sentence>
+    <sentence>Also, at t = 200 s, the central label of the Error was reduced.</sentence>
+    <sentence>Speed of the vehicle with changing reference speed Fig 11.</sentence>
+    <sentence>Speed of the vehicle with changing reference speed.</sentence>
+    <sentence>For a quantitative analysis of the behaviour during the experiment, Fig 12 shows measures of the precision of the execution during the experiment, distinguishing the accelerating (top) and braking (bottom) steps.</sentence>
+    <sentence>In this figure, the values were calculated with respect to the desired speed of the vehicle assuming it is following the indications of the singleton learning module (Fig 3).</sentence>
+    <sentence>As can be seen, MAE is smaller in the braking steps.</sentence>
+    <sentence>This is because the dynamics of the vehicle when using the brake are faster than when using the throttle, so that it is easier to follow the acceleration indications.</sentence>
+    <sentence>In all the steps, the stationary MAE evolves until MAE ≈ 0.5 km/h, and the transitory value until MAE ≈ 1.0 km/h.</sentence>
+    <sentence>In the overall execution, the average MAE decreases over time.</sentence>
+    <sentence>The exception (25 ⇓ 15) is due to the resetting of the singletons made by the structure learning module at t = 100 s. Analysis of the step test MAE: averaged during the test (black), and during the… Fig 12.</sentence>
+    <sentence>Analysis of the step test MAE: averaged during the test (black), and during the transitory (red) and stationary (blue) states.</sentence>
+    <sentence>Accelerating steps (top), and braking steps (bottom).</sentence>
+    <sentence>(For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)</sentence>
+  </section>
+  <section name="Conclusions and future work">
+    <sentence>This communication has presented a method for the on-line evolution of a fuzzy controller responsible for managing the pedals of a vehicle, based on data obtained while the vehicle is moving.</sentence>
+    <sentence>The method is divided into three phases: (i) a singleton learning phase, responsible for modifying the positions of the singletons of the controller depending on the speed and acceleration of the vehicle; (ii) a structure learning phase that, after a certain amount of time, varies the number or shape of the trapezia used to codify the input variables; and (iii) a pedal adjustment phase in which the actions given by the controller are filtered to make them more reliable.</sentence>
+    <sentence>The system was tested in both a simulated environment, and on a real vehicle.</sentence>
+    <sentence>In the simulations, it was tested on 30 cars with different dynamical behaviour, and yielded accurate results with low deviations over time for all the cars.</sentence>
+    <sentence>In the real vehicle trials, the results were compared with those of a human driver.</sentence>
+    <sentence>The control system outperformed the human under conditions of constant reference speeds, and gave excellent results in both speed and acceleration for a changing reference speeds.</sentence>
+    <sentence>Future work will focus on greater sophistication in the structural learning, since the present implementation resets the singletons after a granularity change.</sentence>
+    <sentence>This can be resolved by interpolating the new rule base with respect to the previous one.</sentence>
+    <sentence>In the same line, the present structural learning changes both the number and amplitude of the trapezia, but not their centres.</sentence>
+    <sentence>It is planned to use data concerning the input histogram to redistribute the new trapezia accordingly.</sentence>
+    <sentence>New transport applications are expected to be implemented with the proposed method.</sentence>
+    <sentence>An ACC system able to maintain a safe distance with a preceding vehicle can be easily implemented by using the difference with the desired distance as error signal, and then applying the same approach as has been presented in this work.</sentence>
+    <sentence>Similarly, steering control can be based on using the error with respect to the reference path to follow.</sentence>
+    <sentence>1 We considered it clearer to relate to human driving to say that the vehicle is decelerating at a rate of −1 km/h/s than at −0.27 m/s2.</sentence>
+    <sentence>2 http://torcs.sourceforge.net/.</sentence>
+  </section>
+</article>

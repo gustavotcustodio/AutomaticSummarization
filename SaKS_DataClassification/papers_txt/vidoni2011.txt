@@ -1,0 +1,251 @@
+An intelligent framework to manage robotic autonomous agents
+
+Abstract
+
+In this paper a joint application of Artificial Intelligence (AI), robotics and Web services is described. The aim of the work presented here was to create a new integrated framework that keeps advantage on one side of the sensing and exploring capabilities of the robotic systems that work in the real world and, on the other side, of the information available via Web. Robots are conceived like (semi-)autonomous systems able to explore and manipulate a portion of their environment in order to find and collect information and data. On the other hand, the Web, that in a robotic domain is usually considered like a channel of communication (e.g. tele-operation, tele-manipulation), here is conceived also like a source of knowledge. This allows to define a new framework able to manage robotic agents in order to get precise, real-time information from the real world. Besides, software agents may search for and get additional information from the Web logical world. The intelligent administration of these services can be applied in different environments and leads to optimize procedures and solve practical problems. To this end a traffic control application has been defined and a simplified test-case implemented.
+
+Keywords
+Robots
+Autonomous agents
+Artificial Intelligence
+Web services
+Ontologies
+
+1. Introduction
+
+In recent decades, the diffusion of all Artificial Intelligence, Robotics and Web applications has allowed to find new shared applications with the purpose of realizing systems able to solve problems or improve real systems efficiency. Moreover, research on autonomous robots and autonomous systems is an open issue and the availability of new, easy to share information sources such as the Web let us conceive the Web as a source of data that can be managed by means of a remote controller or supervisor agent. In fact, the use of the Web as a source of communication with a remote controller or supervisor is well studied and applied in different fields in order to develop robust and effective systems. In the majority of applications, the Web connection is used to facilitate systems remote control (i.e. through human commands), as it is the case in tele-operation and tele-manipulation (Farajmandi, Gu, Meng, Liu, & Chen, 2003; Schulz, Burgard, Fox, Thrun, & Cremers, 2000; Skrzypczynski, 2001; Tomizawa, Ohya, & Yuta, 2002, 2003, to offer a channel of communication to the robots of a swarm (Tso, Zhang, & Jia, 2007), and to interface the human with the robotic domain through the Web (Obraczka et al., 2007).
+
+So far, at least two research lines has not been fully explored: the use of the Internet as a data source and the use of robots as brokers of knowledge for a high level autonomous system able to process users queries and manage the information discoverers. It means that the Internet can be used for both sharing information between different agents and getting information by looking at databases and Web sites. It also leads to think in robots as agents able to find elements and sense the environment in order to complete the knowledge map of the application considered.
+
+By looking to the real world, a lot of possible problems can be faced and solved exploiting the information that can be recovered from both sources the Web and physical robotics systems. In this sense, robots can behave like sentinels or scouts into the environment, with a task and a proper behavior (e.g. avoid obstacles, entities/objects recognition, etc.), and can work and cooperate like slave systems leaving the leadership to master autonomous agents. In such a case, a centralized approach can be implemented, the “brain” being constituted by some master agents, while robots and the Internet services would act as laborers.
+
+Once the task is defined, both of these systems can cooperate and be used in order to find the best strategy (e.g. send the robots on the supposed shortest or safest path with the available information). The whole system can be also employed to verify the possibility to follow a particular strategy by sending the physical agents and, in case of failure, collect the new information coming from the robots’ sensors in order to redefine/refine the (optimal) strategy. Hence, this kind of joint action can be used in order to optimize a lot of different tasks and different applications where the information available is not static but can change and both the database system and the strategy to follow have to be updated. Moreover, the task of these applications can be autonomously reached by the intelligent system made of autonomous software and robotic agents.
+
+Thus, the research on Human–Agent–Robot interaction focuses on cognitive, physical and social interaction between agents, robots (Kaminka, 2004, 2007) and people to provide for collaborative intelligence and extend human capabilities. Robots (and/or agents) can be useful in different contexts and environments, such as in disaster recovery, search and rescue tasks, delivering health care, assisting the elderly and increasing productivity in the workplace.
+
+In literature, different approaches and applications for developing multi-agent teamwork and creating cooperation between human, agents and robots, can be found (see Freedy et al., 2004, 2008; Innocenti, Lòpez, & Salvi, 2009; Johnson, Feltovich, Bradshaw, & Bunch, 2008a, 2008b; Pynadath & Tambe, 2003; Scerri et al., 2003). Successful applications have been developed by integrating and extending KAoS (Knowledgeable Agent-oriented System), a collection of componentized agent services compatible with several popular agent frameworks (Bradshaw, Dutfield, Benoit, & Woolley, 1997, 1999, 2001), in order to create a single environment for human-agent work systems (e.g. with Brahms and Nomads as in Bradshaw et al. (2003), Clancey, Sierhuis, Kaskiris, & van Hoof (2003), Sierhuis (2001), Sierhuis et al. (2003), Suri et al. (2000). A more recent evolution of this network infrastructure is presented in Johnson et al. (2008a, 2008b) where the KAoS HART (Human–Agent–Robot Teamwork) has been adapted for providing dynamic regulation between agents, robots, traditional computing platforms and Grid computing. Grid computing is the application of resources from many networked computers to a single problem at the same time. Its evolution led to the so-called socio-cognitive grid concept, and applications in the human-agent domain can be found in Bruijn & Stathis (2003), Pitt & Artikis (2003), Ryutov (2007). The idea behind the socio-cognitive grids is to provide cognitive and social resources accessible on electronic devices in support of common activities. This leads to transform the Net into a human resource, ideally accessible by anyone at anytime and anywhere for solving a particular problem.
+
+Taking into account these human-Artificial Intelligence interactions, in our attempt an alternative integration between humans, software and physical agents is studied and realized. Thus, our goal with the new framework system is to further facilitate the three-party communication between humans, the logical world and the physical world. Ontologies (Studer, Benjamins, & Fensel, 1998) have been chosen for knowledge representation, the agent technology for facing the dynamism of the logical and physical worlds, and the intelligent agents’ properties in order to enable the framework to deal with the ever-changing environment.
+
+The paper is organized as follows. In Section 2 the background technologies and systems are presented and discussed. The proposed new framework is presented in detail from a general point of view in Section 3. In Section 4, the application of the framework to a traffic control application is described and a real simplified test-case is presented. Concluding remarks and future work directions are put forward in Section 5.
+2. Background technologies
+2.1. Multi-Agent systems
+
+An agent is a computer system situated in some environment and capable of autonomous action in this environment in order to meet its design objectives (Wooldridge, 2002). According to Wooldridge, an agent has to fulfill some properties in order to become intelligent: reactivity (the ability to perceive its environment and respond to changes in a timely fashion), pro-activeness (the ability to exhibit goal-directed behavior by taking the initiative), and social ability (the ability to interact with other agents) (Wooldridge, 2002). Intelligent agents (IA) can present some other properties such as temporal continuity (an agent operates continuously and unceasingly), reasoning (decision-making mechanism, by which an agent decides to act on the basis of the information it receives, and in accordance with its own objectives to achieve its goals), rationality (an agent’s mental property that attract it to maximize its achievement and to try to achieve its goals successfully), veracity (mental property that prevents an agent from knowingly communicating false information), mobility (i.e. the ability for a software agent to migrate from one machine to another).
+
+Agents can be useful as stand-alone entities that are in charge of particular tasks on behalf of a user. However, in the majority of cases agents exist in environments that contain other agents, so constituting Multi-Agent Systems (MAS). A MAS consists of a group of agents that can potentially interact with each other (Vlassis, 2007). By exploiting this feature several advantages such as reliability and robustness, modularity and scalability, adaptivity, concurrency and parallelism, and dynamism (Elamy, 2005) can be reached.
+
+In order to operate in complex, dynamic and unpredictable environments (e.g., air traffic control, autonomous-spacecraft control, health care, industrial-systems control) that involve a high degree of complexity, an agent-oriented programming paradigm is desirable. The Agent-Oriented Software Engineering (AOSE) (Wooldridge & Ciancarini, 2000) methodologies aim to satisfy such requirement by creating methodologies and tools that enable inexpensive development and maintenance of agent-based software. In the present work the INGENIAS methodology (Pavón, Gómez-Sanz, & Fuentes, 2005), which was proposed to facilitate the MAS development process, has been considered due to its completeness and tool support.
+
+With the purpose of standardizing agent technologies for the interoperation of heterogeneous software agents, “the Foundation for Intelligent Physical Agents” (FIPA) has become an IEEE Computer Society standards organization and has developed specifications for permitting the creation of a set of shared rules. Thanks to the efforts on standardization, FIPA-OS (FIPA-Open Source), JADE (Java Agent Development Environment) and ZEUS agent platforms compliant to the FIPA rules and directives have been created. The JADE agent platform (Bellifemine, Caire, Poggi, & Rimassa, 2008) has been chosen in our work in order to implement agents and deploy a multi-agent environment.
+2.2. Autonomous robots
+
+Taking into account different possible application fields, a robot can be considered as an electro-mechanical, programmable, self-controlled device capable of performing a variety of tasks on command or according to instructions and intelligent algorithms implemented in advance. Robots can be classified into two main categories according to the task to be carried out by them: industrial robots and service robots.
+
+Industrial robots are created in order to perform repetitive, strenuous, accurate and precise tasks, allow to perform high-quality and cost-effective actions and manufacturing tasks. On the other hand, Service Robots are aimed to provide services to humans instead of “manufacturing” purposes. These robotics systems can be found in an ample repertory of daily life domains, including domestic and leisure environments, health and professional services, and hazardous environments. Applications such as robots for mowing the lawn, cleaning floors or buildings, entertaining and playing are already commercially available (e.g. Roomba, AIBO, ASIMO Sacagami et al., 2002), while robots as companions, fully social interactive or servants are at a development phase (Dautenhahn et al., 2005; Pineau, 2003).
+
+The exploration and recognition of dangerous or non human-like areas by means of robots is an argument of interest for many research teams of diverse areas (Bertrand, Bruckner, & van Winnendael, 2001; Hollingum, 1999). In the case of industrial and service systems, the real world and application environment can be viewed, at different levels, as an information source. Indeed, robots can be directly controlled or programmed in order to realize repetitive actions, tele-operated or provided with autonomous and intelligent capabilities. In all cases, robots can be used to get information from their environment by means of sensors (so that those can touch, see, hear, measure, etc.). Moreover, they can manipulate and modify their environment by means of actuators, for both discovering new information and performing different tasks.
+
+In this work, we are interested in exploiting all actions, information and services that a robot can provide upon request. Thus, the framework and the robots we will use must feature a certain degree of autonomy. Autonomy refers to systems capable of operating in the real-world environment without any form of external control for extended periods of time. Hence, autonomous robots can be viewed as physical agents that are able to perceive and extract information from their environment and use this knowledge to move and act in a purposeful manner.
+
+For intelligent autonomous robots, the three most important desirable features are perception, localization and navigation. In conventional robots, the tasks associated to each of these features are developed independently and each one uses its own algorithms and data structures. Depending on the working environment, which can be more or less structured and dynamic, and on the pre-loaded information and maps of the working area, the tasks of perception and localization have different levels of complexity. Perception and localization can be reached through subsequent actions, i.e. recognition and mapping (Thrun, 2003; Zhang et al., 2007), or through the Simultaneous Localization And Mapping techniques (SLAM) (e.g. Durrant-Whyte & Bailey, 2006). If the updated knowledge that ensues from the perception and localization tasks is used in order to bridge the information gap present on a higher software level agent, complex and articulated problems can be faced and solved. Robot navigation is related to the task and service to carry out and passes through the planning and actuation phases.
+
+In this article, according to Wooldridge’s definition (Wooldridge, 2002), autonomous robots are considered as physical autonomous agents. The integration between the capabilities of software and physical agents is described further in this paper.
+2.3. Semantic web services
+
+Traditionally, the Web has been conceived as a distributed source of information. The emergence of Web Service (WS) Technology (Booth et al., 2004) has permitted to extend it to a distributed source of functionality. WS make applications available on the Web in a standard way so that they can be accessed regardless of the operating system they are deployed on and the programming language they are implemented in. In the stack of emerging standards for Web Services, three major layers can be highlighted. UDDI (Universal Description, Discovery and Integration) provides a mechanism for clients to find Web Services by defining an standard way to publish and discover information about them. WSDL (Web Services Description Language) provides a description of connection and communication with a particular Web Service by describing its functionality using an XML language. Finally, SOAP (Simple Object Access Protocol) is an standard that defines XML formatted messages between two applications over the Internet protocols. The main limitation of this technology is that, due to the growing of the Web in size and diversity, there is a lack of automation necessary for satisfying needs such as discovery, execution, selection, composition and inter-operation of WS (Fensel & Bussler, 2002).
+
+On the other hand, the Semantic Web (SW) aims at adding semantics to the data published on the Web (i.e., establish the meaning of the data), so that machines are able to process these data in a similar way a human can do (Berners-Lee, Hendler, & Lassila, 2001). The SW is therefore characterized by the association of machine-accessible formal semantics with the traditional Web content. Ontologies are the standard knowledge representation technology in the SW. For the purposes of our work, we have adopted the following definition of ontology: “an ontology is a formal and explicit specification of a shared conceptualization” (Studer et al., 1998). In this context, formal refers to the need of machine-understandable ontologies, which eventually enable automatic reasoning. Besides, the ontology language selected in this work was OWL (Web Ontology Language) (McGuinness & van Harmelen, 2004), namely, the current W3C (World Wide Web Consortium) Semantic Web standard ontology language.
+
+Semantic Web Services (SWS) are the joint application of WS and the SW (McIlraith, Son, & Zeng, 2001). They consist of describing the services with semantic content so that service discovery, composition and invocation can be done automatically by, for example, the use of software agents able to process the semantic information provided. SWS are thus defined through a service ontology enabling machine interpretability of its capabilities. A standard for the SWS technology has not yet been defined and different approaches such as OWL-S (Martin et al., 2007), WSMO (Roman et al., 2005), SWSF (Battle et al., 2005), WSDL-S (Li et al., 2006) and SAWSDL (Verma & Sheth, 2007) (current W3C recommendation) are available.
+3. The integrated framework idea
+
+The new framework aims to create a platform that exploits services from both the physical and the logical worlds by using robots and WS, respectively, with the purpose of bringing together on-line and off-line resources in order to provide users with added-value services.
+3.1. Layout
+
+The proposed framework is based on a four layer architecture (see Fig. 1). The lower layer, i.e. “Ground Layer”, contains the sources of functionality in the system. It has been split up into two groups: sources of functionality from the logical world and sources of functionality from the physical world. By sources of functionality from the logical world we refer to the business processes that take place in organizations and constitute their operational engine. A company’s business logic comprises business rules that express the business policy, and workflows (i.e. ordered tasks of passing documents or data from one participant to another). Putting it all together provides the basic ingredients for the publication of functionality on the Web. On the other hand, the sources of functionality from the physical world can be almost anything, from houses and machinery to the weather and other environmental elements. Changes in the environment can be produced by actuators and perceived by sensors. These changes produced/perceived in the environment can be advertised as functionality provided by the system.
+The framework layout
+
+
+Fig. 1. The framework layout.
+
+The second layer in the multi-tier infrastructure is the “Services Layer”. In this layer, the functionality that emerges from the lower layer is exhibited online in the form of services in two flavors: Web Services (WS) and robot-provided services. WS account for some of the companies’ internal business processes. Given that millions of services can be accessible worldwide at the same time, it is necessary a mechanism to automate the discovery and management of those services that are needed at a particular temporal point. The semantic description of the service capabilities is meant to solve that particular issue. By formalizing the description of the functionality that WS offer, we enable machines (i.e., software programs) to autonomously process that information and interact with services without the need of human intervention.
+
+Robot-provided services refer to the features physical agents in the real world possess and may be of use and provide utility for end-users. Industrial robots and more autonomous robots can be used as services. Indeed, both of these systems can alter their surrounding world by means of the actuators and perceive changes in the environment through their sensors. Industrial robots can be exploited in their particular environment while mobile robots can be exploited in different and day-by-day less structured environments (i.e., indoors or outdoors). These functions can be announced as services that the system provides through the robots’ APIs (Application Program Interface) and communication procedures.
+
+The third tier is the “Intelligent Agents Layer”. Agents are responsible for acting as intermediates between end-users and the services available in the “Services Layer”. The role of agents is threefold:
+
+1.
+
+    act on behalf of service consumers;
+2.
+
+    act on behalf of service producers;
+3.
+
+    perform management tasks.
+
+The agents that act on behalf of service owners manage the access to services (i.e., negotiation and invocation) and ensure that the contracts are fulfilled (through monitoring activities). On the other hand, the agents acting on behalf of service consumers have to locate services (through discovery and composition processes), agree on contracts (by means of negotiation and selection activities), and receive and present the results. Last but not least, the agents that carry out management tasks have to ensure the system stability and monitor the status of all interactions.
+
+Finally, the “Application Layer” contains the applications that are built on top of the framework. There are no constraints on the types of applications nor the domains that they can be applied in. In order to customize a particular application in a given domain, it is necessary to organize (orchestrate and coordinate) a set of agents to actually carry out useful activities on behalf of users. In fact, depending on the agents available in the system and the way they interoperate, different user-tailored applications can be obtained.
+3.2. Architecture
+
+The framework basic pillars are: users (service consumers), (robot- and Web-provided) services and agents (facilitators). The integrated system, built on the basis of SEMMAS (García-Sánchez, Fernández-Breis, Valencia-García, Gómez, & Martínez-Béjar, 2008, 2009), which is a framework for seamlessly integrating IA and SWS, is composed of three loosely-coupled components (see Fig. 2): a Multi-Agent System (MAS) with different types of agents, an ontology repository in which several ontologies are stored, and a bunch of services divided into two distinguished groups: Web Services and robot-provided services.
+The framework architecture
+
+
+Fig. 2. The framework architecture.
+3.2.1. The MAS
+
+The MAS operates as an intermediary between users and services and is composed of three different types of autonomous agents, which are (1) service-representative agents (i.e. “Provider Agent”, “Service Agent” and “Robot Agent”), (2) user-representative agents (i.e. “Customer Agent”, “Discovery Agent” and “Selection Agent”), and (3) system-management agents (i.e. “Framework Agent” and “Broker Agent”).
+
+The agents that function as service representatives are responsible for managing the access to services and ensuring that the conditions agreed for the service execution are satisfied. Agents that act as user representatives are in charge of locating the appropriate services, agreeing on contracts with their providers, and receiving and presenting the results of their execution.
+
+The “Robot Agent”, which has been added to the SEMMAS platform, interfaces the software agents environment with the real world and undertakes the “robot” role, which includes the means to communicate with the physical robot. Hence, this agent encloses the standard capabilities of the software agents and special purpose abilities: it is charged to open and close the communication with the correct autonomous robot, translate the task or the requests information into robot commands, and manage the results and the required information that come from the different available sensors. Due to the kind of robot that has to be commanded, the robot agent can act directly on the robot or only send the task and receive the results. Indeed, if for example an industrial manipulator has to be operated in order to carry out a particular action, the “Robot Agent” can directly open the communication, control the robot, order the actions to do, read the sensors and close the communication. In such a case, the integrated system made of the “Robot Agent” and the Physical Robot becomes a true autonomous system.
+
+If a mobile autonomous robotic system has to be driven, the “Robot Agent” has to open the communication, translate and communicate the overall task information into the robot language, and wait for an answer. In this case, the basic actions (i.e., rotate, read the sensor, turn) are autonomously made by the robot. Hence, both the “Robot Agent” and the physical robot are autonomous agents. The communication with robots has to be robust and effective and can be realized at different levels that depend on both the working environment and the availability of sources. Different wireless communication capabilities have to be integrated and available in order to ask and command to, and receive answers and information from the robots. Wireless radio (i.e. Wi-Fi and Bluetooth) or infrared communication devices can be mounted and easily integrated into the robotic systems, so creating robots that can be reached, questioned and used in order to share, discover and use information.
+3.2.2. Ontology repository
+
+Various ontologies must be considered for the system to properly function and the need to deal with the semantic heterogeneity issue (Noy & Halevy, 2005) is satisfied through the “Broker Agent” mediation mechanisms (see (García-Sánchez et al., 2008, García-Sánchez, Martínez-Béjar, Valencia-García, & Fernández-Breis, 2009) for a more detailed discussion of the way the framework faces interoperability issues).
+
+The exploited ontologies are categorized into five groups: domain ontologies, application ontologies, agent local knowledge ontologies, semantic Web Services ontologies and negotiation ontologies. In this approach, the:
+
+•
+
+    domain ontology represents a conceptualization of the specific domain the framework is going to be applied in. This ontology supports the communication among the components in the framework without misinterpretations;
+•
+
+    application ontology may involve several domain ontologies to describe a certain application. For the purposes of this work, the application ontology embraces the knowledge entities (i.e. concepts, attributes, relationships, and axioms) that model the application in which the framework is to be used.
+•
+
+    service ontology is the small piece of ontology used by a single service for service description. We assume the existence of one or various remote ontology repositories containing the semantic description of the available services. As stated before, the framework does not impose any restriction in terms of the kind of SWS specification (i.e. OWLS, WSMO, SWSF, WSDL-S or SAWSDL) to be used.
+•
+
+    negotiation ontology, which comprises both negotiation protocols and strategies, so that agents can choose the best mechanism at run-time. Indeed, when a group of individual agents form a MAS, the presence of a negotiation mechanism to coordinate such a group becomes necessary. The appropriateness of the negotiation mechanisms in a particular situation highly depends on the problem under question and the application domain.
+•
+
+    agent local knowledge ontology generally includes knowledge about the assigned tasks as well as the mechanisms and resources available to achieve those tasks. Thus, for example, the knowledge ontology for the “Broker Agent” may contain the mapping rules it has to apply to resolve the interoperability mismatches that might occur during the system execution.
+
+By selecting a particular set of ontologies, the developer can customize the framework and make it work in a concrete domain to solve a specific kind of problem.
+3.2.3. Services
+
+Services are the entities that provide all the functionality that the system can show off and are: Web Services (WS) and robot-provided services (RS). WS account for some of the companies’ internal business processes. RS refer to the features physical agents possess and may be of use and provide utility for end users.
+
+The semantic description of the services capabilities is meant to create a mechanism to automate the discovery and management of the services. By formalizing the description of the functionality that WS offer, software programs can autonomously process the information and interact with services without the need of human intervention.
+
+From a general point of view, robots can alter the world by means of the so-called actuators and perceive changes in the environment through their sensors. These functions can be announced as services that the system consumes through robots’ APIs (Application Program Interfaces). Indeed, physical robots can be used for achieving different services as the simple and direct knowledge acquisition (e.g., vision, distance, sound and touch sensors), or more complex behaviors and actions as search, find, count, manipulate and move objects, discover, analyze, interact with humans (e.g., request and get info) by means of the merge of intelligent capabilities, sensors and actuators.
+
+Notice that all these capabilities offer data and knowledge directly from the real world, so creating a source of real-time, up-to-date information. Moreover, the active manipulation of the environment and the possible subsequent direct sensing, offer important capabilities that cannot be reached only by means of common Web Services.
+4. Framework application domain
+4.1. Use case scenario
+
+Various governmental bureaus keep traffic information (both at regional and national levels) stored into databases, these being regularly updated. Commonly, this information is to some extent public and accessible to all citizens. Traffic information is generally more precise and up-to-date for big cities and severely congested roads.
+
+However, when it comes to side and small streets or less-traveled roads, there is little or even none information available. This lack of complete information makes it difficult for machines to automatically calculate an optimal route from a location to another on the basis of traffic conditions. In order to fill in this gap, robots may play an important role here. Thus, given the high mobility and flexibility robots may have, they might be used to gather traffic data of the streets from which public databases do not have any information. In this manner, users could have access to both the information coming from governmental databases and the live traffic data robots may provide. A sample scenario is shown in Fig. 3. In this scenario, a citizen is willing to get to the city center through the optimal path. This goal is sent to the system, which first obtains information about all the possible routes to get to the target, and then finds out information about the traffic conditions in all the streets involved in the proposed routes. With all the information obtained, the route containing the less-traveled streets can be returned.
+Traffic scenario
+
+
+Fig. 3. Traffic scenario.
+
+This process is described step-by-step next.
+
+1.
+
+    Query input: the citizen, by means of a Web browser, sends the query in natural language. The query is received by an instance of the “Customer Agent” that will represent and act on behalf of that particular citizen within the system. The “Customer Agent” incorporates a natural language processing tool capable of translating the query into machine-understandable (ontological) language.
+2.
+
+    Service discovery, composition and selection: the “Customer Agent” sends the goal ontology to an instance of the “Selection Agent”, which starts looking for services that can fulfill the goal. As none of the available services will probably be able to achieve the goal by itself, the “Selection Agent” decomposes the goal into finer-grained subgoals. The decomposition involves, first, to get different possible routes in order to access the target address and, second, to get information about the traffic conditions in the streets taking part of those routes. At this point, the system will probably discover several services capable of fulfilling each subgoal and then selects the ones that better suit the user’s needs (in terms of price, dispatch time, trustability, etc.). This is done by means of an instance of the “Selection Agent”. The discovery process is carried out based on (1) the matching between the goal ontology and the WS semantic description, and (2) the detection of robots that provide information about relevant areas. For service selection, a negotiation process takes place that tries to reconcile user requirements with service providers’ conditions.
+3.
+
+    Service execution: once the services have been selected, these are orchestrated for their execution. For it, the “Customer Agent” has to notify the pertinent instances of the “Service Agent” and the “Robot Agent” (i.e., the representatives of the WS and robots involved in the goal resolution, respectively) that they must initiate the service execution process. A “Service Agent” is basically a WS client that has the means to draw, from the semantic description of a service, the methods it has to invoke and the parameters that are necessary for the invocation. A “Robot Agent”, on the other side, has access to the robot API and invokes it by means of RPCs (Remote Procedure Calls).
+4.
+
+    Presenting the results: the “Customer Agent” is responsible for integrating the results of the execution of all the services. When the execution of all the services has finalized, the corresponding agents send the results to the “Customer Agent”. By using the goal ontology, the domain ontology and the services’ semantic descriptions, this agent is able to compose a unique response to be sent to the citizen.
+5.
+
+    System management: during this process, the “Framework Agent” is monitoring all the activities taking place in the system. If it finds out that the system has gotten blocked, the “Framework Agent” initiates the procedure to unblock it. On the other hand, when any agent receives a message it cannot interpret, it sends the message under question to the “Broker Agent”, which is in charge of translating the message contents into terms understandable by the corresponding agent. For this, the “Broker Agent” has access to the mapping rules between the ontologies in the system.
+
+4.2. Implementation
+
+A test-case has been implemented as a first attempt in order to take advantage of both physical and software agents with the purposed framework idea. The chosen application is a path planning application where a specific task, i.e. starting point and final target, has to be reached by minimizing particular variables (e.g., time, distance traveled). The realized application is simplified with respect to the above described framework in order to test the goodness of the idea, and only three types of software agents are exploited.
+
+The system structure is shown in Fig. 4. The types of software agents implemented are: Path Planning Agent (i.e. “Service Agent”), PHYsical Agent (i.e. “Robot Agent”) and a Brain Agent, which exploits the function of the other agents. Moreover, the Web service is simulated as a database with a map of the roads and crosses, while the physical agents are real robots. The Brain Agent (BA) is the core of the system and acts in order to take advantage of all the Path Planning agent (PPA), the PHYsical Agent (PHYA) and the robots for reaching a particular task and updating the database information about the obstructed lines met. Hence, the BA plays the system master role and the other agents act as the system slaves.
+Basic scheme of the application (continuous line=basic application; dotted…
+
+
+Fig. 4. Basic scheme of the application (continuous line = basic application; dotted line = extension).
+
+The BA is the core of the whole system. This agent receives the information concerning the overall job to do, processes it and autonomously makes the adequate decisions in order to ask and find an optimal solution and path (e.g., the shortest path).
+
+The PHYA acts in order to implement the task, commands to the robot the actions that have to be done and informs the BA about the action result (i.e., success or failure).
+
+By taking into account the available information, the PPA is called by the BA in a request action in order to find and suggest the best path that the robot has to follow.
+
+The real environment is a structure of roads and crosses (nodes): the crosses can become the points where the robot has to go to. Moreover, a map of the overall environment is exploited as a “database” (i.e., it plays a Web service role).
+
+As illustrated in Fig. 5, where the conceptualization of the data flow is presented, the agents behavior can be accurately described.
+Logical structure and flux of data and info of the system
+
+
+Fig. 5. Logical structure and flux of data and info of the system.
+4.2.1. The brain agent (BA)
+
+This agent is the core of the system. It acts as the system master and, once it receives the task to do, it works autonomously generating all commands, requests and actions in order to successfully perform the task. In particular, firstly, the BA evaluates the task that has to be carried out and, then, requests the PPA to evaluate the situation and the available data in order to suggest the best path to follow. In order to do all that, a message with the starting and target points is sent to the PPA.
+
+The BA waits until a suggestion for the task becomes available (i.e., it receives a propose message from the PPA) and, after that, it evaluates the message and converts it into a set of commands for the PHYA. Such a message contains information about all the crosses that have to be traveled and information about how to do it, like the directions to choose on the crosses and the orientation that the robot must have in order to comply with them. Once the commands to the PHYA have been sent, the BA switches to a waiting state.
+
+When an informative message from the PHYA is received, the BA reads it in order to understand what has occurred and, if the target has been successfully reached, the BA waits for another external command.
+
+If a failure occurs, a new request for the PPA is sent. This request contains not only information about the actual starting point and the same target point (which was not reached with the previous commands), but also the information about the non-reached node (e.g., because the road is obstructed by a new obstacle) in order to update the map database and try to find a new optimal path.
+4.2.2. The PHYsical Agent (PHYA) and the environment
+
+The PHYA is the autonomous agent responsible for receiving the path that the robot has to follow in its real environment, translating it into robot commands, opening/closing the communication, receiving data and messages from the robot, and transmitting them, appropriately managed, into the BA.
+
+This kind of agent remains at a waiting state until a message with a new task is received from the BA. Then, this message is firstly evaluated in order to understand the content (i.e., a real message or an error). Secondly, if the message contains a correct message, the content is split up in order to recognize the starting and the final point of the task and the nodes that must be crossed.
+
+Thirdly, the agent starts the communication with the robot that is actually the nearest with respect to the starting point of the chain and commands it the direction to be traveled and the next cross that has to be reached. The communication remains opened for all the time that occurs for waiting the robot’s operations – the robot follows the chosen road until the subsequent cross or an obstacle is found –, for sending the subsequent sub-tasks (i.e., future node, travel direction, road to keep at the cross), for understanding if the (sub) task is reached or a new obstacle (e.g. a queue) is found.
+
+Once the overall task is reached or an obstacle is found, the PHYA sets up a new information message for the Brain Agent containing the data of the last reached node (and the orientation of the robot), the target node, and, in case of obstacle, the first non-reached node of the task. If an obstacle is found, the robot is moved in order to travel back to the previous reached node.
+
+Finally, the communication with the robot is closed, the message is sent to the BA and the PHYA switches to a waiting state until a new message with a new task is received.
+4.2.3. The Path Planning Agent (PPA)
+
+The PPA is the one in charge of finding the best path for the purposed task by exploiting the available information. The optimal path planning is calculated by using AI algorithms. The available information in this case (i.e., Web Services) is constituted by the map of the environment with roads and crosses, and the load associated to each way between two crosses (i.e., distance). Depending on the information that the BA sends, these loads are continuously updated in order to have a better, up-to-date representation of the real world.
+
+The request message is evaluated and, after updating the map, whose necessity depends on the state of the action, the starting and target points are extracted. These points are then processed by an intelligent algorithm that creates the best path. The Dijkstra algorithm has been implemented for it.
+
+Once the solution is found, a suggestion message is sent to the BA and the PPA switches to a waiting state until another request arrives.
+4.3. Experimental results
+
+A physical environment has been implemented through a grid comprised of several roads and crosses, a set of obstacles and a set of robots. As illustrated in Fig. 6(a), the roads have been represented by white lines in the black background. The obstacles are physical elements that can be putted or leaved out on the path that a robot has to follow.
+Experimental test-bed
+
+
+Fig. 6. Experimental test-bed.
+
+In the experiment, a LEGO NXT robot has been employed on a three wheeled (tricycle) configuration with two motors that control the two tractor wheels (see Fig. 6(b)). The robot is equipped with different sensors. In particular, two classes of them have been used. Two light sensors have been installed and located at the robot front in order to follow the chosen road and recognize the crosses. Also, an ultrasonic distance sensor has been included in the robotic system in order to evaluate if there are obstacles in a range between 10 and 15 cm.
+
+Java is the programming language that has been used to implement the overall system. In particular, in order to command and control the robot, the ICOMMAND API has been exploited and the leJOS firmware has been employed (leJOS, 2009). Regarding the software agents, the Java Agents DEvelopment framework (JADE (Bellifemine et al., 2008)) has been used.
+
+A test-example is depicted in Fig. 7, where the starting point is the node B and the target is the node P. The actual obstacle is a new obstacle not present in the database and all the node-to-node stretch of road loads have the same initial value. The computed best way with the available stored data is the B-F-L-P path. This path is sent to the robot in B that moves correctly and follows the target reaching firstly the node F and secondly the node L. After that, when it tries to run on the L-P road, the ultrasonic sensor recognizes the obstacle and the robot stops its motion, sends a message to the PHYA informing that the road is obstructed and moves in order to reach again the node L but oriented in the L-F direction. When the node L is reached, the robot stays at this position waiting for a new path to follow. On the other side, the software agents update the database with the new obstacle and re-calculate the best path taking into account the new starting position and orientation of the robot. Once computed, the new best path calculated by means of the Dijkstra algorithm (L-I-O-P or L-M-Q-P) is sent to the robot, which then moves and follows the new target until reaching the P node. The information about the final node reached is then sent to the PHYA, which informs the BA about it. All the system and agents are set into a waiting state until a new target is defined.
+Scheme of a possible environment of roads and crosses (the crosses are inserted…
+
+
+Fig. 7. Scheme of a possible environment of roads and crosses (the crosses are inserted in an adjacency matrix and a letter is associated at each one. Each way is defined considering the previous and the following nodes with respect to the node under consideration).
+
+Different tests with different loads, paths and obstacles have been carried out. Due to the reduced complexity of the logical system and algorithm implemented, the variety of the color (i.e., white or black) and obstacle identification (i.e., yes or not) and the effectiveness of the Bluetooth communication in a test laboratory, with distances ranging between 1 and 5 meters, the overall implemented system does not present significant failures or errors. Hence, the tests carried out show that the system works correctly and that the idea to exploit both the data provided by the Web service agent and the data collected through the “Robot agent” and the physical robots is effective and can lead to complex and powerful systems.
+5. Conclusions and future work
+
+In this work, we describe a system deployed as a platform able to exploit the large amount of information available on the Web and databases, together with the information that can be collected by physical systems (robots) in a real, dynamic environment.
+
+The proposed platform seamlessly integrates four main types of elements: Web services, robot-provided services, intelligent agents and ontologies. Ontologies are the true key for achieving the platform feasibility, as they enable the effective communication between the agents in the platform and the available services. With this approach, software applications can benefit from the autonomy, pro-activeness, dynamism and goal-oriented behavior that physical agents (i.e., robots) can provide, so that both the Web and robots can be successfully used to obtain useful, relevant information.
+
+In order to test the goodness of the framework proposed here, artificial intelligence and (software and physical) agents techniques have been used to implement a test-case application that has been applied in a traffic control scenery. The problem consisted in getting a simplified path-route planning in a physical world of roads and crosses where the available data or information about the free roads can change over time.
+
+The application works with an agent (i.e., the Brain Agent) that works autonomously and coordinates two other kinds of agents whose functionality is the following. The mission of the Path Planning agent is to find the best path (currently a Dijkstra algorithm has been adopted but different or concurred intelligent algorithms can be used and implemented in future) by processing the available information and updating it according to the information coming from the physical world. On the other hand, the Physical Agent commands the robots information about both the tasks to be performed and the states to be reached. This agent also collects the information about the real world that robots gather through their sensors.
+
+The implemented system shows an effective behavior allowing to encourage perspectives for future, more complex applications. Several issues remain to be addressed. First, as it has been pointed out above, when dealing with several disparate ontologies, a mediation mechanism is necessary. In our system, this problem has been overcome by adopting and implementing ad hoc solutions and using simplified test case scenarios in order to delimit the problem. Similarly, other service-related functions (e.g. discovery, selection, composition, etc.) have been implemented ad hoc. The roles-based approach makes easier the inclusion, in the form of plugins, of already tested, more sophisticated implementations for all these components. Second, future research will cover both the increasing of the capabilities of the robots and the implementation of other concurrent agents. Finally, real traffic applications with agents that can search for information on the Web, databases with maps of real roads of a city, and robots with better sensing and communication capabilities will be investigated.
+
+1
+
+    Tel.: +39 0432 558257/8041; fax: +39 0432 558251.

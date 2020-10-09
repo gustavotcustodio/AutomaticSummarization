@@ -1,0 +1,191 @@
+<article>
+  <title>Computational intelligence for microarray data and biomedical image analysis for the early diagnosis of breast cancer</title>
+  <abstract>
+    <sentence>The objective of this paper was to perform a comparative analysis of the computational intelligence algorithms to identify breast cancer in its early stages.</sentence>
+    <sentence>Two types of data representations were considered: microarray based and medical imaging based.</sentence>
+    <sentence>In contrast to previous researches, this research also considered the imbalanced nature of these data.</sentence>
+    <sentence>It was observed that the SMO algorithm performed better for the majority of the test data, especially for microarray based data when accuracy was used as performance measure.</sentence>
+    <sentence>Considering the imbalanced characteristic of the data, the Naive Bayes algorithm was seen to perform highly in terms of true positive rate (TPR).</sentence>
+    <sentence>Regarding the influence of SMOTE, a well-known imbalanced data classification technique, it was observed that there was a notable performance improvement for J48, while the performance of SMO remained comparable for the majority of the datasets.</sentence>
+    <sentence>Overall, the results indicated SMO as the most potential candidate for the microarray and image dataset considered in this research.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Breast cancer</keyword>
+    <keyword>Microarray data</keyword>
+    <keyword>Image data</keyword>
+    <keyword>Computational intelligence</keyword>
+    <keyword>SMOTE</keyword>
+    <keyword>SMO</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The key focus in this paper is to identify the best suited algorithms for early breast cancer detection considering different factors.</sentence>
+    <sentence>Several publicly available databases have been used in different research studies and a number of algorithms have been trialed (Haibe-Kains et al., 2012; Keleş &amp; Yavuz, 2011; Wang et al., 2011).</sentence>
+    <sentence>However, a research that compares the effectiveness of the best suited algorithms and at the same time takes into account the imbalanced nature of these data is still missing.</sentence>
+    <sentence>Two types of data are generally used in early breast cancer identification: image based and microarray based.</sentence>
+    <sentence>Image based identification focuses on analyzing biomedical images to extract features, rules, similarities and dissimilarities using classification algorithms (Sherrow, 2006).</sentence>
+    <sentence>In contrast, microarray based identification focuses on gene level structure for reliable classification (Berns, 2000; Campbell, Li, &amp; Tipping, 2001; Lee &amp; Lee, 2003; Nahar, Ali, &amp; Chen, 2007; Peterson &amp; Coleman, 2008; Pomeroy et al., 2002; Veer et al., 2002; Wong &amp; Wang, 2008).</sentence>
+    <sentence>Early breast cancer detection is a difficult and important problem from clinical view, with recent research showing that the chance of a woman affected by invasive breast cancer at some point during her lifetime is about one in eight, and the chance of death is one in thirty five (ACS, 2010).</sentence>
+    <sentence>As the causes of breast cancer are still not clear, accurate early detection is very important to reduce the high mortality rate (Cheng et al., 2006).</sentence>
+    <sentence>This early detection requires accurate and reliable diagnostic processes, as well as the use of robust prediction techniques.</sentence>
+    <sentence>The two identification processes mentioned earlier, image based identification and microarray based identification are popular, but it is unclear how the different classification techniques compare to each other in terms of performance.</sentence>
+    <sentence>Further, surveys of existing studies indicate that researchers are yet to fully consider the imbalanced nature of the data used in this domain (detailed in the Section 3.1 and 3.2).</sentence>
+    <sentence>Imbalanced nature of data can affect prediction accuracy and, therefore, needs further attention.</sentence>
+    <sentence>This research, through analysing a number of classification techniques and also considering imbalanced nature of data, has attempted to provide direction towards the best suited algorithm for use in early breast cancer identification.</sentence>
+    <sentence>Thus, this research addresses an important problem in this health informatics research field.</sentence>
+    <sentence>It is to be mentioned that this paper is an extension of the authors’ previously published work (Nahar, Tickle, Ali, &amp; Chen, 2009) in this field.</sentence>
+    <sentence>But, this paper has been modified substantially from the previous paper to clearly focus on the main objective and also the technical process used varies considerably.</sentence>
+    <sentence>Further, this paper has considered SMOTE (Chawla, Bowyer, Hall, &amp; Kegelmeyer, 2002), an imbalanced data classification algorithm, an issue ignored in the previous articles.</sentence>
+    <sentence>This paper is organised as follows: Section 2 briefly talks about breast cancer, its characteristics, symptoms, causes and treatment options.</sentence>
+    <sentence>Section 3.0 will explain the image and microarray based existing identification process and limitations.</sentence>
+    <sentence>Section 4 will describe the datasets that will be used for the experiment.</sentence>
+    <sentence>Section 5 will then describe the experimental setup for the comparative research and the outcomes of the experiment.</sentence>
+    <sentence>Section 6 will conclude the paper with a summary of the results and possible future research directions.</sentence>
+  </section>
+  <section name="Breast cancer">
+    <sentence>Breast cancer is the situation when abnormal cells occur in the breast and then multiply uncontrollably (BCOSU, 2011; Caars., 2010; Setchi, Jordanov, Howlett, &amp; Jain, 2010).</sentence>
+    <sentence>Considering the size of tumor, there are four stages of breast cancer (Fallowfield &amp; Clark, 1991): (i) T1: tumors are of size 2 cm or less, (ii) T2: tumours between 2 and 5 cm, (iii) T3: tumours having size greater than 5 cm and (iv) T4: tumours can be of any size.</sentence>
+    <sentence>The majority of early breast cancer cases, however, have no early symptom.</sentence>
+    <sentence>The particular causes of breast cancer are unknown, but major risk factors like obesity (Begum, Richardson, &amp; Carmichael, 2009; Brown &amp; Simpson, 2010), early menarche and late childbirth (Bombardieri, Bonadonna, &amp; Gianni, 2008), breastfeeding status (de Silva, Senarath, Gunatilake, &amp; Lokuhetty, 2010; Gajalakshmi et al., 2009), hormonal factors (Sieri et al., 2008; Woolcott et al., 2010) and family history (Mavaddat et al., 2010; Tao, Yu, Ross, &amp; Xiu, 2006) have been claimed to increase the risk of developing breast cancer.</sentence>
+    <sentence>There are some treatment options (Bombardieri et al., 2008; Healthi., 2010; NCI., 2010; Taghian, Smith, &amp; Erban, 2009) like surgery, radiation therapy, chemotherapy and hormonal therapy.</sentence>
+    <sentence>But treatment effectiveness depends on factors (Bombardieri et al., 2008; NCI, 2010) like the cancer’s stage, growth rate, and the physical properties of the patient.</sentence>
+    <sentence>As, it is a highly mortal disease and difficult to treat in advanced stages, early diagnosis is very important (Evans, 2012; Murukutla, Vivekanandaraja, Paramanathan, Kong, &amp; Varma, 2012; Pieters et al., 2012; Ward &amp; Smith, 2010).</sentence>
+  </section>
+  <section name="Approaches in computer aided cancer identification">
+    <sentence>In recent times, computer aided early breast cancer detection has gained popularity (Alizart, Saunus, Cummings, &amp; Lakhani, 2012; Gatza et al., 2010; Haibe-Kains et al., 2012; Molloy, Roepman, Naume, &amp; Van’t Veer, 2012; Tan, Quek, Ng, &amp; Ng, 2007; Truong et al., 2010).</sentence>
+    <sentence>Generally two identification processes are used in determining cancers: Image based identification and Microarray based identification.</sentence>
+    <sentence>Image based cancer identification mainly rely on analyzing different types of images like mammography, ultrasound, x-ray, CT scan and MRI to diagnosis the disease (Orlov et al., 2009a; Sherrow, 2006).</sentence>
+    <sentence>Microarray based cancer identification mainly uses gene information (Stillman &amp; Stewart, 2005; Teicher, 2006) for this purpose.</sentence>
+    <sentence>The following subsections detail existing computer aided diagnostics based on each of these data formats.</sentence>
+    <sentence>Image data based identification Image-based identification is becoming popular in cancer studies due to advancement of image extraction and manipulation facilities, and also due to the easier understanding by the doctors.</sentence>
+    <sentence>A number of researches have employed this approach.</sentence>
+    <sentence>Antonie et al.</sentence>
+    <sentence>(2001) for example, emphasised on using automatic reading as well as double reading of digital mammograms and observed mammography a very reliable method in the early detection of breast cancer.</sentence>
+    <sentence>Wang, Zhou, and Geng (2005) used a decision tree algorithm based model for mammography classification and achieved 98% accuracy for breast cancer diagnosis.</sentence>
+    <sentence>Another digital imaging and image analysis based system, using mammographic features and classification techniques, (Rangayyan, Ayres, &amp; Desautels, 2007) also showed improvement in diagnosis.</sentence>
+    <sentence>Some other similar works are: a novel image analysis method utilizing SVM classifier (Doyle, Agner, Madabhushi, Feldman, &amp; Tomaszewski, 2008), pattern recognition processes for biomedical image-guided diagnosis (Orlov et al., 2009b), method to estimate breast tumour’s growth rate from breast screening information (Michaelson et al., 2003), receiver operating curve methods for the analysis, classification of breast masses (Rangayyan &amp; Nguyen, 2005), and breast cancer diagnosis through thermogram analysis of using Complementary Learning Fuzzy Neural network (Tan et al., 2007),.</sentence>
+    <sentence>There are also other similar research studies (Nattkemper et al., 2005; Rodrigues, Ruey-Feng, &amp; Suri, 2006; Sheshadri &amp; Kandaswamy, 2007; Twellmann, Meyer-Baese, Lange, Foo, &amp; Nattkemper, 2008).</sentence>
+    <sentence>However, image-based identification has limitations, such as data storage and proper pre-processing for classification, as well as processing time.</sentence>
+    <sentence>Microarray based identification In the microarray based identifications, tumour’s gene expression profiles are used for early cancer diagnosis and have become popular due to reliable classification results.</sentence>
+    <sentence>Lu and Han (2003), for example, revealed that cancer classification using microarray data has potentials in providing a robust approach in identifying tumour types.</sentence>
+    <sentence>Berrar, Downes, and Dubitzky (2003) demonstrated the use of a probabilistic neural network (PNN) for multiclass data in cancer diagnosis.</sentence>
+    <sentence>Sharma and Paliwal (2008) proposed the gradient LDA (linear discriminant analysis) technique to avoid the singularity problem in this field.</sentence>
+    <sentence>Other similar works using microarray based cancer identification are: ant colony optimisation (ACO) algorithm and various machine learning procedures to select genes relevant to cancer (Chiang, Chiang, &amp; Lin, 2008), nonlinear kernel SVM based diagnosis (Qizhong, 2007), gene markers identification through Neural Networks (Minn et al., 2005), chronological feature extraction approach through Naive Bayes (Fan, Poh, &amp; Zhou, 2009), an ensemble method to choose multiple gene subsets (Liu et al., 2009) and a SVM based approach to improve breast-cancer diagnosis (Chen &amp; Yang, 2012).</sentence>
+    <sentence>There are also other studies that have used microarray data for cancer detection (Berns, 2000; Campbell et al., 2001; Chen &amp; Hsu, 2006; Chen &amp; Yang, 2012; Lee &amp; Lee, 2003; Nahar et al., 2007; Peterson &amp; Coleman, 2008; Pomeroy et al., 2002; Veer et al., 2002; Wong &amp; Wang, 2008).</sentence>
+    <sentence>Overall limitations of existing research As shown in the literature review, a number of researchers have developed diagnosis methods for the identification of cancers.</sentence>
+    <sentence>But, a detailed comparative analysis of the suitable algorithms is missing and imbalanced nature of the data is yet to be well considered.</sentence>
+    <sentence>Both of these issues are addressed in this research article for the diagnosis of early breast cancer.</sentence>
+  </section>
+  <section name="Data collection and preparation">
+    <sentence>This research uses three image based and two microarray based breast cancer datasets, as also have been used in the authors’ previously published work (Nahar et al., 2009).</sentence>
+    <sentence>The image dataset was based on cancer affected and healthy breast images (IBC, 2010).</sentence>
+    <sentence>The image manipulation and extraction facilities provided by Matlab, along with multidimensional image filtering, were applied to generate the datasets for the experiments.</sentence>
+    <sentence>The image datasets, so generated, is termed as BcancerImage and has two class labels: cancer and non-cancer..</sentence>
+    <sentence>The breast-cancer-wisconsin database, as available in the UCI data repository (BCW, 2008), was also used.</sentence>
+    <sentence>The experiment also used a filtered noise version of the Breast-cancer-wisconsin dataset (Newman, Hettich, Blake, &amp; Merz, 1998).</sentence>
+    <sentence>Both of these datasets have two classes: benign and malignant.</sentence>
+    <sentence>Along with these image based datasets, the experiment used the Breastmit, a microarray based dataset available from the MIT (MITCGI., 2008).</sentence>
+    <sentence>This dataset has four class labels: expression-1, expression-2, expression-3, expression-4, and indicates breast cancer subtypes through gene expressions.</sentence>
+    <sentence>Breastcancernsu, another microarray based data and available from the Singapore National University (NSU) (Li &amp; Liu, 2006), was also used.</sentence>
+    <sentence>This dataset has two class labels: relapse and non-relapse.</sentence>
+    <sentence>A basic description of these datasets has been summarized in Table 1.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Breast image and microarray dataset description.</sentence>
+    <sentence>Data file name No of attributes No of instances Class labels and the number of data per label Types BcancerImage 153 361 Cancer: 173, non cancer: 179 Image Bcw_noise 18 682 Benign: 444, malignant: 239 Image Breast-cancer-wisconsin 10 698 Benign: 241, malignant: 458 Image Breastmit 1213 146 Expression-1: 23, expression-2: 62, expression-3: 43, expression-4: 19 Microarray Breastcancernsu 24481 1066 Relapse: 34, non relapse: 33 Microarray</sentence>
+  </section>
+  <section name="Experimental setup and outcomes">
+    <sentence>Classification is a important data mining task (Breiman, Friedman, Olshen, &amp; Stone, 1984) and the goal is to learn a model that can predict class type of test data after being trained with data that has known class labels.</sentence>
+    <sentence>Different classification algorithms have been proposed, of which artificial neural network (ANN), decision tree (DT), Naive Bayes (NB) and support vector machine (SVM) are very popular in the medical domain (Kaper, Meinicke, Grossekathoefer, Lingner, &amp; Ritter, 2004; Lotte, Congedo, Lécuyer, Lamarche, &amp; Arnaldi, 2007; Qin, Ding, &amp; He, 2004; Schlögl, Lee, Bischof, &amp; Pfurtscheller, 2005).</sentence>
+    <sentence>On the basis of popularity and efficiency, six well known algorithms are used in this research.</sentence>
+    <sentence>These different algorithms are: Naive Bayes, SMO, IBK, AdaBoostM1, J48 and PART.</sentence>
+    <sentence>The objective, here, was to assess the performance of classification algorithms when applied on the chosen breast cancer datasets.</sentence>
+    <sentence>To perform the experiment, the latest version of WEKA (Witten and Frank, 2005), a computational intelligence software platform, was used and implementations of these algorithms within the platform are utilized.</sentence>
+    <sentence>For the experiments, each of the datasets was split into a train and test subset.</sentence>
+    <sentence>The filtering facility in WEKA was applied for this.</sentence>
+    <sentence>The dataset was split into train-test with 1/3 of the data used for testing.</sentence>
+    <sentence>Five performance metrics were used: Accuracy, TPR (true positive) (Ali &amp; Wasimi, 2007; Zaki, Yu, Ravindran, &amp; Pudi, 2010), TN (true negative) (Wassermann, Epstein, &amp; Ziemann, 2008), AUC (area under curve) (Bradley, 1997) and F-measure (Ali &amp; Wasimi, 2007; Ye, 2003).</sentence>
+    <sentence>The uses of five measures were due to the aim of understanding the algorithms’ performance from different perspectives.</sentence>
+    <sentence>For all the chosen datasets, the minority class (the class that has the least instances in the dataset) was regarded as the positive class, and true positive rate and AUC measures were calculated based on this.</sentence>
+    <sentence>In addition to these prediction measures, training and testing times were also reported.</sentence>
+    <sentence>In the following section, the experimental results are discussed.</sentence>
+    <sentence>Training performance Training performance was determined by running the training algorithm on the training data subset and then measuring the performance on the training data subset.</sentence>
+    <sentence>The idea here was to observe how the trained models fitted the training data.</sentence>
+    <sentence>The results are presented in Table 2.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Training performance.</sentence>
+    <sentence>The bold values indicate the best performance.</sentence>
+    <sentence>Dataset Algorithms Accuracy (%) AUC TPR F-measure Time (sec.)</sentence>
+    <sentence>Bcancer image Naive Bayes 76.495 0.861 0.817 0.774 0 SMO 94.444 0.944 0.904 0.941 0.2 AdaBoostM1 99.145 0.998 0.983 0.991 0.06 IBK 100 1 1 1 0 J48 99.572 0.997 0.991 0.996 0.03 PART 100 0.997 0.991 0.996 0.1 Bcw_noise Naive Bayes 95.604 0.987 0.969 0.939 0 SMO 97.582 0.974 0.969 0.966 0.22 AdaBoostM1 97.802 0.997 0.962 0.968 0.08 IBK 100 1 1 1 0 J48 99.12 0.996 0.987 0.987 0.03 PART 99 0.996 0.987 0.991 0 Breast-cancer-wisconsin Naive Bayes 96.774 0.988 0.955 0.972 0 SMO 98.065 0.981 0.981 0.948 0.19 AdaBoostM1 96.452 0.996 0.944 1 0 IBK 100 1 1 0.977 0.02 J48 98.387 0.995 0.972 0.968 0 PART 99 0.997 0.991 0.982 0 Breastmit Naive Bayes 70.408 0.9 1 0.9 0.05 SMO 100 1 1 1 0.45 AdaBoostM1 64.285 0.959 0 0.959 0.53 IBK 100 1 1 1 0 J48 97.959 0.996 1 1 0.91 PART 99 1 1 1 1.1 Breastcancernsu Naive Bayes 75 0.75 1 1 0.41 SMO 100 1 1 1 1.59 AdaBoostM1 100 1 1 1 11.19 IBK 100 1 1 1 0 J48 100 1 1 1 2.05 Part 100 1 1 1 2.1 The experimental results showed that in the training data, IBK provided the best accuracy (100%), AUC (1), TPR (1) for all the datasets, while in terms of F-measure IBK was the best performer for four of the datasets.</sentence>
+    <sentence>The training time was minimal for IBK (0 seconds) in all cases.</sentence>
+    <sentence>This indicates that IBK fits the training data very well compared to other classification techniques.</sentence>
+    <sentence>Considering other algorithms, it was found that in terms of AUC, AdaBoostM1, J48 and PART performed better than the other two algorithms, SMO and Naive Bayes.</sentence>
+    <sentence>Similar outcomes were also observed in terms of F-measure and TPR.</sentence>
+    <sentence>Naive Bayes, on the other hand, performed poorly in terms of accuracy for four of the datasets.</sentence>
+    <sentence>AdaBoostM1 took 11.19 s to train for the Breastcancernsu dataset, an unusual event in comparison to the others algorithms.</sentence>
+    <sentence>Overall, in terms of training, the IBK algorithm was found to best match the classification tasks for use with the chosen datasets.</sentence>
+    <sentence>However, as it is known in the machine learning community (Vapnik &amp; Mukherjee, 2000), good performance with training data does not necessarily result in a classifier performing well in test cases.</sentence>
+    <sentence>The next section will cover the test performances of the algorithms.</sentence>
+    <sentence>Test performance In Table 3, the test performances of the algorithms are shown.</sentence>
+    <sentence>This was derived through measuring the performance of the trained model on the test data subsets.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Test performance.</sentence>
+    <sentence>The bold values indicate the best performance.</sentence>
+    <sentence>Dataset Algorithms Accuracy (%) AUC TPR F-measure Time (sec.)</sentence>
+    <sentence>BcancerImage Naive Bayes 72.881 0.841 0.776 0.738 0.02 SMO 94.92 0.948 0.897 0.945 0.19 AdaBoostM1 94.067 0.961 0.948 0.94 0.08 IBK 98.30 0.983 0.966 0.982 0 J48 95.763 0.959 0.948 0.957 0.05 PART 96.00 0.959 0.948 0.957 0.02 Bcw_noise Naive Bayes 98.248 0.996 1 0.976 0 SMO 96.491 0.964 0.963 0.951 0.19 AdaBoostM1 95.614 0.995 0.95 0.938 0.05 IBK 96.49 0.957 0.925 0.949 0 J48 94.298 0.958 0.913 0.918 0.02 PART 94.30 0.913 0.95 0.918 0.03 Breast-cancer-wisconsin Naive Bayes 94.42 0.978 0.963 0.922 0.02 SMO 96.137 0.962 0.963 0.945 0.16 AdaBoostM1 93.133 0.992 0.850 0.895 0.02 IBK 94.85 0.974 0.90 0.923 0 J48 94.42 0.953 0.913 0.918 0 PART 96.10 0.979 0.95 0.944 0.02 Breastmit Naive Bayes 69.387 0.9 1 0.571 0.08 SMO 97.959 1 1 1 1.41 AdaBoostM1 67.347 0.835 0 0 0.5 IBK 91.836 0.833 0.667 0.8 0 J48 75.51 0.810 0.667 0.667 0.69 PART 73.469 0.703 0.5 0.5 1.16 Breastcancernsu Naive Bayes 52.174 0.542 1 0.667 0.38 SMO 69.565 0.697 0.727 0.696 1.33 AdaBoostM1 60.869 0.576 0.727 0.64 11.36 IBK 56.521 0.568 0.636 0.583 1 J48 43.478 0.436 0.455 0.435 2.05 Part 43.478 0.436 0.455 0.435 2.17 From the experimental results it is suggested that for the test datasets, in terms of accuracy, SMO performed better (96.14%, 97.96%, 69.57% respectively for Breast-Cancer-Wisconsin, Breastmit and Breastcancernsu) than the other classification algorithms for the three datasets.</sentence>
+    <sentence>Naive Bayes (98.25% accuracy for Bcw_noise) and IBK (98.30% accuracy for BcancerImage) have each performed better for one of the datasets.</sentence>
+    <sentence>Similar characteristics were observed for F-measure.</sentence>
+    <sentence>In terms of AUC, SMO and Naive Bayes showed the highest performance for two of the datasets, while AdaboostM1 and IBK were each the highest performer for one of the datasets.</sentence>
+    <sentence>In terms of TPR, Naive Bayes performed better than the other algorithms for four of the datasets.</sentence>
+    <sentence>The testing time was minimal for IBK (0 seconds) in all cases.</sentence>
+    <sentence>SMO was slightly slower for four of the datasets and, as was the case during training, AdaBoostM1 was exceptionally slow in prediction for the Breastcancernsu dataset.</sentence>
+    <sentence>The above results indicate some interesting characteristics.</sentence>
+    <sentence>Firstly, it is noteworthy that even though IBK appeared to fit well with the training data, the performance of the algorithm on the test data in terms of accuracy was relatively poor.</sentence>
+    <sentence>SMO, on the other hand, performed well for the majority of the datasets in this regard.</sentence>
+    <sentence>This corresponds to the theoretically robust philosophy behind SMO, that it is expected to generalise well during training and perform better on test cases even if it is not the best algorithm in terms of training performance measures (Vapnik &amp; Mukherjee, 2000).</sentence>
+    <sentence>Secondly, it is important to note that the two datasets, for which SMO failed to perform the best, were generated from biomedical images.</sentence>
+    <sentence>In another words, SMO performed well for the two micro-array datasets and one image dataset.</sentence>
+    <sentence>Also, for both the microarray datasets, in terms of accuracy, SMO performed considerably better than other algorithms.</sentence>
+    <sentence>Thus SMO stands out as the best algorithm for breast cancer classification tasks, in particular for microarray based datasets.</sentence>
+    <sentence>SMOTE Many of the chosen breast cancer datasets contain data imbalances.</sentence>
+    <sentence>In other words, the distribution for the total number of instances in the classes varies.</sentence>
+    <sentence>Literature has identified that data imbalance is a problem due to decreased prediction for the minority class and several techniques have been proposed to tackle the issue.</sentence>
+    <sentence>SMOTE is a well recognised technique in this regard (Chawla et al., 2002).</sentence>
+    <sentence>Since the data in the present experiment was imbalanced, SMOTE was applied and the effect on the performance measures was observed.</sentence>
+    <sentence>SMOTE artificially generates new minority class instances in a training data subset.</sentence>
+    <sentence>Table 4 details the performances on the test subset, when SMOTE was applied.</sentence>
+    <sentence>The bold items in the table indicate the cases when applying SMOTE increased performance.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Test performance using SMOTE.</sentence>
+    <sentence>Dataset Algorithms Accuracy (%) AUC TPR F-measure Time (Sec.)</sentence>
+    <sentence>BcancerImage Naive Bayes 72.033 0.841 0.776 0.732 0.02 SMO 94.915 0.949 0.914 0.946 0.2 AdaBoostM1 91.525 0.966 0.966 0.918 0.14 IBK 98.305 0.983 0.983 0.982 0 J48 96.61 0.966 0.931 0.964 0.05 PART 96.61 0.966 0.983 0.966 0.06 Bcw_noise Naive Bayes 98.245 0.993 1 0.976 0.02 SMO 96.929 0.968 0.963 0.957 0.2 AdaBoostM1 95.614 0.991 0.95 0.938 0.08 IBK 96.491 0.973 0.938 0.949 0 J48 94.298 0.963 0.963 0.922 0.03 PART 95.175 0.952 0.913 0.93 0.03 Breast-cancer-wisconsin Naive Bayes 94.849 0.979 0.975 0.929 0 SMO 95.708 0.958 0.963 0.939 0.2 AdaBoostM1 94.42 0.991 0.875 0.915 0.02 IBK 94.849 0.973 0.9 0.923 0 J48 94.42 0.963 0.95 0.921 0.02 PART 92.274 0.952 0.888 0.888 0.02 Breastmit Naive Bayes 69.387 0.895 1 0.57 0.25 SMO 97.959 1 1 1 0.56 AdaBoostM1 53.061 0.936 0.833 0.625 0.81 IBK 87.755 0.953 1 0.75 0 J48 73.469 0.882 0.833 0.714 0.53 PART 77.551 0.882 0.833 0.714 0.86 Breastcancernsu Naive Bayes 52.173 0.542 1 0.667 0.72 SMO 69.565 0.697 0.727 0.696 3.06 AdaBoostM1 47.826 0.455 0.545 0.5 17.77 IBK 73.913 0.731 0.545 0.667 0.02 J48 60.869 0.621 0.545 0.571 3.93 PART 60.869 0.606 0.545 0.571 4.4 The results showed that after applying SMOTE, in terms of accuracy, IBK performed better for one dataset (Breastcancernsu) and comparable in the three other datasets.</sentence>
+    <sentence>Only in the case of Breastmit did the performance of IBK decrease due to SMOTE.</sentence>
+    <sentence>Naive Bayes (94.849% accuracy), SMO (95.708% accuracy) and AdaBoostM1 (94.42% accuracy) each showed better performance than these classifiers applied without SMOTE on the Breast-cancer-wisconsin dataset.</sentence>
+    <sentence>J48 showed better prediction accuracy after SMOTE for two of the datasets.</sentence>
+    <sentence>On the other hand, PART performed better for fours of the datasets (96.61%, 95.175%, 77.551%, 60.869% accuracy for BcancerImage, Bcw_noise, Breastmit and Breastcancernsu, respectively).</sentence>
+    <sentence>In terms of AUC, both PART and J48 showed improved performance for all datasets.</sentence>
+    <sentence>J48 also showed improved TPR and F-measure for all the datasets.</sentence>
+    <sentence>PART, on the other hand, improved in terms of TPR for three of the dataset, and F-measure for four of the datasets.</sentence>
+    <sentence>SMO performed comparably or better for four datasets (all except Breast-cancer-wisconsin) in terms of AUC, TPR and F-measure.</sentence>
+    <sentence>The prediction time was minimal for IBK (0 seconds) in all datasets.</sentence>
+    <sentence>AdaBoostM1, on the other hand, took the longest time to classify for the majority of the datasets.</sentence>
+    <sentence>The results also showed, while applying SMOTE increased AUC, TPR and F-measure for different algorithms, it also led to decreased accuracy for some algorithms.</sentence>
+    <sentence>For instance, for the Bcancerimage dataset, applying SMOTE caused the test accuracy performance of Naive Bayes to decrease from 72.88% to 72.03% and the performance accuracy of AdaboostM1 decreased from 94.07% to 91.53%.</sentence>
+    <sentence>Overall, it was observed that SMOTE, across all the datasets and across all the algorithms, improved performance in terms of imbalanced data algorithm measures (AUC, TPR and F-measure).</sentence>
+    <sentence>This indicates that SMOTE facilitates the performance of algorithms when considering accurate prediction of the minority class in early breast cancer diagnostics.</sentence>
+    <sentence>Of the different algorithms, J48 was the most positively affected by SMOTE, followed by PART.</sentence>
+    <sentence>SMO demonstrated the best performance in terms of TPR and F-measure for both of the microarray datasets.</sentence>
+    <sentence>For the image based datasets, Naive Bayes performed better than the other algorithms in terms of TPR and F-measure.</sentence>
+    <sentence>SMO, which did well for the microarray datasets without SMOTE, has maintained its superiority even after SMOTE was supplied.</sentence>
+    <sentence>In conclusion, considering SMOTE has improved prediction performance of the varied algorithms for the chosen breast cancer datasets.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>This research has explored the application of a number of classification algorithms in the early detection of breast cancer.</sentence>
+    <sentence>As mentioned earlier, early breast cancer identification is one of the world’s most important health issues and the design of a robust computer aided diagnostic (CAD) is important.</sentence>
+    <sentence>The findings from this current research can help the breast cancer CAD designer to choose an appropriate machine learning algorithm.</sentence>
+    <sentence>The performance of six well-known classification algorithms was verified with various performance matrices and a number of very promising algorithms for this pattern classification task have been identified.</sentence>
+    <sentence>In particular, it was found that SMO was well-suited for microarray based datasets and a good candidate for image-based datasets.</sentence>
+    <sentence>Further, the influence of using an imbalanced data classification technique (SMOTE) was tested on the chosen algorithms.</sentence>
+    <sentence>J48, after applying SMOTE, showed a notable performance improvement, while the performance of SMO remained comparable for the majority of the datasets.</sentence>
+    <sentence>It was also seen the computation time for IBK was minimal for all datasets, while AdaBoostM1 required the longest time for the majority of the datasets.</sentence>
+    <sentence>Overall, the results suggested that applying machine learning algorithms can have a major impact on the early detection of breast cancer, with SMO as a potential well-suited candidate algorithm.</sentence>
+  </section>
+</article>

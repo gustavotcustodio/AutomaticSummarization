@@ -1,0 +1,372 @@
+This paper presents an algorithmic approach to obtain the Nash equilibrium in a duopoly.
+Analytical solutions to duopolistic competition draw on principles of game theory and require simplifying assumptions such as symmetrical payoff functions, linear demand and linear cost.
+Such assumptions can reduce the practical use of duopolistic models.
+In contrast, we use an evolutionary algorithmic approach (EAA) to determine the Nash equilibrium values.
+This approach has the advantage that it can deal with and find optimum values for duopolistic competition modelled using non-linear functions.
+In the paper we gradually build up the competitive situation by considering non-linear demand functions, non-linear cost functions, production and environmental constraints, and production in discrete bands.
+We employ particle swarm optimization with composite particles (PSOCP), a variant of particle swarm optimization, as the evolutionary algorithm.
+Through the paper we explicitly demonstrate how EAA can solve games with constrained payoff functions that cannot be dealt with by traditional analytical methods.
+We solve several benchmark problems from the literature and compare the results obtained from EAA with those obtained analytically, demonstrating the resilience and rigor of our EAA solution approach.
+The concept of Nash equilibrium (Nash, 1951) is central to the analysis of strategic interactions between different firms involved in non-cooperative games.
+Nash equilibrium (NE) is the stable state of a system involving competitive firms who try to optimize their personal pay off functions by employing a wide range of strategies.
+In other words, given the actions of other firms, no firm can improve its position by adopting a different strategy.
+In general, individual profit functions are considered as pay off functions.
+However, it can also be minimizing loss function, maximizing sales etc.
+For the purpose of better illustration of our approach we restrict ourselves to a duopoly case where two firms will be involved in the game and pay off functions are their individual profit functions.
+Each firm responds in the best possible way, given the strategies of their competitors.
+This yields a best response function (BRF) for each firm that is employed to determine its decision, taking into account the decisions made by rival firms.
+Analytically, the point of intersection of all the BRFs, each one corresponding to a firm competing in the market, is known as the Nash equilibrium (Nash, 1950).
+The traditional analytical approach of attaining Nash equilibrium involves two stages.
+The first stage is to determine mathematical expressions for BRF of each firm involved in the game by maximizing its corresponding pay off function using calculus principles.
+The second stage involves solving the system of best responses of all firms to attain NE.
+Hence in the analytical approach, we must differentiate up to second order in order to find out the BRF of each firm and solve the resulting cumbersome equations.
+This involves a mathematical obligation to check the continuity and differentiability of each pay off function up to its second order.
+Games that involve complicated pay off functions with sophisticated demand and cost functions require extensive mathematical skills to solve the differential equations which arise analytically (Agiza & Elsadany, 2004; Daskalkis & Goldberg, 2009; Fabrikant, Papadimitriou, & Berkeley, 2004; Grant Schoenebeck, 2006;Maskin, 1986).
+This leads to the adoption of simplifying assumptions such as linearizing the non-linear functions or adopting symmetrical functions (Cheng, Reeves, Vorobeychik, & Wellman, 2004) In addition, games are often solved with little consideration of constraints such as production capacity of each firm, production costs, and environmental obligations.
+A number of authors have used numerical or algorithmic approaches to solve for the Nash equilibrium (Konak, Kulturel-Konak, & Snyder, 2015; Razi, Shahri, & Kian, 2007; Wang, 2013).
+Zhang and Zhou (2012) have built supply chain network equilibrium models as non-linear problem formulations (Zhao & Nagurney, 2008); they employed smooth Newton algorithm (Ma, 2011) for solving the non-linear games but struggled to prove the existence and uniqueness of the equilibrium.
+A three stage game theoretic linear and un-constrained supply chain model is built by Xiao, Jin, Chen, Shi, and Xie (2010); they employed a traditional analytical approach and carried out complex calculations to examine existence of Nash equilibrium.
+Chern, Chan, Teng, and Goyal (2014) have proposed a non-cooperative Nash equilibrium solution in a vendor buyer supply chain model that could capture delay in payments; though they presented an unconstrained mathematical model, they had to solve a system of partial differential equations to prove the existence of an equilibrium.
+In this paper we put forward an evolutionary algorithmic approach (EAA) to obtain the Nash equilibrium.
+An evolutionary algorithm is used to find the optimal value of a payoff function subject to a given set of constraints.
+Evolutionary algorithms work on the principle of random search technique in finding out the optimal value of the payoff function.
+Those random search techniques are iterative in nature and are not concerned with the nature and complexity of payoff function that is being maximized.
+Particle swarm optimization (PSO) provides a heuristic to determine the optimal value of a non-linear function (Kennedy & Eberhart, 1995).
+It is a population-based heuristic drawing on swarm intelligence with origins in the study of bird flocking, fish schooling and other swarm-type behaviours found in the biological world.
+Several variants have been developed to tackle complex situations with improved speed of convergence and quality of solutions, avoiding local entrapment and premature convergence (Nezami, Bahrampour, & Jamshidlou, 2013).
+These include a hybridized PSO back propagation algorithm (Zhang, Zhang, Lok, & Lyu, 2007) and a modified PSO for adaptive equalization (Al-Awami, Zerguine, Cheded, Zidouri, & Saif, 2011).
+Particle Swarm Optimization with Composite Particles (PSOCP) is the particular evolutionary algorithm employed in this paper (Liu, Yang, & Wang, 2010).
+Its qualities are described in the algorithm description in Section 4.
+Use of PSO as an optimization heuristic is still relatively novel in the field of production economics (Nearchou, 2011) but has been applied to assembly line (Nearchou, 2011), inventory classification (Tsai & Yeh, 2008) and combinatorial optimization problems (Kemmoé Tchomté & Gourgand, 2009).
+We use our evolutionary algorithmic approach to solve a variety of duopoly problems.
+EAA can deal with nonlinearities, discreteness and constraints that would be intractable using analytical approaches.
+As we are using a meta heuristic in the solution procedure we initially arrive at very near optimal solutions and hence the approximate Nash equilibrium (Daskalkis & Goldberg, 2009).
+We then improve this approximate solution to obtain a solution very close to the exact Nash equilibrium.
+The results from the PSOCP model are benchmarked against analytically derived solutions.
+The solutions for the Nash equilibria obtained from the EAA computational experiments deviate negligibly from the analytically derived solutions (less than 0.1 per cent).
+The paper is novel in that, to our knowledge, this is the first time that evolutionary algorithms have been used to solve for the Nash equilibrium in constrained nonlinear duopoly models.
+Let us consider that a homogenous commodity is being produced by n firms where the cost incurred to ith firm for producing qi units of good is Ci(qi), where Ci is an increasing function of qi.
+The price of the product being sold is determined by the demand for that good in the market and the total output of the market (Q).
+As we presume that quantity of production is equal to the demand, specifically if the total output of the market is Q then the market price is determined through the function P(Q) where P is called the “inverse demand function”.
+If each firm produces and sells qi units, total market output is given by (1) (1) The market price of that product is determined by the function P(Q).
+Then revenue of ith firm (Ri) is calculated from Eq (2) (2) We consider the profit function of each firm as its payoff function.
+So the profit function (πi) of ith firm is computed by deducting the total cost of production from the revenue it earns for qi units in (3) (3) The nature and complexity of the payoff function of each firm will be determined based on the level of complexity involved with the inverse demand function and cost function.
+So, we expand our formulation to more complex scenarios by adopting a tier wise increase in complexity from the all linear case to a more sophisticated duopoly game in subsequent Sections 2.1–2.4.
+Linear demand and linear cost function We start with a simple scenario by considering a Cournot model of a duopoly game with linear cost and payoff functions.
+Suppose we consider the linear inverse demand function as in (4) (4) where Q is as given in Eq (1) and r represents the market response.
+The cost function of each firm is given in (5) (5) where λ and ci are positive constants and Fi is a fixed cost incurred to the ith firm, and ci represents unit price of the commodity of the ith firm.
+So, based on these assumptions, payoff function of ith firm becomes (6) In case of duopoly, the payoff functions of the individual firms become (7) (7) 2.2.
+Non-linear demand function It is useful to consider non-linear market demand functions as these may better depict certain market situations.
+We adopt two standard scenarios from Martin (2002).
+They include exponential and hyperbolic demand functions.
+The generalized forms of both models are as shown in Eqs.
+(8) and (9) respectively (8) where αi, βi and γ are positive constants.
+The above function delineates the demand function as an exponentially decreasing function which may be more representative of certain markets.
+The other scenario represents demand as hyperbolic in (9) (9) where Ai, ki are positive constants.
+It is quite possible for markets to have sinusoidal payoff functions as presented in Razi et al.
+(2007).
+The nonlinearity in the payoff function may lead to multiple Nash equilibria.
+The payoff functions are defined as follows (10) (11) Thus through the above examples, we have considered a diversified range of scenarios with non-linear demand functions.
+However, it is also useful to consider non-linearity in the cost function.
+This we do in the next section.
+Non-linear cost function Though there exists different kinds of non-linearity in the cost function, we have adopted a standard form of non-linear cost function from Martin (2002) defined below, so that it takes care of both economies and diseconomies of scale of production (12) where ci, j ≥ 0,∀i and j.
+The payoff function with linear demand and non-linear cost is shown in Eq (13) below (13) Eqs.
+(14) and (15) represent the scenario having non-linearity in both demand and cost functions (14) (15) It is easy to observe that the non-linear cost function mentioned in (15) can also take care of cost function of linear nature by making all the coefficient terms except the first order term equal to zero.
+Constrained functions In this section we consider capacity limitations on the production quantities of each firm.
+It is quite possible to have a discrete natured cost function with respect to quantity of production because the unit cost of a product can be lesser for bulk production.
+Hence the cost function can also take the forms of linear, nonlinear and simultaneously both.
+This discrete natured cost function can be taken care of mathematically by subjecting our payoff function to the set of constraints derived from putting limits on the production quantity and discrete cost of production of a commodity.
+Suppose if the discrete cost function is split into k intervals as shown in Eq (18) and capacity of each firm is set as expressed in inequality (17), the generalized form of the model will be as given below (16) Subject to: (17) (18) (19) (20) where is production capacity of ith firm and inequality (17) ensures that the production quantity of each firm will be within its capacity.
+Eq (16) represents the fact that each individual firm tries to maximize its pay off within its feasible zone within the existing constraints frontier.
+Eq (18) allocates different costs for different ranges of production whose range is split into k intervals.
+The expression fk(qi) in Eq (19) can be regarded as an activating binary constant which enables the contribution of kth interval of the cost function if qi falls in the kth interval range.
+The expression is the cost function corresponding to kth interval of the split which can be both linear and non-linear.
+Though the cost of production depends on the quantity that the firm produces, Eq (20) allocates that particular cost corresponding to the production quantity.
+Another constraint that we introduce into the model is that of pollution limits.
+In fact, it is quite likely that different regulatory constraints exist to control the pollution level to ensure environmental protection from pollution prone commodities.
+Here we follow the concept of river basin pollution game (Haurie & Krawczyk, 1997) with a numerical example given by Mathiesen (2008), where ith producer emits pollution api and maximum capacity bp that is allowed on aggregate pollution.
+That restriction can be mathematically represented as in Eqs.
+(21) and (22).
+Suppose there is a scenario in which the firms are located along a river and pollutants may be expelled into to the river, where they disperse.
+Emission ei is assumed to be proportional to production level.
+A regulatory authority monitors concentration of pollution at two downstream stations.
+If the decay and transportation coefficient of pollution from ith firm to control pollutant pth is denoted by upi, then the regulator's constraints can be portrayed as in (21) and (22) (21) (22) where bp, ei, upi, api are assumed to be positive.
+This constrained model can approximate a variety of situations by adjusting the values of parameters as required.
+Though all our constraints are linear in nature in fact, they can be of any forms like linear, non-linear or a combination of both.
+Now it is quite challenging to solve these kinds of scenarios.
+This brings us the usefulness of an EAA in solving these complex models efficiently.
+In this section, we proceed by giving a brief description about traditional analytical approach and EAA to determine the Nash equilibrium.
+The following illustrates the solution procedure: Definition 1 Given the strategy of other competing players in the game, optimal strategy or a best response of a particular firm is the strategy that maximizes its payoff function subject to existing constraints; Definition 2 The Best Response Function (BRF) can be defined as a function that takes the given strategies of competing players as an input and gives as an output the optimal strategy to be followed by it in order to maximize its payoff.
+Analytically, BRF of ith firm is an extrapolation of the optimal strategies for all firms across the range of strategies available in the game.
+Analytical approach The analytical approach is a two stage process.
+The first stage involves finding out the BRF of each firm by differentiating its payoff function with respect to its strategy and solving that first order derivative to get the zeroes of derivative function of each firm.
+Those zero functions have to be validated as its best response by checking the sign of double derivative.
+Second stage proceeds with solving the system of BRFs of the game to arrive at Nash equilibrium.
+The advantages of this approach are that it is simple to understand and gives the exact Nash equilibrium.
+However, the analytical approach cannot be employed if any part of the payoff function is either discontinuous or non-differentiable up to second order.
+With regard to constrained games, ensuring the existence of Nash equilibrium is a major concern.
+To do that, the convexity or concavity of the payoff function of each firm has to be figured out before we find the Nash equilibrium.
+Based on the nature of the solution space, there exist techniques to find out the solution in limited cases but these are complex and mathematically rigorous.
+Evolutionary algorithmic approach Unlike the analytical approach, EAA does not literally find the mathematical expressions of BRFs of each firm to find out Nash equilibrium; rather it uses a graphical approach to do the same.
+Broadly the technical framework of EAA consists of two stages.
+The first stage involves drawing the plots of BRFs of each firm using the evolutionary algorithm.
+The second stage involves the finding of intersection points of the system of BRF plots to give the Nash equilibrium.
+Based on the beforehand approximate strategies of different players involved in the game, a wide range is defined that could cover all the strategy sets of every firm.
+To draw the BRF of a particular firm, the strategies of the remaining competing firms are fixed at Np number of different strategic points across the defined wide range.
+Then the best response of that particular firm at each point of the Np points is determined using the evolutionary algorithm.
+The EAA takes the strategies of competing firms at each point as input and gives the best response of corresponding firm finding maximum of its payoff function.
+The set of all the best responses with respect to its competing firms are plotted at the Np different points across the wide range.
+By extrapolating all the optimal points we get the BRF of that particular firm.
+We repeat this procedure to determine the best reaction functions of the remaining firms.
+The intersection point of all the BRFs will turn out to be our required NE of the game.
+As the concept of extrapolation is used in the process of finding out Nash equilibrium, it is important to have a sufficient number of points for drawing out the plot of BRF of each firm.
+However, to reduce the time of computation in the whole search for Nash equilibrium in the strategy space, a two tier search is employed.
+The first tier involves finding out the approximate vicinity of Nash equilibrium in a wide range with a smaller number (Np< 10) of points for extrapolation.
+Once the promising vicinity is established from this wide range search, a more detailed search is carried out in the promising region around Nash equilibrium.
+To determine the promising space for exclusive search, the Self-Adaptive Range (SAR) technique is employed.
+Though the SAR technique is empirical in nature, experimental results show that SAR enables us to move very close to the exact equilibrium with less time and complexity of computation.
+The overall design of EAA is represented in the form of pseudo code in Table 1.
+Table 1.
+Pseudo code for proposed EAA.
+Step 1: Define parameters of the algorithm and pay off functions of each firm and respective constraints.
+Step 2: Define the wide range and the number of points (Np) (usually around 5 to 10) for plotting each BRF.
+Step 3: Compute the incremental step accordingly based on step 2 Step 4: for i = 1: all firms • Initialize the strategies all firms (generally all set to zeroes) for j = 1: (Np) o Optimize the payoff of ith firm using evolutionary algorithm and find its optimal strategy o Plot the optimal strategy versus current strategy of other firms o Increase the strategy of other firms by amount equal to incremental step (IS) end for • Extrapolate Np optimal points of ith firm to get its BRF.
+end for Step 5: Determine the approximate Nash equilibrium (NElr) by finding intersection of all the BRFs.
+Step 6: Compute the Promising Range using SAR technique Step 7: Update Np to larger value (more than 20) based on required accuracy in NE Step 8: With Promising Range and updated Np repeat steps 3, 4 and 5 to arrive close to accurate Nash equilibrium *BRF → Best response function A number of other authors have used evolutionary algorithms in finding the Nash equilibrium (Rajabioun & Lucas, 2008; Razi et al., 2007).
+Both of these papers adopted very similar approaches: they initialize a random population of solutions and update the solutions iteratively to see if payoff function of any player in the game improves.
+This iterative procedure continues until they find no change in the payoff function of all the players.
+However, there always exists a threat here that the algorithm does not converge if Nash equilibrium does not exist.
+Also, it is quite difficult to find multiple Nash equilibria.
+And, in the case of constrained games convergence becomes doubtful.
+The EAA proposed in this paper can address those issues in an easy manner as we actually find the geometrical best response functions of each player that can be used to see the trend and existence of Nash equilibria.
+Self adapting range (SAR) technique Based on the equilibrium that we get in the first wide range search, we estimate an upper boundary (UB) of the promising range of equilibrium using Eq (23) and carry out a rigorous search by plotting BRFs with a larger number of points in the promising region to arrive at a point very close to the true Nash equilibrium (23) where NEwr is the set of Nash equilibria obtained during initial wide range search i.e.
+and η is the least positive integer that satisfies the inequalities mentioned in Eq (24) (24) and where μ is a positive rational number less than one.
+The constant μ can be termed as the tolerance random number that regulates the extra precision around the true Nash equilibrium in which we conduct the detailed search.
+Through rigorous simulation, it was ascertained that μ should be set at values between 0.4 and 0.7 to obtain good results.
+If multiple Nash equilibria are found to exist during the wide range search, the upper bound of the promising region is set at the maximum value of strategies involved in the multiple Nash equilibria with extra precision around it using Eqs.
+(23) and (24).
+In general, most of the production firms will have non-negative amounts of production units so the lower bound of the promising region is assumed to be equal to zero.
+To relax this assumption and model games with negative values one can build equations similar to Eqs.
+(23) and (24) and solve.
+Once the promising range is determined, incremental steps are used to split the promising range and construct Np different strategic points.
+Exploring the promising range with incremental steps ensures uniformity in the search, which facilitates in building up a reliable BRF of each firm (25) During exhaustive search in the promising region, the number of points (Np) considered to plot a BRF is to be defined based on the complexity and sensitivity involved in the problem.
+In general, results show that keeping Np more than 20 gives us acceptable solutions.
+To illustrate the computational experiments presented in Section 5, we kept Np = 20.
+If the game is sensitive to the precision involved in the values of Nash equilibrium, we can increase Np and compress the promising range near the Nash equilibrium to conduct the search exhaustively around the true Nash equilibrium.
+The same applies even if there exist multiple Nash equilibria.
+This section provides the fundamental technical blocks that build up the PSOCP algorithm that is used as evolutionary algorithm for finding the Np number of best response points of each firm across the range of strategies available for the other competing firms.
+Those best response points are joined to get the BRF of corresponding firm.
+The best response is the strategy that maximizes the payoff function of the firm given the strategies of competing firms.
+Evolutionary algorithms find the optima of a payoff function using random search techniques in an iterative manner.
+Particle swarm optimization is one such algorithm.
+PSO tracks the optimal value with randomly generated solution vectors known as particles.
+The number of swarm particles that participate in the search is called the swarm size (m).
+The dimension (d) or length of each particle in the swarm is generally equal to the number of variables involved in the payoff function.
+In Cournot games, payoff function of a firm is just a function of its production quantity or strategy.
+So the dimension (d) of each particle is one.
+Each particle will be passed into the payoff function to get the value of payoff known as fitness value in artificial intelligence literature.
+So, the swarm is simply a m × d matrix.
+The mechanism of tracking the optima of payoff function involves mathematical operations on the swarm.
+The swarm particles reach the vicinity of optimal value of a payoff function by effective exchange of information.
+To begin the search a set of m swarm particles are randomly generated to cover the whole search space.
+Then mutual exchange of information takes place among the particles participating in the search regarding which particle has the best fitness value.
+The particle with the best fitness value out of the total swarm is called the global best position (GBP).
+Suppose that the kth particle out of m particles has got the best fitness position; then the remaining particles try to move towards the kth particle in an iterative manner.
+Exchange of information takes place among the swarm: during the movement some other particle may come across better fitness position than the kth particle; this information is again exchanged and search goes on.
+The value of the global best position found among the swarm either improves by iteration or remains same but does not degrade.
+After several iterations all the particles converge to a near optimal region of the fitness function after which there will be no significant improvement in the best fitness value of the function.
+The GBP of the converged swarm is taken as the true optimal value of the payoff function.
+Another key concept involved in this exploring mechanism is recollecting of information.
+Each particle will have the ability to remember the best fitness position that it has come across up until the current iteration; this is called the local best position (LBP).
+The LBP is different for different particles during movement.
+If a particle moving towards GBP encounters a worse position than its LBP, it stays at its LBP rather than make a move.
+This ability of remembering and exchanging of information eventually brings all the swarm particles close to the existing true global optima of a given payoff function.
+The efficiency of the algorithm both in terms of quality and quickness of arriving at global optima depends on how the particles exchange information and how quickly they move towards the promising region.
+There is however scope for improving the efficiency of the algorithm giving birth to different variants of evolutionary algorithm.
+This paper uses one such variant of swarm intelligence called particle swarm optimization with composite particles (PSOCP) by Liu et al.
+(2010).
+PSOCP has desirable advancements in the technical framework of the algorithm allowing efficient exploration of optimal values of payoff functions to take place.
+Particle swarm optimization with composite particles (PSOCP) PSOCP is a variant of the evolutionary algorithm known as PSO (Kennedy & Eberhart, 1995) which works on swarm intelligence while tracking out global optima.
+It was initially developed by Liu et al.
+(2010) in order to tackle dynamic environments.
+The concept was inspired by the phenomenon of interaction of elementary members in each composite particle through a velocity-anisotropic reflection scheme (VAR) derived from the physics discipline.
+Compared to basic PSO, it uses the “concerted action” principle explained in Liu et al.
+(2010) while updating the elementary particles for next iteration but maintaining a similar procedure to that used for updating the pioneer particles of composite particles.
+This feature of integral movement of particles facilitates the swarm to share the beneficial information in a constructive manner which ensures that elementary particles move under correct guidance in accordance with the fittest particles.
+This enables the swarm to make an easy decision support system in the space to explore the promising region around exact optima while avoiding collision and velocity-slackening of elementary particles.
+A scattering operation is also adopted to ameliorate the fittest elementary particle available to a more desirable direction.
+When a composite particle generally converges, the scattering operation is triggered which enables the swarm avoid local entrapment.
+The VAR scheme helps the elementary particles to look for more extensive solution space.
+Position modulation function This function ensures that all variables should lie within their corresponding boundaries.
+The function basically takes the swarm to be modulated as its input and modifies that swarm according to the predefined limits and gives the modified swarm as the output.
+The approach is briefly depicted with the help of pseudo code in Table 2.
+Table 2.
+Pseudo code for position modulation function in Section 4.2.
+Step-1: Define lower and upper bounds of each variable Step-2: for i = 1: all variables end for *UB= Upper Bound *LB= Lower Bound 4.3.
+Composite particles As per the procedure mentioned in Liu et al.
+(2010), we adopted the same method to construct the composite particles in this paper.
+A composite particle is defined as a three particle group with similar features.
+We consider the Euclidean distance between one particle and another so that each group forms a near equilateral triangle.
+A “worst is first” criterion is utilized in constructing the composite particles.
+The procedure starts by arranging all the particles in ascending order of their fitness and the worst particle is selected as a first particle in the composite particle being constructed and the remaining two particles are selected based on Euclidean distance which are close to the weakest particle in that composite particle.
+This procedure iterates until all possible composite particles are constructed.
+The particles that remain unconstructed in the end are named as independent particles.
+These will ultimately turn out to be best fit particles.
+Composite particles usually handle two major concerns.
+The primary concern is to develop a method which would increase the interaction among elementary particles in such a way that more promising search space would be explored.
+A secondary concern is that it facilitates VAR and scattering operations on the composite particles being constructed from which we can improve the performance of the algorithm.
+The pseudo code shown in Table 3 depicts the procedure adopted for construction of composite particles.
+Table 3.
+Pseudo code for creation of composite particles in Section 4.3.
+Step-1: Sort all the particles in the increasing order of their fitness Step-2: Compute the number of composite particles using .
+Step-3: Initialize the set of composite particles as null set.
+i.e., Step-4: for i = 1:Nc Select worst particle (xworst) from swarm S Select two nearest particles to xworst end Step-5: Particles that don't belong to any composite particle remain as independent particles.
+* * 4.4.
+Scattering and VAR operations To ensure local diversity within each composite particle, we adopted scattering and VAR operations which facilitates in avoiding local entrapment of our heuristic, a major drawback of meta heuristics in computational intelligence literature.
+The procedure proceeds by utilising the concept of convergence.
+A composite particle is said to be converged when the Euclidean distance between the worst particle and the other particles inside it becomes less than the threshold ϴ.
+A scattering operation is performed whenever the convergence criteria are met within the composite particle.
+If the position of the elementary particle having the best fitness value in the composite particle is represented by F and other two non-pioneer particles denoted by E1 and E2, then the particle with best fitness F scatters along the direction and in order to replace E1 and E2.
+Now the new composite particle contributes to the points F, S1 and S2 as shown in Fig 1.
+Fig 1.
+Generation of new composite particle using scattering operation.
+A velocity anisotropic reflective (VAR) operation is proposed along with a scattering operation to make sure that the worst particles move in an improved direction towards a promising region in the search space.
+This enhances the exploration and better tracking of global optima in the search space.
+The procedure involves two sub steps with an adoptive step size and pioneer particle selection as defined in Liu et al.
+(2010).
+Both of these operations are proposed for better tracking of optima in dynamic environments.
+The pseudo code given in Table 4 depicts the schema for carrying out scattering and VAR operations.
+Table 4.
+Pseudo code for carrying out scattering and VAR Operation.
+Step-1: for i = 1: Nc // Scattering Operation Step-2: Calculate Euclidean distance between its worst particle and the two remaining particles as respectively Step-3: if end if // VAR Operation Step-4: for each j ∈ particles other than worst particle in that CP Step-5: if is better than then end if end for-(step −4) Step-6: Update pioneer and worst particle in ith CP end for-(step-1) *CP-Composite Particle * is jth particle in ith CP; is reflected (updated) position obtained after the VAR operation.
+*θ is minimum threshold distance *Rstep is Reflection Step Size during VAR operation *φ is random number *γ is also a random number * → Particle with best fitness in ith CP 4.5.
+Overview of PSOCP for optimizing payoff functions The innovative qualities of the algorithm
+The algorithm begins with random initialization of the swarm and its initial velocity and runs in an iterative manner until the termination criterion is met.
+Each iteration involves tracking of the personal best for each pioneer particle, the global best particle, construction of composite particles, scattering operation, VAR scheme operation and updating the swarm for next iteration.
+At the end of each iteration the position of each updated particle is checked to ensure that it lies within its predefined boundaries using the function position modulation discussed in Section 4.2.
+Eventually the algorithm arrives at a near optimal solution of the fitness function which we are trying to optimize.
+Hence this algorithm can be used to predict the optimal decisions or best responses of all the firms corresponding to their pay off functions.
+An overview of the algorithm is presented in the form of pseudo code given in Table 5.
+Table 5.
+Pseudo code for overall procedure for PSOCP algorithm.
+Step-1: Define all the parameters like swarm size (m), inertia weight (w), accelerating coefficients (k1, k2), reflection step size (Rstep), maximum and minimum values of stretching step size and termination criteria (E) as maximum number of iterations.
+Step-2: Randomly initialize the swarm, initial velocity and respective fitness and evaluate lbp and gbp of swarm.
+Step-3: Modulate the randomly initialized swarm using position modulation function Step-4: While (Termination criteria is not met) Initialize iteration counter • for each particle evaluate current fitness if (current fitness is better than local best fitness) then update local best fitness of current particle end if end for Step-5: Construct all the possible composite particles and independent particles using procedure laid down in creation of composite particles function Step-6: Apply scattering and VAR operation on each composite particle Step-7: for each composite particle calculate the pioneer particle • Identify pioneer particle and the remaining as elementary particles • Update velocity and position of the pioneer particle of each composite particle and independent particles using two formulae below • Calculate the distance moved by pioneer particle after update and move the two elementary particles by the same amount in each dimension.
+• Modulate the updated positions of particles using modulation function.
+end for in step-7 Step-8: Update lbp and gbp Update iteration counter end while (in step-4) *lbp(t) is local best position of each particle in the swarm up to tth iteration *gbp(t) is the global best position whole swarm up to tth iteration *cposition(t) is current position of a swarm particle in tth iteration *r1 , r2 are random numbers 4.6.
+Handling constrained games Though there are many ways to address constrained scenarios, we have adopted a penalty function method to overcome these problems in EAA.
+The first reason is to do with the randomness involved in generating and updating the solutions in our evolutionary algorithm, which may not facilitate us in giving a feasible swarm in every iteration.
+The second reason has to do with the ease with which the penalty function approach handles complex constraints.
+A penalty function is constructed by penalizing each constraint with an appropriately large number in proportion to its violation and annexing all those penalty values as one function.
+Then this penalty function will be appended to the original objective function as a negative effect.
+As our algorithm tries to rehabilitate and improve the payoff function in every iteration this consolidated objective function ensures reduction in violation of all the constraints in later iterations, as violation of any constraint shows a negative effect in the payoff function.
+This enables us to end up with a feasible solution after substantial number of iterations whose penalty function value falls to zero due to continuous reduction in violation.
+To reduce the search space and ensure faster convergence the bound constraints for individual variables are handled using the position modulation function rather than the penalty function.
+So, ultimately this makes a clear path for our model to return the best response strategy of each firm at every stage by contemplating all the constraints directly without any further attention.
+Several approaches in constructing penalty functions are defined in Yeniay (2005).
+Through this technique we curtail the difficulty concealed with handling all kinds of constraints that exist in the problem.
+Hence in EAA, we directly plot the points that are feasible with respect to all the constraints that frontiers the space and plot the required BRF.
+Hence penalty function approach is adopted to overcome constrained scenarios, which is a conventional behaviour of general competitive market.
+Sensitivity analysis and optimal parameter setting As we are using an evolutionary heuristic, it is necessary to look for the appropriate settings of the prime parameters that amend the efficiency of the algorithm in finding the better optimal solutions with less complexity in computation.
+The crucial parameters involved in our algorithm that may affect the dominant properties of the algorithm are inertia weight (w), accelerating coefficients (k1 , k2), diversification parameter used in VAR operation (Rstep), stretching parameters (Sstepmin ,Sstepmax ), and the threshold Euclidean distance limit (ϴ) involved in the scattering operation.
+It is imperative to fix optimal settings of the parameters, which vary from situation to situation.
+As we deal with diversified scenarios, these parameter settings cannot be stated as being invariably the best.
+Hence in particular with solving the game theory models, we present the optimal data set of the above mentioned parameters obtained by conducting 30 repeated runs for each numerical example that is considered to represent the scenarios modelled above.
+Few parameter settings are adopted from the conclusions drawn with the numerous experiments presented in Liu et al.
+(2010).
+We make an observation that we are getting k2>>k1 at the optimal parameter setting representing the fact that it facilitates the PSO variants to undergo a biased search towards global optima than local optima.
+This may also endanger the fact that search may miss a better optimal solution which is encountered by the diversification operations adopted in our heuristic.
+The important parameter that determines the efficiency of the algorithm in different scenarios is the stopping criteria to be employed while figuring out the optimal points for tracing out each BRF.
+This is exercised in two ways, first one being limiting the number of iterations that algorithm runs and the other is by predefining a threshold converging distance beyond which the algorithm does not search.
+That threshold distance depends on the accuracy in the quality of solutions needed and also on the range of fitness values.
+Here we employed the first one by defining the constraining maximum number of iterations (E) as 100 which is verified from the 30 repeated experiments on each scenario.
+In fact attention should be paid here when we come across a complex situation if it requires more iterations than in the case of constrained optimization.
+Table 6 shows suitable range of parameters at which our test instances have been solved.
+Table 6.
+Optimal parameter settings of PSOCP to solve the test instances.
+Parameter W k1 k2 Rstep ϕ m E Setting 0.9 0.1 0.98 6 2 3 0.05 50 100 *m is number of swarm particles employed for search each time.
+*Remaining parameters are as defined in Section 4.7.
+Table 7.
+Nash equilibrium found using EAA in test scenario defined in Section 5.1 (Linear demand and cost).
+NEwr = (68.74, 17.98) max (NEwr) η μ Promising Range (PR) Incremental Step (IS) 68.74 2 0.7 (0, 138.74) 6.937 Nash equilibrium S. No Firm-1 Firm-2
+In this section we present several, increasingly complex, numerical examples corresponding to the models presented in Sections 2.1–2.4.
+The solutions obtained through EAA are compared with those gained from an analytical approach to show the robustness, ease and efficiency of EAA in attaining the Nash equilibrium, even in games with high levels of complexity.
+Linear demand and cost If we consider a duopoly case in which linear inverse demand function of each firm as and cost function as defined in Section 2.1 with the parameters as then the payoff functions of both firms become The above data are extracted from the data referred to in (Mathiesen, 2008).
+Results for Mathiesen's problem 5.2 are presented in Table 7 and the BRFs of both firms and NE is shown in Fig 2.
+The units for best strategy of all the firms presented in all the subsequent tables presented throughout Section 5 are the number of units of production quantities to be produced by the corresponding firm.
+NEwr in all tables presented throughout Section 5 indicates initial Nash equilibrium found in wide range search in EAA.
+Fig 2.
+Best response functions and corresponding NE for problem defined in Section 5.1 (linear demand and cost).
+Hence from the above results we can observe that the relative error that we get through EAA is negligible at less than 0.05 per cent.
+Non-linear demand In this section, we present numerical examples corresponding to each scenario discussed in Section 2.2.
+The first scenario refers to exponential inverse demand function (Martin, 2002).
+It considers a duopoly situation whose payoff functions are of the forms shown in Eq (8) with the parameters .
+The payoff function of each firm becomes The solution for this situation is presented in Table 8 and Fig 3.
+Table 8.
+Nash equilibrium found using EAA in the test scenario defined in Section 5.2 (Non-linear demand: exponential).
+NEwr = (798.01,798.26) max (NEwr) η μ Promising Range (PR) Incremental Step (IS) 798.26 3 0.4 (0, 1198.26) 59.913 Nash equilibrium S. No Firm-1 Firm-2
+Fig 3.
+Best response functions and corresponding NE for problem defined in Section 5.2 (non-linear demand: exponential).
+Non-linear demand and non-linear cost functions In this case, a situation has been taken up in which both inverse demand function and cost functions having non-linear natures.
+In this sense we provide a numerical replica for the model that is being described in Section 2.3 in which the demand functions takes a hyperbolic nature with respect to quantity.
+This following example is adopted from (Martin, 2002), Payoff function of corresponding firm as shown below Table 9 and Fig 4 show the computational results for the above scenario.
+We have presented more elaborate results than Martin (2002) comprising the different optimal responses found by PSOCP in EAA which are used in plotting BRFs of each firm in Table 9.
+Table 9.
+Nash equilibrium found using EAA along with best responses used in plotting BRFs of firms in test scenario defined in Section 5.3 (Non-linear cost and non-linear demand: hyperbolic).
+NEwr= {(5.012, 7.587), (6.782, 6.894), (7.639, 4.983)} max (NEwr) η μ Promising range (PR) Incremental step (IS) 7.6398 1 0.7 (0, 14.6398) 0.7319 Enhanced search in the Promising Region Point number BRF of firm-1 BRF of firm-2 Best Strategy of Firm-1 Strategy of Firm-2 Strategy of Firm-1 Best Strategy of Firm-2 1 4.804483 0 0 4.813329 2 5.078549 0.73199 0.73199 5.086385 3 5.271097 1.46398 1.46398 5.28613 4 5.441065 2.19597 2.19597 5.453821 5 7.803638 2.92796 2.92796 7.804731 6 7.92935 3.65995 3.65995 7.900556 7 7.958159 4.39194 4.39194 7.991157 8 8.017722 5.12393 5.12393 8.003906 9 8.068147 5.85592 5.85592 8.002797 10 8.007099 6.58791 6.58791 7.996652 11 5.09209 7.3199 7.3199 5.095586 12 4.991875 8.05189 8.05189 4.983557 13 4.908023 8.78388 8.78388 4.897695 14 4.824552 9.51587 9.51587 4.819763 15 4.745976 10.24786 10.24786 4.746341 16 4.709813 10.97985 10.97985 4.680799 17 4.628033 11.71184 11.71184 4.634293 18 4.559394 12.44383 12.44383 4.575247 19 4.516522 13.17582 13.17582 4.527633 20 4.472001 13.90781 13.90781 4.468988 Nash equilibrium S. No Firm-1 Firm-2
+2 6.871403 6.873095 3 8.00686 4.990449 Fig 4.
+Best response functions and corresponding NE for problem defined in Section 5.3 (non-linear cost and non-linear demand: hyperbolic).
+Another non-linear benchmark scenario having multiple Nash equilibria involving sinusoidal payoff functions (Razi et al., 2007) is presented.
+The respective payoff functions for that duopoly scenario are as shown below Fig 5 and Table 10 show the results of that benchmark scenario depicting all the possible multiple equilibria.
+This example reflects the resilience of the EAA algorithm and its ability to achieve solutions to complex games smoothly.
+Table 10.
+Nash equilibria in case of benchmark problem defined in Section 5.3 (In Wide Range Search).
+Multiple Nash equilibrium in case of sinusoidal profit functions S No.
+Firm-1 Strategy ( × 1040) Firm-2 Strategy ( × 1040) 1 0.14 1.329991 2 0.14 1.190009 3 0.14 0.42 4 0.14 0.28 5 0.14 0.14 6 0.14 3.99 7 0.28 8 0.28 0.14 9 0.28 0.28 10 0.28 0.42 11 0.28 1.190019 12 0.28 1.329981 13 0.42 14 0.42 0.14 15 0.42 0.28 16 0.42 0.42 17 0.42 1.190028 18 0.42 1.329972 19 1.19 20 1.190001 0.14 21 1.190001 0.28 22 1.190002 0.42 23 1.190006 1.190079 24 1.190007 1.329921 25 1.329993 1.329912 26 1.329994 1.190088 27 1.329998 0.42 28 1.329999 0.28 29 1.329999 0.14 30 1.33 5.4.
+Constrained functions: production and environmental In this case, a constrained scenario has been considered with linear payoff functions subject to constraints that regulate the quantity of production by each firm and environmental pollution levels.
+The constraints pertain to the production capacities of firms and environmental regulations that regulate emission of pollutants by both firms.
+The environmental pollution constraints are as described in Section 2.4.
+Pay off functions of individual firm: Subject to: Results for the above have been presented in three stages with respect to constraints.
+The first stage deals with the effect of production capacity constraints, the second stage deals with effect of pollution constraints and the last stage deals with the combined effect on NE.
+Figures 6, 7 and 8 and Tables 11, 12 and 13 show the results in sequence of stages.
+Fig 5.
+Nash equilibria in case of benchmark problem defined in Section 5.3 (Multiple equilibria).
+Fig 6.
+Best response functions and corresponding NE for problem defined in Section 5.4 (Production constraints).
+Fig 7.
+Best response functions and corresponding NE for problem defined in Section 5.4 (Pollution constraints).
+Fig 8.
+Best response functions and corresponding NE for problem defined in Section 5.4 (Production and pollution constraints).
+Table 11.
+Nash equilibrium found using EAA in test scenario defined in Section 5.4 (Production constraints).
+NEwr = (19.986,10.034) max (NEwr) η μ Promising range (PR) Incremental step (IS) 19.986 2 0.6 (0, 79.986) 3.9993 Nash equilibrium S. No Firm-1 Firm-2
+Table 12.
+Nash equilibrium found using EAA in test scenario defined in Section 5.4 (Pollution constraints).
+NEwr = (24.442,19.010) max (NEwr) η μ Promising range (PR) Incremental step (IS) 24.442 2 0.4 (0, 67.442) 3.3721 Nash equilibrium S. No Firm-1 Firm-2
+Table 13.
+Nash equilibrium found using EAA in constrained test scenario defined in Section 5.4 (Production and pollution constraints).
+NEwr = (19.987,9.826) max (NEwr) η μ Promising range (PR) Incremental step (IS) 19.987 2 0.5 (0, 69.987) 3.49935 Nash equilibrium S. No Firm-1 Firm-2
+Another constrained scenario can be built by considering the nonlinear payoff functions for each firm subject to the set of constraints given above.
+Consider the payoff functions with hyperbolic demand function and the polynomial cost function presented in Section 2.3 subject to the constraints presented above.
+Fig 9 shows the results of this constrained non-linear scenario.
+We can observe that there is a leftward shift in the Nash equilibrium when we move from the unconstrained scenario discussed in Section 5.3 to the current constrained scenario.
+Multiple equilibria do not exist in the constrained scenario compared to the unconstrained scenario.
+In Fig 9, BRF-1 and BRF-2 represent the best response functions in the constrained scenario and BRF-1UC and BRF-2UC represent the best response curves for the unconstrained scenario.
+NE-UC indicates the Nash equilibrium in the unconstrained scenario; NE-C indicates the Nash equilibrium in the constrained scenario.
+Fig 9.
+Change in Nash equilibrium from unconstrained nonlinear game to constrained nonlinear game as presented in Section 5.4.
+A comparison of the above tests has been made with exact solutions obtained through traditional analytical approach and these are presented in Table 14.
+Except for scenarios 1 and 2, it is difficult to find analytical solutions for the remaining scenarios.
+Hence no comparison could be done for those scenarios.
+In fact this shows the value of the proposed EAA as it can handle without difficulty complicated scenarios that cannot be solved using an analytical approach.
+Table 14.
+Compilation of results of all computational experiments solved using EAA and traditional analytical approach.
+Scenario Defined in Section Nash equilibrium (averaged over 30 trials) % Deviation Average Time of computation (over 30 trials in minutes) Using EAA Using analytical approach Firm 1 Firm2 Firm1 Firm2 Firm1 Frim2 1 5.2 67.942 18.030 68 18 0.0845 0.167 0.158 2 5.3 800.010 799.405 800 800 0.0432 0.074 0.162 3 5.4 5.0087 8.001 – – 0.198 6.8715 6.877 8.006 5.002 4 5.5 19.997 9.968 – – 0.293 5 5.5 23.508 18.720 – – 0.302 6 5.5 19.992 9.987 – – 0.324 7 5.5 3.150 3.148 – – 0.410 Note: the symbol “-” indicates that a solution cannot be found using traditional analytical approach.
+This paper used an evolutionary algorithmic approach to determine the Nash equilibrium for situations of duopolistic competition involving nonlinearities, constraints and discrete functions.
+This is a novel way of determining the Nash equilibrium and a novel application of particle swarm optimization.
+The model was validated by comparing the results found using the composite particle swarm approach to results determined analytically for a variety of different cases.
+Closed form analytical solutions however can be found only for industrial competition problems specified for relatively simple, usually linear, formats.
+The power of the composite particle swarm approach is that solutions for the Nash equilibrium can be found for complex non-linear situations.
+Examples of non-linear competitive situations abound in the real world, for example where inverse demand functions are concave rather than linear, where firm costs demonstrate economies or diseconomies of scale, or where production capacity is constrained or formulated in discrete bands.
+A limitation of this research is that EAA has been tested using a limited number of cases and Nash equilibria determined only for pure strategies.
+Further research work may be carried out to extend the variety of cases examined, to consider more realistic competitive situations, and to determine Nash equilibrium in mixed strategies.

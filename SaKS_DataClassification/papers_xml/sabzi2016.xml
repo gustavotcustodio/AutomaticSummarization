@@ -1,0 +1,301 @@
+<article>
+  <title>Optimization of adaptive fuzzy logic controller using novel combined evolutionary algorithms, and its application in Diez Lagos flood controlling system, Southern New Mexico</title>
+  <abstract>
+    <sentence>In fuzzy logic controllers (FLCs), optimal performance can be defined as performance that minimizes the deviation (error term) between the decisions of the fuzzy logic systems and the decisions of experts.</sentence>
+    <sentence>A range of approaches – such as genetic algorithms (GA), particle swarm optimization (PSO), artificial neural networks (ANN), and adaptive network based fuzzy inference systems (ANFIS) – can be used to pursue optimal performance for FLCs by refining the membership function parameters (MFPs) that control performance.</sentence>
+    <sentence>Multiple studies have been conducted to refine MFPs and improve the performance of fuzzy logic systems through the application of a single optimization approach, but since different optimization approaches yield different error terms under different scenarios, the use of a single optimization approach does not necessarily produce truly optimal results.</sentence>
+    <sentence>Therefore, this study employed several optimization approaches – ANFIS, GA, and PSO – within a defined search engine unit that compared the error values from the different approaches under different scenarios and, in each scenario, selected the results that had the minimum error value.</sentence>
+    <sentence>Additionally, appropriate initial variables for the optimization process were introduced through the Takagi–Sugeno method.</sentence>
+    <sentence>This system was applied to a case study of the Diez Lagos (DL) flood controlling system in southern New Mexico, and we found that it had lower average error terms than a single optimization approach in monitoring a flood control gate and pump across a range of scenarios.</sentence>
+    <sentence>Overall, using evolutionary algorithms in a novel search engine led to superior performance, using the Takagi–Sugeno method led to near-optimum initial values for the MFPs, and developing a feedback monitoring system consistently led to reliable operating rules.</sentence>
+    <sentence>Therefore, we recommend the use of different methods in the search engine unit for finding the optimal MFPs, and selecting the MFPs from the method which has the lowest error value among them.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Fuzzy logic controller</keyword>
+    <keyword>Genetic algorithm</keyword>
+    <keyword>Particle swarm optimization</keyword>
+    <keyword>ANFIS</keyword>
+    <keyword>Flood optimal management</keyword>
+    <keyword>Simulink</keyword>
+    <keyword>Dynamic model</keyword>
+    <keyword>Flood controlling systems</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Fuzzy sets and fuzzy logic were proposed by Zadeh in 1965 (Zadeh, 1965), and these concepts have been used widely in control systems.</sentence>
+    <sentence>Generally, fuzzy logic controllers (FLCs) utilize linguistic expressions to develop a quantitative relationship between the input and output elements of the model.</sentence>
+    <sentence>In order to gain output values that are acceptably near the expected outputs, FLCs should be tuned and optimized.</sentence>
+    <sentence>To achieve this, evolutionary algorithms have been used widely by several researchers.</sentence>
+    <sentence>Khan, Choudhry, Zeeshan, and Ali (2015) used a genetic algorithm for tuning the adaptive fuzzy multivariable controller applied in an air handling unit.</sentence>
+    <sentence>Collotta, Bello, and Pau (2015) have developed a combined system that uses a wireless sensor network and multiple FLCs to dynamically control the green time of traffic lights.</sentence>
+    <sentence>Instead of one single FLC, Collotta et al.</sentence>
+    <sentence>(2015) applied multiple FLCs for controlling different traffic phases.</sentence>
+    <sentence>As compared to the use of a single FLC, the approach developed by Collotta et al.</sentence>
+    <sentence>led to a higher fault tolerance, shorter waiting times for arriving vehicles, higher scalability, and higher flexibility with unbalanced arrival rates.</sentence>
+    <sentence>Muthukaruppan and Er (2012) used the PSO method to tune the developed MFPs of a fuzzy expert system, which was being used to diagnose coronary artery diseases.</sentence>
+    <sentence>They used a decision tree model to unravel the contributing attributes in coronary artery diseases and transfer into fuzzy based rules (fuzzy expert system); then, the fuzzy expert system was tuned by PSO.</sentence>
+    <sentence>The fuzzy expert system tuned by PSO showed higher classification accuracy (93.27%) between heart diseases and health conditions.</sentence>
+    <sentence>Muthukaruppan and Er's approach in using a hybrid model that incorporated both a decision tree model and PSO led them to higher accuracy.</sentence>
+    <sentence>Wang and Altunkaynak (2011) utilized FLCs for simulating the rainfall-runoff of a system, and Saghaei and Didekhani (2011) used an ANFIS to derive overall utilities of projects by considering the interrelations among the involved criteria.</sentence>
+    <sentence>Bingul and Karahan (2011) used PSO for tuning an FLC that was used for controlling a robot trajectory in two dimensional movement.</sentence>
+    <sentence>Deka and Chandramouli (2009) developed a hybrid model of artificial neural network and fuzzy inference systems to find the optimized reservoir releases.</sentence>
+    <sentence>Cheng, Tsai, Ko, and Chang (2008) used a fuzzy neural inference system to optimize the decision-making processes in geotechnical engineering.</sentence>
+    <sentence>Shoorehdeli, Teshnehlab, and Sedigh (2007), by using the PSO method, developed a hybrid learning approach for tuning the parameters of ANFIS.</sentence>
+    <sentence>Ahlawat and Ramaswamy (2004) developed an optimal FLC to predict a tall building's displacement in windy conditions.</sentence>
+    <sentence>Karaboga, Bagis, and Haktanir (2004) used a fuzzy inference system for operating the spillway gates in a flood controlling reservoir.</sentence>
+    <sentence>Navale and Nelson (2010, 2012), Chen and Rine (2003), and Yang and Soh (2000) used a GA for finding the optimal parameters of FLCs in different engineering systems.</sentence>
+    <sentence>Russell and Campbell (1996) used fuzzy inference for finding the optimal operating rule of a reservoir.</sentence>
+    <sentence>Martinez-Soto, Castillo, Aguilar, and Melin (2010)) used GA and PSO for tuning of FLCs' performances.</sentence>
+    <sentence>In most studies, researchers used a single evolutionary algorithm in tuning and optimizing FLCs.</sentence>
+    <sentence>However, it is unlikely that a single evolutionary algorithm will find the optimal solution for all encountered scenarios, and may even select a locally optimal solution rather than a globally optimal solution.</sentence>
+    <sentence>There is a crucial lack of a search engines for comparing the results of different evolutionary algorithms to ensure that the parameters of the FLCs are, in fact, optimal.</sentence>
+    <sentence>This study attempts to minimize the uncertainty level of FLC's optimality by defining a search engine that includes three popular evolutionary methods.</sentence>
+    <sentence>By using and comparing multiple evolutionary algorithms, this approach increases the likelihood of identifying truly optimal conditions and reduces the risk of selecting locally optimal conditions rather than globally optimal conditions.</sentence>
+    <sentence>In order to achieve an accurate and optimal fuzzy inference system (FIS), two key factors are significantly important: (1) discovering appropriate fuzzy rules, and (2) applying an appropriate tuning method.</sentence>
+    <sentence>Considering the input and output values of an FIS, selecting the appropriate techniques to define the optimal phases is crucially important; therefore, selecting the appropriate fuzzy intervals (phases) of input and output values is as important as tuning the membership functions of those intervals.</sentence>
+    <sentence>One of the best approaches to investigate the required structure for a fuzzy inference system is plotting the output and input values.</sentence>
+    <sentence>The graphical behavior facilitates the selection of an appropriate structure for the FLC (an FIS).</sentence>
+    <sentence>Then, the membership function parameters of that structure can be optimized through an optimization process.</sentence>
+    <sentence>For this study, initial membership function parameters were defined based on Takagi–Sugeno fuzzy inference systems instead of linguistic expressions which was developed by Takagi and Sugeno (1985).</sentence>
+    <sentence>The Takagi–Sugeno method was chosen due to the effect exerted by inference systems on the accuracy of FLC-derived output values.</sentence>
+    <sentence>In Takagi–Sugeno systems, input variables typically are defined in the form of Gaussian distributions, and output variables are defined in the form of linear intervals or constant output values.</sentence>
+    <sentence>Increasing the number of membership functions and intervals in the input and output values also increases the inference system's accuracy in deriving output values for specific input values.</sentence>
+    <sentence>After using the Takagi–Sugeno method to select appropriate initial membership function parameters, the FLCs utilized in the Diez Lagos (DL) flood control system were tuned and optimized through a novel dynamic tuning system that was developed in this study.</sentence>
+    <sentence>This dynamic tuning system simultaneously utilizes three evolutionary algorithms in finding the MFPs of the FLCs.</sentence>
+    <sentence>Additionally, this study developed several optimized operational plans for gate and pump operations under different flooding conditions.</sentence>
+    <sentence>These plans were derived by optimizing two FLCs, one for pump operations and the other for gate operations.</sentence>
+    <sentence>The aim of DL pond system is to capture a total runoff volume of about 250,000 m3.</sentence>
+    <sentence>For floods that exceed the pond system's capacity, excess runoff must be transferred to the drainage system through the controllable gate and pump to protect downstream residential areas.</sentence>
+    <sentence>Additionally, a significant percentage of the total captured runoff is infiltrated to the existing aquifer system through seepage.</sentence>
+  </section>
+  <section name="Material and methods">
+    <sentence>In this study, runoff hydrographs for the DL system were obtained by using the soil conservation service method (SCS) for 24-h rainfall flood events with the various return periods of 25-years, 50-years, and 100 years.</sentence>
+    <sentence>In previous studies, Sabzi and King (2015a, 2015b) developed a dynamic operating system for the flood control pond in DL, simulating the pond as a control volume where the volume change in the control volume equals inflow to the pond minus outflow from the pond.</sentence>
+    <sentence>The outflow from the pond is considered to take three forms: outflow as seepage to the underground aquifer, outflow through the gate to the drainage system, and outflow through the pump to the drainage system.</sentence>
+    <sentence>The pump system and gate have not yet been installed, but river aggradation has severely limited the ability to release water by gravity through the drainage system.</sentence>
+    <sentence>Part of the objective of this study was to provide a basis for sizing the proposed gate and pump systems.</sentence>
+    <sentence>Although evapotranspiration could have been considered as another outflow, it was neglected in Sabzi and King's simulation process in order to develop a conservative scenario that minimized risk to the downstream residential area.</sentence>
+    <sentence>Therefore, the general control volume was formulated as follows: (1) where, for a specific simulation duration, Qin is the inflow to the pond and Qout is total outflow from the pond.</sentence>
+    <sentence>Qout, in turn, includes seepage (Qseepage), outflow from the gates (Qgates), and outflow from the pump (Qpump).</sentence>
+    <sentence>The inflow hydrographs to the DL pond for return periods of 100-year, 50-year, and 25-year for 24-h duration were calculated using HEC-HMS software developed by U.S. Army Corps of Engineers (USACE) (2014) and are shown in Fig 1.</sentence>
+    <sentence>The variation of accumulated outflows from the gate against accumulated inflow to the pond for flood return periods of 100-years, 50-years, and 25-years is shown in Fig 2.</sentence>
+    <sentence>Those variations were simulated for simulation duration.</sentence>
+    <sentence>For return periods of 100-years, 50-years, and 25-years, Fig 2 shows, the dynamics of accumulated inflow to the pond, accumulated outflow from the pond, accumulated seepage, total inflow minus total outflows, and allowable average water depth on the pond.</sentence>
+    <sentence>This illustration allows us to monitor the dynamics of inflows and outflows in the pond system.</sentence>
+    <sentence>In developing all three dynamic systems, the concept of mass balance (volume balance) was applied.</sentence>
+    <sentence>Simulated pond inflows and outflows for floods with return periods of 25-years, 50-years, and 100-years are illustrated in Figs.</sentence>
+    <sentence>3–5.</sentence>
+    <sentence>These figures allow visualization of the dynamics of the pond in terms of accumulated inflow, infiltrated seepage, and outflows to the drainage system through the gate and pump.</sentence>
+    <sentence>In Figs.</sentence>
+    <sentence>3–5, the inflow to the pond (control volume) and outflows from the pond were calculated in terms of water depth added to the pond or the amount of water depth leaving the pond through time (meters/minute).</sentence>
+    <sentence>For the accumulated inflow to the pond, accumulated storage depth on the pond was defined in terms of meters, in which the average depth on the pond (in meters) was obtained by dividing the volume (m3) by pond's area (m2).</sentence>
+    <sentence>In order to find the seepage rate, several infiltration tests were developed in the pond and a linear regression model was used to estimate seepage.</sentence>
+    <sentence>The developed seepage model represents the infiltrated depth of water through time.</sentence>
+    <sentence>The average storage depth capacity of the pond is about 1.21 m, and a pump and gate are available for maintaining the pond at a depth less than or equal to its capacity; gate operation is, of course, preferable to pump operation.</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Inflow hydrographs to the pond for floods with 100-year, 50-year, and 25-year return periods (24-h precipitation, Storm type II).</sentence>
+    <sentence>Fig 2.</sentence>
+    <sentence>Variation of the expected gate operation against accumulated inflow to the pond for floods with 100-year, 50-year, and 25-year return periods (24-h precipitation, Storm type II).</sentence>
+    <sentence>Fig 3.</sentence>
+    <sentence>Total inflow and outflow variation through simulation period for flood with 100-year return period and 24-h precipitation duration.</sentence>
+    <sentence>Fig 4.</sentence>
+    <sentence>Total inflow and outflow variation through simulation period for flood with 50-year return period and 24-h precipitation duration.</sentence>
+    <sentence>Fig 5.</sentence>
+    <sentence>Total inflow and outflow variation through simulation period for flood with 25-year return period and 24-h precipitation duration.</sentence>
+    <sentence>For each specific flooding condition, the gates to the drainage system can be programmed and controlled.</sentence>
+    <sentence>The required operating rates for the gate and pump are obtained by investigating the dynamics of an expected flood with a specific return period and duration.</sentence>
+    <sentence>In emergency conditions, the planned gate and pump operations are monitored by two FLCs that ensure optimal DL system operation.</sentence>
+    <sentence>For monitoring the gates, the FLC works as a dynamic tool based on the average flow depth of the pond, which can be calculated through accumulated inflow to the pond minus outflows in the form of seepage and releases.</sentence>
+    <sentence>Simulink toolbox in MATLAB was utilized to develop the required dynamic model.</sentence>
+    <sentence>In this model, two FLCs operate the existing gate and pump.</sentence>
+    <sentence>The membership functions of the two FLCs are tuned through multiple evolutionary algorithms that are contained within a search engine unit that selects the results from the algorithm with the minimum error value.</sentence>
+    <sentence>Through this approach, the FLCs guarantee that the volume of water stored in the pond never exceeds the pond's capacity by optimally operating the pump and gate while facing different conditions.</sentence>
+    <sentence>As a general principle, FLCs are developed based on the membership functions of input and output values and the operating rules between them.</sentence>
+    <sentence>Input and output values, in turn, are derived from the membership function values.</sentence>
+    <sentence>In the output values, there usually are differences between the expected responses and the derived responses (simulated responses); these differences can be defined as error terms, which are defined as the sum of the expected output values minus the sum of the simulated response or output values.</sentence>
+    <sentence>The optimized FLCs are the ones that minimize the error term.</sentence>
+    <sentence>In order to obtain the minimum total error value, the appropriate membership function values should be obtained.</sentence>
+    <sentence>Minimizing total error through trying different membership function values is an evolutionary process that can be done through different algorithms such as Ant Colony (AC), Bee Colony (BC), Imperial Competitive Algorithm (ICA), genetic algorithms (GA), PSO, ANFIS, and artificial neural networks (ANN).</sentence>
+    <sentence>In this study, the optimized membership function values were found through three popular methods: ANFIS, GA, and PSO.</sentence>
+    <sentence>The optimization training process for ANFIS, GA, and PSO is based on minimizing total error, and the magnitude of the error terms is controlled by the parameters of the FLCs’ membership function values.</sentence>
+    <sentence>Each individual set of membership function parameters (MFPs) is evaluated based on a fitness function value.</sentence>
+    <sentence>Generally, FLCs are designed to give specific response values for specific input values.</sentence>
+    <sentence>The expected response values can be defined by experts, or by solving the analytical relationship between the input and response values.</sentence>
+    <sentence>Evolutionary optimization algorithms can be utilized to define both rules and membership functions, but in most projects, the rules are defined by experts.</sentence>
+    <sentence>Interval selection also plays an important role: FLCs divide the input and response values into several specific intervals with specific response values.</sentence>
+    <sentence>In most FLCs, the error term is essential to finding the MFPs that derive membership function values in such a way that minimizes error.</sentence>
+    <sentence>Considering the importance of FLC performance, it is necessary to compare and utilize different evolutionary methods in finding the appropriate MFPs.</sentence>
+    <sentence>In this study, we defined a unit in the FLC for setting the involved fuzzy membership function parameters.</sentence>
+    <sentence>This unit acquires the initial fuzzy MFPs, uses three different evolutionary methods to optimize the fuzzy MFPs, compares the mean squared errors (MSEs) from the investigated methods to get the optimal parameters, and then sets those parameters as fuzzy membership function values for developed fuzzy inference systems.</sentence>
+    <sentence>The total error term is calculated as follows: (2) where IAE is the sum of absolute error values; t is the total number of inputs; and i is the current iteration.</sentence>
+    <sentence>Without using the evolutionary methods, the optimal membership functions would be obtained through trial and error, and the set of MFPs with the minimum error values in comparison with the other sets would be taken as optimal MFPs.</sentence>
+    <sentence>Through GA, PSO, and ANFIS, different sets of membership function values for input and output values are defined, and each set of membership function values is evaluated based on the fitness function values, which equal total error values.</sentence>
+    <sentence>In each iteration, the total error term is calculated and compared with the previous total error value.</sentence>
+    <sentence>This comparison process is continued until there is no significant difference between the error values from two sequential sets of MFPs.</sentence>
+    <sentence>The minimum acceptable error value difference can be defined by experts and the FLC's designers.</sentence>
+    <sentence>The set of membership function values with the minimum total error term is taken as the best set, and used in the FLCs.</sentence>
+    <sentence>For a fuzzy optimization method, we can cluster the data and develop the fuzzy C-means (FCMs), which will derive one operating rule for each cluster.</sentence>
+    <sentence>The number of the clusters, based on the output values, represents the number of rules.</sentence>
+    <sentence>Graphical illustration of the input and output data can be an appropriate way for selecting the membership function type.</sentence>
+    <sentence>For example, if the input or output values behave linearly, it would be appropriate to select linear membership functions.</sentence>
+    <sentence>Additionally, selecting the rules is based on the logical relationship between the inputs and outputs of the system.</sentence>
+    <sentence>Generally, the rules are set based on rational relationships under the form of if-then rules.</sentence>
+    <sentence>For example, if the average water storage level on the pond approaches the allowable average water level on the pond, then open the gate with the largest opening.</sentence>
+    <sentence>The optimization approach is developed based on optimizing the parameters of the membership functions.</sentence>
+    <sentence>Although FLCs have been used widely in many industrial projects, and several evolutionary algorithms have been utilized to develop adaptive FLCs, there is still a lack of work for showing that specific optimization techniques truly produce optimal results.</sentence>
+    <sentence>Since different optimization techniques can lead to different levels of precision in targeting the appropriate MFPs, it is crucially important to compare different techniques in finding the optimal MFPs.</sentence>
+    <sentence>In order to guarantee the optimality of the MFPs in this study, parameters were obtained through different evolutionary methods, and the optimal set of parameters from those methods were compared, and the final optimal set of MFPs was selected based on the minimization of the total error amount.</sentence>
+    <sentence>Fuzzy logic controller systems Fuzzy logic controllers, which use fuzzy inference systems and are designed based on if–then rules under the fuzzy environment, have many applications in different control processes.</sentence>
+    <sentence>Lee (1990) introduced different applications of FLCs in control systems.</sentence>
+    <sentence>The main concern in defining FLCs is defining the parameters of the appropriate membership functions.</sentence>
+    <sentence>Generally, the number of membership functions and rule combinations are assigned by experts, and the parameters of those membership functions can be optimized by evolutionary methods.</sentence>
+    <sentence>Of course, selecting the rules and the number of the membership functions can be considered as other optimization elements for FLCs, along with the MFPs.</sentence>
+    <sentence>In this study, MATLAB software was utilized to develop the initial fuzzy MFPs and FLCs.</sentence>
+    <sentence>Adaptive network based fuzzy inference system (ANFIS) ANFIS, one of the three optimization methods used in this research, is a method for identifying the appropriate parameters for membership functions in Takagi–Sugeno fuzzy inference systems.</sentence>
+    <sentence>In Takagi–Sugeno fuzzy inference systems, the input variables typically are defined in the form of Gaussian distributions, and the output variables are defined in the form of linear intervals or constant output values.</sentence>
+    <sentence>In order to tune the membership functions’ parameters, ANFIS utilizes a hybrid learning method which was developed by Jang (1993).</sentence>
+    <sentence>Through the training process, we utilized a combination of the methods of least squares of errors and backpropagation of errors.</sentence>
+    <sentence>Genetic algorithm (GA) In this algorithm, another of the three optimization methods utilized in this research, a group of chromosomes is produced as an initial population.</sentence>
+    <sentence>These chromosomes have several genes that represent characteristics of the objective function, and these genes can be used to calculate the fitness function value for each individual chromosome.</sentence>
+    <sentence>The fitness function is then used to evaluate the chromosomes.</sentence>
+    <sentence>During this process, we combine (i.e., crossover and mutate) a specific percentage of individuals (i.e., chromosomes) to find better individuals.</sentence>
+    <sentence>This process continues until we find a chromosome that has a fitness function value equal to or less than the defined criteria for best population.</sentence>
+    <sentence>Fig 6 shows the schematic optimization process of a GA and the trend of starting, developing, and finding the best probable answers.</sentence>
+    <sentence>Fig 6.</sentence>
+    <sentence>Schematic of GA process for selecting best answer (population).</sentence>
+    <sentence>Fig 7.</sentence>
+    <sentence>Schematic of PSO process for selecting best answer (population).</sentence>
+    <sentence>Particle swarm optimization (PSO) Generally, this algorithm is based on swarm intelligence.</sentence>
+    <sentence>First, a group of particles is created.</sentence>
+    <sentence>These particles serve the same role as the chromosomes in the GA algorithm.</sentence>
+    <sentence>These particles are moving in the solution space; every particle has the potential to be a solution.</sentence>
+    <sentence>Particles are created to move to the best position (i.e., fitness value) which they have experienced themselves, or that their neighbor particles have experienced.</sentence>
+    <sentence>The dynamics of each particle are controlled by the two characteristics of velocity and position.</sentence>
+    <sentence>According to Eq (3), the updated velocity of a particle in each iteration is related to the previous velocity of that particle, the best position of that particle in the previous iteration, and the global best position from among all particles.</sentence>
+    <sentence>The best position and global best position are selected based on the fitness function values.</sentence>
+    <sentence>For each particle, two updaters of the position and velocity are calculated as follows: (3) (4) where i = 1, 2, 3, n; n is the swarm size; t is the iteration number; c1 and c2 are the acceleration coefficients; w is the inertia weight; r1 and r2 are the random numbers in the range of [0 1]; is the position of particle i at time t; is the velocity of particle i at time t; pbest is the personal best solution; and gbest is the global best solution.</sentence>
+    <sentence>Conceptually, the created variables are moving in the solution space, and in each iteration the best global position and best position of each individual particle are recognized based on the calculated fitness function values for all particles.</sentence>
+    <sentence>Considering Eq (3), the new velocity of each particle is influenced by its previous velocity.</sentence>
+    <sentence>Considering Eq (4), the new position of the particle is obtained through the previous position of the particle and its updated velocity, which was influenced by its best position and the global best position.</sentence>
+    <sentence>The positions of all particles are evaluated by the fitness function and compared to introduce the global best position in each iteration.</sentence>
+    <sentence>Therefore, all particles influence the next movement of each individual particle.</sentence>
+    <sentence>The sequential process of Eqs.</sentence>
+    <sentence>(3) and (4) is iterated for all particles, and finally the positions of the particles are converged to a specific position which probably is the near-absolute optimum position.</sentence>
+    <sentence>Fig 7 shows the schematic optimization process of PSO and the trend of starting, developing, and finding the best probable answers.</sentence>
+    <sentence>Fig 8.</sentence>
+    <sentence>Schematic of dynamic model of flood controlling and monitoring system developed for Diez Lagos pond system (Sabzi and King, 2015b).</sentence>
+    <sentence>Study area The study area is on the west side of the Mesilla Valley (latitude 31°50′24.67″N and longitude 106°36′42.49″W, WGS84).</sentence>
+    <sentence>The DL pond system is a multi-objective pond system, but its major goal is to protect the downstream residential area from flooding.</sentence>
+    <sentence>In this study, we investigate the system dynamics of the pond and develop an operational dynamic model for its flood-control gate and pump based on optimal FLCs.</sentence>
+    <sentence>Hydrological analyses of the watershed were developed using the SCS method.</sentence>
+    <sentence>Fig 8 shows the schematic of the developed dynamic model of flood controlling system in Diez Lagos Pond System.</sentence>
+    <sentence>The model was developed through Simulink toolbox in Matlab.</sentence>
+    <sentence>The accumulated inflow minus seepage from the pond is the stored volume, given in terms of average water depth on the pond.</sentence>
+    <sentence>This average water depth is an input value to the fuzzy logic controller that monitors the gate operation, as shown in Fig 8.</sentence>
+    <sentence>In the simulated model, the gates are opened with the specific storage depth on the pond as a threshold for the operation of the fuzzy logic controller through time.</sentence>
+    <sentence>The outflow from the gate is calculated based on the height of the water behind the gate.</sentence>
+    <sentence>Through the simulation duration, the output from the gate is calculated based on the average depth behind the gate, which is the total accumulated inflow minus seepage.</sentence>
+    <sentence>The MFPs of two defined FLCs in the dynamic model were optimized.</sentence>
+    <sentence>Fig 9 illustrates the general schematic of optimization process using the utilized artificial intelligence methods in this study.</sentence>
+    <sentence>In this study, the input variables (initial membership functions) of FIS for both gate and pump have been set in the form of 15 input clusters.</sentence>
+    <sentence>The number of the clusters is selected based on the designer's idea.</sentence>
+    <sentence>By evaluating the error values, the appropriateness of the number of clusters can be evaluated; therefore, selecting the number of input and output membership functions is a trial process.</sentence>
+    <sentence>Additionally, the number of the clusters can be selected as another optimization variable.</sentence>
+    <sentence>Fig 9.</sentence>
+    <sentence>General schematic of optimization process using artificial intelligence methods.</sentence>
+    <sentence>Fig 10.</sentence>
+    <sentence>FIS variables – MFPs of input and output in the Takagi–Sugeno fuzzy inference system.</sentence>
+    <sentence>In this study, the input membership functions are defined in the form of symmetric Gaussian functions, which are defined as follows: (5) where the shapes of the Gaussian functions are defined through parameters σ and c, sigma (σ) is a standard deviation of the Gaussian distribution, and c is the center or mean of the Gaussian distribution.</sentence>
+    <sentence>The output variables are defined in the form of specific linear intervals in which each individual interval is between two values.</sentence>
+    <sentence>Each interval is assigned to a specific cluster, and each specific input cluster is associated with a specific output interval through the defined rules.</sentence>
+    <sentence>Fig 10 shows the schematic input and output variables of Takagi–Sugeno inference system as defined FIS.</sentence>
+    <sentence>Fig 11 shows the schematic operation of input and output variables in the Takagi–Sugeno fuzzy inference system.</sentence>
+    <sentence>Fig 12 shows the schematic structure of input and output membership functions in the form of the developed ANFIS model.</sentence>
+    <sentence>Generally, selecting the type of the membership functions is based on the precision and simplicity of the application.</sentence>
+    <sentence>Selecting the type of the membership functions is based on the designer's intuition.</sentence>
+    <sentence>Fig 11.</sentence>
+    <sentence>Schematic of Takagi–Sugeno operational fuzzy inference system with 15 clusters of inputs and 15 clusters of outputs.</sentence>
+    <sentence>The rules in the developed ANFIS model are shown in Table 1.</sentence>
+    <sentence>Considering that there are 15 input membership functions, 15 rules relate the input values to the output values.</sentence>
+    <sentence>The graphical results of the dynamics of the flood in the pond system are shown in Fig 13.</sentence>
+    <sentence>The recorded variations were simulated through a duration of runoff simulation.</sentence>
+    <sentence>The pond system's input and output values were shown in the form of average depth value on the pond.</sentence>
+    <sentence>The diagrams in Fig 13 are, respectively: 1) the hydrograph of inflow to the pond; 2) the outflow of seepage from the pond; 3) the accumulated inflow to the pond less seepage; 4) accumulated outflow from the pond through the flood control gates; 5) accumulated inflow to the pond subtracting outflow through seepage and outflow from the pond through the gates; 6) accumulated outflow from the pond through the pump; 7) total variation in the storage level on the pond (variation equals total accumulated inflow less total seepage and total outflows from both the gates and the pump; and 8) the pond's permissible storage level.</sentence>
+    <sentence>The optimized MFPs for the pump and gate were inserted to the FLCs of gate and pump.</sentence>
+    <sentence>The designed monitoring system in the Simulink model as shown in Fig 8 records all the variations of the elements of the model.</sentence>
+  </section>
+  <section name="Results and discussion">
+    <sentence>As an example of results, Fig 14 shows the expected outflow through the gate versus the “accumulated inflow to pond minus accumulated seepage” for a flood with 100-year return period and 24-h rainfall duration, in which Fig 15 shows the tuning process through GA, PSO, and ANFIS simulations based on Fig 14.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>16–18 show the tuning process through GA, PSO, and ANFIS for expected operation of gate and pump in three flood scenarios of 25-year, 50-year, and 100-year flood return periods with 24-h rainfall duration.</sentence>
+    <sentence>Comparing the MSE values from the three different methods indicates that the minimum MSE value was obtained from PSO-derived results, which had a lower MSE than did ANFIS.</sentence>
+    <sentence>The optimized MFPs for the pump and gate were inserted to the FLCs of the gate and pump.</sentence>
+    <sentence>Fig 12.</sentence>
+    <sentence>ANFIS model structure.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>The defined operating rules.</sentence>
+    <sentence>Rule number Operating condition</sentence>
+  </section>
+  <section name="If (in1 is in cluster1) then (out1 is out1cluster1) (1)"/>
+  <section name="If (in1 is in cluster2) then (out1 is out1cluster2) (1)"/>
+  <section name="If (in1 is in cluster3) then (out1 is out1cluster3) (1)"/>
+  <section name="If (in1 is in cluster4) then (out1 is out1cluster4) (1)"/>
+  <section name="If (in1 is in cluster5) then (out1 is out1cluster5) (1)"/>
+  <section name="If (in1 is in cluster6) then (out1 is out1cluster6) (1)"/>
+  <section name="If (in1 is in cluster7) then (out1 is out1cluster7) (1)"/>
+  <section name="If (in1 is in cluster8) then (out1 is out1cluster8) (1)"/>
+  <section name="If (in1 is in cluster9) then (out1 is out1cluster9) (1)"/>
+  <section name="If (in1 is in cluster10) then (out1 is out1cluster10) (1)"/>
+  <section name="If (in1 is in cluster11) then (out1 is out1cluster11) (1)"/>
+  <section name="If (in1 is in cluster12) then (out1 is out1cluster12) (1)"/>
+  <section name="If (in1 is in cluster13) then (out1 is out1cluster13) (1)"/>
+  <section name="If (in1 is in cluster14) then (out1 is out1cluster14) (1)"/>
+  <section name="If (in1 is in cluster15) then (out1 is out1cluster15) (1)">
+    <sentence>Fig 13.</sentence>
+    <sentence>Monitored total inflow and outflow variations through simulation duration for assumed flood with 100-year return period and 24-h precipitation duration.</sentence>
+    <sentence>Fig 19 shows that MSE is decreased as the number of membership functions in the initial fuzzy inference system is increased.</sentence>
+    <sentence>Increasing the number of membership functions also increased the training process time.</sentence>
+    <sentence>Table 2 shows the MSE values of different MFP training methods under different flood scenarios.</sentence>
+    <sentence>For floods with 100-year and 25-year return periods, the bold values in Table 2 indicate that PSO derived the lowest MSE values in gate, and GA derived the lowest MSE values in pump monitoring.</sentence>
+    <sentence>For a flood with a 50-year return period, GA derived the lowest MSE value in gate monitoring.</sentence>
+    <sentence>The developed dynamic model in this study successfully monitored the behavior of the inflows to the pond, the outflows from the pond, and the storage level variation on the pond; additionally, the simulated dynamic model based on the optimal MFP values indicates that our system was able to successfully monitor the gates and pump in three flood scenarios: 25-year event, 50-year event, and 100-year event.</sentence>
+    <sentence>These results demonstrate the viability of dynamic simulated models in monitoring flood control systems.</sentence>
+    <sentence>A feedback-based monitoring supports a system's self-automating structure to provide optimized fuzzy logic controllers, and can allow flood managers to have reliable rules for flood operations under different flood scenarios.</sentence>
+    <sentence>Fig 14.</sentence>
+    <sentence>Expected outflow variation through the gate versus the “accumulated inflow to pond minus accumulated seepage” for a flood with 100-year return period and 24-h rainfall duration.</sentence>
+    <sentence>Fig 15.</sentence>
+    <sentence>The tuning process (error minimization) through GA, PSO, and ANFIS for gate operation (100-year return flow, 24-h rainfall duration).</sentence>
+    <sentence>Fig 16.</sentence>
+    <sentence>The tuning process (error minimization) through GA, PSO, and ANFIS for finding the MFPs of FLC for pump operation (100-year return flow, 24-h rainfall duration).</sentence>
+    <sentence>Fig 17.</sentence>
+    <sentence>The tuning process (error minimization) through GA, PSO, and ANFIS for finding the MFPs of FLC for gate operation (50-year return flow, 24-h rainfall duration).</sentence>
+    <sentence>Fig 18.</sentence>
+    <sentence>The tuning process (error minimization) through GA, PSO, and ANFIS for finding the MFPs of FLC for gate operation (25-year return flow, 24-h rainfall duration).</sentence>
+    <sentence>Fig 19.</sentence>
+    <sentence>The MSE variation versus the number of membership function values.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Mean of squared errors of applied training methods on designed FIS for different flood scenarios.</sentence>
+    <sentence>Mean of squared errors (MSE) Flood with 100-years return periods Flood with 50-years return periods Flood with 25-years return periods Training method Gate monitoring Pump monitoring Gate monitoring Gate monitoring GA 4.742E-08 3.8349e-10 2.7327E-09 2.6249E-08 PSO 1.7428E-08 3.0688e-09 5.4804E-08 7.8467E-10 ANFIS 2.8117E-08 8.7877e-09 1.1116E-08 3.689E-09</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>The efficiency of any FIS in targeting the expected values for specific inputs is directly related to both the structure of the FIS and the optimality of its MFPs; therefore, developing an optimal fuzzy inference system includes optimizing both the structure and the MFPs of the FIS.</sentence>
+    <sentence>The approach in designing the structure of the FIS can be determined through both graphical representation and conceptual relationships of the input and output values.</sentence>
+    <sentence>Then, the appropriate MFPs for the optimally designed structure of the FIS can be found through the appropriate optimization techniques in the form of a search engine.</sentence>
+    <sentence>In comparison to previous studies, the approach of this study in utilizing the search engine to ensure the optimality of the MFPs of the developed FLCs made it a very powerful system control tool whose approach can be extended to other dynamic systems and real time projects.</sentence>
+    <sentence>Utilizing the search engine led us to have significantly precise performance in targeting the expected operational points, rendering them applicable as monitoring systems on the outflow-controlling gate and pump in a simulation of the Diez Lagos flood control system in southern NM.</sentence>
+    <sentence>From a broader theoretical perspective, the use of a search engine unit containing several optimization approaches proved beneficial.</sentence>
+    <sentence>No single optimization approach produced the best outputs under all conditions, so the ability to select the best outputs from several approaches improved the FLC's performance.</sentence>
+    <sentence>The approach of this study in considering the graphical representation of the input and output values led us to the successful use of the Takagi–Sugeno method for developing an initial structure of FIS for obtaining near-optimum initial values for the MFPs.</sentence>
+    <sentence>In other words, the numerical results of this study showed that an optimal design for the structure of an FIS is as critical a part of the optimization process as the optimization process of that structure's MFPs.</sentence>
+    <sentence>Of course, utilizing the search engine for finding the optimal MFPs is a reliable approach for designing a powerful and efficient FLC (a FIS), but simultaneously it would be timely and cost inefficient.</sentence>
+    <sentence>For developing a powerful search engine, numerous optimization algorithms should be applied, which will make the engine more complicated.</sentence>
+    <sentence>FLCs in dynamic systems can be utilized either for monitoring a specific process or to control a specific process.</sentence>
+    <sentence>In monitoring or controlling a specific deterministic process it can be applied simply, but in facing an uncertain environment or unpredictable input values, the error term will increase and the FLC will be unsuccessful in targeting the expected operation values; therefore, there is a crucial need for a feedback system to update the structure of the FIS before optimizing its MFPs.</sentence>
+    <sentence>In most of the dynamic control systems, simplicity, cost, flexibility, and sustainability of the system are crucially important, and all of these factors weigh against technical complexity in the design process.</sentence>
+    <sentence>Designing and applying fuzzy inference systems in real-time projects involves major challenges.</sentence>
+    <sentence>In designing the structure of fuzzy based rules, it is crucially important to select the appropriate methods that can lead to realistic knowledge discovery.</sentence>
+    <sentence>Several techniques of data mining can be utilized to classify and cluster the input data.</sentence>
+    <sentence>Since, in real projects, the utilized data is not absolutely deterministic and has different sources of uncertainty, data of this sort can be considered as fuzzy values rather than deterministic values.</sentence>
+    <sentence>Additionally, to ensure the optimality of the MFPs, several appropriate optimization techniques should be applied in the search engine unit, which in terms of cost and time would be expensive and more complicated.</sentence>
+    <sentence>Since, for designing an FIS, we utilize limited sources of data, the operational reliability and extendibility of an FIS in a wider range of data should be investigated.</sentence>
+  </section>
+</article>

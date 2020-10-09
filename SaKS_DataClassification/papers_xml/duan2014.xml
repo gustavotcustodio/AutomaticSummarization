@@ -1,0 +1,332 @@
+<article>
+  <title>Separate or joint? Estimation of multiple labels from crowdsourced annotations</title>
+  <abstract>
+    <sentence>Artificial intelligence techniques aimed at more naturally simulating human comprehension fit the paradigm of multi-label classification.</sentence>
+    <sentence>Generally, an enormous amount of high-quality multi-label data is needed to form a multi-label classifier.</sentence>
+    <sentence>The creation of such datasets is usually expensive and time-consuming.</sentence>
+    <sentence>A lower cost way to obtain multi-label datasets for use with such comprehension–simulation techniques is to use noisy crowdsourced annotations.</sentence>
+    <sentence>We propose incorporating label dependency into the label-generation process to estimate the multiple true labels for each instance given crowdsourced multi-label annotations.</sentence>
+    <sentence>Three statistical quality control models based on the work of Dawid and Skene are proposed.</sentence>
+    <sentence>The label-dependent DS (D-DS) model simply incorporates dependency relationships among all labels.</sentence>
+    <sentence>The label pairwise DS (P-DS) model groups labels into pairs to prevent interference from uncorrelated labels.</sentence>
+    <sentence>The Bayesian network label-dependent DS (ND-DS) model compactly represents label dependency using conditional independence properties to overcome the data sparsity problem.</sentence>
+    <sentence>Results of two experiments, “affect annotation for lines in story” and “intention annotation for tweets”, show that (1) the ND-DS model most effectively handles the multi-label estimation problem with annotations provided by only about five workers per instance and that (2) the P-DS model is best if there are pairwise comparison relationships among the labels.</sentence>
+    <sentence>To sum up, flexibly using label dependency to obtain multi-label datasets is a promising way to reduce the cost of data collection for future applications with minimal degradation in the quality of the results.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Multi-label estimation</keyword>
+    <keyword>Crowdsourced annotation</keyword>
+    <keyword>Label dependency</keyword>
+    <keyword>Quality control</keyword>
+    <keyword>Human computation</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Given the complexity of human thinking, several artificial intelligence systems aimed at simulating human comprehension, including affect prediction and intention inference, have one thing in common: They more naturally fit the paradigm of multi-label classification than that of single-label classification since one instance may evoke more than one “comprehension” at the same time.</sentence>
+    <sentence>Generally, an enormous amount of multi-label data is needed to form a multi-label classifier.</sentence>
+    <sentence>Moreover, the data quality directly affects the performance of machine learning techniques.</sentence>
+    <sentence>Obtaining high-quality data from both experts and large crowds can be expensive and time-consuming.</sentence>
+    <sentence>We investigated ways to obtain at low cost reliable multi-label datasets for use with aforementioned comprehension–simulation techniques.</sentence>
+    <sentence>On-line crowdsourcing services provide a means for outsourcing various kinds of tasks to a large group of people, and labeling is one of the main crowdsourcing tasks.</sentence>
+    <sentence>Although multi-label data can be obtained from a crowdsourcing service at very low cost (time and expense), crowdsourcing workers are rarely trained and generally do not have the abilities needed to accurately perform the offered task.</sentence>
+    <sentence>Moreover, some workers may simply submit random responses as a means to earn easy money.</sentence>
+    <sentence>Therefore, ensuring the quality of the results submitted by workers is one of the biggest challenges in crowdsourcing.</sentence>
+    <sentence>A promising approach to improving the quality of crowdsourced annotations is to introduce redundancy, which involves asking several workers to work on each task, and then aggregating their results to obtain a more reliable result.</sentence>
+    <sentence>The simplest aggregation strategy, majority vote, is valid only if the number of workers is large enough.</sentence>
+    <sentence>It is based on the implicit assumption that all workers have the same probability of making an error.</sentence>
+    <sentence>If the number of workers is less than a certain unknown number, the detrimental effect of the noisy responses is significant, and treating responses given by different workers equally produces poor quality results.</sentence>
+    <sentence>However, collecting data from a large number of workers is almost impossible due to the high cost (time and expense).</sentence>
+    <sentence>In view of this, several sophisticated statistical techniques (Dawid &amp; Skene, 1979; Oyama, Baba, Sakurai, &amp; Kashima, 2013; Welinder, Branson, Belongie, &amp; Perona, 2010; Whitehill, Wu, Bergsma, Movellan, &amp; Ruvolo, 2009) have been proposed for obtaining reliable results from annotations provided by a handful of crowdsourcing workers.</sentence>
+    <sentence>However, these techniques simply handle the problem of estimating a single true label for each single-labeled instance.</sentence>
+    <sentence>Nowak and Rüger (2010) investigated the agreement between experts and crowdsourcing workers (non-experts) for multi-label image annotation.</sentence>
+    <sentence>They found that the quality of crowdsourced annotations is similar to the annotation quality of experts.</sentence>
+    <sentence>However, they did not determine how many crowdsourcing workers are needed to obtain comparable quality.</sentence>
+    <sentence>To the best of our knowledge, the problem of multi-label estimation has not been effectively solved.</sentence>
+    <sentence>Therefore, our aim here is to determine the best way to estimate multiple true labels for each instance from multi-label annotations provided by a handful of crowdsourcing workers.</sentence>
+    <sentence>The aim is to reduce the cost of creating high-quality multi-label datasets for future applications with minimal degradation in the quality of the results.</sentence>
+    <sentence>Multi-label estimation from crowdsourced annotations can be seen as an unsupervised multi-label classification problem.</sentence>
+    <sentence>Two widely used methods for multi-label classification are the binary relevance (BR) method and the label combination or label power-set (LP) method (Tsoumakas, Katakis, &amp; Vlahavas, 2010).</sentence>
+    <sentence>The BR method decomposes the multi-label estimation problem into several independent binary-label estimation problems, one for each label in the set of candidate labels.</sentence>
+    <sentence>The final labels for each instance are determined by aggregating the predictions from all binary estimators.</sentence>
+    <sentence>However, this method does not consider dependency among candidate labels.</sentence>
+    <sentence>The LP method treats each unique subset of labels in the set of candidate labels as an atomic “label” and considers a new single-label estimation problem, i.e., estimating each member of the power-set of the candidate label set.</sentence>
+    <sentence>Although the LP method takes label dependency into account, a large number of classes has to be dealt with when the number of candidate labels is large.</sentence>
+    <sentence>Simply put, the LP method can easily suffer from the sparsity of high-dimensional annotations.</sentence>
+    <sentence>Aiming to address these limitations, we propose flexibly incorporating label dependency into the label-generation process.</sentence>
+    <sentence>In particular, we propose three statistical quality control models based on the model of Dawid and Skene (1979) (DS), a well-known unsupervised single-label classification algorithm: • Label-dependent DS (D-DS) model The D-DS model, which is an implementation of the LP method, simply takes the dependency relationships among all candidate labels into account.</sentence>
+    <sentence>• Label pairwise DS (P-DS) model The P-DS model groups candidate labels into pairs, and then separately estimates the states of the two labels within each pair, thereby preventing interference from uncorrelated labels.</sentence>
+    <sentence>• Bayesian network label-dependent DS (ND-DS) model The ND-DS model depicts the conditional independence properties of the joint distribution over candidate labels as a Bayesian network and approximates the underlying high-dimensional joint distribution by using the product of the conditional distributions of the candidate labels.</sentence>
+    <sentence>To evaluate the effectiveness of the proposed models for multi-label estimation, we conducted two experiments using Lancers crowdsourcing service.1 In one, crowdsourcing workers were tasked with annotating the affects (emotions) of lines in a story, and in the other they were tasked with annotating the intentions of tweet posters.</sentence>
+    <sentence>The results showed that, with multi-label annotations provided by a handful of crowdsourcing workers, in most cases, the ND-DS model handled the multi-label estimation problem more effectively than the other models.</sentence>
+    <sentence>However, if there were pairwise comparison relationships among the candidate labels, the P-DS model was the most effective.</sentence>
+    <sentence>The remainder of this article is organized as follows.</sentence>
+    <sentence>In Section 2, we review the original Dawid–Skene model, which is the basis of our study.</sentence>
+    <sentence>Section 3 introduces two of the proposed multi-label estimation models: D-DS and P-DS.</sentence>
+    <sentence>Section 4 describes the use of the expectation maximization (EM) algorithm to infer the results together with the parameters of the model.</sentence>
+    <sentence>The drawback of the D-DS model is discussed and the ND-DS model is presented as the solution in Section 5.</sentence>
+    <sentence>Section 6 describes the experimental design and presents the results obtained by applying the majority vote strategy, the original DS model, and the proposed models to actual crowdsourced annotations.</sentence>
+    <sentence>Section 7 briefly introduces related work on quality control in crowdsourcing and provides some background material on the experiments conducted.</sentence>
+    <sentence>Finally, Section 8 discusses the strengths of the proposed models, explains the research contributions in theory, discusses the implications of the research, points out the limitations of the proposed models, and suggests several future research directions.</sentence>
+  </section>
+  <section name="Background: original Dawid–Skene (DS) model">
+    <sentence>Our work is based on the well-known Dawid–Skene model (Dawid &amp; Skene, 1979), which is aimed at inferring the unknown health state of a patient given the assessments of several clinicians.</sentence>
+    <sentence>Let I be the set of patients, J be the set of health state types, and K be the set of clinicians.</sentence>
+    <sentence>That j is the true state of patient i is denoted as .</sentence>
+    <sentence>The true state of patient i is estimated as (1) where denotes the number of times that clinician k declared patient i to be in state l. In our research, instances and crowdsourcing workers are the counterparts of patients I and clinicians K. The state (true or false) of a particular label for an instance can be considered as the health state of a patient.</sentence>
+    <sentence>On the basis of this, the DS model can be directly used to estimate the state of a particular label for each instance.</sentence>
+    <sentence>Let denote whether a particular label is true () or false () for instance i, and let be the number of times that worker k annotated instance i with () or without () the label.</sentence>
+    <sentence>Similar to formula (1), whether the label is true for instance i can be estimated using (2) Simply put, the DS model is an implementation of the BR method.</sentence>
+  </section>
+  <section name="Proposed models">
+    <sentence>As described in Section 2, the states of different labels for each instance must be estimated separately using different DS models.</sentence>
+    <sentence>This is suitable for multi-label estimation only in the extreme case that labels are mutually independent.</sentence>
+    <sentence>However, some labels may reveal clues about other labels.</sentence>
+    <sentence>For instance, in the affect annotation experiment described in Section 6.1, fondness, happiness, and relief are frequently co-true, fondness and anger are rarely co-true, and shame or anger may be false when relief is true.</sentence>
+    <sentence>To take advantage of this insight, we extended the DS model so that it takes label dependency into account to simultaneously estimate multiple true labels for each instance given multi-label annotations.</sentence>
+    <sentence>Label-dependent DS (D-DS) model As a first step, we focus on the assumption that labels depend on each other.</sentence>
+    <sentence>To depict the dependency relationships among candidate labels, we introduce the concept of conjoint-label.</sentence>
+    <sentence>Let J be the set of candidate labels.</sentence>
+    <sentence>A conjoint-label represents a subset of J.</sentence>
+    <sentence>For example, in the affect annotation experiment, the two conjoint-labels {happiness, relief} and {happiness, excitement} express two different kinds of “happiness”: one is comparatively mild while the other is strong.</sentence>
+    <sentence>Let denote that is the true conjoint-label for instance i, and let be the number of times that worker k annotated instance i with conjoint-label , which can be directly calculated from the crowdsourced annotations.</sentence>
+    <sentence>Our goal is to estimate the set of true conjoint-labels , i.e., the multiple true labels for each instance, given the set of multi-label annotations .</sentence>
+    <sentence>Similar to that of the DS model, the true conjoint-label for instance i is the one that achieves the maximum likelihood given the annotations for instance i: (3) Therefore, the D-DS model is an implementation of the LP method.</sentence>
+    <sentence>It is self-evident that conjoint-labels can be derived from J.</sentence>
+    <sentence>We now describe the estimation of the posterior probabilities in formula (3) for each instance in I.</sentence>
+    <sentence>By Bayes’ Theorem, we have (4) In the DS model, each clinician’s predilections, which are called error rates, are captured in confusion matrix , where specifies how likely clinician k will declare a patient to be in state l when the patient is actually in state j.</sentence>
+    <sentence>In the D-DS model, represents the probability that worker k assigns conjoint-label when the true conjoint-label is .</sentence>
+    <sentence>The numbers of times that worker k annotated instance i with different conjoint-labels when is the true conjoint-label are distributed according to a multinomial distribution, i.e., We assume that, given the true conjoint-label, each worker’s capability to make the correct judgment is conditionally independent of that of other workers, i.e., (5) Let be the prior probability that an instance drawn at random has true conjoint-label , i.e., (6) Different conjoint-labels being true for instance i are mutually exclusive events.</sentence>
+    <sentence>From the law of total probability, we have (7) Finally, by substituting Eqs.</sentence>
+    <sentence>(5)–(7) into Eq (4), we can estimate the posterior probabilities in formula (3) using (8) 3.2.</sentence>
+    <sentence>Label pairwise DS (P-DS) model It is generally agreed that if two labels are similar or opposite, they are strongly correlated.</sentence>
+    <sentence>Let us consider an attendance intention annotation task with four candidate labels, have attended, plan to attend, want to attend, and no intention of attending.</sentence>
+    <sentence>It is obvious that the first two labels are strongly correlated, as are the last two, because someone who has already attended an activity (like an annual festival) would not likely plan to attend again, and someone who has no intention of attending would also be unlikely to want to attend.</sentence>
+    <sentence>However, the four labels are not so generally correlated.</sentence>
+    <sentence>Unfortunately, neither the “independent assumption” of the DS model nor the “dependent assumption” of the D-DS model can properly depict the relationships among these four labels.</sentence>
+    <sentence>In view of this, we propose grouping candidate labels into pairs and then estimating the states of the two labels within each pair separately using independent models, each of which can be seen as a “two-label version of the D-DS model”, in order to prevent interference from uncorrelated labels.</sentence>
+    <sentence>The crucial problem with the P-DS model is how to pair the candidate labels.</sentence>
+    <sentence>Let be the joint entropy of labels a and b.</sentence>
+    <sentence>The optimal pairing pattern S is the one that minimizes the sum of the joint entropies of all label pairs:2 Our experiments demonstrated that most label pairs contain synonymous or antonymous labels.</sentence>
+    <sentence>In fact, the pairing pattern described above for the four intention labels is the optimal one for handling the intention annotation experiment, as described in Section 6.2.</sentence>
+    <sentence>The differences among the DS, D-DS, and P-DS models are illustrated in Fig 1.</sentence>
+    <sentence>Multi-label estimation models: (a) DS, (b) D-DS, and (c) P-DS Fig 1.</sentence>
+    <sentence>Multi-label estimation models: (a) DS, (b) D-DS, and (c) P-DS.</sentence>
+  </section>
+  <section name="Inference algorithm">
+    <sentence>Let us take the D-DS model as an example because the P-DS model can be considered to consist of several two-label D-DS models.</sentence>
+    <sentence>Let represent the posterior probability in formula (3), which means Similar to the approach for the DS model, we use an EM-based algorithm to obtain the maximum likelihood estimates of model parameters and , with the probabilities of true conjoint-labels as latent variables.</sentence>
+    <sentence>We then proceed as follows: (1) 3 Obtain the initial estimates of unobserved variables .</sentence>
+    <sentence>(2) M-step: Estimate the maximum likelihood estimates of parameters and by using the current expectations of : (3) E-step: Estimate the expected values of using Eq (8) with the current estimates of parameters and .</sentence>
+    <sentence>(4) Alternately perform steps (2) and (3) until the likelihood for all annotations converge.</sentence>
+    <sentence>At this point, the with the maximum is the true conjoint-label for instance i.</sentence>
+    <sentence>Since all instances are annotated independently, from Eq (7), we have To avoid the “zero frequency problem” in step (2), is estimated using Lidstone smoothing.</sentence>
+    <sentence>Note that if worker k annotated only a certain instance with conjoint-label one time and did not annotate any other instances, for k’s error rate matrix, and constantly within iterations.</sentence>
+    <sentence>Therefore, to estimate a worker’s error rate matrix, at least two annotations of that worker must be collected.</sentence>
+  </section>
+  <section name="Discussion: Bayesian network label-dependent DS (ND-DS) model">
+    <sentence>Recall that there is an unsolved problem in the first step of the EM algorithm described in Section 4: how to initialize the estimates of unobserved variables .</sentence>
+    <sentence>Let be the state of the jth label in conjoint-label for instance i.</sentence>
+    <sentence>One possible and intuitive way to initialize the estimates is to assign (9) which is the maximum likelihood estimate of and which is indeed used in the D-DS model.</sentence>
+    <sentence>This is equivalent to estimating a -dimensional joint distribution for each instance over the candidate labels.</sentence>
+    <sentence>Because the label states are binary-valued, the joint distribution requires the probabilities of different assignments of values.</sentence>
+    <sentence>For all but the smallest , the explicit representation of the joint distribution is unmanageable from every perspective.</sentence>
+    <sentence>At the practical level, it is too expensive and nearly impossible to acquire a sufficient number of samples from workers to robustly estimate the high-dimensional joint distribution.</sentence>
+    <sentence>This means that the D-DS model can easily suffer from the sparsity of high-dimensional annotations.</sentence>
+    <sentence>To overcome this problem, it is better to represent the distribution more compactly, and to approximate the underlying joint distribution from a finite number of samples by using the conditional independence properties of the joint distribution.</sentence>
+    <sentence>To motivate our discussion, we first assume that all candidate labels are statistically independent.</sentence>
+    <sentence>That is, the completely general joint distribution in Eq (9) can be approximated as an independent distribution over candidate labels: (10) Intuitively, this simple assumption of ignoring the dependency relationships among candidate labels is unreasonable in most cases, as we explained at the beginning of Section 3.</sentence>
+    <sentence>There have been several proposals for approximating high-dimensional joint distributions.</sentence>
+    <sentence>Chow and Liu (1968), for example, addressed this problem by approximating an n-dimensional joint distribution as the product of second-order component distributions, where the relationships among random variables are represented by a dependence tree.</sentence>
+    <sentence>Here we represent label dependency as a Bayesian network and call this extended D-DS model the “Bayesian network D-DS (ND-DS) model”.</sentence>
+    <sentence>Fig 2 shows an example Bayesian network for our affect annotation experiment.</sentence>
+    <sentence>The corresponding approximate product of the joint distribution is Example Bayesian network for affect annotation experiment Fig 2.</sentence>
+    <sentence>Example Bayesian network for affect annotation experiment.</sentence>
+    <sentence>Since the number of annotations for one instance is not sufficient for learning a Bayesian network, in the ND-DS model, all instances are assumed to share an identical Bayesian network, which is learned from the annotations for all instances.</sentence>
+    <sentence>This is reasonable because the relationships among candidate labels are independent of instances.</sentence>
+    <sentence>We build the network structure of candidate labels using the “PC” algorithm (Spirtes, Glymour, &amp; Scheines, 2000), which is based on hypothesis testing.</sentence>
+    <sentence>To test whether two labels and are conditionally independent given a subset of other labels , we compute the conditional mutual information of these two labels, by using the maximum likelihood estimates on annotations for all instances.</sentence>
+    <sentence>Under the independence assumption, follows a distribution with degrees of freedom equal to , where m is the sample size .</sentence>
+    <sentence>Although we take the p-value for rejecting the null hypothesis that two labels are conditionally dependent as 0.1, it is worth mentioning that if the p-value is 1, all labels are determined to be unconditionally independent of each other, and the approximation strategy of the ND-DS model is the same as Eq (10).</sentence>
+    <sentence>Likewise, the ND-DS model is equivalent to the D-DS model if the p-value is 0, which means that the network structure is a complete directed acyclic graph, and the depicted approximate product of the joint distribution is the chain rule for Eq (9).</sentence>
+    <sentence>In summary, we proposed two models, D-DS and P-DS, for estimating multiple true labels for each instance given crowdsourced multi-label annotations.</sentence>
+    <sentence>Moreover, we extended the D-DS model to create the ND-DS model, using the Bayesian network to approximate the joint distribution over the candidate labels.</sentence>
+  </section>
+  <section name="Empirical study">
+    <sentence>Affect annotation for lines in story To create a first test bed for the proposed models containing actual annotations obtained from the Lancers crowdsourcing service, we asked crowdsourcing workers to read some story lines and spontaneously indicate the character’s affects (emotions) generated by each line and then estimated the true affects for each line on the basis of the obtained multi-label annotations.</sentence>
+    <sentence>To simplify the task, we needed stories in which the lines express clear affects.</sentence>
+    <sentence>Since children typically have an elementary level of psychological development, stories written for them usually have vibrant affection tint, distinct character personalities, and higher proportion of lines than other types of stories.</sentence>
+    <sentence>The aim is to better attract the attention of children.</sentence>
+    <sentence>Therefore, children’s stories and fairy tales are commonly used in affect analysis (Alm, Roth, &amp; Sproat, 2005; Mohammad, 2011).</sentence>
+    <sentence>We thus chose two Japanese children’s stories, “Although we are in love”4 (“Love” for short) and “Little Masa and a red apple”5 (“Apple” for short), as the texts to be annotated.</sentence>
+    <sentence>As the source of the texts we used the Aozora Library6.</sentence>
+    <sentence>While “the Big Six” affects (i.e., happiness, fear, anger, surprise, disgust, and sadness) and the related affect sets are typically used in affective computing research (Alm, 2010; Alm et al., 2005; Trohidis, Tsoumakas, Kalliris, &amp; Vlahavas, 2008), we used ten affects as the candidate labels in order to provide more choices for the workers and thereby enable us to perform a more in-depth study on multi-label estimation.</sentence>
+    <sentence>The affects were taken from the “Emotive Expression Dictionary” (Nakamura, 1993).</sentence>
+    <sentence>An example task input screen is shown in Fig 3.</sentence>
+    <sentence>If none of the listed affects was felt, the worker could check neutral.</sentence>
+    <sentence>Example task input screen (translated from original Japanese) Fig 3.</sentence>
+    <sentence>Example task input screen (translated from original Japanese).</sentence>
+    <sentence>People have different tendencies when detecting subjective feelings, so two people may be affected differently by the same line.</sentence>
+    <sentence>This means that, for the affect labels to be reliable, they should be in accord with the general consensus of large crowds.</sentence>
+    <sentence>The majority vote strategy most objectively reflects the general consensus if the number of workers is large enough.</sentence>
+    <sentence>Therefore, we obtained gold standards by having each line annotated 30 times and then taking the majority vote.</sentence>
+    <sentence>That is, the most often annotated conjoint-label for a line was used as the gold standard for that line.</sentence>
+    <sentence>For the “Love” story, we asked each of 30 workers to annotate each line one time, which ensured that each worker annotated the complete set of lines.</sentence>
+    <sentence>For the “Apple” story, the workers were not specifically selected, so the 30 annotations for every line were provided by arbitrary workers, and few, if any, of them annotated all the lines.</sentence>
+    <sentence>This is a more realistic situation since it is not a good idea to submit a very large task to a crowdsourcing service because a large task tends to diminish worker enthusiasm or even cause workers to avoid the task.</sentence>
+    <sentence>We conducted the “Apple” task in this way simply to examine the effects of “arbitrary worker interference” on the model results.</sentence>
+    <sentence>Moreover, although our proposed models can handle a line being annotated more than once by a worker, to collect opinions as widely as possible at a fixed cost, it is still best to avoid this situation even though a worker may interpret a line differently at different times.</sentence>
+    <sentence>Therefore, in our experiments, all the annotations for a line were obtained from different workers.</sentence>
+    <sentence>This means that in formula (2) and in formula (3) are either 0 or 1.</sentence>
+    <sentence>The annotation frequencies of the affect labels are shown in Table 1, and other statistics about the datasets are shown in Table 2.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Annotation frequencies of affect labels and neutral.</sentence>
+    <sentence>Affect label Freq.</sentence>
+    <sentence>in “Apple” Freq.</sentence>
+    <sentence>in “Love” Total Relief 362 516 878 Anger 623 242 865 Sadness 298 522 820 Happiness 306 458 764 Fondness 226 467 693 Excitement 270 379 649 Disgust 265 279 544 Neutral 352 120 472 Surprise 243 190 433 Fear 107 164 271 Shame 68 84 152 Total (except neutral) 2768 3301 6069 Table 2.</sentence>
+    <sentence>Statistics for affect annotation experiment.</sentence>
+    <sentence>“Apple” “Love” Total No.</sentence>
+    <sentence>of workers 57 30 84 No.</sentence>
+    <sentence>of lines 78 63 141 No.</sentence>
+    <sentence>of annotations 2340 1890 4230 Avg.</sentence>
+    <sentence>no.</sentence>
+    <sentence>of checked labels per annotation 1.18 1.75 1.43 Avg.</sentence>
+    <sentence>no.</sentence>
+    <sentence>of annotations per line 30 30 30 To determine the effect of the number of workers per line on accuracy, we randomly split the workers who annotated a particular line into various numbers of groups of equal size and estimated the reliable affect labels for each line given the annotations within each group.</sentence>
+    <sentence>We did this for five different group sizes: 3 (ten groups), 5 (six groups), 10 (three groups), 15 (two groups), and 30 (one group).</sentence>
+    <sentence>Since both the estimation result and the gold standard for a line can be regarded as a binary vector, the performance evaluation of the proposed models is the average simple matching coefficient, i.e., the average proportion of correct labels between the gold standard and the estimation result for all lines.</sentence>
+    <sentence>The average accuracies for each group size were obtained with the majority vote strategy, the DS, P-DS, and D-DS models, and the ND-DS sub-model of the D-DS model.</sentence>
+    <sentence>As shown in Fig 4, for the “Love” story, the statistical models achieved better or comparable accuracy than the majority vote strategy when the group size was 3, 5, or 10.</sentence>
+    <sentence>As shown in Fig 5, for the “Apple” story, the statistical models achieved better accuracy when the group size was 3 or 5, and two of them achieved better or comparable accuracy when the group size was 10.</sentence>
+    <sentence>This means that ten workers at most for each line would be a reasonable number.</sentence>
+    <sentence>Moreover, the ND-DS model consistently outperformed the D-DS model.</sentence>
+    <sentence>This means that a learned Bayesian network is effective for approximating the high-dimensional joint distribution over ten affect labels from a finite number of annotations.</sentence>
+    <sentence>Although the DS, P-DS, and ND-DS models had virtually the same average accuracy for three workers per line, the ND-DS model had significantly better accuracy (greater than 90%) for five or more workers per line.</sentence>
+    <sentence>In other words, the ND-DS model can most effectively handle the multi-label estimation problem with annotations provided by only about five crowdsourcing workers per instance.</sentence>
+    <sentence>One noteworthy result is that the average accuracies of the DS and P-DS models remained basically unchanged as the group size increased for the “Love” task while they decreased for the “Apple” one.</sentence>
+    <sentence>This could be because these two models are more sensitive to the effects of “arbitrary worker interference”.</sentence>
+    <sentence>Average affect annotation accuracy for “Although we are in love” story Fig 4.</sentence>
+    <sentence>Average affect annotation accuracy for “Although we are in love” story.</sentence>
+    <sentence>Average affect annotation accuracy for “Little Masa and a red apple” story Fig 5.</sentence>
+    <sentence>Average affect annotation accuracy for “Little Masa and a red apple” story.</sentence>
+    <sentence>Intention annotation for tweets In the second experiment, intention annotation for tweets, we posted 1398 tweets on the Twitter micro-blogging service7 related to the Sapporo Snow Festival.</sentence>
+    <sentence>We again used the Lancers crowdsourcing service and asked workers to infer the attendance intentions of the tweet poster and then select appropriate ones from four intention labels: have no intention of attending, want to attend, plan to attend, andhave attended.</sentence>
+    <sentence>Each tweet was annotated by five arbitrary workers.</sentence>
+    <sentence>The annotation frequencies of the intention labels are shown in Table 3, and other statistics about the dataset are shown in Table 4.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Annotation frequencies of intention labels.</sentence>
+    <sentence>Intention label Frequency Have no intention of attending 2521 Want to attend 2417 Plan to attend 1365 Have attended 1200 Total 7503 Table 4.</sentence>
+    <sentence>Statistics for intention annotation experiment.</sentence>
+    <sentence>No.</sentence>
+    <sentence>of workers 94 No.</sentence>
+    <sentence>of tweets 1398 No.</sentence>
+    <sentence>of annotations 6990 Avg.</sentence>
+    <sentence>no.</sentence>
+    <sentence>of checked labels per annotation 1.07 Avg.</sentence>
+    <sentence>no.</sentence>
+    <sentence>of annotations per tweet 5 We manually assigned reliable labels to each tweet and used them as the gold standards.</sentence>
+    <sentence>The performance of the proposed models was measured in the same way as in the affect annotation experiment.</sentence>
+    <sentence>As shown in Fig 6, all the statistical models as well as the majority vote strategy performed well due to the simplicity of the task.</sentence>
+    <sentence>Particularly noteworthy is that the P-DS model had the highest accuracy, followed by the ND-DS model.</sentence>
+    <sentence>The superior performance of the P-DS model is attributed to the fact that the four intention labels have a typical pairwise characteristic, as explained in Section 3.2.</sentence>
+    <sentence>Average accuracies for intention annotation Fig 6.</sentence>
+    <sentence>Average accuracies for intention annotation.</sentence>
+  </section>
+  <section name="Related work">
+    <sentence>Crowdsourcing and quality control Crowdsourcing is an economical and efficient approach to performing tasks that are difficult for computers but relatively easy for humans.</sentence>
+    <sentence>With the recent expansion of crowdsourcing platforms such as Amazon Mechanical Turk8 and CrowdFlower,9 the concept of crowdsourcing has been successfully applied in various areas of computer science research, including natural language processing (Snow, O’Connor, Jurafsky, &amp; Ng, 2008) and computer vision (Sorokin &amp; Forsyth, 2008).</sentence>
+    <sentence>Because there is no guarantee that all workers are sufficiently competent to complete the offered tasks, ensuring the quality of the results is one of the biggest challenges in crowdsourcing.</sentence>
+    <sentence>A simple strategy is giving monetary bonuses to high-performance workers and denying payments to low-performance ones.</sentence>
+    <sentence>In addition, several approaches geared toward efficient quality control have been applied.</sentence>
+    <sentence>For example, Amazon Mechanical Turk provides a pre-qualification system to assess the skill level of a prospective worker, and CrowdFlower enables requesters to inject a collection of tasks with known correct answers into their tasks to measure a worker’s performance automatically.</sentence>
+    <sentence>Meanwhile, crowdsourcing service researchers have also explored sophisticated statistical strategies for ensuring the quality of crowdsourcing data obtained from noisy responses.</sentence>
+    <sentence>Snow et al.</sentence>
+    <sentence>(2008) demonstrated that, using an automatic bias correction algorithm, Amazon Mechanical Turk can be used effectively for a variety of natural language annotation tasks.</sentence>
+    <sentence>Sheng, Provost, and Ipeirotis (2008) explored several methods for choosing which instances should get more labels, and how to include labels’ uncertainty information when training classifiers.</sentence>
+    <sentence>Whitehill et al.</sentence>
+    <sentence>(2009) presented a model for simultaneously estimating the true label of each multi-labeled instance, the expertise of each worker, and the difficulty of each question.</sentence>
+    <sentence>Lin, Mausam, and Weld (2012) took a decision-theoretic approach to estimating the correct answer for a task that can have a countably infinite number of possible answers.</sentence>
+    <sentence>Oyama et al.</sentence>
+    <sentence>(2013) investigated the use of not only crowdsourced annotations but also workers’ self-reported confidence scores to estimate the true label for each single-labeled instance.</sentence>
+    <sentence>Baba, Kashima, Kinoshita, Yamaguchi, and Akiyoshi (2014) applied quality control techniques to the detection of crowdsourcing tasks considered to be improper by a crowdsourcing service.</sentence>
+    <sentence>They showed that the accuracy of detecting improper tasks could be improved by combining non-expert judgments by crowdsourcing workers with expert judgments.</sentence>
+    <sentence>There has also been some research on the problem of multi-label estimation, the focus of this paper.</sentence>
+    <sentence>Nowak and Rüger (2010) studied inter-annotator agreement for multi-label image annotation and found that using the majority vote strategy to generate one annotation set from several opinions can filter out noisy judgments of non-experts to some extent.</sentence>
+    <sentence>However, they did not answer the question of how many crowdsourcing workers are needed to obtain quality comparable to that of expert annotators.</sentence>
+    <sentence>Bragg and Weld (2013) presented a decision-theoretic approach to taxonomy creation that implements the BR method.</sentence>
+    <sentence>They showed that, with their approach, 16 workers per instance are sufficient to achieve quality comparable to the general consensus of a large crowd.</sentence>
+    <sentence>Affect prediction People, by nature, can be emotionally affected by literature, music, fine art, etc.</sentence>
+    <sentence>Predicting how we are affected is an important research direction in artificial intelligence as it is potentially applicable to many further applications, including expressive text-to-speech synthesis (Anderson, Stenger, Wan, &amp; Cipolla, 2013) and therapeutic education of children with communication disorders (Dias, Faria, &amp; Ibrahim, 2013).</sentence>
+    <sentence>Many researchers have thus concentrated on this research area.</sentence>
+    <sentence>Alm et al.</sentence>
+    <sentence>(2005) investigated the importance of various features for affect analysis and classified the emotional affinity of sentences in the narrative domain of children’s fairy tales using the sparse network of winnows (SNoW) learning architecture.</sentence>
+    <sentence>Trohidis et al.</sentence>
+    <sentence>(2008) modeled the automated detection of emotion in music as a multi-label classification task.</sentence>
+    <sentence>Alm (2010) analyzed the characteristics of sentences with high-agreement crowdsourced affect annotations.</sentence>
+    <sentence>Ptaszynski et al.</sentence>
+    <sentence>(2012) did an experiment on affect analysis of certain characters in narrative text.</sentence>
+    <sentence>Kim, Li, Lebanon, and Essa (2013) introduced a continuous representation, called the manifold, for human emotions in sentiment analysis research and constructed a statistical model connecting it to documents and to a discrete set of emotions.</sentence>
+    <sentence>A method for identifying emotions in micro-blog posts by using “emotion cause extraction” was proposed by Li and Xu (2014).</sentence>
+    <sentence>Intention inference In today’s Web 2.0 era, people post descriptions of their various real-world experiences such as visiting places, participating in activities, and shopping to social networking services, such as Twitter and Facebook.10 Extracting such information from the huge amounts of real-time updated text corpora is important for estimating the popularity of places, activities, and products, and is of great value to navigation and recommendation systems.</sentence>
+    <sentence>Lee and Sumiya (2010) developed a method for detecting geo-social events, such as local festivals, by monitoring crowd behaviors indirectly via Twitter.</sentence>
+    <sentence>Liao et al.</sentence>
+    <sentence>(2012) investigated whether and how micro-messaging technologies could be used to predict attendance trends at the World Expo 2010 in Shanghai.</sentence>
+    <sentence>Xu, Li, and Song (2012) proposed using a semidefinite programing optimization technique for identifying valuable customers from social network services in terms of profit maximization.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>We focused on crowdsourcing tasks fitting the paradigm of multi-label annotation, which means that an instance can have one or more true label(s).</sentence>
+    <sentence>The three statistical quality control models we proposed for the multi-label estimation problem incorporate label dependency into the label-generation process.</sentence>
+    <sentence>An EM-based algorithm is used to estimate the multiple true labels for each instance as well as the maximum likelihood estimates of the model parameters.</sentence>
+    <sentence>Two experiments using Lancers crowdsourcing service showed that two of the models showed promising performance: in most cases, the Bayesian network label-dependent DS (ND-DS) model most effectively handled the annotations provided by about five crowdsourcing workers per instance.</sentence>
+    <sentence>The label pairwise DS (P-DS) model was the most effective when there were pairwise comparison relationships among candidate labels.</sentence>
+    <sentence>Two widely used methods for multi-label classification are the binary relevance method and the label combination or label power-set method (Tsoumakas et al., 2010), which are the counterparts of the DS model and the D-DS model in this research.</sentence>
+    <sentence>The DS model simply decomposes the multi-label estimation problem into several independent binary-label estimation problems, one for each label in the set of candidate labels, and final labels for each instance are determined by aggregating the predictions from all binary estimators.</sentence>
+    <sentence>A significant limitation of this method is that they do not take into account any dependency among candidate labels.</sentence>
+    <sentence>Since multi-label tasks often have many candidate labels, if we simply incorporate dependency relationships among all candidate labels into the label-generation process, as does the D-DS model, we may get data sets with a large number of classes and few samples per class.</sentence>
+    <sentence>This means that the D-DS model can easily suffer from the sparsity of high-dimensional annotations, which makes the learning process difficult.</sentence>
+    <sentence>Therefore, the D-DS model performs poorly for high-dimensional data sets.</sentence>
+    <sentence>To address these limitations, we proposed two approaches that flexibly use label dependency.</sentence>
+    <sentence>In the first approach, the P-DS model is used to group candidate labels into pairs.</sentence>
+    <sentence>The states of the two labels within each pair are then estimated separately in order to prevent interference from uncorrelated labels.</sentence>
+    <sentence>The crucial problem is how to recognize pairwise comparison relationships among candidate labels.</sentence>
+    <sentence>If the labels are pairwise correlated, the optimal pairing pattern should be the one that minimizes the sum of the joint entropies of all label pairs.</sentence>
+    <sentence>The reason for this is explained in detail in Appendix A.</sentence>
+    <sentence>In the second approach, the underlying high-dimensional joint distribution over candidate labels is represented more compactly to enable it to be approximated from a finite number of annotations.</sentence>
+    <sentence>The ND-DS model depicts the properties as a Bayesian network, enabling the joint distribution to be approximated using the product of the conditional distributions of the candidate labels.</sentence>
+    <sentence>Because the dependency relationships among candidate labels are independent of instances, the network is learned from the annotations for all instances.</sentence>
+    <sentence>The superiority of these two approaches is shown by the experimental results.</sentence>
+    <sentence>Multi-label annotation is crucial for many comprehension–simulation techniques, e.g., affect prediction, intention inference, email analysis, and text, image, music, and movie semantic categorization.</sentence>
+    <sentence>The annotation quality directly affects the performance of these techniques.</sentence>
+    <sentence>Collecting high-quality annotations from both experts and large crowds can be expensive and time-consuming.</sentence>
+    <sentence>The proposed models enable multiple true labels to be effectively estimated using the annotations provided by handful of crowdsourcing workers.</sentence>
+    <sentence>This approach to obtaining multi-label datasets with quality approaching that of ones obtained from the general consensus of large crowds or from human experts is a promising way to reduce the cost of data collection for future applications with minimal degradation in the quality of the results.</sentence>
+    <sentence>Our work is an exploration of the human computation issue.</sentence>
+    <sentence>Our promising results provide encouragement for further study to overcome the limitations of our present work.</sentence>
+    <sentence>For one thing, each worker should label at least two instances because a worker’s error rate matrix cannot be estimated with only one annotation, as mentioned in Section 4.</sentence>
+    <sentence>This requirement may decrease the flexibility of crowdsourcing somewhat.</sentence>
+    <sentence>In our research, every instance was assigned an equal number of workers.</sentence>
+    <sentence>However, for simple instances, few (one or two) workers may be sufficient, so taking into account the difficulties of instances should further reduce annotation costs.</sentence>
+    <sentence>In view of these considerations, we plan to enhance our research efforts in several ways.</sentence>
+    <sentence>First, our experiments were conducted on three small databases, especially the two stories.</sentence>
+    <sentence>In future work we will explore the effect of using large datasets on the results.</sentence>
+    <sentence>Another possible direction is the design of an effective mechanism for automatically identifying the difficulties of instances such as using the time needed for completing an instance.</sentence>
+    <sentence>Other information, such as workers’ self-reported confidence scores, which have shown an improvement recently (Oyama et al., 2013), and consistency of story emotionality and character personality for narrative annotation tasks, is also important for the label-generation process and worth studying.</sentence>
+    <sentence>In the long-term, we plan to extend our work to other multi-label estimation problems, such as art genre recognition, which is thought to raise more variant opinions among people.</sentence>
+    <sentence>Estimating labels not only from crowdsourced annotations but also from user-created content services is also an interesting direction for future work.</sentence>
+    <sentence>Appendix A.</sentence>
+    <sentence>Proof of optimal label pairing pattern Let be the joint probability distribution over n labels , …, denoting the n-dimensional vector .</sentence>
+    <sentence>Under the condition that labels are pairwise correlated, the joint distribution over all labels takes the following form: where constitutes a label pair.</sentence>
+    <sentence>The optimal pairing pattern is the one that minimizes the Kullback–Leibler divergence (Kullback &amp; Leibler, 1951), which measures the difference between two probability distributions over the same event space, between and : (A.1) where on the right side is the joint entropy of all labels.</sentence>
+    <sentence>Since is a component of , where the right side of the equation is the joint entropy of label pair .</sentence>
+    <sentence>Thus, Eq (A.1) becomes Since is independent of the pairing pattern, minimizing the Kullback–Leibler divergence is equivalent to minimizing the sum of the joint entropies of all label pairs: If we depict the pairing pattern as an undirected graph, where labels are represented by vertices, and the weight of each edge is assigned the joint entropy of the two labels represented by the two vertices of the edge, the sum of the joint entropies of all label pairs can be minimized by finding the minimum-weight perfect matching of the graph.</sentence>
+    <sentence>This solution can be achieved by using the Blossom algorithm (Edmonds, 1965).</sentence>
+    <sentence>1 http://www.lancers.jp.</sentence>
+    <sentence>2 For a detailed proof of this, see Appendix A.</sentence>
+    <sentence>3 This step is discussed in more detail in Section 5.</sentence>
+    <sentence>4 http://www.aozora.gr.jp/cards/001475/files/52111_47798.html.</sentence>
+    <sentence>5 http://www.aozora.gr.jp/cards/001475/files/52113_46622.html.</sentence>
+    <sentence>6 http://www.aozora.gr.jp.</sentence>
+    <sentence>7 https://twitter.com.</sentence>
+    <sentence>8 http://www.mturk.com.</sentence>
+    <sentence>9 http://crowdflower.com.</sentence>
+    <sentence>10 https://www.facebook.com.</sentence>
+  </section>
+</article>

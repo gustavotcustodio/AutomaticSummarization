@@ -1,0 +1,384 @@
+<article>
+  <title>Neural networks based reinforcement learning for mobile robots obstacle avoidance</title>
+  <abstract>
+    <sentence>This study proposes a new approach for solving the problem of autonomous movement of robots in environments that contain both static and dynamic obstacles.</sentence>
+    <sentence>The purpose of this research is to provide mobile robots a collision-free trajectory within an uncertain workspace which contains both stationary and moving entities.</sentence>
+    <sentence>The developed solution uses Q-learning and a neural network planner to solve path planning problems.</sentence>
+    <sentence>The algorithm presented proves to be effective in navigation scenarios where global information is available.</sentence>
+    <sentence>The speed of the robot can be set prior to the computation of the trajectory, which provides a great advantage in time-constrained applications.</sentence>
+    <sentence>The solution is deployed in both Virtual Reality (VR) for easier visualization and safer testing activities, and on a real mobile robot for experimental validation.</sentence>
+    <sentence>The algorithm is compared with Powerbot's ARNL proprietary navigation algorithm.</sentence>
+    <sentence>Results show that the proposed solution has a good conversion rate computed at a satisfying speed.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Obstacle avoidance</keyword>
+    <keyword>Neural networks</keyword>
+    <keyword>Q-learning</keyword>
+    <keyword>Virtual reality</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Path planning is one of the key elements of autonomous mobile robots.</sentence>
+    <sentence>Since the introduction of mobile robotic platforms back in the ‘50s, the main desiderate sought by most researchers in motion planning is the development an algorithm capable of providing collision-free trajectories.</sentence>
+    <sentence>The subject was divided into two separate research areas, based on the type of environment information which is used by the mobile robot (de Berg, van Kreveld, Overmars, &amp; Schwarzkopf, 2000).</sentence>
+    <sentence>The first approach uses global knowledge of the environment, meaning that at each moment, the robot has complete information about its location, movement capabilities, obstacles and target.</sentence>
+    <sentence>This raises additional problems related to localization.</sentence>
+    <sentence>Based on a good localization technique, the robot can determine precisely its position with respect to the changing environment (usually, a configuration space C is employed to describe all possible configurations of robot; presuming the navigation takes place in a 2D workspace, C is divided in 2: the obstacles space – Cobs, and the free space – Cfree).</sentence>
+    <sentence>Navigating in Cfree can be achieved through a wide variety of algorithms (such as SLAM – Simultaneous Localization And Mapping (Leonard &amp; Durrant-Whyte, 1991), Wireless Localization based on RSSI (Stoep, 2009), particle filter localization (Dellaert, Fox, Burgard, &amp; Thrun, 1999) and others) and sensorial systems (GPS (Montiel &amp; Sepúlveda, 2014), camera networks, environment markers and so on).</sentence>
+    <sentence>As one can infer, it is possible to know in advance if the goal is reachable, which makes this a perfect candidate for artificial neural networks (ANNs).</sentence>
+    <sentence>The second approach uses local information retrieved by range sensors (sonar (Kim &amp; Kim, 2011), laser (Surmann, Nüchter, &amp; Hertzberg, 2003)), infrared sensors (Alwan, Wagner, Wasson, &amp; Sheth, 2005) or video cameras (Seder &amp; Petrovic, 2007).</sentence>
+    <sentence>Aside from the fact that there is no guarantee of convergence, one of the main issues which needs to be solved by scientists is the identification and avoidance of local minima.</sentence>
+    <sentence>In most cases, this approach doesn't guarantee convergence.</sentence>
+    <sentence>Thus, we settle to use global information within this study.</sentence>
+    <sentence>Over the last decades, many researches dealt with the path planning problem.</sentence>
+    <sentence>Various types of solutions were proposed: grid-based, potential fields, geometrical or based on artificial intelligence (AI).</sentence>
+    <sentence>Grid-based methods involve the overlay of a grid over the C space.</sentence>
+    <sentence>In order to obtain a valid path, all grid cells (or grid points) must therefore be included in Cfree.</sentence>
+    <sentence>One of the most common grid-based algorithms in motion planning is VFH (with its variants, VFH+ and VFH*) (Borenstein &amp; Koren, 1991; Ulrich &amp; Borenstein, 1998).</sentence>
+    <sentence>Potential fields model C after a potential function: obstacles are seen as repulsive entities while the target is seen as an attractive center.</sentence>
+    <sentence>The workspace is regarded as an isolated universe, which works towards minimizing its potential energy, thus pushing the moving entity (the mobile robot) to the goal (Borenstein &amp; Koren, 1991).</sentence>
+    <sentence>Among geometrical methods, the most used are cell decomposition and the visibility graph (Barraquand &amp; Latombe, 1991).</sentence>
+    <sentence>The visibility graph is constructed based on clusters of inter-visible points within Cfree.</sentence>
+    <sentence>Using a traversing algorithm such as Dijkstra, A* (Dechter &amp; Pearl, 1985) or D* (Stentz, 1994), the shortest or optimal paths are computed (Lozano-Pérez &amp; Wesley, 1979).</sentence>
+    <sentence>Latest research in motion planning employs the use of artificial learning techniques.</sentence>
+    <sentence>Q-learning has been used in Jaradat, Al-Rousan, and Quadan (2011) to achieve motion planning in dynamic environments.</sentence>
+    <sentence>The authors limit the number of states from the states space, thus reducing the size of Q-table and indirectly, the computation time; however, convergence is not guaranteed.</sentence>
+    <sentence>Inspired by bird flocking, particle swarm optimization (PSO) is also widely used in motion planning (Qin, 2004).</sentence>
+    <sentence>Each particle from the space of solution candidates tries to achieve the goal optimally, and improves its “experience” after every new iteration, based on its trajectory history and on the “experience” of other neighboring particles.</sentence>
+    <sentence>Another widely exploited motion planning method is fuzzy logic (Reignier, 1994).</sentence>
+    <sentence>Last but not least, neural networks were used to achieve obstacle-free trajectories (Dezfoulian, Wu, &amp; Ahmad, 2013; Fierro &amp; Lewis, 1998).</sentence>
+    <sentence>Although many of these AI methods show promising results, just a few actually target the avoidance of dynamic obstacles, and even less fewer implement the proposed motion planning solution in real testing environments for experimental validation.</sentence>
+    <sentence>A multi-layer neural network is able to map non-linear functions (Hecht-Nielsen, 1987).</sentence>
+    <sentence>This feature can be used in conjunction with reinforcement learning in order to solve the path planning problem, given prior knowledge of the environment.</sentence>
+    <sentence>For this specific case, Q-learning (Russell &amp; Norvig, 2002) was used with the following function that quantifies the quality of a state-action: (1) where Q is the set of solutions, S is the set of states and A is the set of actions.</sentence>
+    <sentence>The cost, or better said, the reward for a collision-free trajectory is given if the mobile robot reaches the goal.</sentence>
+    <sentence>In other words, the proposed solution samples each state, action and result from the workspace as an underlying probability distribution which helps in calculating the reward parameter.</sentence>
+    <sentence>For fast convergence, the solution makes further use of a feed-forward neural network.</sentence>
+    <sentence>Thus the proposed, solution usually find a collision-free trajectory from the first few epochs.</sentence>
+    <sentence>The motion planner is implemented in VR for initial testing and efficient visualization, and after achieving satisfying results, on a real mobile robot: PowerBot from Mobile Robots (“PowerBot website”, 2015).</sentence>
+  </section>
+  <section name="Literature overview">
+    <sentence>This study encompasses aspects from multiple research areas.</sentence>
+    <sentence>A brief resume of current achievements in these areas is proposed bellow.</sentence>
+    <sentence>Obstacle avoidance of mobile robots in dynamic environments Avoiding collisions with moving obstacles is a challenging task.</sentence>
+    <sentence>In order to solve this problem, a large number of algorithms using both local and global knowledge were proposed by researchers.</sentence>
+    <sentence>Knowing only local information about the working environment presumes, in most cases, the usage of a reactive approach, such as directional or velocity-based methods.</sentence>
+    <sentence>Directional methods calculate geometrically the robot's trajectory (Khatib, 1986; Minguez &amp; Montano, 2004).</sentence>
+    <sentence>Knowing the exact coordinates of the robot and of the obstacles, the path planner can simply calculate the Euclidian distance at each time instance, and by setting a lower limit to this variable, the robot can move on collision-free trajectories (Asano, Guibas, Hershberger, &amp; Imai, 1985).</sentence>
+    <sentence>Velocity-based methods consider the kinetic energy of the robot and of the closest recognized moving obstacles, and use this data in trajectory generation (Large, Laugier, &amp; Shiller, 2005).</sentence>
+    <sentence>The most used velocity-based method is Dynamic Time Window, introduced back in 1997 (Fox, Burgard, &amp; Thrun, 1997).</sentence>
+    <sentence>One of the biggest issues with reactive methods is that they need a good sensorial system which can produce accurate position coordinates for any local obstacles.</sentence>
+    <sentence>Latest studies use video cameras to get environment information and to estimate the dynamics of the scene.</sentence>
+    <sentence>For example, a single camera can be used to either detect landmarks and environment cues, or based on an algorithm such as the Block-Based Motion Estimation (Kim &amp; Do, 2012), to detect and classify moving obstacles.</sentence>
+    <sentence>Multiple cameras provide stereoscopic vision, making depth perception much easier (Chilian &amp; Hirschmüller, 2009).</sentence>
+    <sentence>Another type of sensor introduced on the market in the last decade is the time-of-flight (TOF) camera (May &amp; Werner, 2006), a hybrid between laser range sensors and classic video cameras.</sentence>
+    <sentence>Usually, obstacle avoidance algorithms based on local information of an environment with a fairly large amount of obstacles rely on selecting the obstacle which is most likely to collide with the robot.</sentence>
+    <sentence>This strategy is however hard to implement on real mobile robots, since the selection process itself is subject to many questions such as: 1.</sentence>
+    <sentence>Are all the obstacles properly sensed?</sentence>
+    <sentence>Is this the closest obstacle?</sentence>
+    <sentence>Is this the most dangerous obstacle?</sentence>
+    <sentence>What if there are 2 or multiple obstacles closing at the same time?</sentence>
+    <sentence>Considering a global representation of the dynamic environment is available, some of the most used navigation algorithms rely on variations of the potential field method.</sentence>
+    <sentence>Cases include specific situations when for example both the target and the robot are moving (Ge &amp; Cui, 2002; Huang, 2009), or the use of harmonic functions in order to completely eliminate the local minima (Kim &amp; Khosla, 1992).</sentence>
+    <sentence>Others use an integrated representation of the workspace (Savkin &amp; Wang, 2014) or analytical approaches (Qu, Wang, &amp; Plaisted, 2004) to achieve collision-free trajectories.</sentence>
+    <sentence>One of the main issues that drifted researches away towards unconventional motion planning algorithms is the computation time.</sentence>
+    <sentence>Lately, several studies employ the use of AI, since many methods converge faster, are easier to implement and produce in some cases more satisfying results.</sentence>
+    <sentence>Path planning with artificial intelligence techniques There are many artificial intelligence techniques used for solving path planning.</sentence>
+    <sentence>Among these, fuzzy logic was the first to be used (Reignier, 1994; Saffiotti, 1997; Yen, 1995).</sentence>
+    <sentence>Fuzzy logic is great for static workspaces, but produces weak results in dynamic environments.</sentence>
+    <sentence>Also, fuzzy-computed trajectories are not optimal.</sentence>
+    <sentence>Genetic algorithms (GAs) followed shortly (Sugihara &amp; Smith, 1997).</sentence>
+    <sentence>Due to their specific, GAs are great at finding global optimal trajectories.</sentence>
+    <sentence>However, they do not scale well with highly complex environments, and finding a good fitness function for the motion planning problem is rather difficult.</sentence>
+    <sentence>Hybrid methods emerged, which used classic algorithms such the potential fields, together with AI techniques (such as GAs), for improving the solution (Vadakkepat, 2000).</sentence>
+    <sentence>However, the path planning performance is still weak due to the limitations imposed by the potential field model used in the study.</sentence>
+    <sentence>PSO also started to be used for achieving collision-free robot navigation (Kennedy, 2010; Nasrollahy, 2009).</sentence>
+    <sentence>However, the results are computed slowly and are highly dependent on the shape of the obstacles.</sentence>
+    <sentence>ANNs have been used to solve the path planning problem for mobile robots.</sentence>
+    <sentence>Several types of neural network planners were proposed in the last 2 decades (Pomerleau, 2012).</sentence>
+    <sentence>Latest studies investigate using ANNs together with additional techniques such as fuzzy logic or genetic algorithms for improving both the reliability, training times and the convergence rates of the proposed path planners.</sentence>
+    <sentence>Neuro-fuzzy controllers were also used to achieve a collision-free navigation (Rusu, Petriu, Whalen, Cornell, &amp; Spoelder, 2003).</sentence>
+    <sentence>In this study, the fuzzy logic module is based on a set of primitive.</sentence>
+    <sentence>The ANN is used if a turning primitive (“Go-Tangent”) is activated, and computes the turning angle.</sentence>
+    <sentence>However, the obstacles from this study are considered always normal to the robot's main axis center, and like all fuzzy logic approaches, the planner is unable to reach optimal trajectories.</sentence>
+    <sentence>One of the most interesting approaches (which also makes the subject of this study) is reinforcement learning (RL).</sentence>
+    <sentence>RL allows a mobile robot to adapt its trajectory, no matter how complex and cluttered its working environment is.</sentence>
+    <sentence>The goal of any robot engaged in a RL algorithm is to maximize its reward.</sentence>
+    <sentence>Thus, by repeated interactions, the robot can learn about its trajectory in real time, just like any living creature, the key desiderate for all autonomous artificial entities.</sentence>
+    <sentence>The terminology was in fact borrowed from the study of animal learning (Mahadevan &amp; Connell, 1992), and was applied to robotics based on the paradigm presented in Fig 1.</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Paradigm of reinforcement learning for mobile robots.</sentence>
+    <sentence>This study uses a relatively new RL algorithm called Q-learning, which was introduced back in 1989 (Watkins, 1989).</sentence>
+    <sentence>One of the strengths of Q-learning is that is doesn't require any previous information about the environment.</sentence>
+    <sentence>Moreover, after defining a reward function, the robot finds the optimal path by itself (finds the maximum achievable reward).</sentence>
+    <sentence>These advantages lured researchers, which started to systematically study this type of unsupervised learning.</sentence>
+    <sentence>One of the first studies that has implemented Q-learning in robot navigation used a relatively simple reward function (Eq 1).</sentence>
+    <sentence>1 was assigned to the goal state, -1 for collision state and 0 for any other states (Smart &amp; Kaelbling, 2002).</sentence>
+    <sentence>Although the results were promising (the robot eventually converged to the solution), the computation times were high.</sentence>
+    <sentence>Q-learning based robot navigation was greatly improved in Jaradat et al.</sentence>
+    <sentence>(2011), but still over 100 training iterations are required to train the Q-table (the matrix holding Q-values).</sentence>
+    <sentence>In real environments, the workspace of a mobile robot may contain many different obstacles.</sentence>
+    <sentence>This increases the amount of Q-values needed to be stored, which in turn translates into high computation times.</sentence>
+    <sentence>If the environment is excessively large, the state space of rewards may be so sparse, it would also take long periods of time to explore it thoroughly.</sentence>
+    <sentence>That is why some studies tried to combine Q-learning with other means of AI, in order to increase the computation performance.</sentence>
+    <sentence>Fuzzy logic was used together with Q-learning in Boubertakh, Tadjine, and Glorennec (2010) and Khriji, Touati, Benhmed, and Al-Yahmedi (2011).</sentence>
+    <sentence>In both studies, although complex environments are targeted, the algorithms were not tested for moving obstacles.</sentence>
+    <sentence>In all fuzzy logic based path planners, the fuzzy variables that are assigned to the state and possible actions of the robot take a finite number of values.</sentence>
+    <sentence>This property makes fuzzy logic suitable to be used in combination with both delayed reinforcement learning techniques as well as ANNs (neuro-fuzzy).</sentence>
+    <sentence>On the other hand, handling large sets of state-action pairs is manageable with neural networks, which can be successfully used to store and compute Q-values (Huang, Cao, &amp; Guo, 2005).</sentence>
+    <sentence>However, this study uses some empirical values for the reward function (0.02 for forward movement, - 0.01 for rotation and -1 for collision) and although it shows improved performance with respect to simple Q-learning, it doesn't explore the possibility of fine tuning its parameters for even better solutions.</sentence>
+    <sentence>The neural Q-leaning approach is suitable to be used in controlling i.e.</sentence>
+    <sentence>robotic arms (Duguleana, Barbuceanu, Teirelbar, &amp; Mogan, 2011), but also in other research areas such as economics (Tesauro, 2001).</sentence>
+    <sentence>Mobile robots in VR Maneuvering robots, whether they are fixed or mobile, has always posed a challenge, especially to new, uninitiated persons.</sentence>
+    <sentence>Modeling these robots in VR may compensate for additional requirements of space, time and money.</sentence>
+    <sentence>In the latest 2 decades, helped by the emergence of better personal computers, various initiatives brought the audience closer to robots.</sentence>
+    <sentence>One of them is the Player/Stage/Gazebo project (Collett, MacDonald, &amp; Gerkey, 2005), a free open-source simulation environment.</sentence>
+    <sentence>The idea of a robotic framework was also explored by both independent researchers (such as Olivier Michel which developed Webots in 1996, a licensed software widely used in robotic competitions such as RoboCup (Michel, 1998), or Louis Hugues which developed Sinbad in 2005, an open source software written in Java (Hugues &amp; Bredeche, 2006)) and commercial entities such as Microsoft, with its Robotics Developer Studio which has now reached the 4th version (Johns &amp; Taylor, 2009).</sentence>
+    <sentence>Robotic simulation has been used in education, virtual testing, industry and entertainment.</sentence>
+    <sentence>There are both advantages and downsizes of using virtual mobile robots.</sentence>
+    <sentence>As positive points, one can list the easiness of the implementation (no more time spent on setting additional safety systems), the answer to the concurrent use problem (multiple researchers can perform experiments on the same simulated robot) and the increased intellectual flexibility (uninitiated personnel can now be actively involved in the testing phase, without the fear of accidents) (Duguleana &amp; Barbuceanu, 2010; Haton &amp; Mogan, 2008).</sentence>
+    <sentence>However, there are also some drawbacks which need to be considered.</sentence>
+    <sentence>The inexact reality representation triggers secondary problems such as the absence of noise in recorded data sets.</sentence>
+    <sentence>Various factors interfere with the robot in real environments, such as the variable friction coefficient, the air pressure in robot's tires caused by parameters which are hard to quantify (such as air pressure, temperature and others), power level, sensor readings and so on.</sentence>
+    <sentence>These introduce differences between the simulated scenario and the real world.</sentence>
+    <sentence>Another factor which also brings inconstancies is the time taken to compute the path planning algorithms.</sentence>
+    <sentence>In dynamic environments, everything happens fairly fast, thus the motion planning algorithms must converge rapidly.</sentence>
+    <sentence>Last but not least, simulating mobile robots presumes spending additional time in order to develop and improve the realism of the VR scenarios, which should be taken into account, especially when talking about the benefits of any simulation software (Sheridan, 1992).</sentence>
+    <sentence>Aside from 2D MATLAB representations which are widely used in the literature, just a few researchers actually implement mobile robots and test their path planning algorithms in VR (Chen and Chen, 2014).</sentence>
+    <sentence>In this study, VR is used for effectively visualize the iteration process and the final trajectory of the modeled robot.</sentence>
+    <sentence>The VR module doesn't interfere in any way with the performance of the trajectory planner.</sentence>
+    <sentence>Fig 2.</sentence>
+    <sentence>Experimental methodology.</sentence>
+    <sentence>Fig 3.</sentence>
+    <sentence>Application architecture.</sentence>
+  </section>
+  <section name="Hardware and software prerequisites">
+    <sentence>The work involved in the experiments presented in this paper is based on several principles: • Performance.</sentence>
+    <sentence>The software written needs to work as fast as possible, so authors have taken all the measures (to the best of their knowledge) to enhance as much as possible the algorithm code.</sentence>
+    <sentence>• Flexibility.</sentence>
+    <sentence>The software needs to be as scalable as possible, thus an object oriented programming paradigm was used.</sentence>
+    <sentence>• Robustness.</sentence>
+    <sentence>The software should be easily executed on various operating systems.</sentence>
+    <sentence>The experiments were conducted according to the paradigm presented in Fig 2.</sentence>
+    <sentence>In the first step, VR modeling and design is performed in C++/VRML.</sentence>
+    <sentence>The robot is first modeled in CATIA, then exported in VRML.</sentence>
+    <sentence>VRML (Virtual Reality Modeling Language) is a standard file format commonly used in VR applications.</sentence>
+    <sentence>The control system is implemented in MATLAB, a widely used software with specific features for neural networks calculus.</sentence>
+    <sentence>Considering the study requirements, the 2 development applications need to be integrated into a single program.</sentence>
+    <sentence>This is achieved through the controller presented in Fig 3.</sentence>
+    <sentence>A configuration file is used to control the movement of all robots from the scene.</sentence>
+    <sentence>The data is sent wireless to the mobile robots, after the control system calculates the trajectories.</sentence>
+    <sentence>The results are quantified based on the readings received from both programming environments.</sentence>
+    <sentence>Physical structure of the mobile robot Although the purpose of this article is to present a new obstacle avoidance algorithm suitable for navigation tasks in unknown dynamic environments, the aim of the experiments presented in this paper is to control a specific mobile robot – PowerBot.</sentence>
+    <sentence>PowerBot is a non-holonomic robotic platform produced by an US company named Mobile Robots.</sentence>
+    <sentence>It has the physical structure presented in Fig 4.</sentence>
+    <sentence>It features 2 powered front wheels and 2 pivoting real wheels.</sentence>
+    <sentence>Fig 4.</sentence>
+    <sentence>Powerbot (left) and its cinematic structure in XOY coordinates (right).</sentence>
+    <sentence>Modeling the work environment Real working environments contain obstacles of various shapes and sizes.</sentence>
+    <sentence>For simplicity, the 2D virtual environment created for this experiment contains 2 classes of obstacles: circles and spheres.</sentence>
+    <sentence>These however can be extended to any type of geometrical figures.</sentence>
+    <sentence>The workspace is set up in MATLAB by providing a configuration text file.</sentence>
+    <sentence>The configuration is set up as a hierarchy of two levels: the objects on the first level and the parameters on the second.</sentence>
+    <sentence>The objects are marked with [&lt;type&gt;] and are followed by their parameters.</sentence>
+    <sentence>The possible types of objects are (Fig 5): • Workspace – The workspace itself can be configured here.</sentence>
+    <sentence>It has as parameters its time resolution (res), and the length/width of the space.</sentence>
+    <sentence>• Obstacle – The obstacles are defined by the following attributes: motion (type of motion: velmove – a simple motion in some direction defined by the velocity parameter, rndmove – a random motion based on the magnitude of the velocity parameter, sinemove - a sinusoid motion based on magnitude of velocity parameter), position (in Cartesian coordinates [x y]), velocity (in Cartesian coordinates [vx vy]), type (circle or square) and size.</sentence>
+    <sentence>• Target – The target, which is seen as a regular obstacle, sharing the same attributes.</sentence>
+    <sentence>• Robot – Aside from obstacle parameters which are inherited by the robot entity, a robot object has additional attributes described in Section 3.3.3.</sentence>
+    <sentence>Fig 5.</sentence>
+    <sentence>A 7 m × 8 m workspace with a robot, 7 fixed obstacles, 1 dynamic obstacle and a target.</sentence>
+    <sentence>Fig 5 presents the scene plotted in MATLAB (left) and the real testing environment used in the experiments (right), at different time instances.</sentence>
+    <sentence>Modeling the robot As presented in Fig 2, the first phase in the experimental methodology of this study is to model the VR scene.</sentence>
+    <sentence>The robot structure is the most important entity of the study, thus it requires an increased attention.</sentence>
+    <sentence>In order to obtain a simpler, easier to use model, specific assumptions were made.</sentence>
+    <sentence>Assumptions The robot operates in a workspace with static and dynamic obstacles.</sentence>
+    <sentence>Its starting configuration, its velocity and the dynamic parameters of the obstacles and of the goal are implemented in configuration files, with direct relationship to the real environment.</sentence>
+    <sentence>Aside this information, the following assumptions were made: Assumption 1 All dynamic parameters are known at each time instant, including the Cartesian position and the velocity of the robot, of the obstacles and of the target.</sentence>
+    <sentence>Assumption 2 The robot has a velocity higher than the velocity of the target, a common sense condition that enforces convergence.</sentence>
+    <sentence>Assumption 3 The robot is activating in an unknown working space.</sentence>
+    <sentence>The collision detection is achieved in simulated environment based on the Euclidian distance from the margin of a virtual sphere that includes the robot structure, to the margin of a virtual sphere that includes the obstacle.</sentence>
+    <sentence>In real environments, collision is detected either by laser or sonar sensors, or by bumpers, once the robot physically touches the obstacle.</sentence>
+    <sentence>Assumption 4 The robot is non-holonomic and is activating in a 2D space.</sentence>
+    <sentence>This assumption can be easily included in the control paradigm and transposed into the real environment, as the smoothness of the computed trajectories depends on the resolution of the virtual environment.</sentence>
+    <sentence>Slightly increasing the threshold between 2 adjacent time samples ensures the real robot has plenty of time/space to reach any 2 neighboring trajectory points with the dynamic parameters presumed by the algorithm.</sentence>
+    <sentence>Modeling the robot in VR Several pieces of software have been used to create the PowerBot robot in VRML.</sentence>
+    <sentence>First, the robot was modeled in CATIA, a CAD software used in a wide variety of engineering tasks.</sentence>
+    <sentence>The CAD model was exported directly to VRML format (Fig 6).</sentence>
+    <sentence>A software viewer like BS Contact or Instant Reality is used to run and navigate into the VR scene.</sentence>
+    <sentence>Fig 6.</sentence>
+    <sentence>PowerBot and resulted CAD model.</sentence>
+    <sentence>Modeling the robot in MATLAB Aside the common attributes derived from the obstacle class, a robot entity has specific configuration parameters suitable for this study: dmin (the minimum distance at which the robot should start taking avoidance decision), gamma (the learning rate of the Q-function), capacity (the number of obstacles whose quadrants drive the state), train (a flag which allows exploration - randomness within training phase) and depth (a parameter which tracks distance to obstacles over a certain number of previous iterations).</sentence>
+    <sentence>Interfacing MATLAB with VR Fig 3 presents a stand-alone application.</sentence>
+    <sentence>In order to implement this, the link between MATLAB and VRML is constructed in C++.</sentence>
+    <sentence>There are several methods suitable to achieve this.</sentence>
+    <sentence>One of them is creating a shared C++ library via MATLAB compiler.</sentence>
+    <sentence>However, custom neural network directives cannot be deployed in a specific library.</sentence>
+    <sentence>Another method is to call MATLAB engine directly from the project build, but this raises variable performance issues, depending on the technical configuration of the station used.</sentence>
+    <sentence>For this study, the 2 separate environments are communicating by making use of a virtual TCP/IP connection.</sentence>
+    <sentence>MATLAB acts as an emitter, sending trajectory data (Cartesian coordinates at each time sample) to a C++ receiver.</sentence>
+    <sentence>After data is received, the C++ program interacts with VRML and updates the view.</sentence>
+    <sentence>The 2 programming frameworks share the same configuration file, which produces an equivalent experimental scene presented in Fig 7.</sentence>
+    <sentence>Since the client-server architecture is virtual, the connection is instantaneous, with no implications over the performance of the planner.</sentence>
+    <sentence>Fig 7.</sentence>
+    <sentence>MATLAB, C++/VRML and SLAM map equivalence.</sentence>
+  </section>
+  <section name="Trajectory planner">
+    <sentence>The path planning algorithm proposed by this paper takes the next step in this specific research field, by presenting a new solution based on Q-learning (Watkins &amp; Dayan, 1992) and neural networks that can be regarded as a “self-learning” paradigm.</sentence>
+    <sentence>This solution was already applied with success in controlling robotic manipulators (Duguleana et al., 2011), but its flexibility allows us to use it in mobile robot navigation, in order to obtain collision-free trajectories in dynamic environments.</sentence>
+    <sentence>Designing the trajectory planner algorithm The problem has been reformulated mathematically as follows.</sentence>
+    <sentence>Let A be an array of 2D Cartesian coordinates, with ps the starting position and pe the end position of the mobile robot.</sentence>
+    <sentence>The kinematic mapping of the trajectory of the robot is described as: (2) Let the sets of points O1(t), O2(t), ..., On(t) represent the n obstacles located in the workspace at moment t. Given the start configuration ps, avoiding obstacles and reaching the goal xe resumes to finding T(A(ps, pe), t) while satisfying both equations: (3) (4) The problem formulated above can be solved with Q-learning and neural networks.</sentence>
+    <sentence>At any given time t, the mobile robot is in an intermediate state pt and can choose among different possible future states.</sentence>
+    <sentence>The two conditions formulated in Eq 3 and Eq 4 can be represented within the trajectory planner architecture proposed in Fig 8.</sentence>
+    <sentence>The condition expressed in Eq 3 means that the mobile robot achieves the target (the algorithm converges).</sentence>
+    <sentence>This condition is modeled by Pos-Net neural network, which is a 30-20-3 Multi-Layer Perceptron (MLP).</sentence>
+    <sentence>30 neurons are used on the first hidden layer and 20 neurons on the second hidden layer, as preliminary tests showed that this configuration is suitable and provides a good mapping of this nonlinear problem.</sentence>
+    <sentence>Pos-Net receives as input the p vector which contains the current position of the robot, the time sample t and the matrix of Q-values.</sentence>
+    <sentence>It outputs a 3 element vector which holds the Cartesian values and the time.</sentence>
+    <sentence>The weights of Pos-Net neural network are updated after each step, using the adapt function, which receives as input the Cartesian coordinates of the goal.</sentence>
+    <sentence>After adapt function is applied, a 3-value output vector is obtained (x, y, t) from the Pos-Net neural network.</sentence>
+    <sentence>If a collision occurred or the maximum number of steps has been reached without reaching the goal, the weights of Pos-Net neural network are initialized and a new global iteration is started.</sentence>
+    <sentence>Each state has assigned a Q-value that quantifies the condition expressed in Eq 4.</sentence>
+    <sentence>Q-values are updated at each step of the iteration, and provide information about the collision state.</sentence>
+    <sentence>Q-values are computed as described in the following section and are sent back as input to Pos-Net after each iteration.</sentence>
+    <sentence>Implementing Q-learning Q-learning is implemented similarly to Jaradat et al.</sentence>
+    <sentence>(2011), but notable adjustments are made to the environment model and to the value function.</sentence>
+    <sentence>The environment Considering the geometrical model presented in Fig 9, at each time instant, the robot is seen as the center of a Cartesian system divided into 4 regions (R1-R4).</sentence>
+    <sentence>Fig 8.</sentence>
+    <sentence>Trajectory planner structure.</sentence>
+    <sentence>Fig 9.</sentence>
+    <sentence>Geometrical model of the scene at any time instance.</sentence>
+    <sentence>The angle θ is constructed between the line formed by the robot and the target and the line formed by the robot and the closest obstacle.</sentence>
+    <sentence>θ was calculated to be: (5) where (6) and (7) (xrob, yrob) are the Cartesian coordinates of center of the robot, (xt, yt) are the Cartesian coordinates of the target and (xo, yo) – the Cartesian coordinates of the closest obstacle.</sentence>
+    <sentence>In order to reduce the number of states, 8 angular regions are defined as in Fig 9 (G1, G2 … G8).</sentence>
+    <sentence>Additionally, a depth flag δ and a capacity parameter μ are defined.</sentence>
+    <sentence>The depth δ ∈ {0, 1} determines whether the capacity parameter μ is taken or not into consideration.</sentence>
+    <sentence>If for example, and , the state definition will contain information about the 2 closest obstacles (as opposed to 1 obstacle, set by default).</sentence>
+    <sentence>At any given time t, the state of the system can be completely defined by the following equation: (8) where (9) Gn is the angular region which contains the angle θ and Rt is the region which contains the target.</sentence>
+    <sentence>Given the fact that the robot is non-holonomic, a set of 3 actions is defined to be addressed and at each time instant: move forward, turn left and turn right.</sentence>
+    <sentence>The reward function The reward function quantifies the decision process, evaluating a score for each action taken at a given state.</sentence>
+    <sentence>The set of states was clustered into 4 types: Safe States – SS (when the robot has a low possibility to collide with an obstacle), Non-Safe States – NSS (when the robot has a high possibility to collide with an obstacle), Wining State – WS (when the robot reached the goal) and Failure State – FS (when the robot collided with an obstacle).</sentence>
+    <sentence>The introduction of μ actively participates in the clustering process.</sentence>
+    <sentence>The reward function is exactly as the one proposed by Jaradat: (10) where n is the step number and do the distance to the closest obstacle.</sentence>
+    <sentence>Computing Q-values Q-values are stored in a matrix with rows that account for the states the robot passes through, and columns that account for actions performed by the robot.</sentence>
+    <sentence>The training process actually refers to filling and updating the values of this table.</sentence>
+    <sentence>The value is usually based on both the reward function and the maximum reward for all the previous actions that can be taken at the resulting state: (11) where st is the state at time instant t, at is the action taken at t, r is the reward function calculated in Eq 10, is the maximum Q-value calculated for taking all possible actions in the new state at the time instant t + 1 and γ – a discount factor.</sentence>
+    <sentence>However, for our specific case, a cumulative approach has a more desirable effect (faster convergence, lower computation times), thus in our study we will use the following value function: (12) 4.3.</sentence>
+    <sentence>Implementing the trajectory planner The proposed trajectory planner is operating according to the flow chart presented in Fig 10.</sentence>
+    <sentence>Fig 10.</sentence>
+    <sentence>Trajectory planner algorithm flow chart.</sentence>
+    <sentence>Both Pos-Net and Q-values table are first initialized.</sentence>
+    <sentence>During any iteration, at each time instance, the algorithm calculates the state Q-value.</sentence>
+    <sentence>After this, the transient state is computed and clustered.</sentence>
+    <sentence>The clustering process takes into account the capacity parameter and categorizes the state in one of the 4 types: SS, NSS, WS or FS.</sentence>
+    <sentence>If the new state is a SS, the robot can freely change orientation and move towards the target.</sentence>
+    <sentence>Otherwise, the robot must either turn left or right in order to avoid the obstacle.</sentence>
+    <sentence>In both cases, the newly computed Q-value is inserted in Q-table and used to adapt Pos-Net.</sentence>
+    <sentence>If the robot collides and the algorithm hasn't reached the last iteration, a new iteration begins.</sentence>
+    <sentence>If the algorithm has reached the last iteration from that specific epoch, the Q-table is initialized based on the values provided by Pos-Net for each state/action pair.</sentence>
+    <sentence>The algorithm runs in this way for a number of epochs established at the beginning.</sentence>
+    <sentence>If the algorithm has reached the epoch limit and the target has not been reached, that means the trajectory planner has not found any collision-free trajectory to the goal.</sentence>
+    <sentence>The tuning process includes testing for different constants used in the construction of the proposed trajectory planner such as the maximum number of epochs, the maximum number of iterations, the number of steps within each iteration, the discontinuity factor γ, the capacity μ and even the MPL hidden layer structure of the Pos-Net.</sentence>
+  </section>
+  <section name="Simulation and study results">
+    <sentence>As expected, the performance of the trajectory planner presented above depends on the configuration of the computer used for simulation.</sentence>
+    <sentence>In this case, all tests were implemented on a desktop equipped with an Intel Core 2 Duo Processor at 2.5 GHz with 2GB SDRAM, running on Windows Vista operating system.</sentence>
+    <sentence>After a brief pre-testing phase, we have chosen to use the following constants in our experiments: • MLP configuration for Pos-Net: 30-20-3.</sentence>
+    <sentence>• .</sentence>
+    <sentence>Setting lower values produces trajectories with a higher degree of discontinuity.</sentence>
+    <sentence>Higher values produce smoother results.</sentence>
+    <sentence>• .</sentence>
+    <sentence>• MaxEpochNo = 200.</sentence>
+    <sentence>• MaxIterationNo = 100.</sentence>
+    <sentence>• MaxStepNo = 100.</sentence>
+    <sentence>Thus, we set the maximum number of epochs to 200, the maximum number of iterations to 100 and the maximum number of steps for each epoch to 100.</sentence>
+    <sentence>As presented above, the 30-20-3 MPL uses the standard backpropagation algorithm for training.</sentence>
+    <sentence>The algorithm performance was assessed in MATLAB, but the quality of the solution from human-robot interaction (HRI) point of view was studied in VR and during tests with the real robot.</sentence>
+    <sentence>Testing in MATLAB Aside the prerequisites described above, based on the physical constrains from the real environment, we consider the scale 1 m = 100.</sentence>
+    <sentence>Mobile obstacles are defined as circles with a radius of 25 and fixed obstacles are defined as squares with a width/length of 50.</sentence>
+    <sentence>The mobile robot has a radius of 49.5, dmin is set to 100 and the turning angle (left/right) is set to .</sentence>
+    <sentence>For assessing the performance of the trajectory planner, 4 testing scenarios are proposed.</sentence>
+    <sentence>Test scenario 1 The first scenario tested uses the following vectors: robot position robot speed ; target position ; target speed ; obstacle position ; obstacle speed .</sentence>
+    <sentence>As one can see, both the target and the dynamic obstacle are moving on OX axis with speed 1.</sentence>
+    <sentence>The robot can however move faster, having a speed of 3 on both axes.</sentence>
+    <sentence>Thus, it can overcome the obstacle and it can reach the target.</sentence>
+    <sentence>This scenario presents a typical local minima problem for algorithms based on potential fields.</sentence>
+    <sentence>Fig 11a contains the trajectories of the scene objects after the 4th iteration, which presents the first valid robot trajectory.</sentence>
+    <sentence>As one can see, the robot starts from coordinates (100, 400), and moves towards right.</sentence>
+    <sentence>Both the target and the obstacle also move towards right, but at a slower pace.</sentence>
+    <sentence>The robot reaches NSS right after start.</sentence>
+    <sentence>It changes its movement direction, and as soon as the distance from the obstacle gets higher than dmin, it passes into SS.</sentence>
+    <sentence>Having a speed higher than the target, it soon reaches WS.</sentence>
+    <sentence>The time took to reach the goal (including the MATLAB plot draw) was 14.8 s. Fig 11.</sentence>
+    <sentence>Test scenario 1 (a); Test scenario 2 (b); Test scenario 3 (c).</sentence>
+    <sentence>Test scenario 2 The second scenario tested keeps the position vectors from the entities presented in the first test scenario, but modifies the speed vector on the obstacle, so that it intersects the trajectory of the robot .</sentence>
+    <sentence>As in the previous case, the robot reaches the target after just 4 iterations, having a similar behavior.</sentence>
+    <sentence>It enters NSS from the start and changes its path as soon as it enters in SS.</sentence>
+    <sentence>Its trajectory is presented in Fig 11b.</sentence>
+    <sentence>The robot avoids the incoming obstacle and successfully reaches the slower moving target.</sentence>
+    <sentence>The time measured in this case was 13.2 s. 5.1.3.</sentence>
+    <sentence>Test scenario 3 The third scenario uses the vectors from the second scenario, but adds a static obstacle at (300; 500) Cartesian coordinates.</sentence>
+    <sentence>The robot reaches the target in 5 iterations with the trajectory presented in Fig 11c.</sentence>
+    <sentence>As described previously, the robot enters NSS since the beginning.</sentence>
+    <sentence>After reaching SS, it moves horizontally for a set of time instances, after which it changes again its movement direction, before reaching the final WS.</sentence>
+    <sentence>The robot avoids both obstacles (fixed and dynamic), and then reaches goal.</sentence>
+    <sentence>The computation time is 18.2 s. 5.1.4.</sentence>
+    <sentence>Test scenario 4 This scenario proposes a more complex scene.</sentence>
+    <sentence>The workspace contains 7 static and 2 dynamic obstacles as presented in Fig 13.</sentence>
+    <sentence>The target is fixed, the robot has a vector speed , and the 2 dynamic obstacles have the speeds şi .</sentence>
+    <sentence>After touching the limits of the scene, the mobile obstacles move backwards on the same trajectory.</sentence>
+    <sentence>The result from Fig 12 is obtained after 2 epochs, at the 12th iteration.</sentence>
+    <sentence>The computation time is 34.4 s. Fig 12.</sentence>
+    <sentence>Test scenario 4.</sentence>
+    <sentence>Fig 13.</sentence>
+    <sentence>Initial state in the real environment and its MATLAB equivalent.</sentence>
+    <sentence>Testing in VR and in the real environment Safe testing was one of the prerequisites of this study.</sentence>
+    <sentence>Testing path planning algorithms in real environments imposes additional work focused on solving security issues, hardware malfunctions, software errors and possible injuries that may appear.</sentence>
+    <sentence>Using VR eliminates all these issues.</sentence>
+    <sentence>However, every study should consider at some point implementing the theoretical research in practice.</sentence>
+    <sentence>Thus, we've decided to implement the test scenario 4 into a real experiment.</sentence>
+    <sentence>Every scene entity was carefully measured, in order to obtain the best possible correspondence between the virtual model and the real environment.</sentence>
+    <sentence>However, there have always been inconstancies between real and virtual environment, inconstancies which appear due to the inexact nature of the measuring process, the friction coefficient, battery power levels and so on.</sentence>
+    <sentence>These differences slightly influence the real trajectories, thus the data received from the proposed solution is spitted into several parts that wait manual approval before continuing the robot movement.</sentence>
+    <sentence>In Fig 13 it is presented the initial state of the real working environment and its MATLAB equivalent.</sentence>
+    <sentence>The start position of the robot is (70; 50) and the target position (marked with a small red circle) is (600; 570).</sentence>
+    <sentence>The robot is oriented 45° between OY and OX.</sentence>
+    <sentence>The dynamic obstacles are constructed using 2 Amigobot robots covered with a paper cylinder, a setup which enables their observation by Powerbot's laser ranger sensor, which scans for obstacles 30 cm above the soil (Fig 14).</sentence>
+    <sentence>Fig 14.</sentence>
+    <sentence>Amigobots used as mobile obstacles.</sentence>
+    <sentence>The Amigobots continuously run a movement program which enables them to move smoothly back and forth on a straight line, between the obstacle and the wall.</sentence>
+    <sentence>Near the obstacles, when their sonar readings are lower than 400, they are programmed to stop and to reverse their movement direction.</sentence>
+    <sentence>The distance traveled by Powerbot is measured by odometry, based on the signals received from the motor encoders mounted on the wheels of the robotic platform.</sentence>
+    <sentence>The value of the distance traveled is measured using the TicksMM parameter, which quantifies this distance based on the number of wheel rotations.</sentence>
+    <sentence>TicksMM is defined inside Powerbot's proprietary software, ARCOS, and it varies depending on the load of the robot and on the tire pressure.</sentence>
+    <sentence>An initial calibration is made by measuring TicksMM parameter resulted from a 1 m movement.</sentence>
+    <sentence>After this phase, determining the length of the entire trajectory is fairly easy, as the TicksMM value can be divided by the 1 m calibration value in order to find the traveled distance in meters.</sentence>
+    <sentence>The developed trajectory planner is compared to the proprietary ARLN solution from Mobile Robotics, the producer.</sentence>
+    <sentence>The proposed solution produces a single valid optimal trajectory, while ARLN (which is based on the dynamic window algorithm) produces variable trajectories.</sentence>
+    <sentence>Thus, for comparing the 2 path planning algorithms, an average ARNL distance and time spent needs to be calculated.</sentence>
+    <sentence>Towards this desiderate, the following data was recorded over a series of 20 trials (Table 1).</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>ARLN trials for scenario 4.</sentence>
+    <sentence>Trial number Time spent (in seconds) Distance (in meters) 1 31 9422 2 28 9331 3 33 9373 4 31 9412 5 34 9477 6 50 10,015 7 37 9633 8 35 9588 9 36 9529 10 40 9936 11 34 9477 12 45 9861 13 34 9431 14 32 9405 15 37 9584 16 36 9592 17 41 9722 18 35 9467 19 31 9395 20 32 9482 In the case of ARNL, the medium time spend to reach the target is 35.6 s whereas the length of the trajectory is 9.56 m, resulting an average velocity of 0.2685 m/s.</sentence>
+    <sentence>In the case of the proposed algorithm, the length of the trajectory is 9.97 m. The speed of the robot is initially set at 0.5 m/s, and the time spent to reach the target is 23.7 s. The robot is moving with a real speed of 0.42 m/s.</sentence>
+    <sentence>The difference between these algorithms is of 11.9 s in the favor of the proposed algorithm, although it traveled with 40 cm more than its competitor.</sentence>
+    <sentence>The time difference is occurring because the proposed algorithm works by setting a speed initially, before actually calculating the trajectory.</sentence>
+    <sentence>The distance difference appears because ARLN chooses online among the best local trajectory alternatives.</sentence>
+  </section>
+  <section name="Conclusions and further development">
+    <sentence>Concluding, a new path planning algorithm has been proposed in this paper.</sentence>
+    <sentence>The algorithm has a good convergence ratio, succeeding in navigating in environments with multiple static and dynamic obstacles.</sentence>
+    <sentence>The convergence rate may be improved by fine tuning the parameters presented at the beginning of Section 5.</sentence>
+    <sentence>The trajectories found by the proposed algorithm are secure, as they specifically take into consideration the geometrical factors posed by the obstacle avoidance problem.</sentence>
+    <sentence>One of the biggest advantages of this implementation is that the robot can be controlled at any desired speed (physically achievable).</sentence>
+    <sentence>The proposed path planner successfully avoided local minima and converged, even in complex environments such as the one presented in Scenario 4.</sentence>
+    <sentence>One of the minor drawbacks of using this solution derives from the assumption that the robot poses global knowledge at any time sequence, assumption which is difficult to implement in real work spaces.</sentence>
+    <sentence>Using VR modeling methodology such as the one described in this study provides safer and easier testing capabilities.</sentence>
+    <sentence>Several developments will be pursued in the near future: 1.</sentence>
+    <sentence>Construct an autonomous module that will provide self-tuning capabilities.</sentence>
+    <sentence>Improve the quality of the virtual scenes in order to increase the level of interaction.</sentence>
+    <sentence>Develop other complex scenarios focused on dynamic obstacles for further validation.</sentence>
+    <sentence>In order to minimize the computation time, we may consider implementing the trajectory planner presented in Fig 10 in an embedded system.</sentence>
+    <sentence>Given a better parallelism degree and a higher efficiency in multitask operations, we expect to obtain a better overall performance.</sentence>
+  </section>
+</article>

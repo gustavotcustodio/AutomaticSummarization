@@ -1,0 +1,811 @@
+Intelligent agents is a research area of the Artificial Intelligence intensely studied since the 1980s.
+Multi-agent systems represent a powerful paradigm of analyzing, projecting, and developing complex systems.
+One of the main difficulties in modeling a multi-agent system is defining the coordination model, due to the autonomous behavior of the agents.
+Distributed Constraint Optimization Problems (DCOP) have emerged as one of most important formalisms for coordination and distributed problem solving in multi-agent systems and are capable of modeling a large class of real world problems naturally.
+This work aims to provide an overview and critical review of DCOP, addressing the most popular methods and techniques, the evolution and comparison of algorithms, and future perspectives on this promising research area.
+Intelligent agents is a research area of the Artificial Intelligence intensely studied since the 1980s (Wooldridge & Jennings, 1995).
+The development of agent-based applications has drawn attention due to the distributed and autonomous nature of the software entities.
+By definition, a software agent has intelligence regarding a specific domain and a local view of the problem, which are used to reason and evaluate the impact of their actions on the environment.
+In addition, an agent is able to take action autonomously.
+Meanwhile, because agents have a partial view of the problem, they must cooperate to solve their local problems.
+One of the difficulties involved during the conception of multi-agent systems is related to the ability of agents to cooperate and coordinate their actions to achieve a global solution.
+Therefore, the decentralized coordination is a key issue in a multi-agent system.
+Defining the coordination model is usually not a trivial task due to the autonomous behavior and interest of the agents.
+Some challenges of the decentralized coordination in multi-agent systems involve communication model, decentralized control, partial knowledge, and self-interested agents (Shoham & Leyton-Brown, 2009).
+To address these challenges of the decentralized coordination, there are several approaches in literature, such as reactive coordination (Ferber, 1999; Jennings & Bussmann, 2003), learning (Sutton & Barto, 1998; Wooldridge, 2009), coalition formation (Sandholm & Lesser, 1995; Weiss, 1999), planning (O’Hare & Jennings, 1996; Scerri, Vincent, & Mailler, 2010), and negotiation protocols (Rosenschein & Zlotkin, 1994; Shoham & Leyton-Brown, 2009).
+One of the difficulties in these approaches is to enable an efficient adaptive behavior of the agents during their interactions.
+Distributed Constraint Optimization Problems (DCOP) have emerged as one of the main coordination techniques in multi-agent systems due to their ability to optimize the global objective function of the problem described as the aggregation of distributed constraint cost functions (Scerri et al., 2010).
+The main motivation to employ this formalism as a decentralized coordination model in multi-agent systems is that DCOP algorithms are distributed, scalable, and robust.
+By definition, DCOP consists of a set of constraints and variables distributed among agents, where each variable has a finite and discrete domain.
+Each value in the domain represents a possible state of the agent.
+Constraints are denoted by a cost or reward relation between a pair of variable assignments.
+Therefore, DCOP aims to find a sequence of actions that minimizes the global cost of the problem modeled as a set of constraints.
+Because combinatorial problems such as satisfaction and optimization problems have been shown to be an NP-Hard problem (Garey & Johnson, 1979), DCOP requires efficient strategies to reduce the search space of the problem.
+In general, the main research focus is on developing new DCOP algorithms.
+As a result, several DCOP algorithms have been proposed so far; however, each technique has some limitations.
+Thus, the choice of DCOP algorithm is an important task in obtaining a suitable performance on a specific problem.
+In other cases, these limitations may be prohibitive in certain real world domains.
+This work aims to present an overview and critical review of DCOP formalism, addressing the main techniques, evolution and comparison of algorithms, and future prospects of this promising research area.
+DCOP provides a generic framework that can model a large class of real world coordination tasks in multi-agent systems.
+Some possible domains include sensor networks (Lesser et al., 2003), traffic control (Junges & Bazzan, 2008), meeting scheduling (Maheswaran, Tambe, Bowring, Pearce, & Varakantham, 2004a), and wireless network configuration (Monteiro, Pujolle, Pellenz, Penna, & Souza, 2012).
+DCOP involves a number of agents handling variables with finite and discrete domains.
+Variables may have constraints, which represent a cost function for each possible assignment.
+DCOP seeks assignments that minimize the global cost of the problem.
+Thus, DCOP is modeled through constraint programming techniques.
+Constraint Programming Constraint Programming (CP) is the study of computational systems based on constraint, one of several problem-solving methods in Artificial Intelligence.
+In general, constraint programming aims to solve complex problems, particularly combinatorial ones, by constraints defined on an application domain.
+A constraint is a logical relation between one or more variables, where each variable has a domain.
+The goal of the logical relations is to restrict the possible values that variables can assume.
+Constraints specify part of the information on a given problem, may be heterogeneous (i.e., constraints among variables of different domains), are declarative, and are rarely independent (Bartàk, 2001).
+Therefore, CP provides techniques for solving a wide class of complex problems, especially problems such as resource scheduling, planning, coordination and combinatorial optimization.
+One of the most popular CP approaches is the Constraint Satisfaction Problem (Tsang, 1993).
+In this approach, the goal is to find a set of assignments for each variable such that no constraint is violated.
+Constraint Satisfaction Problem A Constraint Satisfaction Problem (CSP) consists of finding a sequence of actions to be taken to lead to a valid solution, which is initially unknown.
+However, intelligent methods can be applied to solve these problems to optimize the search to focus on promising states.
+CSP may be described as a problem whose purpose is to find a combination of values for all variables such that all constraints are satisfied.
+A CSP consists of a set of variables, a finite and discrete domain for each variable, and a set of constraints (Tsang, 1993).
+A solution to a CSP is an assignment of a value from the domain to each variable, such that all constraints are satisfied.
+Distributed Constraint Satisfaction Problem CSP defines a formalism to solve complex problems in a centralized way.
+Nevertheless, a CSP can be extended to operate as a distributed solving process.
+Several domains of the Distributed Artificial Intelligence can be modeled as Distributed Constraint Satisfaction Problems (DisCSP).
+In DisCSP, the variables of the problem are distributed among agents whose goal is to coordinate their actions to avoid local optima (Yokoo, Durfee, Ishida, & Kuwabara, 1998).
+DisCSP can naturally be represented by a constraint graph.
+Each agent corresponds to a node and the edges represent the constraints between two connected nodes.
+The solution is achieved by local computations performed at each node of the graph.
+The execution order of these local computations may be arbitrary or highly flexible and may be synchronous or asynchronous (Yokoo et al., 1998).
+Constraint Optimization Problem Methods based on constraint satisfaction can find fulfilling solutions, when they exist.
+However, this formalism cannot model problems where solutions have degrees of quality or cost.
+In DisCSP, a solution can be characterized only as satisfactory or unsatisfactory.
+A Constraint Optimization Problem (COP) is considered a generalization of CSP, in which the constraints have costs or rewards.
+In other words, each constraint of the problem is defined as an optimization function, also known as a cost function.
+The purpose of a COP is to find a set of assignments for all variables to optimize the global objective function of the problem (Modi, Shen, Tambe, & Yokoo, 2005).
+Solving a COP is much more complex than solving a CSP.
+Distributed Constraint Optimization Problem A Distributed Constraint Optimization Problem (DCOP), although an extension of DisCSP, offers techniques that go beyond satisfaction problem-solving or simple optimization methods (Lesser et al., 2003).
+In a DCOP, as in DisCSP, the variables are distributed among agents, but the local computations in a DCOP aim to optimize the cost of the global function defined for the problem.
+Another feature of a DCOP is to provide bounds on solution quality (Modi et al., 2005).
+This bounded-error method is useful when the domain has time restriction or hardware limitations, but the solution quality is still within a previously defined bound.
+In general, large-scale or real-time applications are the most suitable for employing such incomplete methods.
+DCOP definition In general, the definition of DCOP is similar to DisCSP.
+A DCOP consists of n variables , where the values of the variables are taken from finite and discrete domains , respectively.
+Only agent can assign values to and knows .
+Each agent chooses a value , where .
+Therefore, agents must coordinate their actions to choose values of their variables to optimize the cost of the global function of the problem (Mailler & Lesser, 2004).
+In fact, the main difference between DCOP and the DisCSP formalism is the definition of constraint.
+In DCOP, constraints are cost or reward functions.
+A cost function for a pair of agents and is defined by x .
+Two agents are neighbors if a constraint exists between them.
+Thus, a DCOP must find a set of assignments, where , such that the objective function is minimized (see Fig 1).
+(1) DisCSP represented as a constraint graph (Yokoo et al Fig 1.
+DisCSP represented as a constraint graph (Yokoo et al., 1998).
+DCOP representation A DCOP can be structurally represented as a graph, where the variables correspond to nodes and the constraints between pairs of variables are the edges.
+A DCOP representation as a graph allows algorithms to perform searches or inferences from a local context, accounting for constraints with the neighbors (Lesser et al., 2003).
+Such local computations allow agents to explore independent regions on the graph at the same time by a distributed problem-solving method.
+A constraint graph is the simplest way to represent a DCOP, as shown in Fig 2.
+However, all constraints in a constraint graph representation must be at most binary.
+In other words, all cost functions must involve at most two variables.
+In this case, the n-ary constraints must to be decomposed into binary constraints (Lesser et al., 2003).
+DCOP representations as a graph Fig 2.
+DCOP representations as a graph.
+Another way to represent a DCOP is through a factor graph (Rogers, Farinelli, Stranders, & Jennings, 2011).
+A factor graph is a bipartite graph, composed of undirected edges and two disjoint sets of nodes, such that every edge connects a node from each set.
+Thus, one set of nodes corresponds to the variables of the problem and the other set represents cost functions.
+Cost functions must be connected only to variables involved in the constraint.
+Similarly, variables must be connected only to cost functions directly affected by the connected variables.
+A factor graph introduces a more flexible representation of DCOP, as it is possible to represent an n-ary constraint, where n may be higher than two.
+Fig 2 shows an example of DCOP represented by a factor graph.
+In this example, the factor graph (b) corresponds to the same DCOP in constraint graph (a).
+Some DCOP methods require a priority ordering of the agents on the constraint graph.
+One way to define an ordering of the agents consists of prioritizing them in a depth-first-search tree (DSF), called pseudo-tree (Ali, Koenig, & Tambe, 2005).
+By definition, a pseudo-tree is a spanning tree whose nodes may be connected with other higher priority nodes.
+However, only one higher priority node is defined as parent, while other higher priority nodes are called pseudo-parents.
+In addition, when a node is connected to a pseudo-parent, it is labeled a pseudo-child (Petcu & Faltings, 2005).
+The Fig 2 shows a DCOP represented by a pseudo-tree.
+In this example, a pseudo-tree (c) depicts the same DCOP as constraint graph (a), where dotted edges represent the pseudo-parent and pseudo-child relation.
+A widely used way to generate a pseudo-tree is to perform a depth-first search over the constraint graph.
+However, the depth and width of the pseudo-tree have a strong influence on the problem-solving strategy and finding an optimal pseudo-tree is NP-Hard (Petcu & Faltings, 2005).
+Quantified DCOP In a traditional DCOP, agents cooperate to optimize the sum of their cost functions.
+However, some agents may choose values to their variables without cooperation.
+In special cases, such agents may assign values with the worst impact on the global solution quality due to their partial view of the problem.
+Quantified Distributed Constraint Optimization Problem (QDCOP) introduces the use of universal and existential quantifiers, and , to distinguish the uncooperative variables (Matsui et al., 2010).
+In addition to the classical definition of CSP, a Quantified CSP (DCSP) determines a list of quantified variables on the form , where Q corresponds to variables and indicates the existential quantifier or universal for each variable .
+Therefore, the QCSP definition is recursive and is described as follows: if C is empty, is true; if Q is of the form , then is true iff there is a value such that .
+is true; if Q is of the form , then is true iff .
+is true for all values of .
+In addition to the classical definition of DCOP, a QDCOP determines a sequence of quantified variables, similarly to QCSP.
+A QDCOP is represented by , where Q corresponds to the sequence of variables, and indicates the existential quantifier or universal for each variable.
+In general terms, the QDCOP aims to find the global optimal solution to the corresponding DCOP.
+However, the problem definition in a QDCOP is changed due to quantifiers.
+Existential variable corresponding to the usual variables and universal variables may assume any value.
+Therefore, the optimal solution in a QDCOP can be different from the solution in DCOP.
+A QDCOP defines bounds to the optimal solution (upper-bound and lower-bound), while DCOP defines a single value for the optimal cost.
+Thus, the best choice in a QDCOP defines the lowest lower-bound (LB).
+In the worst case, the universal variables can assign values that increase the cost of the candidate solution.
+Therefore, the worst case defines the lowest upper-bound (UB).
+Asymmetric DCOP In general, a DCOP can provide constraints that produce different costs or rewards among agents.
+Asymmetric rewards between agents who share the same constraint cannot be naturally represented by traditional DCOP formulations.
+For example, agents could have private preferences over outcomes.
+Due to the lack of asymmetrical rewards in DCOP, Grinshpoun, Grubshtein, Zivan, Netzer, and Meisels (2013) introduced a new general framework for asymmetric DCOP, the Asymmetric Distributed Constraint Optimization Problem (ADCOP).
+The key concept of ADCOP refers to the analogy between a traditional DCOP formulation and a class of games known as Potential Games.
+The importance of this analogy is that each finite potential game has at least one pure strategy Nash Equilibrium (NE).
+In game theory, a pure strategy NE represents a stable profile of actions corresponding to the set of all participants, where any unilateral change of action by a single agent produces an improved personal gain for the participant.
+Compared to the DCOP formalism, the definition of pure strategy NE is related to solutions known as minimum or maximum local optima.
+These solutions represent a set of all assignments, where a single change of assignment by an agent reduces only the global cost, i.e., the local cost remains the same.
+Each constraint C over the variables of the kth agent is defined as a mapping from the variable domains to a single real value, such that .
+This constraint definition implies that the cost or reward of a constraint is the same for all participating agents.
+When an agent reduces its cost from a constraint, all related constraints share a similar decrement of the cost of this constraint.
+Thus, when considering local optima, any change in an assignment can only reduce both global and local costs.
+The purpose of ADCOP is, therefore, to represents the combinatorial asymmetry through constraints when the involved agents obtain different gains or costs.
+DCOP applications DCOP has proven to be one of the most important formalisms for coordination and conflict resolution in multi-agent systems.
+Domains such as planning, meeting scheduling, resource scheduling, distributed wireless network configuration, and distributed reasoning in general are candidate applications for solution through DCOP methods.
+Traditionally, graph coloring problems are used as a means of benchmarking for DCOP methods.
+In a graph coloring problem, the domains of the variables represent colors, and the constraints ensure that all neighbor variables take distinct colors.
+Thus, a graph coloring problem consists of selecting a color for each variable such that no neighbor node has the same color (Modi et al., 2005).
+A real world problem frequently modeled as a DCOP is coordination in sensor networks (Lesser et al., 2003).
+A sensor network aims to track and determine the movements of targets over the scope of the sensors (see Fig 3).
+Because sensors have a limited scope of tracking, a coordination model among neighboring sensors is required to determine the movements of the targets.
+Usually, the coordination problem in sensor networks is described in a distributed way due to the scalability of the environment, hardware limitations in the sensors, and reduction of point of failures.
+Example of a sensors network Fig 3.
+Example of a sensors network.
+Recent studies address problems of configuration, self-organization, and coordination within wireless sensor networks formulated as a DCOP (Farinelli, Rogers, Petcu, & Jennings, 2008; Muldoon, O’Hare, O’Grady, Tynan, & Trigoni, 2013; Monteiro et al., 2012).
+These studies demonstrate the efficiency of some DCOP algorithms in terms of communication cost.
+In addition to the coordination problem in sensor networks, there are several other real world applications formulated as DCOP in the literature.
+Maheswaran et al.
+(2004a) proposed generic DCOP models for resource and event scheduling.
+In these generic models, the variables of the problem represent time slots or events, and the constraints refer to cost functions of joint activities or shared resources.
+Additionally, in scheduling events, one of main the difficulties is to ensure the privacy of scheduling information for each participant.
+Carpenter et al.
+(2007) formulated the problem of distributed resource allocation in disaster scenarios as a DCOP.
+In this formulation, the variables are the evacuation routes, and destinations and constraints represent the cost functions considering travel time, shelter capacity and route interdiction.
+This formulation aims to find suitable evacuation routes in a dynamic scenario.
+Junges and Bazzan (2008) addressed distributed traffic light synchronization as a DCOP.
+In this formulation, the variables represent crossings, and the constraints define cost functions over signal plans.
+This formulation aims to find the best signal plan among crossings to reduce waiting time at traffic lights and guarantee a progressive traffic system.
+Leite, Giacomet, and Enembreck (2009) proposed a distributed planning for automated train conduction as a DCOP.
+The variables denote the time slot to perform an action, and the constraints represent the impact of each action over the future actions.
+The global objective function aims to find a set of actions that minimize fuel consumption and travel time, accounting for issues related to driving safety.
+DCOP algorithms can be classified into several categories, such as synchronous or asynchronous and fully decentralized or partially centralized.
+These categories refer to strategies applied in DCOP algorithms, and they influence issues such as local computation and communication, solution quality, loss of information privacy, and scalability.
+Yeoh (2010) proposed a taxonomy for DCOP algorithms.
+Fig 4 illustrates a variation of this taxonomy, where other categories have been added to the main algorithms found thus far in the DCOP literature.
+This variation added categories such as synchronous or asynchronous, quality guarantee, and stochastic methods.
+Categories of DCOP algorithms Fig 4.
+Categories of DCOP algorithms.
+Complete and incomplete algorithms Complete algorithms correspond to methods capable of finding optimal solutions (Petcu, 2007).
+However, in some real world domains, especially in large-scale applications, complete algorithms are prohibitive due to the large communication or computational effort required during the problem-solving.
+Complete algorithms require exponential communication or computation regarding the number of agents, which limits their use in many real applications (Pearce, Tambe, & Maheswaran, 2008).
+In contrast, incomplete algorithms provide sub-optimal solutions faster than complete algorithms (Petcu, 2007).
+Recently researchers have focused on incomplete methods capable of finding sub-optimal solutions suitable for real-time and large-scale domains (Kiekintveld, Yin, Kumar, & Tambe, 2010; Petcu, 2007; Pearce et al., 2008; Rogers et al., 2011).
+Moreover, some incomplete algorithms are able to find solutions with a quality guarantee within a predefined limit (Pearce et al., 2008).
+In other words, these algorithms might provide a bounded-error mechanism able to find a solution when the quality converges to a predefined limit.
+Partially centralized and fully decentralized algorithms DCOP algorithms are distributed in essence.
+However, some methods solve conflicts among agents through a partial centralization of the problem.
+Centralized methods prevent the agents from taking local decisions that result in a local maximum and thus avoid unnecessary conflicts (Petcu, Faltings, & Mailler, 2007).
+In other words, an agent decides part of the problem locally and notifies the agents involved in the sub-problem about the decision.
+Nevertheless, such partially centralized methods increase the loss of information privacy, as the centralizing agent needs to know the domains and cost functions of other agents involved in the sub-problem (Greenstadt, Pearce, Bowring, & Tambe, 2006).
+In contrast, fully distributed algorithms prevent loss of information privacy, but require more communication and computation to resolve conflicts and achieve a global solution (Mailler & Lesser, 2004).
+Synchronous and asynchronous algorithms DCOP algorithms seek efficiency through distributed and parallel processing.
+In asynchronous algorithms, the agents take decisions based only on their local view of the problem, without relying on any specific message from their neighbors (Modi et al., 2005).
+In other words, in asynchronous algorithm, the agent receives messages from its neighbors at some moment, but its action does not depend on a specific message to be taken.
+Therefore, asynchronous methods minimize the idle-time of the agents, but there is no guarantee about how consistence the local views are.
+In other words, agents can take decisions from an inconsistent view and then need to revise their actions.
+In contrast, synchronous algorithms have a systematic search divided into well-defined steps or phases, and as a consequence the agents must wait to receive a particular message before performing their actions (Petcu & Faltings, 2005).
+However, in synchronous algorithms agents usually hold a consistent view on the search process.
+On the other hand, synchronous methods increase the idle-time of the agents.
+Peri and Meisels (2013) demonstrate the relation between different levels of synchronization for DCOP algorithms.
+The study shown that inconsistent views can be worse than idle-time of the agents regarding the total runtime of the search process, due to the effort required to revise an action in asynchronous methods.
+In fact, some algorithms result in a greater performance by introducing some level of synchronization in the search process, such as ConcFB (Netzer, Grubshtein, & Meisels, 2012).
+Search, inference and stochastic algorithms DCOP algorithms are typically divided into two distinct strategies regarding the space state exploration.
+The most common strategies are well-known search-based methods, such as best-first, depth-first, backtracking and branch-and-bound (Chechetka & Sycara, 2006; Gershman, Meisels, & Zivan, 2009; Modi et al., 2005; Yeoh, 2010).
+Another approach used in DCOP algorithms is inference-based strategies (Yeoh, 2010).
+These strategies allow agents to compute the aggregated constraint costs from their neighbors to reduce the problem size at each step of the algorithm (Petcu & Faltings, 2005; Rogers et al., 2011).
+Thus, these aggregated costs are propagated to neighboring agents by a systematic process.
+In addition, some incomplete algorithms for DCOP introduce stochastic strategies through a non-deterministic search approach (Nguyen, Yeoh, & Lau, 2012).
+Stochastic algorithms require less communication and computation, but they cannot guarantee convergence to an optimal solution.
+SynchBB The Synchronous Branch-and-Bound algorithm (SynchBB), introduced by Hirayama and Yokoo (1997), was the first complete DCOP algorithm.
+The SynchBB is a distributed version of the branch-and-bound strategy and aims to guide the search through a heuristic applied over the optimization function.
+By applying heuristics in the search process, it is possible to perform pruning in the state space when it is detected that there is no possibility for a partial solution to be extended to a better solution.
+The branch-and-bound strategy guides the search by a global accumulated cost, named bound (Tsang, 1993).
+Nevertheless, in a distributed version of the problem, agents must have access to the global upper-bound.
+When an agent detects that the current solution cost exceeded the global upper-bound, it performs a backtracking.
+In this case, the current solution has a higher cost than previous solutions and the search might be pruned at this time.
+One of the criticisms of SynchBB refers to the synchronous method, i.e., agents must wait to receive a specific message to perform their actions.
+In addition, the SynchBB requires a linear ordering of the agents.
+In addition, an extension of the SynchBB to address ADCOP, called Synchronous Asymmetric Branch and Bound (SyncABB), was proposed by Grinshpoun et al.
+(2013).
+In ADCOP, both sides of each an asymmetric binary constraint must be evaluated.
+Thus, SyncABB performs a back-checking search to consider both costs in asymmetric constraints.
+ADOPT Asynchronous Distributed Optimization (ADOPT), introduced by Modi et al.
+(2005), was the first distributed, complete, and asynchronous algorithm for DCOP.
+Thus, ADOPT can find optimal solutions using asynchronous and local communication among agents, i.e., agents might only communicate with neighboring agents.
+ADOPT requires that agents be ordered in a depth-first search tree structure called pseudo-tree.
+Based on this ordering, the algorithm performs a distributed backtracking using a best-first search strategy.
+In other words, each agent takes an opportunistic choice of the best value based on its local view.
+However, a pre-processing phase is required to transform the constraint graph into a pseudo-tree structure.
+ADOPT definition ADOPT applies three basic ideas to solve a DCOP: asynchronous search, efficient reconstruction of abandoned solutions, and termination detection.
+The asynchronous search enables agents to change the values of their variables from their local views, using a bounds propagation technique.
+However, the global upper-bound technique only fails in asynchronous methods because computing a global upper-bound requires the accumulated cost for a single agent before taking a decision.
+On the other hand, ADOPT proposes an alternative way to compute the cost of a solution, through the lower-bound.
+The lower-bound can be computed without knowing the global cost accumulated, and it is iteratively refined by the agents when receiving new information about the costs of their children.
+The ADOPT search strategy allows agents to abandon partial solutions before they have proved the solution is definitely sub-optimal.
+However, in some cases, the algorithm needs to reconstruct an abandoned solution.
+A simple way to revisit abandoned solutions is memorize partial solutions before discarding them.
+Nevertheless, memorizing all partial solutions is inappropriate due to the exponential memory and sequential search required to revisit the abandoned solutions.
+Therefore, ADOPT uses the lower-bound to reduce the cost of reconstructing the abandoned solution.
+The lower-bound is stored in a variable named threshold before performing a backtracking.
+Thus, the threshold guides the search for a solution with a cost less than or equal to the one that was abandoned previously.
+Finally, the termination detection provides a quality guarantee for the solutions achieved.
+ADOPT uses bound intervals to track the progress towards the optimal solution.
+When the bound intervals are reduced to zero, i.e., the lower-bound is equal to the upper-bound, the cost of the optimal solution has been determined, and agents can safely terminate when a solution of this cost is achieved.
+In other words, when the root node of the pseudo-tree detects that lower-bound and upper-bound are equal, the optimal solution for the problem has been found.
+The termination detection can also use the threshold intervals to provide sub-optimal solutions.
+Thus, the bound intervals can be used to perform a bounded-error search.
+Asynchronous communication model The communication model of ADOPT has three message types: value, cost and threshold (see Fig 5).
+When an agent changes the value of its variable, value messages are sent to its lower priority neighbors.
+This type of message aims to inform lower priority agents of the new value assigned by a higher priority agent.
+Upon receiving this message, the lower priority agent evaluates whether the new value assigned by higher priority agent is compatible with its local view.
+If incompatible, the lower priority agent chooses another value to its variable to minimize the cost of the solution.
+A context represents a partial solution of the form , which holds the values of the variables assigned by higher priority agents.
+CurrentContext is the local view of an agent.
+Two contexts are compatible if they do not disagree on any variable assignment.
+ADOPT communication model (Modi et al Fig 5.
+ADOPT communication model (Modi et al., 2005).
+On the other hand, cost messages are sent from children to parent and contain the local cost of the agent represented by , plus the sum of all costs reported from its children.
+Cost messages are composed of three elements: context, LB, and UB.
+Context is used to compute the current cost of .
+When CurrentContext is incompatible with the value chosen by the current agent, the LB and UB are updated with 0 and , respectively.
+LB represents the lowest lower-bound of all possible values for the current agent.
+In other words, LB contains the minimum cost for the current agent plus the sum of all LB from its children.
+Similarly, UB is the lowest upper-bound of all possible values for the current agent.
+UB corresponds to the minimum cost for the current agent plus the sum of all UB from its children.
+Threshold messages are sent from parents to children to update their thresholds.
+A threshold can be updated in three distinct ways.
+An agent increases its threshold when the cost of an optimal solution in its sub-tree is greater than the current value.
+An agent decrements its threshold when the cost of an optimal solution in its sub-tree is less than the current value.
+Finally, an agent updates the value of its threshold upon receiving a threshold message.
+In some situations, a parent agent must be able to determine the bound of an optimal cost for the sub-trees started in its children to reconstruct an abandoned solution.
+ADOPT-ng Although ADOPT is an elegant asynchronous and distributed method for solving DCOP, the algorithm has some inefficiencies.
+The communication model, especially cost messages, can be criticized for not providing enough information for the agents to take better decisions.
+Thus, the agents need a large number of interactions to reach an optimal solution in their sub-problems.
+Another negative point refers to the agents ordering in a pseudo-tree structure, which requires an additional cost before performing the search process.
+Silaghi and Yokoo (2006) proposed a variant of ADOPT, namely ADOPT-ng, to address such inefficiencies.
+The main difference between traditional ADOPT and ADOPT-ng lies in the communication model, which is based on a new type of nogood.
+The use of nogoods in ADOPT, besides eliminating the need for pre-processing step by not requiring an ordering of the agents, also offers a significant improvement in the search process.
+This motivation resulted in a new type of nogood, called valued nogood, that contains the cost information of the assignment.
+ADOPT-ng definition ADOPT-ng modifies the original cost message with nogood information on the form , where c is the minimum cost for a given set of N variable assignments.
+Through this information, an agent can compute the cost of an assignment v in the form from the received nogoods.
+Thus, the agent can deduce a minimal cost to the conflicting assignments and maximize the efficiency of the search process.
+ADOPT-ng also contains another type of message, called add-link.
+An add-link message announces interest in a variable within the nogood, whenever the sender agent is not a neighbor of the receiver agent.
+The purpose of this message is to minimize the total cost of the assignments contained in the nogood.
+ADOPT-ng reconstructs of abandoned partial solutions more efficiently than the original ADOPT because only the variables contained in the nogood might change their values.
+BnB-ADOPT One of the most important features of ADOPT is to provide a memory-bounded search, i.e., memory is linear regarding the number of agents of the problem.
+Specifically, each agent holds only the current information about the context, which includes the value of its variable and the values assigned by its neighbors with higher priority , as well as their respective costs.
+However, due to the best-first search in ADOPT, the reconstruction of abandoned solutions may occur frequently during the search process.
+The reconstruction of abandoned solutions occurs especially due to the agents partial view of the problem.
+In other words, the reconstruction is required when it is detected that the current solution cannot be better than the previous one.
+Once this situation is identified, ADOPT uses the cost in threshold to guide the search for a solution with quality less than or equal to the solution that was previously abandoned.
+However, this reconstruction process can require many cycles.
+Due to the inefficiencies in the reconstruction of abandoned solutions in ADOPT, Yeoh, Felner, and Koenig (2010) developed a variant of this algorithm based on depth-first and branch-and-bound strategies, called BnB-ADOPT.
+A best-first search expands the nodes of the pseudo-tree, guided by the best local cost.
+In contrast, depth-first and branch-and-bound search expands adjacent nodes of lower priority to improve the cost.
+Furthermore, depth-first and branch-and-bound search prunes all nodes when the current cost is not lower than the lowest value already observed.
+In this case, the search performs a backtracking in all pruned nodes of the pseudo-tree.
+BnB-ADOPT definition BnB-ADOPT maintains the same basic scheme as the original ADOPT.
+In this algorithm, the values of the higher priority neighbors denoted by represent a local view of the agent a.
+The cost represents the sum of the costs of all constraints between agent a and its higher priority neighbors, assuming that agent a assigned the value d for its variable.
+In addition, corresponds to the sum of the costs of all constraints between agent a and its descendants, taking into account that the lower priority agents have assigned values that minimize the cost in .
+BnB-ADOPT guides both the lower-bound and upper-bound by , i.e., .
+The algorithm performs a backtracking when it detects that is impossible to improve the cost if that agent a chooses value d. This detection mechanism uses the information of and , as well as the threshold denoted by .
+starts with cost and it is iteratively refined when new value or threshold messages are sent by higher priority agents.
+OptAPO Usually, agents of a DCOP algorithm try to maintain the privacy of their knowledge during the problem-solving.
+In several distributed optimization problems, this knowledge could be shared, allowing agents to find global solutions faster.
+Thus, due to the lack of knowledge of the agent about the problem, Mailler and Lesser (2004) introduced a partially centralized algorithm for DCOP based on cooperative mediation, namely Optimal Asynchronous Partial Overlay (OptAPO).
+In OptAPO, agents are able to share their knowledge to improve their local decisions.
+When an agent acts as a mediator, a solution is computed for a fraction of the global problem, and new assignments are recommended to the agents involved in the mediation session.
+This strategy reduces the cost of communication normally required in fully distributed algorithms.
+OptAPO definition OptAPO operates using two basic structures: agent-view and good-list.
+The agent-view holds the names, values, domains, and constraints of the agents that are connected to its owner.
+The good-list holds the names of the agents that share direct or indirect constraints with its owner.
+Each agent tries to improve the value of its sub-problem contained in the good-list or to justify its cost by identifying over-constrained structures in the constraint graph.
+Thus, the agents take the role of mediators, computing an optimal value for their sub-problems and recommending changes to the assignments of variables contained in the mediation session.
+When changes affect the costs of agents outside the session, they are added to the good-list of the mediator, assuming that they are involved in the cost justifying related the sub-problem.
+Mediation sessions A mediation session remains active until each agent is able to justify the cost of its centralized sub-problems, ensuring that the fraction of the problem of the mediation session has an optimal cost.
+OptAPO uses a dynamic priority ordering of the agents to determine which agent is able to mediate.
+This priority ordering is based on the size of the good-list of the agents because agents with greater knowledge about the problem are more suited to taking the centralized decisions.
+When OptAPO starts the search, agents assign a value to its variables and send an init message to its neighbors.
+This message contains the name of the variable, the agent priority, the current value of the variable and the constraints of the agent.
+Whenever an init message is received, the receiver holds the message information in its agent-view and adds the variable in the good-list if it shares a direct or indirect constraint with other variables in the agent-view.
+After all init messages have been received, the agents perform the evaluation process of their agent-view, calculating the current cost for all constraints contained in the sub-problem of the good-list.
+If an agent determines that is less than , i.e., the best cost found in the sub-problem, a passive or active mediation session is begun.
+This mechanism ensures the end of the search process and the completeness of the algorithm.
+A value of 0 is initially assigned to , supposing that the best solution has no cost.
+When a mediation session begins, a new value for is calculated through a centered search on the variables contained in the good-list.
+A mediation session can be passive or active.
+The agents decide between an active or passive mediation based on the lowest priority agent contained in its good-list when detecting the need for a mediation session.
+If the lowest priority found in its good-list is less than or equal to its own priority, it will start an active mediation session; otherwise the mediation will be passive.
+While passive mediation aims to change the value of , active mediation aims to change and .
+In other words, a passive mediation aims to understand the results that the higher priority agents obtained without changing their current solutions, while the active mediation attempts to change the assignments of lower priority agents to improve the cost of the sub-problem.
+When an active mediator finds assignments that improve the , value?
+messages are sent to lower priority agents to revise their values.
+If it is not possible to find assignments that satisfy this condition, the mediator starts the mediation process by sending evaluate?
+messages to each agent in its good-list.
+When receiving an evaluate?
+message, the agents will return information about variables and constraints not contained in the local view of the sender agent.
+This information is returned by an evaluate!
+message.
+However, if the agent is already participating in another mediation session when receiving an evaluate?, this request will be answered with a wait!
+message.
+When an agent receives a wait!
+message, the sender agent is excluded from the mediation session.
+After the agents of the good-list reply to all the evaluate?
+messages, the mediator performs a centralized branch-and-bound search to optimize the cost of the sub-problem of the good-list.
+Thus, is updated with the new cost of the sub-problem.
+If the mediation session is active, value?
+messages are sent to agents that need to review their local solutions.
+DPOP Most algorithms for DCOP are based on search strategies.
+Because DCOP can essentially be represented by a graph, it is natural to use such strategies.
+However, there are also alternative approaches based on inference, whose purpose is to compute and propagate the aggregate costs of the variables.
+Petcu and Faltings (2005) proposed a DCOP algorithm called the Dynamic Programming Optimization Protocol (DPOP), which solves optimization problems with a linear number of messages using dynamic programming techniques.
+DPOP definition The DPOP search process consists of three phases.
+First, the agents perform pre-processing to transform the constraints graph into a pseudo-tree.
+Then, each agent calculates the cost of all assignments considering its neighboring agents.
+These costs are calculated from the leaf nodes of the pseudo-tree and propagated through a matrix of utility for the adjacent higher priority nodes.
+Finally, the last phase seeks to assign values based on the costs calculated in the previous phase.
+Thus, DPOP also requires the constraint graph to be in the form of a pseudo-tree to maintain the priority ordering of the agents.
+Another reason to use tree structures is to perform parallel searches in independent branches.
+During the cost propagation phase, UTIL messages are sent from children to parent nodes.
+An agent can only send an UTIL message to its parent when all UTIL messages of their children have been received.
+Thus, the propagation process of UTIL messages starts from the leaf nodes of the pseudo-tree.
+A UTIL message contains the cost for each set of assignments from the sub-problem started in the sender agent.
+When an agent receives an UTIL message, it is possible to calculate and project the optimal cost for each set of assignments for the sub-problem started in the current agent.
+When the root node of the pseudo-tree has received all UTIL messages, the assignment process is started.
+The root node chooses an assignment that optimizes the global cost of the problem and its decision is propagated to their children through VALUE messages.
+Other agents can only perform the assignment of their variables after receiving a VALUE message from their parent.
+Upon receiving a VALUE message from its parent, the current agent chooses an assignment that minimizes the global cost of the problem and propagates this message to its children, attaching its assignment to the VALUE message before sending it.
+This process continues until the VALUE messages reach the leaf nodes.
+Although DPOP requires a linear number of messages to solve a problem, the size of the messages is exponential because of the propagation process, which is the main critique of the DPOP algorithm.
+NCBB After ADOPT, several complete and distributed algorithms for DCOP were proposed (Ali et al., 2005; Bowring, Tambe, & Yokoo, 2006; Silaghi & Yokoo, 2006; Yeoh et al., 2010).
+In general, these algorithms focus on more efficient and scalable techniques for application in real world problems.
+Thus, Chechetka and Sycara (2006) introduced an algorithm called No-Commitment Branch-and-Bound (NCBB), whose performance is better than the main complete algorithms proposed so far in some domains.
+The NCBB, like the other algorithms for DCOP, is also based on a branch-and-bound search strategy.
+In NCBB, agents are prioritized in a pseudo-tree structure.
+The constraints are defined between agents with a parent and child relationship in the pseudo-tree of the problem.
+The agents have private information, i.e., an agent knows only the constraints between its neighbors.
+NBCC definition When beginning the search process, the agents compute the upper-bound and lower-bound of the cost of the local solution.
+The agents opportunistically choose their assignments considering the values of their lower priority neighbors to minimize the AgentCost.
+The AgentCost corresponds to the cost of the current agent.
+These costs are propagated to higher priority agents, which are used as heuristics to guide the search process.
+The search process is started after the pre-processing step.
+However,an agent effectively starts the search process only when a SEARCH message is received from its parent.
+A SEARCH message is sent when all higher priority agents choose their values and communicate them to their descendants.
+This step ensures that, when receiving a SEARCH message, the receiver agent has consistent knowledge about the values of its predecessor agents.
+The main feature of the search process of the NCBB is learning the assignment of the neighbor predecessors.
+Whenever an agent receives a message with the value assigned to a given predecessor, this message is immediately answered with the lower-bound value of the descendent agent recalculated with the new assignment based on its AgentCost.
+In other words, an agent may compute its for each assignment k based on its local view.
+This strategy allows agents to create cost map for each possible value of its variable.
+This also allows agents to consider solutions previously computed and designated as unsatisfactory to restrict the assignment of values that have not been explored in their sub-tree.
+AFB Another complete and distributed algorithm found in the DCOP literature is Asynchronous Forward-Bounding (AFB).
+The AFB algorithm, proposed by Gershman et al.
+(2009), addresses the propagation of partial solutions asynchronously.
+The partial solution propagation in AFB allows asynchronous updating of the views of the agents, computation of the local costs and early detection of backtracking.
+The AFB search strategy is also based on branch-and-bound, where the search is guided by the lower-bound and upper-bound.
+In addition, the partial solutions are represented by a structure known as Current Partial Assignment (CPA).
+The CPA contains the assignments of the agents involved, as well as the accumulated cost of the constraints among the variables.
+Upon receiving the CPA, each agent adds the assignments of variables in its local view only when the cost does not exceed the global upper-bound.
+Otherwise, backtracking is performed and the current agent sends the CPA to the last assigning agent to revise its assignment.
+Therefore, the innovation of AFB is the asynchronous CPA propagation among the involved agents.
+AFB definition Due to the asynchronous propagation in AFB, a timestamp mechanism is necessary to determine the most current CPA and discard obsolete CPAs.
+The CPA is a unique message exchanged among agents, and only one agent performs an assignment on the CPA at a time.
+Then, updated copies of the CPA are sent to agents who have no assignment.
+Each unassigned agent computes a lower-bound considering the cost of the assignment to its respective variable.
+After computing the lower-bound, the current agent replies the received message with the new cost.
+This information is used to perform pruning when the cost in the search exceeds the upper-bound.
+More specifically, each agent adds its assignment in CPA and replies through FB_CPA messages for agents who have no assignment in the current CPA.
+When the agent receives a FB_CPA message, the lower-bound is computed considering the cost of assignments on the CPA and the current agent.
+This estimate cost is returned to the sender by a FB_ESTIMATE message.
+The accumulated cost contained in a FB_ESTIMATE message allows agents to perform pruning in the search process upon detecting that the current cost is greater than the solutions evaluated previously.
+For two neighboring agents and , the cost of assignments and is denoted by .
+For each and each value , the minimum cost of assignments is computed by agent .
+Additionally, is the global cost for the assignment of v, considering the sum of .
+Therefore, represents the lower-bound when assigns the value v to its variable.
+Grinshpoun et al.
+(2013) proposed an alternative version of the AFB algorithm to deal asymmetric costs, called Asymmetric Two-Way Bounding (ATWB).
+In this asymmetric version, the CPA messages are propagated both forward bounding and backward bounding whenever a value is assigned.
+ConcFB A recent and relevant search algorithm for DCOP is the Concurrent Forward Bounding (ConcFB), introduced by Netzer et al.
+(2012).
+The innovation of the ConcFB is twofold.
+First, the algorithm performs multiples concurrent search processes on disjoint regions of the search space.
+Second, ConcFB can detect early the need for pruning of the search space by a synchronous forward bounding search.
+In addition, the algorithm creates dynamically new search processes when detecting promising sub-spaces.
+ConcFB generates such sub-spaces splitting in multiples search processes the unassigned values of the domain D of a given variable .
+Thus, the splitting process can results in a number of search processes equals to the domain size of .
+Each search process holds a global ordering of the involved agents.
+Moreover, each search process maintains a CPA structure, which contains the all assignments of the variables in the specific sub-space.
+ConcFB definition Each CPA represents the assignments performed in a given process search.
+When an agent assigns a value in its variable, it sends a Comp_LB message to all constrained agents with lower priority in the global ordering of the specific search process.
+Upon receiving a Comp_LB message, the current agent computes a lower-bound on the partial assignment on the CPA and returns this information to the sender agent using a Reported_LB message.
+Once the agent receives all estimated lower-bounds for a given assignment in a specific search process, it adds the resulting estimate to the cost of the CPA.
+In sequence, the current agent compares the cost of the CPA to the upper-bound.
+If the cost of the CPA is larger or equal to the upper-bound, the current agent chooses another value to its variable.
+If all values have already been assigned, the current agent performs a backtracking sending a Backtrack_CPA message to the last assignee of the search process.
+The Backtrack_CPA message aims to inform there is not possibility to extend a given CPA.
+However, if the cost of the CPA is smaller than lower-bound, the current agent sends the CPA to the next agent in the global ordering of the specific search process.
+Upon receiving a CPA message, the agent will try extend the CPA generating dynamically new search processes.
+The splitting process occurs when an agent receives a SPLIT message.
+Thus, when received a SPLIT message, the agent verifies the amount of unassigned values in the current domain of the given search process.
+If there is more than one unassigned value, the current domain is split in half, where the first half remains in the original search process and the second is handled by a new search process create at this moment.
+However, if the current agent cannot split the domain, the SPLIT message is sent to the next agent in the global ordering of the specific search process.
+If there is no possibility to split any domain in all search processes, a backtracking can be performed.
+When an agent found a new global upper-bound, this information is broadcast to all agents by a UpperBound message.
+Upon receiving a UpperBound message, the agent will update its local view if the current value is larger than the received upper-bound.
+Otherwise, the agent discards the UpperBound message.
+DSA, DBA, and MGM The Distributed Breakout Algorithm (DBA) and Distributed Stochastic Algorithm (DSA) are the two most popular incomplete methods for solving DCOP (Zhang, Wang, Xing, & Wittenburg, 2005).
+Several subsequent incomplete methods have been influenced by these algorithms.
+Another popular incomplete DCOP algorithm is the Maximum Gain Message (MGM), described as a variant of the traditional DBA (Maheswaran, Pearce, & Tambe, 2004b).
+Because these methods are incomplete, the algorithms are able to find sub-optimal solutions with less computation and communication effort.
+On the other hand, there is no quality guarantee for the solutions found.
+DSA definition The DSA search process is essentially performed in a synchronous way, where agents perform local computations in each round of the algorithm (Zhang et al., 2005).
+Each agent begins the process by selecting an arbitrary value for its variable.
+Then, agents propagate the selected values and obtain the values chosen by neighboring agents.
+After obtaining the values chosen by the neighbors, each agent selects a value that minimizes its local cost.
+Finally, the agent assigns the selected value for its variable, considering a probability p. The rounds of the DSA algorithm are repeated until a stopping condition is satisfied.
+Therefore, the DSA algorithm does not guarantee convergence to the optimal solution, as the agents compute their actions locally.
+In contrast, due to its stochastic nature, DSA does not get stuck in local maximum.
+A difficulty of the DSA is the definition of probability p to confirm the action.
+DBA definition DBA implements a mechanism to avoid local maximums (Zhang et al., 2005).
+In DBA, agents begin the process by assigning weights equal to one to all constraints.
+After, each agent randomly chooses a value for its variable, propagates the selected value and obtains the values chosen by neighboring agents.
+When receiving all the values chosen by the neighbors, every agent calculates the assignment that results in a global cost reduction, considering the weights of the violated constraints.
+Finally, the agents share this cost reduction among their neighbors.
+If the cost reduction is greater than 0, the agent assigns the value computed for this reduction.
+Otherwise, adds 1 to all the weights of all the violated constraints.
+The search process stops when no constraint is violated.
+MGM definition The MGM is a modification of the DBA, where the difference lies in the fact that MGM does not change the cost of the constraint to avoid a local maximum (Maheswaran et al., 2004b).
+Like the DBA, the process is performed synchronously in MGM by agents performing local computations in each round of the algorithm.
+Each agent begins the process by selecting an arbitrary value for its variable.
+Then, the agents propagate the selected values and obtain the values chosen by neighboring agents.
+After obtaining the values chosen by the neighbors, each agent selects a value that results in better unilateral gain and shares the gain among neighboring agents.
+If the locally computed gain is greater than the maximum gain of all neighboring agents, the agent assigns the selected value.
+In other words, MGM performs a distributed hill climbing, but the algorithm avoid local maximum when computing the maximum improvement from its neighbor before assigning the select value.
+The rounds in the MGM are repeated until a stopping condition is satisfied.
+Thus, the MGM does not guarantee convergence to the optimal solution because the agents compute unilateral actions.
+MGM also requires two cycles in each round.
+First, the agents propagate their assigned values.
+Second the agents propagate the obtained gains by unilateral changes.
+On the other hand, DSA only requires a single cycle, i.e., only the value propagation.
+MGM and SCA k-optimality In general, agents interact in small groups in a multi-agent system.
+In other words, the interactions among the agents are local and often consider a sub-region of the constraint graph.
+The k-optimality concept refers to the formation of groups of agents such that no group with k or fewer agents are able to improve the solution.
+In this case, only a subset of agents is involved in this improvement, and the solution is therefore sub-optimal.
+However, it is guarantee that only assignment changes in groups with more than k agents can improve this sub-optimal solution.
+One of the main difficulties of incomplete algorithms for DCOP is related to the solution quality guarantee.
+Pearce et al.
+(2008) introduced variations of the incomplete MGM and DSA algorithms using the k-optimality concept, called the Maximum Gain Message (MGM) and Stochastic Coordination Algorithm (SCA), which are able to guarantee sub-optimal solutions with distance k equal to 2 or 3-optimality.
+The key idea of a k-optimality algorithm is to guarantee the quality of the sub-optimal solutions reached, where .
+For two sets of assignments, a and , the deviating group denotes the set of agents that have different assignments in a and .
+The distance between two sets of assignments represents the number of agents with assignments in conflict, i.e., with different actions.
+The relative cost of the set of assignments a is equal to , where the R function represents the cost of the set of assignments.
+Therefore, a set of assignments is k-optimal if , such that .
+One of the difficulties in k-optimality algorithms involves the definition of k. By increasing the value of k, the algorithm provides solutions with better quality, but it requires greater computational effort to find a k-optimal solution.
+In other words, the exact value of k for a given domain may be unclear.
+One possible way to determine the value of k is to consider the worst quality guarantee for the k-optimal solution.
+1, 2, and 3-Optimality definition The MGM and DSA algorithms are essentially 1-optimal, as the agents guarantee only local optimization.
+Thus, when a 1-optimal algorithm ends the search process, no unilateral change can improve the quality of the assignments.
+denotes the set of assignments after finishing all rounds of the algorithm.
+The algorithms MGM-2 and SCA-2 are 2-optimal, ensuring that no unilateral or bilateral change may improve the quality of assignments in .
+Both algorithms MGM-2 and SCA-2 begin a round when the agents send their current values to their neighbors.
+In the following steps, two groups of agents are formed, called offerers and receivers.
+The choice of which agents will be offerers or receivers is performed randomly.
+If an agent is an offerer, it cannot receive offer messages.
+The offerers randomly choose a neighbor and send it an offer message.
+This offer message contains values between the offerer and receiver that result in a local utility gain to the offerer.
+When a receiver receives an offer message, it calculates the global utility gain for the values contained in the message and updates its context.
+If the values contained in the offer message result in a global gain, the receiver replies with an accept message, and the changes are confirmed between the offerer and receiver.
+Otherwise, the receiver sends a refuse message and the values are unconfirmed on both sides.
+The SCA-2 algorithm differs from MGM-2 in that, when receiving a refuse message, offerers can unilaterally perform random changes with a probability p. Therefore, the SCA-2 requires three cycles per round, called value, offer, and accept or reject.
+In the MGM-2, after replying to the offer messages, each agent sends a gain message to all its neighbors.
+Agents with uncommitted values send their best local utility gains considering a unilateral change.
+On the other hand, agents with committed values send the global utility gain of their coordinated actions.
+In the MGM-2 algorithm, the agents that committed their actions send a confirmation message if all gain messages received have a gain less than the global gain computed by the coordinated action.
+Upon receiving confirmation messages, agents will effectively change their values.
+Thus, MGM-2 requires five cycles per round, named value, offer, accept or reject gain, and confirm or deconfirm.
+Finally, the algorithms MGM-3 and SCA-3 are 3-optimal; however, they require more cycles per round than the 2-optimal algorithms.
+In other words, with groups of three agents, it is no longer possible to compute optimal joint actions involving only the offerers and receivers.
+The MGM-3 algorithm therefore takes seven cycles for local stabilization of the agents, whereas the SCA-3 requires five cycles.
+Bounded Max-Sum One of the difficulties employing incomplete methods to solve DCOP is related to the solution quality guarantee.
+Strategies with solution quality guarantee are required in several classes of real world problems.
+Thus, Rogers et al.
+(2011) proposed a variation of the Max-Sum algorithm, called Bounded Max-Sum, that can offer quality guarantee for the sub-optimal solutions reached.
+The Bounded Max-Sum algorithm removes cycles from the constraint graph by eliminating the dependencies between the cost functions and variables.
+This elimination is performed by considering the dependencies that result in less impact on the solution quality.
+The algorithm uses the traditional Max-Sum process to solve DCOP, but it requires transforming the constraint graph into a spanning tree.
+Thus, the Bounded Max-Sum is able to provide specific sub-optimal solutions for a particular problem instance.
+Belief Propagation definition Belief Propagation is a message-passing algorithm based on marginal distribution (Kschischang, Member, Frey, & Loeliger, 2001).
+Belief Propagation operates performing inference on a graph that represents the marginalization problem.
+In other words, messages are exchanged between two types of nodes, called variables and functions nodes.
+Variables nodes receive the product of descendants and the functions nodes perform a marginalization process by the products received.
+This relation represents the dependencies between variables and function nodes.
+Max-Sum definition Max-Sum is based on a class of Belief Propagation algorithm known as Generalized Distributive Law (GDL).
+By applying this approach in a constraint graph represented by a tree structure, Max-Sum is able to find optimal solutions for DCOP.
+However, the algorithm cannot guarantee the quality of the solution in solving problems whose constraint graph has cycles.
+Max-Sum, unlike most DCOP algorithms, represents the problem by a factor graph.
+A factor graph corresponds to a bipartite graph, where one set of nodes represents the cost functions and the other set represents the variables of the problem.
+The edges indicate dependencies between the cost functions and the variables.
+Therefore, the global function of the problem is decomposed into local functions, formed by subsets of variables of the global function.
+Max-Sum implements a marginalization process of the cost functions whose goal is to reduce the dependencies of a local function to a single variable.
+Thus, the algorithm sums the cost of all possible values considering the costs of the dependent variables to reduce the dependencies.
+This sum represents the marginalized cost function projected over a given variable.
+The marginalization allows agents to take globally optimal decisions by only considering the marginalized local function.
+Max-Sum recursively propagates messages between the variable and cost functions.
+The messages are propagated among the connected nodes in the factor graph, allowing each node to have global knowledge of the functions defined for the problem.
+At the end of the process, each variable assigns a value locally by calculating the impact of the action through the marginalized function.
+However, when using the Max-Sum in a cyclic graph, the process does not converge to a guaranteed solution quality.
+Bounded Max-Sum definition Bounded Max-Sum aims to remove cycles in a factor graph by ignoring dependencies between the cost functions and variables.
+More specifically, a dependency represents a direct link between a variable and a cost function of the factor graph.
+After eliminating cycles of the factor graph, the Bounded Max-Sum algorithm is able to converge to an optimal solution for this new problem.
+Although the solution quality is guaranteed, the distance between the sub-optimal solution reached and the optimal solution depends directly on the problem instance.
+To avoid cycles in a given factor graph, the Bounded Max-Sum must find a spanning tree that minimizes the sum of the weights w of the removed edges.
+Thus, the cost of each edge is used to compute the maximum spanning tree.
+Fig 6 illustrates an example of a cyclic factor graph and a spanning tree generated from this graph, where the dotted edges represent removed dependencies.
+Factor graph converted in a maximum spanning tree Fig 6.
+Factor graph converted in a maximum spanning tree.
+DALO-k and DALO-t The k-optimality concept has been successfully applied as a way to guarantee quality in incomplete algorithms such as MGM and DSA.
+Nevertheless, the lack of a general purpose algorithm, i.e., one that allows the use of arbitrary values for k, and the obligation to form groups based solely on group size limits the application of the k-optimality concept.
+Kiekintveld et al.
+(2010) introduced a variant of this concept called t-distance, which considers the graph distance as an alternative selection criterion to the k-optimality of groups of divergent agents.
+Furthermore, two new incomplete algorithms using the k-optimality and t-distance concepts were also proposed, called Distributed Asynchronous Local Optimization (DALO).
+The main objective when using the k-optimality and t-distance concepts consists of providing a mechanism to coordinate the decisions of local groups of agents, rather than each agent performing a choice individually.
+However, in addition to the group of agents, the t-distance also considers the pre-defined distance from the central agent in the group.
+The distance between two agents on a constraint graph is defined by .
+represents the t-group centered on v. A set of A assignments assuming the t-distance is optimal if , where for any .
+For the k-optimality concept, the number of agents in each group is limited, but the number of k-distinct groups may vary.
+In dense graphs, the number of distinct k-groups can be considerably high, demanding more computation and communication to allow the agents to coordinate their actions in groups.
+However, the opposite hold for the t-distance, as the number of t-groups is limited by the distance from the central agent, whereas the size of the t-groups may also vary in domains where the constraint graph has a high density.
+DALO definition The incomplete MGM and DSA algorithms are essentially 1-optimal and 0-distance.
+The DALO algorithm can compute sub-optimal solutions considering both k-optimal and t-distance criteria.
+Both DALO-t and DALO-k begin the process by defining groups based on k-optimal or t-distance criteria.
+In this step, each agent communicates with its neighboring agents to form groups limited by size or distance in the constraint graph.
+A leader must be elected for each group from the choice of the most central agent in the group to reduce communication costs.
+In the next step, each leader computes optimal assignments locally for the group.
+Finally, the leaders coordinate their actions to evaluate assignments that can improve the global quality of the assignments.
+The coordination process of the local solutions is the same for DALO-k and DALO-t.
+The difference between the algorithms lies in the group formation stage.
+In both algorithms, each agent uses a variable projection strategy comparable to DPOP to compute its local actions in a group.
+Thus, decisions can be taken centrally by the leader considering only its local view of the sub-problem.
+After computing the local assignments, the leaders propagate the assignments and update their local views to reconsider new assignments, ensuring the convergence of the solution within the quality criterion.
+Min–max, alpha–beta, and bi-threshold ADOPT In QDCOP formulation, the agents compute bounds (upper-bound and lower-bound) to the solution through universal and existential quantifiers.
+This feature is similar to the tree search concepts from game theory.
+From this feature, Matsui et al.
+(2010) introduced extensions of ADOPT algorithm to distinguish the uncooperative variables using universal and existential quantifiers.
+Universal variables are kept unassigned by the optimization process because they can take any value in its domain.
+However, existential variables take exactly one of their values in each context.
+Therefore, if the original problem is a minimization, agents with universally quantified variables can result, in the worst case, in the maximization of the cost values.
+Still, other agents normally want to minimize the problem.
+Thus, only the boundaries of the problem, particularly the upper-bound, are guaranteed.
+The purpose of a QDCOP is, therefore, to compute these bounds and hence find sub-optimal solutions.
+QDCOP representation The original ADOPT represents the problem by a pseudo-tree structure.
+In a pseudo-tree, the edges of the original graph can be categorized as tree or back edges.
+The tree edges represent a partial ordering between two variables.
+However, the order of the variables cannot be easily changed in a QDCOP, as otherwise the quantifiers are evaluated in an incorrect order.
+Therefore, the pseudo-tree must be modified to maintain the ordering of the quantifiers.
+This modification can be performed by applying extra null edges for each pair of nodes, if necessary.
+In addition, pseudo-tree-based DCOP algorithms can be easily extended to solve QDCOP.
+Min–max ADOPT definition The min–max ADOPT algorithm retains the same cost and value messages as the traditional communication model of the ADOPT.
+The process starts when the root agent propagates to neighboring agents with lower priority messages containing its assigned value.
+Each neighboring agent receives the value message and updates its local context.
+After receiving a value message from neighboring agents with higher priority, the current agent computes the current cost of the neighbor assignments and chooses an assignment that minimizes its local cost.
+In min–max ADOPT, the existential variables are used to compute the lower-bound, while the universal variables are used to compute the upper-bound.
+The process is terminated when the root agent detects that the upper-bound and lower-bound are equal.
+Alpha–beta ADOPT definition The alpha–beta ADOPT algorithm applies a classical method of pruning trees in game theory search, called alpha–beta.
+The concept of this modified version of ADOPT is to use the parameters alpha and beta to represent the lower-bound and upper-bound, respectively, for each possible cost for an assignment.
+By applying the alpha–beta pruning method on the min–max ADOPT, it is possible to prune the search when agent detected that the current solution cannot be better than any other solution already evaluated.
+The values for the parameters alpha and beta are obtained by a backtracking technique similar to the threshold of the original ADOPT.
+Bi-threshold ADOPT definition Finally, the bi-threshold ADOPT algorithm implements a backtracking guided by two thresholds.
+This mechanism aims to avoid backtracking due to overestimating the cost of all assignments, as usually occurs in alpha–beta ADOPT to compute excess costs in sub-optimal solutions.
+In the original algorithm, backtracking is performed by a single threshold guided by the previously computed lower-bound, whose goal is the reconstruction of abandoned solutions.
+In bi-threshold ADOPT, backtracking is also guided by the upper-bound.
+Except for the backtracking mechanism, the behavior of bi-threshold ADOPT is the same as min–max and alpha–beta ADOPT.
+ACLS and GCA-MGM Traditional DCOP formulations can be inappropriate in domains where agent interactions have different costs or gains.
+In an ADCOP representation, unlike DCOP, there is an exact cost definition for each agent.
+In other words, the values of the domains are mapped in cost tuples for each agent.
+Each constraint defines a non-negative cost for each possible combination of values in a set of variables.
+Thus, each agent maintains a bi-matrix containing pairs of variables and pairs of values on both sides of the constraint.
+Some alternative ways to represent asymmetric constraints in a traditional DCOP are as follows: (i) disclosure of constraint cost: the simplest way to represent asymmetric constraints, but this method exposes the preferences of the agents, which are usually private information; (ii) use of unary constraints: refers to the addition of unary constraints on the variables, but this approach fails when the constraints depend on the assignments involving other agents; and (iii) private events as variables (PEAV): PEAV was the first DCOP model capable of capturing asymmetric gains in which each agent maintains the standard variable and mirror variables to each neighbor (Maheswaran et al., 2004a).
+In PEAV model, the additional variables represent internal constraints and they are used to represent the asymmetric rewards.
+Grinshpoun et al.
+(2013) introduced variations of the incomplete algorithms DSA and MGM to address ADCOP formulations naturally, called ACLS and GCA-MGM.
+ACLS definition The Asymmetric Coordinated Local Search (ACLS) algorithm implements a variant of the DSA to deal asymmetric costs.
+In each round, the agents begin the process by synchronously sending the current assignment for their neighboring agents.
+In turn, the assignments are collected, and actions are computed that can improve the local gain.
+Based on the set of assignments proposed for the neighbors, the agent chooses an assignment randomly and sends it to all the neighboring agents.
+This message is replied to by the neighbor considering the cost computed of its set of constraints.
+Upon receiving the replies to the proposed assignment from all neighboring agents, the current agent is able to estimate the potential loss or gain for this assignment.
+If the proposed assignment results in a better gain than the current assignment, the agent might perform the assignment with a probability p. 5.6.2.
+GCA-MGM definition Similar to the ACLS algorithm, the Guaranteed Convergence Asymmetric MGM (GCA-MGM) also employs the local knowledge of neighboring agents to achieve better local gains.
+In the GCA-MGM algorithm, the agents begin the process by propagating their assignments among neighboring agents.
+Upon collecting all assignments of the neighboring agents, the agent evaluates the current impact of possible changes in the actions of its neighbors on its local cost.
+If the changes lead to a lower local cost, the agent sends the new assignment to the neighboring agents.
+DaCSA Incomplete algorithms can find sub-optimal solutions with low computational and communication effort.
+These methods are more suitable that complete algorithms for a wide range of real world domains, especially large-scale or real time applications.
+On the other hand, incomplete algorithms can converge to a sub-optimal solution of low quality, even with a quality guarantee.
+Due to this inefficiency, Vinyals, Pujol, Rodrguez-Aguilar, and Cerquides (2010) introduced a new approach to solving DCOP called Divide and Coordinate (DaC).
+This approach consists of solving a DCOP in two steps: (i) dividing the DCOP into smaller and simpler sub-problems to be solved locally; and (ii) coordinating the actions of the agents to share their local information and to achieve agreement faster.
+DaC definition In the first stage of the DaC approach, the agents must create an initial DCOP division in a distributed way.
+Each agent uses only its local relation in the original DCOP, dividing the relationships shared with other agents equally.
+Afterward, the agents interleave between dividing and coordinating stages until they reach a sub-optimal solution for the problem.
+In other words, the agents divide the original DCOP into local sub-problems, one per agent.
+Each sub-problem of an agent shares variables.
+Therefore, agents may disagree about the assignments of the shared variables after solving the sub-problems locally.
+To resolve conflicts, the agents must proceed with the coordination stage by sharing information with the neighboring agents.
+The DaC approach has two important properties: (i) the sum of the solutions of the sub-problems is always an upper-bound on the global quality of the optimal solution; and (ii) if all agents reach a joint agreement on a solution during the optimization process, this solution is optimal.
+Therefore, to ensure the first propriety of the DaC approach, given a DCOP , a set of m sub-problems such that is a valid division of the objective function f of , formulated as the sum of the individual objective functions of each sub-problem .
+Thus, represents the objective function of sub-problem , and is the projection of d over the variables .
+The upper-bound of an optimal solution is defined by .
+Finally, to ensure the second property, if the assignments of all the variables are the same value in all sub-problems, the optimal solution is guaranteed by .
+DaCSA definition The Divide and Coordinate Subgradient Algorithm (DaCSA) was the first method for solving DCOP based on the DaC approach (Vinyals et al., 2010).
+The DaCSA algorithm uses Lagrangian dual decomposition and subgradient methods.
+To apply the duality, it is necessary to formalize as a binary linear program.
+Therefore, for each sub-problem the binary variables and are defined.
+The variable takes the value 1 when the variable of the sub-problem takes the value k. The variable takes the value 1 when the variables and of the sub-problem take the values k and l respectively.
+During the coordination stage, each agent shares its local assignments and updates its local view trying to reduce the conflicts between agents by modifying the subgradient parameters.
+The algorithm alternates between the divide and coordinate stages until the quality solution achieves a pre-defined limit or a specified number of iterations between the divide and coordinate stages is exceeded.
+DUCT Most algorithms for DCOP are based on search or inference solving methods.
+Ottens, Dimitrakakis, and Faltings (2012) recently introduced a new approach to solve DCOP based on confidence bounds.
+The Distributed Upper Confidence Tree (DUCT) uses sampling and confidence bounds to solve DCOP.
+DUCT definition In a DCOP, the global function is decomposed into a set of functions.
+Two functions might share a common variable, and thus a variable ordering could optimize the exploration over the search space.
+The structure of the search space may be represented by an AND/OR graph.
+In this graph, there are two set of nodes, where AND nodes represent variables, and OR nodes represent values of the domain for each variable.
+In traditional DCOP algorithms, each agent has a context that represents a set of assignments of the neighboring agents with higher priority.
+When an agent receives a context message, the algorithm has reached an OR node in the AND/OR graph.
+To focus on promising choices, the DUCT constructs a confidence bound B, such that the best value for any context is at least B, and sample the choice with the lowest bound.
+In DUCT, the root agent begins sampling by selecting a value for its variable and sends a CONTEXT message to its children with this assignment.
+When an agent receives a CONTEXT message, it chooses a value , appends this value in its context, and sends a CONTEXT message to its children.
+This process stops when the leaf agents are reached.
+When the leaf agents choose a value, the algorithm has selected a path through the AND/OR tree that contains all the variable assignments.
+Thus, each agent k maintains the context at time t, and is the value chosen by the agent k at time t. Therefore, the choice is guided by the lowest cost found for the value d under context a.
+In addition, to use more informed bounds to guide the search, each agent k holds the number of times the context a has been received.
+This strategy aims to explore the sampling of the most promising values using a confidence interval.
+The sampling process continues for a pre-defined number of iterations or until convergence, i.e., until the samples do not change.
+D-Gibbs DUCT algorithm has proved to be a promising method to solve DCOP.
+DUCT is able to find near-optimal solutions through confidence bounds.
+However, this algorithm requires exponential memory with respect to the number of agents involved in the problem.
+This memory requirement might be prohibitive in large-scale problems or in domains where computational resources are very limited.
+Thus, Nguyen, Yeoh, and Lau (2013) proposed a new memory-bounded DCOP algorithm based on confidence bounds, namely Distributed Gibbs (D-Gibbs).
+Gibbs definition The Gibbs sampling algorithm is a Markov chain that may be used to approximate joint probability distributions.
+The Gibbs algorithm generates a Markov chain of samples, where each sample is correlated with the previous one.
+More specifically, the algorithm begins by assigning an arbitrary value to each variable and iteratively samples from the conditional probability distribution, assuming that all the other previously variables take on the sampled values.
+Thus, Gibbs converges to the true joint probability distribution given a sufficiently number of samples.
+D-Gibbs definition In Distributed Gibbs, the process begins by assigning an initial value to all agents.
+Each agent holds the current value, the previous value, and the best value found so far.
+The context of the agent i contains tuples of the values of the neighboring agents.
+The index time of an agent i is given by .
+In addition, the index time refers to the most recent iteration in which the best solution was found.
+Agents use this information to determine whether they should update their respective best values.
+represents the difference between the current solution and the best solution found in the previous iteration, and represents the difference between the best solution found in the current iteration and the best solution found so far.
+After the root agent assign the initial value to its variable, it sends a VALUE message to its neighboring agents.
+Upon receiving a VALUE message, agents update their context, choose a value for their variable, and propagate until all the leaf agents choose their values.
+Each leaf agent sends a BACKTRACK message to its parent to compute the and information.
+Each iteration is finished when the root agent receives all BACKTRACK messages.
+Thus, is the sum of local differences from the root to the current agent as the sum is updated down the pseudo-tree.
+If the difference is greater than the maximum difference , which means that the new solution is better than the best solution found so far, then the agent updates the maximum difference to , and its best value to its current value .
+DCOP has emerged as an elegant formalism for reasoning and coordination in multi-agent systems.
+DCOP supports various aspects that are usually required in a real multi-agent system, such as information privacy, the autonomy of agents, scalability, and the distributed coordination of actions.
+These aspects are generally unsupported in centralized methods, increasing the importance and potential of DCOP as a coordination mechanism in multi-agent systems.
+Despite being a recent research field, DCOP has drawn considerable attention from researchers due to its ability to model various classes of real world problems naturally.
+Due to the interest in this research area, several algorithms for solving DCOP have been proposed.
+The algorithms can implement different problem-solving strategies, such as synchronous or asynchronous, complete or incomplete, and partially centralized or fully distributed, among others.
+These strategies are often related to the characteristics of the problem domain.
+Because of the limitations of each strategy, an appropriate choice of DCOP algorithm is essential to obtain suitable performance in real applications.
+Evolution of the algorithms Historically, the first algorithms proposed for solving DCOP are variants of or influenced by well-known CSP and DisCSP methods.
+This influence can be justified by the fact that DCOP is a natural extension of the DisCSP.
+The main difference between these two formalisms lies in the constraint definition, where in DCOP constraints denote the costs to solutions, while the DisCSP constraints designate the solutions as satisfactory or unsatisfactory.
+However, this difference significantly increases the complexity of DCOP.
+DCOP algorithms are divided into two main categories, complete and incomplete.
+The complete algorithms can find optimal solutions for DCOP, while the incomplete algorithms provide sub-optimal solutions.
+The main motivation for developing such incomplete methods refers to the scalability feature in multi-agent systems.
+Incomplete algorithms cannot guarantee finding the best solution to a DCOP, but the explored state space is considerably smaller than for complete algorithms.
+Therefore, incomplete algorithms are faster than complete algorithms.
+SynchBB was the first complete algorithm introduced to solve DCOP.
+One of the limitations of the SynchBB algorithm is the synchronous behavior of the agents, due to the dependence on global information updating during the problem-solving process.
+ADOPT was the first complete and asynchronous algorithm proposed for DCOP.
+The ADOPT algorithm captures the essence of a multi-agent system regarding to the autonomy and information privacy of the agents.
+However, ADOPT requires an exponential number of messages in the worst case to achieve an optimal solution.
+After ADOPT, several complete DCOP algorithms were proposed in the literature, such as DPOP, OptAPO, NCBB, AFB, and ConcFB, as well as variations on ADOPT.
+In general, the main reason for developing new methods has been the computational effort required by the algorithms.
+However, all complete DCOP algorithms requires exponential computational effort, in terms of the number of cycles, the number of messages, or the memory required for each agent to perform its actions.
+Aspects such as information privacy are also often considered to improve the performance of the algorithm.
+Nevertheless, in some domains, such as meeting scheduling, it is necessary to avoid the loss of information privacy.
+Thus, the use of algorithms that expose the costs of all constraint to obtain a better performance in the conflict resolution among agents may be infeasible in certain domains.
+Regarding incomplete algorithms, the two most popular methods for DCOP are DBA and DSA.
+Both algorithms are extensions of the DisCSP formalism adapted to address constraints involving costs or gains.
+Another well-known incomplete algorithm is the MGM, whose search strategy is a DBA variant.
+The concept of these algorithms is to provide a local search, where agents locally evaluate the impact of their actions.
+In other words, the search is guided by the local gains of each agent, considering only the constraints among their neighbors.
+However, the lack of solution quality guarantee and local maxima are some of the limitations of these incomplete algorithms.
+Although the DBA/MGM and DSA algorithms have some limitations, these incomplete methods have been widely used as the basis for recent studies in this research area.
+Several improvements were introduced in these incomplete algorithms, especially mechanisms to guarantee the quality of the sub-optimal solutions.
+To achieve this goal, approaches such as k-optimality, t-distance, and game theory concepts were introduced in DBA/MGM and DSA algorithms to offer a guarantee of solution quality.
+Thus, incomplete DCOP algorithms such as DALO-k, DALO-t, ACLS and GCA-MGM are examples of methods based on DBA/MGM and DSA.
+These algorithms guarantee the solution quality by the formation and coordination of the assignments in groups of agents.
+Other alternative approaches, such as quantified variables or constraint relaxation methods, have also been explored in incomplete algorithms.
+The min–max ADOPT, alpha–beta ADOPT, and bi-threshold ADOPT algorithms use universal and existential quantifiers to identify uncooperative variables in the problem.
+The Bounded Max-Sum algorithm aims to relax the problem by eliminating cycles from the constraints graph.
+Bounded Max-Sum removes the constraints that produce the lowest impact on the solution quality.
+Although several incomplete algorithms for solving DCOP that can guarantee solution quality have been proposed in the literature so far, open questions still remain about the definition of the quality bound.
+Consequently, even with a mechanism to guarantee solution quality, the algorithm can reach poor solutions in certain problem instances.
+In other cases, an incomplete algorithm may have a similar performance to a complete algorithm concerning the space state explored.
+Thus, there is no clear definition about of the limits of solution quality because it tends to be strongly associated with individual problem instances.
+Comparative overview of DCOP algorithms DCOP algorithms are generally based on methods already investigated in the literature.
+Therefore, there is no theoretical diversity in such methods, i.e., such algorithms are based mainly on two traditional theories, constraint programming and game theory.
+Therefore, the difference between DCOP algorithms lies in the strategies applied in each algorithm.
+For example, the main strategies employed in complete DCOP algorithms based on constraint programming are coming from classical search methods like best-first and branch-and-bound.
+Complete algorithms such as ADOPT and its variations, OptAPO, NCBB, AFB, and ConcFB are examples of complete methods that implement these strategies.
+On the other hand, incomplete algorithms for DCOP are usually based on game theory.
+Incomplete algorithms often implement a local search, i.e., the agents coordinate their actions only among neighboring agents.
+Therefore, incomplete algorithms are guided by the local gains of each agent regarding the impact of actions among neighboring agents.
+Game theory provides techniques to escape local optima in group of participants with different interests.
+Algorithms such as MGM-2/3, SCA-2/3 DALO-k,-DALO-t, min–max ADOPT, alpha–beta ADOPT, bi-threshold ADOPT, GCA-MGM, and ACLS are examples of incomplete methods based on game theory.
+Table 1 compares the main DCOP algorithms, considering different criteria such as categories, background, and strategies, as well comparing their experimental evaluations.
+From this comparison, it is possible to observe a standard experimental evaluation of the main algorithms for DCOP.
+The experiments are empirical and are performed by randomly generated graphs with a predefined number of variables, domain size, and density.
+However, experimental evaluation by random graph generation may be restrictive, as there is no guarantee of topological diversity among the generated graphs.
+In other words, the experiments are limited to a few classes of real world problems.
+Table 1.
+Experimental Evaluation of DCOP Algorithms.
+Algorithm Strategy Background Categories Evaluation procedure Metrics Benchmark ADOPT Best-first Constraint propagation – Complete – Asynchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 3 – Domain equal to 3 – Number of agents equal to 26 – Cycle messages SynchBB DPOP Cost propagation Dynamic programming – Complete – Synchronous – Fully decentralized – Pre-processing – Random graphs – Number of agents equal to 200 – Number of constraints equal to 341 – Cycle messages ADOPT OptAPO Cooperative mediation Constraint programming – Complete – Synchronous – Partially decentralized – Random graphs – Density equal to 3 – Domain equal to 3 – Number of agents equal to 26 – Cycle messages ADOPT NCBB Branch and bound Constraint programming – Complete – Synchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 3 – Domain equal to 3 – Number of agents equal to 26 – Cycle messages ADOPT DPOP AFB Branch and bound Constraint programming – Complete – Asynchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 98% – Domain equal to 3 – Number of agents equal to 10 – NCCC – Number of messages SynchBB ADOPT ConcFB Branch and bound Constraint programming – Complete – Synchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 5 – Domain equal to 3 – Number of agents equal to 12 – NCCC – Number of messages SynchBB BnB-ADOPT ODPOP MGM-2/3 k-Optimality Game theory – Incomplete – Synchronous – Fully decentralized – Random graphs – Density equal to 5 – Domain equal to 3 – Number of agents equal to 1000 – Cycle messages MGM SCA-2/3 DSA Bounded Max-Sum Generalized Distributive Law Dynamic programming – Incomplete – Synchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 3 – Domain equal to 3 – Number of agents equal to 50 – Cycle messages – Quality solution Max-Sum DALO-k k-Optimality Constraint programming – Incomplete – Asynchronous – Partially decentralized – Pre-processing – Random graphs – Density equal to 4 – Domain equal to 10 – Number of agents equal to 100 – Cycle messages – Quality solution KOPT DALO-t t-Distance min–max ADOPT Quantified variables Game theory – Incomplete – Asynchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 2 – Domain equal to 10 – Number of agents equal to 10 – Cycle messages – alpha–beta ADOPT bi-threshold ADOPT ACLS Asymmetric costs Game theory – Incomplete – Synchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 2 – Domain equal to 10 – Number of agents equal to 10 – Cycle messages – Quality solution – Loss of privacy MGM GCA-MGM DSA DaCSA Divide and coordinate Lagrangian sub-gradient – Incomplete – Synchronous – Fully decentralized – Small-world, regular and random graphs – Domain equal to 2 – Number of agents equal to 49 – Cycle messages – Solution quality DSA Max-Sum DUCT Confidence bounds Markov chains – Incomplete – Synchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 3 – Domain equal to 5 – Number of agents equal to 26 – Simulation runtime – Quality solution DPOP DSA MGM MGM-2 D-Gibbs Confidence bounds Markov chains – Complete – Synchronous – Fully decentralized – Pre-processing – Random graphs – Density equal to 100% – Domain equal to 20 – Number of agents equal to 30 – Simulation runtime – Quality solution DUCT DPOP MGM MGM-2 Another question about the experiments refers to the complexity of the evaluated problems.
+Some real domains in multi-agent systems, such as sensor networks, can involve thousands of agents (Lesser et al., 2003; Scerri et al., 2010).
+In most experiments, the algorithms are empirically evaluated by very small and easy problems, involving a few tens of agents or low density of the constraint graph.
+Regarding the evaluation metrics used in the experiments, in most cases message cycles and total message count are measured for complete algorithms, and message cycles and solution quality are measured for incomplete algorithms.
+Recently complete algorithms have also been evaluated by another metric called non-concurrent constraint check (NCCC) (Gershman et al., 2009; Netzer et al., 2012; Yeoh et al., 2010).
+While message cycles consider only computation time of an agent when receiving a message (Modi et al., 2005), NCCC increases every time an agent performs a constraint check or upon receiving a message (Meisels, Kaplansky, Razgon, & Zivan, 2002).
+Therefore, NCCC is the most suitable metric to evaluate the runtime of the algorithm.
+In addition, NCCC also allows estimating the communication time when an agent receives a message.
+In fact metrics like message cycles and NCCCs focusing on the performance perspective.
+However, some real world domains need to maintain the privacy of the agents information, as in meeting scheduling.
+Other metrics that should also be considered in the experiments refer to the message sizes and the memory required for each agent, due to the computational limitations in some real applications.
+For example, a sensor has extremely limited capacity for processing, memory and communication.
+Therefore, the lack of suitable evaluation metrics also results in partial experiments, in the sense of exploring few classes of real world problems.
+Although the experiments also compare the performance of the algorithms, this comparison can be considered partial due to the small number of algorithms involved.
+Moreover, the performances of the algorithms with the same strategies are very similar in most scenarios.
+Another relevant point is that the experiments do not consider the pre-processing computational effort required by some algorithms.
+Algorithms and problem domains Algorithms for DCOP require computational resources in an exponential order regarding the complexity of the problem, but this information is generally unclear from the reported experimental evaluation.
+Furthermore, some domains may have restrictions that prevent the use of some algorithms.
+For example, complete algorithms are indicated when the problem requires optimal solutions or involves a few agents or low density of the constraint graph.
+In contrast, if the problem refers to a large-scale domain or has a time restriction, incomplete algorithms are more suitable, but the solutions are sub-optimal.
+ADOPT algorithm and its variants require a large communication load to perform the search.
+Thus, the ADOPT are not recommended when the environment has an unreliable network.
+Other algorithms like NCBB, AFB, and ConcFB also require exponential number of messages in the worst case.
+However, the NCBB and ConcFB algorithms significantly reduce the average number of messages by introducing some level of synchronization in the search process.
+Additionally, the DPOP algorithm needs exponential memory to project the optimal cost of the agent.
+Therefore, domains with hardware restriction (regarding the memory) can be inappropriate for the DPOP algorithm.
+Finally, the partial decentralized search of the OptAPO algorithm results in loss of information privacy, in which this feature may be a limitation for some domains.
+Regarding the incomplete methods, the MGM and DSA algorithms can reach a sub-optimal solution faster, but there is no quality guarantee for the solutions found.
+Therefore, the use of the incomplete MGM and DSA algorithms may be prohibitive when the problem requires a bounded-error solution.
+In contrast, MGM-2, SCA-2, and DALO algorithms provide a quality guarantee for the sub-optimal solutions based on k-optimality and t-distance concepts.
+Max-sum algorithm also provides bounds on the solution quality, but this guarantee is specific for a particular problem instance.
+DUCT and D-Gibbs can provide a bounded-error solution; however, as the other incomplete algorithms, it is not easy to determine the quality bounds.
+One possible way to determine the quality bounds is to consider the worst quality guarantee.
+Perspectives on the research area Although there have recently been many searches for new methods for DCOP, such studies are limited to the well-known strategies.
+This lack of diversity results in similar performance among the algorithms with similar strategies, without any effective contribution to DCOP research.
+The investigation of other strategies based on different theoretical background is essential for the evolution of this research area.
+Another open question in this research area concerns the definition of a systematic process to evaluate and compare the DCOP algorithms.
+In general, the experiments performed to evaluate the DCOP algorithms are partial, in the sense that the criteria for the random graph generation and the metrics used are applicable to only a few classes of real world problems.
+In addition, the partial comparison of DCOP algorithms also prejudices the choice of the most suitable algorithm for a given real domain.
+Finally, studies focused on applying DCOP in real world domains are also essential to confirm the potential of this formalism for modeling different classes of real problems.
+In addition, real world problems often have dynamic behavior, which is an important aspect few studies in the research area have explored.
+Questions regarding adaptability and the detection of changes in the dynamic environment remain open for DCOP algorithms.
+DCOP proved to be an elegant formalism for coordination in multi-agent systems.
+Several real world applications can be naturally modeled by DCOP.
+Because DCOP is a NP-Hard problem, efficient strategies to reduce the search space exploration are essential.
+Thus, researchers have focused on the development of new DCOP algorithms in recent years.
+Although this research area has developed substantially, some open questions still remain related to the scalability, robustness and quality of solutions.
+Complete methods for solving DCOP provide optimal solutions, but their applications to real problems are limited due to the computational effort required by the search process.
+In contrast, incomplete methods produce sub-optimal solutions with less computation and communication among agents, but there is generally no guarantee of the quality of the solution found.
+Some incomplete algorithms provide a quality guarantee, though the definition of the quality bounds is unclear.
+These deficiencies combined with partial experimental evaluation of the algorithms, render the use of such methods difficult in real world problems, especially large-scale and real-time applications.
+In addition, the lack of suitable metrics and real benchmark scenarios limit the evaluation and comparison between the algorithms.
+Therefore, this research area needs a systematic process to evaluate and compare the DCOP algorithms.
+Finally, studies focused on developing new DCOP algorithms are limited to a few theoretical backgrounds.
+This lack of diversity results in a similar performance among the algorithms with similar strategies, without an effective contribution to DCOP research.
+The investigation of new strategies based on different theoretical backgrounds is essential for the evolution of this promising research area.

@@ -1,0 +1,231 @@
+Functional networks as a novel data mining paradigm in forecasting software development efforts
+
+Abstract
+
+This paper proposes a new intelligence paradigm scheme to forecast that emphasizes on numerous software development elements based on functional networks forecasting framework. The most common methods for estimating software development efforts that have been proposed in literature are: line of code (LOC)-based constructive cost model (COCOMO), function point (FP) based on neural networks, regression, and case-based reasoning (CBR). Unfortunately, such forecasting models have numerous of drawbacks, namely, their inability to deal with uncertainties and imprecision present in software projects early in the development life-cycle. The main benefit of this study is to utilize both function points and development environments of recent software development cases prominent, which have high impact on the success of software development projects. Both implementation and learning process are briefly proposed. We investigate the efficiency of the new framework for predicting the software development efforts using both simulation and COCOMO real-life databases. Prediction accuracy of the functional networks framework is evaluated and compared with the commonly used regression and neural networks-based models. The results show that the new intelligence paradigm predicts the required efforts of the initial stage of software development with reliable performance and outperforms both regression and neural networks-based models.
+
+Keywords
+Support vector machines
+Neural networks
+Type I fuzzy logic inference system
+Data mining
+Regression
+Functional networks
+Software development effort
+
+1. Introduction
+
+Software intelligence maintainability is defined as the ease of finding and correcting errors in the software. One of the most important issues encountered during the process of software development is a company’s ability to accurately estimate the efforts of the initial stage of development. Inaccurate estimation of development efforts lowers the proficiency of the project, wastes the company’s budget, and can result in failure of the entire project. This has promoted much research during the past three decades, to identify the factors that influence development effort (Ahmed, Saliu, & AlGhamdi, 2005; Boehm’s HYPERLINK Data, 1981; Finnie & Wittig, 1996; Heiat, 2002; Huang, Ho, Ren, & Capretz, 2007; Kadoda, Cartwright, & Shepperd, 2000a; Kadoda, Cartwright, Chen, & Shepperd, 2000b; Martin, Pasquier, Yanez, & Tornes, 2005; Park & Baek, 2007; van Koten & Gray, 2006). Many existing research papers have proposed various effort estimation techniques. Unfortunately no estimation technique has proved consistently accurate. For this reason there has been growing interest in recent years in exploring a variety of both data mining and machine learning schemes either as a complement or an alternative to existing models.
+
+One of the critical factors in software product quality is identifying how efficiently a software development process has been defined and deployed. A high-quality product could be produced by an individual’s effort once. But, without a well-defined development process, reproducing a software product of the same quality as its prior ones cannot be guaranteed. To maintain consistent quality of software, the need for a well-defined software development process is inevitable. The most common techniques that have been utilized in software effort estimation are: artificial neural networks (Heiat, 2002; Jun & Lee, 2001; Park & Baek, 2007), neuro-fuzzy logic inference systems (Ahmed et al., 2005; Martin et al., 2005), Bayesian statistics (van Koten & Gray, 2006), and case-based reasoning (Kadoda et al., 2000a, 2000b).
+
+Recently, functional network has been introduced by Castillo (1998), Castillo, Cobo, Gutierrez, and Hadi (1999), El-Sebakhy (2004), El-Sebakhy, Faisal, El-Bassuny, Azzedin, and Al-Suhaim (2006) and El-Sebakhy, Hadi, and Faisal (2007) as a generalization of the standard neural network. This new computational intelligence paradigm is still a new framework and it was utilized once in the area of software engineering by El-Sebakhy (2008) to identify the software reliability. The results have shown that this novel approach is reliable and more accurate than the most common statistical and machine learning techniques, namely, feedforward neural networks and multiple linear regressions.
+
+The motivation behind this research is to investigate the capabilities of functional networks as a new intelligence paradigm scheme to predict and identify the software development efforts. The methodology and training algorithm process are explained in details below. The implementations were carried out on representative datasets related to the target systems. In addition, the comparative studies between the new intelligence scheme versus the existing models presented in van Koten and Gray (2006), which include regression-based, neural networks-based, and Bayesian belief network-based models, in terms of their performance measures values, as recommended in the literatures. Comparative studies will be carried out to measure the capabilities of this new paradigm in predicting the software development efforts and evaluate its performance against the most common and recently published data mining schemes.
+
+Despite the importance of software maintenance, it is unfortunate that little work has been done as regards developing predictive models for software maintainability, particularly object-oriented software system, which is evident in the fewer number of software maintainability prediction models, that are currently found in the literature. Quality is an important factor in the success of any software product. Defective software systems can cause software failures, increase maintenance cost, and decrease customer satisfaction. This in turn increases the interest in effective software defect prediction models. Defect prediction of object-oriented classes helps software engineers focus their quality assurance activities and assists managers allocate effort and resources more efficiently.
+
+The rest of this paper is organized as follows. Section 2 of this paper provides a brief literature review. The proposed functional networks intelligent system paradigm is described in detail in Section 3. Implementation of the proposed models is discussed in Section 4. Section 5 contains discussions of results while Section 6 presents conclusions and recommendations.
+2. Literature review
+
+Software development effort estimation is an important factor for scheduling and determining the cost of software project; many researchers have done empirical experiments using different machine learning techniques in order to get an accurate estimation of software development effort. The most common computational intelligence scheme that have been utilized so far by numerous researchers in literature is the standard multilayer perceptron feedforward neural networks to estimate software development effort; for instance, the authors in De Barcelos Tronto, Simíes da Silva, and Sant’Anna (2008), Zhou and Leung (2007) and Quah and Thwin (2003) examine the performance of back-propagation neural networks in estimating software development effort by evaluating the performance of neural networks effort estimation models on actual project data. They concluded that despite the restrictions of the project dataset, neural networks have shown their ability to provide an adequate effort estimation model. It has shown competitive results when compared to multiple regressions, SLIM, COCOMO, and function points. A primary advantage of a neural network approach is that it is adaptable and nonparametric.
+
+To define a well-organized and efficient software development process for an organization is one thing. It is totally another thing to customize an organizational process to a specific project, which is known as ‘process tailoring’. So far, process tailoring has been conducted by few well-experienced software engineers using their own heuristic methods. Hence, if a project team does not have experienced process engineers, they have no choice but to deploy an organizational process as is. Even if they have a few process engineers with some experience, tasks related to process tailoring are knowledge intensive and time-consuming. Assuming that they had their own customized process by individual efforts, this high dependence on individual experience may make them hesitate to answer questions regarding rationales for their tailoring results.
+
+It is hard to tailor a process without process engineers’ knowledge. It is equally difficult to automate the steps of process tailoring like a mechanical process since the software development process varies with project environment. Even though it cannot be fully automated, we contend that it could have a more systematic and objective method for tailoring a process than existing heuristic ones so that it can be preserved as an asset and reused within an organization. We have studied the process a novice-level process engineer goes through until he or she becomes an expert. While it is difficult to develop a system that would exactly replicate how the process engineer would tailor a process using prior knowledge based on his or her experience, we have found an alternative way to substitute the process by using learning theory, especially an artificial neural network model. The basic idea is that the more knowledge is learned, the more steps of process tailoring can be automated. The purpose of our study is to provide a mechanism that can reconfigure a generic process to an optimized one for a given project environment by reusing knowledge acquired by process engineers from process tailoring experience. The expected benefit of using this mechanism is to reduce the duration of the process filtering phase, which is one of the three tailoring phases. It also provides reasonable rationales for the tailoring results and facilitates the reuse of process tailoring knowledge acquired from prior project experience to successive projects.
+
+The authors in Martin et al. (2005) utilized the neuro-fuzzy inference systems to estimate the software development effort and compare the obtained estimated values with the statistical regression methodology. In addition, the authors in Ahmed et al. (2005) they presented a transparent fuzzy logic based framework, equipped with training and adaptation algorithms for development effort prediction. Their framework allows contribution from experts, and also enables the prediction technique to model and adapt to the environment of the prediction problem. Furthermore, the author in Ryder (1998) used fuzzy modeling techniques incorporated in the COCOMO model and the Function Points model. The main advantage of this approach is that it handles uncertainty of the data. The author in Huang et al. (2007) combines fuzzy logic, feedforward neural networks, and adaptive neuro-fuzzy inference systems; then they select the best performance of these approaches.
+
+Bayesian belief network and case-based reasoning (CBR) model was used by Kadoda et al. (2000a, 2000b), Pendharkar, Subramanian, and Rodger (2005) and Quah and Thwin (2003) to provide an estimate of software development effort. The authors proved that their technique can be utilized to provide a point forecast for a software development effort. Their results outperform the most common exiting schemes. The key factor in selecting a software estimation model is accuracy of its predictions. According to Leung and Fan (2002) many studies have attempted to evaluate the performance of software effort estimation models. However, many of them were found to be not very accurate (Kemerer, 1987). In a study by Kemerer using COCOMO, FP, SLIM, and Estimacs, most models showed large estimation errors, ranging from a MAPE of 57–800% (Kemerer, 1987). As it is shown in El-Sebakhy et al. (2007) most of the above proposed approaches have numerous of drawbacks. In addition, each modeling scheme has its own advantages and shortcomings, but as yet no model has proved to be successful at effectively and consistently predicting software development effort. Therefore, we investigate the capability of the functional networks intelligence system paradigm in predicting software development efforts. Comparative studies were carried out based on real-world life data. The results show that the new intelligence scheme outperforms the most common existing schemes with reliable and stable performance.
+2.1. Statistical regression-based model
+
+Multiple regression is an extension of the regression analysis that incorporates additional independent variables in the predictive equation. Regression models are used to predict one variable from one or more other variables. Regression models provide the scientist with a powerful tool, allowing predictions about past, present, or future events to be made with information about past or present events. Multiple linear regression (MLR) attempts to model the relationship between two or more explanatory variables and a response variable by fitting a linear equation to observed data. Every value of the independent variable x is associated with a value of the dependent variable y.
+
+The regression line for p inputs x1, … , xp is the line that describes how the mean response μy changes with the explanatory variables. The observed values for y vary about their means μy and are assumed to have the same standard deviation σ (see Kemerer, 1987 for more details). Formally, the model for MLR given n observations is
+
+where εi is notation for model deviation for i = 1, 2, … , n. The parameters β0, β1, … , βk are model coefficients that can be estimated using least squares optimization criterion based on the provided training data. The ability of a regression model to predict the software development effort is enhanced through a weighting scheme of the high and low values. But because of this, the predictor can become unstable and also statistically biased (see Kemerer, 1987 and references therein). The assumption that the error is related only to the dependent variable and not to the independent variables can be verified by comparing repeated runs of properly calibrated instruments with the main runs of the input variables, provided that there is no bias in the measurement. Input data of acceptable quality have errors with a relatively small unbiased scatter that is a function of the physics of the tool and its response characteristics. If the deviations are indeed random, then they would be expected to be normally distributed with a mean value of zero.
+2.2. Standard neural networks
+
+The artificial neural network or multilayer perceptron (MLP) (Finnie & Wittig, 1996; Park & Baek, 2007; Quah & Thwin, 2003) is one type of neural network that is trained using backpropagation algorithm. It consists of multiple layers of computational units that are connected in a feed-forward way. This forms a directed connection from lower units to a unit in a subsequent layer. The basic structure of MLP consists of an input layer, one or more hidden layers and one output layer. The output from a unit is used as input to units in the subsequent layer. The connection between units in subsequent layers has an associated weight which is learned using backpropagation algorithm. The hidden and output units are based on sigmoid units. A sigmoid unit calculates a linear combination of its input and then applies the sigmoid function on the result.
+
+Artificial neural network (ANN) models are computer programs that are designed to emulate human information processing capabilities such as knowledge processing, speech, prediction, classifications, and control. The ability of ANN systems to spontaneously learn from examples, “reason” over inexact and fuzzy data, and to provide adequate and rapid responses to new information not previously stored in memory has generated increasing acceptance for this technology in various engineering fields and, when applied, has demonstrated remarkable success. The basic ANN model provides a nonlinear transformation of a pattern x ϵ Rd to g(x) ϵ Rc, such that
+where m is a constant representing the number of hidden nodes, ωjk and ωki are weights on links, ωj0 and ωk0 are biases on nodes. The nonlinear function φ(·) is usually of the form of the sigmoidal (s-curve) function:
+where z ϵ R and α > 0 is a constant called the gain parameter. Often in practice, the number of outputs, c, is taken as the number of predictors, with each output corresponding to one independent variable. A test sample is assigned to the class with the largest output value. In the MLP model, the optimal weights and biases are found by optimizing a criterion function. Least squared error is often used. It is defined as
+
+where g(xi)is the output vector for the input xi and ti = (ti1, ti2, … , tic)T is the corresponding target vector. Usually, the output are coded in such a way that tij = 1, if xi is in class Ωj, and tij = 0, otherwise. In the MLP model, the procedure to find the optimal weights and biases is called “backpropagation”. Since the objective function is not convex with respect to its parameters, the backpropagation algorithm often gets stuck at a local optimum. Often in practice, to find a good solution, the backpropagation algorithm needs to be run several times, each time with different initial weights, this creates a heavy computational load and is often considered to be the major drawback of the MLP model.
+3. Functional networks
+
+Functional network is a generalization of the standard neural network (Castillo, 1998; Castillo et al., 1999; El-Sebakhy et al., 2006, 2004, 2007; El-Sebakhy, 2008). It deals with generalized functional models instead of standard types. In functional networks the neuron functions associated with each neuron are not fixed but are learnt from the available data. Functional network is a problem driven, which means that the initial architecture is designed based on a problem in hand. In addition, to the data domain, information about the other properties of the function, such as associativity, commutatively, and invariance, are used in selecting the final network. Functional networks allow neurons to be multi-argument, multivariate, and different learnable functions, instead of fixed functions. Functional networks allow converging neuron outputs, forcing them to be coincident. This leads to functional equations or systems of functional equations, which require some compatibility conditions on the neuron functions.
+
+Functional networks can be considered as a general framework useful for solving a wide range of problems in probability, signal processing, pattern recognition, statistics, systems identification, real-time forecasting, functions approximations, bioinformatics applications, and other business and engineering applications (see Castillo, 1998; El-Sebakhy, 2008; El-Sebakhy et al., 2007 and the references therein for more details). The performance of functional networks has shown bright outputs for future applications in both industry and academic research of science and engineering based on its reliable and efficient results.
+
+We know that the purpose in both prediction and classification problem, is to determine the relationship among the set of input and output variables of a given dataset D = {Y, X}
+
+where X ϵ Rp represents the n-by-p matrix of p input variables. It may be noted that Y ϵ R for forecasting problems and
+
+for classification problems. Functional networks as a new modeling scheme has been used in solving both prediction and classification problems. It is a general framework for solving a wide range of problems in probability, statistics, signal processing, pattern recognition, flood forecasting, bioinformatics, medicine, engineering, and business applications (see Castillo, 1998; El-Sebakhy et al., 2006, 2004, 2007; El-Sebakhy, 2008 and the references therein for more details). Basic concepts and definitions that are utilized in functional networks are summarized below:
+
+Suppose we have X = {x1, … , xp}, as the set of nodes, and each node xi is associated with a variable Xi. The neuron (neural) function over a set of nodes X is a tuple U = <x, f, z>, where x is a set of the input nodes, f is a processing function and z is the set of output nodes, such that z = f(x), where x and Z are two non-empty subsets of X. An example shown in Fig. 1 illustrates the representation of a functional network (El-Sebakhy et al., 2007). A functional network consists of the following:
+
+•
+
+    Several layers of storing units, like a layer having the input data set (xi; i = 1, 2, 3, 4) while another contains the output data (x7). There can be one or several layers for storing intermediate information (x5 and x6);
+•
+
+    One or several layers for the processing units that evaluates the set of input values and deliver a set of output values (fi); and
+•
+
+    A set of directed links.
+
+A typical functional networks architecture
+
+    
+
+Fig. 1. A typical functional networks architecture.
+
+Generally, functional networks extend the standard neural networks by allowing neuron functions fi to be not only true multi-argument and multivariate functions, but to be different and learnable, instead of fixed functions. In addition, the neuron functions in a functional network can be any basis functions (family of linearly independent functions), namely, polynomial, Voltera polynomial, exponential, radial basis, B-spline, and Fourier, etc., which has to be estimated during the learning process. According to the universal approximation theorem (De Barcelos Tronto et al., 2008), there exist a finite number of basis functions, so that functional networks can approximate the nonlinear function precisely. Furthermore, functional networks allow connecting neuron outputs, forcing them to be coincident (Castillo, 1998; El-Sebakhy, 2008; El-Sebakhy et al., 2007). The functional network uses two types of learning: (a) structural learning; and (b) parametric learning. In the structural learning, the initial topology of the network, based on some properties available to the designer is arrived at and finally a simplification is made using functional equations. In parametric learning, usually the activation functions are estimated considering the combination of ‘‘basis’’ functions based on the least square, steepest descent and mini-max methods (Martin et al., 2005). In this study, least square method for estimating activation functions has been used. One can choose different optimization criterion based on his interest. Development of a typical model based on functional networks involves several steps described below:
+
+•
+
+    Define the problem by specifying the initial topology based on the domain of the problem in hand;
+•
+
+    Simplify the chosen initial architecture using functional equations and the equivalence concept. Check the uniqueness condition of the desired architecture (see Castillo, 1998; El-Sebakhy et al., 2007 for more details).
+•
+
+    Gather the required data and handle multicollinearity problem along with the required quality control checks.
+•
+
+    Develop the learning procedures and training algorithm based either on structure or on parametric learning by considering the combinations of linear independent functions, 
+
+    , for all s to approximate the neuron functions, that is,
+
+(1)
+
+where the coefficients asi are the parameters of functional networks. The most popular linearly independent functions in literature are:
+
+1.
+
+    Ψ = {1, X, … , Xm}, or
+2.
+
+    Ψ = {1, Cos(X), … , Cosl(X), Sinl(X)}, m = 2l
+3.
+
+    Ψ = {1, eX, e−X, … , emX, e−mX},
+    where m is the number of elements in the combination of sets of linearly independent function. The parameters in (1) can be learned using one of the known optimization (loss criterion) techniques, such as least squares, conjugate gradient, iterative least squares, minimax, or maximum likelihood estimation.
+•
+
+    Select the best model and validate it. The selection is based on the minimum description length and some other quality measurements, such as correlation coefficients and root-mean-squared errors. One can use the well known selection schemes, such as, exhaustive selection, forward selection, backward elimination, backward forward selection, and forward backward elimination. Once the performance of a functional networks model is satisfactory, the model is ready for use in predicting unseen datasets from real-world applications.
+
+In this paper two distinct functional networks are used to approximate f(xi1, … , xip). A brief description of these models is given in Castillo (1998) and El-Sebakhy et al. (2007). The two models are:
+
+1.
+
+    The Generalized Associativity model which leads to the additive model:
+    (2)
+
+The corresponding architecture is shown in Fig. 2.
+
+2.
+
+    The Separable functional networks model which considers a more general form for the unknown function, f(xi1, … , xip):
+    (3)
+
+
+where are unknown parameters expressed in terms of functions ψs, where
+
+    , and s = 1, 2, … , k, are linearly independent. An example of this functional network for k = 2 and q1 = q2 = q is shown in Fig. 3. Eqs. (2) and (3) are functional equations since their unknowns are functions. Their corresponding functional networks are the graphical representations of these functional equations.
+    Functional networks for the separable model with p=2 and q1=q2=q
+
+        
+
+    Fig. 3. Functional networks for the separable model with p = 2 and q1 = q2 = q.
+
+Additive functional networks architecture
+
+    
+
+Fig. 2. Additive functional networks architecture.
+
+The graphical structure of a functional network is very similar to a neural network, but the neuron functions are unknown. The problem consists of learning h1, h2, … , hk in (2) and
+in (3). In order to obtain h1, h2, … , hk in Eqs. (2) and (3), each hj(xj) for j = 1, 2, … , k is approximated by a linear combination of sets of linearly independent functions ψjs defined above, that is,
+(4)
+The problem is then reduced to estimate the parameters, ajs for all j and s. Parameters,
+
+are linked with aj’s and evaluated subsequently as it is shown in Eq. (4) (see Castillo, 1998; El-Sebakhy et al., 2007 for more details). Generally, by feeding appropriate input data and applying system identification to study the defect prone classes identification, one can customize the characteristics of input values according to the desired output. In this paper, the least squares criterion is used to estimate the parameters. However, additive model requires additional constrains to guarantee uniqueness. Alternatively, one can choose a different optimization criterion based on his interest. The main advantage in choosing the least squares method is that it leads to a linear system of equations.
+4. Acquired data and Implementation processes
+
+To implement the functional network intelligence system paradigm and the most common existing schemes, namely, statistical regression and neural networks, we follow the same was as in Heiat (2002) and we utilized same three data sets. Therefore, we utilized three distinct data sets came from three sources: The IBM DP Services Organization comprising 24 projects, Kemerer data set comprising 15 projects, and Hallmark data set comprising 28 projects (see Albrecht & Gaffney, 1983a,b; Kemerer, 1987, 1991; Leung & Fan, 2002 for more details about these studies). For the sake of simplicity we did not include the background of the data on the projects, but the reader can take a look at the first three tables of Heiat (2002) to investigate this background information. Using regression analysis, Kemerer evaluated two LOC-based (SLIM, COCOMO) models and FP model for software cost estimation and he reported different equations as it is shown in details in Heiat (2002) with correlation coefficient between 0.5 and 0.87. Kemerer reported that the average percentage error was 772. All three COCOMO models did poorly in terms of R2 and MRE test (see Heiat, 2002 for more details). To judge the performance of the new predictive data mining models and compare the accuracy of the estimators, different quality measures have been used during the entire implementations. The most common statistical quality measures can be written in mathematical formulae as follows:
+
+•
+
+    Root-mean-squares error: Measures the data dispersion around zero deviation:
+    (5)
+
+where Ei is a relative deviation of an estimated value from an experimental input data sets.
+(6)
+
+•
+
+    Correlation coefficient: It represents the degree of success in reducing the standard deviation by regression analysis, defined as:
+    (7)
+
+where
+
+    .
+•
+
+    Mean absolute percentage error (MAPE): The mean absolute percentage error of the forecasted values with respect to the actual amount of the development effort-hours (EFH) for each project was computed as:
+    (8)
+
+
+    where (y)est is the forecasted value of EFH and (y)act is the actual EFH consumed by the project; n is the number of cases used in the test sample.
+
+During this study, we use the cross-validation process for all the utilized modeling schemes, and then the available dataset has to be divided into two sets, the training and the testing set. This division is usually done by selecting the data points in a random order. The training set is used to build up the network model while the testing set is used to evaluate the predictive capability of that model. The predictive performance of the network is then assessed using cross validation parameters. Either associativity model or separable functional networks model having a family of linearly independent equations (basis) with a polynomial degree of 2 can be used. In addition, the multilayer perceptron feed-forward network (MLPFFN) is used here with pure linear and sigmoid activation neuron functions, with two or three hidden layers (Jun & Lee, 2001). The input datasets were normalized to interval of [0, 1].
+
+To compare and evaluate the accuracy of the estimators, the mean absolute percentage error (MAPE) of the forecasted values with respect to the actual amount of the development effort-hours (EFH) for each project was calculated. As in Heiat (2002), the training set for both functional networks and neural network models and estimation set for regression analysis included 32 cases for the first experiment and 60 for the second experiment. Forecasts of the dependent variable, EFH, for functional networks, neural networks, and nonlinear regression models were computed using test data covering seven cases.
+5. Discussion and comparative studies
+
+Based on the setup, initialization, and experiments that have achieved in Heiat (2002), we compare the estimation accuracy of the software development effort by the three approaches, functional networks, neural networks, and nonlinear regression. As in Heiat (2002), the projects from Kemerer and IBM data sets, which include third generation programming languages (3GL), were combined for the first experiment. Several researchers have concluded that the effort estimation models are generally valid within the organization and platform in which they were developed.
+
+We have utilized the regression model: EFH = c (LOC/FP)k for evaluating and testing the accuracy of the LOC, and FP; where EFH is the number of staff-hours required; c, a constant; LOC, the lines of code delivered excluding comments and utility software; FP, the computed function points, and K, a constant. The implementation processes were achieved based on MATLAB codes written by the author. We report only the results for the first experimental “3GL platform using combined data from Kemerer and IBM” for the sake of simplicity. In this experiment, we follow (Heiat, 2002) and utilized the regression analysis setups:
+
+•
+
+    Function points (FP):
+
+•
+
+    Lines of Code (LOC):
+
+Overall, the regression results are satisfactory, producing relatively high value of coefficient of determination (R2). The t-statistics indicate that all regressions coefficients are significant. We have utilized the associative functional networks with the polynomial linearly independent functions of degree at most 2 only. In addition, we have tried distinct architecture of neural networks, such as, MLPFFN networks with one, two, and three hidden layers and we recorded the best performance with the most adequate parameters as in Heiat (2002).
+
+A summary of the MAPE comparative results for nonlinear regression analysis, neural networks, and functional networks is shown in Table 1. The actual and the estimated values for seven out-of-sample cases results and graphical visualizations are shown in Table 1 with Figs. 4 and 5, respectively.
+
+Table 1. Testing results of three distinct data mining schemes.
+Actual data	Regression analysis	Artificial neural networks	Functional networks
+Est. effort (FP)	Est. effort (LOC)	Est. effort (FP)	Est. effort (LOC)	Est. effort (FP)	Est. effort (LOC)
+17.63	58.88	64.22	68.01	59.75	28.1	19.3
+10.94	4.36	9.55	11.31	8.71	11.2	10.7
+39.32	59.8	56.84	69.81	48.76	41.7	40.3
+35.07	22.4	29.72	19.82	43.46	32.1	34.2
+23.86	18.36	36.89	17.46	37.28	21.4	22.8
+37.53	46.77	37.63	46.65	36.87	41.6	39.5
+10.62	32.94	14.44	28.74	17.86	11.4	10.5
+MAPE	91.3	61.1	90.3	61.9	14.7	3.92
+Actual and estimated efforts based on FP using different schemes for the 3GL…
+
+    
+
+Fig. 4. Actual and estimated efforts based on FP using different schemes for the 3GL platform, combined data from Kemerer and IBM experiment.
+Actual and estimated efforts based on LOC using different schemes for the 3GL…
+
+    
+
+Fig. 5. Actual and estimated efforts based on LOC using different schemes for the 3GL platform, combined data from Kemerer and IBM experiment.
+6. Conclusion and recommendation
+
+This paper has proposed functional networks as a new intelligence system paradigm for software development and compared its performance with the one of both standard multilayer perceptron and nonlinear statistical regression schemes for software effort estimation. The results of this research indicate that functional networks learning scheme was competitive even better than both standard neural networks and multiple regression when a third generation language data set was used in the study. The performance was stable and it shows the smallest MAPE values.
+
+The results in both implementations (training and testing) shown that the performances of functional networks is reliable and outperforms the most common existing data mining learning schemes. We conclude that functional networks technique is shown a bright light performance for future use in different applications of software engineering areas, such as, maintainability, risk analysis, and software cost estimation. We suggest for future work to use different independent families other than polynomial and use more databases for software engineering quality assurance and do comparative studies versus other hybrid intelligence schemes, namely, adaptive neuro-fuzzy inference systems and ensemble learning.

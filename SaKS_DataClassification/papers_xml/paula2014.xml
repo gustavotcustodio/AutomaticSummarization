@@ -1,0 +1,537 @@
+<article>
+  <title>On-line policy learning and adaptation for real-time personalization of an artificial pancreas</title>
+  <abstract>
+    <sentence>The dynamic complexity of the glucose–insulin metabolism in diabetic patients is the main obstacle towards widespread use of an artificial pancreas.</sentence>
+    <sentence>The significant level of subject-specific glycemic variability requires continuously adapting the control policy to successfully face daily changes in patient’s metabolism and lifestyle.</sentence>
+    <sentence>In this paper, an on-line selective reinforcement learning algorithm that enables real-time adaptation of a control policy based on ongoing interactions with the patient so as to tailor the artificial pancreas is proposed.</sentence>
+    <sentence>Adaptation includes two online procedures: on-line sparsification and parameter updating of the Gaussian process used to approximate the control policy.</sentence>
+    <sentence>With the proposed sparsification method, the support data dictionary for on-line learning is modified by checking if in the arriving data stream there exists novel information to be added to the dictionary in order to personalize the policy.</sentence>
+    <sentence>Results obtained in silico experiments demonstrate that on-line policy learning is both safe and efficient for maintaining blood glucose variability within the normoglycemic range.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Diabetes</keyword>
+    <keyword>Gaussian processes</keyword>
+    <keyword>Glycemic variability</keyword>
+    <keyword>On-line sparsification</keyword>
+    <keyword>Policy learning</keyword>
+    <keyword>Reinforcement learning</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Diabetes is a chronic disease due to the inability of the pancreas to segregate the insulin and glucagon hormones, which gives rise to anomalous blood glucose levels in individuals and mainly alter their carbohydrate, fat and protein metabolisms.</sentence>
+    <sentence>High level of blood glucose concentration causes considerable long-term complications such as cellular dehydration, tissue damage, vascular injury that increases the risks to heart attacks, cardiovascular diseases, strokes, end-stage renal diseases and blindness (Guyton &amp; Hall, 2000; Siegelaar, Holleman, Hoekstra, &amp; DeVries, 2010).</sentence>
+    <sentence>To overcome these complications is necessary to maintain the blood glucose level as near to the normal levels as possible.</sentence>
+    <sentence>Through continuous insulin infusion by an external pump it is possible to reduce glycemic variability and prevent events of hyper- or hypoglycemia (Hanaire et al., 2008).</sentence>
+    <sentence>Recent advances in technological devices like glucose sensors and insulin delivery pumps allow moving closer towards the artificial pancreas (AP) (Cobelli, Renard, &amp; Kovatchev, 2011), which includes such devices as key hardware elements in the glucose regulation loop.</sentence>
+    <sentence>The other essential component of an artificial pancreas is the control strategy used to calculate the insulin delivery rate upon a glucose measurement signal coming from the sensor (Lunze, Singh, Walter, Brendel, &amp; Leonhardt, 2013).</sentence>
+    <sentence>The major challenge for the development of an artificial pancreas is to cope with the erratic changes in blood glucose levels due to the variability of glucose metabolism between patients and for the same person over time expressed in terms of age, insulin sensitivity, life style, exercise routine, feeding habits, etc (Bequette, 2012; Buckingham, Caswell, &amp; Wilson, 2007; Heinemann, 2002; Krüger, Slabber, Joubert, Venter, &amp; Vorster, 2007).</sentence>
+    <sentence>Moreover, despite important developments in sensor and insulin pump technology, the control system of an AP must cope with delays and inaccuracies in both glucose sensing and insulin delivery (control action).</sentence>
+    <sentence>In the past three decades the most extensively used control strategies in the design of control algorithms for an artificial pancreas were the proportional–integral-derivative (PID) and the model predictive control (MPC) (Peyser, Dassau, Breton, &amp; Skyler, 2014).</sentence>
+    <sentence>Also, fuzzy logic control techniques were developed but to a lesser extent.</sentence>
+    <sentence>The main obstacle for most control algorithms is that unpredictable factors, such stress and illness, are ubiquitous sources of glycemic variability that must be handled properly.</sentence>
+    <sentence>Most of the existing control literature have failed to address the challenge of patient-specific variability mainly because a fixed control policy is applied bearing in mind an “average” patient.</sentence>
+    <sentence>Recent research efforts were focused towards adaptive control techniques to develop an artificial pancreas which is capable to deal with the uncertain behavior in diabetic patients (Turksoy &amp; Cinar, 2014).</sentence>
+    <sentence>The well known proportional–integrative–derivative feedback controller was employed as an early close-loop control algorithm for the AP (Bequette, 2005).</sentence>
+    <sentence>Several versions of the PID controller have been developed and evaluated in silico.</sentence>
+    <sentence>Chee, Fernando, Savkin, and van Heeden (2003) designed a PID controller applying the concept of an expert system, achieving a “sliding table” to implement a PID control scheme with dynamic properties.</sentence>
+    <sentence>A PID is a purely reactive controller, i.e.</sentence>
+    <sentence>responds to changes in glucose concentration after they have occurred.</sentence>
+    <sentence>To improve PID performance, Weinzimer et al.</sentence>
+    <sentence>(2008) add a feed-forward action and Marchetti, Barolo, Jovanovic, Zisser, and Seborg (2008), incorporate switching strategies for initialization after a meal and insulin bolus, together with time-dependent trajectories and filters for noise removal in continuous glucose monitoring.</sentence>
+    <sentence>Gantt, Rochelle, and Gatzke (2007) designed a simpler asymmetric PI controller with adjustable parameters which are tuned by local search methods.</sentence>
+    <sentence>As a result, the PI controller may exhibit a different response depending on the sign of the observed error value.</sentence>
+    <sentence>To deal with the strong nonlinearity behavior of glucose insulin dynamics in Sasi and Elmalki (2013), a PID and slider table controller are proposed to address the glucose disturbance caused by exercise, delay or noise in glucose sensor and nutrition mixed meal absorption at meal times.</sentence>
+    <sentence>Model predictive control (MPC) is a model-based control technique (García, Prett, &amp; Morari, 1989), which was extensively adopted for simulation-based evaluation of glucose regulation in Type 1 diabetic patients.</sentence>
+    <sentence>In the work of Magni et al.</sentence>
+    <sentence>(2007), a linear MPC controller was assessed whereas in Magni et al.</sentence>
+    <sentence>(2009) the trial was extended to evaluate a nonlinear state feedback MPC controller (Hovorka et al., 2004).</sentence>
+    <sentence>In Lee, Buckingham, Wilson, and Bequette (2009) a feedback control algorithm using MPC along with meal detection and meal size estimation approach are combined.</sentence>
+    <sentence>In addition, a pharmaco-dynamic model of insulin action is used to provide “insulin-on-board” constraints that explicitly include the future effect of past and current changes to the insulin delivered.</sentence>
+    <sentence>Furthermore, a pump shut-off feature is included to avoid hypoglycemic events.</sentence>
+    <sentence>In order to reduce the computational effort and explicitly deriving the control policy the work of Dua, Doyle, and Pistikopoulos (2006) proposes the integration of the parametric programming optimization technique with the MPC framework to obtain the control actions (changes to the insulin delivery rate) as a function of the current blood glucose concentration of the patient (state variables) by treating the control actions as optimization variables and the state variables as inputs.</sentence>
+    <sentence>The multi-parametric model-based control (mp-MPC) is an evolved version, which is a control method with the ability to solve the on-line optimization problem, involved in traditional MPC, off-line via parametric optimization with the advantage that control actions are calculated in an on-line way via simple function evaluations instead of solving repetitively on-line a computationally demanding optimization problem (Dua, Kouramas, Dua, &amp; Pistikopoulos, 2008; Percival et al., 2011).</sentence>
+    <sentence>Alternatively, a zone-MPC has been developed (Grosman, Dassau, Zisser, Jovanovic, &amp; Doyle, 2010) which uses mapped-input data and is adjusted automatically by linear difference personalized models, being the target of the control variable a zone instead of a set point or trajectory.</sentence>
+    <sentence>In Favero et al.</sentence>
+    <sentence>(2014), a modular MPC algorithm has been developed based on a meal-informed MPC strategy and it was first used in an outpatient wearable AP.</sentence>
+    <sentence>Determination of PID constants through well-known methods, such as the well known Ziegler–Nichols, is difficult since a well-tuned AP is always a patient-specific issue.</sentence>
+    <sentence>Also, changes in glucose dynamics generate the need for constantly updating these parameters.</sentence>
+    <sentence>On the other hand, MPCs are model-based control strategies that have an important drawback for using them in an AP: the controller performance is strongly dependent on the accuracy of the model used to represent the true glucose–insulin dynamics.</sentence>
+    <sentence>To overcome these drawbacks, adaptive control techniques arise as a promising alternative to address glycemic variability in diabetic patients (Turksoy &amp; Cinar, 2014).</sentence>
+    <sentence>An adaptive control system that do not necessitate any meal or activity announcements was proposed in Turksoy, Bayrak, Quinn, Littlejohn, and Cinar (2013), which is mainly based on the generalized predictive control framework.</sentence>
+    <sentence>In Eren-Oruklu, Cinar, Quinn, and Smith (2009) a lag filter is used to account for the time-lag between subcutaneous and blood glucose values.</sentence>
+    <sentence>Also, a Smith predictor is used to cope with delays in insulin action effects, which provides a model based-control strategy that calculates the required insulin infusion rate while model parameters are recursively tuned.</sentence>
+    <sentence>In a similar research avenue, machine learning techniques have been applied in the attempt for integrating adaptive control strategies in glucose regulation.</sentence>
+    <sentence>In the pioneering work of McCausland, Mareels, Barnett, and Arad (1999) a rule-based algorithm was proposed, which starts from a set of generic rules to form conclusions.</sentence>
+    <sentence>Later on, decision rules are adapted to suit a given person characteristics by learning from patient-specific data.</sentence>
+    <sentence>In Cosenza (2012) fuzzy techniques are employed for the development of a decision support system which operates as a off-line mixed feedback–feedforward controller allowing the optimization of postprandial glycemia in type 1 diabetic patients.</sentence>
+    <sentence>In De Paula and Martínez (2012a), a simulation based approach based on Gaussian process dynamic programming (Deisenroth, Rasmussen, &amp; Peters, 2009) is implemented to find a control policy, which is represented in a compact format that provides plenty of room for its personalization.</sentence>
+    <sentence>Run to run algorithms have been used for fine tuning of basal infusion rates using sparse blood glucose measurements (Palerm, Zisser, Jovanovič, &amp; Doyle, 2008).</sentence>
+    <sentence>A machine learning algorithm can be considered as a systematic procedure for extracting structure from data (Deisenroth, 2010).</sentence>
+    <sentence>In particular, the work of Esfandiari, Babavalian, Moghadam, and Tabar (2014) review a set of techniques to extract knowledge from the measured patient data.</sentence>
+    <sentence>Automatically learning from the patient data is of paramount importance to develop true adaptive control strategies.</sentence>
+    <sentence>In Serhani, Benharref, and Nujum (2014), an adaptive Expert System is proposed that implements an iterative technique based on previous experience to increasingly improve clinical-decision making.</sentence>
+    <sentence>In Akbari Torkestani and Ghanaat Pisheh (2014), a learning automata-based mechanism is proposed to determine the insulin doses taking into account the past history of blood glucose measurements which, in turn, are encoded in the parameters of a Gaussian distribution function.</sentence>
+    <sentence>In the work of Daskalaki, Prountzou, Diem, and Mougiakakou (2012), continuous glucose monitoring is used to develop on-line adaptive data-driven models for glucose prediction to account for the glycemic variability of diabetic patients.</sentence>
+    <sentence>An integration of reinforcement learning (RL) (Sutton &amp; Barto, 1998) and optimal control theory have been presented in Elena Daskalaki, Diem, and Mougiakakou (2013), where a model-free control approach is proposed.</sentence>
+    <sentence>The control strategy admits an initialization based on clinical procedures, includes simultaneous adjustment of both the insulin basal rate and the bolus dose, and makes room for a real-time personalization of the control policy.</sentence>
+    <sentence>In comparison with other traditional control strategies, RL does not require a detailed description of the glucose dynamics in terms of a first-principles model.</sentence>
+    <sentence>Learning algorithms developed as model-based control strategies are faster than those based on model-free strategies.</sentence>
+    <sentence>RL algorithms aim to find a policy control that optimizes a long-term performance measure, which makes it ideal to cope with delayed effects of the delivered insulin since that effect will be taken into account by the state-value function or state-action function (Daskalaki et al., 2013).</sentence>
+    <sentence>For RL algorithms to be practical, they must be able to learn from a handful of samples while continually taking actions in real-time (Hester, Quinlan, &amp; Stone, 2012).</sentence>
+    <sentence>The paradigm of model-based learning strategies, borrowed from the field of the robotics, require a model of the dynamics (in our case a model of glucose–insulin dynamics) to describe essential information about the response of the system to control actions (Nguyen-Tuong &amp; Peters, 2011b).</sentence>
+    <sentence>Non-parametric models are true data models suitable to work with erratic glucose–insulin dynamics (Daskalaki et al., 2013, 2012), which makes them a powerful tool for adaptive control by reducing the problem of model bias, which frequently occurs when deterministic models are used.</sentence>
+    <sentence>In (Ruan, Thabit, Kumareswaran, &amp; Hovorka, 2014), the proposal is to estimate the parameters of the model developed to describe the insulin pharmaco-kinetics; a Bayesian inference approach is used based on the collected data from patients.</sentence>
+    <sentence>More specifically, a Gaussian process is a novel modeling tool within the non-parametric framework which when combined with tractable Bayesian inference (Rasmussen &amp; Williams, 2006) is useful to cope with modeling the glucose–insulin dynamics under uncertainty (Markakis, Mitsis, Papavassilopoulos, &amp; Marmarelis, 2010).</sentence>
+    <sentence>For safety and performance in the artificial pancreas, on-line adaptive strategy requires to work in real-time and with continuous data streams.</sentence>
+    <sentence>Therefore, for a patient model to be useful in controlling glycemic variability it should be incrementally updated in real-time (Gijsberts &amp; Metta, 2013).</sentence>
+    <sentence>Recently proposed on-line sparsification techniques (Chen, Gao, &amp; Wang, 2013; Engel, Mannor, &amp; Meir, 2004, NguyenTuong and Peters, 2011a) are best suited for on-line learning of dynamic models that adapt a control policy to a patient lifestyle and unique glucose metabolism.</sentence>
+    <sentence>Model-based RL is a promising alternative to develop adaptive personalization techniques to control blood glucose since RL algorithms can quantitatively predict and measure the performance of selected actions (Bothe et al., 2013; Daskalaki, Diem, &amp; Mougiakakou, 2013).</sentence>
+    <sentence>The glucose–insulin dynamics has a continuum of states and actions.</sentence>
+    <sentence>Therefore, a truly flexible and adaptive proposal based on the model-based RL framework should be made in a continuous representation.</sentence>
+    <sentence>In RL, to deal with this situation an efficient balance between exploitation and exploration to generalize from experience is needed.</sentence>
+    <sentence>Also, adaptive modeling of the dynamics is critical.</sentence>
+    <sentence>In this paper, an on-line selective reinforcement learning algorithm that enables real-time adaptation of a control policy based on ongoing interactions with the patient so as to tailor the artificial pancreas is proposed.</sentence>
+    <sentence>Adaptation includes two online procedures: on-line sparsification and parameter updating of the Gaussian process used to approximate the control policy.</sentence>
+    <sentence>Probabilistic Gaussian process models of the transition dynamics and value functions are built on-line.</sentence>
+    <sentence>Also, the control policy itself is modeled by a Gaussian process model.</sentence>
+    <sentence>For safety and performance, the policy is adapted using only a small number of interactions with the patient and only relevant data is sampled through Bayesian active learning (Baranes &amp; Oudeyer, 2013; Cohn, Ghahramani, &amp; Jordan, 1996; Deisenroth et al., 2009).</sentence>
+    <sentence>The integration of a sparsification technique with the on-line learning algorithm makes possible to work with a continuous data stream which enables a permanent updating of the support data set used to approximate the control policy.</sentence>
+    <sentence>In this way, on-line adaptation of the control policy is effective for controlling subject-specific variability due to a patient’s lifestyle and its distinctive metabolic response.</sentence>
+    <sentence>Illustrative examples are used to discuss implementation details of the proposed approach.</sentence>
+  </section>
+  <section name="Off-line policy learning">
+    <sentence>The notion of a control policy comes from the field of artificial intelligence (Russell &amp; Norvig, 2009), and is especially used to describe the behavior of an intelligent agent (controller) in the field of RL (Sutton &amp; Barto, 1998).</sentence>
+    <sentence>In mathematical terms, the policy is a function π:x → u that maps states (x) to a control action (u).</sentence>
+    <sentence>In this sense, a control policy defines how a controller chooses the control actions to be applied to the controlled system.</sentence>
+    <sentence>More specifically, in the artificial pancreas the control policy determines the insulin infusion rate which should be delivered to a diabetic patient.</sentence>
+    <sentence>By formulating and solving a RL problem it is possible to find a generic policy for controlling blood glucose by simulating uncertain conditions in a generic patient and its environment which give rise to glycemic variability.</sentence>
+    <sentence>Later on, the generic policy can be personalized in real-time to a given patient.</sentence>
+    <sentence>Reinforcement learning Solving a RL problem consists in learning iteratively a task from interactions to achieve a goal.</sentence>
+    <sentence>During learning, an agent (or controller) interacts with the target system by taking an action and, after that, the system evolves from the state to xt+1 and the agent receives a numerical signal rt called reward (or cost) which provides a measure of how good (or bad) is the action taken at xt in terms of the observed state transition.</sentence>
+    <sentence>Rewards are given as hints regarding goal achievement or optimal behavior.</sentence>
+    <sentence>In applying RL to the artificial pancreas, the main objective of the agent is to learn the optimal policy, π∗, which defines the optimal insulin infusion for different patient’s states, bearing in mind both short and long term rewards.</sentence>
+    <sentence>Let us assume that under a given policy π, the expected cumulative reward Vπ(x), or value function over a certain time interval, is a function of xπ, where are the corresponding state values and defines the policy-specific sequence of control actions.</sentence>
+    <sentence>The sequence xπ of state transitions gives rise to rewards .</sentence>
+    <sentence>Blood glucose regulation is a continuous task without a single final state, hence N could be defined to account for the daily routine including meals, exercise, sleep, etc.</sentence>
+    <sentence>Therefore, the discounted sum of future rewards is used to define the (discounted) expected state-value function for a policy π from the state x: (1) where γ ∈ (0,1] is the discount factor which weights future rewards.</sentence>
+    <sentence>V∗(x) is used to denote the maximum discounted reward obtained when the agent starts in state x and executes the optimal policy π∗.</sentence>
+    <sentence>Thus, the associated optimal state-value function satisfies the Bellman’s equation for all state x is: (2) where ut = π∗(xt).</sentence>
+    <sentence>Similarly, the state–action value function Q∗ is defined by: (3) such that for all x.</sentence>
+    <sentence>Once Q∗ is known through interactions, then the optimal policy can be obtained directly through: (4) When the state space and the action space are discrete and finite, the optimal policy can be obtained directly from a tabular representation of the value function.</sentence>
+    <sentence>However, in our problem the state and actions take their values from a continuum.</sentence>
+    <sentence>Hence, a function approximation technique is required for value function approximation.</sentence>
+    <sentence>Moreover, inductive modeling of the optimal policy is mandatory to allow selecting optimal actions in the continuous space .</sentence>
+    <sentence>Gaussian process models are a powerful alternative for generalization and on-line learning in reinforcement learning algorithms.</sentence>
+    <sentence>Gaussian process Gaussian process (GP) is a relatively new kernel method popularized within the machine learning community by Rasmussen and Williams (2006).</sentence>
+    <sentence>It is a powerful, non-parametric tool for regression in high dimensional spaces returning a non-parametric probabilistic model.</sentence>
+    <sentence>A GP is a generalization of a Gaussian probability distribution where the distribution is over functions instead of assuming a model with a given structure before data is considered.</sentence>
+    <sentence>A key advantage of the GP is the ability to provide uncertainty estimates and learning the noise and smoothness parameters from training data.</sentence>
+    <sentence>In solving RL problems through on-going interactions, the experience can be collected in data sets as {X,Y}, where is the set of input vectors and is the set of the corresponding observations; where n is the number of samples.</sentence>
+    <sentence>Assume that between pairs of input–output data there is a functional relationship , such that .</sentence>
+    <sentence>Then, in order to make inference about a function value h(x∗) for an unknown input x∗, an inferred model for underlying function h is needed.</sentence>
+    <sentence>Within a Bayesian framework, the inference of the underlying function h is described by the posterior probability: (5) where p(Y∣h,X) is the likelihood and p(h) is a prior distribution on plausible value functions assumed by the GP model.</sentence>
+    <sentence>The term p(Y∣X) is called the evidence or the marginal likelihood.</sentence>
+    <sentence>When modeling with GPs, a GP prior p(h) is placed directly in the space of functions without the necessity to consider an explicit parameterization of the approximating function h. This prior typically reflects assumptions on the, at least locally, smoothness of h. Similar to a Gaussian distribution, which is fully specified by a mean vector and a covariance matrix, a GP is specified by a mean function m(·) and a covariance function Cov(·,·), also known as a kernel.</sentence>
+    <sentence>A GP can be considered a distribution over functions.</sentence>
+    <sentence>However, considering a function as an infinitely long vector, all necessary computations for inference and prediction of value functions can be broken down to manipulate well-known Gaussian distributions.</sentence>
+    <sentence>The fact that function h(·) is GP distributed is indicated by hereafter.</sentence>
+    <sentence>Given a GP model of the function h, we are interested in predicting the value function for an arbitrary input .</sentence>
+    <sentence>The predictive (marginal) distribution of the function value for a test input is Gaussian distributed with mean and variance given by: (6) (7) where K is the kernel matrix with .</sentence>
+    <sentence>A common covariance function is the squared exponential (SE): (8)≔ where matrix and ℓr, r = 1, … ,d, being the characteristic length scales.</sentence>
+    <sentence>The parameter ζ2 describes the variability of the inductive model h. The parameters of the covariance function are the hyperparameters of the and are collected within the vector ψ.</sentence>
+    <sentence>To fit parameters to value function data the evidence maximization or marginal likelihood optimization approach is recommended (see Rasmussen &amp; Williams (2006)).</sentence>
+    <sentence>The log-evidence is given by: (9) In Eq (9), we have h(X) = [h(x1), … ,h(xn)] where n is the number of training points.</sentence>
+    <sentence>We made the dependency of K on the hyper-parameters ψ explicit by writing Kψ in Eq (9).</sentence>
+    <sentence>Evidence maximization yields an inductive model of the value function that: (i) rewards data, and (ii) rewards simplicity of the fitted model.</sentence>
+    <sentence>Hence, it automatically implements Occam’s razor, i.e.</sentence>
+    <sentence>preferring the simplest model.</sentence>
+    <sentence>Further details on GP regression can be found in the excellent books of Rasmussen and Williams (2006) and MacKay (2003), and references therein.</sentence>
+    <sentence>Modeling the state transition dynamics It is widely recognized that model-based methods often make better use of available information since they capture the underlying pattern (latent function) for state transitions.</sentence>
+    <sentence>For controlling glycemic variability, model-based learning methods require a model of the state transition dynamics (in our case a model of the glucose–insulin dynamics) to describe essential information about the behavior of the system and the influence of an action taken on this system.</sentence>
+    <sentence>A transition function f, maps a state-action pair (xt, ut) to a successor glycemic state (xt+1), as is indicated in Eq (10).</sentence>
+    <sentence>(10) Probabilistic models such as GPs can be used to model the glucose–insulin dynamics by learning a transition function f based on training data consisting of a sequence of observed glycemic states and changes to the insulin infusion rate (control actions).</sentence>
+    <sentence>As a result, the GP learns to predict the change between two consecutive states conditioned on the previous state and the control input.</sentence>
+    <sentence>Thus, the GP (inductive) model, the dynamicsGP, is learned to describe the state transition dynamics through expectations on changes caused by a control action execution.</sentence>
+    <sentence>We attempt to model short term transition dynamics based on the data coming from the interactions (with a real patient or a simulator).</sentence>
+    <sentence>We assume that the glucose dynamics smoothly evolve while a control policy is being applied.</sentence>
+    <sentence>However, we implicitly assume that glucose variability is due to uncertainty about both inter- and intra-patient variability, inaccuracies in glucose sensing and delays in insulin absorption from the subcutaneous tissue.</sentence>
+    <sentence>For predicting the glucose transition dynamics, a GP model is trained in such a way the effect of uncertainty about the state transition following a control action is modeled statistically as (11) where mf is the mean function and covf is the covariance function.</sentence>
+    <sentence>Notice that this model implies that the output dimensions are conditionally independent on the given inputs.</sentence>
+    <sentence>Moreover, the correlation between the state variables is implicitly considered when we observe pairs of states and successor states.</sentence>
+    <sentence>The training inputs to the model transition dynamics are tuples (xt, ut), whereas the targets are the state differences shown in Eq (11).</sentence>
+    <sentence>The posterior distribution for the dynamics GP reveals the remaining uncertainty about the underlying latent function for any blood glucose change caused by a control ut when it is implemented at xt.</sentence>
+    <sentence>GP models of the transition dynamics, for observable states, are built on the fly using data gathered from interactions with a certain patient (real or virtual).</sentence>
+    <sentence>GP modeling of a value function For generalization and on-line learning in RL algorithms with continuous state and action spaces, GP models are useful to approximate the value functions V(·) and Q(·,·) directly in function space by representing them by fully probabilistic GP models (Deisenroth et al., 2009).</sentence>
+    <sentence>These inductive models make intuitive sense as they use data (coming from real or simulated interactions) to determine the underlying structures of the value functions, which are a priori unknown.</sentence>
+    <sentence>Moreover, GPs provide information about confidence intervals for the value function predictions.</sentence>
+    <sentence>Thus, the state-value function V(·) and the action-state value function Q(·,·) are approximated as and , respectively.</sentence>
+    <sentence>The training targets (observations) can be iteratively determined by the RL algorithm.</sentence>
+    <sentence>Thus, the training inputs for the data-driven model are the states xt whereas the targets are the corresponding state values V(xt).</sentence>
+    <sentence>Similarly, the training inputs for are tuples (xt, ut) and the targets are the state-action values Q(xt, ut).</sentence>
+    <sentence>The advantage of modeling the value functions by GP models is that the GPs provides a predictive distribution of V(xt) or Q(xt, ut) for any xt or any pair (xt, ut) through Eqs.</sentence>
+    <sentence>(6) and (7).</sentence>
+    <sentence>Due to the generalization property of and , we can work in a continuous state space and action space to determine a value function V(x∗) or Q(x∗, u∗) for any state x∗ or state-action pair (x∗,u∗).</sentence>
+    <sentence>Then, to obtain the optimal control from the value functions for a state xt in Eq (4), the optimal action is given by the maximum of the mean function of which is obtained by solving the optimization problem: (12) It is worth noting that using a probabilistic model for the value function allows addressing uncertainty in state transitions following a control action and the variability in corresponding rewards (costs) in a natural way.</sentence>
+    <sentence>Also, by resorting to GPs, the proposed RL algorithm (developed below) can readily handle uncertainty in state transitions due to a stochastic disturbance dynamics along with noisy measurements and rewards.</sentence>
+    <sentence>GP modeling of a control policy We regard the optimal policy π∗ as a probabilistic map from states to actions.</sentence>
+    <sentence>In order to generalize the control policy all over the state space, we have to solve a regression problem to obtain an optimal policy π∗ based on an observed data set.</sentence>
+    <sentence>These data are obtained from a sequence of interactions (real or simulated) between a learning controller and a given patient.</sentence>
+    <sentence>Although any function approximation technique can be used to model the control policy, here it is also approximated with a GP model, , since it allows assessing the remaining uncertainty when estimating optimal controls for unseen states.</sentence>
+    <sentence>This capability is instrumental in real-time personalization of a generic control policy.</sentence>
+    <sentence>The training inputs of the model are states whereas the training targets are controls .</sentence>
+    <sentence>When the targets are the optimal controls obtained from Eq (12), the models the optimal control policy.</sentence>
+    <sentence>Generic control policy A generic control policy is a policy which is obtained in an off-line way employing a simulation environment.</sentence>
+    <sentence>Through a simulation experiment, involving the interaction between a given controller and a patient, under certain conditions, valuable training data can be acquired.</sentence>
+    <sentence>This data can be sorted and grouped in a support data set , or simply support set, such that and ∀ ut ∈ U, where and are the support sets of training inputs and targets respectively.</sentence>
+    <sentence>Thus, based on a certain support set, a generic policy can be learned and modeled by a GP model, , in on-line off-line way.</sentence>
+    <sentence>During the experiment, any feedback control strategy can be applied to generate the training data.</sentence>
+    <sentence>However, to introduce our approach we employ the RL algorithm -referred to as Algorithm 1- sketched in the Fig 1 to learn a generic control policy .</sentence>
+    <sentence>Integration of reinforcement learning with Gaussian processes for policy… Fig 1.</sentence>
+    <sentence>Integration of reinforcement learning with Gaussian processes for policy iteration.</sentence>
+    <sentence>In Fig 1, an algorithm integrating RL with GP is depicted.</sentence>
+    <sentence>As input, an initial policy π0 has to be supplied.</sentence>
+    <sentence>In a general situation, when no knowledge about the control task exists, π0 is commonly a random policy which actually consists in a random function to select admissible actions.</sentence>
+    <sentence>In line 7, using a simulation environment of the dynamics function f (which simulate the insulin–glucose dynamics) the current policy πk−1 is applied to the simulator from each start state during sampling times, obtaining the support sets and U.</sentence>
+    <sentence>For policy iteration, this algorithm describes the value functions V(·) and Q(·,·) directly in function space by representing them by fully probabilistic GP models.</sentence>
+    <sentence>These inductive models make intuitive sense as they use simulation data to determine the underlying structures of these value functions, which are a priori unknown.</sentence>
+    <sentence>The sets and U instead of being a discrete representation for the state and action spaces, are considered the support points (training data) to approximate the value functions V(·) and Q(·,·) using GP models; which are indicated as and , respectively.</sentence>
+    <sentence>The training targets (observations) are iteratively determined by Algorithm 1 itself.</sentence>
+    <sentence>As it has been already mentioned, the advantage of modeling the state-value function V(·) by is that the GP provides a predictive distribution of V(xt) for any state xt.</sentence>
+    <sentence>This property is exploited in the computation of the Q-value (line 12).</sentence>
+    <sentence>Due to the generalization property of we are not restricted to a finite set of successor states , result of applying an action uj at a certain state xi, when determining .</sentence>
+    <sentence>Once the whole recursion for obtaining a support set and updated optimal controls π∗() have been completed, a new version of the control policy is obtained in the form of a Gaussian process, the policyGP: in line 18.</sentence>
+    <sentence>Policy iteration converges when distributions for control policies are “close” enough.</sentence>
+    <sentence>As control policies in successive iterations are also modeled using GPs, policy iteration can be stopped when the relation ε of the Kullback–Leibler (KL) divergences over a support set, with cardinality ∥∥, between two successive policy GPs is lower than a small tolerance δ.</sentence>
+    <sentence>Typically, only a few iterations are necessary for the control policy distributions to converge according to the criterion in Eq (13).</sentence>
+    <sentence>(13)∊ where: (14) (15) As it is shown in the line 21 of Algorithm 1 (Fig 1), a GP model is learned to approximate the generic policy π∗ based on the support sets and π∗( ).</sentence>
+    <sentence>As it was said, these data sets can be obtained by solving a RL problem with the proposed Algorithm 1, or by recording input–output data coming from simulations of applying other control strategies.</sentence>
+    <sentence>The simulation environment to emulate the glycemic behavior in a diabetic patient is generally representative of only an average subject under specific conditions.</sentence>
+    <sentence>Therefore, once a generic policy is obtained, it can be safely applied to a certain patient.</sentence>
+    <sentence>However, it is imperative to adapt this policy to the patient-specific behavior and lifestyle.</sentence>
+    <sentence>To do this, in the next section we propose a methodology for control policy personalization to control a given patient glucose variability using simulation-based learning and on-line adaptation of a generic control policy.</sentence>
+    <sentence>The proposed approach is based on reinforcement learning principles, it is integrated with a recently methodology for incremental online sparsification and employs Gaussian process approximation.</sentence>
+    <sentence>Also, a Bayesian active learning mechanism is proposed for a self-exploration process (Baranes &amp; Oudeyer, 2013) able to work in an on-line way with a continuous data stream in real-time.</sentence>
+    <sentence>It is important to highlight a key advantage of resorting to Gaussian processes for data-driven modeling of control policies.</sentence>
+    <sentence>Using GPs, a generic control policy can be modeled over an augmented support set, , which combine the support sets of different generic policies obtained from different simulation runs.</sentence>
+    <sentence>For example, each simulation experiment can be done under different conditions, for instance employing different control strategies, regarding different patient configurations, assuming different meal routines as well as many other possible variants.</sentence>
+    <sentence>Thus, each jth simulation experiment will give rise to a different support set .</sentence>
+    <sentence>Thus, an augmented support set can be obtained as: .</sentence>
+    <sentence>Then, a generic policy modeled by a GP learned over a set should have a generalization ability to deal with many different situations that a patient may experience.</sentence>
+    <sentence>Simulation environment To emulate diabetic patients’ behavior, a simulation environment able to replicate the glucose–insulin dynamics (function f in Algorithm 1 in Fig 1) is needed.</sentence>
+    <sentence>Glucose–insulin dynamics shows great variability from patient to patient (inter-patient variability).</sentence>
+    <sentence>Moreover, in the same person the glucose level evolutions are not identical along consecutive days although the patient is subjected to the same conditions every day (feeding, physical exercise, insulin infusion).</sentence>
+    <sentence>This is referred to as intra-patient variability.</sentence>
+    <sentence>When a control policy is learnt off-line using computational simulation, the natural inter- and intra-patient variability needs to be addressed.</sentence>
+    <sentence>Most of the glucose–insulin models proposed are based on either the Bergman’s minimal model (Bergman, Ider, Bowden, &amp; Cobelli, 1979, 1981) or Sorensen’s physiological model (Sorensen, 1985).</sentence>
+    <sentence>These models offer a rather qualitative prediction tool for blood glucose dynamics to account for exogenous insulin infusions and carbohydrate intake.</sentence>
+    <sentence>If the uncertainties are omitted and if the model cannot accurately represent the glucose and insulin dynamics, a significant performance degradation in model-based control strategies may arise whereas hypoglycemic episodes cannot be ruled out.</sentence>
+    <sentence>Meals and exercise along with age and weight require different values of model parameters to describe in quantitative terms the variability observed in the insulin–glucose dynamics.</sentence>
+    <sentence>Furthermore, patients with diabetes are constantly exposed to external disturbances that cause large blood glucose perturbations like meal consumption or physical activity on a daily basis.</sentence>
+    <sentence>Both Bergman’s and Sorensen’s models are physiologically based and can qualitatively explain what happens with varying levels of physical activity.</sentence>
+    <sentence>In this paper, the validated stochastic model proposed by Ulas Acikgoz and Diwekar (2010) is used to simulate the glucose–insulin dynamic system (simulated patients) which accounts for the different sources of uncertainties and variability.</sentence>
+    <sentence>This model is an enhanced model based on the physiological model proposed by Lehmann and Deutsch (1992).</sentence>
+    <sentence>The physiological model proposed by Lehmann and Deutsch considers two subsystems (compartments) to represent the glucose–insulin dynamics based on the following system of differential equations (more detail can be found in Lehmann &amp; Deutsch (1992) and in the website http://www.2aida.net): (16) (17) (18) In the differential equations system above, Eqs.</sentence>
+    <sentence>(16)–(18) represent the changes with time of the: plasma glucose concentrationG, insulin in remote compartment Ia and plasma insulin concentration I, respectively; their initial conditions are: G(0),Ia(0) and I(0).</sentence>
+    <sentence>In Eq (16)Gin is the systemic appearance of glucose via glucose absorption from the gut, NHGB is the net hepatic glucose balance, VG is the volume of distribution of glucose, GX is a reference glucose level, KM is the Michaelis–Menten constant between glucose utilization and plasma glucose concentration and Gren is the renal excretion of glucose.</sentence>
+    <sentence>In Eq (18), η is the fractional disappearance rate of insulin, VI is the insulin distribution volume and Dt is the flow rate of exogenous insulin infused such that Dt = Dt−1 + ut where ut is the change in the insulin supplied (control action).</sentence>
+    <sentence>The vector P = [p1p2p3p4p5] stands for estimated patient-specific parameters and in this work the values estimated by Ulas Acikgoz and Diwekar (2010) are used.</sentence>
+    <sentence>These parameters are given in Table 1, assuming a body weight of 70 kg.</sentence>
+    <sentence>The parameter Sh that appears in Table 1 is the hepatic sensitivity needed to determine the NHGB(t) (see Lehmann &amp; Deutsch (1992)).</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Model parameters.</sentence>
+    <sentence>Parameter Value Unit VG 0.22 L/kg GX 5.3 mmol/L KM 10.0 mmol/L η 5.4 h−1 VI 0.1421 L/kg p1 0.278 p2 0.0248 mmol min−1 kg−1 mU−1 L−1 p3 0.000758 min−1 p4 0.0148 min−1 p5 0.00986 mmol min−1 kg−1 Sh 0.5 Eqs.</sentence>
+    <sentence>(16)–(18) provide a deterministic dynamic model for blood glucose in Type 1 diabetic patients.</sentence>
+    <sentence>However, there exists uncertainty about the estimation of model parameters in Table 1 that prevents describing variability among daily values of glucose in patients, whereas other sources of structural errors give rise to model-patient mismatch.</sentence>
+    <sentence>Also, in a standard implementation there exists inaccuracies of the measurement devices and therefore the available measurements do not uniquely determine the true state in a diabetic patient.</sentence>
+    <sentence>Thus, there is uncertainty in both estimating system state and predicting the outcome of control actions.</sentence>
+    <sentence>Furthermore, noise is present in subcutaneous glucose sensors which is another important cause of variability (Sanger, 2010).</sentence>
+    <sentence>All these sources of time-dependent uncertainties could be represented by introducing stochastic processes in a deterministic model (Ulas Acikgoz &amp; Diwekar, 2010).</sentence>
+    <sentence>Introducing a superimposed Ito’s stochastic process (Ito, 1951), to represent the variability in plasma glucose concentration, can be obtained by modifying Eq (16) as follows: (19) where σito is the variance parameter and ε is a random number generated by a normal distribution with a mean equal to zero and a standard deviation equal to one .</sentence>
+    <sentence>The preceding model was used to represent the dynamics as the function f describing an average glycemic behavior of diabetic patients with parameters in Table 1.</sentence>
+    <sentence>The inter- and intra-variability in diabetic patients are modeled using σito = 0.25.</sentence>
+    <sentence>Later on, the Algorithm 1 (Fig 1) is applied and a generic control policy π∗ is obtained.</sentence>
+    <sentence>In Fig 2, the key concept of a control policy π∗ is highlighted through the resulting glucose profiles of 125 independent simulations made using the described dynamics model (Eqs.</sentence>
+    <sentence>(19), (17) and (18) manipulated by an optimal policy π∗.</sentence>
+    <sentence>It is noticeable that the optimal policy is able to achieve tight glycemic control as glucose levels are within soft constrains (green lines).</sentence>
+    <sentence>Glucose profiles for 125 independent simulations under the generic policy π∗ Fig 2.</sentence>
+    <sentence>Glucose profiles for 125 independent simulations under the generic policy π∗.</sentence>
+    <sentence>The next section presents a novel simulation-based algorithm for real-time personalization of a generic control policy (π∗) to the specific characteristics and lifestyle of a given patient.</sentence>
+  </section>
+  <section name="On-line policy learning and adaptation">
+    <sentence>Once a generic control policy (π∗) has been obtained in an off-line way, it can be adapted to the requirements of a specific patient so as to obtain a personalized control policy, referred to as hereafter.</sentence>
+    <sentence>By introducing some changes to the Algorithm 1 in Fig 1, a new version capable of adapting a generic control policy whilst the control algorithm interacts with the patient is obtained.</sentence>
+    <sentence>Bayesian active learning, borrowed from robotics, should be included for safe exploration as the control policy is being implemented (Baranes &amp; Oudeyer, 2013; Cohn et al., 1996; Settles, 2010).</sentence>
+    <sentence>Hence, only a relevant part of the state space will be explored while the exploitation–exploration dilemma of the RL problem is addressed (Krause &amp; Guestrin, 2007).</sentence>
+    <sentence>Moreover, during the on-going interactions between the AP (and its control policy) and a patient, a model of the glucose dynamics must be learnt on-line, allowing the policy to adapt itself to changes in the patient response to control actions.</sentence>
+    <sentence>For this reason, the on-line learning algorithm must be capable of dealing with continuous data stream to update the support data set.</sentence>
+    <sentence>To this aim, incremental on-line sparsification suitable to work with non-parametric Gaussian process regression is required (Engel et al., 2004; Nguyen-Tuong &amp; Peters, 2011a).</sentence>
+    <sentence>The incremental sparsification technique makes possible to determine whether arriving data provide valuable information regarding the current support sets for both the dynamics and the policy.</sentence>
+    <sentence>This allows us to limit the cardinality of the support sets and keep them updated to account for subject-specific glycemic variability.</sentence>
+    <sentence>Bayesian active learning To learn probabilistic metamodels of the glucose–insulin dynamics and the value functions on the fly, a constrained version of Bayesian active learning (BAL) mechanism must be used on-line.</sentence>
+    <sentence>Let us first describe how to determine the most promising states from a given set of candidate states and then a mechanism suitable for online interactions with the patient (real or virtual) is proposed to obtain candidate data to be added to the support sets.</sentence>
+    <sentence>A version of Bayesian active learning algorithm is sketched in Fig 3 which is referred to as BAL algorithm or Algorithm 2.</sentence>
+    <sentence>Bayesian active learning algorithm Fig 3.</sentence>
+    <sentence>Bayesian active learning algorithm.</sentence>
+    <sentence>Selecting promising states Consider a given set of candidate states .</sentence>
+    <sentence>We need to value them in some way.</sentence>
+    <sentence>Thus, we have to rank them according to that value and select the one with the highest value.</sentence>
+    <sentence>In on-line policy learning control, a “good” state should provide both information gain about the latent value function and be able to reduce uncertainty about the optimal controls.</sentence>
+    <sentence>Hence, an utility function that captures both objectives to rate the quality of candidate states is used (Deisenroth et al., 2009).</sentence>
+    <sentence>Accordingly, the most promising state is the one that maximizes the expected utility function defined as follows (20) where ρ and β are used to control the exploration–exploitation tradeoff, and the predictive mean and variance of the value function are (21) (22) where Kv is the augmented kernel matrix when including (23) and kv is called kernel vector such that .</sentence>
+    <sentence>Similarly, Kv is the kernel matrix such that and kv is the kernel value computed as .</sentence>
+    <sentence>Hereafter k(·, ·) is a kernel function as previously indicated in Eq (8), unless otherwise stated.</sentence>
+    <sentence>The utility of a candidate state expresses how much total reward is expected from it when acting optimally (first term in Eq (20)) and how surprising is expected to be given the current training inputs of the GP model for V (second term).</sentence>
+    <sentence>The second term in Eq (20) is somewhat related to the expected Shannon information (entropy) of the predictive distribution or the Kullback–Leibler divergence (Deisenroth, 2010; Verdinelli &amp; Kadane, 1992) between the predictive Gaussian distribution of and V∗( ).</sentence>
+    <sentence>The parameters ρ and β are used to trade off optimality in action selection with information gain which is needed for on-line policy adaptation.</sentence>
+    <sentence>A large (positive) value of ρ introduces data bias towards optimal controls, whereas a large value (positive) β favors gaining information based on the predicted variance of the value function for unseen states at different decision stages.</sentence>
+    <sentence>Generating the promising states Adapting the policy to the patient’s dynamics requires incrementally improving the model of the glucose–insulin dynamics and consequently the value function model, , will also be improved.</sentence>
+    <sentence>Therefore, the support set must be updated with actually reachable states.</sentence>
+    <sentence>In the proposed BAL on-line algorithm of Fig 3, input locations are added by interacting directly with the patient.</sentence>
+    <sentence>In addition, through BAL safe exploration with control actions is done whereas taking actions that may lead the patient to hazardous states are avoided.</sentence>
+    <sentence>To begin with, a safe enough generic control policy (π∗) is applied.</sentence>
+    <sentence>Then, as the personalization of the policy progresses, the resulting policy is increasingly tailored to the patient.</sentence>
+    <sentence>Initially, the patient is in state x0.</sentence>
+    <sentence>In each recursion of the personalization algorithm (described below), a new datum defined as a state-action tuple (x,u), resulting from the interaction with the patient (real or virtual) is obtained.</sentence>
+    <sentence>When the patient is in a state x′, safe exploration is done by taking actions over a certain set that represents the remaining uncertainty about the optimal action.</sentence>
+    <sentence>This set can be defined as a uniform discretization in the feasible interval for choosing an action.</sentence>
+    <sentence>We propose to establish this set based on the confidence interval of two standard deviations (2σπ) around the mean of the action distribution .</sentence>
+    <sentence>Thus, we obtain an interval with a confidence level of 95% for optimal action selection.</sentence>
+    <sentence>The mean value is given by the mean function of the current evaluated at x′ and the standard deviation is given by the covariance function of the .</sentence>
+    <sentence>Lines 4 through 7 in the BAL algorithm (Fig 3) are the steps required to define .</sentence>
+    <sentence>From line 8 to 11, a procedure to obtain the set is described, where several one-step transitions from x′ for all are simulated.</sentence>
+    <sentence>Then, by the procedure detailed in the Section 3.1.1, the most promising state (line 12) must be determined.</sentence>
+    <sentence>The action , which gives rise to the simulated transition from x′ to , is considered as the best action to be applied to the patient (line 13).</sentence>
+    <sentence>Once the interaction controller-patient takes place (line 14) by applying u∗, the state transition is observed, and a the new candidate datum is defined (line 15 and 18).</sentence>
+    <sentence>Online sparsification in a nutshell Sparsification techniques have been successfully employed in robotics for online identification of data-driven models.</sentence>
+    <sentence>Additionally, sparsification techniques have been combined with regression techniques (Sigaud, Salaün, &amp; Padois, 2011) in order to limit the computational complexity.</sentence>
+    <sentence>Particularly, in the work of Nguyen-Tuong and Peters (2011a) an incremental online sparsification (IOS) method has been proposed which is mainly inspired in the Kernel Recursive Least-Squares algorithm proposed by Engel et al.</sentence>
+    <sentence>(2004).</sentence>
+    <sentence>To prevent expensive computational costs in on-line policy learning, once a new datum carrying novel information is detected, the point that brings the least information from the support set should be removed.</sentence>
+    <sentence>By incorporating incremental online sparsification into the approach employed by the Algorithm 1, an incremental selection of samples that are used to update the support set is possible.</sentence>
+    <sentence>Accordingly, the GP models of the dynamics and the value function are kept updated by re-estimating their hyper-parameters.</sentence>
+    <sentence>On-line learning of the models used to approximate and are critical for continuous policy adaptation to a given patient characteristics.</sentence>
+    <sentence>Following, an overview about the incremental online sparsification technique is given.</sentence>
+    <sentence>Further details on IOS can be found in the works of Nguyen-Tuong and Peters (2011a) and Engel et al.</sentence>
+    <sentence>(2004), and references therein.</sentence>
+    <sentence>Also, the reader is referred to work of Chen et al.</sentence>
+    <sentence>(2013) for a novel integration of on-line sparsification with temporal difference learning.</sentence>
+    <sentence>The general notion is that the kernel matrix Kv should be fully ranked.</sentence>
+    <sentence>That is to ensure that any sample in the support set cannot be linearly represented by the other samples .</sentence>
+    <sentence>Then, for online sparsification, the basic idea is that if an arriving datum can be linearly represented by the data in the support set, it should not be added.</sentence>
+    <sentence>Assuming that at time t, the support set has m data points such that , where, by construction, are linearly independent feature vectors.</sentence>
+    <sentence>When a new datum, , arrives, the key crucial to determine to decide whether it can be linearly represented by the existing data in .</sentence>
+    <sentence>So, testing whether is linearly dependent on data points is required.</sentence>
+    <sentence>The linear dependence (Schölkopf et al., 1999; Schölkopf &amp; Smola, 2001) can be measured by (24) Therefore, when brings some novelty since δ exceedes a threshold η, it must be added to .</sentence>
+    <sentence>Accordingly, this procedure aims to cover only the relevant region of state space with a limited support set.</sentence>
+    <sentence>In Eq (24) we have a vector a = (a1, … ,am)T of coefficients ai of linear dependence which can be determined by minimizing δ as follows (25) where and .</sentence>
+    <sentence>Solving the unconstrained optimization problem of Eq (25) yields the optimal a = K−1k.</sentence>
+    <sentence>Replacing this result in Eq (24) gives rise to (26) Once δ is computed by Eq (26) for a new data point, its value is compared with the threshold η and a decision to incorporate into the set taken.</sentence>
+    <sentence>In the pseudocode of Algorithm 3 in Fig 4 are the main steps for the sparsification procedure.</sentence>
+    <sentence>Sparsification algorithm Fig 4.</sentence>
+    <sentence>Sparsification algorithm.</sentence>
+    <sentence>In the sparsification algorithm, when δ &gt; η and the support set size is smaller than its maximum size (Nmax), must be updated using the Algorithm 3.1 in Fig 5.</sentence>
+    <sentence>Whenever the number of data in the set is must be updated by replacing an old point by the new one .</sentence>
+    <sentence>In the latter case, the Algorithm 3.2 of Fig 6 which takes into account the spatial and temporal allocation of the data through a forgetting rate λi ∈ [0,1] (Nguyen-Tuong &amp; Peters, 2011a) is used.</sentence>
+    <sentence>The forgetting rate defined as (27) where ti is the time when the point i was included into and the parameter h controls the trade-off between spatial and temporal coverage.</sentence>
+    <sentence>The detailed computations involved in Algorithms 3.1 and 3.2 are given in the Appendices A and B, respectively.</sentence>
+    <sentence>Algorithm to augment the support set by incorporating a new data point Fig 5.</sentence>
+    <sentence>Algorithm to augment the support set by incorporating a new data point.</sentence>
+    <sentence>Algorithm to update the support replacing an old data point by a new one Fig 6.</sentence>
+    <sentence>Algorithm to update the support replacing an old data point by a new one.</sentence>
+    <sentence>Algorithm for real time policy personalization Based on the RL framework, the Algorithm 4 outlined in Fig 7 for policy learning and adaptation is proposed.</sentence>
+    <sentence>This algorithm is able to adapt on-line a policy by interacting with a patient in real time.</sentence>
+    <sentence>The personalization process means passing from a generic control policy π∗ to a particular personalized control policy and keeping it updated over time.</sentence>
+    <sentence>Initially, it is assumed that a generic control policy π∗ which can be obtained as was indicated in Section 2.3 is available.</sentence>
+    <sentence>This policy is modeled by a GP model, i.e.</sentence>
+    <sentence>.</sentence>
+    <sentence>Moreover, the support set which supports the model is known.</sentence>
+    <sentence>As indicated in line 3, the generic policy π∗ is applied to the patient during sampling times.</sentence>
+    <sentence>In this way, state-action transitions are observed and recorded in a set .</sentence>
+    <sentence>Next, through the sparsification algorithm, novel data points are identified using Algorithm 3 which provides meaningful information to update (line 5).</sentence>
+    <sentence>Then, the models and are updated by re-estimating their corresponding hyper-parameters using the support set (lines 7 to 9).</sentence>
+    <sentence>On-line policy learning and adaptation algorithm Fig 7.</sentence>
+    <sentence>On-line policy learning and adaptation algorithm.</sentence>
+    <sentence>On-line policy learning in Algorithm 4 takes place in the loop defined from lines 11 to 27.</sentence>
+    <sentence>Through Bayesian active learning (Algorithm 2), safe exploration while interacting with the patient is made by choosing the best action for the current patient state.</sentence>
+    <sentence>Once the control action is applied, the data point for observed state transition is available and recorded in (line 12).</sentence>
+    <sentence>By means of Algorithm 3, the support set is updated iff provides valuable information (line 13).</sentence>
+    <sentence>Later on, the dynamics model is updated based on the latter version of (line 14).</sentence>
+    <sentence>In this way, an updated version of the model used to describe the patient response to control actions is available.</sentence>
+    <sentence>Also, an improved version of the control policy adapted to the patient’s glycemic variability is obtained.</sentence>
+    <sentence>In line 16, the Q-learning rule is implemented to update the Q-values regarding an immediate reward r(xi,ui) and a discount factor γ.</sentence>
+    <sentence>The value function and the dynamics are approximated by GP models, therefore the uncertainties about value function and dynamics have been taken into account.</sentence>
+    <sentence>Due to the generalization property of and , when the expected value function of is computed there is no need to restrict to a finite set of successor states .</sentence>
+    <sentence>Thus, in the computation of these expected values, the expected value of V∗ at a successor (uncertain) state is estimated as described in the Appendix C (Deisenroth et al., 2009).</sentence>
+    <sentence>Later on, in the next for loop (line 18 to 22), with the computed Q-values and all actions , a model of state-action value function, , is learned.</sentence>
+    <sentence>Then, the optimal control is the maximizing argument of the Q-values for a certain state xi, and the value function V∗(xi) at xi is the corresponding maximum value.</sentence>
+    <sentence>To maximize Q for a certain state xi, standard optimization methods such as Golden section or Fibonacci Search are used.</sentence>
+    <sentence>Note that models a function of u only since xi is fixed.</sentence>
+    <sentence>In this way, the optimal action is obtained through maxuQ(xi,u) ≈ maxumq(u), the maximum of the mean function mq(u) of .</sentence>
+    <sentence>Once the optimal values are computed, a GP model, , to approximate the state-value function is learned.</sentence>
+    <sentence>Moreover, with all and the optimal controls computed in line 20 for all an updated version of the control policy can be approximated by a new GP model, which is referred as in the recursion p of the Algorithm 4.</sentence>
+    <sentence>As iterations of Algorithm 4 are made, the personalization process of the control policy takes place.</sentence>
+    <sentence>We say that there is a “personalization” since the dynamics GP model, , is learned with data coming from direct interactions with the patient (real or virtual).</sentence>
+    <sentence>Any change in patient’s dynamic behavior will be reflected in the underlying structure of the collected data.</sentence>
+    <sentence>Therefore, the dynamic model must be updated in each recursion of Algorithm 4.</sentence>
+    <sentence>Hence, the flexible features of nonparametric approximators plays a central issue.</sentence>
+    <sentence>Modeling glycemic response by allows a nonparametric representation which can be improved continuously to the patient behavior based on data from on-going interactions.</sentence>
+    <sentence>Accordingly, a policy personalization is made since the state-value function depends on the dynamic model accuracy and the policy model, .</sentence>
+    <sentence>Note that is learnt based on optimal controls , which depends on the model which, in turn, depends on state-actions values (computed in line 16) which are estimated using the dynamics model .</sentence>
+  </section>
+  <section name="Simulation results">
+    <sentence>RL settings for glucose regulation Controlling glycemia in diabetic patients means maintaining the glucose level within the normoglycemic range.</sentence>
+    <sentence>In the diabetes research community there is not universal agreement about a unique and standard range for normoglycemia.</sentence>
+    <sentence>For instance, in some research papers a hypoglycemic event is defined using a lower threshold of 3.33 mmol/L (∼60 mg/dl) for the glucose level, while others set the lower bound for normoglycemia at 2.22 mmol/L (∼40 mg/dl).</sentence>
+    <sentence>Likewise, in the existing literature is possible to find that hyperglycemic events are defined using from 10 mmol/L (∼180 mg/dl), 15 mmol/L (∼270 mg/dl), 16.66 mmol/L (∼ 300 mg/dl) and up to 18 mmol/L (∼325 mg/dl), which is a very dangerous level.</sentence>
+    <sentence>Narrow ranges of glycemic variability prevent multiple long-term complications of diabetes, e.g.</sentence>
+    <sentence>the oxidative stress, that contribute to increase morbidity and mortality (Marling, Shubrook, Vernier, Wiley, &amp; Schwartz, 2011; Siegelaar et al., 2010).</sentence>
+    <sentence>For on policy learning, the normoglycemic range is defined by glucose levels between 4 mmol/L to 7 mmol/L.</sentence>
+    <sentence>These tighter bounds give rise to a more difficult control task which highlights the need of addressing the long-term effects of control actions.</sentence>
+    <sentence>In the RL problem formulation, the lower and upper bounds for glucose levels are set by choosing an appropriate reward function.</sentence>
+    <sentence>In our simulation experiments, the following Gaussian reward function is used: (28) where G(t) is the instantaneous reading from the glucose sensor whereas Gx and a are the symmetry center and the amplitude of the Gaussian function r(·), respectively.</sentence>
+    <sentence>Thereby, the reward function represented in Eq (28) saturates for significant deviations from Gx.</sentence>
+    <sentence>The width of the glucose band is defined by the parameter a.</sentence>
+    <sentence>In order to enforce glucose levels between 4 mmol/L and 7 mmol/L, Gx = 5.5 and a = 1 are selected.</sentence>
+    <sentence>It is worth mentioning that these limits are not mandatory thresholds since they may be exceeded by a small amount during short periods of time.</sentence>
+    <sentence>Note that the optimal policy should generate a sequence of control actions such that the cumulative reward is maximized instead of maximizing each immediate reward.</sentence>
+    <sentence>In Fig 8, examples of different reward functions for different values of the parameter a are shown.</sentence>
+    <sentence>As can be seen, as the value of a decreases, the reward function spans a smaller interval of glucose readings and consequently the control task is more challenging.</sentence>
+    <sentence>Examples of Gaussian reward functions for different a parameters with Gx=5 Fig 8.</sentence>
+    <sentence>Examples of Gaussian reward functions for different a parameters with Gx = 5.5.</sentence>
+    <sentence>To illustrate the effect of changing the parameter a in the reward function, Fig 9 depicts glucoses profiles resulting of applying the optimal policies found by using Algorithm 1 (in Fig 1) for the same patient (simulated) under identical conditions (diet, exercise, etc.).</sentence>
+    <sentence>For a = 1.5, the control policy is acceptable (see Fig 9(a)) although rather looser when compared to the much tighter policy resulting from using a = 1 in the reward function (see Fig 9(b)).</sentence>
+    <sentence>As can be expected, the corresponding control policy is a bit more aggressive in the latter case to guarantee optimal performance.</sentence>
+    <sentence>It is worth noting that green dotted lines in Fig 9 correspond to soft thresholds for the blood glucose concentrations in the range from 4 to 7 mmol/L whereas red solid lines correspond to hard thresholds imposed to penalize hypo- or hyper-glycemic bounds.</sentence>
+    <sentence>Hereafter, Gx = 5.5 and a = 1 will be chosen unless otherwise stated.</sentence>
+    <sentence>Results obtained through Algorithm 1 for two different settings of the… Fig 9.</sentence>
+    <sentence>Results obtained through Algorithm 1 for two different settings of the parameter a for the gaussian reward function.</sentence>
+    <sentence>(a) a = 1.5; (b) a = 1.</sentence>
+    <sentence>To apply the RL framework, a remaining issue is to define the variables that made up the vector which provides a perception of the system state.</sentence>
+    <sentence>To this aim, the measured blood glucose concentration at time t (Gt) and the insulin flow rate in the previous time step Dt−1 are used to characterize the glycemic state of the patient at time t. In this way, a perception of the system state is conveniently defined through xt = (Gt,Dt−1)T. Furthermore, the scalar control action, ut, is chosen as the change to the insulin infusion rate.</sentence>
+    <sentence>An advantage of perceiving the system state xt in this way is that it only involves readily known variables, yet they are informative enough to describe the physiological state of a patient for successfully controlling blood glucose.</sentence>
+    <sentence>Obtaining a generic control policy in off line way A generic control policy for glucose regulation was obtained by simulation-based learning using the model-based algorithm presented in Fig 1 (Algorithm 1).</sentence>
+    <sentence>Patient responses to control actions were simulated using the model presented in Section 2.4 with parameters in Table 1.</sentence>
+    <sentence>To assess Algorithm 1, different meal routines were considered to obtain the corresponding generic control policies.</sentence>
+    <sentence>The dynamic effect of a meal on blood glucose behavior mainly depends of its carbohydrate contents.</sentence>
+    <sentence>Two feeding schedules indicated in Table 2 which are significantly different regarding the carbohydrate intakes are considered.</sentence>
+    <sentence>In Fig 10, the effect of carbohydrate ingestions of each meal routine (given in Table 2) in terms of the glucose absorption from the gut Gin are shown.</sentence>
+    <sentence>A meal can be understood as an external disturbance that causes blood glucose perturbations and it is useful to interpret the results.</sentence>
+    <sentence>It can be seen that the Routine II is significantly more intensive in term of carbohydrate intakes.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Feeding schedules.</sentence>
+    <sentence>Meal routine I Meal routine II Meal times (min) [180 780 960 1080] [180 300 450 660 870 1020] Carbohydrate content (g) [ 20 20 60 20 ] [ 47 16 63 31 63 31 ] Rates of glucose absorption from the gut for the feeding schedules in Table 2 Fig 10.</sentence>
+    <sentence>Rates of glucose absorption from the gut for the feeding schedules in Table 2.</sentence>
+    <sentence>(a) Gin for meal routine I; (b) Gin for meal routine II.</sentence>
+    <sentence>The glucose profiles resulting of applying the optimal policies found using Algorithm 1 for the same patient (simulated) under meal routines I and II, respectively, are given in Fig 11a and b.</sentence>
+    <sentence>In this case, the algorithm inputs are: with n0 = 5 where such that Gl and Dl are random values from intervals Gl ∈ [3,10] and Dl ∈ [0,80]; δ = 10%, γ = 0.95 and π0 is a random policy.</sentence>
+    <sentence>The changes in insulin infusion rate are performed every 6 min, whereby is used to ensure full-day trajectories.</sentence>
+    <sentence>Glucose profiles by applying the optimal generic policy found by Algorithm 1 on… Fig 11.</sentence>
+    <sentence>Glucose profiles by applying the optimal generic policy found by Algorithm 1 on a patient (virtual).</sentence>
+    <sentence>(a) Results for meal routine I; (b) Results for meal routine II.</sentence>
+    <sentence>Results depicted in Fig 11 clearly indicate that control actions needed to regulate the blood glucose levels for the Routine II is more demanding in terms of the exogenous insulin required.</sentence>
+    <sentence>However, in both cases the time profile of insulin infusion required is vividly correlated with the glucose absorption rate.</sentence>
+    <sentence>Glycemic variability for both meal routines is significantly low and both control policies exhibit outstanding performance.</sentence>
+    <sentence>It is worth noting that for different carbohydrate intakes, the blood glucose concentration is always confined within the green dot lines as can be expected for an optimal control policy.</sentence>
+    <sentence>The flexibility of modeling the policies by GP models allows combining the support sets of different generic policies, which are obtained in a separated way through different simulation experiments (see Section 2.3).</sentence>
+    <sentence>In this way, we obtain a new generic control policy π∗ based on an augmented support data set which includes the support data of policies obtained for meal routine I and II.</sentence>
+    <sentence>Thus, the new generic policy will have an outstanding generalization ability to deal with different situations that a patient may experience.</sentence>
+    <sentence>We test this new policy for meal routines in Table 2.</sentence>
+    <sentence>In Fig 12, different test experiments are shown.</sentence>
+    <sentence>Each experiment includes 125 simulations for a patient (virtual) under a meal routine (I or II) considering different degrees of variability in glycemic behavior, which is established by the σito parameter in the model discussed in Section 2.4.</sentence>
+    <sentence>Test experiments Fig 12.</sentence>
+    <sentence>Test experiments.</sentence>
+    <sentence>Each panel shows 125 resulting glucose profiles for simulated patients with variability parameter σito of 0.15, 0.25 and 0.50 under both meal routines I and II.</sentence>
+    <sentence>(a) Results for σito = 0.15 and meal routine I; (b) Results for σito = 0.25 and meal routine I; (c) Results for σito = 0.50 and meal routine I (d) Results for σito = 0.15 and meal routine II; (e) Results for σito = 0.25 and meal routine II; (f) Results for σito = 0.50 and meal routine II.</sentence>
+    <sentence>Fig 13 shows a situation where there exists quite high carbohydrate intakes spaced in time (see Fig 13(a)).</sentence>
+    <sentence>Fig 13(b) exhibits the corresponding result for this testing case.</sentence>
+    <sentence>Results obtained demonstrate that the obtained generic control policy can successfully control glycemic variability while maintaining it within the safe range (soft thresholds).</sentence>
+    <sentence>In Fig 14, the extreme situation where the patient follows a deterministic behavior is shown.</sentence>
+    <sentence>It can be seen that the policy achieves an optimal performance for meal routine I (Fig 14(a)) and routine II (Fig 14(b)).</sentence>
+    <sentence>Note the control problem becomes rather simple when the policy obtained using Algorithm 1 is applied.</sentence>
+    <sentence>In the next section, the generic policy π∗ is taken as the initial policy which will be personalized in real-time to a certain patient using the Algorithm 4.</sentence>
+    <sentence>Testing case Fig 13.</sentence>
+    <sentence>Testing case.</sentence>
+    <sentence>(a) Rate of glucose absorption from the gut of a testing meal routine; (b) Results of controlling the patient under the testing meal routine.</sentence>
+    <sentence>Deterministic case Fig 14.</sentence>
+    <sentence>Deterministic case.</sentence>
+    <sentence>(a) Results for σito = 0.0 and meal routine I; (b) Results for σito = 0.0 and meal routine II.</sentence>
+    <sentence>Real time personalization of a generic control policy via on-line interactions The main difference between off-line learning and on-line adaptation is that in the latter, the policy is modified based on the data actually generated in real-time by online interactions between the patient and the artificial pancreas which implements the Algorithm 4.</sentence>
+    <sentence>To illustrate on-line policy adaptation, the generic policy π∗ is taken as the starting point and then increasingly personalized to a specific patient upon data obtained from applying π∗.</sentence>
+    <sentence>As a proxy for a real patient, the model described in Section 2.4 is parameterized such that the policy π∗ used do not have an optimal performance.</sentence>
+    <sentence>Thus, setting Sh = 0.28 (hepatic sensitivity parameter) and considering the meal routine I (Table 2) when applying to the virtual patient, it can be seen in the results shown in Fig 15 that this initial policy exhibits an acceptable performance, but there is plenty of room for performance improving through real-time personalization.</sentence>
+    <sentence>Performance of π∗ as initial policy for a specific patient under meal routine I Fig 15.</sentence>
+    <sentence>Performance of π∗ as initial policy for a specific patient under meal routine I.</sentence>
+    <sentence>Results obtained for the personalization strategy using the Algorithm 4 during five days (top-down) are summarized in Fig 16.</sentence>
+    <sentence>The algorithm inputs are: the generic policy π∗ with its support data set , ρ = 1, β = 2, γ = 0.95 and the reward function r(·) is the one described in Section 4.1.</sentence>
+    <sentence>Each panel in Fig 16 corresponds to a daily run of Algorithm 4.</sentence>
+    <sentence>It is rather remarkable the fast evolution from a safe, yet sub-optimal generic policy π∗ to an optimal personalized control policy .</sentence>
+    <sentence>It can be seen that after the third day of policy personalization, only minor changes are perceived in the patient’s glycemic variability when the artificial pancreas implements the adapted control policy.</sentence>
+    <sentence>Results of five days of a policy personalization carried out by Algorithm 4,… Fig 16.</sentence>
+    <sentence>Results of five days of a policy personalization carried out by Algorithm 4, starting from π∗, for a (virtual) patient under the meal routine I.</sentence>
+    <sentence>Now, let us assume that the same (virtual) patient suddenly changes his diet after the day #5 and adopts the meal routine II.</sentence>
+    <sentence>Results obtained when the patient is controlled using the current policy are shown in Fig 17 (note that on-line policy adaptation is not yet carried out).</sentence>
+    <sentence>As can be seen, the version of the specialized policy is underperforming to manage the glucose variability of the patient (virtual).</sentence>
+    <sentence>To adapt the policy to the new feeding pattern, the Algorithm 4 is applied.</sentence>
+    <sentence>In Fig 18, results obtained during on-line policy learning over five consecutive days are shown.</sentence>
+    <sentence>Similarly to Fig 16, each panel of Fig 18 shows a daily run (top-down).</sentence>
+    <sentence>The improvement of the policy as the adaptable artificial pancreas interacts with the patient is quite remarkable.</sentence>
+    <sentence>Performance of πc5∗ for a specific patient under meal routine II Fig 17.</sentence>
+    <sentence>Performance of for a specific patient under meal routine II.</sentence>
+    <sentence>Results of the next five days of a policy personalization carried out by… Fig 18.</sentence>
+    <sentence>Results of the next five days of a policy personalization carried out by Algorithm 4, starting from , for a virtual patient under the meal routine II.</sentence>
+    <sentence>Again, let us assume that the patient suddenly changes his feeding routine such that carbohydrate intakes follow the profile shown in Fig 19a.</sentence>
+    <sentence>If the control policy is applied results obtained are given in Fig 19b, which exhibits that the artificial pancreas is underperforming.</sentence>
+    <sentence>Again, if on-line policy learning is carried out over the next consecutive days, optimal control of glycemic variability is restored (see Fig 20).</sentence>
+    <sentence>Change in feeding habits Fig 19.</sentence>
+    <sentence>Change in feeding habits.</sentence>
+    <sentence>(a) Rate of glucose absorption from the gut for the new diet; (b) Performance of for the virtual patient under the new feeding routine.</sentence>
+    <sentence>Results of the next two days of a policy personalization carried out by… Fig 20.</sentence>
+    <sentence>Results of the next two days of a policy personalization carried out by Algorithm 4, starting from , for a virtual patient under the latter meal routine.</sentence>
+  </section>
+  <section name="Finals remarks">
+    <sentence>A strategy for on-line learning and real-time adaptation of a control policy for personalization of an artificial pancreas to a specific patient has been presented.</sentence>
+    <sentence>This development is an important step forward towards an individualized therapy in diabetes management.</sentence>
+    <sentence>Unlike other adaptive approaches, policy personalization proposes a promissory alternative which allows a real-time continuous interaction with the patient whilst critical patient data are used to update on-line the model of a specific patient dynamics.</sentence>
+    <sentence>This enables that the control policy can be adapted on the fly according to a given patient metabolism and lifestyle.</sentence>
+    <sentence>By considering patient-specific data and working with continuous data stream without requiring any state discretization, the on-line personalization policy can be applied regardless which control strategy was used to define the initial policy.</sentence>
+    <sentence>That is, the initial policy would be obtained using reinforcement learning or mp-MPC.</sentence>
+    <sentence>However, Bayesian active learning algorithm and the sparsification algorithm play a key role in favoring our RL formulation.</sentence>
+    <sentence>Moreover, a compact representation of the control policy modeled based on GPs which greatly facilitates real-time computing is proposed.</sentence>
+    <sentence>This is the main advantage of the proposed approach for its implementation in wearable devices.</sentence>
+    <sentence>Blood glucose control is intrinsically a regulation problem for which we have proposed our approach based on the RL framework unlike the proposal made in De Paula and Martínez (2012b) which belongs to the field of dynamic programming and was developed to solve mainly an episodic learning task in a multi-modal setting.</sentence>
+    <sentence>Also, in De Paula and Martínez (2012b) learning is based on Lebesgue sampling due to control modes whereas in the present work Riemann sampling is used.</sentence>
+    <sentence>The Bayesian active learning strategy in our previous work (De Paula &amp; Martínez, 2012b) was developed for a simulation-based schema which is not apt enough for policy adaptation in real-time interactions.</sentence>
+    <sentence>Therefore, in the present work an improved BAL algorithm capable of interacting in real-time with a certain patient is proposed.</sentence>
+    <sentence>Also, the present development includes a sparsification algorithm that allows working with a limited number of data for data-driven modeling of the glucose dynamics.</sentence>
+    <sentence>These features makes policy adaptation a computational tractable problem which favor working in real-time.</sentence>
+    <sentence>Unlike an expert system, policy personalization is carried out without any prior expert knowledge beyond the initial control policy used as input to the algorithm.</sentence>
+    <sentence>One of the major limitations of the research work made so far lies in resorting to in silico patient experimentation for assessing policy personalization.</sentence>
+    <sentence>Therefore is imperative to test policy adaptation on real patients, or animals, for which is mandatory working as part of a multidisciplinary team.</sentence>
+    <sentence>In turn, this limitation encourages a direction for our future work.</sentence>
+    <sentence>On the other hand, the RL ensures convergence even under conditions for constrained action selection (Sutton &amp; Barto, 1998).</sentence>
+    <sentence>Therefore, it is interesting to consider the possibility of enhancing our proposal by accommodating expert knowledge to make sense of the personalized policy so that it can be better understood by physicians, and on that basis safety constraints can be added.</sentence>
+    <sentence>Current research efforts focus on three avenues.</sentence>
+    <sentence>First, we are working towards integrating the personalized policies of patients in a homogeneous group in a “grand” policy which can be used as a robust initial policy for a new patient in the same group.</sentence>
+    <sentence>Secondly, the ambitious idea of an autonomic artificial pancreas is being pursued.</sentence>
+    <sentence>In this regard, self-optimization (policy personalization) is just one of the key functions.</sentence>
+    <sentence>Also, self-monitoring and self-diagnostic functionalities are being developed.</sentence>
+    <sentence>Finally, prototyping policy personalization so it can be readily used in tablets and smart-phones is an important objective for wide dissemination of the policy personalization idea.</sentence>
+    <sentence>Appendix A.</sentence>
+    <sentence>Calculation when augmenting a data set Whenever a support set is augmented by adding a new data point , the linear independence measures δi for all must be updated (Engel et al., 2004).</sentence>
+    <sentence>This involves updating ai,Ki−1 and ki for every i-th point.</sentence>
+    <sentence>Thus, the Ki must be extended by a row/column and ki by a single value, such that (A.1) (A.2) where with ⧹ .</sentence>
+    <sentence>With the Eqs.</sentence>
+    <sentence>(A.1) and (A.2), the inverse kernel matrix is given by (A.3) Then, the independence measure δi for all point is given by (A.4) being (A.5) where y .</sentence>
+    <sentence>Appendix B.</sentence>
+    <sentence>Calculation when replacing an old data by a new one in a data set Every time that a jth data point is replaced by a new data in , the independence measure δi for all point must be updated (Nguyen-Tuong &amp; Peters, 2011a).</sentence>
+    <sentence>This involves a manipulation of the jth row/column of Ki and the jth value of k, this is (B.1) (B.2) where , .</sentence>
+    <sentence>Then, the independence measures must be updated as in Eq (A.4), where (B.3) while can be recalculated using the following update rule (B.4) where (B.5) where and rowj[M] denotes the jth row of a given matrix M. Appendix C. Predictions with uncertain inputs In the following we refer to the results given in Deisenroth et al.</sentence>
+    <sentence>(2009) of how to predict with GPs for uncertain inputs.</sentence>
+    <sentence>Considerer the problem of predicting a function value h(x∗) for an uncertain test input which is Gaussian distributed , where h ∼ GP with a square exponential (SE) covariance function k(·,·) (as in Eq (8)), correspond to seeking the exact predictive distribution: (C.1) which is not a Gaussian distribution.</sentence>
+    <sentence>The mean and the variance of the predictive distribution p(h(x∗)—μ,Σ) in Eq (C.1) are given by Eqs.</sentence>
+    <sentence>(6) and (7), respectively.</sentence>
+    <sentence>When a GP model regards a square exponential (SE) kernel, kSE (·,·), the mean μ∗ and the variance of predictive distribution in Eq (C.1) can be computed in close form.</sentence>
+    <sentence>Approximating the exact predictive distribution with a Gaussian, which possesses the same mean and variance, the mean μ∗ is given by: (C.2) with , where here, Λ is a diagonal matrix with the characteristic length-scales.</sentence>
+    <sentence>The variance of the predictive distribution of Eq (C.1) is given by: (C.3) where with .</sentence>
+    <sentence>Note, that the predictive mean μ∗ and the predictive variance depend explicitly on the mean, μ, and covariance matrix, Σ, of the uncertain input x∗.</sentence>
+  </section>
+</article>

@@ -1,0 +1,345 @@
+The Intelligent Water Drop (IWD) algorithm is inspired by the movement of natural water drops (WD) in a river.
+A stream can find an optimum path considering the conditions of its surroundings to reach its ultimate goal, which is often a sea.
+In the process of reaching such destination, the WD and the environment interact with each other as the WD moves through the river bed.
+Similarly, the supply chain problem can be modelled as a flow of stages that must be completed and optimised to obtain a finished product that is delivered to the end user.
+Every stage may have one or more options to be satisfied such as suppliers, manufacturing or delivery options.
+Each option is characterised by its time and cost.
+Within this context, multi–objective optimisation approaches are particularly well suited to provide optimal solutions.
+This problem has been classified as NP hard; thus, this paper proposes an approach aiming to solve the logistics network problem using a modified multi–objective extension of the IWD which returns a Pareto set.
+Artificial WD, flowing through the supply chain, will simultaneously minimise the cost of goods sold and the lead time of every product involved by using the concept of Pareto optimality.
+The proposed approach has been tested over instances widely used in literature yielding promising results which are supported by the performance measurements taken by comparison to the ant colony meta-heuristic as well as the true fronts obtained by exhaustive enumeration.
+The Pareto set returned by IWD is computed in 4 s and the generational distance, spacing, and hyper–area metrics are very close to those computed by exhaustive enumeration.
+Therefore, our main contribution is the design of a new algorithm that overcomes the algorithm proposed by Moncayo-Martínez and Zhang (2011).
+This paper contributes to enhance the current body of knowledge of expert and intelligent systems by providing a new, effective and efficient IWD-based optimisation method for the design and configuration of supply chain and logistics networks taking into account multiple objectives simultaneously.
+Increasing competition in today’s global market has forced enterprises to configure and evaluate their supply chain (SC) and many logistics providers have recognised that an optimal SC design (SCD) is a paramount part for any business strategy.
+When the SC is designed, one of the most important objectives is to deliver products to customers in due time at the lowest possible cost (Simchi-Levi, Kaminsky, & Simchi-Levi, 2008).
+This is important because an optimal SCD results in cost reduction by 10% and decrements in service time by 40% (Harrison, 2001).
+The design process is not easy due to several factors, e.g.
+market expansion, wide range of suppliers, customers’ waiting time, and competitors.
+Although those factors are important, the cost of goods sold (CoGS) and the lead time (LT) (or time to market) have been recognised as the most important objectives to optimise (Aslam & Ng, 2010; Ho, Xu, & Dey, 2010).
+Traditionally, the SC is modelled as a network in which the nodes represent facilities such as suppliers, manufacturing plants, warehouses, retailers, and customers.
+The SCD problem has been limited to select the number of facilities and determine the amount of units to flow among them.
+Moreover, it is assumed that the suppliers, plants, warehouses, and retailers have been selected.
+This severely reduces the opportunity to optimise the overall SC cost because the selected option may increase both CoGS and LT, see Chandra and Grabis (2007); Goetschalckx (2011); Shapiro (2007) to check a comprehensive list of these models.
+On the other hand, the SC can be represented as a Bill of Materials (BOM) in which each node represents a supplying, a manufacturing, or a delivery stage.
+Each stage could be performed by one or more options, e.g.
+a component, represented by a supplying stage, could be supplied by one or more suppliers; a sub or final assembly, represented by a manufacturing stage, could be assembled in one or more manufacturing plants or production lines; and a customer, represented by a delivery stage, could be the transportation mode used to deliver the product.
+Therefore, the problem is to determine: from which supplier should each component be obtained?
+; where will each product be assembled?
+; and how should each product be delivered to the customer?
+The complexity of the problem increases by the fact that the selected options must minimise both the CoGS and the LT for a family of products.
+Those objectives are conflicting with each other since a reduction in time increases the cost, e.g.
+suppose two options which can perform a stage, if the cost of option one is greater than the cost of option two, then the time of the option one is less than the time of the second option (Cheshmehgaz, Desa, & Wibowo, 2013).
+When the SCD problem is modelled as a BOM, the resulting problem is a combinatorial optimisation problem (COP) in which the solution is not based on a sequence but on the selection of variables that “best” perform the objective functions, i.e.
+the solution of this problem is to select the subset of options (or variables) that minimise the CoGS and LT.
+This kind of COP has been categorised as NP-hard, thus to find exact solutions in polynomial time is difficult (Garey & Johnson, 1979).
+Exhaustive enumerations could be used to find the exact solutions but to compute all the possible combinations is not practical.
+More efficient methods should be used to find the “best” combination.
+Metaheuristics have been widely used to find near–optimal solutions for hard COP in short periods of time (Talbi, 2009).
+Graves and Willems (2005), Huang, Zhang, and Liang (2005), and Wang and Shu (2007) solved the problem minimising only the CoGS using dynamic programming, genetic algorithm, and fuzzy sets, respectively.
+Moncayo-Martínez and Zhang (2011) minimised CoGS and LT, simultaneously, and Moncayo-Martínez and Zhang (2013) minimised the cost of safety stock using Ant Colony Optimisation (ACO), nevertheless their results are not compared to any other optimisation method to prove the efficiency of the ACO-based algorithm and solved only one instance.
+Hence, a metaheuristic called Intelligent Water Drop (IWD) that is inspired by the flow of rivers is proposed to solve the CoGS and LT in assembly SC.
+This natural behaviour has been applied successfully to a number of theoretical problems such as the travelling salesman problem and multiple-knapsack problem (Alijla, Wong, Lim, Khader, & Al-Betar, 2014; Shah-Hosseini, 2007; 2008; 2009).
+Industrial applications include job-shop scheduling (Niu, Ong, & Nee, 2012), vehicle routing problem (Booyavi, Teymourian, Komaki, & Sheikh, 2014; Kamkar, Akbarzadeh-T, & Yaghoobi, 2010), trajectory planning in aerial vehicles (Duan, Liu, & Wu, 2009), design of irrigation systems (Hendrawan & Murase, 2011), real-life waste collection problem (Islam & Rahman, 2013), economical load dispatch (Rayapudi, 2011), parallel processor scheduling Mokhtari (2015), and capacitated vehicle routing problem which is solved by a novel IWD and cuckoo search algorithm (Teymourian, Kayvanfar, Komaki, & Zandieh, 2016).
+The proposed IWD-based algorithm minimises two objectives and the Pareto optimality criterion is used to evaluate them.
+Computing a Pareto set to compare the performance of two algorithms is a standard method in multi-objective optimisation (Coello, Lamont, & Veldhuizen, 2006; Helbig & Engelbrecht, 2013).
+This paper contributes in two aspects: (a) as nowadays the focus in research is problem-oriented rather than promoting certain algorithm (Blum, Puchinger, Raidl, & Roli, 2011; Blum & Roli, 2003), an IWD-based algorithm is proposed to solve the bi-objective SCD problem which outperforms the multi-objective metrics reported when ACO is used; and (b) the original IWD algorithm is modified to solve a bi-objective problem.
+In the last decade researchers have contributed to the body of knowledge of expert and intelligent systems by focusing on developing and applying meta-heuristics and swarm-based algorithms for complex supply chain configuration and logistics problems.
+In such a context, our paper provides an efficient methodology based on the IWD algorithm for the complex multi-objective optimisation of logistics networks, making an analogy between the methodology and the particular application.
+This paper is organised as follows.
+Relevant literature is reviewed in Section 2.
+Theory of the IWD is provided in Section 3, as well as the problem representation and the proposed solution algorithm.
+Seven instances are solved in Section 4 and the results are reported in Section 5.
+Finally, conclusions are drawn in Section 6.
+The scope of SCD problem has been limited to minimise both the cost of opening a number of facilities (e.g.
+suppliers, manufacturing plants, and warehouses) and the cost of transporting the number of components, sub and final assemblies that flow among the facilities (Melo, Nickel, & Saldanha-da Gama, 2009; Mula, Peidro, Díaz-Madroñero, & Vicens, 2010).
+One important drawback is that it is assumed that the suppliers, manufacturing plants and warehouses have been selected, i.e.
+there is only one option to perform the operations of supplying, manufacturing, and delivery.
+Some examples of those models are proposed by Amiri (2006), Tsiakis and Papageorgiou (2008), and Ko and Evans (2007).
+Examples of multi-objective optimization models include: Guillen, Mele, Bagajewicz, Espuna, and Puigjaner (2005) maximised the net present value, minimised demand dissatisfaction, and the financial risk; Franca, Jones, Richards, and Carlson (2010) evaluated the tradeoff between profit and quality; Cardona-Valdes, Alvarez, and Ozdemir (2011) minimised the total cost and service levels; Yeh and Chuang (2011) optimised the transport cost, lead time, quality and green factor when supplier are selected; and Che and Chiang (2010) considered three evaluation criteria.
+The above approaches developed a mixed-integer programming (MIP) model and computed a Pareto set which includes a set of solutions or SCDs.
+Recently, the SC has been modelled as a BOM.
+Every element of BOM, represents a stage that can be performed by one or more options.
+Graves and Willems (2005); Graves and Willems S. (2001) modelled the SC as a BOM to minimise the total SC cost which includes the CoGS and the on-hand and in-transit inventory.
+They developed a dynamic programming (DP) algorithm to solve the single-objective MIP model and solve a widely used notebook SC.
+To cope with the disadvantage of high computational effort of DP, Huang et al.
+(2005) proposed a genetic algorithm (GA) to minimise the total SC cost.
+The results equal the ones returned by DP when the notebook SC is solved.
+Li and Womer (2008) added resource constraints, i.e.
+the possible options which can perform a stage have limited resources (e.g.
+suppliers have limited capacity).
+They implemented an approach based on constraint programming (CP).
+Wang and Shu (2007) included uncertainty in the options cost and time using fuzzy sets (FS).
+Their model was solved by a GA. You and Grossmann (2010) focused on safety placement under demand uncertainty in the chemical industry, Lagrangian relaxation and piecewise linear approximation are proposed to solve the problems.
+Huang Zhang (2005) focused on the effect of quantity discounts and demand variability when a generic BOM is used.
+Huang, Huang, and Newman (2011) studied the effect of coordinating the price and order quantity when the SC is modelled as a BOM.
+All these approaches solved the notebook SC proposed in Graves and Willems (2005) The described approaches minimised the total SC cost by selecting one option per stage that “best” performs the objective.
+However, the lead time is as important as the costs of both CoGS and inventory when the SC is designed (see Section 1).
+Nepal, Monplaisir, and Famuyiwa (2011) added a second objective (compatibility firm) to the single-objective model proposed by Graves and Willems (2005).
+The compatibility firm measures the SC alliance, i.e.
+the compatibility of the players (selected options) in the SC.
+Therefore, an option to perform a stage is selected not only based on the cost related objectives but also on its compatibility index which encompasses: structural factors.
+e.g.
+cultural alignment, information sharing, and cooperation; managerial factors.
+e.g.
+compatibility in strategic goals and conflict management technique; and financial factors, e.g.
+profit margin and return on assets.
+Each option selected to perform a stage has a compatibility index which is computed by fuzzy logic.
+The total compatibility index is computed as the sum of the individual’s indexes.
+The bi-objective model is reduced to a single-objective one by weighted sum method and the model is solved by standard GA.
+Although, weighted sum method is straightforward implemented, it has difficulty in finding solutions uniformly distributed over the solution space (Konak, Coit, & Smith, 2006).
+Moreover, the model does not account for time to market metrics, i.e.
+the proposed solution could minimise both cost and compatibility firm but there could be a solution that minimises the lead time as well.
+Moncayo-Martínez and Zhang (2011) minimised both CoGS and LT using ACO but they solved one instance and their results were not compared with any other approach.
+They tuned the ACO parameters to generate a Pareto set with solutions with low CoGS and short LT. Yuce, Mastrocinque, Lambiase, Packianather, and Pham (2014) solved the same bi-objective problem by means of the Bees algorithm and its modified version, obtaining better performance compared to the ACO.
+However they solved only one instance.
+Moncayo-Martínez, Ramírez-López, and Recio (2015) used the IWD algorithm to optimise inventory levels in an assembly supply chain showing promising results compared to the ACO algorithm although the authors tested the IWD algorithm using only one case study.
+Our approach does not attempt to minimise inventory cost but CoGS.
+Moreover, they use a hybrid approach based on dynamic programming and IWD to solve the bi–objective problems.
+Thus, medium size instances could be solved.
+In order to confirm and extend the results, in this paper we propose a multi-objective IWD-based algorithm to optimise a SCD problem when the SC is modelled as a BOM, using seven case studies and comparing the results to those returned by ACO and exhaustive enumeration.
+On the other hand, there is no published attempt to solve the bi-objective SCD problem by means of IWD as shown in recent surveys specialised in SC design problem and published by Chandra and Grabis (2007); Mula et al.
+(2010); van der Vaart and van Donk (2008).
+In relation to the multi-objective optimisation using IWD in theoretical or practical problems, Niu, Ong, and Nee (2013) solved the job shop problem minimising the makespan, tardiness, and mean flow time of the schedules.
+The objective of their research is to find the best Pareto non-dominated set.
+Moreover, Booyavi et al.
+(2014) and Teymourian et al.
+(2016) have applied the IWD algorithm and proposed an enhanced version with the cuckoo search algorithm for solving the vehicle routing problem.
+However they performed a single-objective optimisation.
+The IWD metaheuristic is a novel swarm-based algorithm which imitates the natural process between the water drops and the river bed.
+This metaheuristic was first proposed to solve the travelling salesman problem with promising results since it converges quickly to optimal solutions (Shah-Hosseini, 2007).
+The basic idea embedded in IWD metaheuristic is that water drops follow an ideal straight line from their origin to their destination (e.g.
+lake, a sea, or a bigger river) because of the gravitational force.
+In reality, this is not possible since there are obstacles and barriers that force drops to look for an unblocked path.
+In the IWD algorithm: (a) every water drop has two properties: velocity and soil that change during its trip to the destination; (b) the environment or river is represented by a set of paths that are full of soil; and (c) a water drop is supposed to flow in discrete steps, i.e.
+the problem is represented by a graph where V is the set of vertices and E is the set of edges, thus the water drop travels from vertex to vertex until it has found the destination.
+While a water drop travels from a vertex to another, its velocity is increased by an amount that is non-linear proportional to the inverse of the soil over the edge that links the two vertices.
+Additionally, an amount of soil from the edge (path), joining the two vertices, is removed and the water drop gathers the removed soil.
+The amount of soil is non-linearly proportional to the inverse of the time needed for the water drop to pass from a vertex to another.
+The time is proportional to the velocity of the water drop and inversely proportional to the distance between the two vertices.
+A water drop chooses the following vertex to go based on a probability decision rule.
+This rule states that the probability of a water drop to select a vertex is inversely proportional to the soil of the edge that links two vertices, thus edges with lower soil have higher chances to be selected by the water drop.
+Once a water drop has selected the next vertex, the soil over the vertex and the soil from the water drop are updated using an updating parameter which is a small positive number less than one.
+The water drop stops until it reaches the termination condition.
+In this way, a water drop builds a sequence of vertices that returns the total objective value (e.g.
+cost, distance, etc.).
+Using the objective value of all the water drops, the iteration-best solution is found and the soil from the edges that form the solution is updated by a global updating parameter which is chosen between [0, 1].
+Algorithm 1 outlines the IWD meta–heuristic.
+Basically, it is divided into two parts: (a) solution construction in which every water drop visits all the vertices and its velocity and soil are updated by the local updating parameter, then some amount of soil is removed from the edges as well (lines 6–15); and (b) total best solution in which the solutions generated by all the water drops are compared to find the iteration best solution.
+If it is “better” than the total best solution, then it is replaced by the iteration best solution.
+Some amount of soil from the edges in the total best solution is updated using the global updating parameter (lines 16–19).
+Algorithm 1.
+Single-objective IWD metaheuristic.
+As our proposed algorithm minimises two objectives, CoGS and LT, the concept of Pareto optimality criterion is applied to determine which solutions are “better” than others.
+Those solutions build the solution set and are called non–dominated solutions.
+A solution of this kind is one in which any improvement in one objective can only take place if at least one of the other objectives worsens.
+Hence, a solution (in our case and ) dominates another solution represented by if and only if .
+The non-dominated solutions form the solution set represented by where Ω is the feasible solution space.
+Mathematical representation In order to mathematically represent the bi-objective optimisation problem, we add a second objective function to the single-objective model proposed by Graves and Willems (2005); Graves and Willems S. (2001).
+They represented the SC as a graph where the set of vertices represents the supplying, manufacturing, and delivery stages (i), thus and I is the total number of stages.
+The set of edges represents the relationships between two stages.
+These relationships could be between: a supplying and a manufacturing stage, two manufacturing stages, or a manufacturing and a delivery stage, thus .
+The subset of delivery stages is defined as DS ⊆ V. This is important since the products’ demand is generated in those stages.
+Every stage i has different options which can perform the stage.
+The cost and time of those options are cij and tij, respectively.
+In order to select an option to perform a stage, a binary variable is used.
+This variable is defined as if the option j performs stage i.
+Otherwise, .
+The CoGS is modelled by Eq (1).
+Graves and Willems (2005); Graves and Willems S. (2001) defined it as the value of goods sold during the company’s interval time of interest ξ.
+(1) is the demand at stage i, and Ci is the cost of the selected option at stage i.
+The lead time at stage i (LTi) is defined as the time of the selected option to perform the stage (Ti) plus the maximum lead time of its preceding stages i′.
+Formally, the lead time is defined as follows .
+The lead time at the delivering stages is known as the time to market, see Eq (2).
+We add it to the single objective model.
+(2) We minimise Eqs.
+(1) and (2) subject to Eqs.
+(3)–(7).
+We use the common formulation used in literature when the SC is represented as a BOM.
+The SC is designed when Eqs.
+(3), (4) and (6) are solved, i.e.
+when the values of all the binary variables (yij) are known as well as when the time (Ti) and cost (Ci) of the stages are set.
+Eq (5) computes the lead time for all the stages and Eq (7) warranties yij can only take the values of 0 or 1.
+(3) (4) (5) (6) (7) 3.2.
+Proposed IWD-based algorithm In order to solve the SCD problem, the IWD algorithm creates R rivers (representing the number of iterations), each one with D water drops, .
+A water drop solution is a subset Sd of options which perform the stages.
+stands for the value of Eqs.
+(1) and (2) generated by subset of options selected by the water drop d. In every iteration (one per river), each river r creates a solution set which contains all the non-dominated solutions.
+It is said that dominates if (LT ≤ LT′)∧(CoGS ≤ CoGS′) and (LT < LT′)∨(CoGS < CoGS′).
+In order to add sd to the SSr, the last condition, called Pareto optimality criterion, must be proved for every sd generated by river r. The final output of the algorithm is the last solution set .
+Table 1 is an analogy between the elements of the IWD algorithm and those of the SCD problem.
+Table 1.
+Analogy between elements of IWD and SCD.
+Element IWD SCD (i, j) an edge that connects vertex i to vertex j. i is a stage and j is an option which can perform the stage (j ∈ i).
+Number of rivers R > 1 Water drop (d) d visits all vertices and has to decide which vertex j to go while d has just visited vertex i. d visits all stages and selects the option j to perform stage i.
+Soil – ϕij amount of soil of the edge (i, j), thus soil is deposited in edges.
+amount of soil of the option j which can perform the stage i.
+Soil – ϕd amount of soil of the water drop d. Velocity – vd velocity of the water drop d. Neighbourhood set of nodes i that have not been visited yet.
+set of options j which can perform stage i, (j ∈ i).
+Water drop solution (Sd) a sequence of visited node .
+a set of selected options to perform the stages .
+Algorithm Solution (SS) total best solution built by all the water drops of the river.
+a solution set (Pareto front) built by every the rivers.
+Probability (pij) probability that d goes to the vertex j if it is in vertex i. probability of selecting option j to perform stage i. Probabilistic decision rule The larger the value of pij, the greater the chances to select j. Heuristic value (HVij) customised according to the problem.
+we proposed .
+In the first part of the proposed algorithm, every water drop creates a sd.
+To do so, d is placed in a stage i and then the probability that d selects j: j ∈ i is computed by Eq (8), where θ is a very small constant to avoid zero division.
+The value of pij depends on the amount of soil of j (ϕij), thus the larger the value of ϕij, the less the chance j is selected.
+(8) The value of ϕij could be equal or greater than zero.
+On the other hand, when ϕij < 0, we compute to get all the values of ϕij ≥ 0.
+Once every pij has been computed, the selection of the option j to perform stage i is based on a probabilistic decision rule.
+This rule is used to allow water drops to look for new paths (or trying new options) and avoid stagnation as well as explore more options.
+Thus, the option j with the highest probability pij is not always selected.
+As general rule, the larger the value of pij is, the greater the chance to select j to perform i while the options with lower pij still have possibilities to be selected and explore new solutions.
+The value of the binary variable yij of the selected option j is set to 1 and it is stored in the selected options list .
+After that, the water drop velocity is updated using Eq (9); the increments of the option soil are updated by Eq (10); the soil from the option j (ϕij) is updated as well as the water drop soil ϕd by Eq (11) where ρn is the local updating parameter.
+(9) (10) (11) Notice that the time, a water drop spends in option j, is (Eq (10)), to weigh the time and cost of the option.
+When a water drop d visits all the stages i, the values of Eqs.
+(1) and (2) are computed based on selected options Sd, i.e.
+is known.
+In the second part of the algorithm, the river r creates a solution set SSr applying the Pareto optimality criterion to all thus the non-dominated sd are added to the .
+Finally, the soil of the options j that belong to a non-dominated sd is updated using a global updating parameter (ρw), Eq (12).
+(12) Eqs.
+(8) –(12) are the common equation used by IWD, e.g.
+Shah-Hosseini (2009), Niu et al.
+(2012), and Islam and Rahman (2013).
+Algorithm 2 is a summary of the proposed IWD algorithm.
+The first part, in which every water drop selects an option per stage, is carried out by lines 6–25, thus is created.
+So as to create a solution every drop d visits every stage i to select an option j.
+While the drop d is on a stage i, d computes pij for every j (lines 10–12).
+Before going to the next stage the probabilistic decision rule is applied to select j to perform i, i.e.
+the variable yij is set to 1; the increments of soil and velocity are computed and updated (lines 13–16); as well as the selected option j is stored in drop’s solution Sd (lines 17–18).
+Once the drop has selected an option to every stage, the cost (Ci) and time (Ti) per stage is computed; then the lead time (LTi) can be computed as well (lines 20–23).
+Finally, the drop’s solution can be calculated .
+Algorithm 2.
+Proposed algorithm to solve the SCD problem.
+Once, each water drop has computed the solution set of the river r (SSr) is built by the non-dominated sd, this is carried out by lines 26–31.
+The output of the algorithm is the solution set generated by the last river (line 33).
+To test the algorithm, seven instances are solved, shown in Fig 1.
+Instances 1, 2, and 4 are taken from Graves and Willems (2005).
+They represent a notebook SC in which two notebooks are sent to two different markets.
+The notebooks share the main assembly (called notebook assembly) which is assembled using a circuit board assembly and several components.
+The only difference between the two computers is the cover colour that could be either gray or blue.
+The blue notebook, instance 1, is sold at the US market.
+The gray notebook, instance 2, is sent to the US and Export markets.
+In instance 4, the two notebooks are represented.
+Fig 1.
+Instances.
+Instance 3 appears in Graves and Willems (2000).
+It describes a digital capture device (the final assembly) which mainly consists of a charger coupled device, a circuit board assembly, and local accessories.
+The final assembly is sent to a Central Distribution centre and then supplied to US and export demand.
+A bulldozer SC is depicted in instance 5 (Graves & Willems, 2003).
+The main assembly encompasses: (a) a common subassembly in which the transmission, drivetrain and the brake system are assembled; (b) a chassis; and (c) the dressed-out engine.
+The final assembly is assembled by the main assembly, the track roller frame, and the suspension group.
+This instance has no delivery stages and the stages have two options that could perform it.
+Instances 6 and 7 represent a tractor SC with three products Wheel Loader (WHL), Track Loader (TRL), and Track-Type Tractor (TTT).
+The three products share the main assembly which consists of a transmission, an engine and a chassis.
+When a shovel and a suspension with wheels are attached to the main assembly, WHL is produced.
+when a blade, a track roller frame, and the suspension is attached to the main assembly a TTT is produced.
+The TRL is similar to the TTT but instead of a blade a shovel is attached to the main assembly.
+The reader is encouraged to check the references in Fig 1 to know the values of the time (tij) and cost (cij) for all the options in every stage.
+We provide a summary of the characteristics of the instances in Table 2.
+Table 2.
+Summary of the seven instances.
+Instance Productsa Stages i (V) Options Edges Solutionsc ξ Demand sup man delb (j) (E) Product Customerd μ 1 1 9 3 1 26 12 3072 250 1 1 125 2 1 9 3 2 28 13 6144 250 1 1 200 1 2 75 3 1 8 7 2 32 16 12,288 250 1 1 15 1 2 4 4 2 10 4 3 33 16 24,576 250 1 1 200 1 2 75 2 1 125 5 1 14 8 0 44 21 4,194,304 250 1 0 5 6 3 18 11 9 76 37 2.74 × 1011 250 1 1 20 1 3 12 1 4 23 2 2 10 2 4 32 3 1 21 3 2 9 3 3 17 3 4 6 7 3 18 11 9 105 37 1.28 × 1016 250 the same as 6 a The products represent the final assembly, i.e.
+a manufacturing stage.
+b The subset of delivery stages is represented by D ⊂ V. c Solutions = ∏iJi, where Ji is the number of options which can perform the stage i. d This are the delivering stages, a customer could ask for more than one product.
+The values of the static parameters are tuned through different combinations and are based on theoretical studies and similar reported studies like Shah-Hosseini (2008); 2009).
+A multi–objective approach to solve a job–shop problem set the values of to obtain optimum solution (Niu et al., 2013).
+The variable parameters are user selected and they should be tuned experimentally (Shah-Hosseini, 2008; 2009).
+In our case, we set to and according to the value of the CoGsS and LT in each instance.
+The heuristic parameter HV is adjusted according to the value of time and cost in each stage.
+Therefore, the values of these parameters are adjusted according to the value of CoGS and LT of the instance.
+The algorithm runs using 10 rivers with 450 water drops each one.
+and are set to compare the outputs to the results generated by the ACO-based algorithm, proposed by Moncayo-Martínez and Zhang (2011), in which 30 ant colonies are created.
+The algorithm was programmed using Java and a Lenovo T530 computer with a Core i7 processor at 2.90 GHz and 4GB of RAM memory.
+Results Every instance is solved running the algorithm thirty times using and then it is run again thirty times setting and .
+The average CPU time is computed as well as the average value of five multi-objective optimisation metrics (Coello et al., 2006).
+(a) Spacing (S).
+It measures the distribution of solutions throughout the non-dominated solutions, i.e.
+it measures how well the solutions in the solution set are spread.
+A value of zero means all the solutions within the solution set are equidistantly spaced.
+(b) Generational difference (GD).
+This is a way to test the distance (i.e.
+how far) the true Pareto set is from the solution set SS.
+It is clear that the smaller the GD value, the closer the SS is from true Pareto set.
+(c) Hyperarea (H).
+It relates the covered area by the SS to area covered by the true Pareto set.
+In our bi-objective problem, H is the summation of all the rectangle areas bounded by the reference point .
+(d) Hyperarea ratio (HR).
+It measures the ration of the area of coverage of SS to the true Pareto set (tPS) objective space, thus the optimum value of HR is one.
+The average value of those metrics is shown in Table 3 when the IWD is used and in Table 4 when ACO is run.
+The objective is to prove that IWD algorithm outperforms the ACO algorithm.
+Table 3.
+Results of the IWD-based algorithm and exhaustive enumeration.
+IWD-based algorithm Exhaustive enumerationa Instance CPU time (ms) S H (× 106) CPU time GDb S H (× 106) HRc CPU time GDa S H (× 106) HRc 1 1105 125,328 4561 85 11,067 111,484 4556 0.9987 458 10,298 117,594 4563 1.0208 2 1236 247,613 11,277 98 44,117 307,666 11,290 1.0012 733 30,747 266,074 11,290 1.0083 3 4456 142,298 2317 138 3922 142,852 2318 1.0006 1532 4708 142,526 2318 1.0010 4 15,327 379,380 16,380 143 203,919 671,619 16,464 1.0051 2522 159,347 391,203 16,443 1.0039 5 – – – 296 – 70,400 4754 – 2680 – 70,449 13,272 – 6 – – – 1045 – 163,811 6962 – 4456 – 163,811 6962 – 7 – – – 2230 – 185,345 8404 – 4516 – 185,345 6966 – a The true Pareto set was able to compute using exhaustive enumeration for instance 1–4.
+b The generational difference is computed using the true Pareto set and the solution set SS generated by IWD-based algorithm.
+c This ratio is computed dividing H of the IWD algorithm by H of the true Pareto set.
+Table 4.
+Results of the ACO-based algorithm and exhaustive enumeration.
+ACO-based algorithm Exhaustive enumerationa Instance CPU time(ms) S H ( × 106) CPU time GDb S H ( × 106) HRc CPU time GDb S H ( × 106) HRc 1 1105 125,328 4561 665 61,031 138,909 4580 1.0041 1585 61,040 141,825 4578 1.0041 2 1236 247,613 11,277 853 121,126 294,564 11,318 1.0036 2030 112,790 259,131 11,298 1.0019 3 4456 142,298 2317 1982 8307 150,383 2198 0.9487 2400 8148 148,703 2261 0.9758 4 15,327 379,380 16,380 1208 213,554 381,615 16,449 1.0042 3740 220,943 398,750 16,429 1.0030 5 – – – 527 – 6252 2536 – 6205 – 3126 1987 – 6 – – – 6886 – 90,674 5819 – 20,141 – 84,828 5824 – 7 – – – 6,820 – 96,640 5,834 – 21,565 – 110,957 5,778 – a The true Pareto set was able to compute using exhaustive enumeration for instance 1–4.
+b The generational difference is computed using the true Pareto set and the solution set SS generated by ACO-based algorithm.
+c This ratio is computed dividing H of the ACO algorithm by H of the true Pareto set.
+Firstly, the values of the metrics have been compared, when exhaustive enumeration (EE) is used to compute the tPS for instances 1–4, to these values generated by our proposed algorithm.
+As shown in Table 3, the largest CPU time is obtained when EE computes the Pareto sets.
+The CPU time when is larger than the time when .
+However, the values of the metrics are better using : the value of the GD is smaller and the values of S are closer to those computed by EE.
+The values of H, when we set and are very similar to the values computed by EE.
+The values of HR are very close to 1 using either or it means that the area covered by the solutions sets is similar to the area covered by the tPS.
+Fig 2.
+Solution sets (SS) and true Pareto sets.
+Fig 3.
+Box plots of metrics.
+The same analysis can be carried out when ACO solves the same instance (see Table 4).
+The CPU time is longer when than the time when .
+In relation to the S, the outputs are mixed, the values of S when are closer to those generated by EE for instances 2 and 3.
+On the other hand, the values of H are similar to the ones computed by EE for and .
+Secondly, for instances 5–7, the values of S and H have been compared when and (see Table 3).
+The values of S are very similar.
+On the contrary, the values of H are smaller when than those when i.e.
+when setting the area covered by the solution set is smaller.
+This is good since our reference point is (0,0) to compute H. The values of those metrics when ACO is used (see Table 4) are mixed.
+The values of S for are better for instances 5 and 6 and the values of H are smaller in instances 5 and 7.
+Finally, the results of IWD and ACO algorithm have been compared when and respectively.
+For instances 1–4, the solutions set generated by our algorithm are closer to the tPS, according to GD (see Tables 3 and 4) and Fig 2a–d.
+For instance 5, the values of S and H are smaller using ACO, thus it looks like ACO outperforms IWD.
+Nevertheless, the number of solutions in the SS using ACO is smaller than the number of solutions using IWD, 9 and 15 respectively, see Fig 2e.
+Moreover, the LT of solutions computed by ACO is between 9 and 12 days, while the LT of solutions in IWD is between 16 and 52, thus the solutions in SS are spread across the solution space.
+Hence, the IWD generates a SS which covers most of the solution space.
+The analysis carried out for instances 6 and 7 is similar to the one performed for instance 5.
+Notice that for instances 5–7 the solutions of SS using ACO algorithm are not spread evenly on the solution space, as shown in Fig 2e–g.
+Therefore, the IWD algorithm generates SS which covers a larger area of the solution space that the sets generated by ACO.
+So as to define the variability of our algorithm, box plots are drawn using the results of the thirty runs (Talbi, 2009).
+As shown in Fig 3a, our proposed algorithm solves the seven instances in less time (40% average) than time spend by the ACO algorithm.
+The box plots of the GD are plotted in Fig 3b.
+As shown in it, 100% of the 30 results are below the box plot generated using ACO algorithm for the instances 1–4.
+(notice that for the instances in which the true PS is computed, the GD can be computed).
+As shown in Fig 2, the IWD algorithm finds more solutions or SCs than ACO algorithm; thus the decision maker can choose one among more available solutions.
+The values of spacing are plotted in Fig 3c and the ones of hyperarea are plotted in Fig 3d.
+Based on the values of the CPU time, GD, and S in Tables 3 and 4 for instances 1–4, our IWD-based algorithm solves those instances faster than the ACO approach proposed by Moncayo-Martínez and Zhang (2011).
+Moreover, the SS returned by our approach are closer to the tPS and the solution are more evenly spaced (see Fig 3).
+In case of instances 5–7, our approach returns SS evenly spaced (see Fig 2); thus, the values of S are bigger than those of ACO (see Tables 3 and 4).
+According to the descriptive analysis in Fig 3 and the values of the metrics computed in Tables 3 and 4, it seems that the ACO approach by Moncayo-Martínez and Zhang (2011) returns similar results for instances 1–4 but for bigger instances (5–7) the IWD–based algorithm returns solutions in SS that are evenly spread over the feasible region; thus, the hyperarea is greater.
+This suggests that our IWD algorithm overcomes the ACO–based algorithm.
+Discussion The original IWD algorithm is successfully customised to solve the bi–objective SCD problems when the CoGS and LT are minimised simultaneously.
+Our modified algorithm overcomes the ACO algorithm proposed by Moncayo-Martínez and Zhang (2011) according to results in Figs.
+2 and 3.
+Our problem is different from Moncayo-Martínez et al.
+(2015) and Moncayo-Martínez and Zhang (2013) in that we do not include the safety stock cost which is computed by dynamic programming; thus, mid-size instances could be solved.
+Although they minimised the safety stock and lead time, our approach minimises by IWD–based Bi–objective algorithm the CoGS and time to market.
+This work can inspired further application of IWD algorithm to the logistics network problems by adding the safety stock cost, capacity constraints, or sustainability issues such as environmental and social impacts.. On the other hand, we modified the original IWD algorithm to compute a Pareto set; thus, our algorithm returns a set of logistics networks and the decision maker could select the best that suits s/he.
+The proposed methodology has proven to be flexible by providing excellent results on seven different supply chain configuration instances, characterised by different number of stages and options.
+Moreover, not only the algorithm has proven to give solutions equal or very close to the true Pareto fronts for less complex instances, but it has also shown to be capable of finding many more Pareto solutions covering a larger area of the solution space on the more complex instances, compared to the sets generated by ACO.
+Therefore the proposed method shows all its potential especially when applied for solving complex multi-objective supply chain and logistics optimisation problems.
+This paper presents a modified multi-objective optimisation model for minimising the CoGS and LT in a manufacturing supply chain, simultaneously.
+The model enhances SC efficiency by jointly considering the cost and time during the selection of an option to perform a stage.
+We modified the original IWD algorithm to return a Pareto set that overcomes the Pareto sets generated by Moncayo-Martínez and Zhang (2011) when the second objective is to minimise the CoG instead of the safety stock.
+The proposed multi-objective IWD algorithm is applied to seven instances widely used in literature and the results were compared to an ACO-based algorithm as well as exhaustive enumeration when it is possible to compute the true Pareto set.
+According to the results, we conclude that our proposed algorithm outperforms the performance of the ACO algorithm.
+When the values of S and H are computed for the true Pareto set, those values are very close to those ones computed by our algorithms.
+The values of the HR are very close for both algorithms.
+According to Tables 3 and 4, our algorithm returns more spaced solutions sets, i.e.
+our algorithm covers a wider area of the solution space.
+The solution sets are plotted to show that our algorithm generates solutions with lower cost and shorter lead time than those computed by ACO.
+Future search directions may on one hand, compare the proposed approach with other metaheuristic algorithms and, on the other hand, propose enhanced or hybrid versions of the IWD algorithm.
+Furthermore, the proposed IWD algorithm might be used to solve more complex supply chain design problems taking into account safety stock or sustainability issues.

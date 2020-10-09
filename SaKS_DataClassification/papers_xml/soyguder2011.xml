@@ -1,0 +1,212 @@
+<article>
+  <title>Intelligent control based on wavelet decomposition and neural network for predicting of human trajectories with a novel vision-based robotic</title>
+  <abstract>
+    <sentence>In this paper, an intelligent novel vision-based robotic tracking model is developed to predict the performance of human trajectories with a novel vision-based robotic tracking system.</sentence>
+    <sentence>The developed model is based on wavelet packet decomposition, entropy and neural network.</sentence>
+    <sentence>We represent an implementation of a novel vision-based robotic tracking system based on wavelet decomposition and artificial neural (WD-ANN) which can track desired human trajectory pattern in real environments.</sentence>
+    <sentence>The input–output data set of the novel vision-based robotic tracking system were first stored and than these data sets were used to predict the robotic tracking based on WD-ANN.</sentence>
+    <sentence>In simulations, performance measures were obtained to compare the predicted and human–robot trajectories like actual values for model validation.</sentence>
+    <sentence>In statistical analysis, the RMS value is 0.0729 and the R2 value is 99.76% for the WD-ANN model.</sentence>
+    <sentence>This study shows that the values predicted with the WD-ANN can be used to predict human trajectory by vision-based robotic tracking system quite accurately.</sentence>
+    <sentence>All simulations have shown that the proposed method is more effective and controls the systems quite successful.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Intelligent control</keyword>
+    <keyword>Target tracking predicting</keyword>
+    <keyword>Mobile robots</keyword>
+    <keyword>Human trajectory</keyword>
+    <keyword>Wavelet decomposition (WD)</keyword>
+    <keyword>Artificial neural network (ANN)</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>In recent years, object tracking has become a significant problem.</sentence>
+    <sentence>Contemporary solutions emphasize better information and control to use the existing infrastructure more efficiently.</sentence>
+    <sentence>The aim is the challenging problem of defining a realistic yet practical observation model for object tracking in vision based tracking.</sentence>
+    <sentence>Some approaches explicitly model the relation between the state of the object and the appearance of each pixel from the image region occupied by the tracked object: e.g.</sentence>
+    <sentence>models tailored specifically for humans (Gavrila, 1999).</sentence>
+    <sentence>Object tracking is an important task within the field of computer vision which has lots of application areas such as human–computer interaction.</sentence>
+    <sentence>Object tracking are used for visual identification of different objects like the ball, goals, and opponents.</sentence>
+    <sentence>Fast and robust color segmentation algorithms have been developed to detect and track objects in this scenario in real-time (Bandlow, Klupsch, Hanek, &amp; Schmitt, 1999; Bruce, Balch, &amp; Veloso, 2000).</sentence>
+    <sentence>Besides, the field of computer vision which has lots of application areas such as human–computer interaction, surveillance, smart rooms and medical imaging.</sentence>
+    <sentence>In addition, object tracking has received considerable attention during the last decades (Castagno, Swan, &amp; Foster, 1998; Gu, &amp; Lee, 1998; Guo, Kim, &amp; Kuo, 1999; Jang &amp; Choi, 2000; Kim et al., 2001; Lee et al., 1997; Rui, Huang, &amp; Chang, 1998).</sentence>
+    <sentence>Applications of object tracking can be found in areas as diverse as video editing for publishing and entertainment, video surveillance, and object based coding.</sentence>
+    <sentence>When the tracked object signatures or the backgrounds vary in an unlimited or unknown manner, mentioned all these traditional approaches have not been able to furnish appropriate solutions.</sentence>
+    <sentence>Therefore, a new solution based on wavelet decomposition and artificial neural network (WPD-NN) technology is proposed in this paper.</sentence>
+    <sentence>The WPD-NN technology provides a number of tools which could form the basis for a potentially fruitful approach to the object tracking problem.</sentence>
+    <sentence>There are a lot of intelligent techniques about robotics and industrial field in recent years (Murray, Erwin, &amp; Wermter, 2009; Soyguder &amp; Alli, 2009a, 2009b; Soyguder, Karakose, &amp; Alli, 2009; Zhang, Yin, &amp; Cai, 2009).</sentence>
+    <sentence>Among all these techniques, in the artificial intelligence field, artificial neural networks (ANN) have been applied successfully to speech recognition, image analysis and adaptive control, in order to construct software agents (in computer and video games) or autonomous robotics.</sentence>
+    <sentence>A robust person tracking module which uses the neural network (NN) can serve as a powerful building block to support other techniques, such as gesture recognizers (Maung, 2009), face or speaker identifiers (Naini, Seiti, Teshnelab, &amp; Shoorehdeli, 2009; Nasse, Thurau, &amp; Fink, 2009), head pose estimators (Voit, Nickel, &amp; Stiefelhagen, 2005), and scene analysis tools.</sentence>
+    <sentence>In the last decades, a lot of approaches have been presented to tackle the problems posed by unconstrained, natural environments and bring person trackers out of the laboratory environment and into real-world.</sentence>
+    <sentence>There are well-known robust tracking methods such as mean shift (Li, Tang, &amp; Sang, 2008) and active shape model (Cordea, Petriu, &amp; Petriu, 2008) in the literature.</sentence>
+    <sentence>Despite providing robust object tracking, these methods have high computational burden.</sentence>
+    <sentence>Taking into account the requirements of online processing, in this paper, we present an effective human tracking system which uses wavelet decomposition and artificial neural network (WPD-NN) in real time.</sentence>
+    <sentence>This paper presents a vision-based approach for tracking people on a mobile robot using wavelet decomposition and artificial neural network (WPD-NN).</sentence>
+    <sentence>Besides, in this paper, we present a new human tracking method for video measurements that combine the strengths of these tools at our disposal.</sentence>
+    <sentence>The paper is organized as follows: Section 2 discusses issues of morphological operations.</sentence>
+    <sentence>Section 3 briefly describes the wavelet transform, the wavelet packet decomposition (WPD), and the artificial neural network (ANN) as preliminaries.</sentence>
+    <sentence>Then, in Section 4, model procedure is presented.</sentence>
+    <sentence>In Section 5, the experimental results are presented.</sentence>
+    <sentence>Finally, conclusions are given in Section 6.</sentence>
+  </section>
+  <section name="Morphological operations">
+    <sentence>We use adaptive background subtraction process and histogram based mean shift tracking algorithm respectively which are described in more detail as follows.</sentence>
+    <sentence>Adaptive background subtraction techniques can be classified into two broad categories (Cheung &amp; Kamath, 2004): non-recursive and recursive.</sentence>
+    <sentence>In non-recursive background modeling techniques, a sliding-window approach is used for background estimation.</sentence>
+    <sentence>A fixed number of frames is used and stored in a buffer.</sentence>
+    <sentence>Recursive background modeling techniques do not keep track of a buffer containing a number of history frames.</sentence>
+    <sentence>Instead, it recursively updates a single background model based on each incoming frame.</sentence>
+    <sentence>In this article, we used one of the recursive techniques (will be mentioned at next), since they require less storage than non-recursive techniques (Smith, 2006).</sentence>
+    <sentence>A common pixel-level background subtraction method consists of subsequent two steps to decide whether a pixel belongs to background (BG) or foreground object (FG).</sentence>
+    <sentence>At the first step, probability value of each pixel is calculated by (1) where xt is the value of a pixel at time t in RGB.</sentence>
+    <sentence>At the second step, probability values calculated for each pixel are compared with a threshold value to decide whether the pixel belong to the background.</sentence>
+    <sentence>(2) where cthr is a threshold value.</sentence>
+    <sentence>However, the traditional pixel-level methods are very sensitive to illumination change in the scene and do not provide desired results.</sentence>
+    <sentence>Therefore, we use a robust pixel-level method (Zirkovic &amp; Heijden, 2005) which uses Gaussian mixture model with B components for each pixel in image: (3) where μm and σm are respectively, means and variances of GMM.</sentence>
+    <sentence>The mixing weights denoted by π are non-negative and describe how much of the data belongs to the mth component of the GMM.</sentence>
+    <sentence>Besides, the GMM algorithm can select automatically the needed number of component per pixel and update π, σ and σ values by using recursive procedure.</sentence>
+    <sentence>After the background subtraction process, we have some binary objects which contain human blobs and other objects together with artifacts.</sentence>
+    <sentence>Cleaning non human blobs and artifacts, we need to apply some morphological operation.</sentence>
+    <sentence>Together with applying on opening and closing operations morphologically, we measure a set of properties which are convex hull (smallest convex polygon that can contain the object), solidity (the proportion of the pixels in the convex hull), and eccentricity (eccentricity of the ellipse that has the same second-moments as the object) for each detected object.</sentence>
+    <sentence>Our experiments show that common human blobs should have ranges as follows: Afterward determines human blobs in crowded environments, we need to track only one desired person.</sentence>
+    <sentence>For tracking process, we prefer to use a modified version of the histogram based mean shift algorithm (Comaniciu &amp; Meer, 2002).</sentence>
+    <sentence>After obtain rigid human bodies by using processes of the adaptive background subtraction and morphological cleaning, the center of the desired human blob is tracked approximately using the histogram based mean shift algorithms assuming a rigid object shape model.</sentence>
+    <sentence>This accurately resolves most of the translation component of object motion and might resolve some rotation if not excessive (which is usually the case assuming high frame rates relative to speeds).</sentence>
+    <sentence>We update the center of the desired human blob using the following procedure: (1) the center position of each landmark is calculated; (2) 3D color histogram distribution function q belonging to the model object region (surrounded by mask human blob obtained by adaptive background subtraction process) is determined; (3) at each mean shift iteration, we calculate the 3D color histogram distribution function p belonging to the candidate object region and eliminate the differences between q and p (process could be referred to as background elimination); (4) given q and p, the weight at any element x of 3D histogram is derived from the Bhattacharyya measure and is given by: (4) where w(x) defines how likely the pixel color I(x) belong to an object model q.</sentence>
+    <sentence>After estimating the center translation amount via mean shift, it is updated to the prior information of the center point.</sentence>
+  </section>
+  <section name="Preliminaries">
+    <sentence>In this section, the theoretical foundations for the intelligent modeling used in the presented study are given in the following subsections.</sentence>
+    <sentence>Wavelet transform Wavelet transforms are finding inverse use in fields as diverse as telecommunications and biology.</sentence>
+    <sentence>Because of their suitability for analyzing non-stationary signals, they have become a powerful alternative to Fourier methods in many medical applications, where such signals abound (Daubechies, 1998).</sentence>
+    <sentence>The main advantages of wavelets is that they have a varying window size, being wide for slow frequencies and narrow for the fast ones, thus leading to an optimal time−frequency resolution in all the frequency ranges.</sentence>
+    <sentence>Furthermore, owing to the fact that windows are adapted to the transients of each scale, wavelets lack the requirement of stationary.</sentence>
+    <sentence>A wavelet expansion is Fourier series expansion, but is defined by a two-parameter family of functions.</sentence>
+    <sentence>It can be defined as follows: (5) where i and j are integers, the functions are the wavelet expansion functions and the two-parameter expansion coefficients are called the discrete wavelet transform (DWT) coefficients of f(x).</sentence>
+    <sentence>The coefficients are given by (6) The wavelet basis functions can be computed from a function called the generating or mother wavelet through translation and dilation (7) where j is the translation and i the dilation parameter.</sentence>
+    <sentence>Mother wavelet function is not unique, but it must satisfy a small set of conditions.</sentence>
+    <sentence>One of them is multi-resolution condition and related to the two-scale difference equation (8) where is scaling function and h(k) must satisfy several conditions to make basis wavelet functions unique, orthonormal and have a certain degree of regularity.</sentence>
+    <sentence>The mother wavelet is related to the scaling function as follows: (9) where .</sentence>
+    <sentence>At this point, if valid h(x) is available, one can obtain g(x).</sentence>
+    <sentence>Note that h and g can be viewed as filter coefficients of half band low pass and high pass filters, respectively.</sentence>
+    <sentence>J-level wavelet decomposition can be computed with Eq (10) as follows: (10) where coefficient are given and coefficients and coefficient and at scale j + 1 and they can be obtained if coefficient at scale j is available; (11) 3.2.</sentence>
+    <sentence>Wavelet packet decomposition As an extension of the standard wavelets, wavelet packet represent a generalization of multi-resolution analysis and use the entire family of subband decomposition to generate an overcomplete representation of signals (Wang, Teo, &amp; Lin, 2001).</sentence>
+    <sentence>Wavelet decomposition uses the fact that it is possible to resolve high frequency components within a small time window, while only low frequency components need large time windows.</sentence>
+    <sentence>This is because a low frequency component completes a cycle in a large time interval whereas a high frequency component completes a cycle in a much shorter interval.</sentence>
+    <sentence>Therefore, slow varying components can only be identified over long time intervals but fast varying components can be identified over short time intervals.</sentence>
+    <sentence>Wavelet decomposition can be regarded as a continuous time wavelet decomposition sampled at different frequencies at every level or scale.</sentence>
+    <sentence>The wavelet decomposition functions at level m and time location tm can be expressed as (12) where is the decomposition filter at frequency level m. The effect of the decomposition filter is scaled by the factor 2m at stage m, but otherwise the shape is the same at all scales (Devasahayam, 2000).</sentence>
+    <sentence>Wavelet packet analysis is an extension of the discrete wavelet transform (DWT) (Burrus, Gopinath, &amp; Guo, 1998) and it turns out that the DWT is only one of the much possible decomposition that could be performed on the signal.</sentence>
+    <sentence>Instead of just decomposing the low frequency component, it is therefore possible to subdivide the whole time–frequency plane into different time–frequency pieces.</sentence>
+    <sentence>The advantage of wavelet packet analysis is that it is possible to combine the different levels of decomposition in order to achieve the optimum time–frequency representation of the original (Turkoglu, Arslan, &amp; Ilkay, 2003).</sentence>
+    <sentence>Artificial neural networks Artificial neural networks (ANNs) are biologically inspired and mimic the human brain.</sentence>
+    <sentence>They are consisting of a large number of simple processing elements called as neurons.</sentence>
+    <sentence>A schematic diagram for an artificial neuron model is shown in Fig 1.</sentence>
+    <sentence>Let X = (X1, X2, … Xm) represent the m input applied to the neuron.</sentence>
+    <sentence>Where Wi represent the weight for input Xi and b is a bias then the output of the neuron is given by Eq (13).</sentence>
+    <sentence>These neurons are connected with connection link.</sentence>
+    <sentence>Each link has a weight that multiplied with transmitted signal in network.</sentence>
+    <sentence>Each neuron has an activation function to determine the output.</sentence>
+    <sentence>There are many kind of activation function.</sentence>
+    <sentence>Usually nonlinear activation functions such as sigmoid, step are used.</sentence>
+    <sentence>ANNs are trained by experience, when applied an unknown input to the network it can generalize from past experiences and product a new result (Haykin, 1994).</sentence>
+    <sentence>(13) Artificial neuron model Fig 1.</sentence>
+    <sentence>Artificial neuron model.</sentence>
+    <sentence>Artificial neural networks are systems that are deliberately constructed to make use of some organizational principles resembling those of the human brain (Haykin, 1994).</sentence>
+    <sentence>They represent the promising new generation of information processing systems.Artificial neural networks, with their remarkable ability to derive meaning from complicated or imprecise data, can be used to extract patterns and detect trends that are too complex to be noticed by either humans or other computer techniques.</sentence>
+    <sentence>They represent the promising new generation of information processing systems.</sentence>
+    <sentence>Artificial neural networks are good at tasks such as pattern matching and classification, function approximation, optimization and data clustering (Bishop, 1996).</sentence>
+    <sentence>When designing a ANN model, a number of considerations must be taken into account.</sentence>
+    <sentence>First of all the suitable structure of the ANN model must be chosen, after this the activation function and the activation values need to be determined.</sentence>
+    <sentence>The number of layers and the number of units in each layer must be chosen.</sentence>
+    <sentence>Generally desired model consist of a number of layers.</sentence>
+    <sentence>The most general model assumes complete interconnections between all units.</sentence>
+    <sentence>These connections can be bidirectional or unidirectional.</sentence>
+    <sentence>We can sort the advantages of ANN as follows: • They can be implemented electrically, optically, or can be modeled on general purpose computer.</sentence>
+    <sentence>• They are fault tolerant and robust.</sentence>
+    <sentence>• They work in parallel and special hardware devices are being designed and manufactured which take advantage of this capability.</sentence>
+    <sentence>• Many learning paradigm or algorithms are available in practice.</sentence>
+    <sentence>• An ability to learn how to do tasks based on the data given for training or initial experience.</sentence>
+    <sentence>ANN can create its own organization or representation of the information it receives during learning time.</sentence>
+    <sentence>There are many kind of ANN structure.</sentence>
+    <sentence>One of these is multilayer feed forward ANN and is shown in Fig 2.</sentence>
+    <sentence>Multilayer feed forward artificial neural network structure Fig 2.</sentence>
+    <sentence>Multilayer feed forward artificial neural network structure.</sentence>
+  </section>
+  <section name="Model procedure">
+    <sentence>The realization steps are as follows: Step 1: First of all, parameters database is formed.</sentence>
+    <sentence>The parameters data which have missing value are ignored.</sentence>
+    <sentence>The data are normalized by Eq (14).</sentence>
+    <sentence>(14) Step 2: This step is related to feature extracting and classification.</sentence>
+    <sentence>Fig 3 shows the Wavelet packet and ANN structure for intelligent modeling.</sentence>
+    <sentence>Feature extraction is the key process for intelligent methods.</sentence>
+    <sentence>So that it is arguably the most important component of modeling based on intelligent.</sentence>
+    <sentence>A feature extractor should reduce the input vector (i.e., the original waveform) to a lower dimension, which contains most of the useful information from the original vector.</sentence>
+    <sentence>The goal of the feature extraction is to extract features from these data for reliable intelligent modeling.</sentence>
+    <sentence>For feature extraction, the Wavelet packet and ANN structure was used.</sentence>
+    <sentence>The structure of intelligent modeling Fig 3.</sentence>
+    <sentence>The structure of intelligent modeling.</sentence>
+    <sentence>The wavelet packet and ANN structure is composed of two layers.</sentence>
+    <sentence>These are wavelet packet layer and multilayer perceptions layer, respectively.</sentence>
+    <sentence>Wavelet packet layer: This layer is responsible for feature extraction from input data.</sentence>
+    <sentence>The feature extraction process has two stages: Stage1–Waveletpacketdecomposition (WPD): For wavelet packet decomposition of the input data, the decomposition structure at level 3 was realized and shown in Fig 4.</sentence>
+    <sentence>Wavelet packet decomposition was applied to the input data using the Symlet-1 wavelet decomposition filters, ψ.</sentence>
+    <sentence>Total decomposition tree of wavelet packet analysis Fig 4.</sentence>
+    <sentence>Total decomposition tree of wavelet packet analysis.</sentence>
+    <sentence>Stage2–Waveletentropy (WE): An entropy-based criterion describes information-related properties for an accurate representation of a given signal.</sentence>
+    <sentence>Entropy is a common concept in many fields, mainly in signal processing (Quiroga, Roso, &amp; Basar, 1999).</sentence>
+    <sentence>A method for measuring the entropy appears as an ideal tool for quantifying the ordering of non-stationary signals.</sentence>
+    <sentence>We next calculated the sure entropy of the wavelet packet coefficients as defined in Eq (15).</sentence>
+    <sentence>(15) where the wavelet entropy E is a real number, s is the terminal node signal and (si) is i the waveform of terminal node signals.</sentence>
+    <sentence>In sure entropy, P is the threshold and must be a positive number.</sentence>
+    <sentence>At the WPD-ANN training process, while the P parameter is updated by 0.1 increasing steps, the weights of the NN is updated randomly.</sentence>
+    <sentence>Thus, feature vectors which have the length of 4 are obtained.</sentence>
+    <sentence>Multi-layer perception (MLP) layer: This layer is realized the classification by using features from wavelet packet layer.</sentence>
+    <sentence>The training parameters and the structure of the MLP are shown for each zone in Table 1.</sentence>
+    <sentence>These were selected for the best performance after several trial and error stages, such as the number of hidden layers, the size of the hidden layers, value of the moment constant and learning rate, and type of the activation functions.</sentence>
+    <sentence>WPD-ANN training performance is shown in Fig 8.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>MLP architecture and training parameters for novel vision-based robotic tracking system.</sentence>
+    <sentence>Architecture The number of layers 3 The number of neuron on the layers Input: 2 Hidden: 20 Output: 1 The initial weights and biases Random Activation Functions Tangent-sigmoid Tangent-sigmoid Linear Training parameters Learning rule Levenberg–Marquardt Back-propagation Sum-squared error 0.01 Training performance of WPD-ANN model Fig 8.</sentence>
+    <sentence>Training performance of WPD-ANN model.</sentence>
+  </section>
+  <section name="Experiments">
+    <sentence>In the experiment, the proposed tracking schema (adaptive background subtraction, morphological operations, and histogram based mean shift algorithm) described in the preceding section has been successfully tested on two real video sequences which are names as trajectory and walking.</sentence>
+    <sentence>We want to test the proposed software and hardware together.</sentence>
+    <sentence>In Fig 3, the tracking results of for the Walking sequence which has 400 frames of size 320 × 240 pixel are displayed.</sentence>
+    <sentence>In this scenarios, the proposed human tracking software process on Walking sequence about 30 frames per second.</sentence>
+    <sentence>As is shown, four-wheeled online tracking robot can track human successfully in real video sequence having high noise.</sentence>
+    <sentence>The trajectory path of tracked human and robot trajectory result is shown in Fig 6.</sentence>
+    <sentence>Trajectory path of tracked human and robot Fig 6.</sentence>
+    <sentence>Trajectory path of tracked human and robot.</sentence>
+    <sentence>The realized a novel vision-based robotic tracking system data was used in this study to train and test the WD-ANN models.</sentence>
+    <sentence>All program codes were written by using MATLAB Programme.</sentence>
+    <sentence>WD-ANN models were performed.</sentence>
+    <sentence>The proposed modeling structure is shown in Fig 5.</sentence>
+    <sentence>Half of the trajectory path of tracked human data was used to training stages and the other parts were used to test stages.</sentence>
+    <sentence>The obtained tracking data by mean shift algorithm and the tracked human trajectory were used as input to the WD-ANN model and the tracked robot trajectory was used as WD-ANN model output.</sentence>
+    <sentence>Therefore, WD-ANN model has two inputs and one output.</sentence>
+    <sentence>Walking sequence: The frames 16, 48, 74, 99, 134, 170, 189, 227, 274, and 324… Fig 5.</sentence>
+    <sentence>Walking sequence: The frames 16, 48, 74, 99, 134, 170, 189, 227, 274, and 324 are shown (left-right, top-down).</sentence>
+    <sentence>For modeling a novel vision-based robotic tracking system; the formed WD-ANN model was trained for 12 epochs and the structure of WD-ANN model is presented in Table 1.</sentence>
+    <sentence>The predicting performance is shown in Fig 7.</sentence>
+    <sentence>WD-ANN training performance is shown in Fig 8.</sentence>
+    <sentence>Predicted and actual trajectory paths Fig 7.</sentence>
+    <sentence>Predicted and actual trajectory paths.</sentence>
+    <sentence>Some statistical methods, such as the root-mean squared (RMS), the coefficient of multiple determinations R2 are used to compare the predicted and actual values for model validation.</sentence>
+    <sentence>The RMS and R2 can be evaluated by Eqs.</sentence>
+    <sentence>(16) and (17), respectively.</sentence>
+    <sentence>(16) (17) where n is the number of data patterns in the independent data set, ypre,m indicates the predicted, tmea,m is the measured value of one data point m, and is the mean value of all measured data points.</sentence>
+    <sentence>Statistical performance results (RMS, R2) are given in part conclusions.</sentence>
+  </section>
+  <section name="Conclusions and future work">
+    <sentence>In this study, we realized an implementation of a novel vision-based mobile robotic tracking system which can track desired human pattern in real environments.</sentence>
+    <sentence>The performance of the proposition is verified in various tracking scenarios and results are shown here.</sentence>
+    <sentence>In addition, in this work, the predicting of human trajectory with a novel vision-based robotic tracking system was predicted by using WD-ANN method.</sentence>
+    <sentence>To assess the effectiveness of our proposal WD-ANN, computer simulation was developed on the MATLAB environment.</sentence>
+    <sentence>The simulation results have shown that the WD-ANN can be used as an alternative prediction and control method for tracking robotic systems.</sentence>
+    <sentence>In statistical analysis, the RMS value is 0.0729 and the R2 value is 0.9976% for the WD-ANN model.</sentence>
+    <sentence>This study shows that the values predicted with the WD-ANN can be used to predict human trajectory by vision-based robotic tracking system quite accurately.</sentence>
+    <sentence>Therefore, faster and simpler solutions can be obtained based on WD-ANN.</sentence>
+    <sentence>At future work, we are planning to improve both the human tracking scheme to be able to detect and track desired human in crowded environments and the mobile robot hardware to be able to move quickly.</sentence>
+  </section>
+</article>

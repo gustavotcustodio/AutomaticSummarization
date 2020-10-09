@@ -1,0 +1,261 @@
+Genetic algorithms can be used to construct knowledge bases .
+They are based on the idea of “ survival of the fittest ” in the same way as natural evolution .
+Nature chooses the fittest ones in real life .
+In artificial intelligence we need a method that carries out the comparison and choice .
+Traditionally , this choice is based on fitness functions .
+Each alternative or possible solution is given a fitness score .
+If there is no ambiguity and those scores are numbers , it is easy to order individuals according to those values and determine the fittest ones .
+However , the process of assessing degrees of optimality usually involves uncertainty or imprecision .
+In this contribution we discuss the comparison among fitness scores when they are known to be in an interval , but the exact value is not given .
+Random variables are used to represent fitness values in this situation .
+Some of the most usual approaches that can be found in the literature for the comparison of those kinds of intervals are the strong dominance and the probabilistic prior method .
+In this contribution we consider an alternative procedure to order vague fitness values : statistical preference .
+We first study the connection among the three methods previously mentioned .
+Despite they appear to be completely different approaches , we will prove some relations among them .
+We will then focus on statistical preference since it takes into consideration the information about the relation between the fitness values to compare them .
+We will provide the explicit expression of the probabilistic relation associated to statistical preference when the fitness values are defined by uniform and beta distributions when they are independent , comonotone and countermonotone .
+Expert systems traditionally involve a knowledge base ( KB ) containing the experience provided by expertise and a rule or inference engine , which derives solutions to particular situations from the facts and rules of the knowledge-base .
+The construction of the knowledge base is one of the major problems in this context ( Merritt , 1989 ) .
+Tools that allow to build and improve the population of KBs are necessary and genetic algorithms are a widespread option to optimize the KBs since many years ago ( Baron , Achiche , & Balazinski , 2001 ; Payri , 1999 ; Xiong & Funk , 2006 ) .
+Genetic algorithms in artificial intelligence are supported by the same idea as the theory of evolution : Only those individuals that best fit survive in nature and this contributes to the improvement of species .
+In order to provide the best solution to a problem , alternatives are compared at each state and only the fittest ones survive to the next generation ( next stage ) .
+Genetic algorithms have proved their ability in a very wide range of fields as generate and optimize fuzzy rule bases , create membership functions or tuning processes ( see for example , Cordón , Herrera , Gomide , Hoffmann , & Magdalena , 2001a ; Girgis , Sewisy , & Mansour , 2009 ; Jiménez et al. , 2015 ) .
+All these tasks can be considered as optimization or search processes .
+In order to measure how well each individual fits the problem at each step fitness or objective functions are used .
+They usually assign a value to each element and those with highest fitness values are used to the next generation .
+Different fitness functions can be defined depending on the problem and it is a relatively easy task to provide a method or function that compares individuals and provides a best element when the information is precise .
+But imprecision appears very frequently in the context of expert systems ( see , among many others , Armero , Artacho , López-Quílez , & Verdejo , 2011 ; Ładyżyński & Grzegorzewski , 2015 ; Palacios , Palacios , Sánchez , & Alcalá-Fdez , 2015 ) .
+Tools that allow us to cope with this situation of incomplete or imprecise knowledge become necessary .
+This is the purpose of genetic fuzzy systems ( GFS ) which apply genetic algorithms to design and improve fuzzy systems , where the data and/or the rules handled are vague .
+Genetic fuzzy systems have received a great deal of attention in the last years ( Casillas & Martínez-López , 2009 ; Cordón , Herrera , Hoffmann , & Magdalena , 2001b ; Elhag , Fernández , Bawakid , Alshomrani , & Herrera , 2015 ; Saniee , Mohamadi , & Habibi , 2011 ) .
+The input data and the output solutions used to be crisp in the first contributions on this topic ( Herrera , 2008 ) .
+However , since some years ago , some authors ( see Sánchez , Couso , & Casillas , 2006 ; Sánchez & Couso , 2007 ; Sánchez , Couso , & Casillas , 2007 ; 2009 ) have dealt with imprecise data to learn and evaluate GFS .
+The function that assesses the quality of a solution in the genetic algorithm , that is , the fitness function , is vague in this approach .
+There are different ways to model imprecision in the literature ( random variables , fuzzy sets , … ) and many contributions have been devoted to the comparison of fuzzy sets .
+We can cite , among the most recent ones , Ezzati , Allaviranloo , Khezerloo , and Khezerloo ( 2012 ) , Wang ( 2015 ) , Yu and Dat ( 2014 ) , Zhang , Ignatius , Lim , and Zhao ( 2014 ) .
+Sánchez , Couso , and Casillas ( 2009 ) considered that the fitness values are unknown , but bounded in an interval and the imprecision is here modeled by a random variable .
+The traditional procedures to rank the fitness values in this case are either too strict , in the sense that they don ’ t allow us to compare the intervals in many cases , as is the case of strong dominance ( Limbourg , 2005 ) , or they are based on estimating and comparing two probabilities ( Sánchez et al. , 2009 ) .
+In this contribution we consider a more general and flexible way to compare two intervals which is based on a probabilistic relation : statistical preference ( De Schuymer , De Meyer , De Baets , & Jenei , 2003b ; De Schuymer , De Meyer , & De Baets , 2003a ) .
+Firstly , we will see the connection between this new procedure and the classical ones .
+Later , we will focus on statistical preference and we will provide explicit expressions for its associated probabilistic relation .
+In particular , we will consider two cases .
+Firstly , we will assume that we have no information about what are the most likely values in any of the two intervals to be compared .
+Thus , the uniform distribution will be used .
+The assumption of a uniform distribution is not an artificial requirement and it can be considered in many situation as a consequence of lack of information ( see , for instance , Sánchez et al. , 2009 ; Teich , 2001 ) .
+When this distribution is considered , we will obtain the specific expression of the associated probabilistic and fuzzy relations .
+Secondly , we will consider the situation in which the likelihood of the scores in the interval is increasing ( resp .
+decreasing ) .
+Beta distributions model these situations .
+We will also study statistical preference in this case .
+Moreover , since statistical preference takes into account the possible dependence between the distributions compared , we will consider three different situations both for uniform and beta distributions : independence , comonotonicity and countermonotonicity .
+This contribution is organized as follows : In Section 2 we introduce the problem and collect some different methods for comparing two fitness values proposed in the literature .
+In Section 3 we consider a generalization of these methods , based on a probabilistic relation and we study how this probabilistic relation can be equivalently represented by means of a fuzzy relation .
+In Section 4 , the defuzzification of the probabilistic relation is considered and from here a total order is obtained .
+In particular , we prove the relationship between this new approach and some usual methods used in the literature for the comparison of fitness values .
+In the last part of this section we study the expression of the probabilistic relation in two cases : when the fitness values are modeled by uniform and beta distributions .
+Section 5 includes some final remarks and future work .
+Let us consider two fitness values θ1 and θ2 .
+In many situations , these fitness scores θ1 and θ2 are unknown , but we have some imprecise information about them .
+Thus , we can not determine the value of θ1 and θ2 , but we know two intervals where each of them is contained .
+These intervals can be obtained by means of a fuzzy generalization of the mean squared errors ( for a more detailed explanation , see Sections 4 and 5 in Sánchez et al .
+( 2009 ) ) and they will be denoted by FMSE1 and FMSE2 , respectively .
+The comparison of this two intervals is needed in order to choose the predecessor and the successor .
+In this section we will introduce two of the most usual methods that can be found in the literature for the comparison of such intervals , the strong dominance and the probabilistic prior .
+Strong dominance The method of the strong dominance was considered in Limbourg ( 2005 ) .
+In that case , if these two intervals are disjoint , then we have not any problem to determine the preferred interval and therefore the decision is trivial .
+The problem arises when the intersection is non-empty , since the intervals are incomparable .
+Thus , if and it holds that : • If b2 < a1 , then θ1 is preferred to θ2 with respect to the strong dominance , denoted by θ1≻sdθ2 .
+• If b1 < a2 , then θ2 is preferred to θ1 with respect to the strong dominance , denoted by θ2≻sdθ1 .
+• Otherwise , θ1 and θ2 are incomparable .
+Thus , this method is too restrictive , since it can be used only in a very particular case .
+A tentative to solve this problem is to use the stochastic order ( Levy , 1998 ; Müller & Stoyan , 2002 ; Shaked & Shanthikumar , 2002 ) , introducing a prior knowledge about the probability distribution of the fitness .
+Given two random variables X and Y with associated cumulative distribution functions FX and FY , X is stochastically preferred to Y if and only if FX ≤ FY , with a strict inequality in at least one point x0 , and it is denoted by X ≻stY .
+In our context , the stochastic order can be formulated in the following way : θ1 ≻stθ2 ⇔ P ( θ1 ≤ x ) ≤ P ( θ2 ≤ x ) , for any and P ( θ1 ≤ x0 ) < P ( θ2 ≤ x0 ) , for some .
+In particular , if we assume that the fitness value follows a uniform distribution ( as in Teich , 2001 ) , then : being at least one of the inequalities strict .
+In particular , if θ1 strong dominates θ2 , then θ1≻stθ2 regardless on the distribution of the fitness .
+Nevertheless , the stochastic order does not solve all the problems of the strong dominance .
+For instance , incomparability is also allowed with respect to this method .
+Probabilistic prior Another method , called the method of the probabilistic prior , was proposed by Sánchez et al .
+( 2009 ) .
+As the stochastic order , it is based on a prior knowledge about the probability distribution of the fitness , P ( θ1 , θ2 ) .
+In that situation , a decision rule considered was to decide that θ1≻ppθ2 if and only if ( 1 ) Remark 1 If the quotient of Eq ( 1 ) is not defined , but it is assumed that θ1≻ppθ2 .
+Although this method allows us to compare a class of random intervals wider than those compared by the method of the strong dominance , not every pair of intervals can be ordered .
+In particular , whenever θ1 and θ2 will be incomparable .
+Moreover , in this approach we consider a crisp order between the intervals , but if we are in a fuzzy context , with imprecise data , some kind of gradual comparison could be more appropriate as the starting point of the comparison .
+The three methods presented in the previous section posses a common drawback : the absence of degrees of preference .
+They only allow preference or incomparability , but they do not provide degrees in the preference between the fitness values .
+Thus , these methods consider a crisp partial order between the intervals , but if we are in a fuzzy context , with imprecise data , some kind of fuzzy order could be more appropriate , at least as a first step .
+At this point , our purpose is to apply in this context a gradual comparison which solves the previous problems .
+This gradual comparison between fitness values is given by means of a probabilistic relation ( Bezdek , Spillman , & Spillman , 1978 ) .
+Let us recall that given a set of alternatives a probabilistic relation in is a mapping such that for every pair of alternatives a and b in .
+This kind of relations are sometimes called reciprocal or ipsodual relations .
+Although this binary relation also takes values in the interval [ 0,1 ] , its interpretation is quite different from the interpretation of a usual fuzzy relation .
+If Q is a probabilistic relation , expresses that alternative a is totally preferred to b .
+But the value 0 does not mean absence of connection .
+For a probabilistic relation Q , is identified with a clear preference for b over a .
+It also holds that reflects indifference between both alternatives .
+De Schuymer et al .
+introduced in De Schuymer et al .
+( 2003b ) the probabilistic relation generated by a collection of dice .
+The collection of dice is called a discrete dice model for the probabilistic relation defined .
+The definition generalized to a set of random variables can be seen in De Schuymer , De Meyer , and De Baets ( 2005 ) .
+In our context it can be expressed as follows : ( 2 ) Thus , we consider a new way to compare two fitness values .
+In that context , Q ( θ1 , θ2 ) is a graded valuation of the dominance of θ1 over θ2 .
+Its graphical representation can be seen in Fig 1 .
+Fig 1 .
+Comparison of two fitness values by means of probabilistic relations .
+Apart from being a graded relation , it is possible to obtain the degree of comparison for any pair of random intervals with this method , that is , any pair of imprecise observations of two fitness functions can be compared .
+Example 2 We commented in the previous section that , if then θ1 and θ2 are incomparable by means of the probabilistic prior method .
+However , if we assume that then and therefore the method based on a probabilistic relation can be considered .
+Another positive aspect is that the relation Q is based on the joint distribution and not only in the marginal distributions .
+Recall that given two random variables X and Y with cumulative distribution functions FX and FY , respectively , their joint cumulative distribution functions is given by : for any ( x , y ) , where C is a function called copula ( Nelsen , 2006 ) , that is , a binary operator C : [ 0 , 1 ] × [ 0 , 1 ] → [ 0 , 1 ] that satisfies the following properties : • ∀x ∈ [ 0 , 1 ] .
+• ∀x ∈ [ 0 , 1 ] .
+• The property of moderate growth : for every ( x1 , x2 , y1 , y2 ) ∈ [ 0 , 1 ] 4 such that x1 ≤ x2 and y1 ≤ y2 .
+The Fréchet–Hoeffding bounds inequality holds for any copula C and every ( x , y ) ∈ [ 0 , 1 ] 2 : where M is the minimum operator ( ) and W represents the Łukasiewicz operator ( ) .
+A third important copula is the product , that is used to represent independence between the variables .
+Variables linked by the product , the minimum or the Łukasiewicz operators are called independent , comonotonic or countermonotonic , respectively .
+These three particular cases are considered the most important ones in the literature and for this reason we will focus on them .
+De Meyer , De Baets , and De Schuymer ( 2007 ) proved the following expressions for the relation Q for continuous random variables X and Y : • X and Y are independent : ( 3 ) • X and Y are comonotonic : ( 4 ) where the first part corresponds to P ( X > Y ) and the second part to .
+• X and Y are countermonotonic : ( 5 ) where u satisfies .
+These three equations will be very useful in Section 4 , where we will find some expressions of the probabilistic relation Q for comparing the distributions of the two fitness values θi , for .
+Thus , the probabilistic relation defined in Eq ( 2 ) depends on the copula that links the variables and for this reason we will denote the probabilistic relation by QC , that means that the connection between the variables ( or the fitnesses ) is given by the copula C. The information contained in the probabilistic relation can also be presented by means of a fuzzy relation .
+This was initially proposed by De Baets , De Meyer , De Schuymer , and Jenei ( 2006 ) ; De Schuymer et al .
+( 2003b ) and latter analyzed in detail by Martinetti , Montes , Díaz , and Montes ( 2011 ) .
+We also proposed a generalization of this correspondence ( see Montes , Martinetti , Montes , & Díaz , 2010b ) .
+There , we established that from any probabilistic relation Q defined on a set h ( Q ) with h : [ 0 , 1 ] → [ 0 , 1 ] is a fuzzy weak preference relation if , and only if , The previous result was proven for any probabilistic relation Q , but when we are comparing fitness values by means of the relation Q defined on Eq ( 2 ) , h ( Q ) is an order-preserving fuzzy weak preference relation if , and only if , and h is increasing in [ 0 , 1 ] .
+The initial h proposed by De Schuymer et al .
+( 2003b ) was but it is clear that function h can be defined in infinite different ways .
+As an example , we will obtain the expression of the weak preference relation R for that initial case : Example 3 Let us consider θi to be uniformly distributed in the interval [ 4 , 6 ] , [ 7 , 9 ] , [ 5 , 7 ] , [ 3 , 5 ] and [ 0 , 2 ] , respectively , for .
+If we assume independence , it holds that : and we can notice the different scales used by Q and R. Thus , we conclude that R can be seen as a preorder , this is , as a “ greater than or equal to ” relation .
+But the meaning of Q is totally different .
+In fact , the interpretation of the value of the fuzzy relation R is : the closer the value to 0 , the weaker the stochastic dependence between the alternatives .
+This can be seen graphically in Fig 2 .
+Fig 2 .
+Comparison of two fitness values by means of fuzzy relations .
+Let us remark that • R is reflexive : for any θi we have that .
+• R is strongly complete : Therefore , any pair of fitness values can be compared .
+• R is transitive in the classical sense :
+When the defuzzification is required , we will consider statistical preference , that was introduced by De Schuymer et al .
+( 2003b ) and widely studied by Montes , Martinetti , Díaz , and Montes ( 2010a ) ; 2011 ) ; Montes ( 2014 ) .
+It is obtained as a cut of the probabilistic relation .
+Definition 4 Let θ1 , θ2 be two random variables .
+We say that θ1 is statistically preferred to θ2 , and we denote it by θ1 ≻SPθ2 , if or equivalently if where Qα denotes the alpha-cut of the fuzzy set Q. Analogously , θ1 and θ2 are statistically indifferent if and the notation θ1 ≽SPθ2 means that .
+Once we have introduced the method of statistical preference , we shall investigate the relationships between the methods we have presented .
+For this aim , recall that we are comparing two fuzzy mean squared errors , that we assume they are distributed on bounded intervals .
+Thus , we obtain the first result : Proposition 5 Given and it holds that θ1≻sdθ2implies θ1 ≻stθ2 .
+Proof The proof is based on the fact that θ1≻sdθ2 implies and consequently , by Remark 1 , θ1 ≻stθ2 regardless on the distributions of FMSEi , .
+□ Proposition 6 Given and it holds that θ1≻sdθ2implies θ1≻ppθ2 .
+Proof If θ1≻sdθ2 , then : and consequently θ1≻ppθ2 .
+□ Proposition 7 Given and it holds that θ1≻ppθ2implies θ1≻SPθ2 .
+Proof If θ1≻ppθ2 , then that implies : However , since Q is a probabilistic relation , this means that and thus θ1≻SPθ2 .
+□ Let us now study the relationship between the stochastic order and the statistical preference .
+It has widely been investigated in Montes et al .
+( 2010a,2011 ) ; Montes ( 2014 ) .
+Montes , Miranda , & Montes ( 2014a ) In the next proposition we summarize the highlights .
+Proposition 8 Given andit holds that : • If θ1and θ2are coupled by the minimum or by a strict Archimedean copula , then θ1≻stθ2implies θ1≻SPθ2 .
+• If θ1and θ2are coupled by a nilpotent Archimedean copula , then it can only be assured that θ1≻stθ2implies θ1≽SPθ2 .
+• In general , the statements and are not related .
+Finally , it only remains to study the possible relationships between the probabilistic prior method and the stochastic order .
+A first approach is to study the case of independent intervals : Proposition 9 Given and that are considered to be independent , it holds that θ1≻stθ2implies θ1≻ppθ2 .
+Proof If the intervals are independent , then and consequently θ1≻ppθ2 if and only if and this is equivalent to θ1≻ppθ2 .
+Thus , both the probabilistic prior and the statistical preference are equivalent in this situation .
+Thus , if θ1≻stθ2 , applying Proposition 8 , θ1≻SPθ2 , and consequently the preference with respect to the probabilistic prior method also hold .
+□ We have just seen that there is a relationship between the probabilistic prior and the stochastic order when the intervals are independent .
+However , such relationship does not hold for comonotonic and countermonotonic intervals , as we prove in the following example : Example 10 Consider and .
+We consider that θ1 follows a uniform distribution and the distribution of θ2 is .
+Thus , θ1≻stθ2 .
+Assume that both intervals are comonotonic .
+Using Eq ( 4 ) we can compute : Thus , as we commented in Section 2 , both intervals are incomparable with respect to the probabilistic prior .
+Assume now that they are countermonotonic .
+Using Eq ( 5 ) we obtain that Thus , and consequently , using Proposition 7 , .
+The previous relationships are summarized in the scheme showed in Fig 3 .
+Fig 3 .
+Summary of the relationships between strong dominance ( sd ) , first degree stochastic dominance ( st ) , probabilistic priority ( pp ) and statistical preference ( SP ) .
+Hereafter , we will apply this definition in the context of genetic algorithms .
+Thus , we will consider two imprecise fitness values and we will obtain the requirement to be able to assure that one of them is statistical preferred to the other .
+Uniform case We will consider a uniform distribution again , that is , no any prior information about the distribution over the observed interval , and we will try to obtain an expression to the probabilistic relation Q and to characterize the statistical preference .
+Thus , and will denote now two intervals where we know the fitness values θ1 and θ2 of two KBs are included .
+Let us assume a uniform distribution on each of them .
+We will consider again three possible ways to obtain the joint distribution : minimum , product and Łukasiewicz copulas .
+In these three cases we will obtain the condition over a1 , b1 , a2 and b2 to assure the statistical preference of the random fitness value θ1 over the random fitness value θ2 .
+To do that , the expression of QP , QM and QW obtained in the previous section will be an essential part of the proof .
+Proposition 11 Let θ1and θ2be two random fitness values uniformly distributed in the intervals [ a1 , b1 ] and [ a2 , b2 ] , respectively , which represent the information we have about the fitness values of two KBs .
+If the joint distribution is obtained by means of the product copula , then the probabilistic relation QP ( θ1 , θ2 ) takes the following value : Thus , θ1≻SPθ2if and only if : Proof In order to obtain the expressions of the probabilistic relations , it is enough to consider Eq ( 3 ) and apply it to the four cases .
+In order to obtain the conditions to establish some preference , we have to distinguish two cases : on the one hand , first and fourth scenarios present a particularity , they are ordered by the stochastic order .
+In the first case , θ2≻stθ1 , and consequently , using Proposition 8 , .
+Similarly , in the fourth case θ1≻stθ2 , and using the same result , θ1≻SPθ2 .
+Consider now the second scenario .
+Then : ( 6 ) Similarly we can obtain the condition in the third scenario .
+□ Let us now study the comonotonic case .
+Proposition 12 Let θ1and θ2be two random fitness values uniformly distributed in the intervals [ a1 , b1 ] and [ a2 , b2 ] , respectively , which represent the information we have about the fitness values of two KBs .
+If the joint distribution is obtained by means of the minimum copula , the probabilistic relation QM ( θ1 , θ2 ) takes the following value : Thus , θ1≻SPθ2if and only if : Proof The expression of the probabilistic relation can be obtained by Eq ( 4 ) , and taking into account that since the associated cumulative distribution coincide at most in one point .
+The first and fourth scenarios of the second part are trivial .
+In the second scenario , it holds that : ( 7 ) The condition for the third scenario can be similarly obtained .
+□ Finally , let us study the countermonotonic case .
+Proposition 13 Let θ1and θ2be two random fitness values uniformly distributed in the intervals [ a1 , b1 ] and [ a2 , b2 ] , respectively , which represent the information we have about the fitnesses of two KBs .
+If the joint distribution is obtained by means of the Łukasiewicz copula , then the probabilistic relation is given by : In addition , θ1≻SPθ2if and only if : Proof The expression of the probabilistic relation can be deduced from Eq ( 5 ) , and taking into account that the point u equals : .
+The first and fourth scenarios of the second part are easy , since there they are ordered by means of the stochastic order .
+For these reason , in the first scenario it holds that and consequently and then .
+Similarly , we obtain that in the fourth scenario θ1 ≻SPθ2 .
+For the second and third scenarios , it is enough to compare de expression of the probabilistic relation with .
+□ 4.2 .
+Beta case We now assume that more information about the fitness values may be available .
+If it is known that some values of the interval are more feasible than others , the uniform distribution is not a good model any more .
+If we assume that the closer we are to one extreme of the interval the more feasible the values are , beta distributions become more appropriate to model the fitness values .
+We have already said that there are other probability distributions defined on an interval .
+Thus , we assume that the fitness value belongs to the interval but it is probable that it is closer to one of the extremes ai or bi .
+We model that by a beta distribution .
+In this paper we focus on this situation : beta distributions such that one of the parameters is 1 .
+It is well known that the beta distribution , β ( p , q ) , is defined by the density function : for x ∈ [ 0 , 1 ] , and zero otherwise , where p and q are positive real values .
+However , it is possible to define a beta distribution on every interval [ a , b ] ( it is denoted by β ( p , q , a , b ) .
+The associated density function is : ( 8 ) for any x ∈ [ a , b ] , and zero otherwise .
+Next , we will focus on two particular cases .
+In the first one we will assume that the closer the value is to ai , the more feasible the value is .
+In the second case , we will assume the opposite , the closer the value is to bi , the more feasible the value is .
+In terms of density functions , these two cases correspond to strictly decreasing and strictly increasing density functions .
+We will consider the random fitness values θi follows a distribution β ( p , 1 , ai , bi ) , for where p will be an integer greater than 1 .
+Independently of where is the weight of the distribution , we will treat three possibilities concerning the relationship between the fitness values : independence , comonotonicity and countermonotonicity .
+If intervals satisfy one of the following conditions : we have seen in the previous section that , since they are ordered with respect to the stochastic order , the study of the statistical preference becomes trivial .
+For this reason we will assume the intervals to satisfy the condition a1 ≤ a2 < b2 ≤ b1 ( the case a2 ≤ a1 < b1 ≤ b2 can be solved by symmetry ) .
+Proposition 14 Let us consider the random fitness values θi following a distribution β ( p , 1 , ai , bi ) , for where a1 ≤ a2 < b2 ≤ b1 .
+Then it holds that : whereand z * is the point in [ a2 , b2 ] such that Proof Let us begin by computing the expression of QP ( θ1 , θ2 ) .
+First of all , note that , since they are independent and continuous , .
+Then : Let us compute each one of the previous probabilities : Taking the previous expression becomes : Taking and ɛ and applying the Newton formulae , it holds that : ɛɛ Making the sum of the two probabilities , we obtain the value of Q ( θ1 , θ2 ) .
+Now , assume that θ1 and θ2 are comonotonic .
+Then , since applying Eq ( 4 ) it holds that : Furthermore : where t * is the point satisfying : Then : Finally , assume that θ1 and θ2 are countermonotonic .
+Then , by Eq ( 5 ) , where z * satisfy that : □ Proposition 15 Let us consider for the random fitness valuesfollowing the distribution β ( 1 , p , ai , bi ) , where a1 ≤ a2 < b2 ≤ b1 .
+Then it holds that : whereand z * is the point in [ a2 , b2 ] such that Proof We begin by computing the expression of QP ( θ1 , θ2 ) .
+Again , since they are independent and continuous , and then : Let us compute each one of the previous probabilities : Taking the last integral becomes : Taking into account that equals : last integral becomes : Making the sum of the three terms , we obtain the expression of QP ( θ1 , θ2 ) .
+Consider now the fitness to be comonotonic .
+Then , since the expression of the probabilistic relation given in Eq ( 4 ) becomes : Then , where : Then : Finally , assume that θ1 and θ2 are countermonotonic .
+Then , where z * satisfies : □ Remark 16 Notice that for beta distribution it is not possible to obtain a simpler characterization of the statistical preference as we made for uniform distributions .
+To conclude , let us present an example where we show how the values of the probabilistic relation change when we vary the value of p. Example 17 Consider where a1 ≤ a2 < b2 ≤ b1 , and let assume the random fitness value θi follows the beta distribution β ( p , 1 , ai , bi ) for .
+Consider and .
+Table 1 shows the values of the probabilistic relation when p moves from 1 to 5 .
+Table 1 .
+Degrees of preference for the different values of the parameter p for and .
+p QP QM QW 1 0.5000 0.5000 0.5000 2 0.6853 0.7500 0.6400 3 0.7945 0.8750 0.7436 4 0.8644 0.9375 0.8208 5 0.9101 0.9688 0.8766 Consider now different values of the intervals : and .
+The obtained results are shown in Table 2 .
+Table 2 .
+Degrees of preference for the different values of the parameter p for and .
+p QP QM QW 1 0.5715 0.6667 0.5455 2 0.7076 0.8889 0.6400 3 0.7936 0.9630 0.7192 4 0.8533 0.9877 0.7852 5 0.8955 0.9959 0.8384 In Fig 4 we can see how the values of Q vary when we change the value of the parameter p from 1 to 10 .
+Fig 4 .
+Values of the probabilistic relation for different values of p. The above picture corresponds to intervals and and the picture below corresponds to intervals and .
+In this paper we have studied a method to compare imprecise fitness values when they are expressed as intervals where for each point we know the likelihood to be the actual fitness score .
+This method is called statistical preference and is based on a probabilistic relation that provides a degree of dominance or preference of one fitness value over the other .
+Thus , we can not only order the fitness values , but we also have an idea of the intensity of the preferences using this method .
+Moreover , this probabilistic relation is identified with a fuzzy relation .
+Thus , the expert can write the comparison in the context of fuzzy logic , if desired .
+Particularly , we have studied statistical preference in detail in two situations : when all the values in the interval are equally likely to be the actual fitness score and the case in which the likelihood is always increasing ( resp .
+decreasing ) in the interval , this is , when the information known about the fitness values is modeled by the uniform and the beta distributions respectively .
+We have also shown the connection between statistical preference and other common methods to compare distributions .
+We proved that statistical preference is the most flexible one .
+It allows us to order fitness values that according to other methods are incomparable .
+Another stronghold of the method proposed is that it takes into account the possible connection or relationship between the fitness values , since it involves the joint distribution of the underlying random variables .
+Considering this , the study of the two particular cases , uniform and beta distributions , has been carried out and the explicit expressions provided ( when possible ) will allow us to simplify the computation of this method .
+Statistical preference is based on the joint distribution of the two compared fitness values and this makes it a more complete method , but it is a drawback at the same time : working with the joint distribution can make it difficult to provide an easy explicit expression for the associated probabilistic relation in some cases as we discussed in Section 4.2 for the beta distribution .
+As a future work , we would like to extend our studies in two different directions .
+The first and more practical objective is to extend the study of the explicit expression of the probabilistic relation to other families of distributions .
+Uniform and beta distributions are very common examples of distributions of probability in an interval , but uncertainty can be modeled by other distributions and it will be useful for the practical computation of the comparison , to have an explicit expression of the probabilistic relation ir order to carry out the comparison .
+We are already working on a second line of research ( see for example , Montes et al .
+2014a ; Montes , Miranda , & Montes , 2014b ) where we are investigating how to extent statistical preference to the case in which even the distribution associated to the fitness value is not fixed and there is a whole set of random variables that can model the actual distribution .

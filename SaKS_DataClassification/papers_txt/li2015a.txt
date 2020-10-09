@@ -1,0 +1,807 @@
+PS–ABC: A hybrid algorithm based on particle swarm and artificial bee colony for high-dimensional optimization problems
+
+Abstract
+
+Particle swarm optimization (PSO) and artificial bee colony (ABC) are new optimization methods that have attracted increasing research interests because of its simplicity and efficiency. However, when being applied to high-dimensional optimization problems, PSO algorithm may be trapped in the local optimal because of its low global exploration efficiency; ABC algorithm has slower convergence speed in some cases because of the lack of powerful local exploitation capacity. In this paper, we propose a hybrid algorithm called PS–ABC, which combines the local search phase in PSO with two global search phases in ABC for the global optimum. In the iteration process, the algorithm examines the aging degree of pbest for each individual to decide which type of search phase (PSO phase, onlooker bee phase, and modified scout bee phase) to adopt. The proposed PS–ABC algorithm is validated on 13 high-dimensional benchmark functions from the IEEE-CEC 2014 competition problems, and it is compared with ABC, PSO, HPA, ABC–PS and OXDE algorithms. Results show that the PS–ABC algorithm is an efficient, fast converging and robust optimization method for solving high-dimensional optimization problems.
+
+Keywords
+Particle swarm optimization
+Artificial bee colony
+Hybrid algorithm
+High-dimensional optimization problems
+
+1. Introduction
+
+Global optimization can be applied in many areas of science and engineering (Bomze, 1997; Gergel, 1997; Horst & Tuy, 1996; Lin, Ying, Chen, & Lee, 2008). Especially, high-dimensional optimization problem is a branch of global optimization problems that have attracted increasing attention in the past few years. High-dimensional optimization problems can be formulated as a D-dimensional minimization problem as follows (Gergel, 1997; Nguyen, Li, Zhang, & Truong, 2014):
+(1)
+where f(x) is the objective function, is a vector of variables, D corresponds to the problem dimensions, and
+
+define the lower and upper limits of the corresponding variables, respectively. In high-dimensional optimization problems, the search space usually becomes more complex with increasing of dimensionality; thus, solving high-dimensional problems is a considerable challenge.
+
+Due to the practical demands, there were some attempts in trying to use different methods for high-dimensional optimization problems in recent years (Grosan & Abraham, 2009). One method is to use parallel optimization algorithm. This approach aims to solve specific standard functions. Höfinger, Schindler, and Aszódi (2002) proposed a parallel global optimization algorithm for typical high-dimensional problems. Schutte, Reinbolt, Fregly, Haftka, and George (2004) introduced a parallel particle swarm algorithm for some standard functions (Griewank and Corona test functions). However, parallel optimization algorithm is limited in some application fields because parallel computing is difficult to implement for high-dimensional optimization problems.
+
+Several metaheuristic algorithms such as Differential Evolution (DE) (Brest, Greiner, Boskovic, Mernik, & Zumer, 2006; Price, Storn, & Lampinen, 2006; Yang, Tang, & Yao, 2007), Genetic Algorithm (GA) (Chelouah & Siarry, 2000; Sánchez, Lozano, Villar, & Herrera, 2009), Particle Swarm Optimization (PSO) (Eberhart & Kennedy, 1995; Jiang, Hu, Huang, & Wu, 2007; Karaboga, 2005), Artificial Bee Colony (ABC) (Karaboga & Basturk, 2008; Zhang, Ouyang, & Ning, 2010) and so on, have shown considerable successful in solving high-dimensional optimization problems in the past few years. Among the existing metaheuristic for global optimization, the PSO and ABC methods are highly successful and suitable for some classes of high-dimensional optimization problems. However, the main challenge of the PSO algorithm is that it can easily get stuck in a local optima when handling complex high-dimensional problems. Moreover, the convergence speed of the ABC algorithm is typically lower than other metaheuristic algorithms such as DE and PSO algorithms when solving high-dimensional problems. This is because that PSO has poor exploration ability and ABC has poor exploitation mechanism. Therefore, several modified PSO or ABC algorithms have been proposed to further balance the exploration and exploitation processes, which results in improved convergence speed and avoidance of the local optima. For example, TSai, Pan, Liao, and Chu (2009) improved the exploration ability of ABC by adding the concept of universal gravitation to the onlooker bee phase and applied the interactive ABC (IABC) to five benchmark functions. Jia, Zheng, Qu, and Khan (2011) proposes a novel memetic PSO (CGPSO) algorithm for high-dimensional problems, which combines the canonical PSO with a Chaotic and Gaussian local search procedure. Jamian, Abdullah, Mokhlis, Mustafa, and Bakar (2014) proposed a global PSO (GPSO) algorithm for high-dimensional numerical optimization problems. Imanian, Shiri, and Moradi (2014) proposed a modified ABC (i.e. VABC) for high-dimensional continuous optimization problems.
+
+Metaheuristic algorithms use different exploration and exploitation strategies for high-dimensional optimization problems. In order to overcome the poor exploration ability of PSO and the poor exploitation mechanism of ABC, hybrid metaheuristic algorithm is a new research trend for solving high-dimensional optimization problems, which have attracted considerable attention in recent years. In this paper, hybrid metaheuristic algorithm is a recombination procedure for the hybridization of ABC and PSO. For instance, a novel hybrid swarm intelligent algorithm (IABAP) was developed by Shi et al. (2010) by using information communication between PSO and ABC and the information exchange approach improved the performance of the algorithm. El-Abd (2011) proposed a hybrid approach referred to as ABC–SPSO, which is based on PSO and ABC, for continuous function optimization. Kıran & Gündüz (2013) proposed a hybrid approach (HPA) based on PSO and ABC algorithms for continuous optimization problems. Chun-Feng, Kui, and Pei-Ping (2014) proposed a novel ABC algorithm based on PSO search mechanism (ABC–PS) for global optimization. In these studies, algorithms such as IABAP, ABC–SPSO, HPA and ABC–PS are hybridization of PSO and ABC. Although exploration and exploitation in these algorithms can be balanced to achieve excellent quality results for optimization problems, these techniques cannot solve large-scale global optimization problems that involve high dimensions (Kıran & Gündüz, 2013). Such as in the IABAP, HPA and ABC–PS algorithms, the update rule of the ABC algorithm is executed in each iteration process, thus these three algorithms retain the characteristic of the ABC and have a lower convergence speed on the high-dimensional problems. In addition, IABAP and ABC–SPSO has poor global search ability and poor computing power on the high-dimensional multimodal problems.
+
+Therefore, we propose a new hybrid procedure (PS–ABC) for the hybridization of PSO and ABC by using the exploitation ability of PSO and the exploration ability of ABC. This method use the exploration ability of the ABC based on PSO in the algorithm process. Traditional PSO has great exploitation ability and fast convergence speed (Jia et al., 2011). By contrast, basic ABC has effective exploration ability (Zhu & Kwong, 2010). Thus, the proposed method has fast convergence speed and excellent computing performance for high-dimensional optimization problems. The update status of pbest in the PS–ABC algorithm is characterized by three states: active, aged, and dying states. The proposed method determines the optimal solution in the three corresponding phases. An active individual will perform PSO phase to exploit a new solution along the direction of pbest and gbest. The onlooker bee phase in the aged state has the most outstanding pbest for exploring additional possible solutions in the new search space to escape from the search space of the PSO phase. An optimal solution that cannot be updated indicates that the process is in a dying state, and the modified scout bee phase is used to explore the whole search spaces. The performance of PS–ABC is compared with ABC, PSO, HPA, ABC–PS and OXDE algorithms. The experimental results show that the proposed PS–ABC algorithm is more effective on the high-dimensional optimization problems.
+
+The rest of the paper is organized as follows: Section 2 presents the instructions for the PSO and ABC algorithms. Section 3 briefly presents the PS–ABC algorithm, including the algorithm detail, algorithm search ability analysis, algorithm complexity analysis, and algorithm convergence analysis. Section 4 describes the test problems and parameter settings. Section 5 discusses the simulation results over 13 high-dimensional benchmark functions and PS–ABC control parameters. Finally, the conclusion is drawn in Section 6.
+2. Related work
+2.1. PSO algorithm
+
+PSO, which was proposed by Kennedy and Eberhart in Eberhart and Kennedy (1995), is one of the most recent evolutionary algorithms based on the searching behavior of animals such as fish schooling and bird flocking. In PSO model, each individual is composed of three vectors: the velocity vi, the current position xi, and the previous best position pbesti. Suppose that the objective function is D-dimensional, then the velocity and position of the ith particle are represented as
+and , respectively, while its previous best position is stored in . In each generation, the best position discovered from all pbest positions is known as the global best position
+
+.
+
+The process of PSO is presented below (Eberhart & Shi, 2001):
+Step 1: Initialization
+  Assign parameters and create populations.
+Set iter = 0.
+Step 2: Reproduction and updating loop
+ fori = 1, 2,…, Ndo
+  Update the velocity
+of particle
+by using (2)
+  
+  Update the position of particle
+by using (3)
+  
+  Evaluate the fitness value of the new particle
+.
+  if
+is better than
+then
+  Set
+to be
+
+.
+  end if
+ end for
+ Set the particle with best fitness value to be gbest.
+ iter = iter + 1.
+Step 3: If the stop criterion is satisfied, the process is terminated.
+Otherwise, return to Step 2.
+
+The PSO algorithm has three stages: initialization, iteration and termination criterion. In initialization stage, the population is initialized and randomly distributed in the search space. In the iteration stage, the velocities and positions of the particles are updated by Eqs. (2) and (3), respectively. The velocity equation in PSO is
+(2)
+and the position equation is
+(3)
+where c1 and c2 are two positive constants that indicate the relative influence of the cognition and social components, respectively; w is inertia weight that provides a balance between local exploitation and global exploration; r1 and r2 are random real values in interval [0, 1]. The velocity of the particles on each dimension is clamped to the range
+
+.
+
+If the terminate criterion is satisfied, the algorithm produce the best solution (gbest). Otherwise, the iteration stage is repeated.
+2.2. ABC algorithm
+
+Karaboga (2005) proposed an ABC algorithm to optimize numerical problems, which is a swarm intelligence algorithm based on the foraging behavior of honey bee swarms. The colony of artificial bees in the ABC algorithm consists of three groups of bees: employed bees, onlookers and scouts. Employed bees are responsible for search of a food source and for sharing this information to recruit onlooker bees. Onlooker bees tend to select better food sources from those employed bees, and further search the food around the selected food source. If a food source is not improved by a predetermined number of trials (denoted by limit), this employed bee will become a scout bee to search randomly for new food sources. The main steps of ABC algorithm are given below:
+Step 1: Initialization
+ Assign parameters and create populations.
+ Set
+for each populations.
+Step 2: The employed bee phase
+ fori = 1, 2, …, SNdo
+  Update a new candidate solution
+by using (4) for the employed bees.
+  Evaluate the fitness value of the candidate solution
+.
+  Apply a greedy selection process between
+and
+to select the better one.
+  If solution
+does not improve, , otherwise
+.
+ end for
+Step 3: Calculate the probability
+by using(5)for the solutions
+using fitness values
+Step 4: The onlooker bee phase
+  fori = 1, 2, …, SNdo
+  if
+then
+   Update a new candidate solution
+by using (4) for the onlooker bees.
+Evaluate the fitness value of the candidate solution
+.
+   Apply a greedy selection process between
+and
+to select the better one.
+If solution
+does not improve, , otherwise
+.
+   end if
+   end for
+Step 5: The scouts bee phase
+   if
+then
+Replace
+
+with a new randomly produced candidate solution by using (6).
+   end if
+Step 6: If the stop criterion is satisfied, stop and output
+the best solution achieved so far. Otherwise, return to Step 2.
+
+In ABC algorithm, a food source position represents a potential solution to the problem to be optimized. First, let us suppose the solution space of the problem is D-dimensional. The ABC algorithm starts with randomly producing food source, and each solution is represented as
+,
+
+. SN is equals to the number of food sources and half the population size.
+
+In the employed bee phase, each employed bee performs a modification on the position of the food source by randomly selecting a neighboring food source. A new food source vi can be generated from the old food source as follows:
+(4)
+where
+
+is randomly chosen indexes and must be different from i; ψ is a random number in the range [−1, 1].
+
+In the onlooker bee phase, each onlooker bee chooses a better performed food source solution from all the food source solutions of the employed bees. The onlooker bee selects a food source solution depend on the roulette wheel selection mechanism, which is given by
+(5)
+
+where fit is the fitness value of the solution. After the selection, the onlooker bee tries to improve the food source solution of the employed bee by using expression (4).
+
+If the food source position of the employed bees cannot be further improved through a given number of steps (limit) in the ABC algorithm, this employed bee becomes a scout bee. The new random food source position (scout bee) will be calculated from the following equation:
+(6)
+
+Where xmin  and xmax  are the lower and upper bound of the food source position, respectively.
+
+The candidate solution is compared with the old one. If the new food source has a better quality than the old source, then the old source is replaced by the new one. Otherwise, the old source is retained.
+3. Hybrid evolutionary algorithm based particle swarm and artificial bee colony
+3.1. Algorithm description
+
+Exploitation and exploration are key search mechanisms in solving high-dimensional optimization problems. The exploitation process applies the existing knowledge to seek better solutions, whereas the exploration process is concerned with the entire search of the space for an optimal solution. It is obvious from velocity expression (2) (see Section 2.1), that we update each particle's velocity from its own best (pbest) and the global best (gbest) experience. The gbest that is found early in the search process may have poor local minima and is likely to confine the solution convergence to local minima (Suganthan, 1999). This characteristic indicates that PSO has better exploitation ability but poor exploration ability. By analyzing the structure of the ABC algorithm (TSai et al., 2009), we notice that onlooker bees move straight to one of the better nectar sources areas of the employed bees. The flight direction of the bees will change such that the exploration ability of the bee will increase. Furthermore, the scout bees search for a new food source randomly by using expression (6). Although the population is diverse, the convergence rate will be reduced in the late iterations.
+
+To avoid the disadvantages of the two algorithms, we propose a hybrid optimization approach (PS–ABC) based on PSO and ABC. The detailed pseudo-code of PS–ABC is presented in Algorithm 1. There are three main phases of PS–ABC including PSO phase, onlooker bee phase, and modified scout bee phase in Algorithm 1. The onlooker bee and modified scout bee phases are described in Sections 3.2 and 3.3.
+
+Algorithm 1. PS–ABC Algorithm.
+Input: Objective function f(x) and constraints
+1. Initialization
+2. Parameters initialization: assign parameter values to N, MaxFES, w (inertia weight), c1 (cognitive weight), c2 (social weight), Limit1, Limit2.
+3. Population initialization: create particle position X, velocity V, pbest and gbest.
+4. Set pbestMeasure = 0 for each particles and generation iter = 0.
+5. Iterations
+6. Whileiter ≤ MaxFESdo
+7. for i = 1, 2,…, Ndo
+8.  ifpbestMeasure(i) ≤ Limit1 then
+9.   PSO phase ().
+10.  else
+11.   ifpbestMeasure(i) ≤ Limit2 then
+12.    Onlooker Bee phase ().
+13.   else
+14.    Modified Scout Bee pbest ().
+15.   end if
+16.   end if
+17.   ifxi is better than pbestithen
+18.    Set xi to be pbesti and
+.
+19.   else
+20.    
+.
+21.  end if
+22.  iter = iter + 1.
+23. end for
+24.  Set the particle with best fitness value to be gbest.
+25.  end while
+26. The final stage
+Output:
+
+There are three stages in PS–ABC: initialization, iteration, and the final stage. In the initialization stage, we need to define the solutions space, and assign values to several variables. The algorithm adopts all parameters from PSO, the measurement parameter from ABC (we call pbestMeasure), and adds two new control parameters (Limit1 and Limit2) for the control algorithm.
+
+We first produce a particular number (N) of solutions randomly in the solution space. In the iteration stage, the iterations are performed until the stopping criteria are matched. Each individual in each iteration needs to be managed, and pbestMeasure records the update status of pbest for each individual. If pbest is updated, then pbestMeasure is initialized to 0; otherwise, pbestMeasure is increased by 1. For each individual, if pbestMeasure is less than Limit1, it will perform the traditional PSO phase. Otherwise, we continue to examine the criteria of comparison between pbestMeasure and Limit2 to decide which type of search to employ. If pbestMeasure is less than Limit2, the individual will run the onlooker bee phase of the ABC. Otherwise, the modified scout bee phase of ABC will take place.
+
+If the stopping criteria matched, the algorithm performs the final stage to produce the best solution (gbest). Otherwise, the iteration stage is repeated.
+3.2. Onlooker bee phase
+
+When pbestMeasure is larger than Limit1 and less than Limit2, the corresponding individual will perform the onlooker bee phase. The pseudo-code of onlooker bee phase is shown in Algorithm 2. The pbest in PSO phase has a better result and is used in the entire updating process. When the pbest value has not been updated, PSO phase will be terminated and performs the onlooker bee phase of ABC.
+
+Algorithm 2. Onlooker Bee phase ().
+Input: A particle position xi and all pbest
+1. Select half high fitness value of pbest to be employed bees from all pbest.
+2. Calculate the probability values pj for these selected pbest by using ( 5 ).
+3. for each of employed bees do
+4.   ifrand(0, 1) ≤ Pjthen
+5.    Update a new produced solution xi by using (7)
+6.    
+7.   Apply a greedy selection process to select the better one.
+8.  end if
+9. end for
+Output: the new position xi
+
+We first choose half high fitness value of pbest from all pbest, as employed bees. Thereafter, onlooker bees attempt to improve the solution of the employed bees by using expression: xit+1 = xit + ψ · (xit - pbestjt) (7). Based on the “experience” concept, the previous information can be used as guides for accurate decisions. Therefore, other pbest values will be selected and used to update the individual value. Employed bees (pbest values) are selected by using a probability expression (5) on the basis of the “roulette wheel selection” mechanism. A greedy selection is applied between
+and ; then the better one is selected depending on the fitness value. If the fitness value at is superior to that of
+
+, then the individual memorizes the new position and omits the old one; otherwise, the previous position is retained in memory.
+The PS–ABC's possible search spaces
+
+
+Fig. 1. The PS–ABC's possible search spaces. (a) xk is located between pbestk and gbest, (b) pbestk is in between xk and gbest, (c) gbest is located between xk and pbestk.
+3.3. Modified scout bee phase
+
+If pbestMeasure is larger than Limit2, the corresponding individual will perform search as a scout bee to search for a new food source (i.e. modified scout bee phase). The pseudo-code of modified scout bee phase is shown in Algorithm 3. First, we randomly select two pbest from all the pbest, and then the scout bee generates a new food source by using expression: xit+1 = xit + ψ · (pbestk1t - pbestk2t) (8). Once
+is obtained, it will be evaluated and compared with . If the fitness value of is better than that of , then will replace and becomes a new member of the population; otherwise
+
+is retained.
+
+Algorithm 3. Modified scout bee phase ().
+Input: A particle position xi and all pbest
+1. Randomly choose two positive integers k1 ≠ k2 from
+.
+2. Update a new produced solution xi using (8)
+3.
+4. Apply a greedy selection process to select the better one.
+Output: the new position xi
+
+In the original ABC, the scout bee phase that randomly produced the solution can provide diversity in the population, but it would reduce the convergence rate in the iteration process. The modified scout bee phase of the corresponding exploration area can cover the entire search spaces and maintain the diversity in the population because k1 and k2 values (k1 and k2 are positive integers) were randomly selected from
+
+. Meanwhile, scout bees that shared information between any pbest is responsible for the convergence in the late iterations. Therefore, the modified scout bee phase may contribute to the diversity in the population and quick convergence.
+3.4. Algorithm search ability analysis
+
+The above phases coordinate the local exploitation and global exploration abilities of the algorithm to improve search performance when solving high-dimensional optimization problems. To analyze the original PSO's and PS–ABC's potential search spaces, we refer to the “potential search range” in Liang, Qin, Suganthan, and Baskar (2006). The search length of the potential space of the PSO and PS–ABC for the dth dimension of the ith and the jth individual be
+. The potential search range for the ith and the jth individual is expressed as follows:
+(9)
+
+Hence, the volumes of the potential search spaces of PS–ABC for the ith individual is
+(10)
+
+In the original PSO, the current position of each particle learns from its pbest and gbest simultaneously. The gbest is more likely to provide greater guidance information than pbest. When the gbest has not been updated, it may influence the particle to move to a local optimum region. However, the onlooker bee phase in PS–ABC algorithm selects the outstanding pbest from all the pbest, and the individual can fly in other directions by learning these pbests when the individual falls into local optimum region. Furthermore, the individual which uses modified scout bee phase can randomly move in any directions. Hence, the PS–ABC algorithm has the ability to jump out of the local optimum via two global exploration phases.
+
+Table 1. 13 high-dimensional benchmark functions.
+Category	Test function
+Ⅰ	
+Ⅱ	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+Let us consider that all individuals and the possible potential search spaces of the traditional PSO and the PS–ABC on all dimensions are plotted as a line in Fig. 1. For the kth individual whose position is xk, we take it as the reference object. Three different cases are analyzed in Fig. 1: (a) xk is located between pbestk and gbest, (b) pbestk is in between xk and gbest, (c) gbest is located between xk and pbestk. When the individual is active, the particle updates the velocity by using velocity expression (2) and the corresponding exploitation areas for S1. So the possible potential search areas of the original PSO also is equal to S1. When the individual is aged, the bee explores other new optimum areas by using expression (7), the corresponding exploration areas for S2. While the individual is died, the bee explores the entire search space according to the expression (8), its exploration areas for S3.
+
+Therefore, we observe that the two exploration phases of PS–ABC exploit a larger potential search space than that of the traditional PSO from Fig. 1. By increasing the potential search space of each individual, the diversity is also increased. So, PS–ABC searches more promising regions to find the global optimum in high-dimensional optimization problems.
+3.5. Algorithm complexity analysis
+
+Assuming that the variable dimension of the optimization problems is D, and the population size is N, the PS–ABC algorithm is described in Section 3.1. Considering the worst case, the time complexity of the iteration in the iterative process of PS–ABC algorithm is analyzed as follows:
+
+In Step 1, the main operation for produce initial population, and the time complexity is O(ND).
+
+In Step 2, judging the stopping criteria, the time complexity is O(1).
+
+In Step 3, judging the parameter value pbestMeasure, if pbestMeasure is less than Limit1, performing PSO phase. Otherwise, judging the parameter Limit2, if pbestMeasure is less than Limit2, performing onlooker bee phase; if not, performing modified scout bee phase, the time complexity is O(N).
+
+In Step 4, updating pbest and gbest, the time complexity is O(N).
+
+In Step 5, iteration to continue and returns to the Step 2.
+
+Therefore, the time complexity of the PS–ABC algorithm is O(ND).
+3.6. Algorithm convergence analysis
+
+The convergence of an algorithm must satisfy two conditions: (1) the population can produce any individual in the search space, and (2) the optimum solution can be preserved. The PS–ABC algorithm is a process of constantly repeating three main phases. Each phase can generate a better individual, which replaces the old one in the memory. Therefore, the search solution process of PS–ABC algorithm is a Markov chain (Cox & Miller, 1977), the convergence process of the PS–ABC algorithm is analyzed as follows:
+
+Definition 1
+
+Let
+
+is the optimal solution of the problem, where X is searching variable and f is objective function. θ(R): |R∩X*| denotes the number of optimal solutions of the molecules population R.
+
+Definition 2
+
+In the PS–ABC algorithm, if
+
+is true to arbitrary initial population R0, where t represents the number of iterations, then the algorithm converges with probability 1 to its globally optimal solution.
+
+Theorem 1
+
+PS–ABC algorithm converges with probability 1 to its globally optimal solution.
+
+Proof
+
+Let
+, then the probability of is
+
+is true because of the best solution storage mechanism.
+
+Hence,
+
+.
+
+In accordance with the characteristics of three main phases in PS-ABC algorithm, and at the end of the iteration, the algorithm reserves the global optimal solution. So,
+
+is true.
+
+Make
+
+Then
+
+Therefore,
+
+Such that,
+
+Hence,
+
+Given that
+
+and 0 ≤ P0(0) ≤ 1.
+
+Hence
+,
+
+Then
+
+Therefore, when t → ∞, P{θ(R(t)) ≥ 1} → 1. PS–ABC algorithm can find the global optimal solution and guarantees convergence with probability 1.
+4. Test problems and parameter settings
+4.1. Test problems
+
+To evaluate the efficiency of the proposed algorithm, PS–ABC was compared with the standard PSO, ABC, HPA, ABC–PS and OXDE over 13 high-dimensional benchmark functions obtained from the IEEE-CEC 2014 competition problems (Liang, Qu, & Suganthan, 2013). These benchmark functions are listed in Table 1. The 13 high-dimensional benchmark functions are classified into two categories according to their characteristics: (I) unimodal functions (f1–f3) and (II) multimodal functions (f4–f13). A function is unimodal if it has one global optimum. Unimodal functions are easy to solve when compared with those multimodal functions. The multimodal function is difficult to solve because some local optima are randomly distributed in the search spaces. The search process must be able to explore the whole search spaces in order to find the global optima.
+4.2. Parameter settings
+
+To achieve a fair comparison, we set the same values for common control parameters of the algorithms such as population size (N) and the maximum number of function evaluations (MaxFES). For each function, MaxFES was set to D*10,000 (D is the dimensionality of the search space) and N was set to 100 on all experiments. Moreover, search space for each function was
+
+and the dimensions (D) were set to 60, 100, and 500 in turn on all comparative experiments. The other specific control parameters of algorithms are presented below:
+
+PSO settings: In standard PSO (Eberhart & Shi, 2001), the inertia weight w, which is applied to balance between the local and global search abilities, is set as 0.729. Cognitive and social factors (c1 and c2) are real constants, which represent the knowledge of the particle itself and the collaboration among the particles, respectively. In ours experiments c1 and c2 are set to be 1.4945.
+
+Table 2. Optimization computing results for f1–f13 functions with D = 60 after 20 runs (the best mean, Std. values and the ranks are marked in bold).
+f	D		PS–ABC	PSO	ABC	HPA	ABC–PS
+f1	60	Mean	0	1.9043e+07	3.7988e+05	7.8505e−50	9.6344e−03
+		Std.	0	1.4561e+06	1.5768e+05	2.3551e−49	3.3245e−02
+		Rank	1	5	4	2	3
+f2	60	Mean	0	2.5388e+09	6.3499e+05	3.4268e−51	2.2342e−02
+		Std.	0	4.9911e+08	1.3988e+05	6.7922e−51	4.7422e−01
+		Rank	1	5	4	2	3
+f3	60	Mean	0	1.5352e+04	3.6038e+01	3.4446e−55	2.4697e−03
+		Std.	0	2.0491e+03	3.4286e+01	5.1501e−55	5.7247e−04
+		Rank	1	5	4	2	3
+f4	60	Mean	5.8672e+01	4.2446e+07	1.3386e+03	1.8851e+01	4.8637e−02
+		Std.	3.6833e−02	1.0242e+07	2.1109e+03	2.2888e+01	1.5012e−01
+		Rank	3	5	4	2	1
+f5	60	Mean	3.1771e−09	2.1874e+01	2.5987e−01	2.1874e−08	3.3370e−11
+		Std.	2.0798e−09	1.0547e+00	4.2510e−03	2.3507e−09	2.5757e−11
+		Rank	2	5	4	3	1
+f6	60	Mean	5.4677e−14	4.8278e−02	6.5619e−02	3.7219e−05	1.7459e−03
+		Std.	2.3220e−15	5.4949e−05	2.3904e−03	1.3878e−06	2.0923e−02
+		Rank	1	4	5	2	3
+f7	60	Mean	0	1.3579e+00	9.9726e−02	5.1582e−02	1.6354e−08
+		Std.	0	1.1014e−01	2.4281e−01	6.7150e−02	3.3446e−07
+		Rank	1	5	4	3	2
+f8	60	Mean	0	4.0728e+03	7.9768e−08	1.8459e−13	6.2663e−06
+		Std.	0	2.1309e+02	1.2486e−07	3.3259e−12	8.2557e−06
+		Rank	1	5	3	2	4
+f9	60	Mean	7.4167e−04	4.3919e+02	4.3129e+00	7.6950e−04	6.6371e−04
+		Std.	2.3407e−05	1.1919e+02	7.3719e+00	2.6080e−05	7.3516e−06
+		Rank	2	5	4	3	1
+f10	60	Mean	0	0	0	0	0
+		Std.	0	0	0	0	0
+		Rank	1	1	1	1	1
+f11	60	Mean	6.7675e−01	2.4447e+01	1.6713e+01	1.9535e+00	5.7008e−01
+		Std.	1.0973e−01	8.1248e+00	2.2855e+01	4.6253e−01	1.2463e−02
+		Rank	2	5	4	3	1
+f12	60	Mean	4.2917e−01	2.3454e+03	3.2869e+01	7.6691e+00	5.0492e−01
+		Std.	3.0562e−02	2.6270e+02	2.1428e+01	9.7104e+00	4.8901e−01
+		Rank	1	5	4	3	2
+f13	60	Mean	0	2.2310e+01	1.1856e+01	3.7838e−16	8.3417e−07
+		Std.	0	9.6393e−01	4.4201e+00	2.2388e−16	7.9841−07
+		Rank	1	5	4	2	3
+Average rank	1.384	4.615	3.769	2.308	2.154
+Overall rank	1	5	4	3	2
+
+Table 3. Optimization computing results for f1–f13 functions with D = 100 after 20 runs (the best mean, Std. values and the ranks are marked in bold).
+f	D		PS–ABC	PSO	ABC	HPA	ABC–PS
+f1	100	Mean	0	1.8860e+08	7.9291e+06	4.8275e−11	2.9990e−02
+		Std.	0	1.2378e+08	7.6773e+06	5.9398e−11	3.5842e−01
+		Rank	1	5	4	2	3
+f2	100	Mean	0	6.1509e+09	1.9192e+07	5.8956e−09	3.8672e−01
+		Std.	0	1.2886e+09	1.9686e+07	1.5879e−08	4.6321e−03
+		Rank	1	5	4	2	3
+f3	100	Mean	0	5.2459e+04	8.4910e+02	1.0602e−11	3.9066e−03
+		Std.	0	1.6172e+04	4.7740e+02	1.6445e−11	1.2206e−02
+		Rank	1	5	4	2	3
+f4	100	Mean	9.8219e+01	1.1910e+09	5.9772e+03	2.9722e+02	8.7094e+00
+		Std.	9.3594e−01	5.5774e+07	4.1273e+03	7.0215e+01	5.3352e+00
+		Rank	2	5	4	3	1
+f5	100	Mean	6.5777e−11	2.2417e+01	1.9999e+01	2.2017e−08	2.5021e−12
+		Std.	3.2900e−11	2.0817e+01	4.1409e−01	1.3152e−07	1.2578e−12
+		Rank	2	5	4	3	1
+f6	100	Mean	8.8363e−14	4.8278e−02	6.5619e−02	5.7219e−02	3.4071e−05
+		Std.	8.9339e−16	5.4949e−05	2.3904e−02	1.3877e−03	3.6532e−06
+		Rank	1	3	5	4	2
+f7	100	Mean	0	2.6103e+00	9.3039e+00	1.8674e−01	1.0229e−08
+		Std.	0	2.7011e−01	1.0803e+01	2.2738e−01	3.6532e−06
+		Rank	1	4	5	3	2
+f8	100	Mean	0	1.1197e+04	1.6966e+00	4.8713e−12	7.7497e−05
+		Std.	0	2.7289e+03	2.8824e+00	4.2957e−12	5.5547e−04
+		Rank	1	5	4	2	3
+f9	100	Mean	2.4262e−03	1.3682e+03	4.4694e+00	7.2728e−03	1.2728e−03
+		Std.	3.2942e−05	3.0280e+02	4.7585e+00	2.1684e−04	4.5433e−04
+		Rank	2	5	4	3	1
+f10	100	Mean	0	0	0	0	0
+		Std.	0	0	0	0	0
+		Rank	1	1	1	1	1
+f11	100	Mean	8.2625e−01	4.4734e+01	4.2111e+01	1.6003e+00	5.9318e−01
+		Std.	1.1921e−01	9.7357e+00	3.3966e+01	2.2883e−01	3.2544e−01
+		Rank	2	5	4	3	1
+f12	100	Mean	4.4680e−01	6.1837e+03	7.8231e+01	5.1468e+00	5.0619e−01
+		Std.	2.9138e−02	9.5735e+02	6.4651e+01	3.8788e+00	6.7441e−01
+		Rank	1	5	4	3	2
+f13	100	Mean	0	4.5550e+03	7.4062e+03	7.0172e−13	7.8203e−07
+		Std.	0	2.0116e+02	9.0657e+03	7.8939e−13	6.9087e−07
+		Rank	1	4	5	2	3
+Average rank	1.307	4.385	4.000	2.538	2.000
+Overall rank	1	5	4	3	2
+
+Table 4. Optimization computing results for f1 to f13 functions with D = 500 after 20 runs (the best mean, Std. values and the ranks are marked in bold).
+f	D		PS–ABC	PSO	ABC	HPA	ABC–PS
+f1	500	Mean	0	1.9102e+09	1.6871e+09	3.8642e−03	8.4648e−02
+		Std.	0	2.9908e+08	1.8329e+09	1.8772e−04	1.4257e−02
+		Rank	1	5	4	2	3
+f2	500	Mean	0	4.8735e+10	1.9813e+11	2.8695e−04	1.9960e−01
+		Std.	0	1.0465e+10	3.1987e+11	1.7835e−04	3.5632e−02
+		Rank	1	4	5	2	3
+f3	500	Mean	0	2.2558e+05	3.5366e+05	2.2128e−03	4.0020e−04
+		Std.	0	1.4845e+05	4.8528e+05	1.4351e−02	2.8712e−03
+		Rank	1	4	5	3	2
+f4	500	Mean	4.0667e+02	2.0301e+09	1.1226e+09	7.0466e+02	9.9222e+01
+		Std.	8.2411e+01	6.2440e+08	1.6613e+09	5.1551e+02	7.0812e+01
+		Rank	2	5	4	3	1
+f5	500	Mean	3.6480e−10	2.4316e+01	1.8754e+01	2.5433e−07	2.0616e−05
+		Std.	1.4129e−10	4.3263e+00	1.4328e+01	3.1462e−06	8.0021e−05
+		Rank	1	5	4	2	3
+f6	500	Mean	3.8723e−13	6.8278e−01	4.5619e−01	6.7219e−02	1.4086e−06
+		Std.	2.7343e−13	5.4949e−05	2.3904e−03	1.3877e−04	3.8702e−07
+		Rank	1	5	4	3	2
+f7	500	Mean	0	1.7221e+01	6.5413e+01	1.0445e−02	3.9642e−07
+		Std.	0	2.2199e+00	6.0135e+01	4.3240e−03	3.0278e−08
+		Rank	1	4	5	3	2
+f8	500	Mean	0	6.9385e+04	4.5398e+02	1.0658e+02	2.1558e−05
+		Std.	0	9.7041e+03	3.8844e+02	9.9404e+01	1.0934e−05
+		Rank	1	5	4	3	2
+f9	500	Mean	6.3225e−03	9.1049e+03	2.7401e+03	2.5473e−01	5.4638e−03
+		Std.	1.3305e−04	1.8124e+03	3.0435e+03	8.7836e−02	3.1404e−02
+		Rank	2	5	4	3	1
+f10	500	Mean	0	0	0	0	0
+		Std.	0	0	0	0	0
+		Rank	1	1	1	1	1
+f11	500	Mean	1.0247e+00	9.2713e+01	1.7963e+03	4.6218e+00	1.2171e+00
+		Std.	1.0999e−01	1.1378e+01	2.9469e+03	3.8030e+00	2.0421e+00
+		Rank	1	4	5	3	2
+f12	500	Mean	6.3666e+00	7.1494e+04	1.3850e+04	7.1794e+00	5.0998e−01
+		Std.	1.7518e+00	7.9859e+03	1.1623e+04	4.0949e+00	4.4094e−02
+		Rank	2	5	4	3	1
+f13	500	Mean	0	2.3254e+04	6.3590e−01	8.5106e+01	4.0040e−07
+		Std.	0	7.1990e+02	9.8775e−01	1.5544e+01	2.0998e−06
+		Rank	1	5	3	4	2
+Average rank	1.231	4.385	4.000	2.692	1.923
+Overall rank	1	5	4	3	2
+Convergence curves of PSO, ABC, ABC–PS, HPA, and PS–ABC for (a) – (c) f1, (d) –…
+
+
+Fig. 2. Convergence curves of PSO, ABC, ABC–PS, HPA, and PS–ABC for (a) – (c) f1, (d) – (f) f9, (g) – (i) f12.
+
+ABC settings: The ABC population consists of 50 employed bees and 50 onlooker bees because the population size is 100. Limit, which determines occurrence of scout bee, is calculated as follows (Karaboga & Akay, 2009):
+(11)
+
+where N is the number of population, D is the dimensionality of the search space.
+
+HPA settings: HPA is a recombination algorithm based on PSO and ABC. So the HPA population consists of 50 particles, 25 employed bees and 25 onlooker bees. The parameters of ABC component form HPA to be consistent with the standard ABC algorithm. The cognitive and social parameters of PSO component that forms HPA are set as 2 (c1 and c2), respectively (Kıran & Gündüz, 2013). The inertia weight is defined as follows:
+(12)
+
+where MaxFES is the maximum evaluation number, iter is the evaluation index.
+
+ABC–PS settings: In paper (Chun-Feng et al., 2014), the inertia weight is defined as follows:
+(13)
+
+where wmax  and wmin  are maximum inertia weight and minimum weight, respectively, iter is the evaluation index and MaxFES is the maximum evaluation number. wmax  and wmin  set to 0.9 and 0.4, respectively. c1 and c2 were both set to 1.3.
+
+PS–ABC settings: This setting has five control parameters: inertia weight w, cognitive factor c1, social factor c2, Limit1 and Limit2 in our algorithm. The parameters c1 and c2 in the experiment were both set to 1.4945. Inertia weight w use expression (12) in the experiment. The control parameters were set to be
+and , where and
+
+. To investigate the effect of the control parameters (i.e. l1 and l2) in the PS–ABC algorithm, we tested the different l1 and l2 values with D = 60, 100, and 500.
+5. Experimental results and discussion
+5.1. Experimental setting
+
+All algorithms in this paper are coded in MATLAB 7.8.0 and all experiments were implemented 20 times with different random seeds on the same personal computer with an Intel Core i3 CPU G630 2.70 GHz and 2 GB of RAM in Windows 7 OS.
+5.2. Comparison of PS–ABC with ABC, PSO, HPA and ABC–PS
+
+To test the performance of the proposed PS–ABC for high-dimensional benchmark functions, we compare PS–ABC with the original PSO, ABC, hybrid HPA and ABC–PS method, several experiments were carried out. The results in terms of the mean and standard deviations (Std.) of the solutions in 20 independent runs were recorded. Meanwhile, the five algorithms were ranked over the functions, and the average ranks for every category were given in Tables 2–4. In the comparison tables, the results obtained by the methods less than
+and
+
+were assumed to be 0 for unimodal and multimodal functions, respectively. Besides the analysis of mean and Std. value, we employed a non-parametric statistical test (Derrac, García, Molina, & Herrera, 2011) to detect whether there are significances among the results of the algorithms. In addition, we compared the convergence speed of the proposed PS–ABC method with other algorithms for functions f1, f9 and f12 in Fig. 2.
+
+Functions 1–3 are high-dimensional unimodal problems. According to the rank in Table 2–4, PS–ABC outperforms the rest of the algorithms. In addition, the mean and Std. values of PS–ABC are always less than those of PSO, ABC, HPA, and ABC–PS from Table 2–4. PS–ABC can get the global optimum 0 for f1, f2, and f3 function with D = 60, 100, and 500.
+
+Functions 4–13 are high-dimensional multimodal problems, where the number of local optimum increases exponentially as the dimension of the function increases. Table 2–4 gives the mean, Std., and rank of these high-dimensional multimodal functions. According to the rank results in Table 2–4, PS–ABC performed better than PSO, ABC, HPA, and ABC–PS on functions f5, f6, f7, f8, f11, f12, and f13 with D = 60, 100, and 500, except for function f5 and f11 with D = 60 and 100, and f12 with D = 500. However, PS–ABC gives poorer performance than ABC–PS in solving f4 and f9 with D = 60, 100, and 500. This is because functions f4 and f9 are relatively hard test problems. Function f4 have a very narrow valley from local optimum to global optimum, function f9 has many local optima and its second better local optimum is far from the global optimum.
+
+From the average rank and overall rank shown in Table 2–4, PS–ABC in different dimension cases can obtain the highest rank, followed by ABC–PS, HPA, ABC, and PSO. In addition, it should be noted that, PS–ABC obtains steady solutions than other algorithms for all functions with the increase of dimensionality. Thus, PS–ABC is efficient and robust in solving high-dimensional benchmark problems.
+
+Besides the analysis of mean and Std. value, we employed a non-parametric statistical test to prove the efficiency of the PS–ABC method (we only analyze D = 100). Inside the field of non-parametric statistics, the Friedman test is a multiple comparison test that aims to detect significant differences between the results of two or more algorithms. The Friedman test ranks the algorithms for each problem separately; the best performing algorithm ranks 1st, the second best ranks 2nd and so on. Thus, for each problem i, rank values from 1 (best result) to k (worst result). Denote these ranks as
+; For each algorithm j, average the ranks obtained in all problems to obtain the final rank , where k is the number of algorithms included in the comparison, j is its associated index. n is the number of problems considered and i is its associated index. Then the Friedman statistic Ff is given by
+(14)
+
+which is compared with a χ2 distribution with k − 1 degrees of freedom, critical values have been evaluated in (Sheskin, 2003). In this section, we compute the averaged rank obtained in 13 problems for five algorithms. Thus, the ranks achieved by Friedman test, the statistic value and p-value are shown in Table 5.
+
+Table 5. Ranks achieved by the Friedman test, the statistics computed and related p-value are also shown (we only analyze D = 100).
+Algorithms	Friedman ranks
+PS–ABC	1.423076
+PSO	4.500000
+ABC	4.115385
+HPA	2.653846
+ABC–PS	2.115384
+Statistic	29.792293
+p-value	5.39483e−06
+
+Table 6. z-values and adjusted p-values for the Friedman test (PS–ABC is the control method and we only analyze D = 100).
+Algorithms	z	Unadjusted p-value	Bonferroni	Holm	Holland	Finner	Hochberg
+PSO	4.961391	6.9990e−07	2.7996e−06	2.7996e−06	2.7999e−06	2.7999e−06	2.7996e−06
+ABC	4.341218	1.4170e−05	5.6680e−05	4.2510e−05	4.1999e−05	2.9999e−05	4.2510e−05
+HPA	1.984556	0.0472	0.1888	0.0944	0.0922	0.0624	0.0944
+ABC–PS	1.116313	0.2643	1.0000	0.2643	0.2643	0.2643	0.2643
+
+Table 7. Optimization computing results for f1–f13 functions after 20 runs (the best mean and Std. values are marked in bold).
+f	D = 60	D = 100	D = 500
+		PS–ABC	OXDE	PS–ABC	OXDE	PS–ABC	OXDE
+f1	Mean	0	2.5257e−17	0	1.3399e−04	0	1.5992e+07
+	Std.	0	2.0562e−17	0	4.7189e−05	0	2.0508e+06
+f2	Mean	0	1.2387e−14	0	5.8693e−02	0	1.9760e+03
+	Std.	0	1.0219e−14	0	2.3863e−02	0	3.4299e+03
+f3	Mean	0	2.0111e−20	0	7.1141e−08	0	2.9913e−03
+	Std.	0	1.8100e−20	0	3.5769e−08	0	4.0907e−03
+f4	Mean	5.8672e+01	3.9279e+01	9.8219e+01	9.2730e+01	4.0667e+02	1.5340e+03
+	Std.	3.6833e−02	2.2475e+01	9.3594e−01	3.5371e+00	8.2411e+01	1.9651e+02
+f5	Mean	3.1771e−09	2.0717e+01	6.5777e−11	2.1133e+01	3.6480e−10	1.9724e+01
+	Std.	2.0798e−09	1.8598e−01	3.2900e−11	3.5337e−02	1.4129e−10	4.8627e+01
+f6	Mean	5.4677e−14	2.1669e−05	8.8363e−14	5.2933e−05	3.8723e−13	3.1609e−01
+	Std.	2.3220e−15	5.0741e−06	8.9339e−16	6.8093e−07	2.7343e−13	4.6532e−02
+f7	Mean	0	1.4792e−03	0	1.1797e−09	0	3.0348e−06
+	Std.	0	3.1184e−03	0	6.0722e−10	0	3.5308e−06
+f8	Mean	0	5.8873e+01	0	3.2795e+02	0	5.0365e+03
+	Std.	0	1.1657e+01	0	7.8394e+01	0	7.3559e+02
+f9	Mean	7.4167e−04	7.6365e−04	2.4262e−03	1.2728e−03	6.3225e−03	6.6507e−03
+	Std.	2.3407e−05	0	3.2942e−05	7.8821e−09	1.3305e−04	4.9866e−04
+f10	Mean	0	1.1073e+00	0	2.0702e+00	0	4.2632e+01
+	Std.	0	5.4772e−01	0	5.0188e−01	0	1.9812e+00
+f11	Mean	6.7675e−01	4.4004e−01	8.2625e−01	5.6502e−01	1.0247e+00	8.9623e−01
+	Std.	1.0973e−01	4.5514e−02	1.1921e−01	6.0586e−02	1.0999e−01	7.8977e−02
+f12	Mean	4.2917e−01	2.8726e−01	4.4680e−01	3.5976e−01	6.3666e+00	5.7678e−01
+	Std.	3.0562e−02	4.6103e−02	2.9138e−02	7.7432e−02	1.7518e+00	4.0126e−01
+f13	Mean	0	2.6501e+03	0	4.5850e+03	0	2.2925e+04
+	Std.	0	2.0368e+02	0	9.5869e−13	0	0
+
+Table 5 shows that highlighting PS–ABC as the best performing algorithm of the comparison, with a rank of 1.423076 for the Friedman test. The p-value computed through the statistics of Friedman test strongly indicated the existence of significant differences among five algorithms. However, the Friedman test can only found significant differences over the whole multiple comparisons, unable to establish proper comparisons between these algorithms. Thus, a control method is highlighted (i.e. the best performing algorithm) through the application of the test. In the multiple comparisons test, we will illustrate the use of a family of post-hoc procedures, these post-hoc methods allow us to find which algorithms are significantly better/worse than the control method. The test statistic z-value for comparing the ith algorithm and jth algorithm is given by
+(15)
+
+where Ri and Rj are the average rankings by the Friedman test of the algorithms compared.
+
+The z-value is used to detect the corresponding probability (p-value) from the table of normal distribution N(0, 1), which is then compared with an appropriate level of significance α (Sheskin, 2003). However, when p-value is considered in a multiple test, it reflects the probability error of a certain comparison, but it does not take into account the remaining comparisons belonging to the family. To overcome this problem, we will introduce these Adjusted p-values (APVs) include the Bonferroni–Dunn procedure (Dunn, 1961), the Holm procedure (Holm, 1979), the Holland procedure (Holland & Copenhaver, 1987), the Finner procedure (Finner, 1993) and the Hochberg procedure (Hochberg, 1988) in this section. The procedures of p-value adjustment are given below:
+
+•
+
+    The Bonferroni–Dunn procedure: It adjusts the value of α in a single step by dividing it by the number of comparisons performed, 
+
+    .
+
+    Bonferroni APVi: 
+
+•
+
+    The Holm procedure: It adjusts the value of α in a step-down manner.
+
+    Holm APVi: 
+
+•
+
+    The Holland procedure: It also adjusts the value of α in a step-down manner, as Holm's method.
+
+    Holland APVi: 
+
+•
+
+    The Finner procedure: this also adjusts the value of α in a step-down manner, as Holm's and Holland's methods.
+
+    Finner APVi: 
+
+•
+
+    The Hochberg procedure: It adjusts the value of α in a step-up way.
+
+    Hochberg APVi: 
+
+    .
+
+where i and j are the associated index of problems and algorithms, respectively. pi and pj are different p-values.
+
+Table 8. The different Limit1 and Limit2 values, which controls the onlooker and scout production, respectively (Here
+and
+
+).
+Different control values
+l1	0.01	0.01	0.01	0.04	0.04	0.07	0.07	0.1	0.1	∞
+l2	0.05	0.1	0.5	0.09	0.4	0.1	0.7	0.5	1	∞
+
+Table 9. The results obtained by the PS–ABC less than the threshold values, the method will be terminated.
+	The threshold values
+f	D = 60	D = 100	D = 500
+f1, f2, f3	1.0e−60	1.0e−60	1.0e−60
+f4	6.0e+01	1.0e+02	5.0e+02
+f5	5.0e−11	1.0e−10	5.0e−10
+f6	5.0e−14	1.0e−13	5.0e−13
+f7, f8, f13	1.0e−14	1.0e−13	1.0e−13
+f9	1.0e−03	5.0e−03	1.0e−02
+f10	1.0e−04	1.0e−03	1.0e−03
+f11, f12	1.0e+00	1.0e+00	1.0e+01
+
+Table 10. Optimization results of the different control values for f1 to f5 functions with different dimension values after 20 runs. (The shadow and bold values are the minimum and the maximum average FEs values, respectively, except for consider the values of Limit1 and Limit2 approaches to infinity.).
+			D = 60	D = 100	D = 500
+f	l1	l2	Mean	Std.	FEs	Mean	Std.	FEs	Mean	Std.	FEs
+f1	0.01	0.05	8.6711e−60	9.3050e−60	154,130	7.2298e−60	1.4252e−60	241,810	8.3125e−60	1.2136e−60	709,631
+	0.01	0.1	6.9551e−60	1.9439e−60	166,840	8.2323e−60	7.2251e−60	246,780	8.4638e−60	1.8991e−60	831,911
+	0.01	0.5	7.2310e−60	1.6102e−60	212,140	7.0294e−60	2.0172e−60	318,640	9.1478e−60	2.1467e−60	3,291,510
+	0.04	0.09	8.9956e−60	7.8793e−61	174,860	9.2064e−60	6.4219e−60	243,120	8.4238e−60	1.1234e−60	761,821
+	0.04	0.4	8.8737e−60	5.0883e−61	195,930	7.6491e−60	8.1170e−61	286,680	7.6450e−60	3.0456e−61	795,600
+	0.07	0.1	7.3618e−60	2.2815e−61	208,060	8.2168e−60	1.3758e−60	260,580	4.1045e−60	2.8772e−60	814,150
+	0.07	0.7	6.8953e−60	2.3431e−60	287,180	6.6290e−60	1.6588e−60	452,320	6.0047e−60	3.3673e−60	780,711
+	0.1	0.5	6.2757e−60	2.1693e−60	356,950	6.4331e−60	9.0038e−61	709,440	2.8399e−60	5.7503e−60	3,463,610
+	0.1	1	1.2363e+07	3.6121e+07	467,220	5.6070e+07	1.6660e+08	850,200	1.0642e+08	1.4781e+08	4,875,510
+	∞	∞	8.9514e+06	9.203e+06	600,000	2.8038e+07	4.1502e+07	1,000,000	5.4601e+08	6.1479e+08	5,000,000
+f2	0.01	0.05	8.1153e−60	1.2417e−60	172,740	7.9132e−60	1.1863e−60	236,960	9.4115e−60	3.2340e−61	661,460
+	0.01	0.1	7.8515e−60	1.1502e−60	177,680	8.2920e−60	1.5530e−60	245,080	8.6755e−60	8.5199e−61	860,050
+	0.01	0.5	7.8076e−60	1.4074e−60	226,550	8.3229e−60	1.4774e−60	322,900	7.4678e−60	6.7554e−61	2,564,251
+	0.04	0.09	8.5246e−60	1.5617e−60	175,820	8.2112e−60	1.1177e−60	244,560	9.6741e−60	1.8012e−61	743,550
+	0.04	0.4	6.6849e−60	2.2434e−60	196,470	7.3959e−60	2.1038e−60	285,180	4.4568e−60	4.3504e−61	1,744,581
+	0.07	0.1	8.0589e−60	1.9310e−60	177,060	7.3959e−60	2.1038e−60	285,180	2.0144e−60	1.0045e−60	897,120
+	0.07	0.7	6.5970e−60	1.9758e−60	260,530	7.4955e−60	1.4463e−60	412,220	5.6373e−60	3.7326e−61	954,350
+	0.1	0.5	6.5526e−60	2.9054e−60	371,020	6.4668e−60	2.4983e−60	590,900	9.3454e−02	4.6530e−01	4,754,780
+	0.1	1	2.9713e+05	8.9139e+05	453,980	1.1716e+07	3.51480e+06	849,630	2.0064e+04	2.6312e+03	4,874,120
+	∞	∞	2.1128e+07	1.4798e+07	600,000	1.2241e+08	9.5691e+07	1,000,000	3.3478e+09	4.7038e+09	5,000,000
+f3	0.01	0.05	7.8223e−60	1.3837e−60	173,250	8.7802e−60	1.1439e−60	240,300	9.1260e−60	7.6574e−61	686,731
+	0.01	0.1	8.0591e−60	1.1956e−60	175,660	8.9251e−60	9.2568e−61	243,600	8.3433e−60	1.1272e−60	778,410
+	0.01	0.5	8.4507e−60	1.2971e−60	214,250	7.4025e−60	1.4571e−60	322,900	5.3265e−60	1.8534e−61	987,851
+	0.04	0.09	8.3332e−60	1.2099e−60	173,610	9.1755e−60	7.8396e−60	240,760	9.2576e−60	7.1928e−61	730,780
+	0.04	0.4	8.0441e−60	1.4608e−60	194,180	8.0116e−60	9.0618e−61	287,180	9.8974e−60	6.0756e−60	1,256,700
+	0.07	0.1	8.8450e−60	7.6298e−61	173,850	8.6063e−60	1.5434e−60	241,440	5.7058e−60	4.4010e−61	798,520
+	0.07	0.7	7.2166e−60	1.4531e−60	253,690	7.2344e−60	2.3003e−60	400,260	6.8584e−60	1.7494e−61	963,521
+	0.1	0.5	8.3982e−60	1.5610e−60	213,240	9.0283e−60	1.2464e−60	318,720	6.2914e−60	4.7003e−61	976,580
+	0.1	1	6.0843e−60	2.3272e−60	337,550	6.3109e−60	2.5222e−60	536,690	4.9734e+02	3.2145e+03	4,914,210
+	∞	∞	2.3609e+04	1.8042e+04	600,000	3.7044e+04	4.2855e+03	1000,000	9.6326e+05	7.2199e+04	5,000,000
+f4	0.01	0.05	9.6196e+01	1.9497e+00	60,181	9.9895e+01	1.0443e+00	98,981	4.9998e+02	2.3245e+00	304,830
+	0.01	0.1	9.0914e+01	8.3409e+00	66,131	9.9864e+01	9.7350e+00	109,400	4.9996e+02	4.3245e+00	712,261
+	0.01	0.5	8.7200e+01	1.1082e+01	159,230	9.9768e+01	1.1919e−01	263,120	5.4691e+02	2.0931e+00	1,014,520
+	0.04	0.09	9.3156e+01	4.5123e+00	61,171	9.9807e+01	2.0514e−01	101,780	4.9916e+02	1.0053e+00	356,501
+	0.04	0.4	9.1331e+01	5.3593e+00	120,760	9.9233e+01	1.9318e−01	216,200	4.8940e+02	1.4538e+01	1,263,161
+	0.07	0.1	9.7472e+01	1.5912e+00	65,391	9.9528e+01	4.4939e−01	299,280	4.9998e+02	1.2104e+01	456,711
+	0.07	0.7	8.4860e+01	9.7612e+00	224,700	9.9421e+01	3.2312e−01	398,820	5.0414e+02	3.3630e+01	1,220,461
+	0.1	0.5	7.9731e+01	1.1460e+01	282,520	9.9421e+01	3.2312e−01	398,820	4.8940e+02	1.8047e+01	1,175,101
+	0.1	1	8.8470e+01	1.0298e+01	247,340	9.9419e+01	3.7358e+01	479,440	4.2024e+02	7.5625e+01	2,441,540
+	∞	∞	3.4615e+06	6.0547e+06	600,000	1.7227e+07	4.2855e+07	1,000,000	5.0670e+08	9.4870e+08	5,000,000
+f5	0.01	0.05	7.6883e−11	2.7997e−11	178,080	7.0197e−11	1.3287e−11	369,420	3.7300e−10	1.6544e−10	3,169,500
+	0.01	0.1	7.8813e−11	2.3376e−11	201,910	7.4582e−11	9.6479e−12	349,080	3.6068e−10	1.7413e−10	2,500,561
+	0.01	0.5	9.2799e−11	6.4286e−12	259,250	8.7348e−11	3.4345e−12	422,500	3.7341e−10	1.6253e−10	3,169,561
+	0.04	0.09	8.3512e−11	1.2843e−11	197,340	5.9893e−11	1.4041e−11	389,180	3.7300e−10	2.4346e−11	3,168,800
+	0.04	0.4	6.3774e−11	1.1750e−11	311,660	5.1677e−11	1.4119e−11	545,000	3.7680e−10	3.7606e−11	3,179,640
+	0.07	0.1	8.5109e−11	9.7565e−11	186,470	7.6080e−11	1.2138e−11	351,160	1.5851e−10	4.3245e−10	2,951,850
+	0.07	0.7	7.2895e−11	1.0244e−11	239,510	7.8686e−11	8.4290e−12	389,200	4.8358e−10	2.0416e−11	3,146,570
+	0.1	0.5	8.5759e−11	1.6234e−11	258,180	8.6991e−11	5.4332e−12	514,000	2.2649e−10	3.5536e−10	3,127,300
+	0.1	1	6.8601e−11	1.3690e−11	311,690	6.9746e−11	7.0225e−12	516,100	2.2649e−10	1.6432e−11	3,218,400
+	∞	∞	2.3216e+01	1.4087e+01	600,000	2.7683e+01	1.7210e+01	1,000,000	4.8974e+01	1.2426e+01	5,000,000
+
+Table 11. Optimization results of the different control values for f6–f10 functions with different dimension values after 20 runs. (The shadow and bold values are the minimum and the maximum average FEs values, respectively, except for consider the values of Limit1 and Limit2 approaches to infinity.).
+			D = 60	D = 100	D = 500
+f	l1	l2	Mean	Std.	FEs	Mean	Std.	FEs	Mean	Std.	FEs
+f6	0.01	0.05	5.4196e−14	4.1219e−15	791	9.0994e−14	4.2876e−15	951	4.5344e−13	4.9286e−15	1,331
+	0.01	0.1	5.3279e−14	5.0169e−15	881	8.6239e−14	2.5085e−15	1,041	4.5122e−13	1.3401e−14	1,461
+	0.01	0.5	5.5447e−14	2.8365e−15	831	8.9075e−14	2.5303e−15	981	4.6053e−13	1.6708e−14	1,671
+	0.04	0.09	5.2778e−14	2.5360e−15	781	8.8909e−14	3.4358e−15	901	4.5734e−13	2.3924e−14	1,301
+	0.04	0.4	5.4196e−14	2.7684e−15	831	9.2246e−14	1.7016e−15	961	4.4788e−13	6.3074e−14	1,451
+	0.07	0.1	5.3445e−14	3.6595e−15	821	9.1579e−14	3.6936e−15	1021	4.5372e−13	1.3210e−12	1,521
+	0.07	0.7	5.6198e−14	2.4763e−15	825	9.0243e−14	3.6405e−15	921	4.6290e−13	1.1394e−12	1,151
+	0.1	0.5	5.3195e−14	2.4874e−15	771	8.8408e−14	4.2673e−15	941	4.4788e−13	1.0067e−13	1,101
+	0.1	1	5.2861e−14	2.9154e−15	861	9.1578e−14	4.1379e−15	1,001	4.6040e−13	3.5212e−14	2,140
+	∞	∞	5.3695e−02	3.0092e−02	600,000	9.1912e−02	5.1863e−02	1,000,000	4.5094e−01	6.4736e−01	5,000,000
+f7	0.01	0.05	8.6142e−14	5.3302e−15	100,650	8.3866e−14	1.4738e−14	140,340	8.6264e−14	5.2671e−15	434,361
+	0.01	0.1	8.4655e−14	1.1532e−14	105,960	7.7782e−14	1.8034e−14	150,680	9.7921e−14	1.0456e−15	763,371
+	0.01	0.5	7.7126e−14	2.1096e−14	182,050	8.3266e−14	1.6970e−14	290,760	9.1062e−14	2.8710e−14	2,475,210
+	0.04	0.09	8.6741e−14	7.5134e−15	101,080	8.8062e−14	1.2134e−14	144,900	9.1075e−14	3.5183e−15	485,901
+	0.04	0.4	7.0210e−14	2.5069e−14	138,290	8.1468e−14	2.2369e−14	224,280	9.2371e−14	3.7430e−15	1,453,301
+	0.07	0.1	8.4910e−14	1.2581e−14	103,650	5.1314e−14	3.0782e−14	206,900	7.2053e−14	6.5040e−14	558,401
+	0.07	0.7	3.5416e−14	2.9238e−14	232,340	4.0989e−14	1.5923e−14	397,080	6.4608e−13	4.6321e−12	1,754,220
+	0.1	0.5	4.6862e−14	2.0619e−14	223,790	2.2493e−14	1.7356e−14	502,040	3.3046e−13	4.0708e−12	1,942,850
+	0.1	1	2.8699e−14	3.3421e−14	441,210	4.3709e−14	2.9682e−14	750,910	2.8499e−10	5.1425e−11	3,547,110
+	∞	∞	9.4947e−01	2.9754e−01	600,000	1.8191e−01	2.3498e−01	1,000,000	8.6740e−01	1.2257e+00	5,000,000
+f8	0.01	0.05	7.3896e−14	2.6409e−14	150,600	8.1001e−14	1.5812e−14	223,850	6.2764e−14	2.9736e−14	547,861
+	0.01	0.1	8.7752e−14	1.0180e−14	149,730	8.5975e−14	1.1042e−14	219,520	4.5001e−14	2.7416e−14	811,131
+	0.01	0.5	7.5495e−14	2.0210e−14	193,660	6.9988e−14	2.4680e−14	301,220	6.5421e−14	4.8532e−14	2,541,780
+	0.04	0.09	7.6738e−14	1.8182e−14	123,580	8.7752e−14	1.0575e−14	167,660	7.2238e−14	2.2484e−14	713,250
+	0.04	0.4	7.6916e−14	1.8306e−14	155,390	7.6027e−14	1.3453e−14	246,060	6.5725e−14	1.0698e−14	1,288,741
+	0.07	0.1	5.6843e−14	2.8698e−14	201,930	5.5067e−14	2.6704e−14	440,140	1.7764e−14	3.0724e−11	1,340,250
+	0.07	0.7	4.9915e−14	3.1681e−14	282,860	6.2527e−14	3.1883e−14	472,920	5.0120e−11	1.4162e−11	2,714,660
+	0.1	0.5	2.5401e−14	2.5084e−14	413,950	7.1022e+01	1.4204e+02	840,740	4.2548e−11	5.0974e−10	3,563,560
+	0.1	1	1.0186e+02	1.2702e+02	493,720	8.3468e+01	1.0693e+02	853,160	5.8498e+01	3.5325e+01	4,572,140
+	∞	∞	1.1187e+03	5.7760e+02	600,000	2.2212e+03	8.4883e+03	1,000,000	3.5237e+04	4.7613e+04	5,000,000
+f9	0.01	0.05	9.6469e−04	3.8063e−05	73,581	4.3253e−03	4.9301e−04	98,291	9.8367e−03	1.5119e−04	325,730
+	0.01	0.1	9.6547e−04	3.2686e−05	79,701	4.4348e−03	3.0755e−04	107,040	9.9082e−03	6.4270e−05	498,971
+	0.01	0.5	9.3147e−04	5.1378e−05	160,790	3.6974e−03	8.8560e−04	263,820	6.5435e−03	2.4622e−05	2,407,801
+	0.04	0.09	9.8027e−04	1.1720e−05	73,511	4.8257e−03	1.3565e−04	99,841	9.7115e−03	1.4428e−04	393,131
+	0.04	0.4	8.4416e−04	5.5603e−05	126,920	3.1662e−03	1.1942e−03	212,940	7.8505e−03	1.7501e−04	1,598,710
+	0.07	0.1	9.3971e−04	7.8786e−05	105,441	3.9218e−03	1.3793e−03	141,140	7.0894e−03	5.9082e−02	2,110,420
+	0.07	0.7	8.4859e−04	6.5559e−05	234,260	3.7724e−03	1.1566e−03	418,160	1.3541e−02	1.5017e−02	1,524,100
+	0.1	0.5	8.1945e−04	8.1047e−05	262,730	2.5986e−03	1.2884e−03	463,260	1.0630e−02	1.0788e−02	1,150,440
+	0.1	1	7.8474e−04	3.0052e−05	457,920	6.1351e−03	1.7499e−03	875,570	2.4635e−02	1.3425e−02	4,125,740
+	∞	∞	1.7938e+02	2.3482e+02	600,000	1.1219e+03	1.7114e+03	1,000,000	1.3039e+03	1.8432e+03	5,000,000
+f10	0.01	0.05	6.1475e−04	2.2868e−04	601	6.3253e−04	2.2215e−04	531	7.9402e−04	1.8154e−04	781
+	0.01	0.1	5.2565e−04	2.8521e−04	591	6.9675e−04	2.5552e−04	581	8.0470e−04	2.0363e−04	811
+	0.01	0.5	4.5176e−04	3.0432e−04	597	7.1666e−04	8.9564e−05	601	7.3257e−04	1.4872e−04	1,010
+	0.04	0.09	5.2516e−04	2.7924e−04	561	5.5991e−04	1.9277e−04	561	4.7734e−04	1.1750e−04	801
+	0.04	0.4	4.2168e−04	2.1773e−04	574	7.7318e−04	1.3844e−04	571	4.0187e−04	2.5877e−04	921
+	0.07	0.1	3.4963e−04	2.2768e−04	601	7.8462e−04	1.3406e−04	561	8.7875e−04	2.3881e−04	790
+	0.07	0.7	5.9162e−04	3.3333e−04	571	5.3056e−04	3.2894e−04	541	3.8132e−04	2.5363e−04	831
+	0.1	0.5	4.4411e−04	2.6805e−04	621	5.6053e−04	1.6727e−04	581	8.7178e−04	4.0904e−04	850
+	0.1	1	5.7022e−04	3.0429e−04	651	5.3842e−04	2.1836e−04	571	8.5517e−04	1.1750e−04	1,171
+	∞	∞	1.7938e+02	2.3482e+02	600,000	1.7938e+02	2.3482e+02	1,000,000	1.7938e+02	2.3482e+02	5,000,000
+
+Table 12. Optimization results of the different control values for f11–f13 functions with different dimension values after 20 runs. (The shadow and bold values are the minimum and the maximum average FEs values, respectively, except for consider the values of Limit1 and Limit2 approaches to infinity.).
+			D = 60	D= 100	D = 500
+f	l1	l2	Mean	Std.	FEs	Mean	Std.	FEs	Mean	Std.	FEs
+f11	0.01	0.05	9.2401e−01	6.9768e−02	64,571	9.7794e−01	9.9113e−02	113,150	8.9366e+00	9.2379e−01	862,100
+	0.01	0.1	9.5838e−01	5.1719e−02	124,230	9.2925e−01	5.2735e−02	106,780	8.9171e+00	1.2041e−01	244,630
+	0.01	0.5	9.7299e−01	3.8319e−02	152,051	9.8321e−01	2.6431e−02	393,380	1.2098e+01	1.3091e+00	1,164,360
+	0.04	0.09	9.7363e−01	3.1165e−02	65,091	9.8420e−01	3.2234e−02	278,280	8.9252e+00	2.8572e−01	245,950
+	0.04	0.4	9.5772e−01	2.9734e−02	179,101	9.8465e−01	3.5267e−02	484,840	7.9547e+00	4.0276e−01	1,240,781
+	0.07	0.1	9.8732e−01	3.9775e−02	78,450	1.0063e+00	2.3819e−02	634,700	8.5988e+00	7.1025e+00	754,100
+	0.07	0.7	9.8383e−01	2.4092e−02	116,861	9.7383e−01	2.1146e−02	108,260	9.5373e+00	4.0142e+00	292,240
+	0.1	0.5	9.8306e−01	9.7520e−02	172,411	9.9047e−01	4.3861e−02	460,120	9.0479e+00	3.6406e+00	257,500
+	0.1	1	9.9942e−01	6.4637e−02	222,420	9.8570e−01	2.0075e−02	284,220	9.4772e+00	2.1432e+00	962,010
+	∞	∞	1.0072e+00	9.6395e−02	176,941	1.0115e+00	4.1768e+00	893,590	2.3527e+01	6.1245e+00	1,736,334
+f12	0.01	0.05	8.9673e−01	9.7099e−02	54,801	8.7049e−01	1.1546e−01	80,321	9.2046e+00	8.1947e−01	179,500
+	0.01	0.1	7.6934e−01	1.5307e−01	60,981	7.9452e−01	1.0304e−01	88,821	9.9468e+00	5.2198e−01	468,561
+	0.01	0.5	7.6808e−01	1.3664e−01	148,800	8.1738e−01	1.4368e−01	229,020	3.7280e+01	4.7455e+00	954,510
+	0.04	0.09	8.5717e−01	1.2831e−01	55,021	9.0512e−01	1.1514e−01	85,081	9.3893e+00	1.5485e+00	266,140
+	0.04	0.4	8.8876e−01	1.0314e−01	68,621	9.0501e−01	1.6072e−01	124,121	8.4780e+00	3.0558e+00	897,150
+	0.07	0.1	8.5920e−01	1.0208e−01	56,771	9.1954e−01	8.0318e−02	90,521	9.3456e+00	1.0128e+00	253,740
+	0.07	0.7	8.0036e−01	1.4891e−01	61,301	6.8848e−01	1.8789e−01	100,101	7.5437e+00	1.0278e+00	586,420
+	0.1	0.5	8.9852e−01	7.1733e−01	64,101	8.6193e−01	9.3012e−02	91,881	7.6163e+00	1.5978e+00	244,400
+	0.1	1	8.3030e−01	1.2581e−01	57,781	8.2845e−01	1.2504e−01	87,341	1.2356e+01	1.5321e+00	659,810
+	∞	∞	8.6506e+02	1.4424e+02	600,000	8.2025e+03	1.2209e+02	1,000,000	9.0041e+03	1.1372e+03	5,000,000
+f13	0.01	0.05	1.4976e−14	2.1566e−14	568,900	2.1221e−14	2.6178e−14	948,610	4.7277e−14	2.7607e−14	4,749,061
+	0.01	0.1	1.2324e−14	1.5134e−14	569,150	1.0158e−14	6.6436e−15	948,520	5.5696e−14	2.6875e−14	4,784,630
+	0.01	0.5	1.5681e−14	2.4351e−14	568,820	3.8108e−15	2.6066e−15	949,520	1.3345e−13	1.5526e−14	4,894,630
+	0.04	0.09	1.3106e−14	1.6086e−14	569,320	3.6104e−14	2.2094e−14	949,480	7.8093e−13	5.3938e−13	4,786,331
+	0.04	0.4	2.6584e−14	2.8335e−14	569,460	1.1157e−14	7.1875e−15	949,680	1.8950e−13	1.5705e−12	4,957,950
+	0.07	0.1	1.6814e−14	1.9900e−14	569,450	4.2000e−14	2.7689e−14	948,560	6.4948e−14	1.4630e−13	4,758,131
+	0.07	0.7	1.5803e−14	1.1662e−14	569,230	7.9825e−15	4.3163e−15	950,080	5.6670e−01	3.0104e−01	4,976,430
+	0.1	0.5	1.4066e−14	1.1885e−14	569,370	2.9032e−15	3.6128e−15	949,340	4.6532e−13	5.7653e−13	4,796,430
+	0.1	1	1.5204e−14	2.5460e−14	569,892	7.5396e−15	1.6657e−15	949,900	2.2879e−12	2.2351e−11	4,832,140
+	∞	∞	2.7006e+03	2.4697e+02	600,000	4.5162e+03	3.6869e+02	1,000,000	3.2848e+04	2.1684e+01	5,000,000
+
+We can get the z-value, unadjusted p-value and these APVs through the post-hoc procedures in Table 5. As Tables 5 and 6 show, the Friedman test shows a significant improvement of PS–ABC over PSO, ABC, ABC–PS, and HPA for all these post-hoc procedures, except for the Bonferroni–Dunn test.
+
+In order to analyze the convergence speed, the convergence curves are drawn in Fig. 2 for some functions (f1, f9 and f12) in a particular run of PSO, ABC, ABC–PS, HPA, and PS–ABC. As shown in Fig. 2 (a, b, and c), the convergence speed of PS–ABC on function f1 was so fast and quickly found the global optimum 0 (i.e.
+
+). However, although the PS–ABC for function f9 with D = 500 and f12 with D = 60, 100, and 500 cannot converge to the global optimum, PS–ABC converges faster than ABC, ABC–PS, and HPA, as shown in Fig. 2 (f, g, h, and i). From Fig. 2, we conclude that PS–ABC on these functions almost converges faster than other algorithms except for PSO. This is because that PSO has higher convergence speed and the proposed PS–ABC uses the exploration ability of the ABC based on PSO in the algorithm process. Thus, PS–ABC like PSO has a fast convergence speed.
+5.3. Comparison of PS–ABC with OXDE
+
+Wang, Cai, and Zhang (2012) proposed an orthogonal crossover based differential evolution (OXDE). The performance of the OXDE algorithm has been examined on 24 test instances from (Noman & Iba, 2008; Suganthan et al., 2005), and extensive experiments have demonstrated that OXDE was more effective than the traditional DE and state-of-the-art DE (denoted as ODE) algorithm. The parameters of OXDE are the same as in the paper (Wang et al., 2012) except the population size (N = 100) to ensure fairness, that is, scaling factor F = 0.9, crossover control parameter CR = 0.9, and MaxFES = D*10,000 (D is the dimensionality of the problem).
+
+In this section, we compare the PS–ABC with OXDE over 13 high-dimensional benchmark functions with D = 60, 100, and 500. The results of 20 independent runs were recorded in Table 7. From the mean and Std. values shown in Table 7, PS–ABC outperforms OXDE in most cases. The details are as follows: PS–ABC performed better than OXDE for functions f1, f2, f3, f5, f6, f7, f8, f10, and f13 with D = 60, 100, and 500. For functions f1, f2, f3, f7, f8, f10, and f13, PS–ABC can obtain the global optimum 0 and their Std. values are 0. For f5 and f6, PS–ABC gives the best results although it cannot obtain the global optimum, and the Std. value is the least. For f9, PS–ABC outperforms OXDE with D = 60 and 500. However, PS–ABC gives poorer performance than OXDE in solving f4, f11 and f12 with D = 60, 100 and 500 except for function f4 with D = 500. These results indicate that the PS–ABC is efficient in solving high-dimensional benchmark problems.
+5.4. Experiments to analyze the PS–ABC control parameters
+
+PS–ABC has two control parameters that affect its performance. These parameters are Limit1 and Limit2, which controls the onlooker and scout bee production, respectively. In order to analyze the effect of the control parameters, it has been 20 runs for f1 to f13 functions with different dimension values. For each function, MaxFES was set to D*10,000 and N was set to 100 in all experiments. In this section,
+and
+
+. The different Limit1 and Limit2 values are decided by l1 and l2, and the corresponding values are presented in Table 8. In Table 8, as the values of l1 and l2 approaches 1, the total number of the onlookers and scouts produced gradually reduce. When the values of l1 and l2 equals to infinity (i.e. ∞), the total number of the onlookers and scouts produced goes to zero. It means that the PS–ABC algorithm only has PSO phase that exploited the search space in the entire iteration process.
+
+The convergence speed and optimal solution are controlled by the different Limit1 and Limit2 (i.e. l1 and l2) values in the PS–ABC algorithm. To verify this hypothesis, some experiments are performed and are then compared in Tables 10–12. The results given there are the mean, Std. values and average FEs values needed to reach the threshold expressed as acceptable solutions specified in Tables 10–12. The FEs is function evaluation index, which can indicate the convergence speed of the algorithm. When the FEs value is smaller, the faster convergence speed of the algorithm will be. These threshold values in different dimensions are presented in Table 9.
+
+As mentioned before, when the values of l1 and l2 equal to infinity, the PS–ABC algorithm only has PSO phase and obtained poor results in Tables 10–12. For functions f1, f2, f3, f4, f7, and f12 with
+and , the PS–ABC algorithm in different dimensions (D  = 60, 100, and 500) obtained the minimum average FEs values. PS–ABC in functions f9 and f10 obtained the minimum average FEs values when control parameters and
+
+with D = 100 and 500, respectively. In addition, when the l1 value close to l2, the PS–ABC obtained the minimum average FEs values such as f1, f2, f3, f4, f6, f7, f8, f9, f10 and f12 with D = 60, 100, and 500. As seen from Tables 10–12, for all functions except for f5(D = 100), f6 (D = 60 and 100), f10(D = 100), f11(D = 500) and f12(D = 60, 100, and 500), when the control parameter values of l1 and l2 are very high, the PS–ABC obtained the maximum average FEs values. Therefore, it can be concluded that as the control parameter values of l1 and l2 increases, the PS–ABC algorithm produces poor results for most of functions. This is because that the exploration phase in the PS–ABC is gradually weakened with the increase of the l1 and l2 values, and the algorithm produces poor results.
+
+Therefore, based on the above analysis, the convergence speed and optimal solution are controlled by the different Limit1 and Limit2 values in the PS–ABC algorithm. As expected, we should choose a suitable Limit1 and Limit2 control parameter values for all high-dimensional functions. When the l1 and l2 values are small and close to each other, the algorithm produces better results. In addition, the comprehensive results of
+and for all functions are better than other control parameter values as showed in Tables 10–12. Thus, the control parameters were set to be and , where and
+
+in this paper.
+6. Conclusion
+
+In this paper, a hybrid algorithm called PS–ABC was proposed to solve high-dimensional optimization problems. This method use the exploration ability of the ABC based on PSO in the algorithm process. In PS–ABC, the exploitation ability of PSO was used to find the best solution and increase the convergence rate of the algorithm, whereas the exploration ability of ABC was used to search the solution space. The efficiency of the proposed method was examined on 13 high-dimensional benchmark functions from the IEEE-CEC 2014 competition problems. The results showed that PS–ABC is an efficient, fast converged and robust optimization method compared to the original PSO, ABC, hybrid HPA, ABC–PS and OXDE to solve high-dimensional optimization problems.
+
+Our future study will be focus on reduce the influence of some parameters and testing more high-dimensional complex problems as well. Furthermore, we will try to develop this algorithm for high dimensional multi-object optimization problems in the near future.

@@ -1,0 +1,226 @@
+Near field acoustic localization under unfavorable conditions using feedforward neural network for processing time difference of arrival
+
+Abstract
+
+Using time difference of arrival (TDOA) is one of the two approaches that utilize time delay for acoustic source localization. Combining the obtained TDOAs together with geometrical relationships within acoustic components results in a system of hyperbolic equations. Solving these hyperbolic equations is not a trivial procedure especially in the case of a large number of microphones. The solution is additionally compounded by uncertainties of different backgrounds. The paper investigates the performance of neural networks in modelling a hyperbolic positioning problem using a feedforward neural network as a representative. For experimental purposes, more than 2000 sound files were recorded by 8 spatially disposed microphones, for as many arbitrarily chosen acoustic source positions. The samples were corrupted by high level correlated noise and reverberation. Using cross-correlation, with previous signal pre-processing, TDOAs were evaluated for every pair of microphones. On the basis of the obtained TDOAs and accurate sound source positions, the neural network was trained to perform sound source localization. The performance was examined using a large number of samples in terms of different acoustic sensors setups, network configurations and training parameters. The experiment provided useful guidelines for the practical implementation of feedforward neural networks in the near-field acoustic localization. The procedure does not require substantial knowledge of signal processing and that is why it is suitable for a broad range of users.
+
+Keywords
+Processing time difference
+Acoustic source localization
+Time difference of arrival
+Feedforward neural network
+Artificial intelligence
+
+1. Introduction
+
+Acoustic source localization is the determination of sound source position, relative to some reference frame, by using sound signals. It is used in diverse military, industrial, scientific, office, and home applications for speech signal processing (Clifford, Rathborn, & Bull, 1981), intelligent living environments (Principi, Droghini, Squartini, Olivetti, & Piazza, 2016), maintenance and structural monitoring systems (Costiner et al., 2014), sonar (Bokhari & Khan, 2012), surveillance systems (Vozáriková, Pleva, Juhár, & Cižmár, 2011) or to locate sources of artillery fire (Calhoun, Showen, Beldock, Manderville, & Dunham, 2012). The process is performed passively or actively and can take place in liquids, gases and solids. Passive systems use sound signals coming from acoustic sources to locate them. On the other hand, active localization is used for locating targets that are not necessarily acoustic sources. Sound pulses are sent and their echoes, reflected from objects, are used for localization (Bokhari & Khan, 2012).
+
+Many implementations of acoustic localization systems try to imitate flexible and integrated sensory functionality of animals (Nikolić, Kim, & Allen, 2012). People and animals are able to point at the horizontal direction that sound is coming from using slightly different signals that arrive at each ear (Lin, Xiao-Yan, Xu, & Zhen-Yang, 2015). For the vertical direction, features of the sound spectrum, produced by a sound reflector (pinna) (Macpherson & Sabin, 2013), are used as the auditory cue. The localization ability can be established by the process of learning through the repetition of movement. Biologically inspired, audio localization systems can be realized by only one, two or by array of microphones (Argentieri, Danes, & Soueres, 2015; Belloch, Gonzalez, Vidal, & Cobos, 2015; Seewald, Gonzaga, Veronez, Minotto, & Jung, 2014).
+
+Audio localization can be applied on different scales, which mostly depends on the sound power level. Localization of lighting phenomena, volcano explosion (Rowell et al., 2014) or aircrafts (Martín, Genescà, Romeu, & Clot, 2016), for instance, is performed from dozens of kilometers, while in the case of small precision mechanisms or material structure investigation localization is performed on the millimeter scale (Grabowski et al., 2016; Tan, Zhu, Su, Wang, Wu & Gu, 2016). The error is determined by the geometry of the microphone array, accuracy of the microphone setup, uncertainties in microphones locations, lack of synchronization within microphones, inexact propagation delays, bandwidth of emitted pulses, presence of noise sources, numerical round off errors, anisotropy, obstacles in the propagation path and other terms.
+
+Representative methods of acoustic localization are intensity difference, beam forming and using time delay estimation (TDE). These methods primarily differ in physical variables utilized for the sound source localization. The first method uses the phenomenon of decreasing the sound source energy as it propagates through the medium (Wu, Wang, Dai, & Tong, 2014). Beam-forming uses a collection of signals, from the array of microphones, for computing a correlation matrix, which is thereafter used for the determination of sound source direction (Radcliffe, Naguib, & Humphreys, 2014). The procedure, known as spatial filtering, is based on subspace-theory. The last approach uses the time delay of arrival (TOA), for the case of far-field localization, or the time difference of arrival (TDOA), in the case of near-field localization, collected at different spatial positions. Obtained delays are used, together with the geometrical positions between acoustic components, for estimating the emitter position. Near-field localization is also known as hyperbolic localization because it requires solving hyperbolic equations (Park, Jeon, & Kim, 2014). The complexity of calculations needed for achieving accurate localization increases dramatically with the size of the sensor array (Belloch et al., 2015; Seewald et al., 2014), yet the problem can be mitigated by doing some of the processing on the sensor platform.
+
+The experiment presented in this paper dealt with near field 3D acoustic localization, motivated by the possibility of locating flying objects, such as insects or drones, in the near field of the microphone array on the basis of acoustic signals they emit. It was performed under extremely bad conditions reflected in high disturbances and reverberation. Neural networks were employed for evaluating acoustic source location because of their high speed during exploitation and possibility to model some of the uncertainties in the experimental setup (microphone positions, locations of parabolic reflectors, lack of synchronization within microphones). The performance of neural networks was investigated using a basic, feedforward, neural network, as a representative, in terms of sensor parameters, network configuration and training parameters. The results and the optimal solution of the localization problem are discussed and presented at the end.
+2. Time difference of arrival (TDOA)
+
+Sound signals received on two spatially separated audio receivers can be expressed by equations
+(1)
+(2)
+where s0(t) is the signal of emitter, ni(t) and nj(t) are the uncorrelated zero-mean Gaussian noise processes, α is the scaled difference in amplitude between the two received signals. After discretization, the previous equations take the form
+(3)
+(4)
+where k is the time sample index and l is the correlation lag between the samples. Time difference of arrival, Δtij, between signals is commonly determined using the cross-correlation function
+(5)
+as the argument l that maximizes its value within the range of possible lags
+(6)
+where Fs is the sampling frequency and T is the size of the observation window. A good approximation of the cross-correlation function can be obtained using the inverse discrete Fourier transformation
+(7)
+where Rij(f) is the cross-power spectral density (XPSD)
+(8)
+
+Some other TDOA estimation algorithms developed for the purpose of TDOA estimation are phase transform, maximum likelihood estimator, average square difference method, adaptive last mean square filter, etc. All of them differ in accuracy and computational complexity.
+
+TDOA estimation in real circumstances is always negatively affected by disturbances of various backgrounds. The quality of signal is measured by the ratio between the original signal amplitude and the amplitude of noise. It is usually expressed in decibels
+(9)
+
+If SNR falls below a certain threshold all methods become unreliable. For the case of the cross-correlation function it is about 13 dB and for the phase transform algorithm about −13.5 dB (Dhull, Arya, & Sahu, 2010).
+
+Since computational efforts have limited effect, SNR ratio is improved using different types of filters. The role of a filter is to suppress the noise while leaving the signal unchanged. The general equation of infinitive impulse response (IIR) filters, in the time domain, has the following form
+(10)
+
+Unlike finite impulse response (FIR) filters, the future state of IIR filters depends not only on the finite number of previous inputs, but also on the finite number of previous outputs. The transfer function of IIR filters can be obtained after the z-transformation of Eq. (10)
+(11)
+
+A filter design procedure means searching for suitable transfer function coefficients that will provide a filter to meet the specification. For instance, a typical specification of a low-pass filter consists of the following parameters:
+
+•
+
+    [0, ωp] - pass-band
+•
+
+    [ωs, π] - stop-band
+•
+
+    [ωp, ωs] - transition band
+•
+
+    dB - pass-band ripple (dB)
+•
+
+    20log10(δs) dB - stop-band ripple (dB)
+
+Graphical representation of these parameters is presented in Fig. 1. Filter design requires considerable knowledge about signal processing and frequency response of both signal and noise. Fortunately, some filters possess the possibility to adapt the transfer function according to an optimization algorithm. Implementing adaptive filters does not require a priori knowledge of signal and noise.
+
+
+Fig. 1. Graphic representation of typical low-pass filter specification parameters.
+3. Hyperbolic equations
+
+A sound signal propagates through a non-dispersive isotropic homogeneous medium, with a constant speed, in all directions. That is why an acoustic source can be considered as the core of a spherical wave. However, in most practical implementations, the wave front is assumed to be planar. Although the assumption significantly simplifies mathematical modeling and processing, it stands only if the radius of the wave front is much greater than the distance between microphones. In other words, the sound source has to be in the far-field of the microphone array. The result of far-field localization is the direction from which the sound is coming. An alternative model, developed for the case of near-field implementation, is the spherical model. It is much more computationally complex but gives the estimation of sound source position. Moreover, the common case in practical applications is that the signal collected by the microphone array is a mixture of far-field and near-field acoustic sources.
+
+The position of an acoustic source is obtained using geometrical relations between the mobile acoustic source and fixed microphones. The distances are estimated indirectly by measuring the time it takes for the signal to reach the microphones from the sound source. Multiplying the obtained times by the velocity of the sound yields unknown distances. The speed of sound is supposed to be known or its dependency with respect to relevant physical parameters. As shown before (6), TDOA has to be calculated for the whole range of possible delays. Harmonic signals behavior repeats periodically so the maximal phase difference is restricted to 2π. To avoid exceeding the range, the maximal allowed difference of distances dij between each pair of microphones should be
+(12)
+
+where λmin is the minimal wave length present in the signal. Fortunately, the majority of real signals are quasi-periodic, which means they never repeat periodically in the exactly same manner. In such cases, the range of possible lags is limited only by computational complexity.
+
+Suppose that Mi(xi, yi, zi), i ∈ [1, N], are the spatial coordinates of N arbitrary disposed microphones and S0(x0, y0, z0) are the spatial coordinates of an acoustic source (Fig. 2). If the source emits a sound pulse at a time t0, then the time of the pulse arrival at the microphone is given by
+(13)
+where ti is the time of arrival at the microphone Mi, ri is the distance between the sound emitter and the microphone Mi. The speed of sound c depends on different physical conditions (temperature, height, humidity…). A simple formula for the case of dry air, commonly used for the approximation of sound velocity in practical applications, is
+(14)
+
+where θ is the temperature of air in degrees Celsius (°C).
+
+
+Fig. 2. Near field sound source localization.
+
+Using Eq. (13) the time delay of arrival between two microphones can be evaluated by
+(15)
+
+The expression (15), indeed, describes a three-dimensional hyperbola because, in terms of Cartesian coordinates, vectors ri can be computed by
+(16)
+where xi, yi, zi and x0, y0, z0 are the Cartesian coordinates of the microphone Mi and the sound source respectively (Kundu, 2014). Combining Eqs. (15) and (16) for all pairs of microphones gives a system of equations
+(17)
+
+where n is the number of microphones.
+
+Since there are 3 unknown variables, x0, y0 and z0, three simultaneous equations, such as Eq. (17), are necessary to determine the sound emitter position. Actually, even three equations are not enough for obtaining a unique solution because of the square root terms (Bucher & Misra, 2002). Adding another microphone provides one more equation and a unique solution of the problem. Four equations also additionally improve the accuracy of the estimated position. More microphones provide a better elimination of, necessarily present, disturbances of different backgrounds. That is why even more than 4 microphones are used in practice. Because there are more equations than unknown variables (n > 3), system of Eq. (17) is overdetermined and finding its solution becomes a nonlinear optimization problem. It is obtained approximately by involving a certain quality criterion (objective function). The most often used in practice is the least squares criterion.
+
+Several algorithms of different complexity have been proposed for solving hyperbolic localization problems. The Newton–Kantorovich method (Polyak, 2006) provides accurate and robust results but has high computational complexity. It can be partially overcome by using some of the gradient methods (Nemirovski, 1999). Unlike the Newton–Kantorovich method, the gradient methods do not require the computation of the inverse matrix. However, they also require a good initial guess, while convergence is not guaranteed in the presence of high disturbances and is still quite intensive computationally. The Levenberg–Marquardt algorithm (Chen, 2016), which is used for the comparison in this paper, combines advantages of the gradient and the Gauss–Newton algorithm. For the case when the number of arbitrarily placed microphones is equal to the number of equations, the Fang's method (Fang, 1990) provides an exact solution and is computationally less intensive in comparison with iterative methods. Chan's (Dehkordi, 2011) solution is valid for both far-field and near-field localization. It is better than Fang's in the sense that it provides a possibility of improving accuracy using redundant measurement. However, it is not suitable when the level of disturbances is relatively high.
+4. Feedforward neural network
+
+Feewforward neural networks (FFN) are a nonlinear model easy to understand and operate with. These networks have the ability to detect complex nonlinear relationships between dependent and independent variables. Since network nodes contain primitive functions, their behavior is determined by composition rules, implicitly placed in the interconnection pattern. The adjustment of the pattern is done not by an explicit programming but through an adaptive method called the learning algorithm (Gonzalez, 1996). The learning algorithm may be slow but the convergence is certain. Because of their massive parallelism, FFN are computationally efficient especially during exploitation. The worst property of neural networks is the “black box” learning approach which does not provide any interpretation of the relations between input and output data. The operating region is limited to the measured region because neural networks are incapable of extrapolating the results outside the measured region.
+
+There are plenty of applications of neural networks for sound source localizations (Chlada, Prevorovsky, Blahacek, 2010; Kalafat & Sause, 2015; Murray, Erwin, & Wermter, 2009; Sidibe, Druaux, Lefebvre, Maze, & Léon, 2016; Zhang, Liu, Zhang, Zhang, & Gu, 2016). In this experiment, feedforward neural networks were chosen because of their speed of signal processing during exploitation. It was essential because of the intention to locate fast objects. The learning process intensity can be avoided easily in the case of mass production. In addition, neural networks provide simple physical realizations made by adjusting electronic components without processors. The physical approach provides better parallelism and consequently faster signal processing.
+
+Artificial neural networks consist of simple processing elements called artificial neurons. A neuron has two functional parts (Fig. 3), the integrating and activation function. The integrating function reduces n input arguments to a single value. The most used integrating function is the sum function
+(18)
+although it can be some other, like multiplication. The second part, the activation function, produces the output of the node taking the result of integrating as its argument. Neural networks with purely linear activation functions are able to approximate linear problems (Kalafat & Sause, 2015) and the most common activation function for approximating nonlinear problems is the sigmoid (hyperbolic tangent) function
+(19)
+
+
+
+Fig. 3. Processing element (artificial neuron).
+
+It squashes the output domain to a narrow range, f(x) ∈ [0,  1]. The derivative of the sigmoid function can be determined by a simple formula
+(20)
+
+which significantly reduces computational complexity. In the case of neural networks, generally, any symmetrical activation function has some advantages (Gonzalez, 1996). The sigmoid function (19) tends to the step function as constant c approaches infinity. The step function has only two possible values, one and zero, so it is used for performing logical operations. The alternative activation functions are symmetric sigmoid, hyperbolic, tangent, ramp, etc.
+
+The topology of an artificial neural network is determined by the number of processing elements (artificial neurons) and the way they are connected (Fig. 4). Artificial neurons are organized in layers. The minimal configuration consists of one input and one output layer of neurons. Between these may be an arbitrary number of hidden layers. A neural network is recurrent if it contains any cycle. If all outputs flow forward to the next layer, without any cycling, the network is called a feedforward neural network. The functionality of an unweighted network is determined only by its topology. On the other hand, each connection of a weighted network is multiplied by an appropriate weighting factor. The factor determines the effect of each input on the final decision (Fig. 3). The global function of a weighted network is achieved by the topology and by the optimal combination of weights.
+
+
+Fig. 4. Topology of a feedforward neural network.
+5. Backpropagation algorithm
+
+Searching for suitable weighting factors that provide the desired function of an artificial neural network is called training or learning. The learning process can be supervised or unsupervised. The goal of supervised learning is to approximate an unknown mapping function between the known input and output data. Unsupervised learning is performed on the basis of input and no output data. The goal is to model the underlying structure or distribution in the data in order to draw conclusions about them. Acoustic localization requires a direct relation of input dataset to a corresponding set of output data and that is why only supervised learning methods are suitable for this purpose (Kalafat & Sause, 2015). The function is given by a set of input–output pairs,
+
+, where Xi are the n-dimensional and Tj are the m-dimensional vectors. The combination of weights that minimizes the error between the realized and the given data set is considered to be a solution of the learning problem. The most dominant learning algorithm, in practice, is the backpropagation algorithm. It searches for the minimal error, in weighting space, using the method of gradient descent. Since the method requires computation of the gradient, at each iteration step, continuity and differentiability of the error function have to be guaranteed.
+
+The procedure is performed in two phases starting with arbitrarily chosen network weights. In the first, feedforward, phase inputs are fed into the network. The primitive functions and their derivatives are calculated at each node and derivatives are stored. For the common case of sum integration and sigmoid activation function the output of a single neuron is given by
+(21)
+
+The network produces the output vector Oi generally different from the target vector Ti. The error is defined by
+(22)
+where Oi is the output vector and Ti is the target vector and the gradient of the error by the equation
+(23)
+where l is the total number of weights in the whole network. In the second, back propagation, phase of the algorithm, constant 1 is fed into the outputs and the network is run backwards. The cumulative result of the backward computation up to the current node is called the backpropagated error. If the backpropagated error at the jth node is denoted by δj, a partial derivative of the error can be expressed by the equation
+(24)
+where wij is the weight between the ith and jth nodes. After all of the partial derivatives are computed, the gradient decent is performed by correcting each weight wij by the increment
+(25)
+
+The correction of network weights, by the factor Δwij, is the final step of the iteration. A single iteration of the training algorithm is otherwise known as a training epoch. The procedure is repeated until the error function (22) falls under the tasked error or the number of epochs reaches the maximal allowed one. The learning constant γ is chosen experimentally to accelerate training the algorithm. Another possibility of acceleration is introducing a momentum term in the correction formula (25)
+(26)
+where
+
+is the previous correction direction and α is the momentum factor. Such an approach, called the backpropagation with momentum, provides a kind of inertia that helps avoiding excessive oscillation of the error function.
+6. Experimental setup
+
+A sketch of the experimental setup is presented in Fig. 5. A source of mechanical vibrations is assembled from a table tennis ball and a cell phone vibration motor inside it. The cell phone motor beats the walls of the ball emitting a quasi-periodic audio signal that resembles the fluttering of the wings of a beetle, a large fly or some other insect. The source moved within a 1.6 m edge long cubic space hanged on three strings. The opposite end of each string was wrapped around a step motor driven pulley. Three of these pulleys were geometrically placed in vertices of a horizontal, approximately 4.35 m edge long equilateral triangle, above the cubic space, building a simple routing mechanism. A meaningful winding and unwinding of the pulleys was used for achieving any specified location of the sound source within the cubic space. Step motors were driven by an Arduino CNC driver and the driver was governed using a PC through the USB connection and the ATmega328P microcontroller. Geometrical relations of the experimental setup and the realized spatial positions of the sound source were precisely measured using the Total Station Sokkia SET630R. The instrument allows laser measurement of distances with the accuracy of ±3 mm, at the used range of lengths, memorization and automatic data transfer through an RS-232 port. After the measured positions were compared with the given positions, the resulting mean absolute error, achieved by the routing mechanism, was approximately 10 mm. Since the given positions were randomly chosen, the realized positions were adopted as chosen, and used for the computation of theoretical delays between channels.
+
+
+Fig. 5. Sketch of the experimental setup.
+
+The sound was recorded by 8, low cost, mini spy microphones, designed for CCTV (Closed Circuit Television) security camera and connected to a PC through an 8 channel TerraTec EWS88 MT sound card. These microphones were spatially disposed at vertices of a 2 m edge length cube, symmetrically around the sound source moving zone, with the purposely chosen tolerance of ±20 mm. Parabolic reflector dishes were applied on each microphone as audio signal mechanical amplifiers. Inside of the emitter moving space, 2000 positions were randomly chosen and as many as 8 channel audio files were recorded at the sampling frequency of 44.1 kHz and each for a period of 3 s. At the same manner 126 points were taken along the training path. The sound source was stopped at each position during the period of acquiring sound samples.
+
+The experiment was performed in a highly reverberant room full of interfering sound sources (fans and step motors).
+
+Therefore, the recorded audio samples were corrupted by the high level correlated noise and reverberation. SNR ratio was evaluated to −20 dB To cancel the negative effect of corruption to TDOA estimation accuracy, signals were filtered by a suitable second order IIR filter. At the beginning the filter coefficients were chosen randomly and then tuned up through iterative steps of a genetic algorithm in order to minimize the mean absolute TDOA estimation error over the recorded samples. The error was calculated as a difference between TDOA estimated using the filtered signal and the theoretical TDOA calculated on the basis of speed of sound and geometrical positions of acoustic components. After optimization the filter took a form of a band-pass filter with the transfer function
+(27)
+
+and the frequency response as shown in Fig. 6. The filter fitted only the specific sound source and the environmental conditions used in the experiment. Except optimal filter coefficients, the genetic algorithm was employed to determine some other TDOA estimation parameters, such as the maximal allowed lag, and to decide on implementing the absolute operator that also showed a positive effect on TDOA estimation accuracy.
+
+
+Fig. 6. Frequency response of the optimal, second order, digital filter obtained by the genetic algorithm.
+
+TDOA estimation was performed using the cross-correlation function with the maximal allowed lag for every of 28 possible combinations, with 8 channels, and for every sound source position realized in the experiment (2126 recorded files). It resulted in the matrix of 2126 × 28 elements. Comparing the matrix with the theoretical delays, computed on the basis of real sound source positions, gave a mean absolute error of approximately 0.13 ms. For the sound velocity of 334.33 m/s, related to the temperature of 5°C that rules during the experiment (14), the mean absolute error corresponded to the length of 45 mm. This is quite satisfactory since the size of the acoustic source in the experimental setup was 40 mm.
+
+Acoustic localization was performed on the basis of the obtained TDOAs using a feedforward neural network with the sigmoid activation function and the backpropagation algorithm with momentum. The network was realized and the backpropagation algorithm was performed entirely on the basis of equations from the two previous chapters. The number of neurons in the input layer was determined by the number of employed microphones. In order to achieve the best accuracy, all redundant pairs that correspond to the certain number of microphones were employed as inputs. 8 microphones, for example, gave 28 different TDOAs and as many network inputs. The number of outputs was always 3 because the spatial position was determined by 3 independent coordinates. Although orthogonal coordinates were used in the experiment, other referent systems can be applied in the same manner. The rest of the network configuration (number of hidden layers and artificial neurons in them) was a subject of examination.
+7. Experimental results
+
+The performance of the feedforward neural network in acoustic localization was examined, at first, with respect to the disposition of microphones. The influence of disposition on the localization error was evident particularly for the case of 4 microphones. Since 8 microphones were fixed in the vertices of a cubic space, a different disposition of 4 microphones was achieved by turning half of them on or off. The results were obtained by a neural network with 10 neurons in a single hidden layer, on the basis of 1866 training points, using the learning rate of 0.7, the momentum factor of 0.9 and 1600 training epochs. The training error was defined as a mean absolute difference between realized (actual) and estimated positions of training points, and the testing error was defined as a mean absolute difference between actual and estimated positions of testing points. After measurements were made for plenty of different dispositions, three different groups were segregated on the basis of the error values (Table 1). Since the network performance was previously carefully examined with respect to the training parameters, a high ratio between testing and training errors must be a consequence of uncertainties and nonlinearities that were not well approximated by neural network and the high deviation of TDOAs caused by unfavorable experimental conditions. The maximal error was for the microphones placed in the slantwise plane that obliquely intersected the cubic space. Slightly lower values of training and testing errors were corresponding to the disposition of microphones in the horizontal and vertical plane, along the side of the cubic space. Several times lower errors were obtained for any disposition where microphones were placed out of a plane. It is logical to assume that the standard linear disposition of microphones would have extremely unfavorable effect on the localization error. What follows from the preliminary results is that microphones have to be deployed equally in all three spatial directions in order to achieve optimal accuracy of the near field 3D acoustic localization.
+
+Table 1. Mean absolute localization errors with respect to the microphone disposition for the case of 4 microphones.
+Microphone disposition	Training error (mm)	Testing error (mm)
+Horizontal or vertical plane	53	305
+Slantwise plane	64	329
+Out of plane	3	72
+
+The dependency of localization errors with respect to the number of microphones is presented in Fig. 7. The results were obtained with the same parameters as in the previous case using the most favorable disposition for each number of microphones. They show a natural tendency of decreasing both errors with respect to the increasing number of microphones. On the other hand, the number of TDOAs and thus processing time dramatically increases with a higher number of microphones according to the square equation
+(28)
+
+where n is the number of possible TDOAs using M microphones. The optimal number of microphones for acoustic localization has to be a compromise between accuracy and the allowed complexity.
+
+
+Fig. 7. Mean absolute localization errors with respect to the number of microphones.
+
+The following subject of investigation was the network configuration. According to the general rule, an optimal numbers of neurons and layers are achieved when the model quality does not change significantly by adding additional neurons and layers (Kalafat & Sause, 2015). The quality is measured by the value of training and testing errors. At the beginning, the neural network was supposed to be with a single hidden layer. The graphs in Fig. 8 represent the resulting mean absolute training error and the mean absolute testing error with respect to the number of neurons in a single hidden layer. The results were obtained with 8 microphones, 5000 training epochs and the same remaining parameters as in the previous case. It is obvious that the optimal number of neurons for the case of a single hidden layer is approximately 10. The next step was to involve another hidden layer of neurons. The dependency of the mean absolute testing error with respect to the number of neurons in two hidden layers is presented in Fig. 9. The corresponding graph for the training error had a very similar shape. The two layer configuration did not show any advantage in comparison with the single layer configuration that had the same number of hidden neurons, so the single layer configuration with 10 neurons was adopted as optimal.
+
+
+Fig. 8. Mean absolute localization errors with respect to the number of artificial neurons in a single hidden layer.
+
+
+Fig. 9. Mean absolute testing error with respect to the number of neurons in two hidden layers.
+
+The graphs in Fig. 10, obtained with the same parameters as in the previous case, represent the mean absolute training and the mean absolute testing error with respect to the number of training points. The optimal number of training points is generally dependent on the number of neurons and the complexity of the system. The higher density of points provides better accuracy of the approximation but increases computational complexity of the training algorithm. It has been proven, in practice, that at least twice as many training points are required as the number of weights present in the network (Kalafat & Sause, 2015). For the current configuration, with the total number of 310 weights, it is approximately 600 training points. The testing error in Fig. 10 confirms that 600 training points provide the optimal accuracy of the training algorithm. Further increasing the density of training points gave no significant improvement of the training error. On the basis of the graph, 500 was adopted as the optimal number of training points. The training error slightly increases as the number of training points increases since the network cannot approximate all measurement errors well.
+
+
+Fig. 10. Mean absolute localization errors with respect to the number of training points.
+
+At the end, the performance of the network was examined with respect to the parameters of backpropagation algorithm. When the tasked error was not known a priori, the only criterion for stopping the algorithm was the maximal allowed number of training epochs. It can be limited, generally, by the duration of the training process, but for the purpose of acoustic localization this criterion can be neglected in compilation with other steps that have to be taken (assembly of the equipment, programming, measuring TDOAs, etc.). In the absence of other criteria, the maximal allowed number of epochs can be determined, similar as the number of neurons, as the number at which the model quality does not change significantly by adding new epochs. In practice, the training error starts to oscillate after a certain number of epochs. The maximal allowed number of epochs can be picked as slightly lower to prevent such behavior. The dependency of localization errors with respect to the total number of training epochs is given, in exponential scale, in Fig. 11. It is obtained with 500 training points and the same remaining parameters. The graphs show that both errors decrease with respect to the number of training epochs until approximately 4000. Further continuation of training may lead to the oscillation of the error.
+
+
+Fig. 11. Mean absolute localization errors with respect to the number of training epochs.
+
+The learning rate and the momentum factor are determined experimentally. Higher values of learning rate speed up the training algorithm but decrease the accuracy. The problem can be mitigated by introducing an appropriate momentum factor. Fig. 12. represents the result of searching for the optimal learning rate and momentum factor in two dimensional space using the training error as the searching criterion. The results were obtained after 4000 training epochs and the same remaining parameters as in the previous case. The graph suggests that the optimal values are 0.7 for the learning rate and 0.9 for the momentum factor.
+
+
+Fig. 12. Mean absolute testing error with respect to learning rate and momentum factor.
+
+The final results of localization are presented in Fig. 13. The smooth (red) line is the actual path of the acoustic source along 126 successive points. The blue one is the result of the estimation using 8 microphones and the feedforward neural network with, experimentally obtained, optimal parameters. The mean absolute testing error was approximately 35.7 mm which is more than satisfactory because the diameter of the utilized acoustic source was 40 mm. The result of localization by the Levenberg–Marquardt algorithm is presented with the green line. It is obtained using the same data set and the termination tolerance of 10−4 m. The resulting mean absolute testing error was approximately 36.3 mm which is almost the same as in the case of the neural network. On the other hand, the processing time was more than 104 times longer.
+
+
+
+Fig. 13. Actual path and estimated paths of acoustic source. (For interpretation of the references to color in the text, the reader is referred to the web version of this article.)
+8. Conclusions
+
+The experiment proved the effectiveness of the feedforward neural network in solving hyperbolic positioning problems under the uncertainties of microphone positions and obtained TDOAs. The performance was examined and analyzed using a large number of sound samples, for different sensors setups, different network configurations and training parameters. The analysis showed that the network compensated successfully for some of the experimental uncertainties (microphone positions, locations of parabolic reflectors). The resulted positions had even better accuracy than the obtained TDOAs in spite of using a relatively small number of microphones. The paper provides useful guidelines for practical implementation of neural networks in the near-field sound source localization. The procedure can be performed using low-cost equipment, available software and does not require substantial knowledge of signal processing.

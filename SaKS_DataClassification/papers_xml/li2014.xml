@@ -1,0 +1,374 @@
+<article>
+  <title>Fight sample degeneracy and impoverishment in particle filters: A review of intelligent approaches</title>
+  <abstract>
+    <sentence>During the last two decades there has been a growing interest in Particle Filtering (PF).</sentence>
+    <sentence>However, PF suffers from two long-standing problems that are referred to as sample degeneracy and impoverishment.</sentence>
+    <sentence>We are investigating methods that are particularly efficient at Particle Distribution Optimization (PDO) to fight sample degeneracy and impoverishment, with an emphasis on intelligence choices.</sentence>
+    <sentence>These methods benefit from such methods as Markov Chain Monte Carlo methods, Mean-shift algorithms, artificial intelligence algorithms (e.g., Particle Swarm Optimization, Genetic Algorithm and Ant Colony Optimization), machine learning approaches (e.g., clustering, splitting and merging) and their hybrids, forming a coherent standpoint to enhance the particle filter.</sentence>
+    <sentence>The working mechanism, interrelationship, pros and cons of these approaches are provided.</sentence>
+    <sentence>In addition, approaches that are effective for dealing with high-dimensionality are reviewed.</sentence>
+    <sentence>While improving the filter performance in terms of accuracy, robustness and convergence, it is noted that advanced techniques employed in PF often causes additional computational requirement that will in turn sacrifice improvement obtained in real life filtering.</sentence>
+    <sentence>This fact, hidden in pure simulations, deserves the attention of the users and designers of new filters.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Particle filter</keyword>
+    <keyword>Sequential Monte Carlo</keyword>
+    <keyword>Markov Chain Monte Carlo</keyword>
+    <keyword>Impoverishment</keyword>
+    <keyword>Artificial intelligence</keyword>
+    <keyword>Machine learning</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The Sequential Monte Carlo (SMC) approach allows inference of full posterior distributions via Bayesian filtering in general nonlinear state-space models where the noises of the model can be non-Gaussian.</sentence>
+    <sentence>There has been great interest in applying the SMC approach to deal with a wide variety of nonlinear filtering problems.</sentence>
+    <sentence>This method is normally called the Particle Filter(ing) (PF) Del Moral, 1996, also referred to as Sequential imputations (Liu &amp; Chen, 1995), the Monte Carlo filter (Kitagawa, 1996), the Condensation filter (Isard &amp; Blake, 1998), and the survival of fittest and the likelihood weighting algorithm (Kanazawa, Koller, &amp; Russel, 1995).</sentence>
+    <sentence>To date, particle filters have been successfully applied in different areas including finance (Lopes &amp; Tsay, 2011), parameter estimation (Andrieu, Doucet, Singh, &amp; Tadic, 2004; Kantas, Doucet, Singh, &amp; Maciejowski, 2009), geophysical systems (Van Leeuwen, 2009), wireless communication (Djuric et al., 2003), decision making (Caesarendra, Niu, &amp; Yang, 2010; Kostanjčar, Jeren, &amp; Cerovec, 2009), tracking and defense (Mihaylova et al., 2014; Ristic, Arulampalam, &amp; Gordon, 2004; Yin, Zhang, Sun, &amp; Gu, 2011), robotics (Thrun, 2002) and some nontrivial applications (Andrieu et al., 2004; Johansen, 2006).</sentence>
+    <sentence>Additionally, a variety of strategies have been proposed to improve the performance of the particle filter in terms of accuracy, convergence, computational speed, etc.</sentence>
+    <sentence>The staged survey of different years can be seen; examples include 2000 (Doucet, Godsill, &amp; Andrieu, 2000), 2002 (Arulampalam, Maskell, Gordon, &amp; Clapp, 2002), 2007 (Cappé, Godsill, &amp; Moulines, 2007), 2009 (Doucet &amp; Johansen, 2009), 2010 (Gustafsson, 2010), etc.</sentence>
+    <sentence>However, PF continues to suffer from two notorious problems: sample degeneracy and impoverishment, which is arguably a long-standing topic in the community.</sentence>
+    <sentence>A variety of methods have been investigated to fight these two problems in order to combat the weakness of the particle filter.</sentence>
+    <sentence>This study does not purport to give either a comprehensive review of the development of general particle filters or its special applications.</sentence>
+    <sentence>Both are covered in the aforementioned survey papers.</sentence>
+    <sentence>Our aim is to investigate a group of emerging ‘intelligent’ ways employed within PF that have benefited from a variety of intelligent and heuristic algorithms.</sentence>
+    <sentence>These variations of techniques, acting in different ways to optimize the spatial distribution of particles namely Particle Distribution Optimization (PDO), are particularly effective in alleviating sample degeneracy and impoverishment, forming a very systematic standpoint that is both mathematically sound and practically efficient to enhance PF.</sentence>
+    <sentence>In addition, approaches that are effective in dealing with high-dimensional filtering, another obstacle for the SMC, are reviewed.</sentence>
+    <sentence>This study aims to coordinate these developments into a unifying framework, unveiling their pros and cons and thereby directing further improvements of existing schemes.</sentence>
+    <sentence>This survey is specifically expected to serve as the first comprehensive coverage of artificial intelligence and machine learning techniques applied in PF.</sentence>
+    <sentence>The basic background of PF is presented in Section 2 with emphasis on its two fundamental difficulties: sample degeneracy and impoverishment.</sentence>
+    <sentence>These two difficulties have motivated the development of a variety of PDO approaches, which are reviewed in the categories identified in Section 3.</sentence>
+    <sentence>Further discussions on the PDO framework including the computational efficiency and high dimensionality challenge are given in Section 4.</sentence>
+    <sentence>The conclusion is given in Section 5.</sentence>
+  </section>
+  <section name="Sample degeneracy and impoverishment">
+    <sentence>Before we proceed, we provide a brief review of PF and define the notation.</sentence>
+    <sentence>The primary notations used are summarized in Table 1.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Primary notations.</sentence>
+    <sentence>xt The state of interest at time t Xt the history path of the state yt Observation at time t Yt the history path of the observation gt(⋅) The state transition equation at time t ht(⋅) The observation equation at time t ut Noise affecting the system dynamic equation gt(⋅), at time t vt Noise affecting the observation equation ht(⋅), at time t The state of particle i, at time t The weight of particle i, at time t Nt The total number of particles at time t δx(⋅) The delta-Dirac mass located in x N(.</sentence>
+    <sentence>:a,b) Gaussian density with mean a and covariance b, Kh(⋅) A kernel function with bandwidth h Nonlinear filtering is a class of signal processing that widely exists in engineering, and is therefore a very broad research topic.</sentence>
+    <sentence>The solution of the continuous time filtering problem can be represented as a ratio of two expectations of certain functions of the signal process.</sentence>
+    <sentence>However, in practice, only the values of the observation corresponding to a discrete time partition are available; the continuous-time dynamic system has to be converted into a discrete-time simulation model, e.g., discrete Markov System, by discretely sampling the outputs through discretization.</sentence>
+    <sentence>This paper is concerned with the problem of discrete filtering, which can be described in the State Space Model (SSM) that consists of two equations: (1) (2) The filtering problem recursively solving the marginal posterior density p(xt | Yt) can be determined by the recursive Bayesian estimation, which has two steps: (1) Prediction (3) (1) Updating or correction (4) In (3) and (4), the integration of often unknown and maybe high-dimensional functions is required, which can be computationally very difficult.</sentence>
+    <sentence>This makes analytic optimal solutions such as the Kalman filter intractable.</sentence>
+    <sentence>One flexible solution is the Monte Carlo approach, as the topic of this paper, which uses random number generation to compute integrals.</sentence>
+    <sentence>That is, the integral, expressed as an expectation of f(x) over the density p(x), is approximated by a number of random variables x(1), x(2), … x(N) (called samples or particles) that are drawn from the density p(x) (if possible), then (5) This is an unbiased estimate and, provided the variance of f(x) is finite, it has a variance which is proportional to 1/N.</sentence>
+    <sentence>However, one limitation in applying Monte Carlo integration (5) in Bayesian inference (3) and (4) is that sampling directly from p(x) is difficult, even impossible, if high density regions in p(x) do not match up f(x) with areas where it has a large magnitude.</sentence>
+    <sentence>A convenient solution for this is the Importance Sampling (IS).</sentence>
+    <sentence>Assuming the density q(x) roughly approximates the density (of interest) p(x), then (6) This forms the basis of Monte Carlo IS which uses the weighted sum of a set of samples from q(x) to approximate (6): (7) An alternative formulation of IS is to use (8) with the variance given by (9) where x(i) is drawn from the proposal density q(x).</sentence>
+    <sentence>The variance is minimized to zero if p(x) = q(x) (Doucet, de Freitas, &amp; Gordon, 2001; Rasmussen &amp; Ghahramani, 2003).</sentence>
+    <sentence>There are many potential choices for q(x) leading to various integration and optimization algorithms, as shown in the summary provided in Del Moral, Doucet, and Jasra (2006).</sentence>
+    <sentence>In general, q(x) should have a relatively heavy tail so that it is insensitive to the outliers.</sentence>
+    <sentence>In the importance sampling the estimator not only depends on the values of p(x) but also on the entirely arbitrary choice of the proposal density q(x).</sentence>
+    <sentence>This results in heavy dependence on irrelevant information q(x).</sentence>
+    <sentence>This sampling difficulty seems inevitable as the density p(x) of interest is generally always unknown; therefore, it is impossible to direct the sampling.</sentence>
+    <sentence>For this reason, some advanced important sampling methods have been proposed, such as annealed importance sampling (Radford, 2001), Bayesian importance sampling (Rasmussen &amp; Ghahramani, 2003), adaptive importance sampling (Liu &amp; West, 2001), numerically accelerated importance sampling (Koopman, Lucas, &amp; Scharth, 2011), and nonparametric importance sampling (Neddermeyer, 2011).</sentence>
+    <sentence>Alternatively, sampling strategies such as rejection sampling (Gilks, Richardson, &amp; Spiegelhalter, 1996), block sampling (Doucet, Briers, &amp; Sénécal, 2006), Markov Chain Monte Carlo (MCMC) sampling (Gilks &amp; Berzuini, 2001; Del Moral et al., 2006) and factored sampling (Banerjee &amp; Burlina, 2010; Isard &amp; Blake, 1998) have also been used, in addition to ad hoc strategies such as multiple stages of important sampling (Li, Ai, Yamashita, Lao, &amp; Kawade, 2008).</sentence>
+    <sentence>SMC samplers are specifically developed to sample sequentially from a sequence of probability distributions that allows the calculation of a weight update equation for different proposal kernel (Del Moral et al., 2006).</sentence>
+    <sentence>To avoid an overly broad discussion, the reader is referred to the given references for further details.</sentence>
+    <sentence>The importance sampling implemented under the recursive Bayesian interference is referred to as Sequential Importance Sampling (SIS), which is the basis of PF.</sentence>
+    <sentence>Formally, the core idea of PFs is to capture the statistics of the state probability distribution by a set of random particles with associated weights, i.e., (10) (11) The weights will be normalized to sum to one (for the single-target output case).</sentence>
+    <sentence>Classical Monte Carlo procedures entirely ignore the state values of particles in the state space when forming the estimate, see (Rasmussen &amp; Ghahramani, 2003).</sentence>
+    <sentence>In the process of propagation, particles perform a step of Markov jump for prediction and then the approximation density needs to be adjusted through re-weighting the particles.</sentence>
+    <sentence>After a few iterations in the particle propagation process, the weight will concentrate on a few particles only and most particles will have negligible weight, resulting in namely sample degeneracy, see (Li, Sattar, &amp; Sun, 2012).</sentence>
+    <sentence>This is an inherent default of the SIS.</sentence>
+    <sentence>To address sample degeneracy, the standard PF is commonly accompanied with the resampling procedure (referred to Sampling-Importance Resampling, SIR or Sequential Importance Sampling and Resampling, SISR) to force particles to areas of high likelihood by multiplying high weighted particles while abandoning low weighted particles.</sentence>
+    <sentence>This, however, may cause another problem: sample impoverishment, which occurs when very few particles have significant weight while most other particles with small weight are abandoned during the resampling process.</sentence>
+    <sentence>To alleviate this, it is possible to balance the trade-off by applying resampling only at deterministic steps; that is, to execute resampling only when the variance of the non-normalized weights is superior to a pre-specified threshold (which is taken as a signal of sample degeneracy).</sentence>
+    <sentence>In the general single-target case, a simple estimation of the Effective Sample Size (ESS) criterion is given by (12) The ESS takes values between 1 and Nt and the resampling is implemented only when it is below a threshold NT, e.g., NT = Nt / 2, Nt is the sample size at time t. The relationship between degeneracy and impoverishment can be depicted as shown in Fig 1 in which the size of the circles represents the weight of the particles; in the bottom row, connected circles share the same state after generic resampling.</sentence>
+    <sentence>In the resampling process, only particles with significant weight (shown in green in Fig 1) are sampled, while other small weighted particles (shown in red) are abandoned.</sentence>
+    <sentence>As shown therein, sample degeneracy is apparently the result of particles being distributed too widely, while sample impoverishment can be viewed as particles being over concentrated.</sentence>
+    <sentence>The degeneracy converts to impoverishment as a direct result of resampling.</sentence>
+    <sentence>If the resampling is unbiased, then the more serious the degeneracy, the more serious the impoverishment.</sentence>
+    <sentence>In more general terms to remark on their relativity, sample degeneracy and impoverishment are a pair of contradictions that can be collectively described as a trade-off between the need of diversity and the need of focus in Liu, Chen, and Logvinenko (2001), as a problem in managing the spread of the particle set in the state space to balance conflicting requirements in Naeem, Pridmore, and Mills (2007), or in another perspective, as the computing resource converging prematurely either by weight or by state in Li et al.</sentence>
+    <sentence>(2012).</sentence>
+    <sentence>Sample degeneracy and impoverishment illustrated in 1-dimensional state space Fig 1.</sentence>
+    <sentence>Sample degeneracy and impoverishment illustrated in 1-dimensional state space.</sentence>
+    <sentence>(For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)</sentence>
+    <sentence>Sample degeneracy and impoverishment are arguably a pair of fundamental difficulties of PFs, which manifests themselves as ‘unsatisfactory’ particle distribution.</sentence>
+    <sentence>Quite intuitively, the solution to mitigate this problem is to optimize the distribution of particles either in advance or in hindsight.</sentence>
+    <sentence>This forms the basis of our survey.</sentence>
+    <sentence>In what follows, efforts devoted in this discipline are reviewed in different categorizes to illustrate the motivation, implementations and implications of PDO.</sentence>
+    <sentence>Their interrelationships, pros, cons and high-dimensionality challenge are provided.</sentence>
+  </section>
+  <section name="Particle distribution optimization">
+    <sentence>To deal with sample degeneracy and impoverishment, there are mainly two kinds of information about the weighted particles that can be taken into account when one optimization operation is executed: weight and state.</sentence>
+    <sentence>The PDO approaches presented in this paper are especially interested in the state of particles.</sentence>
+    <sentence>Compared to distribution smoothing methods, most approaches act in a more intelligent manner and benefit from a variety of intelligent or heuristic techniques such as MCMC methods, Mean-shift algorithms, Artificial Intelligence (AI) algorithms e.g., Particle Swarm Optimization (PSO), Genetic Algorithm (GA) and Ant Colony Optimization (ACO) and Machine Learning (ML) approaches e.g., clustering, splitting and merging, etc.</sentence>
+    <sentence>They form a coherent perspective to optimize the distribution of particles.</sentence>
+    <sentence>In general terms, the moving of particles can be ‘blind’ (particle are moved without a specific direction) or ‘sighted’ (particles are moved in a specific direction).</sentence>
+    <sentence>In the latter case, new observations are used to direct the moving operation that can be referred to as data-driven methods, which is the main part of this study.</sentence>
+    <sentence>In particular, various AI and ML optimizations for PF are specially reviewed.</sentence>
+    <sentence>It is worth noting that, there is generally no standard implementation of each method; instead, one intelligent technique can be applied in many different ways within PF.</sentence>
+    <sentence>In this case, too much is as bad as too little.</sentence>
+    <sentence>The study emphasizes the similarity of all works in order to form the common PDO principle, and it will not cover all of the possible implementations.</sentence>
+    <sentence>The primary PDO techniques that will be reviewed in this paper are categorized as shown in Table 2.</sentence>
+    <sentence>In each category, typical examples will be given as an explanation if possible.</sentence>
+    <sentence>The basic idea will be briefly introduced first, and then the interrelationship and special achievements of different implementations are presented for further elaboration.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Categories of primary PDO approaches to review.</sentence>
+    <sentence>PDO tool Typical PDO property Primary references Kernel smoothing Blind Martí et al.</sentence>
+    <sentence>(2011), Gordon et al.</sentence>
+    <sentence>(1993), Thomas and Neil (2009), Musso et al.</sentence>
+    <sentence>(2001), Freund et al.</sentence>
+    <sentence>(2009), Li et al.</sentence>
+    <sentence>(2013) Data-driven method MCMC Sighted Doucet and Johansen (2009), Radford (2001), Naeem et al.</sentence>
+    <sentence>(2007), Gilks and Berzuini (2001), Murray (2012), Godsill and Clapp (2001), Chopin (2002), Andrieu et al.</sentence>
+    <sentence>(2010) Mean-shift Sighted Naeem et al.</sentence>
+    <sentence>(2007), Shan et al.</sentence>
+    <sentence>(2004), Chang and Ansari (2005), Maggio and Cavallaro (2005), Deutscher et al.</sentence>
+    <sentence>(2000) AI algorithms (Evolution and population) GA Blind Higuchi (1996), Park et al.</sentence>
+    <sentence>(2009), Kootstra and de Boer (2009), Kwok et al.</sentence>
+    <sentence>(2005), Uosaki et al.</sentence>
+    <sentence>(2004) PSO Sighted Zhao and Li (2010), Tong et al.</sentence>
+    <sentence>(2006), Zhang et al.</sentence>
+    <sentence>(2008), Lee and Lee (2011), Wang et al.</sentence>
+    <sentence>(2006) ACO Sighted Xu et al.</sentence>
+    <sentence>(2010), Yu and Zheng (2011), Socha and Dorigo (2008), Zhong and Fung (2012) ML techniques Clustering Blind Shan et al.</sentence>
+    <sentence>(2004), Gasparri et al.</sentence>
+    <sentence>(2006), Wu et al.</sentence>
+    <sentence>(2009), Milstein et al.</sentence>
+    <sentence>(2002), Yang and Aitken (2005), Lindsten et al.</sentence>
+    <sentence>(2011), Ceranka and Niedzwiecki, (2003), Clark and Bell (2007) Merging/splitting Blind Li et al.</sentence>
+    <sentence>(2010), Orguner and Gustafsson (2008), Liu et al.</sentence>
+    <sentence>(2008) Others scatter search process (Pantrigo et al.</sentence>
+    <sentence>(2005), Pantrigo et al.</sentence>
+    <sentence>(2008)), support vector machines &amp; support vector data description (Banerjee and Burlina (2010)), etc.</sentence>
+    <sentence>Hybrid PDO Evolution + clustering (Gasparri et al.</sentence>
+    <sentence>(2006)), artificial immune system + PSO (Akhtar et al.</sentence>
+    <sentence>(2011)), kernel mean-shift + annealed PF (Naeem et al.</sentence>
+    <sentence>(2007)), artificial neural networks + genetic algorithm (Torma and Szepesvári (2003)).</sentence>
+    <sentence>Roughening, Kernel smoothing and regularization Resampling, which is a type of re-selection and re-weighting of particles (Li, Bolić, &amp; Djurić, 2014), is originally adopted to force particles to areas of high likelihood from low likelihood areas.</sentence>
+    <sentence>However, as early as resampling was first proposed for PF in Gordon, Salmond, and Smith (1993), its side effect (i.e., sample impoverishment) was apparently found to cause gaps between particles and accordingly a solution called roughening was proposed to smooth the posterior.</sentence>
+    <sentence>Smoothness, here acting as the fitness, results in a continuous state probability distribution, which permits a better distribution diversity of the particles (Cappé et al., 2007; Martí, García, &amp; Molina, 2011).</sentence>
+    <sentence>The roughening procedure (the terms jittering (Thomas &amp; Neil, 2009), diffusing (Pantrigo, Sánchez, &amp; Montemayor, 2005), diversifying (Vadakkepat &amp; Jing, 2006), etc., are also used) basically adds an independent Gaussian jitter noise with zero mean and constant covariance, say Jt, to each resampled particle.</sentence>
+    <sentence>Suppose that the original posterior density is denoted as .</sentence>
+    <sentence>Since the addition of two independent random variables corresponds to a convolution operation in the density domain, the approximate posterior density obtained after the roughening process can be factored as (Orguner &amp; Gustafsson, 2008) (13) where ⋅ denotes the convolution operation, defined as .</sentence>
+    <sentence>Simply, if p(xt) | y0:t) is Gaussian with mean and covariance Pt, then (14) In (14) we can see that, the roughening strategy may be implemented more directly by increasing the simulation noise of the dynamic propagation of particles, called direct roughening (Li, Sattar, Han, &amp; Sun, 2013).</sentence>
+    <sentence>Furthermore, in target tracking cases, roughening may be employed only in selected steps, on partial particles and in partial dimensions (Li et al., 2014).</sentence>
+    <sentence>It is also suggested to employ the observation noise to scale the jittering strength so that jittering would not blur the position estimates out of the range of the observation.</sentence>
+    <sentence>With regard to scattering the multiple copies of the same particles, roughening is very equivalent to using a Gaussian kernel to smooth the posterior density.</sentence>
+    <sentence>The basic principle of kernel smoothing is that local averaging or smoothing is performed with respect to a kernel function.</sentence>
+    <sentence>To implement kernel smoothing mathematically, each particle is convolved with a diffusion kernel.</sentence>
+    <sentence>The distribution is given as follows (15) with the rescaled Kernel density (16) where the bandwidth h &gt; 0, d is the dimensionality.</sentence>
+    <sentence>Under mild conditions (h must decrease with increasing Nt) the kernel estimate converges in probability to the true density.</sentence>
+    <sentence>The kernel and bandwidth are chosen so as to minimize the mean intergraded error or the mean integrated square error between the posterior distribution and the corresponding regularized weighted empirical measure.</sentence>
+    <sentence>Based on the Kernel method, the so-called regularization (of the empirical distribution associated to the particles) technique calculates a continuous analytical expression for the particle probability distribution (Arulampalam et al., 2002).</sentence>
+    <sentence>There are two different approximations called pre-regularized PF (pre-RPF) and post-regularized PF (post-RPF), depending on whether the regularization step is taken before or after the correction step, see (Musso, Oudjane, &amp; Legland, 2001).</sentence>
+    <sentence>While the optimal kernel is intuitively appealing, and also satisfies an optimality criterion of some sort, it should be noted that it is possible to sample directly from such a kernel and to evaluate the weight integral analytically only in specific classes of model (Cappé et al., 2007).</sentence>
+    <sentence>The selection of smoothing parameters (e.g., kernel bandwidth or roughening variance) is customized to specific problems and seems easier than it is.</sentence>
+    <sentence>For a special review of the kernel based PDF estimation algorithms and their respective performance, the reader is referred to (Freund, Burlina, Banerjee, &amp; Justin, 2009).</sentence>
+    <sentence>Data-driven methods Kernel smoothing is a straightforward albeit ‘blind’ way to rejuvenate the diversity of particles to fight the sample degeneracy and impoverishment, in which no new information is employed.</sentence>
+    <sentence>It is more reasonable to adjust the distribution of particles in a data-driven/’sighted’ manner, e.g., move the particle to a better position by using the newest observations, namely new-observation-driven methods as discussed below.</sentence>
+    <sentence>The aim of new-observation-driven PDO methods is to use the newest observation, in which the particles tend to cluster in regions where the conditional posterior distribution for the current state has a high probability mass.</sentence>
+    <sentence>There are two well-known data-driven approaches to building better proposal density.</sentence>
+    <sentence>One is the auxiliary variable method (Pitt &amp; Shephard, 1999) which augments the existing “good” particles in the sense that the predictive likelihoods are large for the “good” particles, which is quite similar to the prior editing proposed in Gordon et al.</sentence>
+    <sentence>(1993).</sentence>
+    <sentence>The second approach uses the look-ahead strategies (de Freitas et al., 2004) or local perturbed sampling (Torma &amp; Szepesvári, 2001) to construct efficient proposal distributions.</sentence>
+    <sentence>Both incorporate the information of the state dynamics and the current observation to combat the blindness of SIS.</sentence>
+    <sentence>Much of this content is well documented in literature and will not be repeated here.</sentence>
+    <sentence>We will now consider some of the more profound variants of the principles exposed so far for sampling from the desired distribution and/or improving the diversity of particles.</sentence>
+    <sentence>They are Markov chain transition, mean-shift and some artificial intelligence algorithms.</sentence>
+    <sentence>MCMC: MCMC methods including random walk Monte Carlo are a class of algorithms for sampling from probability distributions based on constructing a Markov Chain that has the desired distribution as its equilibrium distribution.</sentence>
+    <sentence>Relying upon Markov kernels with appropriate invariant distributions, MCMC will generate collections of correlated samples.</sentence>
+    <sentence>To cope with the sampling difficulty, since we wish particles to be drawn from p(x1:t | y1:t), it seems reasonable to design Markov chain transition kernels, having p(x1:t | y1:t) as the stationary distribution.</sentence>
+    <sentence>As with other Monte Carlo methods, the empirical average taken over the samples is used to estimate the expectation of interest.</sentence>
+    <sentence>Unlike sequential importance sampling, the samples from MCMC are exact (drawn from the desired distribution) and outstandingly, are free of sample degeneracy and impoverishment, although the MCMC suffers from other disadvantages.</sentence>
+    <sentence>One of them is that, MCMC methods cannot be used in an online sequential Bayesian estimation context (Del Moral et al., 2006).</sentence>
+    <sentence>As with IS, where a good importance function encourages more samples to be drawn from high probability regions, MCMC random walks spend more time in regions of the parameter space with high probabilities, producing more samples from those areas.</sentence>
+    <sentence>There are many well-known ways to achieve this, including the Metropolis–Hastings (MH) methods and Gibbs sampler (Johansen et al., 2006).</sentence>
+    <sentence>Denoting invariant distribution p(x) and proposal distribution q(x∗ | x(i)), which involves sampling a candidate value x∗ given the current value x(i), the Markov chain then moves towards x∗ with acceptance probability (17) otherwise it remains at x(i).</sentence>
+    <sentence>In any case, the algorithm will tend to favor samples that increase the likelihood ratio, however its stochastic nature allows it to sometimes accept values that decrease the likelihood ratio, allowing it to escape local minima.</sentence>
+    <sentence>In mathematics, the transition kernel for the MH algorithm is (18) where r(x(i)) is the term associated with rejection (19) However, there are situations where a very large number of MCMC iterations would be required in order to reach the target distribution, especially when the likelihood for the new data point is far from the points sampled from the importance distribution q(xt | x1:t-1).</sentence>
+    <sentence>To overcome this, a series of smaller transitions is replaced by a single large transition in Godsill and Clapp (2001); the Monte Carlo variation of the importance weights is also reduced there.</sentence>
+    <sentence>Furthermore, the simulated annealing (Radford, 2001) can be used in MCMC for handling isolated modes and finding the maximum of a complex function with multiple peaks.</sentence>
+    <sentence>Simulated annealing is very closely related to Metropolis sampling (but does not require designing the proposal distribution in MH sampling), differing only in that the probability A(x∗ ← x(i)) of a move is given by (20) where the function T(t) is called the cooling schedule (setting T = 1 recovers Metropolis sampling).</sentence>
+    <sentence>In fact, the simulated annealing strategy itself can be employed in PF, such as in Naeem et al.</sentence>
+    <sentence>(2007), Deutscher, Blake, and Reid (2000) which will be described later in detail.</sentence>
+    <sentence>It is generally difficult to assess when the Markov chain, even the simulated annealing, has reached its stationary regime and on the contrary it can become easily trapped in local modes.</sentence>
+    <sentence>In spite of the successful employment of the MCMC sampling to replace the important sampling (Del Moral et al., 2006; Gilks &amp; Berzuini, 2001; Godsill &amp; Clapp, 2001), there are other areas where MCMC could benefit SMC, especially to rejuvenate the particle diversity (Chopin, 2002 for example) and in turn SMC can also benefit MCMC, typically such as particle MCMC (Andrieu, Doucet, &amp; Holenstein, 2010).</sentence>
+    <sentence>For example, the Resample-Move algorithm that adds a MCMC move step after the resampling step of the SMC algorithm forms a principled way to jitter the particle locations, and thus reduce impoverishment (Gilks &amp; Berzuini, 2001).</sentence>
+    <sentence>In addition to the Resample-Move method, block sampling is proposed; it aims to sample only component xt at time t in regions of high probability mass (while the previously-sampled values of the components xt-L+1:t-1 sampled are simply discarded), and then use MCMC moves to rejuvenate xt-L+1:t after a resampling step (Doucet &amp; Johansen, 2009; Doucet et al., 2006), where L is the length of the lag.</sentence>
+    <sentence>Both resample-move procedure and block sampling are often taken as correctly weighted Monte Carlo updating schemes.</sentence>
+    <sentence>The MCMC transition which is naturally parallel processing can be employed to execute resampling which is the primary obstacle for parallelization of PF (Murray, 2012).</sentence>
+    <sentence>For the parallelization of the resampling and PF, the reader is referred to (Li, Bolić, et al., 2014) for a comprehensive review.</sentence>
+    <sentence>We believe there will be more potential hybrid of MCMC and SMC for further benefits of both.</sentence>
+    <sentence>Before proceeding to the AI and ML categories, the following section will review another class of data-driven method for PDO, based on the Mean-shift algorithm.</sentence>
+    <sentence>Mean-shift.</sentence>
+    <sentence>Mean-shift is a gradient based iterative non-parameter optimization method for locating the maxima of a density function given discrete data sampled from that function.</sentence>
+    <sentence>Given an initial estimate x and a specified kernel function K( ⋅ ) with bandwidth h, the weighted mean of the density is (21) where N(x) is the neighborhood of x, a set of points for which K(x) &gt; 0.</sentence>
+    <sentence>In particular, m(x) − x is called mean shift.</sentence>
+    <sentence>The mean-shift algorithm recursively set m(x) as x, and repeats the estimation until m(x) converges to x.</sentence>
+    <sentence>In this way, kernel mean-shift hill climbs towards the target, minimizing the distance between target and model candidates.</sentence>
+    <sentence>Particles are redistributed (termed as herded in Shan, Wei, and Ojardias (2004), moved in Chang and Ansari (2005) and derived in Maggio and Cavallaro (2005)) to their local mode of the posterior density (or observation) by similar mean-shift analysis in hybrid PFs (Chang &amp; Ansari, 2005; Maggio &amp; Cavallaro, 2005; Shan et al., 2004).</sentence>
+    <sentence>For example, the kernel PF (KPF) Chang &amp; Ansari, 2005 is similar to RPF in the sense that a kernel density estimate (Musso et al., 2001) is used to approximate the posterior PDF.</sentence>
+    <sentence>However, unlike RPF, which uses samples from the kernel density estimate to replace the original particles, KPF estimates the gradient of the kernel density and moves particles toward the modes of the posterior by the mean-shift algorithm, leading to a more effective allocation of particles.</sentence>
+    <sentence>To summarize, the Kernel mean-shift can be viewed as an attempt to cluster spread particles with Kernel mean-shift; however, if PF tends towards an incorrect local maximum the mean-shift step will accelerate the process.</sentence>
+    <sentence>To mitigate this, the kernel mean-Shift algorithm can be combined with the Annealed PF rather than with the basic PF as in Naeem et al.</sentence>
+    <sentence>(2007).</sentence>
+    <sentence>The annealed PF (Deutscher et al., 2000) uses annealing to smooth out the evaluation function, making the global maximum clearer and allowing particles to spread further by increasing the process noise (inspired by the roughening approach).</sentence>
+    <sentence>This will not be caught on local clutter since the mean-shift component could pull particles back towards the true target.</sentence>
+    <sentence>This meticulous optimization of the distribution of particles shows, to a great extent, a type of ‘intelligence’, for which more direct solutions are presented in the following subsection.</sentence>
+    <sentence>AI optimization: Evolution and Population As a natural combination of artificial intelligence and single processing, the Evolution and Population optimization strategies rooted in AI algorithms may be employed for PDO; this will be referred to as AI PDO in this paper.</sentence>
+    <sentence>The evolutionary heuristics and population-based search solves complex optimization problems by maintaining a population of candidate solutions, and are feasible for obtaining efficient PDO.</sentence>
+    <sentence>Ever since earlier attempts to use the genetic algorithm filter were introduced, there have been many efforts devoted to this task (Higuchi, 1996), the Annealed PF (Deutscher et al., 2000) (also the annealed importance sampling (Radford, 2001) and the LS-N-IPS (Torma &amp; Szepesvári, 2001).</sentence>
+    <sentence>Recently, these emerging AI-PF hybrid approaches have been extensively studied.</sentence>
+    <sentence>In the following section, we review some representative studies to consider their common characteristics in order to develop a profound understanding of AI PDO.</sentence>
+    <sentence>The AI algorithms that will be reviewed include GA, PSO and ACO.</sentence>
+    <sentence>We will put emphasis on how these artificial intelligent algorithms work to optimize the distribution of particles to combat sample degeneracy and impoverishment.</sentence>
+    <sentence>GA: GA is governed by the Schema Theorem, which was originally derived from binary string representation of the genes of a chromosome within an individual.</sentence>
+    <sentence>The Schema Theorem can be expressed as follows, see also (Kwok, Gu, &amp; Zhou, 2005).</sentence>
+    <sentence>(22)∊∊∊∊∊ where m(∈, t) is the number of schema ∊ at generation t, f(∈) is the average fitness of chromosomes having the same schema, is the average fitness of the whole population, pc is the Crossover probability, δ(∈) is the length of a schema, L is the chromosome length, pm is the Mutation probability and o(∈) is the order of a schema.</sentence>
+    <sentence>The population of the GAs evolves in a competition for survival by different genetic operations including Selection, Crossover, and Mutation.</sentence>
+    <sentence>GA is a Monte Carlo method.</sentence>
+    <sentence>In accordance with the fitness values, the individuals are selected to undergo Crossover and Mutation and search for an optimal solution.</sentence>
+    <sentence>Crossover pairs two individuals and mates them, and Mutation randomly alters the selected individual.</sentence>
+    <sentence>Genetic operators are used in PF, either separately or in combination, to optimize the position of the particles by the genetic operations; they are used to deal with the situation in which most particles have collapsed at a single (i.e., sample impoverishment) point.</sentence>
+    <sentence>These have been partly achieved since (Higuchi, 1996), and improved in different ways by Kwok et al.</sentence>
+    <sentence>(2005), Uosaki, Kimura, &amp; Hatanaka, 2004 and (Park, Hwang, Kim, &amp; Kang, 2009).</sentence>
+    <sentence>For an intuitive understanding, one evolutionary PF depicted in pseudo codes is given in Park et al.</sentence>
+    <sentence>(2009) where a new form of the importance weight is derived.</sentence>
+    <sentence>To further avoid premature concentration of the particles, the search region of particles can be enlarged within GA (Kootstra &amp; de Boer, 2009).</sentence>
+    <sentence>PSO: In the basic PSO algorithm, a set of particles are generated randomly, and their positions (states) are iteratively updated according to their own experience and the experience of the swarm (or neighboring particles).</sentence>
+    <sentence>The particles are updated according to the following equations: (23) (24) where, i is the current iteration step, vt is the flying speed of particles, xibest is the particle’s location at which the best fitness has been achieved, xgbest the population global location (or local neighborhood position xnbest, in a neighborhood version of the algorithm) at which the best fitness so far has been achieved and ØØ are weighting factors.</sentence>
+    <sentence>As a rule of thumb, the two random control factors ØØ in Eq (23) are typically drawn from the uniform distribution U(0, 2.05).</sentence>
+    <sentence>A large inertia weight q facilitates a global search while a small inertia weight facilitates a local search.</sentence>
+    <sentence>As a result, the following linearly decreasing weighting function is usually utilized in (23) (25) where, qmax is the initial weight, qmin is the final weight, and I is maximum iteration number.</sentence>
+    <sentence>By exploring the likelihood distribution of the recent observations, the PSO particle flying strategy can help PF to obtain samples with high likelihoods (Tong, Fang, &amp; Xu, 2006; Zhang, Hu, Maybank, Li, &amp; Zhu, 2008; Zhao &amp; Li, 2010).</sentence>
+    <sentence>The PSO algorithm distributes the particles in high likelihood area, regardless of the weight of particles in case of the dynamic model is unavailable.</sentence>
+    <sentence>In addition, two different base points are used to distribute particles in order to achieve diversity and convergence in Zhao and Li (2010).</sentence>
+    <sentence>It is even shown that in a Bayesian inference view the sequential PSO framework is a swarm-intelligence guided multilayer importance sampling strategy (Zhang et al.</sentence>
+    <sentence>2008).</sentence>
+    <sentence>However, applying PSO directly to PF involves two problems that have to be dealt with.</sentence>
+    <sentence>One is the loss of particle diversity after the PSO procedure.</sentence>
+    <sentence>To mitigate this, particles can be redistributed to increase the diversity after PSO (Zhang et al., 2008).</sentence>
+    <sentence>The second problem is that a single swarm might not be enough due to the variation of the maximum likelihood point.</sentence>
+    <sentence>To handle this, a multi-swarm mechanism maintaining multiple trajectories for a possible target position has been added to the generic PSO algorithm for robust tracking in Lee and Lee (2011).</sentence>
+    <sentence>Unlike the evolutionary programming and evolutionary strategies in GA, PSO does not implement the principle of the survival of the fittest, as there is no selection and crossover operation.</sentence>
+    <sentence>To enhance this, the particle flying strategy combined with the mutation operation is proposed in Wang, Xie, Liu, and Xiang (2006) for PDO.</sentence>
+    <sentence>ACO: The ACO meta-heuristic that is initially proposed for solving combinatorial optimization problems (COPs) can benefit PF for PDO as well, especially after it is defined in the continuous domains ( ) (Socha &amp; Dorigo, 2008).</sentence>
+    <sentence>The central component of ACO algorithms is the pheromone model, which is used to probabilistically sample the search space.</sentence>
+    <sentence>ACO attempts to solve the problem by iterating two steps: • Step 1: A number of artificial ants build solutions to the problem by sampling a PDF which is derived from the pheromone information.</sentence>
+    <sentence>In the basic Ant System (AS), the ith ant moves from state x(i) to state x∗with probability (26) where τα(x∗ ← x(i)) and ηβ(x∗ ← x(i)) are, respectively, the amount of pheromone deposited and the desirability (heuristic value) associated with the state transition from state x(i) to state x∗while α, β are positive real parameters whose values determine the relative importance of pheromone versus heuristic information.</sentence>
+    <sentence>• Step 2: The solutions are used to modify the pheromone such that the probability to construct high quality solutions is increased.</sentence>
+    <sentence>This is achieved by increasing the pheromone levels associated with chosen good solution Sch by a certain value Δτ, and by decreasing all the pheromone values through pheromone evaporation (27) where ρ ∈ [0, 1] is the pheromone evaporation coefficient.</sentence>
+    <sentence>In addition to the above two steps, problem specific and/or centralized actions (Daemon actions) may be required (Socha &amp; Dorigo, 2008).</sentence>
+    <sentence>ACO and are incorporated into PF for moving particles to their local highest posterior density function in Zhong and Fung (2012), which is to say, towards the region of the state space with the new observation (Yu &amp; Zheng, 2011).</sentence>
+    <sentence>The convergence result of ant stochastic decision based PF is presented in Xu, Zhu, and Xu (2010), in which each particle evolves in either of the two proposed ways to accommodate model variations.</sentence>
+    <sentence>Particles are then selected (re-sampling) according to ant empiricism acquired from available observation.</sentence>
+    <sentence>It is very interesting to notice that ACO PDO works in a data-driven manner that is very similar to the MCMC transition, mean-shift, and the PSO PDO as well.</sentence>
+    <sentence>They all appear to have obvious particle moving character, differing only in implementation techniques and environments.</sentence>
+    <sentence>However, there must be a balance point to optimize the particle distribution to avoid over-moving.</sentence>
+    <sentence>This is reflected in the proper parameter setting evolved, as verified in the PSO embedded PF (Lee and Lee, 2011).</sentence>
+    <sentence>It should be noted that, very less evidence is available to demonstrate the convergence or the optimality property of these AI PDO strategies reviewed so far within PF.</sentence>
+    <sentence>This is because rigorous convergence analysis is often infeasible for heuristic and intelligent algorithms.</sentence>
+    <sentence>Even so, one needs to be careful when applying intelligent techniques in PF otherwise the results may the exact opposite of what is desired.</sentence>
+    <sentence>For this, reasonable parameter settings are critical to achieve the maximum benefit with the least side effects.</sentence>
+    <sentence>This has been noticed in Socha and Dorigo (2008) in which the pheromone evaporation was applied to avoid too rapid a convergence of the GA algorithm (here the convergence is loosely defined).</sentence>
+    <sentence>Further extension of evolution algorithms, called coevolution based on the interaction between species (Luo, Hong, &amp; Li, 2005), is an option to preserve diversity within the population of evolutionary algorithms.</sentence>
+    <sentence>ML Optimization: clustering, merging and splitting The diversity of particles and the estimated uncertainty of PFs are essentially manifested in the spatial distribution (density) of particles, which is therefore worth considering for adjusting the sample size and maintaining the diversity of particles.</sentence>
+    <sentence>A general idea for setting an appropriate sample size is to choose a small number of particles (i.e., samples) if the density is focused on a small part of the state space, otherwise a large number of particles should be chosen, (see Fox, 2003; Li, Sun, &amp; Sattar, 2013).</sentence>
+    <sentence>Particles distributed in the same partition of the state space are considered to provide the same contribution to the diversity of particles (Li et al., 2012), and more specifically, the Euclidean distance is used as a measure of the diversity of particles (Pantrigo, Sánchez, Montemayor, &amp; Duarte, 2008).</sentence>
+    <sentence>For example, when the state uncertainty is high, particles will be decentralized and distributed to a wider state space.</sentence>
+    <sentence>When the state uncertainty is low, particles will be centralized and distributed to a small state space.</sentence>
+    <sentence>Based on this understanding, the KLD (Kullback–Leibler Distance)-sampling approach (Fox, 2003) and KLD-resampling (Li et al., 2013) determine the required number of particles Nt so that the KLD between sample-based maximum likelihood estimate (MLE) and the true posterior does not exceed a pre-specified error bound threshold ε by using the following equation (28) where, k is the number of grids with support, and z1−δ is the upper quantile of the standard normal distribution.</sentence>
+    <sentence>The equation shows that the number of particles is nearly proportional to the number of grid with support, which is based on the grid-partitioning of the state space.</sentence>
+    <sentence>One case of grid partitioning in a 2-dimensional state space is shown in Fig 2.</sentence>
+    <sentence>Particle merging and splitting illustrated in 2-dimensional state space Fig 2.</sentence>
+    <sentence>Particle merging and splitting illustrated in 2-dimensional state space.</sentence>
+    <sentence>In what follows, we consider a new class of PDO techniques that benefit much from techniques such as clustering, merging and splitting and that need to handle the dimensionality of the state space.</sentence>
+    <sentence>Unlike AI PDO techniques, these approaches may not be data-driven or heuristic, but are instead, apparently, ad hoc as they are tailored to their particular applications e.g., robot localization (termed as Monte Carlo Localization, MCL) and target tracking, which are of relatively low dimensionality.</sentence>
+    <sentence>Clustering is a natural logic analysis based statistic decision.</sentence>
+    <sentence>By definition, cluster analysis or clustering is the assignment of a given set of data points into different groups, or clusters, based on some common properties of the points.</sentence>
+    <sentence>The fact that spatially close particles represent a similar state raises the idea of clustering spatially close particles together to consider their common property.</sentence>
+    <sentence>Clustering of particles is not only a means to reduce the sample size, but also a means to supervise the tracking convergence, to maintain the diversity of particles (with the potential ability to solve special problems such as the kidnapped-robot problem, which refers to a situation where the robot is carried to an arbitrary location and the tracking is completely lost) and to extract multi-estimates, etc.</sentence>
+    <sentence>One problem with MCL is that the plain bootstrap filter sometimes incorrectly converges to a unimodal distribution that is unable to maintain multimodal distributions.</sentence>
+    <sentence>To solve this problem, spatially close particles are clustered together; each cluster is considered to be a hypothesis of the true state and is independently processed (Milstein, Snchez, &amp; Williamson, 2002).</sentence>
+    <sentence>This allows for the solution of the kidnapped robot problem.</sentence>
+    <sentence>While each cluster possesses a probability that represents the belief of the robot being at that location, the cluster with the highest probability would be used to determine the robot’s location at that instant in time.</sentence>
+    <sentence>It should be noted that both the filtering type and the clustering method are not specified and may be any advanced choice, such as the Uniform MCL (Yang &amp; Aitken, 2005), Sum-Of-Norms (SON) clustering (Lindsten, Ohlsson, &amp; Ljung, 2011).</sentence>
+    <sentence>The distribution of the particles provides an awareness about the degree of tracking convergence (Wu, Chen, &amp; Wang, 2009) which is helpful to know the progress of the localization in MCL.</sentence>
+    <sentence>Based on this, the particle clustering technique is used to guarantee that the estimates are feasible at all times and positions (Ceranka &amp; Niedzwiecki, 2003).</sentence>
+    <sentence>The dynamical nature of clusters can be used to guarantee better coverage of the environment, allowing attention to be focused only where the probability to find the real robot is higher (Gasparri, Panzieri, Pascucci, &amp; Ulivi, 2006; Shan et al., 2004).</sentence>
+    <sentence>In addition, in the multi-object tracking case based on the SMC-PHD (probability hypothesis density) filter (Clark &amp; Bell, 2007), estimates are often extracted by peak searching of the particle distribution via clustering (k-means, Expected Maximum, etc.)</sentence>
+    <sentence>albeit with its computational slowness and unreliability.</sentence>
+    <sentence>A more sophisticated implementation of clustering allows more accurate and reliable estimate extraction, especially for the case of group/extended targets (Mihaylova et al., 2014).</sentence>
+    <sentence>In contrast to employing clustering within PF, PF can in turn serve for clustering Schubert &amp; Sidenbladh (2005).</sentence>
+    <sentence>Merging and Splitting: Like the clustering technique, the merging and splitting (M&amp;S) techniques are also based on the spatial similarity of particles to carry out PDO.</sentence>
+    <sentence>They appear in variations based on different subjects: particles (Li, Sun, &amp; Duan, 2010; Orguner &amp; Gustafsson, 2008) or particle clusters (Liu, Shi, Zhao, &amp; Xu, 2008).</sentence>
+    <sentence>In the so-called particle M&amp;S PF (Li et al., 2010), different numbers of particles are used for prediction and updating separately to circumvent the contradiction between the estimation accuracy (the more particles, the better accuracy) and computational speed (the fewer particles, the faster speed).</sentence>
+    <sentence>This works under the premise that weight updating is more computationally expensive than the prediction step, in which the computing speed will be highly improved when the number of particles for updating is reduced (by merging particles, see the left part of Fig 2) while the prediction robustness and estimation accuracy can still be well maintained with a bigger prediction number of particles (by splitting particles, see the right part of Fig 2).</sentence>
+    <sentence>The merging and splitting in spirit execute a kind of threshold-based resampling (Li, Bolić, et al., 2014) that can avoid the discarding of small-weighted particles.</sentence>
+    <sentence>In addition, an appropriate smoothing e.g., roughening applied on the split particles, will be further helpful for the diversity of particles.</sentence>
+    <sentence>Furthermore, by means of merging and splitting the formed clusters in the Cluster PF, a dynamic clustered PF is proposed in Liu et al.</sentence>
+    <sentence>(2008).</sentence>
+    <sentence>Many other machine learning algorithms such as the scatter search process are available to execute PDO for PF; the implementation can also be quite flexible (see Pantrigo et al., 2005; Pantrigo et al., 2008).</sentence>
+    <sentence>To improve the speed of the kernel density estimators in the aforementioned kernel smoothing strategy, machine learning approaches such as support vector machines (SVMs) and the support vector data description (SVDD) density estimation method (Banerjee &amp; Burlina, 2010) have been developed in PF.</sentence>
+    <sentence>Despite tremendous effort, PDO based on machine learning still has much room to develop, not only for the benefit of better particle diversity (convergence and robustness) and faster speed, but also for improving estimation accuracy.</sentence>
+  </section>
+  <section name="Computational efficiency, high dimensionality and beyond">
+    <sentence>We cannot expect to enumerate all the PDO effects not only because the literature is quite rich and will continually expand for some time to come, but also because it is hard to arrive at a rigorous definition of PDO that is simultaneously exclusive, exhaustive, separable and satisfying.</sentence>
+    <sentence>To concentrate on a more coherent and intuitive understanding of PDO, less attention is placed on well-known work such as auxiliary variable methods (Whiteley &amp; Johansen, 2011), regularization methods (Liu, Wang, &amp; Ma, 2011; Musso et al., 2001), decentralized and look-ahead PF (Ahmed, Bibalan, Freitas, &amp; Fauvel, 2012).</sentence>
+    <sentence>The efforts we have reviewed so far allow a novel standpoint to improve PF that are particularly effective in dealing with sample degeneracy and impoverishment.</sentence>
+    <sentence>In addition, the filtering reliability and convergence of PF might be improved accordingly.</sentence>
+    <sentence>It is necessary to note that, the benefit of PDO techniques is generally problem-dependent and parameter-sensitive: 1) Each PDO technique may only work well on limited models, especially when it is initially designed for a specific problem, e.g., tracking lost (kidnapped robot) problem (Milstein et al., 2002).</sentence>
+    <sentence>2) The benefits highly depend on the parameter setting.</sentence>
+    <sentence>For the problem-specified PDO techniques, a very different performance may be achieved under different problem models or different parameter setting.</sentence>
+    <sentence>3) The benefits are not independent but instead highly interactively related to each other.</sentence>
+    <sentence>e.g., to increase estimation accuracy is often accompanied with a decrease in computing speed.</sentence>
+    <sentence>A more thorough discussion on the impact of computing speed to the estimation accuracy is given in the following subsection.</sentence>
+    <sentence>Hybrid PDO and computational efficiency Instead of utilizing a single PDO technique, there are some further hybrid approaches using two or more techniques to augment each other for hybrid optimization.</sentence>
+    <sentence>For example, a method based on training artificial neural networks is introduced in Torma and Szepesvári (2003) to implement the local search in the LS-N-IPS of Torma and Szepesvári (2001).</sentence>
+    <sentence>Other hybrid PDO approaches include evolution along with clustering (Gasparri et al., 2006), artificial immune system with PSO (Akhtar, Ahmad, Abdel-Rahman, &amp; Naqvi, 2011), and kernel mean-shift algorithm with the annealed PF (Naeem et al., 2007), etc., to name a few.</sentence>
+    <sentence>There are in fact other ideas involved with PDO that may not seem so obvious.</sentence>
+    <sentence>However, it is necessary to note that approaches that are too complex may suffer from high computational burden that can heavily sacrifice the estimation quality in practice, although there does not appear to be anything wrong in simulations.</sentence>
+    <sentence>This is because a complex filter design often accompanies a slowed-down sampling speed, which indicates a longer iteration period and heavier interval noise (e.g., the state transition noise).</sentence>
+    <sentence>The increased noise can in turn sacrifice the performance of the filter.</sentence>
+    <sentence>The good performance of complex filters, reported in many of the PDO strategies when using the same dynamic noise in the simulation, is highly suspicious.</sentence>
+    <sentence>If the filtering speed is considered in practice, their improvements may not be obtained at all.</sentence>
+    <sentence>This fact is overlooked in pure simulations where the simulation noise is constant regardless of the filtering speed.</sentence>
+    <sentence>In fact, both theoretical and practical evidences show that choices that seem to be intuitively correct may lead to performances even worse than that of the plain bootstrap filter, (see Cornebise, Moulines, &amp; Olsson, 2008; Douc &amp; Moulines, 2008).</sentence>
+    <sentence>This reminds us that thorough attention should be paid to the design and evaluation of a new filter, otherwise it may be overstated.</sentence>
+    <sentence>For fair evaluation and comparison in simulations, the state transition noise should be simulated according to the sampling speed of each filter which is no easy task.</sentence>
+    <sentence>This is elaborated in detail in Li and Sun (2013).</sentence>
+    <sentence>For this reason, a traditional simulation comparison of different PDO approaches does not form part of our review.</sentence>
+    <sentence>High-dimensionality It has been shown in Chris, Bengtsson, Bickel, and Anderson (2008), Bickel, Li, and Bengtsson (2008), Rebeschini and Van Handel (2013) and Bengtsson, Bickel, and Li (2008) that, according to (8), the standard Monte Carlo error satisfies (29) where N is the number of particles, πt(⋅) is the empirical measure function, the constant C typically does not depend on time t but must be exponential in the dimension of the state space of the underlying model.</sentence>
+    <sentence>The exponential growth in the number of particles for increasing dimensions (known as the cure-of-dimensionality, see the evidence provided in Chris et al.</sentence>
+    <sentence>(2008)) is one of the biggest challenges for PDO, as well as one of the primary obstacles for the application of PF.</sentence>
+    <sentence>It has been widely recognized that Monte Carlo methods may fail in large scale systems (Bengtsson et al., 2008; Vaswan, 2008), especially in geosciences (Van Leeuwen, 2009; van Leeuwen, 2010; Winschel &amp; Krätzig, 2010) which could have one million or even more space–time dimensions.</sentence>
+    <sentence>The stress for PDO application to high dimensional systems is laid on space partitioning, indexing and searching of particles in the state space.</sentence>
+    <sentence>To release this stress, advanced techniques and solutions can be roughly catalogued as follows: (1) reduce the performing dimensionality by functionally similar techniques such as Rao–Blackwellisation (RB) (Doucet, Freitas, Murphy, &amp; Russell, 2000; de Freitas et al., 2004; Schön, Gustafsson, &amp; Nordlund, 2005), decentralization (Chen, Schön, Ohlsson, &amp; Ljung, 2011), subspace hierarchy (Brandão, Wainer, &amp; Goldenstein, 2006; Djuric, Lu, &amp; Bugallo, 2007), partitioned sampling (MacCormick &amp; Blake, 1999), etc., (2) design heuristics procedures (Pantrigo et al., 2005) suitable for high dimensional state space or curse-of-dimensionality-free operators (Winschel &amp; Krätzig, 2010), etc., (3) avoid the problem by employing more satisfied sampling of each particle to allow a small number of particles (Van Der Merwe et al., 2000; van Leeuwen, 2010) or by parallel computing (Simonetto &amp; Keviczky, 2009).</sentence>
+    <sentence>We only provide brief introductions to each of these in the following paragraphs; for further details, readers are referred to the references provided.</sentence>
+    <sentence>The RB (Doucet, Freitas, et al., 2000) approach partitions the state vector so that the Kalman filter is used for the part of the state space model that is taken as linear, while PF is used for the other part.</sentence>
+    <sentence>For example, the state vector in the inertial navigation can have as many as 27 states, and here, the Kalman filter can be used for the 24 states, whereas PF is applied to the 3-D position state (Gustafsson, 2010).</sentence>
+    <sentence>In order to remove the linear dependence using Kalman filter, the Decentralized PF (DPF) (Chen et al., 2011) splits the filtering problem into two nested sub-problems, and then handles the two nested sub-problems using PFs, which differs from RB in that the distribution of the second group of variables is also approximated by a conditional PF.</sentence>
+    <sentence>Furthermore, the state space may be partitioned into more subspaces and run PF separately in each subspace (Djuric et al., 2007).</sentence>
+    <sentence>Similarly, splitting the state space to reduce the important sampling dimension (Li et al., 2012; Vaswan, 2008), extracting hierarchical subspace to filter separately (Brandão et al., 2006), partitioned sampling based on hierarchical search (MacCormick &amp; Blake, 1999), and running SMC samplers in parallel in different regions of the state space with further possibility to interact with each other (Jasra, Doucet, Stephens, &amp; Holmes, 2008), are all similar and can be classified into the computationally efficient technique partitioning and parallelization to alleviate the burden of dimensionality in the high-dimensional search space as the terminologies suggest.</sentence>
+    <sentence>It has been argued that it is often possible, at least in principle, to develop a local particle filtering algorithm whose approximation error is dimension-free (Rebeschini and Van Handel, 2013).</sentence>
+    <sentence>On the other hand, efforts have been devoted to reinforce the use of each particle and thus to reduce the total number of particles required.</sentence>
+    <sentence>A better proposal density using the so-called “nudging” method (future observations are employed in the proposal density to draw particles toward the observations) is explored, allowing the particles to know where the observations are in order to reduce the required number of particles (van Leeuwen, 2010).</sentence>
+    <sentence>Furthermore, Path Relinking (PR) and scatter search are evolutionary meta-heuristics that have been successfully applied to PF for high dimensional estimation problems, (see Pantrigo et al., 2005).</sentence>
+    <sentence>The Smolyak operator underlying the sparse grids approach, which frees global approximation from the curse of dimensionality, is proposed for multivariate integration in Winschel and Krätzig (2010).</sentence>
+    <sentence>These can afford more flexibility to PF for dealing with high dimensionality, especially in the case that only a small number of particles are allowed or preferred.</sentence>
+    <sentence>Multiple ‘Stochastic Meta-Descent’ tracker are developed as ‘smart particles’ to track high-dimensional articulated structures with far fewer particles (Bray, Koller-Meier, &amp; Van Gool, 2007).</sentence>
+    <sentence>The box particle (Gning, Ristic, Mihaylova, &amp; Abdallah, 2013) occupies a small and controllable rectangular region having a non-zero volume in the state space which reduces the computational complexity and is suitable for solving high dimensional problems.</sentence>
+    <sentence>Clearly, approaches that are effective for sample optimization in the state space of either low dimensionality or high dimensionality are all worth considering.</sentence>
+    <sentence>As stated already, the resulting sampling speed of the filter should be taken into account.</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>This paper has reviewed a series of intelligent efforts that have been made on optimizing the distribution of particles in their propagation process in the particle filter.</sentence>
+    <sentence>These efforts are particularly efficient for presenting or alleviating sample degeneracy and impoverishment.</sentence>
+    <sentence>The survey emphasizes the similarity, interrelationships, pros and cons of these approaches rather than provide details on the variety of applications of each algorithm.</sentence>
+    <sentence>An understanding of PDO was developed by considering all algorithms and techniques that share the same characteristics within a well-founded perspective, providing a systematic and coherent standpoint to study PF and allowing further improvements to be made.</sentence>
+    <sentence>Some issues were not discussed including the rigorous reliability and convergence property of the PDO approach.</sentence>
+    <sentence>Finding more effective solutions for PDO in high dimensional problems remains, undoubtedly, an active and challenging topic in which there is still much more to do, especially in cases where only a small number of particles are allowed.</sentence>
+    <sentence>For example, the newly appearing Cubature method (Arasaratnam &amp; Haykin, 2009) and quantum filtering (Bouten, Van Handel, &amp; James, 2006) may have a potential benefit for PF.</sentence>
+    <sentence>If high dimensionality is inevitable, the use of real-time techniques like parallel processing and ad hoc techniques related to hardware improvement is suggested.</sentence>
+    <sentence>Even, alternatives to the SIR such as MCMC are considerable.</sentence>
+    <sentence>We have noticed that most of advanced techniques used to enhance PF do not work for all cases but are problem-dependent and parameter-sensitive.</sentence>
+    <sentence>In particular, the increased computational cost due to complex algorithm design may sacrifice performance quality in real life estimation, which is often overlooked in a pure simulation that uses constant parameters for all filters.</sentence>
+    <sentence>As a result, the simulation outcome is not intended to represent the outcome of a real life situation.</sentence>
+    <sentence>This deserves the attention of the users and designers of new discrete filters, not only PF.</sentence>
+    <sentence>To overcome the gap between simulation and real life practice, a critical step involved is to setup the simulation model with respect to the computing speed of different filters.</sentence>
+    <sentence>This is the key point to seamlessly connect simulation and reality and requires an urgent solution.</sentence>
+  </section>
+</article>

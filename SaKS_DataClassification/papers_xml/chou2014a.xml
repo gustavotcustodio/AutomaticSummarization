@@ -1,0 +1,404 @@
+<article>
+  <title>Smart meter monitoring and data mining techniques for predicting refrigeration system performance</title>
+  <abstract>
+    <sentence>A major challenge in many countries is providing sufficient energy for human beings and for supporting economic activities while minimizing social and environmental harm.</sentence>
+    <sentence>This study predicted coefficient of performance (COP) for refrigeration equipment under varying amounts of refrigerant (R404A) with the aids of data mining (DM) techniques.</sentence>
+    <sentence>The performance of artificial neural networks (ANNs), support vector machines (SVMs), classification and regression tree (CART), multiple regression (MR), generalized linear regression (GLR), and chi-squared automatic interaction detector (CHAID) were applied within DM process.</sentence>
+    <sentence>After obtaining the COP value, abnormal equipment conditions can be evaluated for refrigerant leakage.</sentence>
+    <sentence>Analytical results from cross-fold validation method are compared to determine the best models.</sentence>
+    <sentence>The study shows that DM techniques can be used for accurately and efficiently predicting COP.</sentence>
+    <sentence>In the liquid leakage phase, ANNs provide the best performance.</sentence>
+    <sentence>In the vapor leakage phase, the best model is the GLR model.</sentence>
+    <sentence>Experimental results confirm that systematic analyses of model construction processes are effective for evaluating and optimizing refrigeration equipment performance.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Refrigeration management</keyword>
+    <keyword>Smart meter</keyword>
+    <keyword>Monitoring experiment</keyword>
+    <keyword>Data mining</keyword>
+    <keyword>Performance diagnosis</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Data mining (DM) techniques have formed a branch of applied Artificial Intelligence (AI) since the 1960s, several major kinds of data mining methods such as generalization, characterization, classification, clustering association, evolution, pattern matching, data visualization and meta-rule guided mining (Liao, Chu, &amp; Hsiao, 2012).</sentence>
+    <sentence>Prediction is one of major data mining functions used in the applications (Köksal, Batmaz, &amp; Testik, 2011).</sentence>
+    <sentence>Its broad applications include marketing, healthcare, civil engineering, and many others (Chen, Chiang, Wu, &amp; Chu, 2013; Chou, 2009; Kao, Chen, &amp; Chou, 2011; Koyuncugil &amp; Ozgulbas, 2012; Küçüksille, Selbaş, &amp; Şencan, 2009; Moreno Sáez, Sidrach-de-Cardona, &amp; Mora-López, 2013).</sentence>
+    <sentence>In addition, Köksal et al.</sentence>
+    <sentence>(2011) comprehensively reviewed DM applications in manufacturing industries (Köksal et al., 2011).</sentence>
+    <sentence>However, DM is rarely applied in the energy field, particularly to support energy efficiency.</sentence>
+    <sentence>Taiwan, which imports 99.4% of its energy needs, has already begun replacing conventional meters with smart meters.</sentence>
+    <sentence>Taiwan Power Company plans to install 1 million smart meters for its customers before 2015.</sentence>
+    <sentence>To achieve this target, smart meter devices will be installed in 10 thousands households in 2012, and installations will gradually increase to 1 million devices during 2013 to 2015 (Lee, 2011).</sentence>
+    <sentence>The aim of this policy is to improve energy efficiency and reduce carbon emissions in Taiwan.</sentence>
+    <sentence>Based on the overseas experience in similar projects, policy makers have predicted that the devices will reduce carbon dioxide emissions in the future.</sentence>
+    <sentence>Moreover, in many countries, current policies for reducing emissions coupled with growing public awareness of increased utilities price have increased the use of smart meters as monitoring tools (Bennett, Stewart, &amp; Beal, 2013; Li, Fang, Mahatma, &amp; Hampapur, 2011; Usman &amp; Shami, 2013).</sentence>
+    <sentence>Therefore improving refrigeration system performance via smart meter and data mining is an important research issue.</sentence>
+    <sentence>As energy conservation and carbon reduction have recently become an important issue, investigation of large consumption energy systems has been prioritized (Bektas, Ekici, &amp; Aksoy, 2011; Kalogirou, 2000; Oğuz, Sarıtas, &amp; Baydan, 2010; Rodger, 2014; Soyguder &amp; Alli, 2009).</sentence>
+    <sentence>One of the facilities being studied is refrigeration systems for preserving food and for air conditioning, which constantly consume energy.</sentence>
+    <sentence>Refrigeration systems are ubiquitous and can be found in many locations, including factories, households, offices, etc.</sentence>
+    <sentence>Despite their wide spread use, the performance of these systems has not been fully investigated (Ahmed, Korres, Ploennigs, Elhadi, &amp; Menzel, 2011; Ozgoren, Bilgili, &amp; Babayigit, 2012; Şahin, 2011).</sentence>
+    <sentence>Thus, developing an appropriate methodology for predicting refrigeration system performance based on refrigerant conditions is imperative.</sentence>
+    <sentence>Although many studies of this problem have been performed, available studies using data mining approach of such energy systems are still rare.</sentence>
+    <sentence>Notably, the electrical properties of refrigerant amount used in vapor compression refrigeration systems can only be determined through experiments.</sentence>
+    <sentence>This study designed laboratory experiments to achieve this goal.</sentence>
+    <sentence>All experimental data were retrieved from smart meters, which were also used to monitor electricity usage and user behavior.</sentence>
+    <sentence>The DM techniques were used as analytical tools to predict the coefficient of performance (COP) under different refrigerant amounts.</sentence>
+    <sentence>The DM techniques compared in this study included artificial neural networks (ANNs), support vector machines (SVMs), classification and regression tree (CART), multiple linear regression (MLR), generalized linear regression (GLR), and chi-squared automatic interaction detector (CHAID) techniques.</sentence>
+    <sentence>The indicators used to evaluate model performance were mean absolute percentage error (MAPE), root mean square error (RMSE), mean absolute error (MAE) and correlation coefficient.</sentence>
+    <sentence>Cross-fold validation was also performed to ensure a balanced view and to avoid bias from data.</sentence>
+    <sentence>The rest of this paper is organized as follows.</sentence>
+    <sentence>Research findings from previous studies are summarized in Section 2.</sentence>
+    <sentence>Section 3 presents the data mining methodology used in this work.</sentence>
+    <sentence>Section 4 describes the experimental design and monitoring system.</sentence>
+    <sentence>Section 5 discusses the model implementation and analytical outcomes, i.e., model settings, cross-fold validation and the analysis results.</sentence>
+    <sentence>The last section gives concluding remarks.</sentence>
+  </section>
+  <section name="Literature review">
+    <sentence>A major challenge in many countries is providing sufficient energy for human beings and for supporting economic activities while minimizing social and environmental harm.</sentence>
+    <sentence>Therefore, the social and scientific importance of electrical power system load forecasting has increased (Liu &amp; Yi, 2010; Metaxiotis, Kagiannas, Askounis, &amp; Psarras, 2003; Pao, 2006).</sentence>
+    <sentence>In recent years, various electricity load forecasting methods have become highly advanced (Ahmed et al., 2011; Mateo et al., 2013).</sentence>
+    <sentence>Current forecasting tools include: regression based models (Taylor &amp; Buizza, 2003), time series models (Saab, Badr, &amp; Nasr, 2001), artificial intelligence techniques (Jun &amp; Chuntian, 2008; Park, Kim, Kim, Jo, &amp; Yeo, 2010; Tso &amp; Yau, 2007), fuzzy logic method (Bin, Chuangxin, &amp; Yijia, 2004), nonlinear approach (Pao, 2006), Adaptive Network Based Inference System (Bektas Ekici &amp; Aksoy, 2011), and fuzzy Bayesian network (Penz, Flesch, Nassar, Flesch, &amp; de Oliveira, 2012).</sentence>
+    <sentence>Küçüksille et al.</sentence>
+    <sentence>(2009), for example, presented ten modeling techniques within data mining process for the prediction of thermo-physical properties of refrigerants (R134a, R404a, R407c and R410a) (Küçüksille et al., 2009).</sentence>
+    <sentence>Another study by Şahin (2011) reviewed the literature on performance analysis of refrigeration systems in the electrical engineering field and indicated that ANN model is slightly better than ANFIS for R134a whereas ANFIS model is slightly better than ANN for R404a and R407c (Şahin, 2011).</sentence>
+    <sentence>Similarly, Chengmin, Yufeng, and Lijun (2012) proposed three modeling techniques, namely stepwise regression, decision tree and neural networks, for the prediction of electricity energy consumption.</sentence>
+    <sentence>The prediction results showed that decision tree and neural networks were best models in the summer and winter phase, respectively (Chengmin et al., 2012).</sentence>
+    <sentence>Ying and Pan (2008) further applied the adaptive network based fuzzy inference system (ANFIS) model to forecast regional electricity loads in Taiwan and reported that the ANFIS model has better forecasting performance compared to the regression model, ANN model, support vector machines with genetic algorithms model, recurrent support vector machines with genetic algorithms model and hybrid ellipsoidal fuzzy systems for time series forecasting model (Ying &amp; Pan, 2008).</sentence>
+    <sentence>Similarly, Hosoz, Ertunc, and Bulgurcu (2011) suggested that the ANFIS modeling technique could be used successfully for predicting the performance of an R134a vapor-compression refrigeration system with a cooling tower (Hosoz et al., 2011).</sentence>
+    <sentence>In another attempt to predict thermodynamic properties of refrigerant by using data mining, including linear regression, pace regression, sequential minimal optimization, M5 model tree, M5’Rules and back propagation neural network (BPNN) models were applied to determine the specific volume of different refrigerant (Şencan, 2007).</sentence>
+    <sentence>The study showed that the BPNN model had the best prediction performance.</sentence>
+    <sentence>In the refrigeration industry, system performance is expressed in terms of COP, which is defined as the ratio of change in heat at the “output” to the supplied work.</sentence>
+    <sentence>Therefore, the literature has increasingly focused on predicting and utilizing COP.</sentence>
+    <sentence>Bechtler, Browne, Bansal, and Kecman (2001) used a dynamic neural network model to predict relevant vapor-compression liquid chillers such as COP or compressor work input.</sentence>
+    <sentence>Application of the model in two dynamic processes in two different chillers showed that the model accurately identified all process characteristics (Bechtler et al., 2001).</sentence>
+    <sentence>Chengmin et al.</sentence>
+    <sentence>(2012) used COP as one of indicators to measure the phase cost and environment impact of different central heating systems in city of Tianjin China (Chengmin et al., 2012).</sentence>
+    <sentence>Ozgoren et al.</sentence>
+    <sentence>(2012) utilized COPcooling as a performance prediction evaluation of solar absorption refrigeration system (Ozgoren et al., 2012).</sentence>
+    <sentence>Both studies confirm COP as a refrigeration system performance indicator.</sentence>
+    <sentence>Moreover, Swider (2003) predicted COP using input variables that are readily available to the operating engineer.</sentence>
+    <sentence>The comparison results showed that ANNs have higher generalization abilities and consistently obtain better results compared to regression models (Swider, 2003).</sentence>
+    <sentence>Arcaklioğlu, Erişen, and Yilmaz (2004) used ANNs to predict the performance of a vapor compression heat pump when using various R12/R22 ratios refrigerants mixtures.</sentence>
+    <sentence>The study showed that ANNs can accurately forecast COP and rational efficiency RE for a heat pump, which was confirmed by R2 values equal to 0.9999 (Arcaklioğlu et al., 2004).</sentence>
+    <sentence>Leung, Tse, Lai, and Chow (2012) built ANNs-based model using occupancy space electrical power demand usage to predict building cooling load and produced satisfactory results (Leung et al., 2012).</sentence>
+    <sentence>Küçüksille, Selbaş, and Şencan (2011) used data mining to determine the thermodynamic properties of refrigerants, including enthalpy, entropy and volume of alternative refrigerants R134a, R404a, R407c and R410a (Küçüksille et al., 2011).</sentence>
+    <sentence>Above studies confirmed that data mining methodology effectively obtains refrigerant properties under varying temperature and pressure.</sentence>
+    <sentence>An important benefit of this methodology is the reduced research time needed to compute vapor compression for a refrigeration system (Küçüksille et al., 2009).</sentence>
+    <sentence>The literature shows that a comprehensive review of refrigeration system models can greatly aid users in evaluating refrigeration equipment condition.</sentence>
+    <sentence>To increase the energy efficiency and predict performance of refrigeration systems, this study therefore investigated six data mining methods to predict refrigeration system performance.</sentence>
+    <sentence>A feature selection process for correlating input and output variables was also used to compare modeling efficiency based on the parsimony rule, i.e., the smallest number of input variables that obtain an adequate output accuracy.</sentence>
+  </section>
+  <section name="Research methodology">
+    <sentence>The data mining and artificial intelligence based approaches use computer system programs to solve problems by emulating human brain processes.</sentence>
+    <sentence>The DM methods are developed recently in many fields, including generalization, characterization, classification, clustering, association, evolution, pattern matching, data visualization and meta-rule guided mining (Liao et al., 2012; Şen, Uçar, &amp; Delen, 2012; Tsai, 2012; Yeh &amp; Lien, 2009).</sentence>
+    <sentence>Therefore, the use of DM- and AI-based models can predict and improve the future refrigeration system performance.</sentence>
+    <sentence>This work used numerical predictor nodes and six data mining techniques, ANNs, SVMs, CART, MLR, GLR, and CHAID, for automatically creating and comparing default models of continuous numerical outcomes.</sentence>
+    <sentence>Default values were set in numerical predictor nodes using the IBM SPSS modeler (IBM, 2010).</sentence>
+    <sentence>Notably, when comparing the predictive accuracy of two or more methods, research ers often use k-fold cross-validation to minimize bias associated with the random sampling of the training and hold out data samples.</sentence>
+    <sentence>Since cross-validation randomly assigns individual cases into distinct folds, a common practice is stratifying the folds themselves.</sentence>
+    <sentence>In stratified k-fold cross-validation, the proportions of predictor la bels (responses) in the folds are intended to approximate those in the original dataset.</sentence>
+    <sentence>Kohavi R. (1995) showed that ten folds are optimal (i.e., ten folds obtain the shortest validation testing time acceptable bias and variance) (Kohavi, 1995).</sentence>
+    <sentence>This study therefore used a stratified 10-fold cross-valida tion approach to assess model performance.</sentence>
+    <sentence>The en tire dataset is divided into ten mutually exclusive subsets (or folds) with class distributions approximating those of the original dataset (stratified).</sentence>
+    <sentence>The subsets are extracted in five steps: • Randomize the dataset • Extract one tenth of the original dataset size from the randomized dataset (sin gle fold).</sentence>
+    <sentence>• Remove the extracted data from the original dataset.</sentence>
+    <sentence>• Repeat steps 2-3 eight times.</sentence>
+    <sentence>• Assign the remaining portion of the dataset to the last (10th) fold.</sentence>
+    <sentence>Of the ten distinct folds obtained by this procedure, one was used for performance tests of the prediction models, and the remaining nine folds were used for training.</sentence>
+    <sentence>Therefore, ten independent performance estimates were obtained.</sentence>
+    <sentence>The overall accuracy of cross-validation estimation was calculated by simply averaging the k individual accuracy measures for cross-validation accuracy (Chou, Chiu, Farfoura, &amp; Al-Taharwa, 2011).</sentence>
+    <sentence>Data mining techniques Artificial Intelligence (AI) is an artificial system created through computer intelligence.</sentence>
+    <sentence>Particularly, data mining (DM), a critical step of knowledge-discovery in database (KDD), is the process of using AI automated search to extract useful information from vast amounts of data (Köksal et al., 2011).</sentence>
+    <sentence>Predictive data mining, which is the most common data mining technology, is typically performed in three stages: the initial exploration, model building and validation, and deployment.</sentence>
+    <sentence>The first stage normally starts with data preparation, which involves cleaning data, transforming data, selecting subsets of records, and performing preliminary feature selection operations to obtain a manageable number of variables.</sentence>
+    <sentence>Depending on the nature of the problem, the analyst can then use a set of predictors to implement various DM models for performing graphical and statistical methods and for identifying the implicit relationships between variables.</sentence>
+    <sentence>Finally, the model with the best performance is deployed with new data to obtain predicted result.</sentence>
+    <sentence>Artificial neural networks Artificial neural networks (ANNs) consist of information-processing units that function similarly to neurons in the human brain except that a neural network consists of artificial neurons.</sentence>
+    <sentence>An ANN is structured by many such neurons connected systematically.</sentence>
+    <sentence>The use of ANNs to predict refrigerants system performance has been studied intensively (Kamar, Ahmad, Kamsah, &amp; Mohamad Mustafa, 2013; Mohanraj, Jayaraj, &amp; Muraleedharan, 2012; Şencan, Köse, &amp; Selbaş, 2011).</sentence>
+    <sentence>The feed-forward neural networks used in this work are also known as multilayer perceptrons.</sentence>
+    <sentence>The input layer contains a set of sensory input nodes representing temperature and pressure components, one or more hidden layers contain computation nodes, and an output layer contains one computation node representing coefficient of performance.</sentence>
+    <sentence>Like any intelligence model, ANNs can learn.</sentence>
+    <sentence>The most widely used and effective learning algorithm for training an MLP neural network is the back-propagation (BP) algorithm.</sentence>
+    <sentence>Activation of each neuron in a hidden output layer is calculated as (1) where netk is the activation of kth neuron, j is the set of neurons in the preceding layer, wkj is the weight of the connection between neuron k and neuron j, oj is the output of neuron j, and yk is the sigmoid or logistic transfer function.</sentence>
+    <sentence>(2) The formula for training and updating weights wkj in each cycle t is (3) The change value Δwkj(t) is calculated as (4) where η is the learning rate parameter, δpj is the propagated error, opj is the output of neuron j for record p, α is the momentum parameter, and Δwkj(t − 1) is the change value for wkj in the previous cycle.</sentence>
+    <sentence>Notably, BP networks learn by storing nonlinear information between influencing factors and the strength of influences.</sentence>
+    <sentence>By adjusting connection weights during training to match predictions for target values in specific records, the outcomes generated by the network improve as the network “learns” (SPSS, 2007).</sentence>
+    <sentence>Support vector machines Support vector machines were first introduced by Vapnik (1995) and colleagues at AT&amp;T Bell Laboratories (Vapnik, 1995).</sentence>
+    <sentence>The SVM classifies data with different class labels by determining a set of support vectors that are members of a training input set that represents a hyper plane in a feature space.</sentence>
+    <sentence>A kernel function of a generic mechanism is used to fit the hyper plane surface to training data.</sentence>
+    <sentence>Notably, the COP input-output model in this study was constructed by Epsilon Support Vector Regression (ε-SVR) (SPSS, 2007), which is a variation of the generic SVM and is used for function estimation.</sentence>
+    <sentence>In SVM regression, the input is first mapped onto an m-dimensional feature space by using fixed (nonlinear) mapping.</sentence>
+    <sentence>A linear model is then constructed in this feature space.</sentence>
+    <sentence>The linear model in the feature space, f(x, w), can be expressed by Eq (5): (5) where gj(x) is a set of nonlinear transformations and b is a bias term.</sentence>
+    <sentence>Moreover, estimation quality is measured by a loss function where (6) The most novel feature of support vector regression (SVR) is its use of ε-insensitive loss to compute a linear regression function for the new higher dimensional feature space while simultaneously decreasing model complexity by minimizing .</sentence>
+    <sentence>This function is introduced by including nonnegative slack variables ξi and ξi∗, where i = 1, … , n is used to identify training samples from the ε-insensitive zone.</sentence>
+    <sentence>The SVR can thus be formulated as a minimized version of the following function: (7) This optimization problem can be transformed into a dual problem, which is solved by (8) where n is the number of support vectors.</sentence>
+    <sentence>The kernel function is (9) A user may select the SVM kernel function (e.g., linear, radial basis, polynomial, or sigmoid function) during the training process to identify support vectors along the function surface.</sentence>
+    <sentence>Since the RBF kernel maps samples nonlinearly into a higher dimensional space and presents fewer numerical difficulties, RBF is a reasonable first choice.</sentence>
+    <sentence>Default values of RBF parameters depend clearly on their type and on the software implemented.</sentence>
+    <sentence>Software usually treats SVM parameters as user-defined inputs (Smola &amp; Schölkopf, 2004).</sentence>
+    <sentence>Classification and regression tree Decision tree is a data mining approach that is often used for classification and prediction (Chien &amp; Chen, 2008).</sentence>
+    <sentence>The CART is a decision tree method for constructing a classification or regression tree according to its dependent variable type, which may be categorical or numeric (Breiman, Friedman, Olshen, &amp; Stone, 1984).</sentence>
+    <sentence>The rule-based CART splits data into two subsets such that the new subset records are more homogeneous, i.e., more pure, compared to those in the previous subset.</sentence>
+    <sentence>To achieve the homogeneity criterion, however, the splitting process must be recursive.</sentence>
+    <sentence>In this method, purity level is defined as similarity between values and target values.</sentence>
+    <sentence>Purity is considered perfect when all subset values have identical.</sentence>
+    <sentence>Decision tree methods are far superior to other modeling techniques in terms of logic rules (SPSS, 2007).</sentence>
+    <sentence>Depending on the target field, three impurity measures can be used to locate splits for CART models.</sentence>
+    <sentence>For instance, Gini is usually applied to symbolic target fields while the least-squared deviation method automatically selects continuous targets without explaining the selections.</sentence>
+    <sentence>The Gini index g(t) at a node t in a CART, is defined by Eq (10) (10) where i and j are target field categories (11) where π(j) is the prior probability value for category j, Nj(t) is the number of records in category j of node t, and Nj is the number of records of category j in the root node.</sentence>
+    <sentence>Notably, when the Gini index is used to find the improvement after a split during tree growth, only records in node t and the root node with valid values for the split-predictor are used to compute Nj(t) and Nj, respectively.</sentence>
+    <sentence>Generalized linear regression Unlike the generalized linear regression (GLR) model developed by Nelder and Wedderburn (1972) (Nelder &amp; Wedderburn, 1972), ordinary linear regression (LR) uses a linear combination of variables for prediction only if the data have normal distribution.</sentence>
+    <sentence>In practice, however, data often have an arbitrary distribution.</sentence>
+    <sentence>One solution to this problem is to form a linearized model from a linear combination of predictors.</sentence>
+    <sentence>This process, which is known as a link function, models the mean value in ordinary LR based on its data distribution.</sentence>
+    <sentence>Therefore, in this sense, ordinary LR can be considered a special case of the GLR (Chou, 2009).</sentence>
+    <sentence>The GLR, which is more flexible than LR, assumes data points have an arbitrary of distribution pattern, and the relationship between X and Y is constructed by a link function according to its distribution pattern.</sentence>
+    <sentence>The X–Y relational model is therefore defined as: (12) where g(·) is the selected link function, O is the offset variable, F is the distribution model of Y, X is the predictor, y is the response variable, and is the regression coefficient.</sentence>
+    <sentence>The GLR then uses Newton–Raphson method to obtain a continuous estimate of, such that approaches g(E(y)).</sentence>
+    <sentence>The final proximal equation is formulated as an X–Y relational expression.</sentence>
+    <sentence>Although additional parameters in the GLR increase model instability, GLR has a wider application range and obtains a more realistic relationship model compared to ordinary linear regression.</sentence>
+    <sentence>Multiple linear regression An extension of simple regression model is the multiple linear regression (MLR) model, which is built from two or more predictor variables.</sentence>
+    <sentence>This method is very popular due to its simplicity and its easily interpreted model parameters.</sentence>
+    <sentence>However, Tso and Yau (2007) noted that a major drawback of this method is its inability to explain the underlying causal relationship between the parameter and target (Tso &amp; Yau, 2007).</sentence>
+    <sentence>To perform ordinary least squares multiple linear regression, MLR uses four methods of variable selection, which are enter, stepwise, forward and backward (SPSS, 2007).</sentence>
+    <sentence>Specifically, the selection process continues until no further independent variables qualify for entry or removal.</sentence>
+    <sentence>In the enter method employed at baseline in this study, all selected input fields were entered into the model without performing field selection.</sentence>
+    <sentence>If any cases have a missing value for any input or output field, the IBM SPSS modeler automatically excludes them from the computation (IBM, 2010).</sentence>
+    <sentence>The predicted value for a new record is calculated as (13) where is the predicted value; p is the number of input fields; bo and bi are estimators; Xi is a data point.</sentence>
+    <sentence>Chi-squared automatic interaction detector The CHAID decision tree technique for dataset classification was developed by Kass (1980).</sentence>
+    <sentence>Like CART, CHAID uses a rule set to classify outcomes for an input dataset.</sentence>
+    <sentence>However, it requires more data preparation compared to CART.</sentence>
+    <sentence>Moreover, since CHAID can split more than two groups at any node in the tree, it tends to produce a wider tree compared to binary tree methods.</sentence>
+    <sentence>Notably, CHAID can handle both qualitative (nominal or ordinal) and quantitative dependent variables (Koyuncugil &amp; Ozgulbas, 2012).</sentence>
+    <sentence>However, continuous variables are transformed into ordinal numbers before the splitting process is performed.</sentence>
+    <sentence>The CHAID uses Chi-square test for node splitting when using qualitative data to improve purity.</sentence>
+    <sentence>Optimally, an analysis to explicate a dependent measure in terms of variance components is performed before splitting quantitative data.</sentence>
+    <sentence>The exhaustive CHAID, which classifies the target field, was developed to address the limitations of CHAID technique (Biggs, De Ville, &amp; Suen, 1991).</sentence>
+    <sentence>However, the exhaustive CHAID may not optimize the split for a predictor variable because it stops merging categories as soon as it determines that all remaining categories differ significantly.</sentence>
+    <sentence>The exhaustive CHAID avoids over-fitting the full-grown tree to training data by merging predictor categories continuously until only two super categories remain.</sentence>
+    <sentence>It then identifies the predictor in the series of merges and computes an adjusted p-value for the set of categories that gives the strongest association with the target variable.</sentence>
+    <sentence>Thus, exhaustive CHAID finds the best split for each predictor and chooses which predictor to split based on adjusted p-values (SPSS, 2007).</sentence>
+    <sentence>Evaluation methods The R2, 1 − R, MAPE, MAE, RMSE and number of attributes are used as evaluation criteria of model performance in this study and were derived as follows.</sentence>
+    <sentence>(14) (15) (16) (17) (18) SST, total of sum square; SSE, sum of square due to error; SSR, sum of square due to residual; Ŷi, predicted value; Yi, observed value; , mean value; n, sample size.</sentence>
+    <sentence>Accuracy is assessed using Eqs.</sentence>
+    <sentence>(14)–(18) in both the training and test datasets.</sentence>
+    <sentence>Low MAPE, RMSE, and MAE values indicate high confidence in the values predicted by the model.</sentence>
+    <sentence>In contrast, R2 represents the similarity between the predicted and observed values.</sentence>
+    <sentence>A value close to 1 indicates that the predicted and observed values are very similar.</sentence>
+    <sentence>The MAPE is useful for evaluating the performance of predictive models because of its relative values.</sentence>
+    <sentence>Since the MAPE is unaffected by the size or the unit of the observed and predicted values, it indicates their relative difference.</sentence>
+    <sentence>A MAPE value lower than 10 percent indicate high forecasting accuracy.</sentence>
+    <sentence>Values between 10% and 20% represent good forecasting, between 20% and 50% represent reasonable forecasting, and over 50% indicate inaccurate forecasting.</sentence>
+    <sentence>The RMSE formula calculates the square error of the prediction compared to observed values and calculates the square root of the summation value.</sentence>
+    <sentence>Since the errors are squared before calculating the average, values with large errors are weighted most heavily.</sentence>
+    <sentence>Therefore, this measure is useful for judging undesirably large differences.</sentence>
+    <sentence>In contrast, MAE by definition calculates the average magnitude of errors between predicted and observed values without considering the direction of errors.</sentence>
+    <sentence>That is, since all individual differences are weighted equally, MAE can be used to measure continuous variables.</sentence>
+    <sentence>In addition to those evaluation methods, this study includes number of attributes in an average synthesis index (SI).</sentence>
+    <sentence>Attributes used in the model are selected according to the strength of the correlation between attributes and outcome.</sentence>
+    <sentence>A correlation value close to 1 indicates a strong relation between an attribute to an outcome.</sentence>
+    <sentence>Therefore, this study provides two evaluations, SI4, which is based on the first four methods, and SI5, which is based on SI4 with additional attribute number.</sentence>
+    <sentence>After predicting COP, four statistical measurement methods were performed: 1 − R, MAPE, MAE, and RMSE.</sentence>
+    <sentence>However, to obtain a comprehensive index, the calculation considered the number of attributes used in the Pearson correlation.</sentence>
+    <sentence>The average value of indicators was then converted to a Synthesis Index (SI) as follows: (19) Since 4 and 5 indicators were used to calculate SI4 and SI5, respectively, the first part of the formula normalizes each measure where Oij is the value of each measure indicator; Oij,max is the maximum value of each indicator; Oij,min is the minimum value of measure indicator; n is the number of measures and q is the number of measurement methods.</sentence>
+  </section>
+  <section name="Experimental design">
+    <sentence>The experiment was set up in the Employment and Vocational Training in Bureau of the northern Taiwan city of Taoyuan.</sentence>
+    <sentence>The experimental data were measured and recorded by a smart meter equipped with distributed sensors for automatically retrieving temperature and pressure values.</sentence>
+    <sentence>The data were then used to construct a Mollier chart of the physical characteristics of the refrigerant.</sentence>
+    <sentence>Detailed processes and components of the experiment are described below.</sentence>
+    <sentence>Refrigeration process In a refrigeration system, heat flows from low to high temperature areas.</sentence>
+    <sentence>The flow is achieved by a refrigerant, which absorbs heat and hence boils or evaporates at low pressure to form vapor.</sentence>
+    <sentence>The vapor is then compressed to a higher pressure, so that the heat is transferred to ambient air or water and condenses into liquid.</sentence>
+    <sentence>This process absorbs, i.e., transfers heat from a low temperature source to a higher temperature source (Şahin, 2011).</sentence>
+    <sentence>The COP of a refrigeration system with internal heat exchanger depends on evaporator temperature, condenser temperature, subcooling temperature, superheating temperature and cooling capacity.</sentence>
+    <sentence>These variables are therefore depicted in the Mollier chart to provide a better visualization of equipment performance.</sentence>
+    <sentence>The chart presents all information, including pressure, temperature and electricity data.</sentence>
+    <sentence>In the vapor-compression cycle typically used in industrial refrigeration systems, household refrigerators or commercial refrigeration systems, the low-pressure vapor pressure increases as it passes through the compressor.</sentence>
+    <sentence>Therefore, temperature sharply increases as a proportion of energy input into compression process is transferred to the refrigerant.</sentence>
+    <sentence>The refrigerant then changes a vapor to a liquid.</sentence>
+    <sentence>In the next stage, the high-pressure sub-cooled liquid passes through the expansion device, which both reduces its pressure and controls the flow into the evaporator.</sentence>
+    <sentence>In the final stage, the low pressure liquid refrigerant in the evaporator absorbs heat from its surroundings and converts the air, water or liquid used in the process to a vapor.</sentence>
+    <sentence>Monitoring system Fig 1 displays the experimental settings.</sentence>
+    <sentence>The components of a typical refrigeration system are the compressor, oil separator, condenser, accumulator, filter dryer, injector, and evaporator.</sentence>
+    <sentence>Experimental settings Fig 1.</sentence>
+    <sentence>Experimental settings.</sentence>
+    <sentence>In this study, system performance was monitored with a smart meter, which is an electrical meter that records electrical energy consumption at intervals of an hour or less and sends the information back to the utility centre for monitoring and billing purposes.</sentence>
+    <sentence>Smart meters enable two-way communication between the meter and the central system.</sentence>
+    <sentence>Unlike home energy monitors, smart meters can continuously report remotely collected data.</sentence>
+    <sentence>Its main functions are power measurement and network transmission.</sentence>
+    <sentence>The system enables monitoring of all electricity usage information, including real-time and historic data and daily and monthly power demand, which can be communicated through RS-485 or Ethernet or ZigBee.</sentence>
+    <sentence>Once an unusual signal is detected, the system automatically notifies users via email or text.</sentence>
+    <sentence>The experiment simultaneously monitored 16 temperature and 4 pressure values controlled digitally and mechanically.</sentence>
+    <sentence>The sensors are located at the compressor inlets and outlets and at the oil separator, condenser, accumulator, filter dryer injector and evaporator (Fig 2).</sentence>
+    <sentence>The function of the evaporator is to compress the cooling chemical substances, which convert it from liquid to vapor form, and to absorb heat.</sentence>
+    <sentence>The function of the filter dryer is to remove debris from the refrigeration system.</sentence>
+    <sentence>An accumulator acts a pressure storage reservoir in which a non-compressible hydraulic fluid is continuously pressurized by an external source.</sentence>
+    <sentence>The oil separator separates oil and water to prevent the discharge of oil from the compressor together with the refrigerant circulating in the refrigeration system.</sentence>
+    <sentence>The compressor is a mechanical device used to compress the vapor.</sentence>
+    <sentence>The condenser converts vapor to liquid by condensation.</sentence>
+    <sentence>Monitored points (T: temperature; P: pressure) Fig 2.</sentence>
+    <sentence>Monitored points (T: temperature; P: pressure).</sentence>
+    <sentence>Table 1 lists the liquid/vapor leakage numeric attributes measured in the experiment.</sentence>
+    <sentence>The collected data can be classified as electricity data, temperature data and pressure values.</sentence>
+    <sentence>Temperature data are collected by sixteen monitoring points located at the compressor outlet, oil separator inlet/outlet, condenser refrigerant inlet/outlet, condenser airflow inlet/outlet, inside the evaporator, injector inlet, evaporator refrigerant inlet/outlet, evaporator airflow inlet/outlet, evaporator temperature, outdoor temperature, and compressor refrigerant inlet.</sentence>
+    <sentence>The pressure monitoring points are the compressor refrigerant, the compressor refrigerant outlet, the condenser outlet refrigerant and the evaporator outlet refrigerant.</sentence>
+    <sentence>The liquid leakage phase obtained 528 values after processing the monitoring points.</sentence>
+    <sentence>The vapor leakage phase obtained 217 values.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Numeric attributes measured by the smart meter (liquid/vapor leakage).</sentence>
+    <sentence>Code Liquid leakage Vapor leakage Min.</sentence>
+    <sentence>Max.</sentence>
+    <sentence>Ave. Min.</sentence>
+    <sentence>Max.</sentence>
+    <sentence>Ave. Electricity Operating time (min.)</sentence>
+    <sentence>OT 0.87 31.78 10.80 1.08 61.87 20.25 Amount of R404A (kg) R404A 1.00 6.00 3.50 1.00 6.00 3.50 Power (kW) PW 1.70 4.22 2.52 2.00 3.94 2.43 Apparent power VA 0.00 4.92 2.89 2.94 4.60 3.29 Reactive power VAR 2.17 2.54 2.26 2.12 2.45 2.24 Power factor PF 608.50 865.40 731.46 670.60 863.50 731.18 Cumulative watt hours CWH 36.32 40.94 38.87 41.47 54.33 45.64 Temperature Compressor outlet T1 32.20 55.60 47.61 27.70 58.00 49.07 Oil separator inlet T2 28.30 38.30 35.66 23.35 40.90 36.17 Oil separator outlet T3 28.40 37.90 35.72 22.40 41.20 36.44 Condenser refrigerant inlet T4 23.20 32.20 30.17 18.70 36.80 31.59 Condenser airflow inlet T5 16.50 17.10 16.75 14.60 18.20 16.55 Condenser airflow outlet T6 19.00 24.30 21.09 18.20 21.90 20.45 Condenser refrigerant outlet T7 20.60 25.70 23.27 16.30 24.00 22.57 Inner evaporator T8 −20.00 15.00 −2.63 −20.60 15.90 1.95 Injector inlet T9 0.90 24.40 16.18 0.90 22.00 14.38 Evaporator refrigerant inlet T10 −23.50 9.60 −11.25 −21.20 4.80 −13.28 Evaporator airflow inlet T11 −17.80 16.70 −0.70 −18.40 17.70 3.81 Evaporator airflow outlet T12 −20.90 14.80 −3.91 −21.60 15.40 0.94 Evaporator temperature T13 −21.90 15.00 −4.25 −22.00 15.80 1.14 Evaporator refrigerant outlet T14 −15.70 15.30 1.52 −16.20 17.20 5.44 Outdoor temperature T15 17.90 18.30 18.13 16.30 19.10 17.83 Compressor refrigerant inlet T16 −13.20 16.20 5.50 −4.90 18.60 9.46 Pressure Compressor refrigerant pressure P1 9.10 58.70 23.71 14.70 54.80 22.14 Compressor refrigerant outlet P2 157.00 318.50 207.05 175.40 294.80 199.95 Condenser outlet refrigerant pressure P3 143.30 220.60 169.00 153.40 200.80 164.41 Evaporator outlet refrigerant pressure P4 56.00 57.30 56.55 18.60 66.80 27.31 Since the monitored data type is “continuous”, data analysis was performed using a numeric predictor in IBM SPSS modeler (IBM, 2010).</sentence>
+    <sentence>The numeric predictor node in the software automatically creates and compares default models of continuous numeric outcomes.</sentence>
+    <sentence>The selected refrigerant in this experiment is R404A, which is a compound used in a heat cycle that reversibly undergoes a phase change from vapor to a liquid.</sentence>
+    <sentence>Due to environmental concerns, chlorofluorocarbons (CFCs) and hydro chlorofluorocarbons (HCFCs) are no longer used.</sentence>
+    <sentence>The R404A includes three refrigerants: HFC125 (44%), HFC143a (52%) and HFC134a (4%).</sentence>
+    <sentence>The R404A refrigerant has an ozone depletion index (ODP) of 0 and a global warming potential (GWP) value of 3260, which indicates that it is an environmentally safe non-azeotropic refrigerant with minimal effects on the ozone layer (Pedersen, 1998).</sentence>
+    <sentence>Because R404A is clean, nonflammable, effective for cooling, and has low toxicity, it has generally replaced R22 and R502 refrigerants (Li &amp; Zhao, 2008).</sentence>
+    <sentence>The R404A refrigerant is widely used in medium and low temperature refrigeration systems.</sentence>
+    <sentence>When leakage occurs in a refrigeration system, the repair usually requires removal and replacement of all refrigerant since the composition of the remaining refrigerant and the reliability of system performance are unknown.</sentence>
+    <sentence>Therefore, this study refilled the refrigerant in liquid state and analyzed the effect of different amounts of refrigerant without considering the composition of the remaining refrigerant.</sentence>
+    <sentence>COP forecasting The performance of a refrigeration system with internal heat exchanger is determined by evaporator temperature, condenser temperature, sub-cooling temperature, superheating temperature and cooling capacity.</sentence>
+    <sentence>This study estimated COP values based on the above temperature and cooling capacity values.</sentence>
+    <sentence>A high COP value was interpreted as high equipment efficiency.</sentence>
+    <sentence>Notably, COP can be calculated by plotting a Mollier diagram, which is an enthalpy–entropy chart for describing the enthalpy of a thermodynamic system by plotting total heat versus energy.</sentence>
+    <sentence>The Mollier chart can be used to show the physical characteristics related to the refrigerant, in which each curve represents a different physical characteristic.</sentence>
+    <sentence>If no point on the line corresponds to the state, then equal portions on both sides correspond to the most recent state.</sentence>
+    <sentence>The COP can be used to evaluate the cooling capacity of refrigeration equipment.</sentence>
+    <sentence>Six data mining techniques were used to predict COP under varying amounts of refrigerant.</sentence>
+    <sentence>The operating temperature of the evaporator was also set to a range from +20 °C to −20 °C.</sentence>
+    <sentence>Table 2 shows the experiment settings.</sentence>
+    <sentence>The COP of a refrigerator is the ratio of the change in heat at the “output” to the supplied work.</sentence>
+    <sentence>The formula is given below: (20) where, COP = the coefficient of performance; ΔHevap = heat removed by the refrigeration; ΔHcompvap = heat consumed by the refrigeration.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Experimental information.</sentence>
+    <sentence>Experimental settings Location A municipal bureau of employment and vocational training Purpose Effect of COP on refrigeration under varying R404A refrigerant Variables Amount of refrigerant, pressure sensor, temperature sensor Conditions Duration of evaporator temperatures ranging from +20 °C to −20 °C and the temperature (T1–T16) and pressure (P1–P4) sensor readings for all equipment Equipment Vacuum pump, electronic platform scales, pressure gage, refrigerant recycle bottle Monitored values Electricity data, temperature, pressure Refrigerant type R404A R404A 6 kg, 5 kg, 4 kg, 3 kg, 2 kg, 1 kg</sentence>
+  </section>
+  <section name="Data preprocessing and analytical results">
+    <sentence>Data preprocessing and model settings The experiments in this study measured both liquid leakage and vapor leakage.</sentence>
+    <sentence>The experimental data retrieved by the smart meter were converted to general reading patterns via spreadsheet.</sentence>
+    <sentence>After data collection, the first step was removing abnormal values caused by the signal sent from the smart meter to the computer.</sentence>
+    <sentence>After deleting the abnormal data, the next step was performing statistical analysis methods to find the critical variables associated with COP.</sentence>
+    <sentence>Pearson correlation coefficient was used to measure the correlation between input and output variables.</sentence>
+    <sentence>The Pearson formula is (21) where n is the sample number, Xi is the value of input variable i; Yi is the value of the output variable; is the mean of the input variable; is the mean of the output variable; Sx is the standard deviation of X; and Sy is the standard deviation of Y.</sentence>
+    <sentence>The |r| describes the degree of the relationship between two variables.</sentence>
+    <sentence>A high |r| indicates a strong correlation between two variables.</sentence>
+    <sentence>Original data are normalized to improve the precision of prediction values.</sentence>
+    <sentence>Table 3 shows the attributes selection results.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Pearson correlation comparison of liquid/vapor leakage phase.</sentence>
+    <sentence>|r| &gt; 0 |r| &gt; 0.1 |r| &gt; 0.2 |r| &gt; 0.3 |r| &gt; 0.4 |r| &gt; 0.5 |r| &gt; 0.6 |r| &gt; 0.7 |r| &gt; 0.8 |r| &gt; 0.9 1 Cumulative minutes ★ ☆ ★ ☆ ★ ☆ ☆ ☆ ☆ ☆ ☆ 2 Amount of R404a ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 3 Power ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ ☆ 4 Apparent power ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ 5 Reactive power ★ ☆ ☆ ☆ ☆ 6 Power factor ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 7 Cumulative watt hours ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 8 Compressor outlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ ☆ 9 Oil separator inlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ ☆ ☆ 10 Oil separator outlet ★ ☆ ★ ☆ ☆ ☆ ☆ ☆ ☆ ☆ 11 Condenser refrigerant inlet ★ ☆ ☆ ☆ ☆ ☆ ☆ ☆ ☆ 12 Condenser airflow inlet ★ ☆ ★ ☆ ★ ☆ ☆ ☆ ☆ ☆ ☆ ☆ 13 Condenser airflow outlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ★ 14 Condenser refrigerant outlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ★ 15 Inner evaporator ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 16 Injector inlet ★ ☆ ★ ☆ ☆ ☆ 17 Evaporator refrigerant inlet ★ ☆ ★ ☆ ★ ☆ ★ 18 Evaporator airflow inlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 19 Evaporator airflow outlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 20 Evaporator temperature ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 21 Evaporator refrigerant outlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ 22 Outdoor temperature ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ ☆ 23 Compressor refrigerant inlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ 24 Compressor refrigerant pressure ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 25 Compressor refrigerant outlet ★ ☆ ★ ☆ ★ ☆ ★ ☆ ☆ 26 Condenser outlet refrigerant pressure ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ 27 Evaporator outlet refrigerant pressure ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ★ ★ ★ No.</sentence>
+    <sentence>of Attributes 27 27 25 27 23 27 21 26 17 23 16 17 11 16 8 15 5 9 1 3 Note: ☆: vapor leakage phase ★: liquid leakage phase.</sentence>
+    <sentence>The experimental settings in this study were 1 kg to 6 kg unfilled refrigerant and +20 °C to −20 °C evaporator bank temperature.</sentence>
+    <sentence>The six DM models were ANNs, CART, CHAID, MLR, GLR and SVMs.</sentence>
+    <sentence>The data were first divided into ten cross-fold training and testing sets.</sentence>
+    <sentence>The training sets (nine of the ten sets) were then utilized to determine the best models.</sentence>
+    <sentence>Finally, the models were tested via the hold-out data (the remaining set).</sentence>
+    <sentence>The cross-fold training and testing were repeated ten times.</sentence>
+    <sentence>Model performances were then evaluated in terms of average values for the above evaluation indicators.</sentence>
+    <sentence>Although the attributes in the models were selected according to varying correlations, they were generally based on 11 high correlated attributes (|r| &gt; 0.6) for both liquid and vapor phases (Table 3): condenser refrigerant inlet temperature, inner temperature of the evaporator, evaporator airflow inlet temperature, evaporator airflow outlet temperature, evaporator temperature, evaporator refrigerant outlet temperature, outdoor temperature, compressor refrigerant inlet temperature, and evaporator outlet refrigerant pressure.</sentence>
+    <sentence>Results and discussions Table 4 compares the models in terms of accuracy in predicting liquid leakage and vapor leakage phases.</sentence>
+    <sentence>The input attributes were determined for each model based on the screen results using Pearson correlation coefficients (Table 3).</sentence>
+    <sentence>Specifically, SI values were calculated to rank the accuracy of each model with a small value corresponding to better model accuracy.</sentence>
+    <sentence>In addition to the SI, MAPE is used to judge model performance since it is a widely used as a singular performance measurement index.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Performance ranking of 10-fold validation (liquid/vapor leakage).</sentence>
+    <sentence>Liquid leakage phase Vapor leakage phase Pearson correlation No.</sentence>
+    <sentence>of attributes Model Method R2 1 − R MAPE MAE RMSE SI4 SI5 Rank SI4 Rank SI5 Pearson correlation No.</sentence>
+    <sentence>of attributes Model Method R2 1 − R MAPE MAE RMSE SI4 SI5 Rank SI4 Rank SI5 |r| &gt; 0.9 1 L1 ANNs 0.978 0.011 0.146 0.026 0.035 0.201 0.161 39 9 |r| &gt; 0.9 3 V1 ANNs 0.983 0.009 0.214 0.032 0.046 0.305 0.244 40 19 L2 SVMs 0.938 0.031 0.264 0.052 0.059 0.547 0.438 55 48 V2 SVMs 0.957 0.022 0.704 0.072 0.080 1.000 0.800 60 60 L3 CHAID 0.964 0.018 0.190 0.034 0.048 0.336 0.269 43 30 V3 CHAID 0.964 0.018 0.160 0.036 0.068 0.510 0.408 48 43 L4 CART 0.970 0.015 0.132 0.031 0.043 0.259 0.208 42 18 V4 CART 0.966 0.017 0.203 0.034 0.065 0.493 0.394 47 42 L5 MR 0.888 0.058 0.489 0.070 0.083 0.946 0.757 59 59 V5 MR 0.959 0.021 0.693 0.060 0.079 0.925 0.740 58 57 L6 GLR 0.881 0.062 0.502 0.074 0.087 1.000 0.800 60 60 V6 GLR 0.959 0.021 0.693 0.060 0.079 0.925 0.740 59 58 |r| &gt; 0.8 5 L7 ANNs 0.987 0.007 0.102 0.020 0.029 0.111 0.120 15 3 |r| &gt; 0.8 9 V7 ANNs 0.988 0.006 0.189 0.029 0.041 0.222 0.228 30 18 L8 SVMs 0.935 0.033 0.263 0.058 0.064 0.595 0.507 56 50 V8 SVMs 0.971 0.014 0.325 0.055 0.066 0.605 0.534 49 49 L9 CHAID 0.984 0.008 0.133 0.020 0.031 0.142 0.145 27 6 V9 CHAID 0.974 0.013 0.134 0.028 0.056 0.348 0.328 46 37 L10 CART 0.980 0.010 0.093 0.024 0.036 0.162 0.160 34 8 V10 CART 0.986 0.007 0.185 0.024 0.042 0.215 0.222 27 17 L11 MR 0.937 0.032 0.381 0.050 0.063 0.623 0.529 57 52 V11 MR 0.985 0.007 0.280 0.030 0.045 0.295 0.286 39 27 L12 GLR 0.937 0.032 0.381 0.050 0.063 0.623 0.529 58 53 V12 GLR 0.986 0.007 0.264 0.030 0.044 0.283 0.277 38 25 |r| &gt; 0.7 8 L13 ANNs 0.993 0.003 0.085 0.013 0.020 0.028 0.076 6 1 |r| &gt; 0.7 15 V13 ANNs 0.991 0.004 0.221 0.028 0.038 0.193 0.254 25 20 L14 SVMs 0.957 0.022 0.188 0.045 0.053 0.412 0.383 47 47 V14 SVMs 0.971 0.015 0.468 0.054 0.064 0.663 0.631 55 51 L15 CHAID 0.986 0.007 0.128 0.018 0.029 0.120 0.150 19 7 V15 CHAID 0.984 0.008 0.119 0.023 0.047 0.217 0.274 29 24 L16 CART 0.982 0.009 0.093 0.025 0.033 0.151 0.175 32 12 V16 CART 0.986 0.007 0.185 0.026 0.040 0.215 0.272 28 23 L17 MR 0.964 0.018 0.274 0.038 0.048 0.400 0.374 45 45 V17 MR 0.989 0.005 0.214 0.020 0.029 0.127 0.202 16 8 L18 GLR 0.964 0.018 0.274 0.038 0.048 0.400 0.374 46 46 V18 GLR 0.991 0.005 0.109 0.016 0.023 0.039 0.131 14 3 |r| &gt; 0.6 11 L19 ANNs 0.989 0.005 0.083 0.012 0.019 0.027 0.099 5 2 |r| &gt; 0.6 16 V19 ANNs 0.990 0.005 0.220 0.027 0.037 0.196 0.265 26 21 L20 SVMs 0.949 0.026 0.258 0.049 0.057 0.500 0.477 50 49 V20 SVMs 0.973 0.014 0.483 0.053 0.063 0.648 0.627 53 50 L21 CHAID 0.986 0.007 0.121 0.017 0.028 0.108 0.164 14 10 V21 CHAID 0.981 0.009 0.119 0.023 0.047 0.230 0.292 34 28 L22 CART 0.982 0.009 0.093 0.025 0.033 0.151 0.198 33 16 V22 CART 0.984 0.008 0.189 0.029 0.045 0.265 0.320 37 35 L23 MR 0.971 0.015 0.250 0.034 0.043 0.337 0.347 44 44 V23 MR 0.995 0.003 0.200 0.021 0.028 0.096 0.185 15 7 L24 GLR 0.980 0.010 0.202 0.023 0.034 0.213 0.248 40 27 V24 GLR 0.996 0.002 0.107 0.016 0.023 0.001 0.109 1 1 |r| &gt; 0.5 16 L25 ANNs 0.994 0.003 0.077 0.012 0.019 0.013 0.126 3 4 |r| &gt; 0.5 17 V25 ANNs 0.991 0.005 0.206 0.027 0.036 0.186 0.265 23 22 L26 SVMs 0.944 0.029 0.275 0.052 0.060 0.544 0.550 54 55 V26 SVMs 0.972 0.014 0.506 0.054 0.064 0.667 0.650 56 52 L27 CHAID 0.988 0.006 0.086 0.016 0.026 0.073 0.174 11 11 V27 CHAID 0.982 0.009 0.161 0.025 0.045 0.248 0.315 35 30 L28 CART 0.984 0.008 0.091 0.023 0.032 0.134 0.223 21 20 V28 CART 0.984 0.008 0.189 0.027 0.045 0.256 0.321 36 36 L29 MR 0.979 0.010 0.233 0.025 0.035 0.245 0.311 41 42 V29 MR 0.995 0.002 0.120 0.017 0.025 0.019 0.132 4 4 L30 GLR 0.982 0.009 0.186 0.021 0.033 0.188 0.266 37 29 V30 GLR 0.996 0.002 0.107 0.016 0.023 0.001 0.117 2 2 |r| &gt; 0.4 17 L31 ANNs 0.995 0.003 0.077 0.012 0.018 0.008 0.129 2 5 |r| &gt; 0.4 23 V31 ANNs 0.989 0.005 0.197 0.027 0.038 0.191 0.319 24 34 L32 SVMs 0.948 0.026 0.244 0.048 0.056 0.487 0.512 49 51 V32 SVMs 0.972 0.014 0.520 0.052 0.063 0.659 0.694 54 53 L33 CHAID 0.988 0.006 0.096 0.015 0.026 0.074 0.183 12 14 V33 CHAID 0.986 0.007 0.105 0.019 0.038 0.142 0.280 17 26 L34 CART 0.984 0.008 0.091 0.023 0.032 0.134 0.230 22 21 V34 CART 0.981 0.010 0.192 0.031 0.050 0.322 0.424 41 44 L35 MR 0.983 0.009 0.196 0.024 0.032 0.200 0.283 38 34 V35 MR 0.996 0.002 0.146 0.017 0.023 0.022 0.184 5 6 L36 GLR 0.987 0.007 0.156 0.020 0.029 0.142 0.237 26 24 V36 GLR 0.996 0.002 0.133 0.016 0.023 0.012 0.176 3 5 |r| &gt; 0.3 21 L37 ANNs 0.993 0.003 0.086 0.013 0.020 0.028 0.176 7 13 |r| &gt; 0.3 26 V37 ANNs 0.990 0.005 0.192 0.027 0.037 0.184 0.339 22 38 L38 SVMs 0.946 0.027 0.253 0.050 0.058 0.511 0.563 51 56 V38 SVMs 0.970 0.015 0.576 0.056 0.066 0.726 0.773 57 59 L39 CHAID 0.984 0.008 0.108 0.019 0.029 0.117 0.247 17 26 V39 CHAID 0.986 0.007 0.109 0.020 0.038 0.148 0.310 18 29 L40 CART 0.985 0.008 0.105 0.022 0.030 0.129 0.257 20 28 V40 CART 0.981 0.010 0.194 0.032 0.050 0.327 0.453 42 45 L41 MR 0.985 0.008 0.165 0.022 0.031 0.167 0.287 35 35 V41 MR 0.996 0.002 0.146 0.017 0.023 0.022 0.209 6 9 L42 GLR 0.986 0.007 0.157 0.021 0.029 0.149 0.273 31 31 V42 GLR 0.996 0.002 0.137 0.017 0.024 0.022 0.209 10 10 |r| &gt; 0.2 23 L43 ANNs 0.993 0.004 0.084 0.013 0.020 0.027 0.191 4 15 |r| &gt; 0.2 27 V43 ANNs 0.988 0.006 0.201 0.029 0.040 0.223 0.378 31 39 L44 SVMs 0.946 0.027 0.266 0.050 0.058 0.519 0.584 52 57 V44 SVMs 0.972 0.014 0.511 0.051 0.060 0.638 0.710 50 54 L45 CHAID 0.987 0.006 0.096 0.016 0.026 0.081 0.234 13 23 V45 CHAID 0.986 0.007 0.109 0.020 0.038 0.148 0.318 19 31 L46 CART 0.984 0.008 0.091 0.033 0.032 0.174 0.308 36 40 V46 CART 0.981 0.010 0.194 0.032 0.050 0.327 0.462 43 46 L47 MR 0.986 0.008 0.091 0.033 0.032 0.201 0.288 13 36 V47 MR 0.996 0.002 0.147 0.017 0.023 0.001 0.244 40 11 L48 GLR 0.987 0.007 0.158 0.020 0.030 0.547 0.279 36 33 V48 GLR 0.996 0.002 0.138 0.017 0.024 0.191 0.800 60 14 |r| &gt; 0.1 25 L49 ANNs 0.991 0.007 0.152 0.020 0.028 0.336 0.210 30 19 |r| &gt; 0.1 27 V49 ANNs 0.988 0.006 0.201 0.029 0.040 0.659 0.408 48 40 L50 SVMs 0.945 0.004 0.074 0.013 0.021 0.259 0.612 25 58 V50 SVMs 0.972 0.014 0.511 0.051 0.060 0.142 0.394 47 55 L51 CHAID 0.988 0.028 0.265 0.052 0.059 0.946 0.231 8 22 V51 CHAID 0.986 0.007 0.109 0.020 0.038 0.322 0.740 58 32 L52 CART 0.983 0.006 0.067 0.015 0.026 1.000 0.294 53 38 V52 CART 0.981 0.010 0.194 0.032 0.050 0.022 0.740 59 47 L53 MR 0.986 0.008 0.090 0.023 0.032 0.111 0.302 10 39 V53 MR 0.996 0.002 0.147 0.017 0.023 0.012 0.228 30 12 L54 GLR 0.989 0.007 0.165 0.020 0.029 0.595 0.278 23 32 V54 GLR 0.996 0.002 0.138 0.017 0.024 0.184 0.534 49 15 |r| &gt; 0 27 L55 ANNs 0.994 0.005 0.153 0.018 0.026 0.142 0.205 29 17 |r| &gt; 0 27 V55 ANNs 0.988 0.006 0.201 0.029 0.040 0.726 0.328 46 41 L56 SVMs 0.957 0.003 0.071 0.012 0.018 0.162 0.534 18 54 V56 SVMs 0.972 0.014 0.511 0.051 0.060 0.148 0.222 27 56 L57 CHAID 0.988 0.022 0.223 0.043 0.051 0.623 0.245 1 25 V57 CHAID 0.986 0.007 0.109 0.020 0.038 0.327 0.286 39 33 L58 CART 0.984 0.006 0.066 0.015 0.026 0.623 0.310 48 41 V58 CART 0.981 0.010 0.194 0.032 0.050 0.022 0.277 38 48 L59 MR 0.987 0.008 0.091 0.023 0.032 0.028 0.316 9 43 V59 MR 0.996 0.002 0.147 0.017 0.023 0.022 0.254 25 13 L60 GLR 0.989 0.007 0.164 0.020 0.029 0.412 0.291 24 37 V60 GLR 0.996 0.002 0.138 0.017 0.024 0.223 0.631 55 16 Min 1 0.881 0.003 0.018 0.012 0.018 0.006 0.076 3 0.957 0.002 0.105 0.016 0.023 0.001 0.109 Max 27 0.995 0.062 0.502 0.074 0.115 1.000 0.800 27 0.996 0.022 0.704 0.072 0.080 1.000 0.800 In terms of R2 for liquid phase, 26 models have values above 0.95, 23 models have values between 0.90 and 0.95, and 11 models have values less than 0.90.</sentence>
+    <sentence>For vapor phase, 11 models have values above 0.95, 38 models have values between 0.90 and 0.95, and 12 models have values less than 0.90.</sentence>
+    <sentence>These data indicate that most (81.67%) of the liquid phase models had satisfactory variance explanation, and most (80%) of the vapor phase models had R2 values larger than 0.9.</sentence>
+    <sentence>However, indicators other than R2 were required for a comprehensive model comparison.</sentence>
+    <sentence>Fig 3 compares the MAPEs for liquid phase from Table 4.</sentence>
+    <sentence>The comparison shows that 21 models have values less than 10%, 21 models have values between 10% and 20%, 17 models have values between 20% and 50%, and only 1 has a value larger than 50%.</sentence>
+    <sentence>The comparison results indicate that 98.33% models yield satisfactory prediction accuracy.</sentence>
+    <sentence>Furthermore, under various attribute settings, six of the best models were ANNs models, three of the best models were CHAID models, and one of the best models was a CART model.</sentence>
+    <sentence>When using SI4 and SI5 as the comparison index, however, ANNs consistently had the best under various attribute settings.</sentence>
+    <sentence>The MAPE analysis in liquid leakage phase Fig 3.</sentence>
+    <sentence>The MAPE analysis in liquid leakage phase.</sentence>
+    <sentence>In Fig 4, the MAPE values for vapor phase data show that no model has values less than 10%, 36 models have values between 10% and 20%, 15 models have values between 20% and 50%, and 9 models have value higher than 50%.</sentence>
+    <sentence>These results indicate that 85% of models had medium prediction accuracy, but none had high prediction accuracy.</sentence>
+    <sentence>Moreover, under different attribute settings, seven of the best models were CHAID models, and three of the best models were GLR models.</sentence>
+    <sentence>When using SI4 as the evaluation index, however, the results varied: four of the best models were GLR models, two were MR models, one was a CART model, and one was an ANNs.</sentence>
+    <sentence>In contrast, when SI5 was used as the evaluation index, four of the best models were GLR models, four were MR models, one was an ANNs model, and one was a CART model.</sentence>
+    <sentence>The MAPE analysis in vapor leakage phase Fig 4.</sentence>
+    <sentence>The MAPE analysis in vapor leakage phase.</sentence>
+    <sentence>Notably, in liquid phase, comparisons made using SI calculations show more consistent results compared to comparisons made using MAPE (Figs.</sentence>
+    <sentence>5 and 6).</sentence>
+    <sentence>For example, Table 4 shows that the high correlation values were consistently observed in the best model for each Pearson correlation.</sentence>
+    <sentence>In terms of model testing results, the SI comparison also shows more consistent results: 100% of best models for liquid phases were ANNs.</sentence>
+    <sentence>In contrast to the liquid phase, the opposite is true in vapor phase, in which MAPE evaluation shows more consistent results compared to both SI evaluations in |r| &gt; 0.0 to |r| &gt; 0.5 cases.</sentence>
+    <sentence>However, in |r| &gt; 0.5 to |r| &gt; 0.7 cases MAPE, SI4, and SI5 produced similar best models which were GLR.</sentence>
+    <sentence>In |r| &gt; 0.8 and |r| &gt; 0.9 cases, the best models were CART for SI4 and SI5 while CHAID were the best models for MAPE.</sentence>
+    <sentence>The SI4 analysis in liquid leakage phase Fig 5.</sentence>
+    <sentence>The SI4 analysis in liquid leakage phase.</sentence>
+    <sentence>The SI5 analysis in liquid leakage phase Fig 6.</sentence>
+    <sentence>The SI5 analysis in liquid leakage phase.</sentence>
+    <sentence>The experimental results show that the best models observed when using SI method substantially differ than those when using MAPE alone.</sentence>
+    <sentence>For example, consider GLR (L60) and ANNs (L13), which had the best MAPE and SI5 in liquid phase.</sentence>
+    <sentence>In L60, the MAPE value 6.6% can be interpreted as very high accuracy and superior to that of L55 value 7.1%.</sentence>
+    <sentence>However, the RMSE value of 0.025 obtained by L60 denotes that the model tends to produce a larger error compared to L55, which has an RMSE of 0.018.</sentence>
+    <sentence>Moreover, the MAE value of 0.018 in L60 is much larger than the MAE of only 0.012 in L55.</sentence>
+    <sentence>In terms of R correlation value, L55 also has a better fitness compared to L60.</sentence>
+    <sentence>Similarly, in vapor phase, the best model (V33) was superior to V24 only in terms of MAPE.</sentence>
+    <sentence>The above examples confirm that the SI method provides a more comprehensive analysis in multiple performance evaluations compared to MAPE alone.</sentence>
+    <sentence>Moreover, SI calculation can be represented by the number of highly correlated attributes.</sentence>
+    <sentence>For example, when applying the same evaluation method, the best model in liquid phase when using SI4 is the ANNs (L55) model which has an SI value of 0.006.</sentence>
+    <sentence>When using SI5, the best model in liquid phase is the ANNs (L13) which has an SI value of 0.076.</sentence>
+    <sentence>The first model has a Pearson correlation of |r| &gt; 0 which cannot be considered a strong correlation between input and output attributes, while the latter has a correlation of |r| &gt; 0.7 which indicates a strong correlation.</sentence>
+    <sentence>This implies that the latter model can be considered the best model based on its |r| value.</sentence>
+    <sentence>In vapor phase, however, the best model is still GLR (V24), which has an SI4 value of 0.213 and an SI5 value of 0.109 (Figs.</sentence>
+    <sentence>7 and 8) since it already has a Pearson value exceeding 0.5.</sentence>
+    <sentence>The SI4 analysis in vapor leakage phase Fig 7.</sentence>
+    <sentence>The SI4 analysis in vapor leakage phase.</sentence>
+    <sentence>The SI5 analysis in vapor leakage phase Fig 8.</sentence>
+    <sentence>The SI5 analysis in vapor leakage phase.</sentence>
+    <sentence>Another interesting finding of the analysis of SI5 values is that including the number of attributes can suggest an appropriate number of measurement data points or variables for model building.</sentence>
+    <sentence>As the cost of sensor installation increases with the number of measurement points, fewer measurement points can be selected without sacrificing model accuracy.</sentence>
+    <sentence>For example, in liquid phase model L7 may be chosen instead of model L13 even though L7 model is only ranked No 3.</sentence>
+    <sentence>Since L7 has three fewer measurement points compared to L13, the cost of producing data may be significantly lower.</sentence>
+    <sentence>For the same reason, V18 may be preferable to V24 in vapor phase.</sentence>
+    <sentence>To evaluate equipment performance by combining energy management with data mining techniques, this study further analyzed the relationship between cooling capacity (kJ/kg) and COP at varying refrigerant settings.</sentence>
+    <sentence>Cooling capacity is defined as the enthalpy value of evaporator outlet refrigerant temperature minus the enthalpy value of evaporator inlet refrigerant temperature.</sentence>
+    <sentence>Fig 9 depicting the ANNs (L19) model in liquid phase shows that the cooling capacity of R404A in 2 kg appears sufficient, but the time needed to lower the temperature is long.</sentence>
+    <sentence>Cooling capacity stabilizes at 177 kJ/kg.</sentence>
+    <sentence>The figure shows that the system performs best when the amount of R404A is 3 kg.</sentence>
+    <sentence>Relationship between cooling capacity and COP in the ANNs L19 model Fig 9.</sentence>
+    <sentence>Relationship between cooling capacity and COP in the ANNs L19 model.</sentence>
+    <sentence>Notably, the analytical results show that cooling behavior in vapor phase differs from that in liquid phase.</sentence>
+    <sentence>For example, Fig 10 shows that no cooling capacity is available in vapor phase when the amount of refrigerant is 2 kg.</sentence>
+    <sentence>When the liquid refrigerant converts to vapor phase, the refrigeration state is unstable.</sentence>
+    <sentence>Hence, vapor leakage can substantially affect equipment performance.</sentence>
+    <sentence>Further studies are needed to determine how the influence of vapor refrigerant leakage can be reduced in the refrigeration system.</sentence>
+    <sentence>Relationship between cooling capacity and COP in GLR V24 model Fig 10.</sentence>
+    <sentence>Relationship between cooling capacity and COP in GLR V24 model.</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>The aim of this paper is to evaluate the usefulness and compare the performance of data mining techniques in predicting COP of refrigeration equipment under varying settings for R404A refrigerants.</sentence>
+    <sentence>Predicting coefficient of performance is useful in equipment monitoring in utility companies and facility owners.</sentence>
+    <sentence>The six data mining techniques compared in this study were ANNs, SVMs, MR, CHAID, CART and GLR.</sentence>
+    <sentence>The comparison is performed in several steps.</sentence>
+    <sentence>Firstly, Pearson correlation coefficient is calculated for attribute selection.</sentence>
+    <sentence>Secondly, cross-fold validation models are introduced to reduce prediction bias.</sentence>
+    <sentence>The final step is to determine the SI values for each model under different Pearson correlation coefficients.</sentence>
+    <sentence>The SI value is calculated by averaging 1 − R, MAPE, MAE, RMSE and the number of attributes.</sentence>
+    <sentence>The research findings can be summarized as follows.</sentence>
+    <sentence>(a) In liquid leakage phase, ANNs accurately predict COP values.</sentence>
+    <sentence>When using SI5 value as the performance index, L13 provides the best prediction performance (|r| &gt; 0.7).</sentence>
+    <sentence>In vapor leakage phase, the best model is the GLR model (V24) with |r| &gt; 0.6.</sentence>
+    <sentence>(b) The amount of refrigerant substantially affects equipment performance.</sentence>
+    <sentence>Therefore, equipment performance should be judged in terms of cooling capacity and cooling time.</sentence>
+    <sentence>(c) The proposed refrigeration system performs best when the amount of R404A is 3kg.</sentence>
+    <sentence>(d) In vapor phase and |r| &gt; 0 to |r| &gt; 0.5 cases, MAPE evaluation method shows more consistent results compared to both SI evaluations.</sentence>
+    <sentence>(e) Model comparison results show that the SI5 method produces a more reliable and more comprehensive performance evaluation compared to MAPE method alone for |r| &gt; 0.6 to |r| &gt; 0.9 models.</sentence>
+    <sentence>However, one significant limitation of this work is that it used default settings in the single model.</sentence>
+    <sentence>Therefore, further studies are needed to investigate model parameters optimization for predicting COP as well as detect abnormal electricity usage and to reduce unnecessary energy consumption.</sentence>
+    <sentence>The investigation is aligned with present global trends in terms of its use for reducing carbon emissions and for addressing customer concerns about high electricity costs.</sentence>
+    <sentence>Another research direction suggested for future studies is to use cloud monitoring systems to diagnose equipment performance, including abnormal signal characteristics.</sentence>
+  </section>
+</article>

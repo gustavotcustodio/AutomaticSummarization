@@ -1,0 +1,298 @@
+<article>
+  <title>A novel brain-inspired neuro-fuzzy hybrid system for artificial ventilation modeling</title>
+  <abstract>
+    <sentence>Artificial ventilation is a crucial supporting treatment for Intensive Care Unit.</sentence>
+    <sentence>However, as the ventilator control becomes increasingly more complex, it is non-trivial for less experienced clinicians to control the settings.</sentence>
+    <sentence>In this paper, the novel Hebbian based Rule Reduction (HeRR) neuro-fuzzy system is applied to model this control problem for intra-patient and inter-patient ventilator control.</sentence>
+    <sentence>These two ICU care studies demonstrate the capability of HeRR neuro-fuzzy system in extracting the salient knowledge embedded in the training data.</sentence>
+    <sentence>Experimental results on the two studies show promising use of the HeRR neuro-fuzzy system for artificial ventilation.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Artificial ventilator</keyword>
+    <keyword>Intra-patient and inter-patient control</keyword>
+    <keyword>HeRR neuro-fuzzy system</keyword>
+    <keyword>Salient knowledge extraction</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Artificial ventilation plays a critical role in the treatment of patients in the Intensive Care Unit (ICU).</sentence>
+    <sentence>In patients with impaired lung function, it provides a means to maintain the arterial oxygen and carbon dioxide levels.</sentence>
+    <sentence>Numerous research studies on ICU ventilator weaning have been proposed in clinical research domain (Bulter, Keenan, Inman, Sibbald, &amp; Block, 1999; Huang &amp; Lin, 2006; Papadelis et al., 2006; Weavind, Shaw, &amp; Feeley, 2000).</sentence>
+    <sentence>At hospitals, doctors in ICUs manually adjust the settings based on the patient condition.</sentence>
+    <sentence>The adjustment undertaken depends on clinical experience and expert knowledge.</sentence>
+    <sentence>However, as new technologies are used, ventilators are increasing more complex and it is not easy for clinicians with lesser experience to perform judiciously.</sentence>
+    <sentence>Hence there is an increasing urgency for the automation of the decision-making process and computational tools to assist clinicians in this process.</sentence>
+    <sentence>One of the first successful attempts to address the ventilatory management task using artificial intelligence (AI) techniques is the ventilatory management expert system VM (Fagan, 1980; Fagan, Kunz, &amp; Feigenbaum, 1979).</sentence>
+    <sentence>The system is designed to interpret physiological state of the patients and to propose appropriate ventilatory therapy.</sentence>
+    <sentence>It uses AI knowledge representation techniques to detect possible artifacts and undesirable patient state.</sentence>
+    <sentence>KUSIVAR (Rudowski, Frostell, &amp; Gill, 1989) is an expert system for the mechanical ventilation of adult patients suffering from respiratory insufficiency.</sentence>
+    <sentence>It provides guidance for respirator management during all phases of the pulmonary disease using both qualitative rule-based knowledge and quantitative knowledge expressed in the form of mathematical models.</sentence>
+    <sentence>The VentEx system (Shahsavar et al., 1994) is a knowledge-based system consisting of a knowledge base including the domain knowledge represented by rule-based and object-oriented schemes and an inference engine including the mechanism for generating decision support.</sentence>
+    <sentence>It is based on the KUSIVAR system, and integrates a domain knowledge specific tool, called KAVE (Shahsavar et al., 1991), in the clinical environment using Nexpert Object.</sentence>
+    <sentence>Another ventilator management advisor, which combines both qualitative and quantitative computation, is the VentPlan (Rutledge et al., 1991).</sentence>
+    <sentence>It employs a belief network to compute the probability distributions of the shared physiologic model parameters from the qualitative and semi-quantitative inputs (Polaschek, Rutledge, Andersen, &amp; Fagan, 1993; Rutledge, Andersen, Polaschek, &amp; Fagan, 1990).</sentence>
+    <sentence>A mathematical model of cardiopulmonary physiology (Thomsen &amp; Sheiner, 1989) is implemented to predict the effects of alternative ventilator-control settings.</sentence>
+    <sentence>The VentPlan ranks the proposed ventilator settings and their predicted effects using a plan evaluator on the basis of a multi-attribute-value model that specifies physician preferences for ventilator treatment.</sentence>
+    <sentence>An expanded version of the VentPlan, the VentSim, has been developed (Rutledge, 1994).</sentence>
+    <sentence>More detailed physiological model is employed in VentSim.</sentence>
+    <sentence>The NeoGanesh (Dojat et al., 1997) is a knowledge-based system which controls the mechanical assistance provided to patients.</sentence>
+    <sentence>It is a rule base system using a temporal reasoning model, and a closed-loop controller which has been tested in real medical situation.</sentence>
+    <sentence>Fuzzy system has been widely used in biomedical applications in recent years (Wang et al., 2004).</sentence>
+    <sentence>It has been applied to control the ventilators in Intensive Care Units (Seising, Schuh, &amp; Adlassnig, 2003).</sentence>
+    <sentence>In fuzzy modeling, the data can be interpreted using linguistic terms, which are understandable to human user.</sentence>
+    <sentence>The knowledge, in the form of fuzzy rules, can be extracted from the system, and provides the clinicians assistance in practice use.</sentence>
+    <sentence>Expert’s knowledge can also be incorporated into the system.</sentence>
+    <sentence>In addition, fuzzy systems are more tolerable to the noises thus making them more robust.</sentence>
+    <sentence>These advantages make the fuzzy system suitable in medical decision-making.</sentence>
+    <sentence>Fuzzy controller has been used to control the adjustment of inspired oxygen concentration (FiO2) for ventilated newborns using a set of fuzzy rules obtained from the expert knowledge for neonatologists (Sun, Kohane, &amp; Stark, 1994), and the pressure support level for the patients with severe chronic obstructive pulmonary disease using a set of rules generated by the investigators (Nemoto et al., 1999).</sentence>
+    <sentence>FuzzyKBWean is a knowledge-based fuzzy rule-base system for artificial ventilation (Schuh, Zelenka, &amp; Hiesmayr, 2000).</sentence>
+    <sentence>It is an open-loop control system and designed to advise the change of the positive inspiratory pressure (PIP) level, the PEEP level, the inspiration time, the expiration time and the FiO2 level.</sentence>
+    <sentence>The antecedents of the fuzzy rules consist of the linguistically expressed physiological parameters of the patients and actual ventilator settings, while their consequences contain the crisp values of the new settings of the ventilator.</sentence>
+    <sentence>The Fuzzy Advisor for Ventilator Management (FAVeM) is a fuzzy rule-base system, developed after the extensive literature survey and consultations with a clinical expert (Goode, Linkens, Bourne, &amp; Cundill, 1998).</sentence>
+    <sentence>It is tested using a model of ventilation, namely the Simulation of Patients under Artificial Ventilation (SOPAVENT) (Goode, 1993).</sentence>
+    <sentence>They employed the SOPAVENT as a physiological model (Kwok, Linkens, Mahfouf, &amp; Mills, 2003), and the adaptive neuro-fuzzy inference system (ANFIS) (Jang, 1993) to control the level of FiO2.</sentence>
+    <sentence>The results were validated against the clinician’s suggestions on the level of FiO2.</sentence>
+    <sentence>Next, they create a new FiO2 advisory system, based on non-invasive estimation of the shunt using ANFIS (Kwok, Linkens, Mahfouf, &amp; Mills, 2004).</sentence>
+    <sentence>Finally, SIVA, a hybrid knowledge-and-model-based advisory system, was proposed by Kwok et al.</sentence>
+    <sentence>(2004).</sentence>
+    <sentence>It consists of a top-level fuzzy rule-based module to give the qualitative component of the advice, and a lower-level model-based module to give the quantitative component of the advice.</sentence>
+    <sentence>Closed-loop validation is performed in various medical scenarios.</sentence>
+    <sentence>The Hebbian based Rule Reduction (HeRR) neuro-fuzzy system is proposed in this paper as a neural fuzzy rule-based data driven knowledge construction tool with improved interpretability of the fuzzy rules.</sentence>
+    <sentence>The system uses the Hebbian ordering to determine the significance of each rule.</sentence>
+    <sentence>This can be judiciously employed to merge the fuzzy membership functions and remove inconsistent rules.</sentence>
+    <sentence>An iterative tuning and reduction process is also proposed to strike a trade-off between interpretability and accuracy.</sentence>
+    <sentence>It reduces redundant rules and obtains more compact and meaningful rules, while still maintaining high accuracy.</sentence>
+    <sentence>This paper is organized as follows.</sentence>
+    <sentence>Section 2 states the dataset used in the ICU ventilation study, and presents the novel neuro-fuzzy system based on Hebbian ordering.</sentence>
+    <sentence>Section 3 presents a series of in-depth analysis of experimental results that complete the study for intra- and inter-patients using the novel HeRR to model the ventilator control and subsequently as a neuro-fuzzy controller.</sentence>
+    <sentence>Finally Section 4 concludes the paper.</sentence>
+  </section>
+  <section name="Methods and materials">
+    <sentence>ICU ventilator data The data employed in the paper is collected from the KK Women’s and Children’s Hospital of Singapore (Webpage: http://www.kkh.com.sg/).</sentence>
+    <sentence>They represent a 20 day’s records for patients in the hospital under the BIPAP ventilation mode.</sentence>
+    <sentence>The sampling time of the records is approximately one hour.</sentence>
+    <sentence>All the time intervals may not be exactly one hour, because the measurements of the variables may take a little while.</sentence>
+    <sentence>In the medical records, these amounts of time are usually several minutes.</sentence>
+    <sentence>Compared with the one-hour time interval, it is small and will not have significant impact on the accuracy and practicality of the results.</sentence>
+    <sentence>The records consist of measured patient-status variables and the setting variables recommended by the attending consultant.</sentence>
+    <sentence>The patient-status variables include Heart Rate (HR), Respiratory Rate (RR), Oxygen Saturation (SaO2), Mean Airway Pressure (MAP) and Expiratory Tidal Volume (ETV).</sentence>
+    <sentence>The setting variables include Fraction of Inspired Oxygen (FiO2), Inspiratory/Expiratory Ratio (IE), Positive End Expiratory Pressure (PEEP), Peak Inspiratory Pressure (PIP), set Respiratory Rate (RRset) and set Tidal Volume (TVset).</sentence>
+    <sentence>It is crucial to provide adequate oxygenation of the arterial blood for the maintenance of life.</sentence>
+    <sentence>Thus, the arterial oxygen tension should be maintained at a proper level.</sentence>
+    <sentence>The arterial oxygen tension is controlled by adjusting the FiO2.</sentence>
+    <sentence>Among all the variables in the medical records, the SaO2, FiO2, RR and PEEP are used to predict the next value of FiO2 (Kwok et al., 2003).</sentence>
+    <sentence>The following section briefly describes the novel Hebbian ordering based Rule Reduction neuro-fussy system.</sentence>
+    <sentence>It is used to derive the clinical knowledge in the control setting of the ventilator.</sentence>
+    <sentence>Hebbian ordering based rule reduction neuro-fuzzy system In fuzzy system, the crisp inputs are firstly fuzzified into fuzzy inputs and subsequently transformed into fuzzy outputs through a set of fuzzy rules, which has the form of Mamdani type as described in Eq (1).</sentence>
+    <sentence>The output of the fuzzy system is defuzzified into crisp output for the real-world application: (1) where x1 and x2 are input linguistic variables; y1 is output linguistic variable; A, B and C are linguistic labels for variables x1, x2 and y1 respectively.</sentence>
+    <sentence>A five-layer neural network is used to integrate with the fuzzy rule system.</sentence>
+    <sentence>This allows the neural learning capabilities to derive parameters for the fuzzy linguistic label and fuzzy rules that best describe the fuzzy relationship present in the observed data.</sentence>
+    <sentence>The neural network structure is shown in Fig 1.</sentence>
+    <sentence>It consists of the input layer (which performs the fuzzification), condition layer, rule node layer (each node denotes a fuzzy rule), consequence layer and the output layer (which performs the defuzzification).</sentence>
+    <sentence>The crisp input and output vectors are represented as and respectively.</sentence>
+    <sentence>The terms n1, n2, n3, n4, n5 denote the number of the neurons of the input, condition, rule-node, consequence and output layers, respectively.</sentence>
+    <sentence>and , where Li and Tm are the number of input and output linguistic labels for each dimension.</sentence>
+    <sentence>In the proposed method, the Gaussian membership function is used in the condition and consequence layers.</sentence>
+    <sentence>The centroids and widths of the membership functions are denoted as (the ith input dimension and the jth MF) for the input layer and (the mth output dimension and the lth MF) for the output layer.</sentence>
+    <sentence>By denoting ILk(i) as the input label in the ith input dimension of the kth rule, and OLk(m) as the output label in the mth output dimension of the kth rule, the final output of the mth output dimension, denoted as , can be expressed as follows: (2) where is called the firing strength of the input point XT.</sentence>
+    <sentence>The structure of 5-layer neuro-fuzzy system Fig 1.</sentence>
+    <sentence>The structure of 5-layer neuro-fuzzy system.</sentence>
+    <sentence>There are two important issues in neuro-fuzzy modeling, namely: the interpretability and accuracy.</sentence>
+    <sentence>Interpretability refers to the capability of the fuzzy model to express the behavior of the system in an understandable way, while the accuracy refers to the capability of the fuzzy model to faithfully represent the system (Casillas, Cordon, Herrera, &amp; Magdalena, 2003).</sentence>
+    <sentence>Interpretability and accuracy are usually pursued for contradictory purposes and sometimes are dipoles apart as the system complexity increases.</sentence>
+    <sentence>When tuning the membership functions of the rules to diminish the modeling error, the interpretability of the rules may be degraded during the tuning process, where the fuzzy sets can drift closer to each other and may end up overlapping each others (Setnes, Babuska, Kaymak, &amp; van Nauta Lemke, 1998).</sentence>
+    <sentence>Thus, a balance between interpretability and accuracy is desirable.</sentence>
+    <sentence>This is achieved by using a 3 phase intuitive Hebbian processes as follows (see Fig 2): the initial rule generation (P1), the iterative rule reduction and refinement (P2), and the membership function tuning (P3).</sentence>
+    <sentence>The flow chart of the proposed rule generation, reduction and tuning process Fig 2.</sentence>
+    <sentence>The flow chart of the proposed rule generation, reduction and tuning process.</sentence>
+    <sentence>In P1 phase, the fuzzy rules are formulated to cover all the training samples.</sentence>
+    <sentence>The number of input labels, as well as the output labels in the neuro-fuzzy model, is equal to the number of the fuzzy rules.</sentence>
+    <sentence>This causes an excessive number of adjustable parameters in the system.</sentence>
+    <sentence>Also, the resultant fuzzy sets have large areas of overlapping.</sentence>
+    <sentence>These will be reduced in P2 phase.</sentence>
+    <sentence>In P2 phase, an iterative tuning process is employed.</sentence>
+    <sentence>It consists of two sub-phases: rule reduction (P2.1) and membership function refinement (P2.2).</sentence>
+    <sentence>The objective of this phase is to improve the interpretability of the model and simultaneously to maintain high modeling accuracy.</sentence>
+    <sentence>Membership functions are merged according to the degree of their overlap, and redundant and conflicting rules are deleted at the same time.</sentence>
+    <sentence>A merging scheme based on the Hebbian ordering of rules is proposed.</sentence>
+    <sentence>There are 3 procedures in P2.1 phase: rank the rules (P2.1.1), merge the membership functions (P2.1.2), and reduce the redundant and conflictive rules (P2.1.3).</sentence>
+    <sentence>The system first ranks all the rules according to the importance of each rule, which is realized by the Hebbian ordering in the proposed method.</sentence>
+    <sentence>Then the membership functions of each variable are merged in accordance to a set of criteria, which will be defined later.</sentence>
+    <sentence>Finally, if there are any equivalent rules that have the same condition and consequence, only one of them is preserved.</sentence>
+    <sentence>If there are any conflicting rules that have the same condition but different consequence, the ones with lower importance are removed.</sentence>
+    <sentence>If there is only one MF of an input feature variable, this feature will be reduced.</sentence>
+    <sentence>In P2.2 phase, the Least Mean Square (LMS) algorithm is employed to tune the centers and widths of the membership functions to reduce the modeling error.</sentence>
+    <sentence>As there may be unsatisfied overlaps between membership functions, there will be iteration in P2.1 phase to reduce the membership functions and the rules.</sentence>
+    <sentence>The stopping criterion for iteration is as follows: Denote the training error after the ith time of rule reduction (P2.1) and MF refinement (P2.2) as .</sentence>
+    <sentence>If i exceeds the maximum iteration imax, or , then restore the rule set just after the ith iteration and goes to the next phase.</sentence>
+    <sentence>η is a human defined parameter that controls the number of rule reduction.</sentence>
+    <sentence>This is based on the fact that if the number of rule is less than necessary, the training error will become much larger than before.</sentence>
+    <sentence>P3 phase is the fine tuning of the membership functions to achieve a high level of accuracy.</sentence>
+    <sentence>In this phase, there will be no further reduction of the membership functions and rules.</sentence>
+    <sentence>This phase has a larger number of updating epochs due to smaller learning rate than that of P2 phase.</sentence>
+    <sentence>Initial rule base formulation During the rule initialization phase, whenever a new data sample is presented, if there are no rules in the rule base, or if the strength of the rule with the largest firing strength is below a specified threshold θ, a new rule node will be created.</sentence>
+    <sentence>This threshold controls the coverage of the data space by the rules and affects the number of initial rules.</sentence>
+    <sentence>The larger the threshold, the fewer the rules that will be generated, and vice versa.</sentence>
+    <sentence>When a new rule node is created, for each pair of input and output dimensions, a neuron is inserted into the condition and consequence layers.</sentence>
+    <sentence>The centroid of the newly generated membership functions is set to the data sample, while the width of the membership functions is set to a predefined value in proportion to the scale of each dimension.</sentence>
+    <sentence>Fig 3 shows the flowchart of this phase.</sentence>
+    <sentence>Flowchart of the rule initialization algorithm Fig 3.</sentence>
+    <sentence>Flowchart of the rule initialization algorithm.</sentence>
+    <sentence>Hebbian-based membership function and rule reduction Excessive membership functions and rules are generated during the rule initialization phase and they should be reduced so as to provide a clearer and concise linguistic semantic meaning of each fuzzy set and subsequently decreases the complexity of the model.</sentence>
+    <sentence>In fuzzy modeling, each fuzzy rule corresponds to a sub-region of the decision space.</sentence>
+    <sentence>Some rules lying in a proper region may represent many samples and have much influence on the final result, while some other rules may occasionally be generated by noise and become redundant in the rule base.</sentence>
+    <sentence>Thus, the importance of each rule is not necessarily of the same value.</sentence>
+    <sentence>This section introduces the Hebbian importance of fuzzy rules and explains how it is utilized to merge the fuzzy sets.</sentence>
+    <sentence>As the membership functions of a rule are determined, the training sample is fed into both the input and output layers simultaneously.</sentence>
+    <sentence>The input is used to produce the firing strength of the kth rule node, while is fed into the consequence layer to derive the membership values at the output label nodes.</sentence>
+    <sentence>As stated in the Hebbian learning algorithm (Hebb, 1949): “When an axon of cell A is near enough to excite a cell B and repeatedly or persistently takes place in firing it, some growth process or metabolic change takes place in one or both cells such that A’s efficiency, as one of the cells firing B, is increased”, so if the input–output samples repeatedly fire a rule by the product of their firing strength and the membership values, and the accumulated strength surpasses that of other rules, it indicates the existence of such a rule.</sentence>
+    <sentence>In another view, the accumulated strength exerted by the sample pairs reflects the degree of coverage of them by the rule.</sentence>
+    <sentence>The rule that covers the samples to a higher degree will have greater influence on the modeling accuracy.</sentence>
+    <sentence>This is due to the fact that when the membership functions of the rule or the rule itself are merged or deleted respectively, it will result in a larger change in the fuzzy inference results and significantly affect the modeling accuracy.</sentence>
+    <sentence>Thus such a rule is of greater importance.</sentence>
+    <sentence>To derive a good balance between interpretability and accuracy, when membership functions and rules are reduced, it is desirable to preserve all such efficient and effective rules.</sentence>
+    <sentence>Let’s define the degree of the coverage of the ith data point by the kth rule as in Eq (3): (3) where Ck,i is the degree of the coverage of the ith data point by the kth rule, is the kth rule firing strength and is the product of the membership functions.</sentence>
+    <sentence>The Hebbian importance of the kth rule is defined as the sum of the degree of coverage of all the training samples as in Eq (4): (4) The fuzzy rules can then be efficiently sorted by the importance of them, defined by Eq (4), in a decreasing order.</sentence>
+    <sentence>This is called the Hebbian ordering of the rules.</sentence>
+    <sentence>At the beginning of rule reduction, the original rule set, denoted by R, contains all the sorted rules and the reduced rule set, denoted by R′, contains nothing.</sentence>
+    <sentence>The rules in R are presented successively according to their Hebbian orders.</sentence>
+    <sentence>If there is no rule in the reduced rule set, the rule in R is directly added into R′, otherwise, the fuzzy set in each dimension of the rule will be added or merged into the fuzzy sets in R′ according to a set of criteria defined below.</sentence>
+    <sentence>All the newly added or merged fuzzy sets will be linked together to formulate a new rule in R′.</sentence>
+    <sentence>During the merging process, some fuzzy sets may be shared by several rules.</sentence>
+    <sentence>To change a fuzzy set shared by many rules is equivalent to modifying these rules simultaneously.</sentence>
+    <sentence>This may exert much influence on the overall system performance, as a less shared fuzzy set only affects the performance locally.</sentence>
+    <sentence>Thus, much shared fuzzy set is of higher importance than the less shared ones.</sentence>
+    <sentence>Denote the importance of a fuzzy set F as .</sentence>
+    <sentence>is changing during the merging process.</sentence>
+    <sentence>At each time the kth rule in the original rule set R is presented, its fuzzy sets Ai and Bj (i.e.</sentence>
+    <sentence>for the kth rule “IF xi = Ai THEN yj = Bj”) are as important as their rule, i.e.</sentence>
+    <sentence>(5) for i = 1, … , n1 and j = 1, … , n5.</sentence>
+    <sentence>For each input dimension i, among the fuzzy sets in the reduced rule set R′ of this dimension, the fuzzy set with the maximum degree of overlap over Ai (the degree of overlap is defined in Eq (9)) is selected.</sentence>
+    <sentence>If the maximum degree of overlap satisfies a specified criteria, they will be merged into another fuzzy set , otherwise, the fuzzy set Ai is directly added into the reduced rule set of this dimension.</sentence>
+    <sentence>The centroid and the variance of Ai and , i.e.</sentence>
+    <sentence>and , are merged into using Eqs.</sentence>
+    <sentence>(6) and (7).</sentence>
+    <sentence>(6) (7) The importance of the new fuzzy set is given by Eq (8): (8) In other words, the centroid and variance of resultant fuzzy set is the weighted average of the two fuzzy sets in accordance to their importance, and the degree of importance of this final fuzzy set is the sum of the importance of the two.</sentence>
+    <sentence>Then the newly generated fuzzy set replaces the previous fuzzy set .</sentence>
+    <sentence>For each output dimension, fuzzy set Bj is either added directly or merged into the fuzzy sets of this output dimension in the reduced rule set, using the same process for the input dimensions.</sentence>
+    <sentence>Finally, the newly added or merged fuzzy sets in all the dimensions are linked together to formulate a fuzzy rule in the reduced rule set R′.</sentence>
+    <sentence>Given fuzzy sets A and B, the degree of overlap of A by B is defined in Eq (9): (9) As the Gaussian membership function is used in the proposed method, the overlap measure can be derived using the centers and variances of the membership functions.</sentence>
+    <sentence>For the fuzzy sets A and B, with membership functions and respectively, assuming that cA ⩾ cB and then |A| and |A∩B| can be expressed in Eqs.</sentence>
+    <sentence>(10) and (11) (Juang &amp; Lin, 1998): (10) (11) where h(x) = max {0, x}.</sentence>
+    <sentence>Let be a threshold that determines the maximum degree of overlap between fuzzy sets that the system can tolerate.</sentence>
+    <sentence>The merging criterion is: if or , they will be merged.</sentence>
+    <sentence>Higher increases the accuracy but would degrade the interpretability, while a lower causes larger number of rules to be reduced but the risk is that the number of rules may be less than necessary to maintain high modeling accuracy.</sentence>
+    <sentence>After all the rules are presented, the following steps are executed to remove feature and delete redundant and conflicting rules in the reduced rule set R′: S1: If there is only one membership function within one dimension, this dimension (i.e.</sentence>
+    <sentence>feature) will be removed S2: If there is any rule that has the same conditions and consequences with others, it is removed S3: If there are any conflicting rules that have equivalent conditions but different consequences, the one with the higher degree of importance is preserved and the others are deleted.</sentence>
+    <sentence>Finally, the original rule set is replaced with the reduced rule set The detail of the algorithm is shown in Fig 4.</sentence>
+    <sentence>The flowchart of the rule reduction algorithm Fig 4.</sentence>
+    <sentence>The flowchart of the rule reduction algorithm.</sentence>
+  </section>
+  <section name="Experimental results">
+    <sentence>The proposed HeRR neuro-fuzzy system is applied to the problems of intra-patient and inter-patient modeling.</sentence>
+    <sentence>The intra-patient study in Section 3.1 is completed through threefold cross-validation on a 20-day medical record of a patient.</sentence>
+    <sentence>The inter-patient study in Section 3.2 demonstrates the capability of the proposed HeRR neuro-fuzzy system in judiciously addressing the ICU ventilation modeling problem.</sentence>
+    <sentence>Two additional patients are used in the inter-patient study as compared to that of the intra-patient study to evaluate the performance of HeRR.</sentence>
+    <sentence>In both studies, the Root Mean Squared Error (RMSE) between the advised value of FiO2 by neuro-fuzzy hybrid systems and the setting of the clinician, is used to assess the performance.</sentence>
+    <sentence>Some other well-established neuro-fuzzy systems are employed for benchmarking.</sentence>
+    <sentence>They are: namely, EFUNN (Kasabov, 2001), POPFNN (Ang, Quek, &amp; Pasquier, 2003), RSPOP (Ang &amp; Quek, 2005), DENFIS (Kasabov &amp; Song, 2002) and ANFIS (Jang, 1993).</sentence>
+    <sentence>The first 3 models are Mamdani-type systems while the latter 2 are TSK models.</sentence>
+    <sentence>Some classical neural network models, such as the Multi-Layer Perceptron (MLP) and Radial Basis Function network (RBF) (Haykin, 1999), are also used in the comparative study.</sentence>
+    <sentence>Intra-patient study This set of experiments attempt to model the manual setting of FiO2 by the clinician using a neuro-fuzzy hybrid system.</sentence>
+    <sentence>A total of 408 data samples are divided into 3 cross-validation groups to evaluate the performance of the system.</sentence>
+    <sentence>Within one cross-validation group, the first 60% data is used as training set and the following 40% data is used as testing set (see Fig 5).</sentence>
+    <sentence>The FiO2 series and the division of 3 cross-validation groups Fig 5.</sentence>
+    <sentence>The FiO2 series and the division of 3 cross-validation groups.</sentence>
+    <sentence>The experimental results are shown in Tables 1 and 2.</sentence>
+    <sentence>Table 1 shows the comparison of RMSE between the above-mentioned neuro-fuzzy models.</sentence>
+    <sentence>In both CV1 and CV2, the HeRR system performs much better than other systems.</sentence>
+    <sentence>In CV3, the ANFIS is slightly worse than the HeRR system.</sentence>
+    <sentence>The last column of Table 1 shows the average RMSE of the 3 cross-validation groups.</sentence>
+    <sentence>The HeRR system is the best among all of the neuro-fuzzy systems.</sentence>
+    <sentence>It shows that the HeRR system is a more robust and consistent modeling tool.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Testing accuracy on the three CV groups.</sentence>
+    <sentence>Models RMSE CV1 CV2 CV3 Mean Std.</sentence>
+    <sentence>HeRR 2.085 0.753 0.536 1.125 0.839 POPFNN 13.776 6.031 2.375 7.394 5.821 RSPOP 13.841 6.031 2.166 7.346 5.948 EFuNN 3.417 2.908 1.219 2.515 1.151 DENFIS 3.045 2.243 1.045 2.111 1.007 ANFIS 2.409 1.863 0.560 1.611 0.950 MLP 2.940 2.822 0.654 2.139 1.238 RBF 6.416 1.768 2.220 3.468 2.563 Table 2.</sentence>
+    <sentence>The number of derived fuzzy rules (Mamdani type).</sentence>
+    <sentence>Models Number of rules CV1 CV2 CV3 Mean Std.</sentence>
+    <sentence>HeRR 12 3 26 13.67 11.59 POPFNN 48 28 53 43.00 13.23 RSPOP 29 9 11 16.33 11.02 EFuNN 32 57 109 66.00 39.28 Table 2 shows the comparison of the number of the derived fuzzy rules.</sentence>
+    <sentence>As the form of the TSK-style rule is different from the Mandani-style rule, these two types of rules are not quite comparable.</sentence>
+    <sentence>Thus, the comparison is only made among the Mandani systems.</sentence>
+    <sentence>The number of derived rules reflects the interpretability of the system.</sentence>
+    <sentence>The more the number of rule is, the more complex and uninterpretable the system is and vice versa.</sentence>
+    <sentence>In Table 2, the HeRR system produces the least number of rules in CV1 and CV2.</sentence>
+    <sentence>In CV3, only the RSPOP produces less number of rules than that of the HeRR.</sentence>
+    <sentence>From the average number of rules in the last column, the HeRR system produces the least among all these Mandani systems.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>6–8 show the target and actual values of FiO2 in the testing set of the 3 cross-validation groups.</sentence>
+    <sentence>In CV1, small deviations appear only when the amount of FiO2 becomes higher or lower abruptly.</sentence>
+    <sentence>In CV2 and CV3, the output of the HeRR system is almost perfectly matched to the target setting of FiO2.</sentence>
+    <sentence>Target and actual values of FiO2 in CV1 Fig 6.</sentence>
+    <sentence>Target and actual values of FiO2 in CV1.</sentence>
+    <sentence>Target and actual values of FiO2 in CV2 Fig 7.</sentence>
+    <sentence>Target and actual values of FiO2 in CV2.</sentence>
+    <sentence>Target and actual values of FiO2 in CV3 Fig 8.</sentence>
+    <sentence>Target and actual values of FiO2 in CV3.</sentence>
+    <sentence>The membership functions and some sample rules are extracted to show the interpretability of the HeRR system.</sentence>
+    <sentence>The membership functions for the 4 input variables and 1 output variable are shown in Fig 9.</sentence>
+    <sentence>The overlap between the fuzzy sets is low for all the variables.</sentence>
+    <sentence>Each fuzzy set has a clear semantic meaning.</sentence>
+    <sentence>Fuzzy membership functions on SaO2, FiO2 (old), PEEP, RR and FiO2 Fig 9.</sentence>
+    <sentence>Fuzzy membership functions on SaO2, FiO2 (old), PEEP, RR and FiO2.</sentence>
+    <sentence>Three sample fuzzy rules are shown in Table 3.</sentence>
+    <sentence>These rules are the acquired knowledge from the data by the HeRR system.</sentence>
+    <sentence>They can be easily understood so as to assist the clinicians.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Three derived sample fuzzy rules.</sentence>
+    <sentence>Rule 1 IF SaO2 is Normal(2) and FiO2 is Medium and PEEP is High and RR is Medium, THEN the new FiO2 is High Rule 2 IF SaO2 is Low and FiO2 is High and PEEP is Medium and RR is High, THEN the new FiO2 is High Rule 3 IF SaO2 is Normal(1) and FiO2 is High and PEEP is Medium and RR is Low, THEN the new FiO2 is Medium 3.2.</sentence>
+    <sentence>Inter-patient study The data used in this experiment are 20-day record of patient A, 5-day record of patient B and 5-day record of patient C. To make a fair comparison, the data of patient A is divided into 4 independent sets, each of which consists of a 5-day record.</sentence>
+    <sentence>Together with the data of patients B and C, there are a total of 6 independent sets of data, where the former 4 are from patient A and the latter 2 are from patients B and C, respectively.</sentence>
+    <sentence>In this experiment, a sixfold cross-validation (CV) grouping is used to evaluate the performance.</sentence>
+    <sentence>In each CV group, one of the 6 sets is used as the training data and the remaining five are used for testing.</sentence>
+    <sentence>The experimental results are shown in Table 4(a)–(c).</sentence>
+    <sentence>From the tables, we can see that, the HeRR neuro-fuzzy system outperforms other established models in these 6 CV groups, except in CV1, CV2 and CV6 where its RMSE is marginally higher than that of ANFIS.</sentence>
+    <sentence>The ANFIS is a precise fuzzy model that employs the TSK-type fuzzy rules.</sentence>
+    <sentence>It has been used in ICU ventilator modeling (Kwok et al., 2003).</sentence>
+    <sentence>In this experiment, the HeRR outperforms the ANFIS in terms of interpretability.</sentence>
+    <sentence>It is able to derive Mamdani-type rules from the data, which can be easily understood by the clinicians, while the ANFIS mainly focuses on the improvement of accuracy through the TSK-type rules.</sentence>
+    <sentence>Some of the rules derived by HeRR from one of CV groups are shown in Table 5.</sentence>
+    <sentence>The fuzzy membership functions of each variable are shown in Fig 10.</sentence>
+    <sentence>The semantics associated with the rules are analyzed by the consultant Dr. T.F.</sentence>
+    <sentence>Loh, who is the Head of Children’s Intensive Care Unit, Department of Paediatric Medicine of KK Women’s and Children’s Hospital.</sentence>
+    <sentence>The clear separations of the membership functions also indicate that good interpretability is achieved by HeRR.</sentence>
+    <sentence>This set of experiment has conclusively validated the novel HeRR neuro-fuzzy system in modeling the data and the extractions of salient knowledge embedded in data, to permit the application across the patients.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Experimental results (i.e.</sentence>
+    <sentence>RMSE) in the inter-patient study of ICU ventilator modeling.</sentence>
+    <sentence>CV1 CV2 CV3 Mean Std.</sentence>
+    <sentence>Mean Std.</sentence>
+    <sentence>Mean Std.</sentence>
+    <sentence>(a) HeRR 3.289 2.495 3.006 2.116 2.523 2.574 POPFNN 8.139 5.164 8.336 5.024 7.641 4.853 RSPOP 7.549 4.311 7.610 4.101 6.974 4.221 EFuNN 4.910 3.249 4.216 2.463 4.163 2.115 DENFIS 4.396 2.201 3.952 2.634 3.554 2.504 ANFIS 3.166 2.825 2.850 2.404 2.787 2.558 MLP 3.631 2.156 3.716 2.963 3.348 3.062 RBF 6.998 3.304 4.360 3.412 4.242 2.840 CV4 CV5 CV6 Mean Std.</sentence>
+    <sentence>Mean Std.</sentence>
+    <sentence>Mean Std.</sentence>
+    <sentence>(b) HeRR 2.215 1.935 3.905 2.379 4.529 2.712 POPFNN 7.126 3.652 9.215 5.139 9.743 5.315 RSPOP 5.127 3.194 8.193 5.291 8.267 5.417.</sentence>
+    <sentence>EFuNN 3.844 2.490 5.346 3.480 5.945 4.065 DENFIS 3.498 2.218 5.177 3.269 5.710 3.702 ANFIS 2.429 2.004 4.128 2.588 4.296 2.643 MLP 3.594 2.311 5.219 3.530 5.464 3.722 RBF 3.721 2.493 6.026 4.212 6.591 4.551 Average Mean Std.</sentence>
+    <sentence>(c) HeRR 3.245 2.369 POPFNN 8.367 4.858 RSPOP 7.287 4.423 EFuNN 4.737 2.917 DENFIS 4.381 2.755 ANFIS 3.276 2.504 MLP 4.162 2.958 RBF 5.323 3.469 Table 5.</sentence>
+    <sentence>Fuzzy rule set derived from one of the cross-validation groups.</sentence>
+    <sentence>Rule 1 IF SaO2 is Normal(2) and FiO2 is High and PEEP is High and RR is Medium THEN the new FiO2 is High Rule 2 IF SaO2 is Normal(2) and FiO2 is Very Low and PEEP is High and RR is Medium THEN the new FiO2 is Very Low Rule 3 IF SaO2 is Normal(1) and FiO2 is Very Low and PEEP is High and RR is Medium THEN the new FiO2 is Very Low Rule 4 IF SaO2 is Normal(2) and FiO2 is High and PEEP is High and RR is High THEN the new FiO2 is High Rule 5 IF SaO2 is Normal(2) and FiO2 is Low and PEEP is High and RR is Medium THEN the new FiO2 is Low Rule 6 IF SaO2 is Normal(1) and FiO2 is Very Low and PEEP is High and RR is High THEN the new FiO2 is Very Low Rule 7 IF SaO2 is Normal(2) and FiO2 is High and PEEP is High and RR is Low THEN the new FiO2 is High Rule 8 IF SaO2 is Normal(1) and FiO2 is High and PEEP is High and RR is Medium THEN the new FiO2 is High Rule 9 IF SaO2 is Normal(1) and FiO2 is High and PEEP is High and RR is High THEN the new FiO2 is High Rule 10 IF SaO2 is Normal(1) and FiO2 is Very Low and PEEP is High and RR is Low THEN the new FiO2 is Very Low Rule 11 IF SaO2 is Low and FiO2 is Very High and PEEP is Low and RR is High THEN the new FiO2 is Very High Rule 12 IF SaO2 is Low and FiO2 is Very Low and PEEP is High and RR is Medium THEN the new FiO2 is Very Low Rule 13 IF SaO2 is Normal(2) and FiO2 is Very High and PEEP is High and RR is Medium THEN the new FiO2 is Very High Rule 14 IF SaO2 is Normal(1) and FiO2 is High and PEEP is High and RR is Low THEN the new FiO2 is High Rule 15 IF SaO2 is Low and FiO2 is Very Low and PEEP is Low and RR is Medium THEN the new FiO2 is Very Low Rule 16 IF SaO2 is Normal(1) and FiO2 is Very High and PEEP is High and RR is Low THEN the new FiO2 is High Rule 17 IF SaO2 is Normal(2) and FiO2 is Low and PEEP is High and RR is High THEN the new FiO2 is Low Rule 18 IF SaO2 is Normal(1) and FiO2 is Very Low and PEEP is Low and RR is Medium THEN the new FiO2 is Very Low Rule 19 IF SaO2 is Normal(2) and FiO2 is Very High and PEEP is High and RR is Low THEN the new FiO2 is Very High Fuzzy membership functions on SaO2, FiO2(old), PEEP, RR and FiO2 Fig 10.</sentence>
+    <sentence>Fuzzy membership functions on SaO2, FiO2(old), PEEP, RR and FiO2.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>In this paper, control setting in artificial ventilation is modeled by a neuro-fuzzy hybrid system.</sentence>
+    <sentence>An iterative rule reduction is proposed to produce interpretable fuzzy rules while still maintaining low modeling error.</sentence>
+    <sentence>Fuzzy sets are merged through their Hebbian ordering and the redundant rules are removed.</sentence>
+    <sentence>The rule with a higher Hebbian ordering has a greater degree of coverage of the sample points and contributes more towards the modeling of the data, and is more likely to be preserved.</sentence>
+    <sentence>Membership functions are merged according to the Hebbian importance of their associated rule.</sentence>
+    <sentence>The resultant equivalent rules are deleted and the attributes with only one membership function are removed.</sentence>
+    <sentence>The problem of rule confliction is resolved by retaining the rules of higher importance.</sentence>
+    <sentence>The proposed membership function merging process does not only reduce similar membership functions, but also preserves the more informative rules.</sentence>
+    <sentence>The proposed HeRR neuron-fuzzy system is tested on the real ventilation data from intra- and inter-patient studies.</sentence>
+    <sentence>This research work intends to study the ability of the hybrid neuro-fuzzy system in extracting salient knowledge in both intra- and inter-patient studies.</sentence>
+    <sentence>Such knowledge formed is shown to be generic and is sufficient for the modeling of the experts’ actions.</sentence>
+    <sentence>The experimental results demonstrate the effectiveness of the HeRR system through benchmarking against other well-established systems using the medical records of different patients.</sentence>
+    <sentence>Current research effort to develop fuzzy neural systems such as SeroFAM (Tan &amp; Quek, 2010) and Safin (Tung, Quek, &amp; Guan, 2011) that can dynamically model time varying data.</sentence>
+    <sentence>The former is based on the BCM theory (Bienenstock, Cooper, &amp; Munro, 1982) of learning that addresses both Hebbian and anti-Hebbian learning association while the latter employs the categorical learning induced partitioning based on the psychological behavioral category learning.</sentence>
+    <sentence>In addition, research effort such as eT2FIS (Tung, Quek, &amp; Guan, in press) to address noisy data is also reported which is particularly useful in the modeling of domains where there are heavy noise content in the data.</sentence>
+    <sentence>other work employing advanced fuzzy neural network techniques that supports complex fuzzy reasoning models (Goh, Lim, &amp; Quek, 2009; Nguyen, Shi, &amp; Quek, 2006; Quek &amp; Zhou, 2006; Singh, Quek, &amp; Cho, 2008; Wong, Cho, &amp; Quek, 2009), online learning (Cheu, Quek, &amp; Ng, 2012; Tung &amp; Quek, 2010) and feature selection and rule reductions (Liu, Quek, &amp; Ng, 2007; Quah &amp; Quek, 2007) would allow more comprehensive analysis of intra and inter patient ventilation modeling as well as the possibility of reduced representation and the deployment in online as well as an offline instructional ventilator control advisory system.</sentence>
+  </section>
+</article>

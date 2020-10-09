@@ -1,0 +1,556 @@
+A two-stage artificial bee colony algorithm scheduling flexible job-shop scheduling problem with new job insertion
+
+Abstract
+
+This study addresses the scheduling problem in remanufacturing engineering. The purpose of this paper is to model effectively to solve remanufacturing scheduling problem. The problem is modeled as flexible job-shop scheduling problem (FJSP) and is divided into two stages: scheduling and re-scheduling when new job arrives. The uncertainty in timing of returns in remanufacturing is modeled as new job inserting constraint in FJSP. A two-stage artificial bee colony (TABC) algorithm is proposed for scheduling and re-scheduling with new job(s) inserting. The objective is to minimize makespan (maximum complete time). A new rule is proposed to initialize bee colony population. An ensemble local search is proposed to improve algorithm performance. Three re-scheduling strategies are proposed and compared. Extensive computational experiments are carried out using fifteen well-known benchmark instances with eight instances from remanufacturing. For scheduling performance, TABC is compared to five existing algorithms. For re-scheduling performance, TABC is compared to six simple heuristics and proposed hybrid heuristics. The results and comparisons show that TABC is effective in both scheduling stage and rescheduling stage.
+
+Keywords
+Flexible job-shop scheduling
+New job inserting
+Artificial bee colony
+Re-scheduling
+
+1. Introduction
+
+Many researchers studied flexible job shop scheduling problem (FJSP) in the past decade. FJSP is a generation of classic job shop scheduling problem (JSP). In FJSP, an operation can be processed on more than one candidate machines. For solving FJSP problem, two sub-problems have to be considered, machine assignment and operation sequencing. Machine assignment is to assign a processing machine for each operation while operation sequencing is to schedule all operations on machines to obtain feasible and quality solution. Therefore, FJSP is more complicated than JSP problem and is classified as NP-hard problem (Bruker & Schlie, 1990).
+
+The first study to address FJSP was by Bruker and Schlie who proposed a polynomial algorithm for two jobs FJSP. In recent years, many heuristics and meta-heuristics have been employed for FJSP problem, for example tabu search (TS) (Brandimarte, 1993), genetic algorithm (GA) (Gao, Sun, & Gen, 2008), particle swarm optimization (PSO) (Zhang, Shao, Li, & Gao, 2009), simulated annealing (SA) (Li, Pan, & Gao, 2011; Li, Pan, Suganthan, & Chua, 2011), ant colony optimization (ACO) (Xing, Chen, Wang, Zhao, & Xiong, 2010), parallel variable neighborhood search (PVNS) (Yazdani, Amiri, & Zandieh, 2010) and hybrid algorithms based on different heuristics and meta-heuristics.
+
+Among different approaches, artificial bee colony (ABC) is a widely employed swarm intelligence algorithm for scheduling FJSP problems. ABC algorithm is a relatively new population-based meta-heuristic approach that is based on the collective behavior of self-organized systems. It was first proposed to solve the multi-variable and multi-modal continuous functions (Karaboga, 2005). Many comparative studies have shown that the performance of the ABC algorithm is competitive to other population-based algorithms with the advantage of employing fewer control parameters in the continuous space (Karaboga, 2009; Karaboga & Akay, 2009; Karaboga & Basturk, 2007, 2008). The ABC algorithm has received intensive interest from researchers in scheduling fields.
+
+Li (Li et al., 2011; Li, Pan, Suganthan, et al., 2011) proposed a Pareto-based ABC algorithm for multi-objective FJSP problem. In the study, a crossover operator was proposed for sharing information between bees. Furthermore, a fast Pareto set update function was designed to decrease the computational times. Wang (Wang, Zhou, Xu, & Liu, 2012; Wang, Zhou, Xu, & Wang, 2012) proposed an effective ABC algorithm for FJSP to minimize makespan. The novelty of the algorithm is employ a combination of several heuristic rules for initializing food sources. Crossover and mutation operators were designed to generate new neighbor food sources for employed bees. A critical path based local search was proposed to improve the intensification capability for the onlooker bees. Wang (Wang et al., 2012; Wang, Zhou, Xu, & Wang, 2012) also proposed an enhanced Pareto-based artificial bee colony algorithm for multi-objective FJSP with makespan, the total workload of machines and the workload of the critical machine. In addition, a recombination and select strategy is employed to determine the survival of the bees and Taguchi method based parameter setting is investigated in design of experiment. For FJSP with fuzzy processing time, Wang (Wang, Wang, Xu, & Liu, 2013; Wang, Yin, & Qin, 2013; Wang, Zhou, Xu, & Liu, 2013) proposed a hybrid ABC algorithm with variable neighborhood search (VNS).
+
+ABC algorithm was also employed for other shop scheduling problem. Lei (Lei & Guo, 2013) proposed a modified ABC for JSP with lot streaming. An effective two-phase decoding procedure is applied in which a schedule is first built and then transportation tasks are dispatched. Swap and insertion were used in the employed bee phase and the onlooker bee phase respectively to produce new solutions. Zhang (Zhang, Song, & Wu, 2013) proposed a hybrid ABC for JSP with total weighted tardiness objective.
+
+FJSP has strong industry background, such as semiconductor manufacturing process, automobile assembly process and mechanical manufacturing systems etc. al. For actual industry related scheduling, many constraints or uncertain conditions have to be considered when solving FJSP. Mousakhan (2013) considered sequence-dependent setup time in FJSP with total tardiness. A mathematic model was developed to formulate FJSP with sequence-dependent setup time and an iteration based meta-heuristic was proposed for solving the same problem. Wang Ling and Wang Shengyao (Wang, Wang, et al., 2013; Wang, Yin, et al., 2013; Wang, Zhou, et al., 2013) studied FJSP with fuzzy processing time using ABC and estimation of distribution algorithm (EDA). The influence of parameter setting was considered in both ABC and EDA. The novelty of the algorithm is that a left-shift scheme was employed for improving the scheduling solution in decoding stage. In addition, crossover based exploitation and variable neighborhood search (VNS) were employed for improving the performance of ABC. Xiong (Xiong, Xing, & Chen, 2013) researched into robust scheduling multi-objective FJSP with random machine breakdowns. Two surrogate measures for robustness were developed. One was for machine breakdown and another was for the location of float times and machine breakdown at the same time. Al-Hinai (Al-Hinai & ElMekkawy, 2011) researched robust and stable scheduling for FJSP with random machine breakdowns using a two-stage hybrid genetic algorithm. The first stage considered general FJSP while the second stage was for machine breakdown in the decoding space. Calleja (Calleja & Pastor, 2014) and Wang (Wang, Wang, et al., 2013; Wang, Yin, et al., 2013; Wang, Zhou, et al., 2013) also considered and studied FJSP with constrains, for example, transfer batches and machine disruption. Li, Pan, & Tasgetiren (2014) researched on the FJSP with maintenance activities using ABC algorithm. A self-adaptive strategy was proposed to generate new neighboring solutions and tabu search based local search was employed to improve performance. For multi-objective function, the algorithm was compared to ten existing algorithms to verify algorithm’s effectiveness.
+
+In this study, we consider the FJSP problem in remanufacturing environment. Remanufacturing is the process of disassembly and recovery at the module level and, eventually, at the component level (Lund, 1984). It requires the repair or replacement of worn out or obsolete components and modules. Parts subject to degradation affecting the performance or the expected life of the whole are replaced. Remanufacturing is a form of a product recovery process that differs from other recovery processes in its completeness: a remanufactured machine should match the same customer expectation as new machines (Krupp, 1992). Guide (2000) considered the production planning when inputs have different and uncertain quality levels and discussed different decision variables in remanufacturing engineering. Junior and Filho (2012) reviewed the literatures on production planning and control in remanufacturing. Seventy-six papers were examined and classified. However, there are few literatures on reprocessing scheduling in remanufacturing. Uncertainty in timing of returns is one of seven major complicating characteristics in remanufacturing (Ferguson, 2009; Krupp, 1993). Li Yongjian (Li, Chen, and Cai, 2006) proposed a dynamic programming approach to derive the optimal solution in the case with large returned products and different arriving time. Li Jianzhi (Li, González, and Zhu, 2009) proposed a simulation optimization model with a prioritized stochastic batch arrival mechanism to plan and control the remanufacturing process. The uncertainty in timing and quantity are factors cannot be controlled by remanufacturers. It means that new returned product(s) or job(s) may need to be inserted into the ongoing existing scheduling solution. It is therefore important to handle this uncertainty in remanufacturing scheduling. As many discrete manufacturing systems, remanufacturing processes can be modeled as FJSP problem.
+
+Building on the successful application of ABC for solving FJSP, a two-stage artificial bee colony (TABC) algorithm is proposed for FJSP with new job inserting. The first stage is for the general FJSP scheduling problem while the second stage is for rescheduling after new job inserting. To improve the algorithm performance, we add crossover operator and critical path based local search method.
+
+The motivation to design two-stage ABC algorithm is scheduling and rescheduling FJSP with new job inserting. The first stage is to schedule the existing job at start stage. After that, the scheduling solution will be executed in shop floor. The second stage is to reschedule for new job inserting. After new job inserting, the second stage will be activated to reschedule the new inserted job(s) and the existing jobs’ operations that are not yet started at the inserting time. The second stage will be executed repeatedly for each new job inserting. In the first stage, all machines and jobs have the same start time. In the second stage, one machine is available for rescheduling after completing the current operation if there is an operation on this machine at new job inserting time. The jobs and machines may have different start time for rescheduling. The objective considered in this paper is to minimize the maximum complete time (makespan).
+
+The remainder of this paper is organized as follows. Section 2 describes the FJSP with new job inserting. In Section 3, the ABC algorithm is introduced. The two-stage ABC algorithm is proposed in Section 4. Experiment design, comparison and discussion are in Section 5. We conclude this paper with future work in Section 6.
+2. Description of FJSP with new job inserting
+
+In FJSP, each job consists of a sequence of operations. An operation can be executed by one machine out of a set of candidate machines. Each operation of a job must be processed only on one machine at a time, while each machine can process only one operation at a time. The following notations and assumptions are used for the formulation of FJSP.
+
+(1)
+
+    Let 
+
+, indexed , be a set of jobs to be scheduled. denotes total number of operations of job
+
+    .
+(2)
+
+    Let 
+, indexed , be a set of
+
+    machines.
+(3)
+
+    Each job 
+consists of a predetermined sequence of operations. Let be operation of
+
+    .
+(4)
+
+    Each operation 
+can be processed without interruption on one of a set of candidate machines . Let be the processing time of on machine
+
+    .
+(5)
+
+    Decision variables 
+
+denotes the completion time of the operation ; denotes the completion time of the job
+
+(6)
+
+    The objective is to minimize makespan. Makespan denoted by 
+
+    , can be calculated by formula (1).
+
+(1)
+where is the complete time of job
+
+. Makespan is related to completion time of all jobs and the machine efficiency. If makespan value is reduced, it can shorten the job completion time and improve machine efficiency.
+
+In remanufacturing environment, the arrival time of new job is unpredictable (Guide, Jayaraman, & Srivastava, 1999; Guide, 2000; MurisLage & Moacir, 2012). When a new job arrives and needs to be inserted into the already scheduled job sequence, re-scheduling is needed. Because there is a scheduled scheme processing, the machines are available for re-scheduling when the corresponding operations are completed. It means that jobs on machines may have different start times after re-scheduling. There are three different re-scheduling strategies proposed.
+
+(1)
+
+    Strategy I is to reschedule the new job(s). Existing scheduling scheme is remained. In this re-scheduling strategy, the machines are available when all the assigned operations are completed. It means that machines may have different start time when re-scheduling is implemented. Hence, machine start time must be considered for re-scheduling in this strategy. The re-scheduling problem becomes FJSP with different machine starting times.
+(2)
+
+    Strategy II is to re-schedule both new job(s) and the existing jobs’ operations that are no started yet. The revised schedule for existing jobs’ operations may be changed. Consider a scenario that some machines may be processing some operations of existing jobs at the new job inserting time. The machines are available when the processing operations are completed. The existing jobs are also available for re-scheduling when the corresponding operations are completed. It means that maybe jobs have different start time and machines have different available time after re-scheduling. Hence, both machine start time and job start time must be considered for re-scheduling in this strategy. The re-scheduling problem becomes to FJSP with different machine starting times and different job starting times.
+(3)
+
+    Strategy III is available-time-block re-scheduling based on existing scheduling scheme. Similar to Strategy I, the existing scheduling schema is also remained. The new job(s) are scheduled on all gaps of all machines after inserting time. It means that one machine is available if it has free-time-gap on the existing scheduling schema. In this condition, this machine can be employed for scheduling new job(s). After considered all available-time-block on each machine, the same scheduling strategy in Strategy I is employed to schedule remaining operations. Compared to Strategy I, Strategy III has higher time complexity.
+
+To explain FJSP problem and the three different re-scheduling strategies more clearly, two examples are shown in following content. Fig. 1(a) shows a Gantt chart for 3-jobs and 3-machines FJSP problem. The numbers of operations in three jobs are Job 1, 3, Job 2, 2 and Job 3, 2, respectively. The makespan value in this scheduling solution is 10. The completion time of three machines is M1, 8, M2, 7 and M3, 10. Fig. 1(b) shows the new job, Job 4, arrives at time 3 and will be inserted into existing schedule at or after time 3. The Job 4 has three operations. Fig. 1(c) and (d) show re-scheduling scheme using strategy I and II. In Fig. 1(c), existing scheduling scheme is remained and the Job 4 are scheduled when the assigned operation on all machines are completed. The start times of three machines for re-scheduling are M1, 8, M2, 7 and M3, 10. In Fig. 1(d), both new Job 4 and all no start operations of existing three jobs are rescheduled. The available time of M1 and M3 is 3 while the available time of Job 2, Job 3 and Job 4 is also 3. M2 is processing the first operation of Job 1 when the Job 4 inserts at Time 3. M2 and Job 1 are available when the first operation of Job 1 is completed. Therefore, the available time of M2 and Job 1 is Time 4. In Fig. 1(d), the start time of Operation 1.2 and Operation 1.3 are delayed than that in Fig. 1(b). Fig. 1(e)         and (f) show the Strategy III for another example. New job 5 comes and inserts into existing scheduling schema at Time 4. In Fig. 1(f), the operation 5.1 and 5.2 are assigned at free gap of machine M2 and M3.
+An example of FJSP with new job inserting
+
+    
+
+Fig. 1. An example of FJSP with new job inserting.
+3. Introduction to ABC algorithm
+
+ABC algorithm is a population-based meta-heuristic proposed by Karaboga (Karaboga, 2005, 2009; Karaboga and Basturk, 2008). ABC is inspired from the foraging behavior of bee colony. There are three kinds of bees, namely, employed bees, onlooker bees and scout bees in ABC algorithm. A bee that is currently exploiting a food source is called an employed bee. A bee waiting in the hive for making decision to choose a food source is named as an onlooker. A bee carrying out a random search for a new food source is called a scout. Each solution to the problem under consideration is called a food source, whereas the fitness of the solution is corresponded to the nectar amount of the associated food resource. The main steps of the basic ABC algorithm are as followings.
+
+(1) Initialization of the parameters and population phase
+
+The parameter of ABC are the number of food sources (
+), the number of trials after which a food source is to be abandoned (limit) and the termination criterion. The number of food sources is equal to the number of employed bees or onlooker bees. The initialization of population is to fill the population with
+
+number of randomly generated food sources, n-dimensional real-valued vectors.
+
+Let
+represent the ith food source in the population. The food sources are generated as follows:
+(2)
+where is a uniform random number in the range [0, 1]; and are the lower and upper bounds for the dimension
+
+respectively. The food sources are randomly assigned to employed bees and the corresponding finesses are evaluated.
+
+(2) Employed bee phase
+
+In this phase, each employed bee
+generates a new food source in the neighborhood of its present position as follows:
+(3)
+where and are randomly chosen indexes. is a uniformly distributed real number in [−1, 1]. will be compared to . If the fitness of is equal or better than that of , will replace as a new food source; otherwise
+
+is retained.
+
+(3) Onlooker bee phase
+
+An onlooker bee evaluates all the employed bees and selects a food source
+depending on its probability value calculated by the following expression.
+(4)
+where is the nectar amount or the fitness value of the ith food source . The higher the
+
+is, the more ability that the ith food source is selected.
+
+Once the food source
+is selected, the onlooker bee will execute the update using Eq. (3). If the new food source has equal or better fitness value than , the new food source will replace
+
+as a new member in the population.
+
+(4) Scout bee phase
+
+If a food source
+cannot be improved through a predetermined number of trials limit, the food source is to be abandoned and the corresponding employed bee becomes a scout. The scout produces a new food source randomly as follows:
+(5)
+where
+
+is a uniform random number in the range [0, 1].
+
+(5) Repeat (2)–(4) until the termination is satisfied.
+4. Two-stage TABC for DFJSP
+4.1. Encoding and decoding
+
+A solution in this paper consists of two vectors corresponding to the machine assignment and operation scheduling sub-problems of the FJSP with new job inserting. Using ABC algorithm, a bee is therefore composed of two parts, Machine Assignment vector (hereafter called MA) and Operation Sequencing vector (hereafter called OS). MA is a sequence for assigning machine for each operation while OS is a sequence for ordering the operations on selected machines. Fig. 2(a) illustrates a machine assignment vector (MA) while Fig. 2(b) shows the corresponding operation sequence (OS). In Fig. 2(a), the first line is the operation of all jobs while the second line is the MA used in the proposed algorithm. In MA, each element represents the machine selected for the corresponding operation. For example, the first value “3” means machine 3 is selected for processing operation O11. In OS, the same elements represent the different operations of the same job. For example, the first value “2” is the first operation of job 2. The second value “1” is the first operation of job 1. The third value “3” is the first operation of job 3. The fourth value “2” represents the second operation of job 2 because it is the second time value “2” appearing in OS. In the same way, the fifth value “4” is the first operation of job 4 while the sixth value “4” represents the second operation of job 4. The seventh value “1” is the second operation of job 1 while the eighth value “3” represents the second operation of job 3. The last four values “2, 4, 3, 1” represent the third operations of corresponding jobs.
+Illustration of MA and OS
+
+    
+
+Fig. 2. Illustration of MA and OS.
+
+Pinedo (2002) divided schedules into three classes: non-delay schedule, active schedule and semi-schedule. It has been verified in the above literature that active schedule contains the optimal schedule. In an active schedule, there is no operation to be processed earlier except putting off other operations start time or changing the order of operations. Therefore, we decode the MAOS solution to be an active schedule in order to reduce the search space. The criterion for obtaining the active schedule is to find the earliest idle time interval for each operation on the corresponding machine. The process of finding the earliest idle time interval is shown in Fig. 3. Therefore, in the two-stage ABC algorithm, a bee includes two parts: one part is the machine assignment that is the machine permutation and another is the operation sequence that is the job permutation (see Fig. 4).
+The process of finding the earliest idle time
+
+    
+
+Fig. 3. The process of finding the earliest idle time.
+Proposed crossover operator for MS part of new solution
+
+    
+
+Fig. 4. Proposed crossover operator for MS part of new solution.
+4.2. Population initialization
+
+In meta-heuristics, the quality of initial population often affects the speed of convergence to a satisfactory solution. Therefore, it is a critical step to generate a better quality initial population. The initialization process includes MA phase and OS phase.
+
+For MA initialization, random rule and global minimum processing time rule are employed to select one processing machine for each operation. In addition, a minimum completion time rule is also employed for MA initialization. In this rule, two machines will be considered for each operation that has more than two selectable machines. The operation has minimum processing time on machine M1 while the second selected machine M2 has earliest feasible time. The completion times of this operation on above two machines are compared. The machine with the smaller completion time will ultimately be selected for processing the operation. This rule considers the completion time of each operation to makespan optimization. For OS initialization, random rule, most work remaining rule and most number of operations remaining rule are employed. All the above initialization methods do machine assignment first, and then perform the operation sequencing. One initializing rule with reverse process, reverse heuristic (RH), is proposed. In this heuristic, the operation sequence is decided randomly first, then the machine assignment is decided based on the operation sequence. The steps of this heuristic are as follows:
+
+Step 1:
+
+    All operations of all jobs are shuffled randomly to obtain operation sequence.
+Step 2:
+
+    Calculate the completion time of each operation 
+
+on all selectable machines. The machine with the minimum completion time is selected for processing operation
+
+    .
+
+4.3. Exploitation search
+
+According to the characteristic of FJSP with new job inserting and the encoding strategies, we use crossover operators for the OS part of a new solution. There are several crossover operations proposed during the past decades, such as partial-mapped crossover, order crossover, cycle crossover and so on. In this study, we employed a new crossover operator based on order crossover. We obtain two new solutions from the current two solutions. The proposed crossover operator works for the OS part as follows:
+
+Step 1:
+
+    Generate a random number R from 1 to number of jobs;
+Step 2:
+
+    Copy the values from the OS part of S1 to the corresponding positions in New S1 where the values are less than or equal to R.
+Step 3:
+
+    Copy the values from the OS part of S2 to the corresponding positions in New S2 where the values are larger than R.
+Step 4:
+
+    From the OS part of S2, copy the values which do not appear in New S1 to the vacant positions in New S1 from left to right according to the order of the sequence in S2.
+Step 5:
+
+    From the OS part of S1, copy the values which do not appear in New S2 to the vacant positions in New S2 from left to right according to the order of the sequence in Harmony 1.
+
+The procedure is illustrated in Fig. 5.
+Proposed crossover operator for OS part of new solution
+
+    
+
+Fig. 5. Proposed crossover operator for OS part of new solution.
+4.4. Ensemble local search
+
+Critical path theory is employed for solving the FJSP problem by many researchers (Gao et al., 2008; Zhang, Li, Guan, & Rao, 2007; Li et al., 2011; Li, Pan, Suganthan, et al., 2011). In one solution, there may exist one or more critical paths. Each operation on one critical path is called a critical operation. This paper proposed an ensemble local search on machine. The machines are sorted based on the number of critical operations processed on them. The first ensemble local search is executed on the machine with the maximum critical operations. There are five local search operators, one Insert, one Swap, two Inserts, two Swaps, one Insert and one Swap. These five operators are stored in an operator pool. At the beginning, each operator has the same ratio to be selected for generating a neighbor solution. The operator improving the solution will be remained in operator pool while the operator not improving the solution will be deleted from the operator pool. The ensemble local search will be terminated when all the operators have been deleted from operator pool. The next machine will be executed ensemble local search until the maximum local search iterations is met. The detail steps of ensemble local search can be described as follows:
+
+(1)
+
+    Set 
+
+    .
+(2)
+
+    Sort all machines based on the number of critical operations.
+(3)
+
+    Set 
+
+    .
+(4)
+
+    Ensemble local search
+
+    (4.1)
+
+        Select a local search operator from the operator pool.
+    (4.2)
+
+        Generate neighbor solution.
+    (4.3)
+
+        If the neighbor solution is better than the current one, remain the operator; otherwise, delete the operator from operator pool.
+
+(5)
+
+    Set 
+, if
+
+    is the maximum iteration), repeat (4) until operator pool is empty; otherwise, stop and return solution.
+(6)
+
+    If the solution is improved, update the solution and go to (2).
+(7)
+
+    Set 
+, if
+
+    is machine number), go to (4); otherwise, go to (3).
+
+4.5. Framework of two-stage TABC
+
+The TABC algorithm employed multiple initialization strategies, novel machine assignment and operation sequencing operator for generating new solutions, ensemble local search method on machine. The exploitation and exploration are balanced and stressed in this algorithm. The proposed TABC algorithm includes two stages: initiating scheduling stage and re-scheduling stage. At the initiating stage, the start time of all jobs and machines is at time 0. After the initiating stage, the solution with the best objective value will be output, and all operations will be processed on corresponding machines based on the best solution. On new job(s) coming and inserting into the shop floor, the re-scheduling stage will be activated and reschedule the new job(s) and the operations that have not started processing. All not started operations and new job(s) will proceed based on the re-scheduling best solution. The computational procedure of TABC algorithm for scheduling and re-scheduling can be described as follows:
+Initializing scheduling stage
+
+(1)
+
+    Set parameters, including the number of employed bees, the number of onlooker bees and the number of scout bees. In TABC algorithm, the number of employed bees equal to the number of food sources.
+(2)
+
+    Initialize population with multiple strategies shown in Section 4.2, evaluate each solution and determine the best food source.
+(3)
+
+    Employed bee phase. For all populations, repeat the following sub-steps:
+
+    (3.1)
+
+        For each pair of current solutions, generate two new solutions by using the strategy presented in Section 4.3.
+    (3.2)
+
+        Improve the two new solutions based on the ensemble local search method shown in Section 4.4.
+    (3.3)
+
+        If the new solutions are better than or equal to the current solutions, update the population.
+
+(4)
+
+    Onlooker bee phase. For all populations, repeat the following sub-steps:
+
+    (4.1)
+
+        Select two food sources for two onlooker bees by using tournament selection.
+    (4.2)
+
+        Generate two new solutions for the two onlookers by using the strategy presented in Section 4.3.
+    (4.3)
+
+        Improve the two new solutions based on the ensemble local search method shown in Section 4.4.
+    (4.4)
+
+        If the new solutions are better than or equal to the current solutions, update the population.
+
+(5)
+
+    Scout bee phase. If a solution is not been improved during the last limit number of trials, abandon it, generate a new solution randomly and execute the ensemble local search on it.
+(6)
+
+    Update the best solution. If the termination criterion is reached, return the best solution; otherwise, go to step (3).
+
+Re-scheduling stage
+
+(7)
+
+    The new job(s) inserting in the scheduled and executing sequence.
+(8)
+
+    Calculate and record the start time of each job and each machine based on the inserting time.
+(9)
+
+    Re-calculate the operation number of existing jobs and add the new job(s) to the re-scheduling job set.
+(10)
+
+    Execute re-scheduling.
+(11)
+
+    Link up the re-scheduling results to executing scheduling results based on the inserting time.
+
+5. Experiment evaluation and comparisons
+5.1. Experimental setup
+
+To test the performance of the proposed two-stage TABC algorithm, extensive experimental evaluation and comparisons with existing algorithms are provided using well-known FJSP benchmark sets. Two sets of instances are considered in this paper: (1) the first data set are five Kacem instances (Kacem, Hammadi, and Borne, 2002a, 2002b), (2) the second data set, called BRdata, is a set of 10 problems by Brandimare. The Kacem benchmark set is composed of 5 instances with the size ranging from 4 jobs, 5 machines and 11 operations to 15 jobs, 10 machines and 60 operations. The Brandimare benchmark set includes 10 problems with the size ranging from 10 jobs, 6 machines and 55 operations to 20 jobs, 16 machines and 240 operations.
+
+To test the performance of TABC for FJSP with new job inserting and the three re-scheduling strategies provided in Section 2, an instance set from remanufacturing enterprise is considered. This instance set includes eight instances with the size ranging from 5 jobs, 4 machines and 23 operations to 20 jobs, 15 machines and 355 operations. There are 35 new jobs inserted to existing scheduling sequence of eight instances. Each inserting has different inserting time, job number and operation number. The detail information is shown in Table 1. The first two columns are instance number and new job inserting order. The third column is the inserting time of corresponding inserting order. The last three columns are the corresponding job number, machine number and operation number. The first row of each instance shows the job number, machine number and operation number at initializing scheduling.
+
+Table 1. The data of eight remanufacturing instances.
+Instance	Inserting order	Inserting time	Job number	Machine number	Operation number
+1	0	0	5	4	23
+1	10	1	4
+2	15	1	5
+
+2	0	0	8	8	64
+1	12	1	8
+2	24	1	8
+
+3	0	0	10	6	81
+1	15	1	8
+2	25	1	7
+3	35	1	6
+
+4	0	0	10	10	100
+1	15	2	20
+2	30	2	20
+
+5	0	0	15	8	171
+1	21	2	18
+2	47	2	17
+
+6	0	0	15	10	185
+1	14	2	20
+2	31	2	19
+3	44	2	19
+
+7	0	0	20	10	308
+1	21	3	38
+2	52	3	32
+
+8	0	0	20	15	355
+1	18	3	42
+2	34	3	42
+3	49	2	25
+
+The TABC algorithm is coded in C++ and implemented on an Intel ® Core ™2 Duo CPU P8600 @ 2.40 GHz PC with 4 GB RAM. Based on our previous research (Li et al., 2011; Tasgetiren, Pan, Suganthan, and Oner, 2013), the population size is fixed at 50. The sizes of employed bees, onlooker bees and scout bees are 50, 100 and 10, respectively. The predetermined number of trials is fixed at 50. The probability of crossover operation is 0.4, and the maximum iteration of ensemble local search is set to 5 times the number of available machines. The maximum generation is 3000. Each instance is carried out 30 replications.
+5.2. Discussion and comparison of three re-scheduling strategies
+
+For the eight instances from remanufacturing enterprise, the re-scheduling is based on the initiating scheduling or last time re-scheduling for new job(s) inserting. In this section, we just focus on the minimal makespan over 30 runs. To compare the three re-scheduling strategies, we also calculated the relative percentage increase (RPI) as follows:
+(6)
+where is the makespan value obtained in the ith replication,
+
+is the best makespan value found by three re-scheduling strategies. Obviously, the smaller the RPI value, the better result the re-scheduling strategy produces. To show the algorithm performance, we also calculated the average relative percentage increase (ARPI) of each re-scheduling strategy. For each instance, the average run time over 30 replications also recorded for the performance of TABC algorithm and three re-scheduling strategies (see Tables 2 and 3).
+
+Table 2. Scheduling and re-scheduling results for small-scale instances.
+Instance	Inserting order	Re-sche I	Re-sche II	Re-sche III
+CM	Time (s)	ARPI (%)	CM	Time (s)	ARPI (%)	CM	Time (s)	ARPI (%)
+1	0	25	1.032	0.00	25	1.032	0.00	25	1.032	0.00
+1	36	0.156	33.33	27	0.469	0.37	36	0.312	33.33
+2	36	0.219	12.50	32	0.531	0.00	36	0.341	12.50
+
+2	0	36	4.203	0.00	36	4.203	0.00	36	4.203	0.00
+1	63	0.235	38.64	44	2.343	0.00	53	0.419	20.45
+2	77	0.312	57.14	49	1.531	1.84	59	0.487	20.41
+
+3	0	55	5.641	0.00	55	5.641	0.00	55	5.641	0.00
+1	77	0.281	32.76	58	3.640	0.17	77	0.646	32.76
+2	111	0.261	68.18	66	2.687	1.97	111	0.583	68.18
+3	111	0.247	58.57	70	2.172	1.14	111	0.602	58.57
+
+4	0	44	7.938	0.00	44	7.938	0.00	44	7.938	0.00
+1	69	1.020	35.29	51	5.344	0.00	56	2.754	9.80
+2	103	1.111	71.67	60	2.766	0.33	75	1.673	25.00
+
+Avg				31.39			0.45			21.62
+Sum			3.842			21.483			7.817	
+
+Table 3. Scheduling and re-scheduling results for large-scale instances.
+Instance	Inserting order	Re-sche I	Re-sche II	Re-sche III
+CM	Time (s)	ARPI (%)	CM	Time (s)	ARPI (%)	CM	Time (s)	ARPI (%)
+5	0	79	19.813	0.38	79	19.813	0.38	79	19.813	0.38
+1	106	0.904	29.27	82	10.891	0.98	101	1.657	23.17
+2	132	0.817	48.31	89	5.391	1.12	114	1.490	28.09
+
+6	0	73	25.157	0.00	73	25.157	0.00	73	25.157	0.00
+1	97	1.008	32.88	73	18.875	1.37	97	1.369	32.88
+2	115	0.939	49.35	77	11.250	1.04	110	1.425	42.86
+3	118	0.931	51.28	78	8.594	1.28	110	2.247	41.03
+
+7	0	96	53.594	0.31	96	53.594	0.31	96	53.594	0.31
+1	140	2.423	26.13	111	41.391	0.45	140	3.163	26.13
+2	168	1.807	37.70	122	25.391	0.82	140	6.592	14.75
+
+8	0	91	112.078	0.66	91	112.078	0.66	91	112.078	0.66
+1	116	2.865	24.73	93	71.578	0.00	104	4.036	11.83
+2	147	2.800	51.55	97	53.156	1.03	109	4.317	12.37
+3	161	2.237	69.47	95	32.640	1.05	123	3.941	29.47
+
+Avg				30.14			0.75			18.85
+Sum			16.731			279.157			30.237	
+
+To illustrate the three re-scheduling strategies more clearly, the first time new job inserting re-scheduling of instance 2 is used as an example. Fig. 6 shows the initiating scheduling Gantt chart. The makespan value is 36. It means that all existing jobs will be completed and all machines are available at time “36” if there is no new job(s) inserting. The new job, Job 9, inserts at time “12”. At this time, the machine release time, job release time and corresponding operation number are shown in Table 4. For example, the fourth operation of job 1, O1.4, is processing on machine M3 on time “12”. This operation will be completed on time “13” on machine M3. Hence, the release time of job 1 is on time “13” and the start operation is O1.5. At the same time, release time of machine M3 is also on time “13”. In the same way, all job release time and machine can be obtained. For the new job J9, the release time is on time “12” and the first start operation is operation O9.1.
+The Gantt chart of initiating scheduling
+
+    
+
+Fig. 6. The Gantt chart of initiating scheduling.
+
+Table 4. Machine release time, job release time and corresponding operations.
+Order	1	2	3	4	5	6	7	8	9
+Job release time	13	12	17	13	19	18	13	16	12
+Job start operation	1.5	2.4	3.3	4.4	5.5	6.6	7.6	8.4	9.1
+Machine release time	16	17	13	18	19	12	13	13	
+
+The three re-scheduling strategies’ Gantt charts are shown in Figs. 7–9. Fig.7 is the Gantt chart of re-scheduling strategy I. The new inserting job, Job 9 is re-scheduling from time “36” and the finial complete time is 63. Fig.8 shows the Gantt chart of re-scheduling strategy II. The re-scheduled operations include Job 9’s operations and the existing jobs’ operations that have no start at inserting time, time “12”. Compared to Fig.6, the existing jobs’ operations have different and new operation sequence. The Job 9’s operations are also included in the new operation sequences. The finial complete time is 44 by re-scheduling strategy II. The Gantt chart by re-scheduling strategy III is shown in Fig.9. It can be seen that the existing jobs’ operations are the same with initiating scheduling, shown in Fig.6. The first three operations of Job 9 are inserted into the free-time-gap of existing operation sequence. The fourth operation’s start time is time “35” which is also earlier than the makespan value, unit time “36”, in initiating scheduling. The final complete time in Fig.9 is 53.
+The Gantt chart by re-scheduling strategy I
+
+    
+
+Fig. 7. The Gantt chart by re-scheduling strategy I.
+The Gantt chart by re-scheduling strategy II
+
+    
+
+Fig. 8. The Gantt chart by re-scheduling strategy II.
+The Gantt chart by re-scheduling strategy III
+
+    
+
+Fig. 9. The Gantt chart by re-scheduling strategy III.
+
+It is clear that the re-scheduling strategy II is more appropriate than re-scheduling strategy III if the new Job 9 has the same priority with the existing jobs. The re-scheduling strategy III should be selected if the existing jobs are priority completed. In practice remanufacturing environment, re-scheduling strategy III may also be selected if the operations of existing jobs cannot be moved from assigned machine. Although three re-scheduling obtain different performance, each of them may be selected in practice shop floor.
+5.3. Comparison with existing algorithms
+
+In initializing scheduling phase, the job start time and machine release time are the same, zero. Hence, the problem is a general FJSP problem. In re-scheduling phase, the job start time may be different and the machine release time may be different. The problem becomes FJSP problem with different job start time and different machine release time. In addition, the job number is also different in different re-scheduling operators. In this section, we compare the TABC algorithm to several existing algorithms for FJSP in initializing phase. For the re-scheduling phase, we compare TABC algorithm with several simple and combination heuristics. The results and discussions are shown in Sections 5.3.1 and 5.3.2.
+5.3.1. Initializing scheduling
+
+There are many existing meta-heuristics for solving flexible job shop scheduling problem with makespan criterion. To test the performance of proposed algorithm, we compare TABC algorithm to five competitive meta-heuristics, parallel variable neighborhood search (PVNS), knowledge-based ant colony optimization (KBACO), tabu search algorithm with efficient neighborhood structure (TSPCB) effective artificial bee colony algorithm (EABC) and a simple and effective evolutionary algorithm (SEA) (Chiang & Lin, 2013). The makespan values for all the algorithms are shown in Table 5.
+
+Table 5. Results of two benchmarks sets by all compared algorithms.
+Instance	PVNS	KBACO	TSPCB	EABC	SEA	TABC
+CM	SD	Avg_t (s)
+Kacem 1	N/A	11	11	11	11	11	0.00	0.47
+Kacem 2	14	14	14	14	14	14	0.00	1.19
+Kacem 3	N/A	11	11	11	11	11	0.00	1.2
+Kacem 4	7	7	7	7	7	7	0.00	1.4
+Kacem 5	12	11	11	11	11	11	0.00	2.97
+
+MK01	40	39	40	40	40	40	0.53	3.36
+MK02	26	29	26	26	26	26	0.81	3.72
+MK03	204	204	204	204	204	204	0.00	1.56
+MK04	60	65	62	60	61	60	0.83	66.58
+MK05	173	173	172	172	173	173	0.00	78.45
+MK06	60	67	65	60	65	60	2.02	173.98
+MK07	141	144	140	139	140	139	0.91	66.19
+MK08	523	523	523	523	523	523	0.00	2.15
+MK09	307	311	310	307	311	307	1.81	304.43
+MK10	208	229	214	208	225	202	4.98	418.19
+No. CM	2 + 6	5 + 3	5 + 4	5 + 8	5 + 3	5 + 8		
+
+For five Kacem instances, all compared algorithms can obtain the best known makespan as long as the instances were solved. The only exception is that PVNS did not reached the best known makespan for Kacem 5 with 15 jobs, 10 machines and 60 operations. For 10 BRdata instance, TABC and EABC are the best algorithms. TABC obtained minimal makespan values for eight instances except MK01 and MK05 while EABC also reached eight minimal makespan values except instanceMK01 and MK10. Compared to EABC, TABC algorithm obtained a better result for the largest scale instance, MK10. The MK10 result by TABC is 202 that is the best result among all compared algorithms. TABC algorithm is more effective than five compared algorithms for large-scale instance. PVNS found minimal makespan for six instances, and TSPCB did it for four instances. Both KBACO and SEA found 3 minimal makespan values in 10 instances. For each instance, the standard deviation of makespan value over 30 runs is shown in the second last column of Table 5.
+
+All compared algorithms are run on different PC with different parameters and running time. In this paper, we just provide the average running time over 30 times of proposed TABC algorithm to find the minimal makespan for corresponding instances. The detail information of running time for all benchmark instances is also shown in the last column of Table 5. Based on the makespan results of TABC and comparison to existing algorithms, the TABC algorithm is effective and efficiency for solving flexible job shop scheduling problem. Hence, the TABC algorithm is also employed for re-scheduling when new job(s) come(s) and insert(s) into scheduled operation sequence.
+5.3.2. Re-scheduling for new job inserting
+
+Several simple heuristics are proposed for machine assignment and operation sequencing in FJSP problem. For example, machine with minimum workload heuristic (MSC) is for machine assignment while job with maximum remain work (MSB) and job with maximum remain operations (MSC1) are two heuristics for operation sequencing 0. In this section, we improve some simple heuristics and develop combined heuristics based on simple heuristics. For example, random job order in machine with minimum workload heuristic (RMSC), MSC + MSB heuristic, RMSC + MSB heuristic, MSC + MSC1 heuristic, RMSC + MSC1 heuristic etc. al. we also combine MSC1 heuristic with RH heuristic proposed in Section 4.2. MSC1 heuristic is employed to obtain the operation sequence in RH heuristic.
+
+Based on the initializing scheduling results of simple heuristics and the combination heuristics, we compare TABC algorithm to MSC, RMSC, RMSC + MSB, RMSC + MSC1, RH and MSC1 + RH heuristics in re-scheduling phase. The initializing scheduling and all re-scheduling results are shown in Table 6. MSC and MSC1 are simple heuristics and the results are the fixed. MSC1 + RH heuristic also have fixed results. RMSC, RMSC + MSB, RMSC + MSC1 and RH heuristics run 30 times. We count minimum values (min), average values (ave) and standard deviation results by these four heuristics. TABC algorithm is also run 30 times and the results are fixed for the same instance. For each instance, the best solution is selected for next rescheduling operator.
+
+Table 6. Scheduling and re-scheduling results of eight instances.
+Instance	Inserting order	MSC	RMSC	RMSC + MSB	RMSC + MSC1	MSC1 + RH	RH	TABC
+min	ave	SD	min	ave	SD	min	ave	SD	min	ave	SD
+1	0	39	27	34.3	4.03	28	35.6	3.81	27	29.4	2.77	28	25	33	4.39	25
+1	43	31	34.3	1.75	31	33.4	1.77	34	35.4	1.61	36	28	30.6	2.42	27
+2	56	34	39.7	3.41	35	40.2	3.45	35	38.1	2.07	44	33	37.2	3.59	32
+
+2	0	90	48	57.3	5.66	50	58.9	6.04	49	58.7	5.06	51	44	51.6	3.12	36
+1	107	55	64.1	6.32	56	64.7	3.91	57	64.2	3.63	55	52	58.4	3.82	44
+2	102	58	63.2	2.62	60	67.7	4.79	63	68.4	4.15	62	56	63	5.37	49
+
+3	0	106	70	81.8	7.01	71	82.1	4.78	69	78.1	4.97	77	67	80.9	7.34	55
+1	123	73	80.3	3.52	74	80.8	4.27	71	80.1	5.75	71	71	81.6	6.04	58
+2	131	84	94.6	4.87	88	97.1	4.77	78	86.8	4.71	80	80	91.6	5.61	66
+3	145	89	97.8	3.87	91	100.6	4.69	86	90.7	4.27	81	86	94.6	4.49	70
+
+4	0	111	61	70.1	5.63	63	69.8	4.2	58	69.7	5.92	67	56	67.4	5.94	44
+1	116	69	75.8	5.04	70	79.7	4.77	67	76.7	5.57	64	61	71.7	4.59	51
+2	140	84	94.4	7.73	83	93.8	4.61	81	88.4	4.91	84	74	84.7	5.97	60
+
+5	0	195	103	115.7	6.09	102	115.2	7.07	97	106	3.95	92	93	102.4	5.31	79
+1	199	115	125.5	5.95	112	122.3	5.56	110	115.9	4.15	101	101	111.3	5.63	82
+2	216	124	131.5	5.43	124	131.8	4.87	113	125	6.03	117	110	119.2	3.67	89
+
+6	0	174	92	107.1	7.17	96	110.5	5.96	91	96.3	4.55	82	82	91.3	5.98	73
+1	184	101	111.5	7.18	102	110.9	5.85	87	99.1	5.78	89	87	95.6	5.13	73
+2	192	103	112.8	5.43	106	116.3	4.29	95	101.6	4.28	89	91	102.9	5.04	77
+3	220	111	117.2	4.29	113	123.4	6.64	100	106.9	4.48	98	97	105.1	6.53	78
+
+7	0	263	122	137.3	6.81	119	134.7	8.41	120	130.9	3.64	117	117	124.4	4.77	96
+1	267	142	152.6	4.97	143	153.9	6.24	137	145.6	5.86	126	131	140.4	5.56	111
+2	303	152	165.9	6.62	153	163.9	5.26	144	152.6	5.16	136	140	147.8	4.63	122
+
+8	0	223	110	121.2	5.16	111	121.1	7.12	99	110.7	5.29	100	94	106.2	7.24	91
+1	258	118	126.5	4.7	119	126.8	5.69	108	117.1	4.86	100	101	106.7	3.83	93
+2	275	134	141.1	4.05	130	139.4	5.45	118	126.6	4.47	116	108	117.5	4.93	97
+3	268	134	140.9	5.04	137	143	4.88	123	130.1	4.05	114	110	121.3	4.97	95
+
+Ave		168.3	90.5	99.8	5.2	91.3	100.6	5.1	85.8	93.6	4.5	84.3	81.3	90.3	5.0	69.3
+
+It can be seen from Table 6 that MSC has the worst average (Ave) result for eight instances. RMSC and RMSC + MSB obtain quite minimum (min) values, average (ave) values and standard deviation (SD) values for initializing scheduling and all re-scheduling operators. RMSC + MSC1, MSC1 + RH and RH have similar average values of min, ave and SD, RMSC + MSC1 (85.8, 93.6, 4.5), MSC1 + RH (84.3) and RH (81.3, 90.3, 5.0). In these three heuristics, RH has the best Ave value of min (81.3) and the worst average value of SD (5.0). For all initializing scheduling and all re-scheduling operators, TABC obtain best results and best Ave value. Among all compared heuristics, only RH can find the best result of instance 1 at initializing phase.
+
+For all compared algorithms, there are several special results. For example, MSC1 + RH heuristic obtain smaller first re-scheduling minimum result (71) than initializing result (77) for second instance. It means that the re-scheduling results have much improvement after inserting the first new job into the second instance. MSC1 + RH show the same situation for the fourth instance and the eighth instance. In addition, this heuristic has the same initializing scheduling and the first re-scheduling results (100) for the eighth instances.
+
+TABC algorithm has the same initializing scheduling and the first re-scheduling results (73) for the sixth instance. In the third re-scheduling operator for the eighth instance, TABC obtains smaller result (95) than the second re-scheduling result (97). These situations mean that, after inserting new job, re-scheduling operator may remain or even reduce makespan value in some special situation. To compare different heuristics and TABC algorithm clearly, Figs. 10 and 11 show the initializing scheduling results and all re-scheduling results for the sixth instance and eighth instance. It is clear that TABC has better results than other heuristics in initializing scheduling and re-scheduling operator phase.
+Scheduling and re-scheduling results for instance 6
+
+    
+
+Fig. 10. Scheduling and re-scheduling results for instance 6.
+Scheduling and re-scheduling results for instance 8
+
+    
+
+Fig. 11. Scheduling and re-scheduling results for instance 8.
+
+In summary, TABC algorithm is effective and efficiency for solving FJSP problem. For scheduling and re-scheduling FJSP with new job inserting, combination heuristics and RH has better performance than simple heuristics. TABC algorithm obtains better results than compared simple and combination heuristics in both initializing scheduling and re-scheduling phase. For all eight remanufacturing instances, TABC algorithm can get the same result in all 30 repeats. It shows that the TABC algorithm has very good convergence and stability. Compared against six heuristics, the disadvantage of TABC algorithm is requiring more time to get the best solution. Compare to the actual job shop processing time of operations in remanufacturing, the computation time to obtain best solution can be negligible.
+6. Conclusions and future work
+
+This paper modeled the remanufacturing scheduling problem as two stage FJSP with new job inserting. This is the first work to model the uncertainty in timing of returns as the new job inserting constraint in FJSP. A two-stage artificial bee colony algorithm is proposed to solve scheduling and rescheduling with new job inserting. Three re-scheduling strategies are proposed for rescheduling and compared. The best one is used in the TABC algorithm. Except scheduling stage, the TABC algorithm realize dynamic and multiple rescheduling processes for remanufacturing. Ensemble local search is proposed to improve algorithm’s performance. The performance of TABC algorithm is verified by comparing against eleven heuristic and meta-heuristics algorithms. 15 benchmark FJSP instances and eight remanufacturing cases are solved by the TABC algorithm effectively.
+
+These are some directions for future works. Additional local search heuristics can be developed and experimented to see if they are useful for solving some instances. Further, the developed algorithm can be applied to practical remanufacturing scheduling problems in order to serve remanufacturing enterprise.

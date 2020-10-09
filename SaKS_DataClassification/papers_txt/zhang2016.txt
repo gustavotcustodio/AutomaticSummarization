@@ -1,0 +1,291 @@
+Multi-objective optimization for sustainable supply chain network design considering multiple distribution channels
+
+Abstract
+
+The emergence of Omni-channel has affected the practical design of the supply chain network (SCN) with the purpose of providing better products and services for customers. In contrast to the conventional SCN, a new strategic model for designing SCN with multiple distribution channels (MDCSCN) is introduced in this research. The MDCSCN model benefits customers by providing direct products and services from available facilities instead of the conventional flow of products and services. Sustainable objectives, i.e., reducing economic cost, enlarging customer coverage and weakening environmental influences, are involved in designing the MDCSN. A modified multi-objective artificial bee colony (MOABC) algorithm is introduced to solve the MDCSCN model, which integrates the priority-based encoding mechanism, the Pareto optimality and the swarm intelligence of the bee colony. The effect of the MDCSCN model are examined and validated through numerical experiment. The MDCSCN model is innovative and pioneering as it meets the latest requirements and outperforms the conventional SCN. More importantly, it builds the foundation for an intelligent customer order assignment system. The effectiveness and efficiency of the MOABC algorithm is evaluated in comparison with the other popular multi-objective meta-heuristic algorithm with promising results.
+
+Keywords
+Supply chain network
+Multiple distribution channels
+Multi-objective optimization
+Swarm intelligence
+Artificial bee colony
+
+1. Introduction
+
+Along with the development of Omni-channel, supply chain enterprises are facing new challenges. On one hand, an increasing number of customers tend to purchase their products online rather than shopping in the conventional brick-and-mortar stores (Brynjolfsson, Hu, & Rahman, 2013). Meanwhile, customers are expecting more flexible delivery service than ever before, such as fast delivery and on time delivery. On the other hand, the market competition is also forcing the supply chain enterprises either to provide novel value-added services or to optimize the existing operations to fulfill the customer requirements (Chan, He, & Wang, 2012). To ensure a flexible delivery, a number of central or regional warehouses have to be built in specific areas to shorten the distance from customers. Adequate product allocation for different warehouses is realized by considering the preferences of customers in particular regions. Two other aspects which confront the development of supply chain enterprises are the environmental influence and social concerns. Energy and resource consumption, governmental legislation and customer awareness are all forcing supply chain enterprises to conduct practical initiatives so as to keep a good environmental image and shoulder the social responsibility. The economic measurement, environmental influence and social concerns constitute the triple bottom line for the development of sustainable supply chain (Linton, Klassen, & Jayaraman, 2007).
+
+Aiming to overcome these challenges, supply chain enterprises undertook a variety of operations and activities, among which the design of an efficient supply chain network (SCN) is the most important and fundamental initiative (Sachan & Datta, 2005). A well designed SCN could be treated as a flexible and scalable system platform, which supports further operations and activities. The operational process of the conventional SCN platform is rather strict. For instance, customer orders can only be delivered from regional distribution centers (DC) and the inventory of regional DC is supplied by the central DC. However, such a strict flow can cause severe waste in terms of manpower and facility. In this research, we propose a novel strategic design of SCN with multiple distribution channels (MDCSCN). In contrast with the conventional SCN, in which the products have to flow through a strict sequence of facilities, the design of MDCSCN presents a much more flexible network platform, especially for customers. Customer orders can be served from any available facility in the MDCSCN. For instance, a customer order can be fulfilled by manufacturers, central distribution centers (DC) or regional distribution centers. The determination of serving facilities for customers in the MDCSCN is affected by multiple considerations such as operating cost, transportation cost, customer service level and environmental influence, which are designed to initiate sustainable development for supply chain. With the support of the MDCSCN, a new supply chain system can be designed, which can intelligently analyze customer orders and determine the optimal facility to serve customers.
+
+The design of the MDCSCN pertains to the category of the facility location problem (FLP), in which the location of a number of facilities and the allocation of customers to particular facilities need to be determined. The MDCSCN model is of high complexity due to the multiple echelon settings, the large number of facilities in each echelon and the multiple distribution channels, which lead to a large scale problem and it is not feasible to be solved by exact algorithms. Therefore, meta-heuristic algorithms become the only appropriate choice. In this research, swarm intelligence is employed as the major approach to solve the MDCSCN model. Swarm intelligence is a new branch of meta-heuristics in contrast with the evolutionary computational methods, such as genetic algorithm (GA). Swarm intelligence is inspired by the collective behavior of insect colonies and animal societies (Blum & Merkle, 2008). One of the typical examples of swarm intelligence is the foraging behavior of bee colonies, which drives the introduction of the artificial bee colony (ABC) algorithm. The operation of bee colony possesses two features, self-organization and labor division. Three types of bees exist in a bee colony and each bee controls its own behavior individually. The collective behavior of bee colony demonstrates high intelligence during the searching process towards best food source (Karaboga & Basturk, 2008). Since the introduction of the ABC algorithm, it has attracted much attention from researchers due to its balanced search ability and easy implementation. The original ABC algorithm was designed to solve numerical optimization problems with single objectives. However, the MDCSCN is modeled as a practical industrial optimization problem with complicated constraints and multiple objectives. Therefore, in this research, a multi-objective artificial bee colony (MOABC) algorithm is designed for solving the MDCSCN model, which comprises the priority-based encoding mechanism for solution representation, the concept of Pareto optimality for handling multiple objectives, and the swarm intelligence of the bee colony. The performance of the MOABC algorithm is measured using numerical experiments and the results indicate that it outperforms the multi-objective genetic algorithm (MOGA).
+
+The remainder of this paper is organized as follows. After a brief review of the existing literature for sustainable supply chain networks and swarm intelligence, we formulate the MDCSCN model with multiple objectives in Section 3. Section 4 presents the multi-objective optimization approach with swarm intelligence to solve the problem stated in Section 3. The designed experiment and discussion of results are presented in Section 5. The final section concludes this research.
+2. Literature review
+2.1. Sustainable supply chain network design
+
+The design of the SCN has been drawing ever-growing attention from academic researchers and industrial practitioners as it provides fundamental and underlying support for other supply chain operations and activities. There are a number of publications concerning the SCN design from different perspectives. One of the popular trends is the design using reverse logistics, which emphasizes the collection and process of end-of-life or end-of-use products. For example, Wang and Yang (2007) designed a reverse logistics network for recycling electronic waste. Reynaldo and Jürgen (2009) designed a reverse logistics network for collection of end-of-life vehicles. The closed-loop supply chain is another research topic, in which the forward logistics and reverse logistics are integrated. For instance, Kusumastuti, Piplani, and Hian Lim (2008) designed a closed-loop service network emphasizing the post-sale service. Easwaran and Üster (2010) designed a closed-loop SCN with integrated forward and reverse channels. The integration of the SCN design with other supply chain components is also a promising research area. For example, Hugo and Pistikopoulos (2005) incorporated the life cycle assessment criteria as part of the strategic investment decisions into the SCN design. Amin and Zhang (2012) integrated the closed-loop supply chain configuration with the supplier selection model. Tancrez, Lange, and Semal (2012) presented a location-inventory model for large three-level SCN. Govindan, Jafarian, Khodaverdi, and Devika (2014) introduced a multiple-vehicle location-routing model for the design of SCN for perishable food.
+
+The concept of sustainability could be used to integrate the multifarious objectives for designing SCN (Linton et al., 2007). The measurement of the sustainability of the SCN could be categorized into three aspects, i.e., economic consideration, environmental influence and societal concerns (Piplani, Pujawan, & Ray, 2008). The economic consideration is the most common measurement metric when designing any SCNs, which is frequently measured in terms of either minimizing cost (Fledelius & Mayoh, 2008) or maximizing profit (Shen, 2006). The environmental influence is frequently measured in terms of the carbon emissions, which are associated with the various activities in the supply chain (Sundarakani, de Souza, Goh, Wagner, & Manikandan, 2010). The sustainable development for designing SCN becomes a popular trend. For instance, Frota Neto, Bloemhof-Ruwaard, van Nunen, and van Heck (2008) developed a framework for the design and evaluation of sustainable logistics networks, which balanced the economic profitability and environmental impacts. Karaboga (2005b) planned a sustainable reverse logistics system balancing costs with environmental and social concerns, in which the economic objective, environmental objective and social objective are represented as the collection variable costs, carbon emission and working hours respectively. Eskandarpour, Zegordi, and Nikbakhsh (2013) designed a sustainable post-sales network with multiple objectives, among which the first objective consists of fixed and variable cost; the second objective is to measure customer tardiness and the third objective is to compute the number of disposed components. More research concerning the sustainability and supply chain can be found in the literature (Hassini, Surti, & Searcy, 2012; Seuring & Müller, 2008).
+2.2. Swarm intelligence
+
+Swarm intelligence is inspired by the collective behavior of social insects or animal societies, which forms a new branch of the meta-heuristic approaches in contrast with evolutionary computation (Blum & Li, 2008). Swarm intelligence possesses three inherent features, i.e., decentralization, self-organization and collective behavior (Bonabeau, Dorigo, & Theraulaz, 1999). Decentralization means that no central mechanism exists for controlling or managing the behavior of each individual. Self-organization indicates that each individual determines its own behavior. An individual may interact with the other individuals or the environment so as to determine its next move. Such an interaction might follow some simple rules. The behavior of an individual might be non-deterministic or even random. However, the collective behavior of the entire population turns out to be intelligent in regard to achieving certain goals. Ever since the introduction of the concept of swarm intelligence by Beni and Wang (1993), a number of swarm intelligent algorithms have been proposed, such as the Ant System inspired by the operations of ant colonies (Dorigo, Maniezzo, & Colorni, 1996) and the Artificial Bee Colony algorithm inspired by the behavior of bee colonies (Karaboga & Basturk, 2007b). A recent review of swarm intelligence can be found in the literature (Parpinelli & Lopes, 2011; Zhang, Lee, Chan, Choy, & Wu, 2015).
+
+Among the various popular swarm intelligent algorithms, the ABC algorithm is a relatively new exemplar, which was introduced by Karaboga (2005a). Apart from the intrinsic features of swarm intelligence, the concept of labor division is firstly employed in the ABC algorithm. Three types of bees comprise a bee colony with different and interchangeable roles for foraging. Ever since the introduction, the ABC algorithm has gained much popularity due to its robust yet simple architecture, and more and more researchers try to explore the application of the ABC algorithm for solving practical problems. For example, Baykasoglu, Ozbakir, and Tapkan (2007) employed the ABC algorithm to address the generalized assignment problem. Vishwa, Chan, Mishra, and Kumar (2010) employed the ABC algorithm to solve an environmental closed-loop logistics model. Li, Pan, and Xie (2011) applied the ABC algorithm to the job shop scheduling problem. Zhang, Lee, Choy, Ho, and Ip (2014) introduced a hybrid ABC algorithm for the environmental vehicle routing problem. Moreover, one of the promising trends is to apply the ABC algorithm to the multi-objective problems. For instances, Humphreys, Wong, and Chan (2003) presented a parallel vector evaluated multi-objective variant of the ABC algorithm (VEABC) for multi-objective design optimization of composite structures. Das, Narasimhan, and Talluri (2006) proposed a hybrid Pareto-based discrete ABC algorithm for solving flexible job shop scheduling problems with multiple objectives. Ho, Xu, and Dey (2010) introduced a hybrid multi-objective ABC algorithm named HMOABC for burdening optimization of copper strip production. Akbari, Hedayatzadeh, Ziarati, and Hassanizadeh (2012) introduced a multi-objective ABC algorithm for optimizing a set of standard numerical problems with multiple objectives.
+2.3. Motivation of this research
+
+Even though a number of studies concerning the design of the SCN from different perspectives have been conducted, few of them are suitable for the latest requirement of the Omni-channel in which flexible options of sales and deliveries are particularly emphasized. To provide customers with a flexible delivery service, we propose a novel strategic design of the SCN that considers the feasibility of multiple distribution channels for direct sales. Customers could be served with more flexible service with the MDCSCN in contrast with the conventional SCN. Moreover, the design of the MDSCN considers the necessity of sustainable development. The trade-off among the economic, environmental and social objectives could provide more compromised options for decision making. Both the supply chain enterprises and customers could benefit from the MDCSCN model.
+
+The MDCSCN is formulated as a mixed integer linear programming (MILP) model with multiple objectives. Several techniques are integrated so as to solve this multi-objective MILP problem. The priority-based mechanism is used for encoding solutions; the Pareto optimality mechanism is adopted for handling the multiple objectives and the ABC algorithm is applied for solving the distribution problem. To our knowledge, it is the first research in applying the ABC algorithm to the multi-objective SCN design problem with the consideration of multiple distribution channels. The advantages of the MDCSCN model are not only explained qualitatively, but also measured quantitatively through numerical experimentation, which provides practical managerial insights for industrial practitioners. The successful application of the MOABC for solving the MDCSCN problem demonstrates the potential of the ABC algorithm, which inspires the application of the ABC application for solving other practical multi-objective problems.
+3. Problem formulation
+
+In this section, the MDCSCN is formulated as a MILP model, in which the location of facilities and allocation of customers to specific facilities need to be determined. Fig. 1 illustrates the concept of the MDCSCN, in which the manufacturers and the central DCs could act as serving facilities for customers directly.
+
+
+Fig. 1. The illustration of the MDCSCN.
+
+The manufacturers are treated as the core entity of the supply chain, which manage the establishment and operation of central DCs and regional DCs. The establishment of suppliers is not considered in this research as they do not act as a distribution channel to customers directly. Therefore, the cost of operating suppliers is not considered except for the transportation cost from suppliers to manufacturers. The other assumptions for designing the MDCSCN problem are listed as follows.
+
+(1)
+
+    The location and capacity of suppliers are known in advance.
+(2)
+
+    The location and demand of customers are known in advance.
+(3)
+
+    The potential locations of manufacturers, central DCs and regional DCs are known with corresponding determined capacities.
+(4)
+
+    The facilities in the same echelon share the same settings, e.g., capacity, operating cost and environmental influence.
+(5)
+
+    Each facility can acquire products only from the upstream facility except for customers.
+(6)
+
+    Customers can purchase their products only from one facility.
+(7)
+
+    Customer demands have to be satisfied.
+
+The notations and settings employed for designing MDCSCN are as follows.
+Notations	Description
+	The set of suppliers, manufacturers, central DCs, regional DCs and customers
+	The index and capacity of suppliers
+	The index, capacity, fixed cost and environmental influence of manufacturers
+	The index, capacity, fixed cost and environmental influence of central DCs
+	The index, capacity, fixed cost and environmental influence of regional DCs
+	The index and demand of customers
+	The distance between two facilities
+	The unit transportation cost between two facilities
+
+	The unit environmental influence between two facilities
+
+Decision variables
+Decision variables	Description
+	Binary variables denoting the open/close status of manufacturer, central DC and regional DC
+	Binary variables denoting the product flow from supplier to manufacturer, from manufacturer to central DC, from central DC to regional DC and from regional DC to customers
+	Binary variables denoting the product flow from manufacturer and central DC to customers directly
+	Integer variables denoting the amount of product flow from supplier to manufacturer, from manufacturer to central DC, from central DC to regional DC and from regional DC to customers
+
+	Integer variables denoting the amount of product flow from manufacturer and central DC to customers directly
+
+The design of a sustainable SCN consists of three objectives, i.e., the economic objective, the social objective and the environmental objective, which are also known as the triple bottom lines for sustainable development. All these three objectives are considered in the formulation of the MDCSCN model. The first objective is to minimize the total cost, which comprises the operating cost for running facilities and the transportation cost for delivering products as shown in Eq. (1).
+(1)
+
+The second objective is to maximize the customer service in terms of customer demand coverage. In order to measure the customer demand coverage, some further notations and settings are needed. The maximum coverage distance for each facility is denoted as Dmax. Customers within this distance range to an open facility are considered well served (Villegas, Palacios, & Medaglia, 2006). The set of manufacturers, central DCs and regional DCs which could serve customer m within the maximum coverage distance are denoted as
+, and respectively. With the above notations and settings, the second objective could be expressed as Eq. (2).
+(2)
+
+The third objective is designed to measure the environmental influence of the MDCSCN network as shown in Eq. (3), which derives from the facility operating and vehicle transportation.
+(3)
+
+The associated constraints for the MDCSCN model are summarized as follows.
+(4)
+(5)
+(6)
+(7)
+(8)
+(9)
+(10)
+(11)
+(12)
+(13)
+(14)
+
+Constraint (4) means that customers can only purchase their products from one facility. Constraint (5) indicates that customer demands have to be satisfied. The relationship between the flow connectivity and the flow amount between two facilities are denoted in constraints (6)–(8). Constraints (9)–(11) suggest that the flow of products can be associated with open facilities. The capacity of the regional DC, central DC and manufacturer cannot be violated as illustrated in constraints (12)–(14) respectively.
+4. Method of solution
+
+The MDCSCN problem is of high complexity due to the unique features, comprising the flexible delivery channels, the multi-echelon settings and the large number of facilities in each echelon. In this section, a modified ABC algorithm is employed to solve the MDCSCN problem. In consideration of the multiple objectives, the concept of Pareto optimality is introduced. The hybridization of the ABC algorithm and the Pareto optimality results in a multi-objective ABC algorithm (MOABC), which can find a number of Pareto optimal solutions in one execution.
+4.1. Design of the solution scheme
+
+The design of the solution scheme is the first consideration before implementing any algorithm. A network can be represented in different schemes. For example, Brynjolfsson et al. (2013) used a matrix-based scheme to represent a transportation network. Syarif, Yun, and Gen (2002) converted a transportation network into a spanning tree and encoded the spanning tree with the Prufer number. In this research, we employ two encoding mechanisms to construct the solution. The solution consists of four separate stages, among which the first three stages are the same as the conventional supply chain network, which are the product flow from supplier to manufacturer, from manufacturer to central DC and from central DC to regional DC respectively. The first three stages are encoded with a priority-based encoding mechanism, which takes into consideration both the position and the priority of each element in the solution (Gen, Altiparmak, & Lin, 2006). For instance, the supply chain network comprises 3 suppliers, 4 manufacturers, 3 central DCs, 4 regional DCs and 6 customers. The position of each element denotes the index of the facility, while the priority of each element is assigned as a random permutation of the set {1, 2, ⋅⋅⋅, 7}. A similar encoding mechanism applies to the second and the third stages as well. As for the fourth stage, we adopt a different encoding mechanism since it involves the supply of customer demands from different facilities. Instead of considering only two successive echelons in the first three stages, we locate and assign the facility for customers directly in this stage. The position of each element in stage 4 represents the index of each customer and the value for each element is taken in the set
+
+. Fig. 2 illustrates an example of a solution encoding step for each individual stage and the final scheme, with 3 suppliers, 4 manufacturers, 3 central DCs, 4 regional DCs and 6 Customers.
+
+
+Fig. 2. Solution encoding scheme.
+
+Given the encoded solution, we have to decode it so as to construct the practical supply chain network, which is further measured by considering the multiple objectives. The decoding procedure is conducted backwards, since the first priority is that the customer demands have to be satisfied. The decoding scheme for the first three stages and the last stage is also different with different encoding schemes. The decoding scheme for stage 4 is rather straightforward, as it consists of the direct links between the facilities and customers. The decoding scheme for the first three stages involves three factors, which are the priority of the facility, the capacity of the facility and the unit transportation cost from/to this facility. Suppose we have K sources and L depots with associated capacity and demand ak and bl respectively. The unit transportation cost from source k to depot l is denoted as ckl. The encoding scheme with the K sources and L depots is denoted as
+
+, which comprise two sections as P(K) and P(L). The amount of products transported from source k to depot l is denoted as gkl. Fig. 3 shows the decoding algorithm. One of the advantages of this decoding algorithm is that the balance between supply and demand is no longer considered, as we process the solution backwards and focus on the demand side.
+
+
+Fig. 3. The decoding algorithm.
+4.2. Pareto optimality
+
+The Pareto-based optimization method is very popular and practical for addressing multi-objective optimization problems. In practice, one solution cannot satisfy all the objectives to a maximum level simultaneously. Some solutions may favor some objectives, while other solutions may approve of other objectives. Therefore, the concept of the Pareto optimal solution is introduced to find solutions which are at least good for one objective. The Pareto optimality can be described as follows. For a multi-objective optimization problem
+
+, solution s1 is claimed to dominate solution s2 denoted as s1≺s2 under the following condition (Collette & Siarry, 2005). Solution s1 is called the Pareto optimal solution provided that there is no other solution that dominates it. The set of Pareto optimal solutions is named the Pareto frontier.
+
+(1)
+
+    ∀i ∈ {1, ⋅⋅⋅, n}, fi(s1) ≤ fi(s2)
+(2)
+
+    ∃j ∈ {1, ⋅⋅⋅, n}, fj(s1) < fj(s2)
+
+In addition to the simple comparison between any two solutions, we often need to rank and sort a number of solutions (population) so as to find the Pareto frontier and conduct further analysis (Deb, Pratap, Agarwal, & Meyarivan, 2002). The determination of the non-domination fronts are described as follows. Each solution belongs to a certain non-domination front, denoted as sfront, and any two solutions which cannot dominate each other belong to the same non-domination front. In this regard, two more parameters are introduced to determine the non-domination front for one individual solution, namely (1) dominated count ns (the number of solutions which dominate the solution s) and (2) domination set Ps (the set of solutions which are dominated by the solution s). The non-domination front of solution s can be calculated as shown in Fig. 4. All the solutions in the first non-domination front F1 have the same dominated count 0 and the non-domination front F1 is also called Pareto frontier. For each solution within the first non-domination front F1, we visit its domination set and reduce the dominated count by one for each member within the domination set. The solutions with dominated count of 0 constitute the second non-domination front F2. This procedure is continued until all solutions are assigned to a certain non-domination front.
+
+
+Fig. 4. The determination of non-domination fronts.
+
+Once the non-domination fronts are determined, we need to further compare the solutions within the same non-domination front. For this purpose, the concept of crowding distance is introduced to measure the density of solutions in a non-domination front. The crowding distance for a given solution is calculated using the Euclidean distance between two nearby solutions in terms of the multiple objectives (Fleischer, 2003). The crowding distance can be calculated as follows. Suppose there are N non-dominated solutions with M objectives, we first need to sort the N solutions in terms of the first objective. Then, the crowding distance di for solution si can be calculated as Eq. (15).
+(15)
+
+4.3. Performance metric
+
+Different Pareto frontiers obtained by different multi-objective algorithms need to be compared through some performance measurement metrics. Different metrics emphasize different features of the Pareto fronts and some of them even conflict with each other (Beamon, 1998). Some metrics are used simultaneously to assess the performance of different Pareto fronts. In this research, we use four metrics to evaluate the Pareto frontiers from different algorithms, of which the first three metrics emphasize the inner features of a Pareto frontier and the fourth metric underlines the comparison between different algorithms.
+
+(1)
+
+    The Pareto ratio (PR) is used to calculate the percentage of the Pareto frontier solutions among the whole population. Suppose the number of Pareto frontier solutions and population are denoted as |PS| and |S| respectively. Then, PR is calculated referring to Eq. (16).
+(2)
+
+    The Pareto crowding space (PCS) is used to calculate the distribution of the Pareto frontier. PCS is implemented using the crowding distance of each individual solution as shown in Eqs. (17) and (18).
+(3)
+
+    The Average Ideal distance (AID) is the average distance between the practical Pareto solutions and the ideal solution Govindan et al., 2014). The calculation of the AID and the ideal solution is shown in Eqs. (19) and ((20).
+(4)
+
+    Percentage domination (PD) is to calculate and compare the percentage of different Pareto frontiers obtained from different algorithms. To calculate the PD, we first need to construct a mixed set of solutions containing all the Pareto solutions obtained from different algorithms. Then the dominated solutions are eliminated and the percentage of the remaining solutions belonging to different algorithms is calculated.
+    (16)
+
+(17)
+(18)
+(19)
+(20)
+
+4.4. MOABC algorithm
+
+The original ABC algorithm was firstly introduced by Karaboga (2005a), which simulates the foraging behavior of honey bees. One bee colony consists of three types of bees, i.e., scout bees, employed bees and onlooker bees. Each type of bee performs a specific function and the roles of bees are interchangeable (Karaboga & Basturk, 2008). The role of scout bees is to find the initial food sources or to find alternative food source once a food source is abandoned. The role of employed bee is to exploit the food sources, while the role of onlooker bees is to determine promising food sources. The operation of a bee colony is described as follows. At the beginning, a number of scout bees are sent out to find food sources randomly in a certain area. Once the food sources are found, scout bees change their roles to employed bees and start to exploit the food sources. During the exploitation period, employed bees try to find better food sources nearby to replace the current food source. Employed bees share the food source information with onlooker bees waiting in the hive after they return to the hive. Then onlooker bees may determine to explore some preferential food sources, which is mainly determined by the richness of corresponding food sources. The role of onlooker bees is changed to employed bees once they determine to exploit food sources. After a number of exploration and exploitation cycles, some food sources may be exhausted. In this case, the corresponding employed bees would abandon the exhausted food source, and change their role to scout bees so as to find alternative food source. The three types of bees work collaboratively in order to find the best food sources, which is treated as the optimal solution.
+
+The ABC algorithm was originally invented to solve numerical optimization problems, where the problems usually have regular search spaces (Karaboga & Basturk, 2007a, b). However, industrial problems differ from the numerical optimization problems substantially in terms of the isolated search spaces, the discrete decision variables, the varying constraints, etc. In this research, we introduce an MOABC algorithm based on the modification of the ABC algorithm so as to address the MDCSCN problem. The MOABC algorithm incorporates the features of a network structure with the concept of Pareto optimality. The pseudo code of the MOABC algorithm is illustrated in Fig. 5.
+
+
+Fig. 5. The pseudo code of the MOABC algorithm.
+4.4.1. Initialization phase
+
+The ABC algorithm is of great popularity and practicability which is partially attributed to the simple parameter settings. Two major parameters need to be tuned before its execution. The first parameter is the number of food sources. One food source is treated as one solution to a specific problem. In the ABC algorithm, the number of employed bees and the number of onlooker bees are commonly set the same as the number of food sources, as one employed bee manages one food source. The number of scout bees is not fixed, because any employed bee can change its role to a scout bee once its associated food source is abandoned. A larger number of food sources indicate better diversified search capability. The second parameter is the abandonment criterion, denoted as limit. If a candidate solution cannot be improved through a number of trials limit, it would be discarded and replaced by another solution. The setting of limit represents a trade-off consideration between a diversified search and an intensified search.
+
+After the parameter settings, a number of initial solutions could be generated with respect to the priority-based encoding scheme. The first three stages share the same initialization mechanism. Provided that there are m sources and n depots, any random permutation of
+
+can be treated as a solution segment for a single stage. For the fourth stage, since customers can get their products from any available facility, it is possible to assign the facility index to each customer directly. Following the same procedure, a number of initial solutions could be generated. After the initialization phase, we need to evaluate the whole population. Referring to the predefined Pareto optimality, the ranking and sorting of the initial solutions are determined by the non-domination front and the crowding distance, which are calculated using the equation mentioned in the above section. For any two solutions with different non-domination fronts, the one with a lower non-domination front has priority over that with higher non-domination front. If two solutions belong to the same non-domination front, the one with larger crowding distance is preferred.
+4.4.2. Employed bee phase
+
+The major role of the employed bee is to exploit the corresponding food source. In addition to the exploitation of the food source, the employed bee also attempts to conduct a neighborhood search around the current food source aiming to find a better food source. In the original ABC algorithm, the neighborhood search for a given solution is realized through the interaction with another randomly found solution. However, such a mechanism is not suitable in this research due to the characteristics of the practical problem. Therefore, we redesign the neighborhood structure referring to the designated encoding mechanism. For the first three solution segments, three neighborhood structures are introduced as swap, reverse and insert. For the fourth solution segment, one more neighborhood structure is introduced due to its unique encoding mechanism as reassign. Fig. 6 illustrates the mentioned neighborhood structures.
+
+
+Fig. 6. The neighborhood structure.
+
+Once a neighborhood solution is generated, we need to compare the neighborhood solution with the current solution. For a single objective problem, we could simply compare their associated fitness values. However, for a multi-objective problem, the concept of Pareto optimality is applied herein. If one solution could dominate another, certainly the non-dominated one is preserved. If the two solutions could not dominate each other, the original one is kept for simplicity. In addition, the number of trials to improve the original solution increases by one, which leads to a diversified search once it reaches the abandonment criterion.
+4.4.3. Onlooker bee phase
+
+The onlooker bees acquire the information on food sources from the employed bees, which return to the hive after the exploitation phase. The onlooker bees then determine to exploit and explore some food sources as well. The decision-making for onlooker bees is proportional to the richness of the food sources. In the original ABC algorithm, the probability of choosing a solution is calculated using its associated fitness value. However, for multi-objective problems, the fitness calculation is no longer proper. In this regard, the tournament selection mechanism is employed herein after we rank and sort the solutions referring to the non-domination front and crowding distance. A detailed explanation of the tournament selection mechanism can be found in the literature (Hiremath, Sahu, & Tiwari, 2013).
+
+An onlooker bee changes its role to an employed bee once it determines to exploit and explore a food source. It would repeat the same operations as the employed bee, carrying a neighborhood search for finding better solutions. The same selection rules apply in this phase as in the employed bee phase. The function of the onlooker bee phase is to facilitate the intensified search of the ABC algorithm, as the promising solutions have more chance to be improved due to the more frequent neighborhood search.
+4.4.4. Scout bee phase
+
+Whenever a neighborhood search is conducted, we try to improve a given solution. If the given solution can be improved, we reset its associated trial number as zero; otherwise, its trial number is increased by one. Once the trial number exceeds the predetermined setting as limit, the given solution is abandoned and substituted by a new solution found by the scout bee. The trial number of the new solution is reset as zero. The purpose of the abandonment mechanism is two-fold. One is to discard the solutions with poor performance, and the other is to avoid trapping in some local optimal points. The abandonment mechanism could facilitate a diversified search of the ABC algorithm. After the scout bee phase, all the solutions would be evaluated one more time. The non-domination front and crowding distance for each solution is recalculated. After a number of iterations, the Pareto frontier from the last population is obtained as the final result for further analysis.
+5. Numerical analysis
+
+In this section, experiments are conducted with two purposes; one is to show the advantages of the proposed MDCSCN in comparison with the conventional SCN, in order to provide valuable managerial insights for industrial practitioners; the other is to examine the effectiveness and efficiency of the introduced MOABC algorithm, which could be employed to solve other practical problems.
+5.1. Test data and setting
+
+The locations of customers, regional DCs, central DCs, manufacturers and suppliers are generated within a square area with 200*200 using a coordinate scheme. We assume that all the facilities in the same echelon share the same capacity and operating cost, and all customers have the same demand. Various problem instances are generated in different scales, which possess a different number of facilities in each echelon. The customer demand follows a uniform distribution as U(10,  20). The capacities of regional DC, central DC, manufacturer and supplier are set referring to the following inequality 21. The transportation cost between any two facilities is expressed using the Euclidian distance between any two facilities. The operational costs for regional DC, central DC and manufacturer follow uniform distributions of U(300,  400), U(400,  500) and U(500,  600) respectively.
+(21)
+
+The first objective is to construct the network with minimum transportation cost and operational cost. The second objective is to design the network with maximum customer coverage so as to provide efficient service to customers. In this research, the second objective is converted into the finding of the minimum cumulative distance between customers and their corresponding facilities so as to avoid the extra setting of the maximum coverage distance. The serving facilities for customers can only be regional DCs in the conventional SCN. However, in the MDCSCN, the manufacturers, central DCs and regional DCs all can be the serving facilities. The third objective is to measure the environmental influence. The environmental influences associated with the operation of facilities are set as 100, 200 and 300 for regional DC, central DC and manufacturer respectively. The environmental influence associated with the transportation is proportional to the travelling distance, denoted as
+
+.
+
+With respect to the parameter setting for the MOABC algorithm, the number of solutions (SN) is set as 40, the limit setting for abandonment is set as
+
+, in which Dim is the dimension of an individual solution. The maximum number of iterations is set as 1000. Each problem instance is run 10 times and the mean result is recorded so as to provide a convincing result. The performance of the MOABC algorithm is compared with another popular multi-objective meta-heuristic algorithm, the MOGA (Konak, Coit, & Smith, 2006). The crossover rate and mutation rate of the MOGA are set as 0.9 and 0.1 respectively. The population of chromosomes is set as 40, which is equal to the number of solutions of the MOABC algorithm for the purpose of comparison. Both the MOABC algorithm and the MOGA are coded in Java Language with Eclipse IDE, and all tests are performed on a PC with a 3.60 GHz processor.
+5.2. Comparison of conventional SCN and MDCSCN
+
+In order to get a better understanding regarding the differences between the conventional SCN and the MDCSCN, we first compare the results of these two networks in terms of single objective. Twelve instances are classified into three scales, i.e., small, medium and large scales. The major differences among the different scales are the number of regional DCs and the number of customers. Even though for the small instance, the number of decision variables and constraints can be a large number due to the multi-echelon settings of SCN. For example, instance 1, which comprise 3 potential suppliers, 2 potential manufacturers, 2 potential central DCs, 2 potential regional DCs and 8 customers, have 8 integer variables to denote the open or close status of facilities, 82 binary variables to denote the interconnection between facilities and 82 integer variables to denote the amount of products transported between facilities. Moreover, the settings of multiple objectives certainly increase the complexity of problems. Therefore, it is not appropriate to use exact approaches as it either consumes too much time to search the entire search space or be incapable to handle the large scale instances. Table 1 summarizes the whole results for this comparison. From the results, it can be noticed that the largest saving in terms of three objectives occurs in the small scale instances, which reach 24.83%, 14.05% and 17.97% for objective 1, 2 and 3 respectively, on average. However, the advantages of the MDCSCN decrease gradually with the increase of the complexity of problem instances. Such a phenomenon may be attributed to the limitation of the square size for designing the SCN. The large number of facilities and customers in a crowded area weakens the effect the MDCSCN.
+
+Table 1. Comparison of conventional SCN and MDCSCN with single objective.
+		Instances	Conventional SCN	MDCSCN	Saving
+		{S, P, K, L, M}	Obj1	Obj2	Obj3	Obj1	Obj2	Obj3	Obj1	Obj2	Obj3
+Small case	1	{3, 2, 2, 4, 8}	34,267.3	482.2	4024.7	25,064.8	412.9	3210.3	26.8%	14.3%	20.2%
+	2	{4,  3,  3,  6,  12} 	45,082.8	635.3	5589.1	33,344.0	537.3	4460.8	26.1%	15.4%	20.1%
+	3	{5,  4,  4,  8,  16} 	55,225.2	712.7	6730.2	41,670.1	613.5	5634.2	24.5%	13.9%	16.2%
+	4	{6,  5,  5,  10,  20} 	62,400.9	847.3	7967.7	49,876.0	741.5	6757.5	20.2%	12.5%	15.1%
+Average	24.3%	14.0%	17.9%
+Medium case	5	{6,  6,  6,  12,  40} 	115,082.8	1573.2	13,405.6	96,127.3	1334.6	12,034.8	16.4%	15.1%	10.2%
+	6	{7,  7,  7,  14,  60} 	175,093.5	2327.4	20,431.0	142,107.8	1971.6	17,539.7	18.8%	15.2%	14.1%
+	7	{8,  8,  8,  16,  80} 	236,593.9	3037.4	27,084.1	195,420.2	2687.2	23,410.0	17.4%	11.5%	13.5%
+	8	{9,  9,  9,  20,  100} 	296,598.2	3677.4	33,908.3	242,346.1	3226.2	28,782.1	18.2%	12.2%	15.1%
+Average	17.7%	13.5%	13.2%
+Large case	9	{8,  6,  10,  20,  120} 	319,817.5	4505.5	34,978.9	284,441.1	4111.6	32,353.8	11%	8.7%	7.5%
+	10	{9,  8,  15,  30,  160} 	425,812.4	5997.1	46,511.8	382,634.8	5758.9	43,923.8	10.1%	3.9%	5.5%
+	11	{10,  10,  20,  40,  200} 	523,993.7	8107.4	57,884.7	481,968.4	7685.8	55,435.9	8%	5.2%	4.2%
+	12	{12,  10,  20,  40,  240} 	633,696.6	10,128.8	69,379.0	583,367.2	9987.8	65,545.2	7.9%	1.3%	5.5%
+Average	9.2%	4.8%	5.7%
+
+The detailed network design of instance 1 is illustrated in Fig. 7 with objective 1, which aims at minimizing the operational cost and transportation cost. From the results, it could be noted that two suppliers (S1 and S3), two manufacturers (P1 and P2), two central DCs (K1 and K2) and four regional DCs (L1, L2, L3 and L4) compose the conventional SCN. However, MDCSCN consists of two suppliers (S1 and S3), two manufacturers (P1 and P2), two central DCs (K1 and K2) and one regional DC (L2). The major difference is that all the regional DCs are used in the conventional SCN, however, only 1 regional DC is used in MDCSCN as 2 central DCs and 2 manufacturers could supply products for customers immediately, which leads to a 26.85% cost reduction in objective 1. Fig. 8 illustrates the results for objective 2, which focuses solely on the customer coverage. In contrast with the conventional SCN in which customers can only be served by regional DCs, the MDCSCN is much more flexible. The products for customers may come from any available facility. Such a change would certainly reduce the aggregate distance between customers and facilities. In this case, the aggregate distance saved is 14.37% on average. Fig. 9 shows the results comparison for the two networks in terms of the objective 3, which is designed to measure the environmental influence. The major differences concerning the utilization of facilities still occurs in the regional DC and the reduction of environmental influence reaches 20.24%. In a conventional SCN, three regional DCs (L1, L2 and L3) are used. However, in MDCSCN, only the regional DC with label L4 is used, which means the manufacturer and central DC alleviate the role of regional DC.
+
+
+Fig. 7. Comparison of objective 1.
+
+
+Fig. 8. Comparison of objective 2.
+
+
+Fig. 9. Comparison of objective 3.
+
+The performance of the proposed MDCSCN exceeds the conventional SCN substantially in terms of all three objectives, which can be attributed to the utilization of less number of facilities and their better operational efficiency. Both the manufacturers and central DC can handle the product distribution to customers directly if assigned. Moreover, the design of MDCSCN can help enterprise managers realize the potential of different facilities when they design the supply chain system. A more intelligent supply chain system can be designed, which can handle the information from customer, product inventory and transportation integrally and simultaneously.
+5.3. Comparison of MOABC with MOGA
+
+The above section dealt with the comparison between the conventional SCN and the MDCSCN in terms of each single objective. In this section, the multi-objective MDCSCN model is solved using the MOABC algorithm and the MOGA. According to the performance metrics introduced in the above section, the overall results of the MOABC and the MOGA are summarized in Table 2.
+
+Table 2. The performance of the MOABC and the MOGA.
+	Instances	MOABC	MOGA	MOABC	MOGA
+		{S, P, K, L, M}	PCS	AID	PR	Time	PCS	AID	PR	Time	PD	PD
+Small case	1	{3, 2, 2, 4, 8} 	36,114.3	4863.5	0.27	78	38,293.7	8009.4	0.26	48	0.78	0.22
+	2	{4,  3,  3,  6,  12} 	34,740.0	4596.1	0.23	114	48,163.5	11,117.8	0.32	65	1.00	0.00
+	3	{5,  4,  4,  8,  16} 	48,344.7	7617.9	0.27	165	57,492.8	14,560.5	0.31	88	0.95	0.05
+	4	{6,  5,  5,  10,  20} 	63,141.9	6008.2	0.24	222	85,024.8	4077.5	0.33	118	1.00	0.00
+Medium case	5	{6,  6,  6,  12,  40} 	89,698.6	7148.4	0.23	370	127,786.1	20,183.6	0.31	194	1.00	0.00
+	6	{7,  7,  7,  14,  60} 	144,239.1	9384.2	0.13	556	207,918.8	25,993.4	0.29	287	1.00	0.00
+	7	{8,  8,  8,  16,  80} 	300,608.7	10,174.1	0.13	776	379,442.5	28,181.8	0.31	399	1.00	0.00
+	8	{9,  9,  9,  20,  100} 	315,692.8	12,036.8	0.15	1074	417,876.1	22,280.1	0.28	555	1.00	0.00
+Large case	9	{8,  6,  10,  20,  120} 	351,391.2	19,151.4	0.11	1171	456,677.2	70,533.7	0.38	604	1.00	0.00
+	10	{9,  8,  15,  30,  160} 	470,514.9	26,162.7	0.11	2173	644,766.2	66,211.4	0.31	1107	1.00	0.00
+	11	{10,  10,  20,  40,  200} 	493,298.7	29,811.7	0.13	3563	675,272.1	94,666.4	0.38	1762	1.00	0.00
+	12	{12,  10,  20,  40,  240} 	675,624.0	19,068.2	0.11	4072	841,849.2	97,838.4	0.34	2067	1.00	0.00
+
+It can be noted that the Pareto optimal solutions generated by the MOABC dominate the ones generated by the MOGA for almost all the problem instances, except for the first and third instances, with small scale, as denoted by the performance metric PD. According to the PCS, AID and PR, the Pareto optimal solutions generated by the MOGA are much more diversified than the ones from MOABC. Regarding the computational time, CPU time is employed for reference. For example, with the same configuration, the MOABC algorithm takes 222 milliseconds to solve the instance 4, while the MOGA uses 118 milliseconds to solve that. The MOABC algorithm takes almost two times computational time in contrast to the MOGA algorithm for solving all the instances, which partially attributes the unique design of four phases in the MOABC algorithm, especially the employed bee phase and onlooker bee phase. Such a design enables the MOABC algorithm to search the solution space intensively. Even though the MOABC algorithm consumes more time than the MOGA algorithm, the results from the MOABC algorithm can outperform the ones from the MOGA substantially. Therefore, we can draw the conclusion that with the same configuration, MOGA could generate more diversified Pareto optimal solutions in contrast to the MOABC. However, the Pareto optimal solutions generated by the MOGA are averagely worse than the ones from the MOABC, especially when the problem scales increases.
+
+In order to get a clear understanding of the performance difference from two algorithms, we accumulate the Pareto optimal solutions acquired from several executions of each instance. Even though the accumulated solutions may not dominate each other, they can be used to illustrate the average performance of the corresponding algorithm. Fig. 10a and b illustrates the distribution of Pareto optimal solutions for each instance. The results are consistent with the findings of Table 2. For instances, 1 and 3, the distribution of solutions from the two algorithms have some overlapping space. However, for other instances, the average performance of the MOABC exceeds the MOGA significantly.
+
+
+Fig. 10. The distribution of solutions (o, the MOGA solutions; *, the MOABC solutions).
+6. Conclusions
+
+This research proposes a novel strategic model for designing supply chain networks with multiple distribution channels, which embraces the booming development of the Omni-channel. The concept of sustainable development is considered when designing the MDCSCN model, which can reduce the economic cost for supply chain enterprises, enlarge the flexibility of order fulfillment for customers and diminish the environmental influences. A priority-based solution scheme is employed to encode the network structure, which can reduce the computational complexity significantly. The concept of Pareto optimality is utilized to handle the multiple objectives of the MDCSCN model. A swarm intelligent algorithm named MOABC is designed to solve the MDCSCN problem, which is based on modification of the ABC algorithm and incorporates the concept of Pareto optimality.
+
+The contribution of this research can be realized from the numerical analysis. First, the performance of the MDCSCN model significantly exceeds the conventional SCN in terms of each single objective, and can provide useful and valuable insights in reconfiguring the SCN for logistics practitioners. Second, the integration of three components, i.e., the priority-based encoding scheme, the Pareto optimality and the ABC algorithm, comprises the solving methodology, in a pioneering approach. The results indicate that this method is no less competitive than other popular methods such as MOGA, and also has the potential to solve other practical problems.
+
+Even though the numerical analysis has demonstrated the advantages and the necessity of the MDCSCN model and the efficiency of the proposed method, there are still some aspects which can be improved or achieved in the future. For example, the matching between customers and the serving facilities is mainly determined by the distance factor in the MDCSCN model. However, this relationship could be affected by some other factors, such as customer preferences and customer time windows, which could certainly increase the complexity of the model. A second improvement can be the adoption of practical data from some real world cases rather than numerical analysis, thereby providing more convincing results. It is importance for the management to realize the paradigm shift from tradition supply chain network to new SCN with multiple distribution channels. With sophisticated information analysis, it helps management to realize the importance of optimizing multiple objectives of MDCSCN by considering the efficiency order fulfilling, facility capacity and transportation schedule.

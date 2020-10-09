@@ -1,0 +1,294 @@
+<article>
+  <title>An application of case-based reasoning with machine learning for forensic autopsy</title>
+  <abstract>
+    <sentence>Case-based reasoning (CBR) is one of the matured paradigms of artificial intelligence for problem solving.</sentence>
+    <sentence>CBR has been applied in many areas in the commercial sector to assist daily operations.</sentence>
+    <sentence>However, CBR is relatively new in the field of forensic science.</sentence>
+    <sentence>Even though forensic personnel have consciously used past experiences in solving new cases, the idea of applying machine intelligence to support decision-making in forensics is still in its infancy and poses a great challenge.</sentence>
+    <sentence>This paper highlights the limitation of the methods used in forensics compared with a CBR method in the analysis of forensic evidences.</sentence>
+    <sentence>The design and development of an Intelligent Forensic Autopsy Report System (I-AuReSys) basing on a CBR method along with the experimental results are presented.</sentence>
+    <sentence>Our system is able to extract features by using an information extraction (IE) technique from the existing autopsy reports; then the system analyzes the case similarities by coupling the CBR technique with a Naïve Bayes learner for feature-weights learning; and finally it produces an outcome recommendation.</sentence>
+    <sentence>Our experimental results reveal that the CBR method with the implementation of a learner is indeed a viable alternative method to the forensic methods with practical advantages.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Case-based reasoning</keyword>
+    <keyword>Naïve Bayes</keyword>
+    <keyword>Autopsy report system</keyword>
+    <keyword>Decision-support system</keyword>
+    <keyword>Feature-weight learning</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The database or perhaps more aptly the knowledge repository is the most important asset in the domain of forensic science as a whole, regardless of whether the information is computerized or otherwise.</sentence>
+    <sentence>The database records the past forensic cases and assists personnel when they perform analysis as part of their current investigations.</sentence>
+    <sentence>However, many systems, which store data, require some degree of intelligence to reduce turnaround time of an investigation process and mitigate errors such as those arising from human negligence or mistakes.</sentence>
+    <sentence>For instance, currently, data of past case evidences are retrieved from the database to perform “eyeball” comparison.</sentence>
+    <sentence>A positive result (based on human judgment) of the comparison suggests the two cases are similar.</sentence>
+    <sentence>If the result is negative, the forensic personnel will need to retrieve evidence from the database and perform another comparison.</sentence>
+    <sentence>A system capable of handling comparison with some degree of automation coupled with intelligence will definitely increase the productivity.</sentence>
+    <sentence>In forensics, the relevant experts need to analyze the collection of evidences and interpret the results of analysis by using his or her theory (Srihari, 2010).</sentence>
+    <sentence>Furthermore, the shortage of human resource and time are the main hurdles faced by these experts (Hoelz, Ralha, &amp; Geeverghese, 2009).</sentence>
+    <sentence>This is where machine intelligence comes in useful, which can assist these experts in their decision-making.</sentence>
+    <sentence>The use of computerized techniques in forensic science should not be mistaken for digital forensics, which is a field in forensic science that focuses primarily on investigations and recovery of data from digital devices.</sentence>
+    <sentence>Digital forensics has developed rapidly due to the need to process huge volumes of data extracted from digital devices.</sentence>
+    <sentence>Information retrieval (IR), a data extraction technique (Beebe, Clark, Dietrich, Ko, &amp; Ko, 2011) is often used in the forensic investigation process, and this is where computer intelligence is essential to expedite the process.</sentence>
+    <sentence>The extracted data are usually filtered and synthesized using a certain degree of machine intelligence.</sentence>
+    <sentence>Compared with the use of machine intelligence in digital forensics, the use of machine intelligence in forensic science is minimal.</sentence>
+    <sentence>Most of the analyses of evidence in forensic science are still based mainly on traditional methods, even though computational forensics can address some of the limitations in traditional methods (Srihari, 2010).</sentence>
+    <sentence>Computational forensics is a relatively new field that aims to improve the analysis of evidence using computational methods.</sentence>
+    <sentence>The forensic personnel can use many state-of-the-art automated tools to assist them in daily operations in forensic investigations.</sentence>
+    <sentence>For example, ImaQuest (2013) and ASTIS (2012) are tools that provide a platform to facilitate the investigation process.</sentence>
+    <sentence>These tools are visualization and screening devices that can assist the forensic personnel in their investigation process and double up as digital data stores.</sentence>
+    <sentence>However, even with some degree of automation, narrowing down matches still requires human experts with specific knowledge to assess the evidence based on their professional opinion.</sentence>
+    <sentence>Similarly, INFODADS (2013) is another integrated software application that not only acts as a visualization and screening tool, but assists the forensic personnel in post-mortem reporting.</sentence>
+    <sentence>The Federal Bureau of Investigation (FBI) of the United States of America uses the CODIS (2005) as a DNA database to match DNA evidence from criminal cases.</sentence>
+    <sentence>These state-of-the-art tools are only a few examples of the capability of machine intelligence.</sentence>
+    <sentence>There are tremendous opportunities available to the members of the forensic fraternity to embark on future plans to tap the full potential of machine intelligence in investigative forensics.</sentence>
+    <sentence>In this research, our objective is to initiate a support system that can handle decision-making and reasoning of a decision, based on the available forensic data.</sentence>
+    <sentence>The method incorporated in the decision support system must be capable of providing a conclusion with minimum participation of human experts throughout the entire system reasoning process.</sentence>
+    <sentence>This is our main rationale to incorporate the Case Based Reasoning (CBR) method as the backbone of the decision support system in the field of forensic science.</sentence>
+    <sentence>This work is originally motivated by a research work presented by Ribaux and Margot (1999), which adopted the CBR methodology as an inference structure using the forensic case data.</sentence>
+    <sentence>The methodology was then generalized and modeled with better detail in his subsequent publication (Ribaux &amp; Margot, 2003).</sentence>
+    <sentence>Both the research works of Ribaux and Margot (1999), Ribaux and Margot (2003) proved the viability of using past cases to solve new cases.</sentence>
+    <sentence>The underlying method and model proposed is technically underestimated compared with an actual problem-solving technique based on artificial intelligence.</sentence>
+    <sentence>The methods of other researchers that are based on this similar approach are compared as well.</sentence>
+    <sentence>This paper is organized in the following manner.</sentence>
+    <sentence>In Section 2, the state-of-the-art CBR method is reviewed.</sentence>
+    <sentence>The related forensic methods and their advances that are used for decision support are also reviewed and compared with the CBR method.</sentence>
+    <sentence>In Section 3, the methodology of this research work is described.</sentence>
+    <sentence>This also includes the design and development of the system, which is based on our proposed method.</sentence>
+    <sentence>In Section 4, the details of our experiment setup as well as data are described, and the experimental results are reported.</sentence>
+    <sentence>This paper concludes with Section 5.</sentence>
+  </section>
+  <section name="Artificial intelligence in forensic science">
+    <sentence>In this section, the literature is reviewed based on two questions regarding the application of artificial intelligence techniques in forensic science.</sentence>
+    <sentence>The first question pertains to justification of the use of CBR method over other available methods as a forensic decision support system.</sentence>
+    <sentence>The second question addresses the underlying challenges and would-be limitations of a forensic scientist in using the existing forensic methods, which includes the underestimation of the CBR method as merely another form of computerized systems.</sentence>
+    <sentence>The deliberations on the two questions give rise to a proposal of a new CBR method which incorporates a full-fledge artificial intelligence approach; the new CBR method is deemed capable of meeting the need of more efficient investigative processes in the forensic domain.</sentence>
+    <sentence>CBR is an artificial intelligence paradigm of problem solving and learning by experience (Aamodt &amp; Plaza, 1994; Leake, 2003).</sentence>
+    <sentence>One of the goals of a CBR system is to solve new problems by retrieving solutions of old cases stored in a case base; these old solutions are adapted to solve new problems (Leake, 2003).</sentence>
+    <sentence>With the maturity and the flexibility of a CBR method, it is often coupled with various other methods to solve a specific problem.</sentence>
+    <sentence>Generally, the coupling of a CBR method with other methods is used to solve specific problems in various domains.</sentence>
+    <sentence>These coupling methods include: the artificial neural networks (Henriet, Leni, Laurent, &amp; Salomon, 2013), preference functions (Vukovic, Delibasic, Uzelac, &amp; Suknovic, 2012), classification (Begum, Barua, Filla, &amp; Ahmed, 2013), optimization algorithm (Teodorović, Šelmić, &amp; Mijatović-Teodorović, 2012), genetic algorithm (Lam, Choy, Ho, &amp; Chung, 2012; Liao, Mao, Hannam, &amp; Zhao, 2012), fuzzy logic (Lao et al., 2012), and ontology (Yang, 2012).</sentence>
+    <sentence>There are also works that implement the CBR method as a core learning mechanism, with minimal modification to the original CBR method.</sentence>
+    <sentence>For example, the CBR method is applied in medical diagnosis (Guessoum, Laskri, &amp; Lieber, 2013) and business management (Carmona, Barbancho, &amp; Larios, 2012).</sentence>
+    <sentence>Based on these examples, it is proven that the CBR method is indeed very flexible and viable for application in various forms of knowledge and domains.</sentence>
+    <sentence>The potential of CBR method is limitless in providing a learning platform based on past cases to reduce the involvement of human experts.</sentence>
+    <sentence>There is evidence that the forensic investigators’ experience and knowledge are directly proportional to the quantity of their previously investigated cases; they are able to retrieve the information of past cases and use the old situations or solutions as a means to deal with new problems.</sentence>
+    <sentence>Furthermore, when an investigator mentors a newcomer, or when there is an attempt to tackle a new situation, he or she will systematically refer to his or her experience.</sentence>
+    <sentence>This kind of reasoning process practiced by the investigators resembles the concept of CBR in artificial intelligence.</sentence>
+    <sentence>This is the basis of Ribaux and Margot (1999), Ribaux and Margot (2003) in initiating the implementation of a CBR methodology in forensics, as part of the forensic intelligence.</sentence>
+    <sentence>There is no report of result accuracy or extent of success pertaining to these works.</sentence>
+    <sentence>The effort to develop the CBR methodology was not continued by the researcher, as the attention was later diverted to the area of forensic intelligence (Ribaux, Walsh, &amp; Margot, 2006; Ribaux et al., 2010a; Ribaux et al., 2010b).</sentence>
+    <sentence>Forensic intelligence is not related to artificial intelligence, even though “intelligence” is the common subject in both areas.</sentence>
+    <sentence>Forensic intelligence is generally considered as an intelligence-led condition to gather traces from a crime scene, to process the traces and to interpret the results of the analysis (Ribaux et al., 2010b).</sentence>
+    <sentence>We have reviewed some of the more recent related works that are based on this approach.</sentence>
+    <sentence>The subject of intelligence, within the forensic community, is seen to be advancing into a probabilistic approach such as the Bayesian networks and likelihood ratio.</sentence>
+    <sentence>Biedermann, Bozza, Garbolino, and Taroni (2012) and Biedermann and Taroni (2012) reviewed the use of Bayesian networks in evaluating forensic evidence.</sentence>
+    <sentence>The Bayesian network is one of the most frequently encountered approaches in that area; it is highly accepted by the community due to its bidirectional probabilistic inferences.</sentence>
+    <sentence>The probabilistically driven inference allows forensic prediction to be done more naturally.</sentence>
+    <sentence>For example, the Bayesian approach is used to analyze genetic evidence (Wolańska-Nowak, Branicki, Parys-Proszek, &amp; Kupiec, 2008), DNA profiling (Dawid, Mortera, &amp; Vicard, 2007), facial identification (Allen, 2008), gunshot particle evidence (Biedermann, Bozza, &amp; Taroni, 2011), etc.</sentence>
+    <sentence>In addition, the Bayesian network is often coupled with the likelihood ratio to analyze the relatedness and the relationship between evidences.</sentence>
+    <sentence>An example that has adopted this approach is the interpretation of the shoemark evidence (Skerrett, Neumann, &amp; Mateos-Garcia, 2011).</sentence>
+    <sentence>With the Bayesian inference structure, the evidence is analyzed with likelihood ratio to measure the relationship vs. other possible evidences.</sentence>
+    <sentence>On the other hand, Zadora and Neocleous (2009) proposed a model for forensic evidence classification that only used a likelihood ratio model to analyze glass fragments.</sentence>
+    <sentence>If we compare the methods used by the forensic researchers vs. the CBR method in the artificial intelligence field, we can observe that the main difference between both schools of thought is the approach in problem solving.</sentence>
+    <sentence>The methods in forensics provide a good foundation to predict new case evidence, but they do not generally relate the evidence to any evidence of the past cases.</sentence>
+    <sentence>With a “belief network”, the system merely predicts an outcome based on a network that models an individual’s belief.</sentence>
+    <sentence>The CBR method, however, can relate the provided evidence to the similar cases based on a similarity measure.</sentence>
+    <sentence>The prediction of an outcome given by a CBR method is indeed derived from a similar case, if not identical.</sentence>
+    <sentence>The likelihood ratio used as a measurement of evidence relatedness and relationship can be replaced with a CBR method.</sentence>
+    <sentence>With a suitable form of prior knowledge integrated into a CBR method, it can operate as a calculator for likelihood.</sentence>
+    <sentence>Another limitation of the forensic methods is that, most of the prediction is evidence-specific.</sentence>
+    <sentence>The decision-making on a particular case, which requires the combination of several evidences, is left to the human experts.</sentence>
+    <sentence>The CBR method does not have this problem as the evidences can be assessed on a bottom-up manner to provide an outcome.</sentence>
+    <sentence>Having revisited the initial proposal of CBR in forensics presented by Ribaux and Margot (2003), it is noted that the model resembles a CBR methodology in terms of the workflow suggested.</sentence>
+    <sentence>However, in terms of technical implementation, several limitations need to be addressed.</sentence>
+    <sentence>First, the proposed model requires a great deal of user intervention during certain phases within the CBR.</sentence>
+    <sentence>Users are required to input the relation of cases for the induction process.</sentence>
+    <sentence>Second, the understanding of the underlying similarity metric is required to ensure that the CBR cycle can work effectively, since the users must facilitate the process.</sentence>
+    <sentence>On the other hand, the relation and linkage between cases are assigned and stored statically.</sentence>
+    <sentence>This causes the relation between cases to be less dynamic, if new evidence is found to be suggesting a different link.</sentence>
+    <sentence>In short, the overall approach is less dynamic and modular.</sentence>
+    <sentence>We opine that the above-mentioned limitations can be improved by using a feature-based approach within a CBR method, which is similar to the machine learning of artificial intelligence.</sentence>
+    <sentence>In the following sections, our method is presented.</sentence>
+  </section>
+  <section name="Intelligent autopsy report system (I-AuReSys)">
+    <sentence>This section discusses the methodology of our work and the system known as I-AuReSys.</sentence>
+    <sentence>The main purpose of this research is to exploit the CBR method with our proposed feature-based technique as a methodology for a decision support system, specifically tailored for forensic autopsy.</sentence>
+    <sentence>The system was developed according to the conceptual flow chart as shown in Fig 1.</sentence>
+    <sentence>Generally, the system consists of two main processes, which are the information extraction and the case-based reasoning (similarity assessment).</sentence>
+    <sentence>This process flow is intentionally designed to deal with documents such as autopsy/post-mortem reports or case reports, which have a similar documentation structure.</sentence>
+    <sentence>More importantly, the documents must have a standardized format to allow the system to perform optimally.</sentence>
+    <sentence>System flow chart showing the main processes of I-AuReSys Fig 1.</sentence>
+    <sentence>System flow chart showing the main processes of I-AuReSys.</sentence>
+    <sentence>Data entry The narration of an investigation and observations should be inputted via the data entry interface of the system.</sentence>
+    <sentence>The narration should be given in free texts, but it must adhere to specific guidelines and format.</sentence>
+    <sentence>The system will validate the inputs to ensure that the data fed into the system can be processed accurately.</sentence>
+    <sentence>For instance, the investigation narrative should follow a specific order of text structure as shown below: a.</sentence>
+    <sentence>General description of remains.</sentence>
+    <sentence>b. Anthropological examination results.</sentence>
+    <sentence>c. Description of injuries found.</sentence>
+    <sentence>d. Other additional findings (if available).</sentence>
+    <sentence>We are aware of the different formats of autopsy reports and the extent of details, which vary depending on the standards of investigative bodies in different regions.</sentence>
+    <sentence>The items above are based on the availability of information in our dataset, acquired from the Srebrenica Historical Project (2011).</sentence>
+    <sentence>We shall explain our dataset further in the experiment section.</sentence>
+    <sentence>The data entry interface of the system is illustrated in Fig 2.</sentence>
+    <sentence>Data entry interface of I-AuReSys Fig 2.</sentence>
+    <sentence>Data entry interface of I-AuReSys.</sentence>
+    <sentence>Information extraction Since this system involves the processing of autopsy reports, information extraction is the core of the preprocessing of the system.</sentence>
+    <sentence>The information extraction sub-process/module is used to extract the features and attributes required by the system’s reasoning engine (see Section 3.3).</sentence>
+    <sentence>We use a rule-based extraction technique to extract the gist of autopsy reports.</sentence>
+    <sentence>The rules in the information extraction module have been hand-coded to search for features and their respective values in autopsy reports, and convert them into a format that the system can utilize for processing.</sentence>
+    <sentence>For each individual report, the system will extract the gist such as fractures, gunshots, and blast injuries, which are essential for the reasoning process.</sentence>
+    <sentence>These features are not hard-coded so they can be modified based on the report content.</sentence>
+    <sentence>The details of the information extraction module will not be discussed in this paper.</sentence>
+    <sentence>Case-based reasoning using feature-based technique Our system’s CBR method is fairly similar to most of the state-of-the-art CBR systems.</sentence>
+    <sentence>Fig 3 shows the CBR cycle of I-AuReSys.</sentence>
+    <sentence>The main difference in our system as compared with other previous works such Ribaux and Margot (2003) is that it works with a feature-based technique, besides having a complete set of procedures ranging from gist extraction to reasoning process.</sentence>
+    <sentence>With the feature-based technique, a learner can be integrated into the CBR method to learn the outcome.</sentence>
+    <sentence>The details of the learner are described in Section 3.3.2.</sentence>
+    <sentence>CBR cycle of I-AuReSys Fig 3.</sentence>
+    <sentence>CBR cycle of I-AuReSys.</sentence>
+    <sentence>Within the CBR cycle, the synthesized information is the gist of each new case in an autopsy report.</sentence>
+    <sentence>The gist, upon extraction, is transformed into a set of features and values, which are required by the system to perform a similarity analysis.</sentence>
+    <sentence>The gist is compared with the past cases by computing the similarity of each individual feature.</sentence>
+    <sentence>Each feature is also given a default weightage, which is learned or configured automatically via the Naïve Bayes learner.</sentence>
+    <sentence>The assignment of weightage is based on the implied significance of each of the features that contributes to the overall outcome of the similarity analysis.</sentence>
+    <sentence>Similarity analysis is done using the nearest neighbor approach, by computing the similarity scores for all the past cases in the case base.</sentence>
+    <sentence>The most similar top-n cases are selected after the system sorts the similarity scores and displays the top-n cases to the user for reference.</sentence>
+    <sentence>An outcome is recommended based on the case(s) that scores the highest similarity value.</sentence>
+    <sentence>Once the solution is justified and accepted by the user, the new case will be stored in the case base.</sentence>
+    <sentence>The gist will also be stored in the case base as an index to speed up the comparison for future cases.</sentence>
+    <sentence>Case similarity measure In a CBR system, case similarity is the most important criterion in determining a probable solution.</sentence>
+    <sentence>While there are many methods to evaluate the case similarity, we have adopted the nearest neighbor method to evaluate the new case.</sentence>
+    <sentence>This is because the approach is the most similar to the human judgment of similarity; the features are compared side-by-side to determine the similarity of both cases.</sentence>
+    <sentence>In this study, we have adopted an equation which was presented in Watson’s (1999) paper to measure the similarity of all past cases in a case base.</sentence>
+    <sentence>The presented equation is the simplest and easiest for an extension, as required in our research work.</sentence>
+    <sentence>The equation is given as below: where A is the new case; B is the existing case; n is the number of attributes/features in each case; i is the individual feature/attribute of each case from 0 to n; f is the similarity function for feature i in cases of A and B; and w is the weightage of each individual feature i.</sentence>
+    <sentence>The similarity function, f calculates the similarity of individual features based on the number of matches.</sentence>
+    <sentence>As described in Section 3.3, the weightage of each feature, w is initially assigned with a default value.</sentence>
+    <sentence>In this work, the weightage value will be modified by the feature-weight learner after each case is evaluated.</sentence>
+    <sentence>The feature-weight learner assigns an optimal weightage to each feature that contributes to the highest accuracy of the outcome.</sentence>
+    <sentence>For the feature similarities, the attribute values of the current case are matched vs. the attribute values of past cases, which must be within the system vocabulary.</sentence>
+    <sentence>After the similarity measures, similarity(A, B) for all cases are computed; the system ranks similar cases based on the similarity scores.</sentence>
+    <sentence>The k-nearest neighbor case(s) can also be obtained for purposes of comparison.</sentence>
+    <sentence>Case(s) which scores the highest value of similarity(A, B) will be used by the system as the most probable solution and will be analyzed further to suit the new solution.</sentence>
+    <sentence>Outcome recommender A CBR system is not complete without an outcome recommender.</sentence>
+    <sentence>We experimented with two approaches for the outcome recommendation of this system.</sentence>
+    <sentence>The first method is the direct recommendation method, where the best outcome of past cases that records the highest similarity score is selected as the best-fit outcome.</sentence>
+    <sentence>In the instance of multiple cases with similar scores, the confidence factor is calculated to select the best-fit outcome.</sentence>
+    <sentence>The confidence factor is obtained by calculating the frequency of the similar outcomes based on the similar cases.</sentence>
+    <sentence>The outcome with the highest confidence factor is selected as the best-fit outcome for the new case.</sentence>
+    <sentence>An example is illustrated in Fig 4.</sentence>
+    <sentence>This method, which only relies on the nearest neighbor technique for outcome prediction is used as the baseline for the purpose of comparison.</sentence>
+    <sentence>Outcome recommendation using confidence factor method Fig 4.</sentence>
+    <sentence>Outcome recommendation using confidence factor method.</sentence>
+    <sentence>The second method we tested is the proposed method of this paper.</sentence>
+    <sentence>The proposed method involves implementing the Naïve Bayes learner as a technique for the feature-weight learner in order to achieve multiple outcome resolution.</sentence>
+    <sentence>On top of the normal CBR mechanism, the feature weight is learned after the recommended outcome of every case is verified.</sentence>
+    <sentence>The verified outcome is used to update the learner’s model for the subsequent prediction.</sentence>
+    <sentence>The similarity measure of this method uses a global measure and an internal measure for the similarity analysis.</sentence>
+    <sentence>The global measure is to modify the feature weight based on the actual outcome, whereas the internal measure is to learn the significance of an individual value within a feature.</sentence>
+    <sentence>Fig 5 shows the scopes for both measures, represented in a tabular form.</sentence>
+    <sentence>The scopes of global and internal measures Fig 5.</sentence>
+    <sentence>The scopes of global and internal measures.</sentence>
+    <sentence>In the actual implementation, the tabular representation is equivalent to the model for the machine-learning parameters.</sentence>
+    <sentence>Each parameter represents the conditional probability of the respective features.</sentence>
+    <sentence>The overall mechanism of the CBR coupled with the Naïve Bayes learner is illustrated in Fig 6.</sentence>
+    <sentence>Outcome recommendation using the Naïve Bayes learner Fig 6.</sentence>
+    <sentence>Outcome recommendation using the Naïve Bayes learner.</sentence>
+    <sentence>Through the Naïve Bayes learner, each feature is treated as an independent instance, and is evaluated independently based on both global and internal measures, respectively.</sentence>
+    <sentence>Subsequently, the model (storage of the parameters) is updated by the learner after each successful decision-making process that includes the feedback from the user, if any.</sentence>
+    <sentence>The feature weightages are concurrently learned to improve the similarity analysis result.</sentence>
+    <sentence>Our experiments show significant improvements by using the Naïve Bayes learner as compared with the first method.</sentence>
+    <sentence>The experiments and the results obtained are reported in the next section.</sentence>
+  </section>
+  <section name="Experimental results">
+    <sentence>We obtained our data from the Srebrenica Historical Project,1 which are fairly well structured.</sentence>
+    <sentence>The document repository of the Srebrenica Historical Project contains 3568 autopsy reports of war victims from various mass graves in Eastern Bosnia.</sentence>
+    <sentence>These reports are categorized based on different sites, representing cases from different locations.</sentence>
+    <sentence>After all the reports were assessed, we obtained the data, which consisted of a collection of 796 well-structured autopsy reports.</sentence>
+    <sentence>The criterion to filter our data was the completeness of the report.</sentence>
+    <sentence>We ensured that all the reports had proper sections and that they were completely filled up by the medical personnel in charge of conducting the autopsy.</sentence>
+    <sentence>Each report needed to have a summary section and an outcome section.</sentence>
+    <sentence>With an extraction module, the gist in the summary section was translated into features and values automatically; meanwhile, the outcome section that represented the actual outcome would also be extracted and translated into a similar format, which was to be used for the system evaluation.</sentence>
+    <sentence>Experiment setup The entire testing process is automated.</sentence>
+    <sentence>An evaluation module was developed to test the system’s output from different aspects.</sentence>
+    <sentence>First, we tested the system’s accuracy vs. the number of cases in the case base or case repository using different algorithms and machine-learning settings.</sentence>
+    <sentence>The variations in settings for these experiments were the confidence factor technique (baseline), the Naïve Bayes learner with default feature weight (internal), and the Naïve Bayes learner with feature-weight learning (global + internal).</sentence>
+    <sentence>We performed two sets of experiments; one for cases with proper outcomes (good data), and another for a mixture of cases with proper outcomes as well as cases without any outcomes to observe how well our system could handle cases with incomplete data.</sentence>
+    <sentence>The automation of this series of tests simulated the growth of the case base while evaluating the system’s accuracy.</sentence>
+    <sentence>The third experiment was conducted to test the system’s accuracy with different numbers of features in the feature-weight learner.</sentence>
+    <sentence>The evaluations of these experiments were done with the repeated random sub-sampling validation, and were carried out incrementally as illustrated in Fig 7.</sentence>
+    <sentence>A sample of 10 cases was randomly selected for training, and then the cases were validated with the out-of-sample data.</sentence>
+    <sentence>After the first result was obtained, the test was repeated incrementally with the addition of 10 cases to the training set until the complete dataset was used.</sentence>
+    <sentence>Evaluation method using repeated random sub-sampling validation with increment… Fig 7.</sentence>
+    <sentence>Evaluation method using repeated random sub-sampling validation with increment of 10 cases per iteration.</sentence>
+    <sentence>Evaluation of the outcome The evaluation of the outcome was entirely automated, whereby the system’s outcome was compared with the actual outcome of the data.</sentence>
+    <sentence>The actual outcome of the data is represented by the decision made by the medical personnel who conducted the autopsy.</sentence>
+    <sentence>If the system’s output did not match the actual output, the outcome recommendation was considered as an error and the correct outcome was learned.</sentence>
+    <sentence>However, since the baseline method did not involve any learner algorithms, the error was noted and the correct outcome was fed into the case base before proceeding with subsequent evaluations.</sentence>
+    <sentence>The graph below shows the experiment results of the cases with outcomes.</sentence>
+    <sentence>Based on Fig 8, our results show that enabling the global and internal measures performed better than the learner with only internal measure as well as the baseline.</sentence>
+    <sentence>When the global or internal or both measures of the system were enabled, the accuracy of outcome prediction increased with respect to the increasing number of cases.</sentence>
+    <sentence>The baseline, however, shows that the nearest neighbor algorithm alone has a poor learning curve, even though more data were given to construct the CBR model.</sentence>
+    <sentence>An in-depth investigation on the poor learning curve suggests that the outcome prediction was biased towards the frequency of occurrence of the similar outcome.</sentence>
+    <sentence>Besides, the irrelevant features and feature weights caused an inaccurate prediction of the outcome.</sentence>
+    <sentence>By employing a learner to learn from the outcome (from past cases), the outcome prediction shows significant improvement from its learning curve.</sentence>
+    <sentence>The prediction of the outcome was based on the Bayesian’s theorem, which computes the likelihood of an outcome with certain conditions.</sentence>
+    <sentence>An unseen data can be predicted more effectively with the Bayesian theorem, hence giving a higher accuracy.</sentence>
+    <sentence>On the other hand, with feature-weight learning, the accuracy is further improved.</sentence>
+    <sentence>This suggests that by learning and reassigning the feature weights, the major disadvantage of the nearest neighbor algorithm, which performed poorly with irrelevant attribute and incorrect feature weights, can be overcome (see Fig 9).</sentence>
+    <sentence>System accuracy vs Fig 8.</sentence>
+    <sentence>System accuracy vs. number of cases with three features for cases with outcome.</sentence>
+    <sentence>System accuracy vs Fig 9.</sentence>
+    <sentence>System accuracy vs. number of cases with three features with incomplete data.</sentence>
+    <sentence>With similar settings, the three techniques were tested with incomplete data; the purpose is to observe their ability to cope with incomplete data and the effects produced.</sentence>
+    <sentence>We decided to retain the same baseline for the second experiment although it performed badly in the first experiment.</sentence>
+    <sentence>However, the accuracy scheme for this baseline was changed; an additional rule was added to detect the incomplete information.</sentence>
+    <sentence>The features for both the internal and global + internal measures remained untouched, as incomplete data were supposed to have slight effects on the learner’s model.</sentence>
+    <sentence>Contrary to the results obtained from the earlier experiment, the presence of incomplete data caused the learner (internal) to be unstable and produced poor results.</sentence>
+    <sentence>The system performance was the worst when it used feature-weight learning (global + internal measures).</sentence>
+    <sentence>The result of the baseline system dropped significantly even though it could cope with incomplete data quite well at the beginning with fewer cases.</sentence>
+    <sentence>This implies that our system’s CBR methodology cannot perform well with the presence of incomplete data.</sentence>
+    <sentence>In order to achieve desirable results we must first eliminate the incomplete data.</sentence>
+    <sentence>Introducing incomplete data into the system will affect the constructed model; the learner will produce erroneous values, thus causing the system to make inaccurate decisions.</sentence>
+    <sentence>We also evaluated the system results based on the number of features.</sentence>
+    <sentence>Here, we only choose to evaluate our system with a feature-weight learner (global + internal measures).</sentence>
+    <sentence>The reason of this experiment is to study the effects of increasing (and decreasing) the number of features.</sentence>
+    <sentence>The results shown in Fig 10 were produced by testing the system with the most relevant features in descending order.</sentence>
+    <sentence>An in-depth study of these features shows that the features are the deciding factor of the system’s accuracy, and not the increasing number of features.</sentence>
+    <sentence>Thus, an increase in the number of irrelevant features does not contribute to the improvement in accuracy.</sentence>
+    <sentence>However, a decrease in the number of relevant features causes the system accuracy to drop, as these essential features should have been included in the system.</sentence>
+    <sentence>With the feature-weight learning capability, the learning curve gradually improves with extra training data to compensate for the loss of accuracy due to the extra and insignificant features.</sentence>
+    <sentence>System accuracy vs Fig 10.</sentence>
+    <sentence>System accuracy vs. number of cases with various numbers of features.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>In this paper, we proposed our CBR method to be an alternative method that can be used in forensics to analyze forensic evidence.</sentence>
+    <sentence>Although the current methods used in the forensics can perform remarkably well, several existing practical limitations can be overcome by using our proposed CBR approach.</sentence>
+    <sentence>By applying the CBR method, the links and relation between cases based on evidence can be drawn with greater ease; the efficiency is obvious if we compare the method with the current methods used in forensics, which are mostly evidence-specific.</sentence>
+    <sentence>The CBR method that uses forensic data to predict a new case is far more efficient as compared with the traditional forensic methods, which are primarily established on human expert input or experiments.</sentence>
+    <sentence>The self-learning capability integrated into the CBR method further improves the prediction results, and addresses the problems that are present in the CBR model of Ribaux and Margot (2003).</sentence>
+    <sentence>The proposed CBR method can possibly replace the current forensic methods in two circumstances.</sentence>
+    <sentence>First, the prediction can be performed with a probabilistic method, on top of the past cases, which is executed by the CBR approach.</sentence>
+    <sentence>This is equivalent to the likelihood ratio and the Bayesian networks, which are used by the forensic decision support systems to predict and assess the relatedness and links between evidences.</sentence>
+    <sentence>Second, with sufficient forensic data backing the CBR case base, the knowledge acquired by the system is nearly equivalent to an expert’s experience and his/her ability to predict an outcome for a new case.</sentence>
+    <sentence>This process only requires adding solved cases into the CBR case base to train the system.</sentence>
+    <sentence>The knowledge acquisition for the CBR method is minimal compared with other methods.</sentence>
+    <sentence>Although our CBR system provides reasonably accurate results, in practice, it is insufficient to be presented as evidence in the courts of law.</sentence>
+    <sentence>The system, which is able to assist the forensic personnel in decision-making, can only predict the cause of death specifically related to war victims.</sentence>
+    <sentence>In reality, other factors such as the time of death and the nature of death should be included as part of the hypothesis.</sentence>
+    <sentence>Furthermore, other detailed evidences, such as fingerprints, facial features, dental records, etc., are essential for decision-making on criminal cases.</sentence>
+    <sentence>Our system is designed and developed based on the forensic autopsy of war victims; the scope and the number of features are quite few.</sentence>
+    <sentence>To accommodate other criminal cases, additional features are needed for the system.</sentence>
+    <sentence>The future work involves the expansion of the forensic scope, to include more forensic features and forensic methods in the system.</sentence>
+    <sentence>Enlarging the scope is not a straightforward process because the underlying features and processing mechanism should be enhanced to cater for the more complex and heavier system workload.</sentence>
+    <sentence>The prediction algorithm and the feature weights have to be managed in a modular approach, such that different natures of cases can be addressed with dynamically assigned algorithm and set of weights.</sentence>
+    <sentence>As such, a multi-agent CBR system could be a possible technique for the future research works.</sentence>
+    <sentence>Additionally, the selection of features, which is presently a manual step, could be enhanced to be an automated feature selection technique to minimize user involvement.</sentence>
+    <sentence>1 Srebrenica Historical Project was founded by a non-profit organization to collect information on the Srebrenica massacre during a conflict between Bosnia and Herzegovina.</sentence>
+    <sentence>We obtained the autopsy reports from the document repositories with the permission of the committee.</sentence>
+    <sentence>For more information, please visit http://www.srebrenica-project.com/.</sentence>
+  </section>
+</article>

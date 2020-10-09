@@ -1,0 +1,293 @@
+IR aims to find a geometric transformation between two or more images. In the last decade, the application of EAs to IR has caused an outstanding interest. We apply innovative population-based algorithms (ABC, BBO, and HS) to tackle IR. We compare ABC, HS, and BBO against other state-of-the-art contributions in 3D IRs.
+
+0.063063 - Deterministic or analytical methods for computing the global optima of a functional have been extensively applied in a wide range of engineering applications.
+0.022222 - Nevertheless, it is wellknown they usually lack of effectiveness when dealing with complex nonlinear optimization problems.
+0.035714 - In particular, such a shortcomings have been addressed by using approximate approaches, named metaheuristics.
+0.045406 - Among them all, those methods using a population-based scheme, e.g.
+0.055556 - the evolutionary algorithms, have been the most successful optimization strategies.
+0.150528 - Recently, innovative population-based algorithms such as ABC, BBO, and HS have arisen as promising optimization methods due to they provide a good tradeoff between design and performance when compared to other more elaborated methods.
+0.113817 - In this work, we aim to first introduce the particular design of these three cutting edge algorithms, and additionally analyse their performance when tackling a challenging real-world optimization problem.
+0.069444 - In particular, our case study of numerical optimization tackles a computer vision problem named 3D range image registration for 3D modeling tasks.
+0.218860 - Computational experiments have been conducted comparing the performance of ABC, HS, and BBO against other contributions in the state-of-the-art of 3D image registration.
+0.064516 - Optimization problems are often complex situations to cope with in several areas of knowledge such as engineering.
+0.066667 - The objective function may have many local optima and in many cases finding the best solution (named global optimum) is so time-consuming that goes beyond the admissible in practical applications.
+0.000000 - Those problems cannot be handled by classical methods (e.g.
+0.077020 - gradient-based algorithms) which are likely to compute local optima.
+0.040404 - Thus, there remains a need for efficient and effective numerical optimization methods for tackling challenging real-world engineering problems.
+0.087475 - In the last few decades, approximate algorithms, named metaheuristics (MHs) (Glover & Kochenberger, 2003; Luke, 2009), have demonstrated their good performance in these kinds of problems, where the guarantee of finding the optimal solution is relaxed in order to obtain high quality solutions in a much more reduced time interval.
+0.033333 - There are different kinds of MHs.
+0.057639 - Among them all, population-based techniques work on a population of solutions based on analogies with natural phenomena.
+0.077236 - This approach has been applied to a large amount of engineering optimization problems and it has being proved to be effective in solving well-known challenging problems.
+0.043808 - Within population-based techniques, we can find classical techniques such as genetic algorithms (GAs) (Goldberg, 1989; Michalewicz, 1996), particle swarm optimization (PSO) (Clerc, 2006; Kennedy & Eberhart, 2001) and ant colony optimization (ACO) (Dorigo & Di Caro, 1999; Dorigo & Stützle, 2004; Farhaana et al., 2012; Zhou & Wang, 2012).
+0.058429 - Recently, many new population-based approaches have been arised: artificial bee colony (ABC) (Karaboga & Basturk, 2007a, 2007b), differential evolution (DE) (Price, 1999; Storn, 1997), harmony search (HS) (Geem, Kim, & Loganathan, 2001), cats swarming (CS) (Chu & Tsai, 2007), and biography-based optimization (BBO) (Simon, 2008), among others.
+0.119599 - Testing these new population-based approaches and carrying out a comparison with other state of the art methods may serve the field to analyse both their shortcomings and googness in performance, thus allowing the field to propose more advanced variants, e.g.
+0.000000 - addressing hybrid strategies.
+0.183681 - In this work, we aim at analysing the performance of three cutting edge algorithms: ABC, BBO, and HS.
+0.103175 - To do so, we have considered a case study of numerical optimization within the field of computer vision, known as the image registration (IR) problem (Zitová & Flusser, 2003).
+0.078704 - In particular, we addressed several IR problem instances for 3D modeling by using laser range scanners (Santamaría, Cordón, & Damas, 2011).
+0.200980 - Moreover, these results were compared to those provided by other state-of-the-art population-based algorithms in the field of IR.
+0.068182 - The structure of this contribution is as follows.
+0.205556 - In Section II, a description of the optimization design of the population-based algorithms ABC, BBO, and HS.
+0.087719 - Then, in Section III, we are introducing the basics of the real-world problem tackled which is known as range image registration (RIR) (Bernardini & Rushmeier, 2002).
+0.100397 - A revision of IR methods using population-based approaches will also be followed in this section.
+0.048611 - the mos relevant conclusions will be shown in section IV.
+0.022222 - Finally, Section V collects some concluding remarks as well as possible works for the near future.
+0.026667 - Background Numerical optimization problems are encountered in many domains, e.g.
+0.035088 - science, engineering, management, and business.
+0.057018 - Formally, they may be defined as a couple where X is named as search space and it represents the set of feasible problem solutions .
+0.078976 - Each of the latter d-dimensional vectors, , consists of a set of design variables, , each one ranging to a particular continuous domain ().
+0.057292 - A function , so-called the objective function which assigns a real value to every solution indicating its quality.
+0.103874 - The main challenge in solving an optimization problem is to find the global optimal solution.
+0.075938 - However, computing optimal solutions in many real-world applications would be so time-consuming that go beyond the admissible, basically due to the high dimension of the factible solutions space.
+0.107298 - In the last decades, MHs have emerged as a new kind of approximate search and optimization algorithms (Glover & Kochenberger, 2003; Luke, 2009).
+0.078947 - They combine basic heuristic methods in order to explore efficient and effectively the search space which will provide acceptable solutions in a reasonable time.
+0.066081 - One of the main advantages of MHs is that they make use of a general purpose optimization framework requiring relatively few modifications to be applied to a specific problem.
+0.025362 - The MHs family include methods as Simulated Annealing (SA), tabu search (TS), multi-start local search (MS), iterated local search (ILS), variable neighborhood search (VNS), and greedy randomized adaptative search procedures (GRASP).
+0.015152 - These are usually termed as trajectory-based MHs.
+0.073154 - On the other hand, population-based MHs, e.g.
+0.043011 - evolutionary algorithms (EAs) (Bäck, Fogel, & Michalewicz, 1997; Fogel, 2005), consider populations of candidate problem solutions instead.
+0.123468 - In particular, GAs are probably the most extended population-based algorithm in the literature to face real-world optimization problems.
+0.072917 - GAs are theoretical and empirically found to provide global near-optimal solutions for several problems of complex optimization.
+0.068362 - The search space represented in GAs is a collection of individuals (problem solutions) or chromosomes conforming a population, each of them operating simultaneously on several points of the search space.
+0.050725 - An initial set/population of solutions is randomly generated.
+0.053349 - Then, a pool of parents is randomly selected for reproduction on the basis of the fitness function,1 which measures how good is each candidate solution and guides the search space exploration strategy.
+0.085470 - The reproduction procedure, which is based on crossover and mutation operators is iteratively performed at every generation (iteration) in order to generate the offspring population.
+0.074246 - Crossover operators systematically/randomly mix parts (block of genes) of two individuals of the previous population, and additionally every new combined individual is subjected to random changes by using mutation operators.
+0.070419 - The next generation is produced using a replacement mechanism which selects individuals from the pool composed of the parents and the new offspring generated.
+0.092349 - Regardless the approach (trajectory-based vs. population-based), MHs constitute a very interesting choice to achieve a good quality solution in a reasonable time.
+0.069892 - Specifically, optimization algorithms, already based on the evolution of populations of solutions, have obtained a remarkable success.
+0.167982 - The next section will be devoted to introduce the description of three innovative population-based MHs recently proposed in the literature, namely ABC, BBO, and HS.
+0.043651 - Artificial bee colony Swarm intelligence has become an interesting research nowadays (Bonabeau, Dorigo, & Theraulaz, 1999; Cui, Zeng, & Sun, 2006) been applied to solve optimization problems (Zhou & Wang, 2012).
+0.104048 - The ABC algorithm is a new swarming variant inspired in the population-based approach proposed by Karaboga and Basturk (2007a, 2007b) which is based on the intelligent behavior of honeybee swarms.
+0.086667 - In the ABC algorithm, the colony of artificial bees is divided into the three following categories (Karaboga & Basturk, 2008): • Employed: They take nectar from the food source to the hive and share information with onlookers about their location.
+0.063135 - • Onlookers: Those specialized bees tend to select a food source (the most profitable one) according to their quality, which is given by shared information provided by employed bees in the hive.
+0.013333 - • Scouts: They are employed bees whose food source has been abandoned.
+0.057971 - They start to search a new food source randomly.
+0.075219 - The algorithm works just by including a common area in the hive so-called the dancing area, where bees share and exchange information about food sources.
+0.085422 - Bees identify the quality of food source by means of the duration of dancing which is determined by the nectar contained in the food source being exploited and its distance to the hive.
+0.066667 - From the optimization viewpoint, each food source represents a possible solution to the problem, where scouts perform exploration and employed and onlooker bees are focused on the exploitation of search space.
+0.079710 - Specifically, the ABC algorithm is sketched in Fig 1.
+0.061728 - It starts by associating all the employed bees to randomly generated food sources.
+0.053571 - Each food source is a vector where d is the number of optimization parameters.
+0.000000 - Next, each iteration is done as follows.
+0.058333 - Every employed bee determines a food source within the neighborhood of its current source when using the expression (1) where k different to and are randomly chosen indexes, and is a random number between [−1, 1] which controls the production of a neighbor food source around .
+0.057692 - When applying a greedy selection process, if the nectar amount of new food (objective function value) is better than the current one for the employed bee, the bee is moving to this new food, leaving its current one.
+0.058288 - Then, nectar information is shared with onlookers and the onlooker bees will select a food source according to a probability determined using the expression: (2) where is the objective function value of the solution represented by the food source i and N is the total number of food sources.
+0.053459 - Next, a food source which is not improved in a predetermined number of trials is abandoned and replaced by scouts with a new food source using: (3) where and are the lower and upper bounds for the variable j.
+0.043478 - Finally, the best solution found so far is stored.
+0.077236 - ABC assumes that only one employed bee is needed for every food source making the number of food sources is equal to the number of employed bees.
+0.091667 - Pseudo-code of the ABC algorithm Fig 1.
+0.100926 - Pseudo-code of the ABC algorithm.
+0.057561 - In the last few years, ABC has been applied to solve several optimization problems such as multi-dimensional numeric optimization functions (Karaboga, 2009; Karaboga & Akay, 2009; Karaboga & Basturk, 2007b), numerical benchmark functions which are used in engineering problems with high dimensionality (Karaboga & Basturk, 2008; Alvarado-Iniesta, García-Alcaraz, Rodríguez-Borbón, & Maldonado, 2013), digital filters (Karaboga, 2009) and to the leaf-constrained minimum spanning tree (LCMST) problem (Singh, 2009), among others.
+0.083868 - Further information can be found in the ABC’s homepage (Karaboga, 2013).
+0.118873 - Biography based optimization Biography based optimization (BBO) (Simon, 2008) is a new population-based algorithm aimed to tackle optimization problems.
+0.044715 - This innovative approach is based on mathematical models of biography describing natural ways of distributing species, i.e., how species migrate, how they arise and become extinct.
+0.078431 - Next, we review the biography model components and their correspondence with the BBO algorithm from an optimization viewpoint (Simon, 2008): • Habitat (H): It represents a solution inside the search space of a d-dimensional numerical optimization problem.
+0.050000 - • Habitat Suitability Index (HSI): In a biography model, geographical areas, that is well suited as residences for biological species are said to have a high HSI.
+0.073333 - Thus, HSI corresponds to the objective function from an optimization viewpoint.
+0.060060 - • Suitability Index Variables (SIV): The computation of the HSI value is influenced by additional factors such as rainfall, diversity of vegetation, land area, and temperature.
+0.055556 - All of them are called the SIVs.
+0.079710 - • Ecosystem: It refers to a group of N habitats.
+0.111605 - From a population-based optimization viewpoint, it corresponds to the population of solutions.
+0.046875 - The size N is usually constant but the use of variable-sized ecosystems is being studied (Simon, 2008).
+0.066667 - • Immigration Rate: The control parameter λ is devoted to control habitat immigration.
+0.062847 - The maximum immigration rate in a single habitat (I) is reached when species are not in the habitat.
+0.079167 - As the number of species increases, it will become crowded and immigration will decrease due to fewer species would be able to survive in that crowd.
+0.048611 - • Emigration Rate: In this case, the μ parameter controls habitat emigration.
+0.000000 - If there are no species, emigration is null.
+0.085859 - As the number of species increases, species are capable to leave their habitat in order to explore other residences.
+0.058824 - Maximum emigration rate (E) is reached in a single habitat when containing the maximum number of species it can support.
+0.044118 - • Migration model: According to different mathematical models of biogeography, various migration curves can be applied (Ma, 2010; MacArthur & Wilson, 1967).
+0.069106 - In Fig 2, a linear model is illustrated where is the equilibrium number of species (Simon, 2008), which denotes that the immigration and emigration rates are equal.
+0.056911 - I is the maximum possible immigration rate, E is the maximum possible emigration rate, and is the largest possible number of species that the habitat can support.
+0.026667 - Linear model of migration (Simon, 2008; MacArthur & Wilson, 1967) Fig 2.
+0.028986 - Linear model of migration (Simon, 2008; MacArthur & Wilson, 1967).
+0.096154 - The BBO algorithm has two main operators: habitat modification (Ω) and mutation (M).
+0.085357 - The former is an probabilistic operator that adjusts an habitat based on the ecosystem according to its immigration rate and to the emigration rate taking as the source of the modification.
+0.089147 - The second one is an , a probabilistic operator that randomly modifies the SIV factors of an habitat according to a probability based on both the and parameters (Simon, 2008).
+0.077708 - Both operators let BBO implement elitism for the best b habitats (b is a user-selected elitism parameter) setting in the habitat modification operator and in the mutation operator.
+0.089431 - As it is shown in Fig 3, BBO starts initializing the search with a set of random habitats and the HSI is computed from each of them.
+0.042735 - Next, the habitat modification (Ω) and mutation (M) operators are subsequently applied on each non-elite habitat ( worst habitats) while the stopping criterion is not satisfied.
+0.091667 - Pseudo-code of the BBO algorithm Fig 3.
+0.100926 - Pseudo-code of the BBO algorithm.
+0.042105 - Recently, BBO has been applied in several optimization problems, for instance: the Traveling Salesman Problem (TSP) (Song, Liu, & Wang, 2010), the optimization of a set of standard multi-variable benchmark functions (Simon, 2008), the tuning of neuro-fuzzy system parameters for diagnosis of cardiac diseases (Ovreiu & Simon, 2010), a sensor selection problem for aircraft engine health estimation (Simon, 2008), economic emission load dispatch problems (Bhattacharya & Chattopadhyay, 2011) and the power flow problem in analysis of circuits (Rarick, Simon, Villaseca, & Vyakaranam, 2009).
+0.083868 - Further information can be found in the BBO’s homepage (Simon, 2013).
+0.103488 - Harmony search The last population-based algorithm, which was analyzed in this study, is based on analogies with the natural phenomena of the musical process.
+0.097088 - It is focused on searching the perfect state of harmony, an analogy to the optimization process, and it is called the harmony search (HS) algorithm (Geem et al., 2001).
+0.072956 - As the optimization procedure tries to find a global solution which is determined by an objective function, a musical performance (e.g., rhythms played on a set of instruments in jazz) seeks to find pleasing harmony determined by an aesthetic standard.
+0.082100 - The possible values of each variable may be identified in the pitches of the different instruments in HS, where each iteration would be a practice and the global optimum can be considered as finding a Fantastic Harmony.
+0.074193 - Furthermore, while each variable of the solution vector is taking value within a range of possible values, the same occurs to HS when each player sounds with a musical note within a candidate range, and all together build an harmony.
+0.089431 - If the harmony is good, the experience is stored in each player’s memory and, next time, te occurrence to achive a more harmonius chord is increased.
+0.060720 - Basically, HS consists of the following components (Lee & Geem, 2005): • Initialization: The harmony memory (HM) matrix is filled with HMS random vectors which are sorted according to the values of the objective function : (4) where HMS is the harmony memory size.
+0.055556 - The parameters harmony memory considering rate (HMCR) and the pitch adjusting rate (PAR) are also initialized.
+0.086957 - HMCR refers to the probability of choosing random notes.
+0.074830 - On the other hand, PAR mimics the adjustment of each instrument by shifting to neighboring values (Lee & Geem, 2005) according to: (5) where and bw is an arbitrary distance bandwidth for the continuous design variable.
+0.038462 - • Harmony Improvisation: A new harmony vector, is generated considering HCMR and PAR.
+0.061905 - For each instrument , the value is selected as follows: (6) where and are the lower and upper bounds of each variable.
+0.050889 - • Update of HM: If the quality of the new harmony is better than the current best in HM, the new harmony is included in HM by replacing the worst one in HM.
+0.037582 - As the previous methods, HS has been recently applied in optimization problems as the TSP (Geem et al., 2001), the minimization of multi-variable functions (Geem et al., 2001; Omran & Mahdavi, 2008), the design of a pipeline network for water supply (Geem et al., 2001), various engineering optimization problems (Lee & Geem, 2005), the addressing of sudoku puzzles (Geem, 2007), the spread spectrum radar polyphase codes design problem (Gil-López et al., 2012) and the sum-of-ratios optimization problem applied in economy and engineering (Jaberipour & Khorram, 2010).
+0.083868 - Further information can be found in the HS’s homepage (Geem, 2013).
+0.097769 - IR (Zitová & Flusser, 2003) is a fundamental task in computer vision and computer graphics fields used to find either a spatial transformation (e.g., rotation, translation, etc.)
+0.059481 - or a correspondence (matching of similar image features) among two or more images acquired under different conditions: with different times, by using different sensors, by taking different viewpoints, or with a combination of them.
+0.119021 - IR aims to achieve the best possible overlapping, by transforming those independent images into a common one.
+0.095635 - Over the years, IR has been applied to tackle with many real-world problems ranging from remote sensing to medical imaging, artificial vision, and computer-aided design (CAD).
+0.060470 - The optimization process applied by traditional IR methods like the classical iterative closest point (ICP) algorithm (Besl & McKay, 1992; Chen & Medioni, 1992) is likely to provide incorrect registration transformation estimations due to the fact that these methods are usually prone to be trapped in local minima (Liu, 2004; Masuda, 2002; Rusinkiewicz & Levoy, 2001; Sharp, Lee, & Wehe, 2002) since they assume a rough prealignment of the images.
+0.000000 - (See Fig 4).
+0.091667 - Pseudo-code of the HS algorithm Fig 4.
+0.100926 - Pseudo-code of the HS algorithm.
+0.108772 - In the last few years, there has been an increasing interest in adopting MHs as the optimization technique for IR methods (Santamaría et al., 2011).
+0.116271 - In particular, evolutionary algorithms (EAs) (Bäck, 1996; Bäck et al., 1997) have been successfully applied to tackle with IR problems without requiring a good initial estimation of the image alignment.
+0.102186 - The first attempts to face the IR problem using EC can be found in the eighties (Fitzpatrick, Grefenstette, & Gucht, 1984), where a GA (Michalewicz, 1996) was developed for tackling rigid IR of 2D angiographic images.
+0.071240 - Since then, evolutionary IR has become a very active area due to the successful results and several well-known EAs which have been considered to tackle with the IR optimization process (Damas, Cordón, & Santamaría, 2011; Santamaría et al., 2011) where a two-stage IR approach is usually considered: a first coarser stage, named as prealignment, and a refinement step usually applying ICP-based IR algorithms.
+0.124163 - Problem definition The key idea of the IR process is to achieve the transformation that places different 2D/3D images in a common coordinate system.
+0.062893 - There is not an universal design for a hypothetical IR method that could be applicable to all registration tasks due to the particular application items that must be taken into account in every real world application (Zitová & Flusser, 2003).
+0.069444 - However, IR methods usually require the four following components: • Two input Images named as scene and model, with and being image points.
+0.079365 - • A Registration transformationf, relating the two images.
+0.016667 - Typically, it is a parametric function.
+0.047246 - (7) based on geometric transformations such as translation, rotation, scale, etc.
+0.018519 - • A Similarity metric functionF.
+0.118665 - It aims to measure a qualitative value of closeness or degree of fitting between the transformed scene image, noted by , and the model image.
+0.019608 - (8) • An Optimizer.
+0.027273 - It is a method that seeks the optimal solution which optimizes F (9) An iterative process is often followed (see Fig 5) which usually finishes when convergence is achieved, i.e., when the similarity metric is bellow a given tolerance threshold.
+0.083333 - The IR optimization process Fig 5.
+0.083333 - The IR optimization process 3.2.
+0.111244 - Range image registration In order to provide a more specific description of the problem, we focused our attention on the particular application we are considering in our experiments: the pair-wise IR of range images (i.e.
+0.021930 - RIR) for 3D modeling of real objects (Campbell & Flynn, 2001; Godin, Hebert, Masuda, & Taubin, 2009; Rodrigues, Fisher, & Liu, 2002; Salvi, Matabosch, Fofi, & Forest, 2007).
+0.094097 - Range scanners are able to capture 3D images, named range images, of the surface of the sensed object.
+0.086184 - Every range image is acquired from a particular viewpoint and it partially models the geometry of the scanned object.
+0.094877 - Thus, it is mandatory to consider a reconstruction technique to perform the accurate integration of the images in order to achieve a complete and reliable model of the physical object.
+0.084963 - This framework is usually called 3D modeling (see Fig 6) and it is based on applying IR techniques to achieve the integration of the range images (Salvi et al., 2007; Campbell & Flynn, 2001; Rodrigues et al., 2002; Godin et al., 2009).
+0.065217 - The 3D modeling procedure of forensic objects Fig 6.
+0.086957 - The 3D modeling procedure of forensic objects The 3D model reconstruction procedure involves several pair-wise alignments of two adjacent range images in order to obtain the final 3D model of the physical object.
+0.087939 - Therefore, every pair-wise IR method aims to find the Euclidean motion that brings the scene view ( ) into the best possible alignment with the model view ().
+0.063333 - An Euclidean motion is usually considered based on a 3D rigid transformation (f) determined by seven real-coded parameters, that is: a rotation , with θ and being the angle and axis of rotation, and a translation , respectively.
+0.057366 - Then, the transformed points of the scene view are denoted by (10) Hence, the pair-wise IR task can be formulated as an optimization problem developed to search for the Euclidean transformation achieving the best alignment of both images according to the considered Similarity metric F: (11) The median square error (MedSE) is usually considered the Similarity metric in 3D modeling (Rodrigues et al., 2002; Santamaría, Cordón, Damas, García-Torres, & Quirin, 2009): (12) where corresponds to the median value.
+0.095527 - We define as the squared Euclidean distance between the transformed scene point, , and its corresponding closest point, , in the model view .
+0.078376 - In order to speed up the computation of the closest point of , indexing structures as kd-trees (Zhang, 1994) or the grid closest point (GCP) transform proposed in (Yamany, Ahmed, & Farag, 1999) are often used.
+0.115675 - This section is aimed at presenting a number of experiments to be studied for the performance of the three analyzed population-based algorithms according to accuracy and robustness.
+0.103248 - Specifically, we considered a benchmark suite of several problem instances of the well-known IR problem by using range images.
+0.118566 - The obtained results will be benchmarked against those obtained by four state-of-the-art evolutionary IR methods, i.e.
+0.055728 - : • Santamaria et al.’s proposal (StEvO) (Santamaría, Damas, García-Torres, & Cordón, 2012), a recent contribution based on a automatic or self-adaptive tuning of the EA control parameters.
+0.046701 - • de Falco et al.’s method (deFalco08) (de Falco, Della Cioppa, Maisto, & Tarantino, 2008), which makes use of a basic implementation of the differential evolution (DE) algorithm (Storn, 1997).
+0.055556 - • Silva et al.’s contribution (Silva05) (Silva, Bellon, & Boyer, 2005), in which a steady-state variant of GAs (Goldberg, 1989) is developed.
+0.073379 - • Yamany et al.’s proposal (Yamany99) (Yamany et al., 1999), where the authors considered a binary representation of the transformation parameters and a canonical implementation of GAs.
+0.073529 - Both these three analyzed and the latter four algorithms were implemented in C++ and compiled with the GNU/g++ tool.
+0.106541 - We adapted all the tested methods by using the same representation of the rigid transformation (f) and objective function (see Eq (12) in Section 3.2) in order to accomplish a fair comparison.
+0.047619 - The similarity metric considered will depend on the particular real-world application being faced.
+0.063354 - Range image datasets and problem scenarios In order to ease the comparison with the reported results in other contributions in the field (Salvi et al., 2007; Silva et al., 2005), our results correspond to a number of pair-wise RIR problem instances using different range datasets obtained from the well-known public repository of the Signal Analysis and Machine Perception Lab (SAMPL, http://sampl.ece.ohio-state.edu/data/3DDB/RID/index.htm).
+0.047009 - Specifically, Fig 7 shows the six range datasets considered, named as in previous contributions (Silva et al., 2005): “Frog”, “Bird”, “Tele”, “Lobster”, “Angel”, and “Buddha”.
+0.060000 - Each dataset ranges from 8 K to 15 K of size.
+0.041667 - Range image datasets available at the SAMPL repository Fig 7.
+0.045455 - Range image datasets available at the SAMPL repository.
+0.070513 - From left to right: “Frog”, “Bird”, “Tele”, “Lobster”, “Angel”, and “Buddha” images.
+0.059829 - The second group of datasets is the specific ones, acquired using a Konica-Minolta© VI-910 laser scanner, named “Skull” and “Tooth” (see Fig 8).
+0.060000 - Each dataset ranges from 30 K to 70 K of size.
+0.040000 - Overall, eight different datasets of range images have thus been considered.
+0.016667 - Specific range image datasets Fig 8.
+0.018519 - Specific range image datasets.
+0.083333 - From left to right: “Skull” and “Tooth” images.
+0.058824 - Besides, we have defined several pair-wise RIR problem scenarios by using different overlapping degrees between pairs of adjacent images.
+0.053307 - Specifically, four and six RIR problem instances were considered using pairs of range images of the SAMPL’s datasets at 20 and 40 rotation degrees of misalignment between the adjacent views, and another two more complex instances of pairs of images at 45 and 60 degrees were also considered using the “Skull” and the “Tooth” specific datasets, respectively.
+0.045833 - Then, we designed four different RIR problem scenarios regarding the rotation degree (20, 40, 45, and 60) from which twelve different problem instances have been generated.
+0.040000 - Each of those scenarios will be faced by every RIR algorithm.
+0.088580 - Moreover, we used a subsampled version of each range image (original sizes are shown in Table 1) in order to speed-up the computation of the objective function (see Eq (12) in Section 3.2).
+0.035714 - In particular, five thousand points have been randomly chosen by using a uniform distribution.
+0.081633 - Feature-based approaches (Gal & Cohen-Or, 2006; Zitová & Flusser, 2003) can also be adopted to achieve a reduced and a characteristic subset of image points, even providing improved IR results (Santamaría et al., 2011).
+0.086207 - Nevertheless, the latter usually needs the intervention of expert users to obtain high quality features.
+0.000000 - Table 1.
+0.083965 - Original size of the range images for the considered datasets.
+0.017544 - Dataset Original size (number of points) Frog 9584 Bird 9051 Tele 6810 Lobster 11683 Angel 14009 Buddha 14801 Skull 76794 Tooth 59033 4.2.
+0.057018 - Parameter settings All the tested algorithms are run on a PC with an Intel Pentium IV 2.6 MHz processor and 2 GB RAM.
+0.125453 - We maintained the values of the control parameter of each of the four state-of-the-art algorithms (StEvO, deFalco08, Yamany99, and Silva05) as those used in their original contribution facing the IR problem.
+0.141950 - Regarding the three analyzed algorithms (ABC, BBO, and HS), we carried out some preliminary experiments to carefully tune their control parameters facing the RIR problem.
+0.044872 - The parameter values, which are finally selected, are given in Table 2.
+0.000000 - Table 2.
+0.152431 - Best performing values of the control parameters of the ABC, BBO, and HS algorithms tackling the RIR problem.
+0.069391 - ABC BBO HS PopSize 100 Elitism size 2 Colony size (CS) 20 Habitat modification prob.
+0.000000 - 1 PopSize 50 Limit 150 Immigration prob.
+0.015152 - bounds [0,1] HMCR 0.9 50% of CS Step size 1 PAR 0.2 1 Maximum immigration rate 1 Step size 0.1 Maximum emigration rate 1 Mutation prob.
+0.069005 - 0.05 In order to avoid execution dependence, thirty different runs have been performed for each of the seven tested RIR algorithms when facing each of the four problem scenarios, i.e.
+0.069444 - considering 20, 40, 45, and 60 degrees of image overlapping.
+0.074074 - Moreover, all the tested algorithms start from a initial population of random solutions.
+0.091398 - Each run concerns applying a rigid transformation, randomly generated using an uniform distribution, to the scene image .
+0.098346 - In each case, the RIR method will search for this optimal transformation between the proposed image and the model image .
+0.073219 - Every rigid transformation is randomly generated as follows: each of the three rotation axis parameters will be in the range ; the rotation angle will range in ; and the range of three translation parameters is .
+0.087963 - In order to perform a fair comparison among the methods included in this study, we considered CPU time as the stop criterion.
+0.067568 - Different time limits were tested and 20 s was determined as a good threshold just allowing all the methods to achieve accurate solutions.
+0.043643 - Analysis of results Tables 3–5 show statistical results regarding the thirty different runs carried out by each of the seven RIR algorithms when facing the four RIR problem scenarios (i.e.
+0.060606 - 20, 40, 45, and 60 degrees of overlapping).
+0.086957 - In particular, each column of these tables refer to the range dataset, the algorithm, and the minimum, maximum, mean and standard deviation values of the F function (see Eq (12)) in those thirty runs.
+0.053030 - The unit length is always in squared millimeters.
+0.152778 - Two different algorithm families are distinguished, the one of the three new methods analyzed (ABC, BBO and HS) and that of the four state-of-the-art evolutionary RIR methods.
+0.074074 - The algorithm with the best (lowest) minimum and mean results in each family is highlighted according to the boldface as well as the overall best value for each dataset is underlined.
+0.000000 - Table 3.
+0.063131 - RIR results of the 20 degrees of overlapping problem scenario.
+0.016667 - Dataset Algorithm Minimum Maximum Mean Std.
+0.000000 - dev.
+0.010582 - Angel ABC 0.2470 0.5289 0.3319 0.1007 BBO 0.2576 0.9554 0.4975 0.2692 HS 0.2494 0.9535 0.4412 0.2724 StEvO 0.2448 0.5268 0.2947 0.0886 DeFalco08 0.2493 0.9462 0.6732 0.2209 Silva05 0.2495 0.9555 0.4179 0.2560 Yamany99 0.2553 0.9531 0.5818 0.2792 Bird ABC 0.1167 0.9009 0.3107 0.2451 BBO 0.1263 0.9301 0.4347 0.2759 HS 0.1170 0.9188 0.4671 0.3603 StEvO 0.1125 0.5977 0.1814 0.1569 DeFalco08 0.1245 0.8429 0.4793 0.2157 Silva05 0.1152 0.9178 0.3506 0.3112 Yamany99 0.1199 0.9180 0.4465 0.2725 Frog ABC 0.1226 0.7733 0.2437 0.1798 BBO 0.1649 0.8690 0.5396 0.2023 HS 0.1260 0.8751 0.3476 0.2749 StEvO 0.1193 0.5308 0.1792 0.1337 DeFalco08 0.1322 0.7345 0.4374 0.1615 Silva05 0.1249 0.8555 0.4329 0.2415 Yamany99 0.1234 0.8311 0.5119 0.2162 Tele ABC 0.0752 0.8691 0.1501 0.1817 BBO 0.0829 0.8699 0.251 0.2292 HS 0.0754 0.8721 0.2350 0.2963 StEvO 0.0735 0.8647 0.1044 0.1414 DeFalco08 0.0755 0.6578 0.3193 0.1819 Silva05 0.0750 0.9234 0.3728 0.3366 Yamany99 0.0791 0.8958 0.3159 0.2531 Table 4.
+0.063131 - RIR results of the 40 degrees of overlapping problem scenario.
+0.016667 - Dataset Algorithm Minimum Maximum Mean Std.
+0.000000 - dev.
+0.010582 - Angel ABC 0.3542 0.9098 0.5265 0.2210 BBO 0.3690 0.9674 0.6975 0.2435 HS 0.3553 0.9567 0.6460 0.2665 StEvO 0.3493 0.9436 0.4990 0.2175 DeFalco08 0.3694 0.9599 0.7954 0.1499 Silva05 0.3527 0.9711 0.6790 0.2640 Yamany99 0.3623 0.9687 0.7776 0.2057 Bird ABC 0.2124 0.9308 0.5072 0.2829 BBO 0.2426 0.9419 0.7633 0.2189 HS 0.2165 0.9430 0.6151 0.3058 StEvO 0.2041 0.9168 0.3741 0.2655 DeFalco08 0.2955 0.9350 0.7358 0.1852 Silva05 0.2159 0.9425 0.5795 0.3158 Yamany99 0.2776 0.9407 0.7547 0.2070 Frog ABC 0.2717 0.8410 0.5512 0.2015 BBO 0.4794 0.9191 0.7691 0.0823 HS 0.4026 0.9005 0.7403 0.1161 StEvO 0.2517 0.7717 0.3941 0.1856 DeFalco08 0.3997 0.8000 0.6937 0.0876 Silva05 0.2735 0.9474 0.6923 0.1750 Yamany99 0.2809 0.8964 0.7490 0.1220 Tele ABC 0.1082 0.8607 0.2700 0.2222 BBO 0.1198 0.8837 0.4648 0.2300 HS 0.1095 0.9222 0.4129 0.3072 StEvO 0.1054 0.4708 0.1682 0.1226 DeFalco08 0.1240 0.7722 0.4785 0.1520 Silva05 0.1077 0.8950 0.5354 0.2929 Yamany99 0.1104 0.9230 0.4689 0.2686 Buddha ABC 0.4473 0.9446 0.6690 0.1220 BBO 0.6258 0.9481 0.7798 0.0978 HS 0.5526 0.9285 0.7147 0.1044 StEvO 0.3996 0.6873 0.5730 0.1103 DeFalco08 0.6705 0.9335 0.8105 0.0812 Silva05 0.5075 0.9506 0.7146 0.1126 Yamany99 0.6080 0.9259 0.7704 0.0889 Lobster ABC 0.2745 0.8220 0.6249 0.1530 BBO 0.3249 0.9406 0.6735 0.1555 HS 0.2665 0.9257 0.5890 0.1964 StEvO 0.2522 0.8013 0.3816 0.1916 DeFalco08 0.3392 0.7917 0.6642 0.1020 Silva05 0.2665 0.9201 0.5727 0.2089 Yamany99 0.3010 0.8846 0.6530 0.1756 Table 5.
+0.072222 - RIR results of both the 45 (“Skull”) and the 60 (“Tooth”) degrees of overlapping problem scenarios.
+0.016667 - Dataset Algorithm Minimum Maximum Mean Std.
+0.000000 - dev.
+0.013889 - Skull ABC 0.2423 0.8897 0.6526 0.1578 BBO 0.2401 0.9288 0.6648 0.2215 HS 0.2388 0.9911 0.6499 0.2200 StEvO 0.2251 0.7719 0.3783 0.2025 DeFalco08 0.2311 0.8465 0.6677 0.1831 Silva05 0.2395 0.8451 0.6691 0.1859 Yamany99 0.2525 0.9416 0.6710 0.2143 Tooth ABC 0.0433 0.7066 0.3141 0.1975 BBO 0.1105 0.8824 0.5590 0.2057 HS 0.0426 0.7851 0.4202 0.2351 StEvO 0.0396 0.6231 0.2674 0.1752 DeFalco08 0.0454 0.7237 0.4936 0.1922 Silva05 0.0473 0.7511 0.3958 0.2147 Yamany99 0.0568 0.8549 0.5488 0.1943 Besides, Figs.
+0.065891 - 9–11 summarize and graphically highlight the latter tabulated data, regarding accuracy (according to minimum values of F) and robustness (according to mean and median values of F), respectively.
+0.091954 - Bar-graphs comparing the accuracy (according to the minimum value in Tables 3… Fig 9.
+0.083532 - Bar-graphs comparing the accuracy (according to the minimum value in Tables 3 to 5) of all the tested algorithms on each of the four RIR problem scenarios.
+0.094444 - Bar-graphs comparing the robustness (according to the mean value in Tables 3 to… Fig 10.
+0.083532 - Bar-graphs comparing the robustness (according to the mean value in Tables 3 to 5) of all the tested algorithms on each of the four RIR problem scenarios.
+0.107143 - Bar-graphs comparing the robustness (according to the median value) of ABC,… Fig 11.
+0.145468 - Bar-graphs comparing the robustness (according to the median value) of ABC, BBO, HS and StEvO on each of the four RIR problem scenarios.
+0.100172 - In view of the latter data, we can see how ABC is the most accurate and robust algorithm out of the three new RIR methods which are being analyzed, i.e.
+0.120261 - BBO and HS.
+0.078172 - Specifically, ABC achieves the most accurate results in all the instances of the 20 degrees RIR problem scenario and within five out of the six instances of the 40 degrees RIR problem scenario.
+0.089233 - Nevertheless, it does not behave in that way in the two instances of the 45 and 60 degrees RIR problem scenarios where HS offers a slightly better performance in some cases.
+0.075595 - In addition, ABC obtains improved outcomes regarding robustness in all the instances of the first scenario, five out of the six instances of the second scenario, and one out of the two instances of the third and fourth scenarios.
+0.062246 - This fact can also be viewed in Fig 11, where median values for the thirty different runs are analyzed and ABC achieves the best values in three instances of the 20 degrees problem scenario and five instances of the 40, 45 and 60 degrees scenarios.
+0.065657 - Overall, it is proven that the ABC algorithm achieves a more suitable trade-off between exploration/exploitation search phases.
+0.128474 - Regarding to BBO and HS, we can see how the latter result obtains more accurate outcomes than the former one in all of the twelve addressed RIR problem instances.
+0.107580 - According to robustness, HS also achieves a better performance than BBO in all the scenarios except in two of the four instances of the 20 degrees RIR problem scenario, i.e.
+0.083333 - the “Bird” and the “Frog” instances.
+0.132310 - Thus, the three analyzed algorithms can be ranked in a decreasing order according to both accuracy and robustness as follows: ABC, HS, and BBO.
+0.078565 - When benchmarking ABC results with those of the baseline evolutionary methods from the specific problem being tackled, we can see how the former one obtains a lower performance than the best algorithm in that group, i.e.
+0.035088 - StEvO, according accuracy and robustness.
+0.103333 - Nevertheless, we should highlight that ABC achieves outstanding results due to the basic design it proposes compared to the very complex and specific one used by StEvO, which makes use of a more elaborated optimization scheme.
+0.101122 - However, in comparison to the deFalco08, Silva05, and Yamany99 state-of-the-art evolutionary RIR methods, ABC provided improved outcomes in eleven out of the twelve addressed instances (except in the “Lobster” dataset of the 40 degrees problem scenario).
+0.113578 - Regarding BBO and HS, despite their low performance against ABC and StEvO, the former two algorithms achieve better results than deFalco08, Silva05, and Yamany99 in many of the addressed RIR problem scenarios according to both accuracy and robustness criteria.
+0.144356 - According to individual accuracy, Fig 12 shows how ABC, BBO, and HS achieve similar RIR results compared to one of the best evolutionary RIR approaches in the literature, StEvO.
+0.083730 - From left to right: Some of the most accurate RIR results (according to the… Fig 12.
+0.087107 - From left to right: Some of the most accurate RIR results (according to the minimum values in Tables 3–5) obtained by ABC and StEvO shown in the first and the second columns, respectively.
+0.053054 - Finally, Table 6 shows the results of the Mann–Whitney U test, also known as Wilcoxon ranksum test, used for a deeper statistical study of the results.
+0.062205 - This is motivated by those situations in which simply by using the visual inspection procedure does not provide good insights of the real performance of the algorithms, e.g.
+0.058333 - the outcomes shown in Fig 12.
+0.056999 - Unlike the commonly used t-test, the Wilcoxon test does not assume normality of the samples, which would be unrealistic for the data in our real-world application (Lehmann, 1975).
+0.063289 - The significant results are comprised by three symbols:‘+’ meaning the significance is favorable to the method in the row; ‘−’ stands for the significance favorable to the method in the column; and ‘=’ is used when there is not significance favorable (not relevant) to any of the couple of methods which are being compared.
+0.195495 - As reported above, the three tested algorithms (ABC, BBO, and HS) achieve competitive RIR outcomes compared to the state-of-the-art methods.
+0.043011 - Specifically, remarkable significant results are drawn by ABC, which is only outperformed by the best method, StEvO.
+0.000000 - Table 6.
+0.059130 - Mann–Whitney U paired-test results (10% significance level) comparing all the evolutionary RIR methods in the twelve problem instances.
+0.077839 - ABC BBO HS StEvO DeFalco08 Silva05 Yamany09 ABC ○ + + − + + + BBO − ○ − − = = = HS − + ○ − + = + StEvO + + + ○ + + + DeFalco08 − = − − ○ − = Silva05 − = = − + ○ + Yamany09 − = − − = − ○
+0.117632 - In this work we performed a first step in the analysis of some cutting edge population-based optimization algorithms tackling continuous optimization problems.
+0.162594 - In particular, the ABC, BBO, and HS algorithms have been considered in this study due to their innovative designs.
+0.076923 - A computational analysis of their performance has been carried out facing IR, a challenging and well-known NP-hard problem within the computer vision field.
+0.139013 - A benchmark suite composed by several instances of the pair-wise IR problem using range images has been considered to testing the ABC, BBO, and HS algorithms and benchmarking their results with several state-of-the-art evolutionary IR methods proposed to date as well.
+0.086003 - Promising results have been obtained by these three recent population-based approaches when tackling complex IR problem instances of range images.
+0.117083 - Specifically, ABC achieved the best outcomes according to accuracy and robustness regarding BBO and HS, which is motivated by the good trade-off between exploration and exploitation of the search, also promoted by the former algorithm.
+0.085029 - Regarding the latter two methods, it has been shown how HS improves BBO according to accuracy in all the problem instances addressed, as well as it also outperforms BBO in terms of robustness in most of the problem instances.
+0.139897 - Then, these algorithms can be ranked in a decreasing order according to their performance, tackling the IR problem as follows: ABC, HS, BBO.
+0.090909 - This seems to suggest there is a relationship between the design complexity level of these approaches and their performance.
+0.077708 - As it has been recently proven in the literature, those approaches based on easy-to-implement schemes usually provide competitive outcomes compared to the most elaborated ones, e.g.
+0.092349 - ABC vs. StEvO, despite the best results of the latter method are due to its specific design considered to this particular real-world application.
+0.134199 - Moreover, it can be shown how ABC outperforms the performance obtained by several of the state-of-the-art IR algorithms.
+0.063725 - Finally, we conclude that there is room for improvement for all the three analyzed algorithms from different points of view.
+0.074405 - In particular, the synergy between global and local search strategies (Santamaría et al., 2009) will promote the achievement of more accurate results, as it has been proven in memetic algorithms (Moscato & Norman, 1992; Krasnogor & Smith, 2005; Santamaría et al., 2009).
+0.135382 - Besides, hybridizations between the ABC, BBO, and HS algorithms with other MHs (Glover & Kochenberger, 2003; Luke, 2009) would be another promising alternative to the improvement of any of the former innovative optimization approaches.
+0.073379 - 1 The fitness or objective function is one of the most important components of heuristic methods whose design affects dramatically to the performance of the implemented method.
+
+[Frase 9] Computational experiments have been conducted comparing the performance of ABC, HS, and BBO against other contributions in the state-of-the-art of 3D image registration.
+[Frase 273] A benchmark suite composed by several instances of the pair-wise IR problem using range images has been considered to testing the ABC, BBO, and HS algorithms and benchmarking their results with several state-of-the-art evolutionary IR methods proposed to date as well.
+[Frase 219] Two different algorithm families are distinguished, the one of the three new methods analyzed (ABC, BBO and HS) and that of the four state-of-the-art evolutionary RIR methods.
+[Frase 6] Recently, innovative population-based algorithms such as ABC, BBO, and HS have arisen as promising optimization methods due to they provide a good tradeoff between design and performance when compared to other more elaborated methods.
+[Frase 7] In this work, we aim to first introduce the particular design of these three cutting edge algorithms, and additionally analyse their performance when tackling a challenging real-world optimization problem.

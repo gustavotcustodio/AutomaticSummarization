@@ -1,0 +1,239 @@
+<article>
+  <title>Forecasting of stock return prices with sparse representation of financial time series over redundant dictionaries</title>
+  <abstract>
+    <sentence>This paper presents the theory, methodology and application of a new predictive model for time series within the financial sector, specifically data from 20 companies listed on the U.S. stock exchange market.</sentence>
+    <sentence>The main impact of this article is (1) the proposal of a recommender system for financial investment to increase the cumulative gain; (2) an artificial predictor that beats the market in most cases; and (3) the fact that, to the best of our knowledge, this is the first effort to predict time series by learning redundant dictionaries to sparsely reconstruct these signals.</sentence>
+    <sentence>The methodology is conducted by finding the optimal set of predicting model atoms through two directions for dictionaries generation: the first one by extracting atoms from past daily return price values in order to build untrained dictionaries; and the second one, by atom extraction followed by training of dictionaries though K-SVD.</sentence>
+    <sentence>Prediction of financial time series is a periodic process where each cycle consists of two stages: (1) training of the model to learn the dictionary that maximizes the probability of occurrence of an observation sequence of return values, (2) prediction of the return value for the next coming trading day.</sentence>
+    <sentence>The motivation for such research is the fact that a tool, which might generate confidence of the potential benefits obtained from using formal financial services, would encourage more participation in a formal system such as the stock market.</sentence>
+    <sentence>Theory, issues, challenges and results related to the application of sparse representation to the prediction of financial time series, as well as the performance of the method, are presented.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Financial time series</keyword>
+    <keyword>Artificial financial predictors</keyword>
+    <keyword>Sparse representation</keyword>
+    <keyword>Learned over-redundant dictionaries</keyword>
+    <keyword>Temporal feature extraction</keyword>
+    <keyword>Time-domain pattern recognition</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>This paper presents a method, based on sparse representation of time series over redundant dictionaries, which is implemented and applied as a predictive model for time series within financial contexts, specifically the return of the price of an individual stock from some companies that are listed on the U.S. stock exchange market.</sentence>
+    <sentence>The problem is approached using the framework of dictionary learning, early addressed by Olshausen and Field (1997), with the motivation that there are no reports about forecasting of stock return prices using the framework of sparse representation of time series over learned dictionaries.</sentence>
+    <sentence>This research field focuses on developing algorithms to learn dictionaries with elements, called atoms, so that a signal of interest can be reconstructed as a linear combination of a very few atoms.</sentence>
+    <sentence>There are three categories of dictionary leaning algorithms.</sentence>
+    <sentence>In this application, the learning algorithm follows the direction of the clustering methods (Tosic &amp; Frossard, 2011).</sentence>
+    <sentence>We use dictionaries which are constructed in two ways by (1) extraction of an observed sequence of stock price return values from historical information about a certain company, and (2) by extraction of an observation sequence followed by dictionary adaptation which consists in minimizing a cost function through optimization methods such as K-SVD (Aharon, Elad, &amp; Bruckstein, 2006).</sentence>
+    <sentence>The application of untrained dictionaries has been successful in some applications such as face recognition (Wright, Yang, Ganesh, Sastry, &amp; Ma, 2009).</sentence>
+    <sentence>The data to evaluate are the shares corresponding to 20 companies such as Bank of America, Intel, Nanosphere, Haliburton, Nokia, Office Depot, Twitter, Netflix, General Electric Company, Oracle Corporation, Rite Aid Corporation and the Coca-Cola Company.</sentence>
+    <sentence>The price of an individual stock is analyzed to predict changes that will happen in the immediate future so that a decision is taken with such information.</sentence>
+    <sentence>To perform an adequate forecasting analysis, historical information, about companies listed in the stock exchange market, is required.</sentence>
+    <sentence>There are tools that allow us to obtain this information such as Yahoo!</sentence>
+    <sentence>Finance, which provides historical prices of companies that trade on various exchange markets around the world.</sentence>
+    <sentence>The stock market is an institution that people attend to protect and enhance their financial savings and the resources obtained, allow companies and government to finance productive projects that generate development.</sentence>
+    <sentence>It is important to bring formal saving systems to the population since this is what drives an active economy.</sentence>
+    <sentence>This is possible by working on the development of systems that provide attractive and safe yields and, above all, accurate performance forecasting.</sentence>
+    <sentence>The rest of the paper is organized as follows.</sentence>
+    <sentence>Section 2 reviews relevant and recent related work that combines machine learning with financial engineering.</sentence>
+    <sentence>Section 3 presents a description of basic concepts of financial time series and how a predictive system is used to analyze and predict these signals.</sentence>
+    <sentence>Section 4 gives a detailed overview of the framework of sparse representation and dictionary learning.</sentence>
+    <sentence>Description of the proposed method for prediction of financial time series based on sparse representation over dictionaries is described in Section 5.</sentence>
+    <sentence>Section 6 provides the experimental results obtained by using the aforementioned method.</sentence>
+    <sentence>Conclusions are presented in Section 7.</sentence>
+  </section>
+  <section name="Review of related work">
+    <sentence>Stock market prediction is a challenging research area where different methods have been developed with the aim of predicting the future of return gain values (Guresen, Kayakutlu, &amp; Daim, 2011).</sentence>
+    <sentence>The aim is to design models with the potential to predict stock price behavioral movements in the stock exchange market; however, predicting such trends is very challenging due to the fact that stock market data are noisy and time varying in nature (Atsalakis &amp; Valavanis, 2009).</sentence>
+    <sentence>To address the topic of future stock price predictions, different techniques from artificial intelligence, fuzzy systems, and machine learning areas have been applied to predict the future stock prices movements and trends.</sentence>
+    <sentence>An overview of the most common neural networks applied to forecast spatio-temporal patterns from feed forward to recurrent neural networks to model non-linear dependencies in spatio-temporal patterns, is presented by Dorffner (1996).</sentence>
+    <sentence>Prediction models based on Artificial Neural Networks (ANN), Support Vector Machines (SVM), Random Forest and naïve-Bayes have been applied to predict the stock movement direction and the stock price index for Indian stock markets according to Patel, Shah, Thakkar, and Kotecha (2015).</sentence>
+    <sentence>Three classical learning based forecasting methods: Neural Networks (NN), Adaptive Neuro-Fuzzy Inference Systems (ANFIS), and Least-Squares Support Vector Machines (LS-SVM), have been used (Wu &amp; Lee, 2015) for time series prediction through a local modeling strategy.</sentence>
+    <sentence>Artificial Neural Networks (ANNs) were applied by Vanstone and Finnie (2010) to financial time series by outlining an empirical methodology for creating and testing ANNs for stock market trading systems.</sentence>
+    <sentence>Chua, Suardy, and Tsiaplias (2013) examine the forecasting performance of Bayesian Model Averaging (BMA) for a set of single factor models of short-term rates.</sentence>
+    <sentence>Kara, Boyacioglu, and Baykan (2011) provided a comparable pattern whereby Neural Networks and plain SVM were compared for stock price movement prediction.</sentence>
+    <sentence>Zbikowski (2015) applied a modified Support Vector Machine (SVM) and the Fisher method for feature selection to create a stock trading strategy based on stock market short-term trends forecasting.</sentence>
+    <sentence>Sparse representation of signals has received considerable attention as a tool to solve different problems.</sentence>
+    <sentence>An extensive survey of the challenges, motivation, approaches and applications of the main algorithms in the field of dictionary learning for sparse representation is presented by Tosic and Frossard (2011) and Elad (2010).</sentence>
+    <sentence>Aharon et al.</sentence>
+    <sentence>(2006) proposed the groundbreaking K-SVD algorithm for dictionaries adaptation in order to achieve the best sparse reconstruction for each member from a set of signals under sparsity conditions, which is an iterative method that alternates between sparse coding of signals over the current dictionary and a dictionary updating process to better fit the signals set.</sentence>
+    <sentence>Mairal, Bach, Ponce, Sapiro, and Zisserman (2008) introduced two different algorithms to perform an efficient optimization of an energy function to learn dictionaries, which are explicitly optimized to be both reconstructive and discriminative.</sentence>
+    <sentence>Modeling of signals through sparse representation has been a very useful for different applications.</sentence>
+    <sentence>The solution to the problem of dictionary learning for sparse representation has proven to be successful in different applications such as classification for EEG based computer-brain interfaces (Shin et al., 2015), short text classification (Gao, Zhou, &amp; Guan, 2015), face recognition with occlusion (Zhao and Hu, 2015), Alzheimer disease classification (Xu, Wu, Chen, &amp; Yao, 2016), image super-resolution (Zhao, Chen, Sui, &amp; Gu, 2015), image denoising (Aharon et al., 2006; Elad &amp; Aharon, 2006), compression (Marcellin, Gormish, Bilgin, &amp; Boliek, 2000), and color restoration (Mairal et al., 2008).</sentence>
+  </section>
+  <section name="Financial time series and forecasting of future returns">
+    <sentence>A financial time series is a sequence of observations (feature vectors), , with features of some financial asset (such as price Pt, return Rt, gain Gt, etc.)</sentence>
+    <sentence>defined over discrete time, where the time index () corresponds to an hour, or a trading day, or a week, or a month, etc.</sentence>
+    <sentence>The price of an asset, Pt, is an essential feature and given two consecutive daily prices, and Pt, another financial feature, called return, is defined (1) where In our experiments, the daily stock price return Rt, rather than price, is used as a temporal feature because of the fact that it requires a smaller dynamic range which makes it easier to quantize.</sentence>
+    <sentence>A positive return, Rt &gt; 0, represents an increase in the asset price while a negative return, Rt &lt; 0, means a price drop.</sentence>
+    <sentence>Another asset feature, related to the daily return, is the one-period gain Gt which is given by .</sentence>
+    <sentence>A positive return or price increase implies a gain greater than one while a negative return or price drop introduces a gain less than one.</sentence>
+    <sentence>Prediction of financial time series consists in estimating a future price return, , with n trading days in advance by processing a set of past return observations .</sentence>
+    <sentence>The cumulative return price Pc, after a period of n trading days, is given by the product of the initial price of the asset P and the cumulative gain according to, (2) The return is not only used as a feature, but it is also used to measure the performance of an artificial financial predictor.</sentence>
+    <sentence>A financial predictor is efficient if it provides an investor with a higher cumulative gain than that obtained by not using it.</sentence>
+    <sentence>For instance, let us assume that a financial predictor has estimated four consecutive price return values according to the four-day sequence {price increase, price drop, price increase, price drop}.</sentence>
+    <sentence>The consequence of this prediction is that the investor decides to sell his/her shares at those days when a price drop is expected, so that the obtained return at those days is zero Rt = 0 instead of negative, with a gain .</sentence>
+    <sentence>Therefore, the cumulative gain over the four-day period is which is expected to be an accurate prediction and higher than the original index .</sentence>
+    <sentence>A return gain curve shows the evolution of the return gain as time increases and the final goal of an artificial financial predictor is to generate a return gain curve higher than the index curve.</sentence>
+    <sentence>The higher the prediction accuracy, the higher the obtained return.</sentence>
+    <sentence>Fig 1 shows a set of financial time series, which includes curves for stock price, return value, gain at each training day, and the cumulative gain.</sentence>
+    <sentence>All curves are shown over an interval of 1765 trading days.</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Financial time series: price (top left), return value (top right), daily gain (left bottom), cumulative gain (right bottom).</sentence>
+    <sentence>An artificial financial predictor is a dynamic system that evolves over time to learn the changes of financial time series, which are also dynamic and this is why most of the methods that seek to predict financial time series use machine learning tools such as artificial neural networks (ANN).</sentence>
+    <sentence>Prediction of financial time series is a two-stage periodic process where each cycle consists of two stages: (1) training of the model to learn the parameters that maximize the probability of occurrence of an observation sequence of return values, (2) prediction of the return value for the next coming trading day.</sentence>
+    <sentence>After prediction, the two stages are alternatively repeated by using an adjusted sequence of observations that adds the newest observed return value and drops the oldest observed return value from the sequence (window shift).</sentence>
+    <sentence>The length of the sequence of observations might take on different values such as 5, 20 or 50 trading days.</sentence>
+    <sentence>Fig 2 shows the two stages of a predictive model applied to financial time series.</sentence>
+    <sentence>Fig 2.</sentence>
+    <sentence>Predictive model applied to time series in finance.</sentence>
+  </section>
+  <section name="Sparse representation and dictionary learning">
+    <sentence>Bases and time series reconstruction Time series or discrete-time signalsx are vectors in the n-dimensional Euclidean space .</sentence>
+    <sentence>The set of atomic signals is called a basis for the set if the atomic signals, also called atoms, are linearly independent and span .</sentence>
+    <sentence>This implies that each signal in can be uniquely reconstructed by one single linear combination of the atoms in , (3) where is a matrix composed of k columns and the entries of the vector are the coefficients for this linear combination.</sentence>
+    <sentence>If the elements of the basis are mutually orthonormal, that is if i ≠ j and each atom lies in the hyper-sphere ( ), then the basis is complete such as the case of the Fourier basis.</sentence>
+    <sentence>By allowing the use of linearly dependent atoms, a basis and the respective dictionary matrix D become over-redundant, and there exist multiple choices for vector α for reconstruction of the signal x according to .</sentence>
+    <sentence>We say that the signal x admits a sparse representation over the basis when it is concisely reconstructed with very few atoms; and the signal is characterized by a sparsity factor L when its sparse representationα has at most L non-zero entries (ℓ0-norm), (4) The resulting representation is a powerful model for reduction of storage and transmission, and this model suggests that optimal over-redundant dictionaries exist for different classes of signals.</sentence>
+    <sentence>Learned over-redundant dictionaries Instead of using predefined dictionaries, such as wavelets, for sparse reconstruction of signals, dictionaries can be adapted to fit a set of training signals.</sentence>
+    <sentence>Letting the columns of matrix be the set of m training signals, of one particular class, to be sparsely reconstructed through an optimal over-redundant dictionary D, the dictionary learning task is described by the following minimization problem: (5) where the columns of matrix are the sparse representations of the set of signals in X, L is the sparsity factor, and ‖A‖F stands for the Frobenius norm defined as .</sentence>
+    <sentence>Different approaches to dictionary learning have been developed and they are based on a two-step process where the first step consists in finding the sparse representation A of the training signals X based on the current fixed dictionary D through a pursuit algorithm such as Matching Pursuit (MP) (Mallat &amp; Zhang, 1993) or Orthogonal Matching Pursuit (OMP) (Patti, Rezaiifar, &amp; Krishnaprasad, 1993).</sentence>
+    <sentence>During the second step, the atomic signals are updated assuming fixed reconstruction coefficients.</sentence>
+    <sentence>Matching Pursuit (MP) is an iterative algorithm to construct representations like that in Eq 3.</sentence>
+    <sentence>Each iteration of the MP algorithm results in an intermediate representation where rj is the current residual.</sentence>
+    <sentence>At iteration , rj is projected over all the set of atoms so that , , and .</sentence>
+    <sentence>One suitable algorithm to adapt dictionaries for sparse representation is the K-SVD method (K-Singular Value Decomposition) proposed by Aharon et al.</sentence>
+    <sentence>(2006).</sentence>
+    <sentence>The key idea of the K-SVD method consists in expressing the total reconstruction error function, given by the Frobenius norm in (5), as (6) where atom di is the ith column of D and is the ith row of A. K-SVD is an iterative two-step process to train a dictionary.</sentence>
+    <sentence>On each iteration, the first step consists in estimating the sparse representation A according to (7) For the second step, each atom di and corresponding row are found by using SVD (Singular Value Decomposition) according to (8) where matrix Ωj shrinks Ej by keeping only those columns which have non-zero reconstruction coefficients (entries) in .</sentence>
+    <sentence>By using the SVD, matrix EjΩj can be approximated by a rank-1 matrix, (9) where , and .</sentence>
+  </section>
+  <section name="Predictive models for financial time series based on sparse representation">
+    <sentence>Given a set of past daily return price values, the goal is to predict the price return at the next trading day.</sentence>
+    <sentence>In order, to accomplish this goal, a dictionary for sparse reconstruction of signals is initialized and optimized by using historic price return values.</sentence>
+    <sentence>Dictionary atoms and training signals lie in the n dimensional space.</sentence>
+    <sentence>A truncated version of the optimal learned dictionary is used to sparsely reconstruct a sequence of return values at days.</sentence>
+    <sentence>The truncated version of the dictionary is obtained by projecting the optimal dictionary in a space of lower dimension.</sentence>
+    <sentence>Each atom in the projected dictionary is also characterized by having a lower dimension so that daily price return values can be sparsely reconstructed over the projected dictionary.</sentence>
+    <sentence>The sparse code for reconstruction of daily price return values over the projected dictionary is also used to sparsely reconstruct n daily price return values over the optimal dictionary.</sentence>
+    <sentence>The last entry, in the reconstructed set of n daily price return values, specifies the predicted value.</sentence>
+    <sentence>In what follows, the methodology is explained.</sentence>
+    <sentence>Dictionary initialization and learning stages (1) An observation sequence of price return values at ℓ trading days is extracted from a financial time series which represents the history of a particular company in the stock market.</sentence>
+    <sentence>This is the same as multiplying the financial time series by a window of finite duration ℓ.</sentence>
+    <sentence>(2) Theobservation sequence is used to initialize each atom of a dictionary.</sentence>
+    <sentence>An atom is a n-dimensional feature vectorwhich consists of a sub-sequence of n consecutive price return values.</sentence>
+    <sentence>Each atom is obtained by multiplying the observation sequence by a sliding window of finite duration n. The window is shifted just one element while extracting two consecutive atoms.</sentence>
+    <sentence>The initialized dictionary is given by (10) Fig 3.</sentence>
+    <sentence>Newest feature addition and oldest feature drop on each matrix row.</sentence>
+    <sentence>Fig 4.</sentence>
+    <sentence>Cumulative return gain obtained by following a predictive model based on trained dictionaries vs. the curve generated by the market.</sentence>
+    <sentence>(3) A second observation sequence of price return values at p trading days is extracted from the same financial time series to generate a set of m training signals which are used for optimization of the initial dictionary so that each signal is sparsely reconstructed through the optimal dictionary D. Observation sequences, and , represent a single concatenated sequence of past consecutive price return values, extracted from the financial time series.</sentence>
+    <sentence>The set of training signals is contained in a matrix according to, (11) An add-drop approach is applied to each feature vector during initialization of the dictionary and generation of the set of training signals.</sentence>
+    <sentence>The newest observed return value is concatenated to the next row (or column) vector and the oldest observed return value and the previous vector is eliminated as it is shown in Fig 3.</sentence>
+    <sentence>(4) The dictionary-learning task, which is described by the minimization problem in Eq (5), is applied to find the optimal dictionaryD based on the K-SVD method.</sentence>
+    <sentence>Stage for prediction of return gain values (5) To predict the price return gain at the following day, past return values are extracted from the financial time series so that a dimensional signal is established .</sentence>
+    <sentence>(6) A truncated dictionary is generated by projecting the learned dictionary in a space of lower dimension, .</sentence>
+    <sentence>Therefore, each initial atom dimensionality is reduced by one and then the new projected atom is characterized by eliminating its initial atom last entry.</sentence>
+    <sentence>A projected atom consists of a -dimensional feature vector.</sentence>
+    <sentence>The truncated dictionary is given by (12) (7) Given a set of daily price return values, , its sparse representation over the projected dictionary DT is computed by applying Matching Pursuit.</sentence>
+    <sentence>(13) (8) To predict the price return value at the following day, the sparse coding , for reconstruction of over , is used to reconstruct the n dimensional signal over the learned dictionary , according to (14) where the last entry in x specifies the predicted price return value.</sentence>
+    <sentence>To predict new values further into the future, the model has to be re-trained to absorb the latest trends of the market, which is an intrinsic behavior of financial predictors since financial patterns are dynamic and a fixed model is not appropriate for this application.</sentence>
+    <sentence>The dictionary is trained again based on the add-drop process of Fig 3 to add new information to the observation sequence and withdraw the oldest values so that the system continuously adapts to the most recent market trends.</sentence>
+    <sentence>The algorithm that combines the training and testing of an artificial financial predictor based on a sparse representation over learned dictionaries consists of the following steps: Input: (number of trading days in the observation sequence), (size of atoms and training signals), (number of atoms), (number of training signals for dictionary learning), (sparsity factor).</sentence>
+    <sentence>Output: Estimated return value for the next coming trading day .</sentence>
+    <sentence>Loop: At each trading day: • Dictionary initialization: Obtain from observation sequence .</sentence>
+    <sentence>• Extraction of training signals: Obtain from observation sequence .</sentence>
+    <sentence>• Learning: Optimization of the set of atoms by applying K-SVD.</sentence>
+    <sentence>• Projection: Project each atom in a lower dimensional space by dropping its last entry .</sentence>
+    <sentence>• Sparse coding: Compute the sparse code of a feature vector , which contains price return values, over the projected dictionary.</sentence>
+    <sentence>• Sparse reconstruction: Use the sparse code for reconstruction of a feature vector in a higher dimensional space over the optimal dictionary according to .</sentence>
+    <sentence>• Prediction: The last entry of the reconstructed signal gives the predicted value.</sentence>
+  </section>
+  <section name="Experimental results">
+    <sentence>Data set A series of experiments were run using financial time series downloaded from Yahoo!</sentence>
+    <sentence>Finance.</sentence>
+    <sentence>In the present section, two versions of the predictive model are applied to analyze and predict time series and a subsequent comparison of these predictive methods is conducted.</sentence>
+    <sentence>The prediction is applied to time series within the financial sector, specifically data from companies listed on the U.S. Stock Exchange.</sentence>
+    <sentence>A text file containing the daily stock price for each company was downloaded from the Yahoo!</sentence>
+    <sentence>Finance website where the reported price is the closing price at each day.</sentence>
+    <sentence>The length of the series (number of trading days) is variable and it depends on the history of the company.</sentence>
+    <sentence>Price values are converted into return values before an analysis and prediction are carried out on the company data.</sentence>
+    <sentence>Prediction results based on sparse representation over trained dictionaries The first set of experiments includes prediction results of the proposed model based on trained dictionaries.</sentence>
+    <sentence>We tested data sets, corresponding to 20 companies, with different model parameters.</sentence>
+    <sentence>The model was tested on the whole information of the company from its earliest recorded activity.</sentence>
+    <sentence>In this set of experiments, (1) the length of the dictionary k is varied for each company from 450 to 4500 atoms, and the average numbers of atoms over different simulations and companies is 1850, (2) the dimension n of an atom and a feature vector is 50, and (3) the size of the set of training signals m to learn a dictionary is 100, (4) the sparsity factor L is 3.</sentence>
+    <sentence>The goal of an artificial predictor is to make the most accurate predictions, which result in a cumulative return gain curve (cumulative return gain vs. time) higher than the curve provided by the market.</sentence>
+    <sentence>It is considered that 1 monetary unit is the input at the beginning of the predicting analysis.</sentence>
+    <sentence>Fig 4 shows some examples of the optimal prediction achieved by the model when it is applied to analyze the shares of different companies.</sentence>
+    <sentence>It is observed that the cumulative return gain of the predicting system (orange) generally exceeds that of the market (blue).</sentence>
+    <sentence>The cumulative return gain is a geometric series, .</sentence>
+    <sentence>Once this series reaches a value greater than one, it might increase exponentially as long as it is multiplied by factors greater than one, .</sentence>
+    <sentence>When the geometric series stays at a value lower than one, it is hard for it to start increasing rapidly and it looks as a steady signal.</sentence>
+    <sentence>This is the reason why there are some cases where the predictor gain grows exponentially while the market gain keeps a steady, or even decreasing; a trend such as this is shown in the curves for Santander Bank beginning with trading day 784, and Nokia beginning with trading day 2821.</sentence>
+    <sentence>These are cases where the artificial predictor achieves a good performance in terms of beating the market.</sentence>
+    <sentence>Table 1 provides a quantitative analysis of the predictive model based on trained dictionaries.</sentence>
+    <sentence>One performance metric is the rate of successful prediction (RSP), which is defined as the ratio of those days where the predictor beats the market over the total number of days under prediction.</sentence>
+    <sentence>Other metrics are generated by computing the difference between two signals, the predictor return gainxp (orange signal) minus the market return gainxm (blue signal).</sentence>
+    <sentence>Metrics, associated to the histogram of the differential signal , are (1) the average difference between the predictor gain and market gain , and (2) the maximum value of the differential signal .</sentence>
+    <sentence>The final metric performance is the number of atoms per dictionary.</sentence>
+    <sentence>For the case of trained dictionaries, the number of atoms needs to be large to have the predictor beating the market whereas untrained dictionaries are characterized by having a smaller number of atoms to achieve successful results.</sentence>
+    <sentence>There are two cases where the successful prediction rate is low, Haliburton Company with RSP = 0.547627 and Nanosphere with RSP = 0.620513; however, Nanosphere is also characterized by the highest values for parameters maximum difference (25.16187) and average difference (2.322425).</sentence>
+    <sentence>The best values are shown in boldface characters.</sentence>
+    <sentence>Prediction results based on sparse representation over untrained dictionaries Fig 5 shows some results of experiments, which are performed on 20 companies by applying the predictive model based on untrained dictionaries.</sentence>
+    <sentence>In this set of experiments, steps 3 and 4, described in Section 5, are skipped.</sentence>
+    <sentence>All the companies were analyzed to predict the return over all the history of the company.</sentence>
+    <sentence>The model is applied on the training data with different values for the model parameters, (1) the size of the dictionary is adjusted at different number of atoms (300, 350, 380, 400, 450), (2) the dimensionality of each atom is 50, (3) there is no set of training signals to adapt a dictionary, (4) the sparsity factor is 3.</sentence>
+    <sentence>For this set of experiments, it is observed that the model achieves better performance than that of the model based on trained dictionaries.</sentence>
+    <sentence>This model is also characterized by a computational time, which is considerably reduced since there is no dictionary training stage and the fact that the number of atoms is much lower than that of trained dictionaries.</sentence>
+    <sentence>Fig 5.</sentence>
+    <sentence>Cumulative return gain obtained by following a predictive model based on untrained dictionaries vs. the curve generated by the market.</sentence>
+    <sentence>There are some cases where the geometric series, corresponding to the predictor, reaches a value greater than one and increases exponentially, while the market series stays at values lower than one and thus behaves as a steady signal.</sentence>
+    <sentence>Some scenarios characterized by this trend are those of Applied Materials as from trading day 2671, Frontier Communications Corporation as from day 4239, General Electric Company as from trading day 8234, and Cisco Company between trading days 940 and 2192.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Quantitative analysis of the predictive model based on trained dictionaries.</sentence>
+    <sentence>Company Number of trading days Successful prediction rate Average difference Maximum difference Number of atoms Applied Materials 1037 0.933462 0.134551 0.411098 1800 Banco Bradesco 1493 0.931011 0.147604 0.529507 1700 Banco Santander 4949 0.925844 1.279362 3.406631 1900 Bank of America Corporation 2752 0.998547 0.54079 0.884993 4500 Direxion Daily Gold 287 0.989547 0.220402 0.623338 700 Haliburton Company 3139 0.547627 0.334887 3.128864 1800 Intel Corporation 1240 0.929839 0.209619 0.719994 2000 Lannett Company 2070 0.999034 0.62041 1.149219 1900 Nanosphere 975 0.620513 2.322425 25.16187 900 Nokia 3570 0.99944 1.351609 3.730181 1700 Oasis Petroleum 386 0.831606 0.14297 0.494709 800 Office Depot 1207 0.882353 0.237358 0.648902 3800 Pfizer 1852 0.967063 0.329787 0.638791 1800 SIRI 1718 0.927241 1.024333 2.965039 1700 Sprint Corporation 327 0.990826 0.295772 0.521129 1600 Sun Edison 625 0.992 0.449024 0.794063 1850 The Coca Cola Company 510 0.907843 0.037209 0.110866 2500 Twitter 181 0.701657 0.078321 0.263259 150 Vera Bradley 374 0.919786 0.356279 0.588402 750 WPCS International Incorporated 609 0.995074 0.466195 0.910921 1700 Table 2.</sentence>
+    <sentence>Quantitative analysis of the predictive model based on untrained dictionaries.</sentence>
+    <sentence>Company Number of trading days Successful prediction rate Average difference Maximum difference Number of atoms Alcoa Inc. 1548 0.910207 0.322051 0.848233 350 Applied Materials 3377 0.998519 1.235327 3.205048 300 Banco Bradesco 2813 0.79808 0.290351 0.777002 380 Banco Santander 6469 0.941104 0.273208 0.635865 380 Bank of America Corporation 6902 0.616778 0.463229 2.64655 450 Brocade Communications Systems 3637 0.999725 0.402858 1.423769 350 Cisco Systems 5935 0.992249 4.143708 15.53699 350 Frontier Communications Corporation 5864 0.997442 0.615141 1.607215 450 Intel Corporation 8158 0.743197 0.887895 3.251783 400 Nanosphere 855 0.912281 0.594047 1.23293 350 Netflix 2942 0.988443 3.363954 17.22953 300 Nokia 4970 0.914286 0.693434 2.775752 300 Oracle Corporation 1477 0.918754 0.694525 1.543832 450 Pfizer 3302 0.894912 0.293304 0.923765 350 Power Shares QQQ 3748 0.999733 0.414269 0.757353 300 Rite Aid Corporation 2902 0.696072 0.384714 1.765183 300 TECO Energy 2638 0.920015 0.21106 0.638477 450 The Coca Cola Company 2047 0.85393 0.14208 0.37172 400 The Dow Chemical Company 1140 0.998246 0.278879 0.714436 300 The General Electric Company 13034 0.88 1.940549 6.774487 350 WPCS International Incorporated 1592 0.926508 0.477183 1.004763 350 The quantitative analysis of the predictive model based on untrained dictionaries is shown in Table 2.</sentence>
+    <sentence>This table presents the same metrics used to analyze the predictive potential of trained dictionaries, ratio of successful prediction, average difference between predictor gain and market gain, maximum value of the differential signal, and number of atoms per dictionary.</sentence>
+    <sentence>The best results were obtained for Power Shares in terms of Successful Rate of Prediction (0.99944), CISCO Systems in terms of average difference (4.143708), and Netflix in terms of maximum difference (17.22953).</sentence>
+    <sentence>These results are shown in boldface characters.</sentence>
+    <sentence>Financial insights based on experimental outcomes According to most of the qualitative results in Figs.</sentence>
+    <sentence>4 and 5, the cumulative gain provided by the artificial predictor is higher than that offered by the market.</sentence>
+    <sentence>According to the quantitative analysis shown in Tables 1 and 2, the proposed method is characterized by high rates of successful prediction.</sentence>
+    <sentence>Therefore, the predictor is a good financial tool since it can anticipate increases and drops so that a share-holder can withdraw or maintain his/her investments.</sentence>
+    <sentence>There are cases, like that of WPCS International Incorporated in Fig 5, which are characterized by having periods of time where the predicted time series goes below that of the market, and for these cases it would be interesting to analyze the corresponding dates to find if some historic events had a negative influence on the predictions such as presidential elections, terrorist attack, etc.</sentence>
+    <sentence>Once an artificial predictor has been trained, the share-holder will be interested in knowing if financial decisions should be based on using the predictive potential of dictionaries, which is possible by analyzing its performance metrics, mainly the rate of successful prediction.</sentence>
+    <sentence>Comparison of predictive models based on untrained dictionaries vs. models with K-SVD dictionaries According to some of the results, shown in Figs.</sentence>
+    <sentence>4 and 5 as well as results in Tables 1 and 2, untrained dictionaries outperform K-SVD dictionaries for the case of predicting financial time series in terms of cumulative return gain.</sentence>
+    <sentence>An additional advantage of untrained dictionaries vs. trained ones is simplicity and lower computational time since the extraction of training sets and the dictionary training stage are not required.</sentence>
+    <sentence>Because of lower computational time, untrained dictionaries were used to predict return values over much longer periods of trading days.</sentence>
+    <sentence>In addition, for the case of untrained dictionaries, the number of atoms is considerably lower than the number of atoms in trained ones.</sentence>
+    <sentence>One motivation for using untrained dictionaries is the straight use of features in atoms, which are return gain values, without changes introduced by a training stage.</sentence>
+    <sentence>All the atoms of a dictionary lie in the n-dimensional space , specifically in the unit hyper-sphere.</sentence>
+    <sentence>Another characteristic of an untrained dictionary is that all of its atoms are in the positive orthant of the n-dimensional space since all atom entries are return gain values which are non-negative .</sentence>
+    <sentence>In the other hand, if atoms are trained then they will not be constrained to be in the positive orthant anymore.</sentence>
+    <sentence>Any signal , which is sparsely reconstructed over a dictionary, is also located in the positive orthant since its components are return gain values.</sentence>
+    <sentence>In conclusion, atoms in untrained dictionaries lie closer to any signal to be sparsely reconstructed than those atoms in trained dictionaries.</sentence>
+    <sentence>This is the reason why the error, , introduced by the sparse reconstruction of a signal in the positive orthant, is smaller for the case of untrained dictionaries.</sentence>
+    <sentence>According to Rosas-Romero and Tagare (2014), the occurrence of misclassified patches in echocardiographic image segmentation is more serious when trained dictionaries are used instead of dictionaries without training.</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>This paper presents the development of a method, based on sparse representation of financial time series over redundant dictionaries, which is applied to the problem of predicting financial time series.</sentence>
+    <sentence>To the best of our knowledge, this is the first time that the framework of sparse representation of signals is applied to the problem of forecasting stock return behavioral movements.</sentence>
+    <sentence>It was found that the overall return gain generated by the predictive model exceeds the gain generated by the market.</sentence>
+    <sentence>Each stock has a different behavior; therefore, the ideal set of model parameters depends on the behavior of its historical data.</sentence>
+    <sentence>As a result, the optimal dictionary size depends on the history of the company and its financial background.</sentence>
+    <sentence>Strengths of the proposed method are (1) the simplicity in extracting features since it only requires historical return values; (2) the fact that is not based on speculation as other methods where features are related to news such as oil price, dollar currency exchange, stock return values from other companies, credit risk, foreign investments, gross domestic product (GDP), indexes, people perception, etc.</sentence>
+    <sentence>; (3) as opposed to other methods, there are no assumptions about the fact that return values behave according to some probability density function; and (4) additional features might be generated by concatenating time series from different companies related to the same asset.</sentence>
+    <sentence>Weaknesses of the proposed method are (1) that it depends on different parameters such as the number of atoms, size of the atom, sparsity and number of training samples; and (2) training of the model depends on trying different sets of parameter values to find the optimal set what makes it computationally costly.</sentence>
+    <sentence>Trained and untrained dictionaries were tested.</sentence>
+    <sentence>Experiments show that dictionaries, directly built with the extraction of historical return price values, outperform trained dictionaries with the KSV-D method.</sentence>
+    <sentence>Any vector, whose components are non-negative return price values, lies in the positive orthant of the n-dimansional space.</sentence>
+    <sentence>A financial time series, to be sparsely reconstructed, is also placed in the positive orthant and will lie close to the set of atoms of an untrained dictionary.</sentence>
+    <sentence>In the other hand, a trained dictionary is characterized by a set of atoms located at all the possible orthants.</sentence>
+    <sentence>It is concluded that the error, for sparsely reconstructing a signal over a set of untrained atoms, is smaller than that introduced by a reconstruction based on updated atoms by the K-SVD training.</sentence>
+    <sentence>An additional advantage of untrained dictionaries vs. trained ones is its simplicity and lower computational time since the extraction of training sets and the dictionary training stage are not required.</sentence>
+    <sentence>The quantitative analysis of the predictive model consists in estimating some metrics, used to analyze the predictive potential of dictionaries, such as ratio of successful prediction, average difference between predictor gain and market gain, maximum value of the differential signal, and number of atoms per dictionary.</sentence>
+    <sentence>According to qualitative and quantitative results, models with untrained dictionaries outperform those with trained dictionaries.</sentence>
+    <sentence>In order to analyze all the companies that conform the stock market, it is required to perform complicated data processing with extremely high computational time.</sentence>
+    <sentence>It is not an easy task to analyze all companies in the stock exchange market from one day to another to make decisions about buying and selling stocks; and for that reason, it is important to use parallel computing.</sentence>
+  </section>
+</article>

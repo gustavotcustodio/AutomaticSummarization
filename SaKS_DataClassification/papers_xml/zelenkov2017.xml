@@ -1,0 +1,392 @@
+<article>
+  <title>Two-step classification method based on genetic algorithm for bankruptcy forecasting</title>
+  <abstract>
+    <sentence>By present, many models of bankruptcy forecasting have been developed, but this area remains a field of research activity; little is known about the practical application of existing models.</sentence>
+    <sentence>In our opinion, this is because the use of existing models is limited by the conditions in which they are developed.</sentence>
+    <sentence>Another question concerns the factors that can be significant for forecasting.</sentence>
+    <sentence>Many authors suggest that indicators of the external environment, corporate governance as well as firm size contain important information; on the other hand, the large number of factors does not necessary increase predictive ability of a model.</sentence>
+    <sentence>In this paper, we suggest the genetic algorithm based two-step classification method (TSCM) that allows both selecting the relevant factors and adapting the model itself to application.</sentence>
+    <sentence>Classifiers of various models are trained at the first step and combined into the voting ensemble at the second step.</sentence>
+    <sentence>The combination of random sampling and feature selection techniques were used to ensure the necessary diversity level of classifiers at the first step.</sentence>
+    <sentence>The genetic algorithms are applied at the step of features selection and then at the step of weights determination in ensemble.</sentence>
+    <sentence>The characteristics of the proposed method have been tested on the balanced set of data.</sentence>
+    <sentence>It included 912 observations of Russian companies (456 bankrupts and 456 successful) and 55 features (financial ratios and macro/micro business environment factors).</sentence>
+    <sentence>The proposed method has shown the best accuracy (0.934) value among tested models.</sentence>
+    <sentence>It has also shown the most balanced precision-recall ratio.</sentence>
+    <sentence>It found bankrupts (recall = 0.953) and not bankrupts (precision = 0.910) rather accurately than other tested models.</sentence>
+    <sentence>The ability of method to select the task-relevant features has been also tested.</sentence>
+    <sentence>Excluding the features that are significant for less than 50% of the classifiers in the ensemble improved the all performance metrics (accuracy = 0.951, precision = 0.932, recall = 0.965).</sentence>
+    <sentence>So, the proposed method allows to improve the advantages and alleviate the weaknesses inherent in ordinary classifiers, enabling the business decisions support with a higher reliability.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Bankruptcy</keyword>
+    <keyword>Bankruptcy forecasting models</keyword>
+    <keyword>Ensembles of classifiers</keyword>
+    <keyword>Features selection</keyword>
+    <keyword>Genetic algorithm</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The problem of bankruptcy forecasting is one of the most actively studied nowadays among practical and theoretical issues of company management.</sentence>
+    <sentence>Assessment of the current financial status and determination of bankruptcy probability are of interest to shareholders, suppliers, creditors and others aiming is to deal with perspective and reliable business partners.</sentence>
+    <sentence>Although more than 150 bankruptcy models employing above 750 different factors have been proposed, these models are rarely used in practice (Bellovary, Giacomino, &amp; Akers, 2007).</sentence>
+    <sentence>In our opinion, this is since different economic environments have various properties that do not allow reusing models and related sets of factors in other conditions.</sentence>
+    <sentence>This fact has been confirmed by comparative studies of models for different countries (Liang, Tsai, &amp; Wu, 2015; Peng, Wang, Kou, &amp; Shi, 2011).</sentence>
+    <sentence>For developing countries, with the economic structure significantly different from the developed countries this fact is particularly significant (Fedorova, Gilenko, &amp; Dovzhenko, 2013).</sentence>
+    <sentence>In addition to the financial ratios, new factors may be required for forecasting in such conditions (Liang, Lu, Tsai, &amp; Shih, 2016; Tinoco &amp; Wilson, 2013).</sentence>
+    <sentence>However, it is not possible to predict in advance which indicators will affect the predictive ability, so the features selection is necessary.</sentence>
+    <sentence>In this paper, we design a predictive model that can be easily adapted to any new situation, both in terms of model architecture and the features used.</sentence>
+    <sentence>We combine the following techniques: at the first stage, we select the significant features for ordinary classifiers, which are combined into a voting ensemble in the second stage.</sentence>
+    <sentence>For both stages (features selection and determination of the weights of the ensemble) a genetic algorithm is used.</sentence>
+    <sentence>The proposed method has been tested on the balanced set of data that consists of 912 observations of Russian companies (456 bankrupts and 456 successful companies) and 55 features (financial ratios, macro and micro business environment factors).</sentence>
+    <sentence>The research data set was divided into a training set and a test set in a proportion 80/20.</sentence>
+    <sentence>The proposed method has shown the best accuracy (0934) among tested models on the test set.</sentence>
+    <sentence>It has also shown the most balanced precision-recall ratio.</sentence>
+    <sentence>It determined bankrupts (recall = 0.953) and not bankrupts (precision = 0.910) with a higher accuracy compared to the other tested models.</sentence>
+    <sentence>An another advantage of the proposed method is the ability to select the conditions-depended features.</sentence>
+    <sentence>Elimination of features significant for less than 50% of classifiers in the ensemble increases all the performance metrics (accuracy = 0.951, precision = 0.932 and recall = 0.965).</sentence>
+  </section>
+  <section name="Related works">
+    <sentence>Nowadays a number of studies are devoted to the problem of bankruptcy probability assessment.</sentence>
+    <sentence>All researches of this subject can be conditionally divided into two groups.</sentence>
+    <sentence>The first one consists of the researches concerning the choice of measurable characteristics (features) set providing a high precision forecasting (Kumar &amp; Ravi, 2007).</sentence>
+    <sentence>The most extensive of these studies concerns the indicators of financial condition (du Jardin, 2016; Fedorova et al., 2013; Lee &amp; Yeh, 2004; Zięba, Tomczak, &amp; Tomczak, 2016).</sentence>
+    <sentence>There are works which are focused on corporate management factors (Bredart, 2014; Chan, Chou, Lin, &amp; Liu, 2016; Lee &amp; Yeh, 2004; Liang et al., 2016; Salloum &amp; Azoury, 2012), environmental factors (Alifiah, 2014; Bruneau, de Bandt, &amp; El Amri, 2012; Delas, Nosova, &amp; Yafinovych, 2015; Duffie, Saita, &amp; Wang, 2007; Karas &amp; Režňáková, 2014; Tinoco &amp; Wilson, 2013; Vlamis, 2007), level of legislation development (Rowoldt &amp; Starke, 2016), etc.</sentence>
+    <sentence>In most cases, the forecasting model of bankruptcy includes characteristics from all of these factors sets (Chan, et al., 2016; Liang et al., 2016; Tinoco &amp; Wilson, 2013).</sentence>
+    <sentence>According to Bellovary et al.</sentence>
+    <sentence>(2007), who reviewed bankruptcy prediction studies from 1930 to mid-2000s, a total of 752 different factors are used in researches, yet 674 of the factors are utilized in only one or two studies.</sentence>
+    <sentence>The number of factors considered in one study ranges from 1 to 57 and the average number of factors is 10.</sentence>
+    <sentence>The second group of studies focuses on forecasting methodology.</sentence>
+    <sentence>The bankruptcies prediction is commonly considered as a two-class classification problem: there is a set of same type objects (in our case – firms) which belong to known classes (in our case – bankrupts and non-bankrupts); the goal is to design an algorithm capable of classifying analogical objects of unknown class.</sentence>
+    <sentence>Aziz and Dar (2006) stated that bankruptcy prediction models can be divided into three main categories: statistical models, artificial intelligence expert models and theoretical models.</sentence>
+    <sentence>According to Bellovary et al.</sentence>
+    <sentence>(2007), prior to the 1990s, the basic prediction methodologies were based on statistical methods including logit and probit models, and the most common was discriminant analysis (DA), first applied in the seminal work of Altman (1968).</sentence>
+    <sentence>DA attempts to derive a linear combination of features, which best ‘discriminate’ between the classes.</sentence>
+    <sentence>Altman (1968) determined 5 financial ratios, which linear combination helps to calculate a discriminant score for the US manufacturing firms; this model is well-known as Z-score.</sentence>
+    <sentence>After the 1990s, artificial intelligence expert systems including machine-learning techniques became the primary method for bankruptcy prediction.</sentence>
+    <sentence>Most often artificial neural networks (ANN) were used (Bellovary et al., 2007), especially the multilayer perceptron (MLP).</sentence>
+    <sentence>It should be noted, however, that many researchers stated that ANNs have some shortcomings (Dos Gordini, 2014; Santos, E.M., &amp; Maupin, 2009): (1) a researcher should have great experience in order to select the control parametres properly, (2) it is difficult to generalize the results due to overfitting, and (3) ANNs have lack of explanatory power, so it is difficult to explain the prediction results.</sentence>
+    <sentence>In addition, some authors have investigated the applicability of other artificial intelligence methods to bankruptcy prediction, for example, the case-based reasoning (Ahn &amp; Kim, 2009; Sartori, Mazzucchelli, &amp; Di Gregorio, 2016).</sentence>
+    <sentence>Bellovary et al.</sentence>
+    <sentence>(2007) come up with the following conclusions in their review: (1) there are over 150 models available, many of which have shown high predictive ability, so the focus of future research should be on using the existing models as opposed to the development of new ones; (2) a large number of factors does not necessary increase model's predictive ability; (3) existing models are poorly used in practice, so researchers should attempt to establish stronger connection with practice.</sentence>
+    <sentence>We disagree with the first limitation.</sentence>
+    <sentence>First, the existing gap with practice, noted by Bellovary et al.</sentence>
+    <sentence>(2007), is the consequence of the bounded applicability of available models.</sentence>
+    <sentence>Many studies show that it is impossible to use models prepared for a specific industry, market or country in other conditions.</sentence>
+    <sentence>Liang et al.</sentence>
+    <sentence>(2015) examined data of four different countries (Germany, Australia, Taiwan, and China).</sentence>
+    <sentence>Their results indicate that there is no single best combination of feature selection method and the classification technique over the four data sets.</sentence>
+    <sentence>Similar results were obtained by Peng et al.</sentence>
+    <sentence>(2011), who analyzed bankruptcies in Japan and Korea.</sentence>
+    <sentence>Fedorova et al.</sentence>
+    <sentence>(2013) showed that the Altman Z-score, based on the five financial ratios identified by Altman (1968), does not yield acceptable results for Russian companies.</sentence>
+    <sentence>Moreover, an attempt to build a new DA model that separates Russian bankrupts and successful firms also does not provide significant results (the confirmation of this statement is presented below in a section describing research results).</sentence>
+    <sentence>In addition, the size of the firms studied significantly affects the model.</sentence>
+    <sentence>Gordini (2014) showed that the models for small and medium-sized enterprises differ from those for large enterprises.</sentence>
+    <sentence>Therefore, the development of new models (or, to be precise, the adaptation and combination of known techniques) and use of new factors are required for each specific case.</sentence>
+    <sentence>At the same time, we believe there is no need in limiting ourselves to using models proposed 20 years ago and earlier.</sentence>
+    <sentence>Many new machine learning techniques are known today, which can also be successfully applied to the problem of bankruptcy prediction that is confirmed by flow of scientific publications.</sentence>
+    <sentence>Both ordinary methods of classification (logistic regression (LR), k nearest neighbors (kNN), support vector machine (SVM), naive bayes (NB), decision trees (DT)) and methods based on classifiers ensembles are used to solve this problem.</sentence>
+    <sentence>Numerous works have been devoted to comparative efficiency analysis of various classification techniques applied to bankruptcy forecasting in differnet countries (Chang &amp; Yeh, 2012; Fedorova et al., 2013; Heo &amp; Yang, 2014; Liang et al., 2016; Peng et al., 2011; Tsai, Hsu, &amp; Yen, 2014; Zhou, Lai, &amp; Yen, 2014).</sentence>
+    <sentence>Secondly, the use of new factors in addition to financial ratios can provide new useful information.</sentence>
+    <sentence>We agree that the large number of factors in general does not increase the accuracy of the model, and it is not possible in advance to predict which of them will be informative.</sentence>
+    <sentence>Therefore, it is advisable to combine an increase in the number of factors with methods of features selection (Liang et al., 2016).</sentence>
+    <sentence>Thus, the goal of our work can be formulated as following: to develop a more or less universal method that allows to build an effective classifier, which can adapt to different conditions.</sentence>
+    <sentence>The proposed method should (1) select significant features and (2) determine the architecture of the classifier.</sentence>
+    <sentence>To achieve this goal, we propose using evolutionary techniques, namely genetic algorithm (GA).</sentence>
+    <sentence>Such approach should ensure high applicability in practice.</sentence>
+    <sentence>Some researchers use evolutionary techniques for parameters optimization in addition to more or less determined standard methods of classifiers creation.</sentence>
+    <sentence>In this case, the optimal combination of the classifier parameters is searched in the space of their possible values, the optimization goal (i.e.</sentence>
+    <sentence>fitness function) is defined usually as a minimal error of classification.</sentence>
+    <sentence>For example, Gordini (2014) used GA to build a system of logical rules based on the sign and the cutoff value of the selected financial ratios for Italian small and medium enterprises.</sentence>
+    <sentence>This helped the author to create discriminative system that outperforms the results of LR and SVM classifiers, especially in reducing the Type II error.</sentence>
+    <sentence>Similar approach was used by Gorzalczany and Rudzinski (2015), who proposed an automatic design of fuzzy rule-based classifiers using multi-objective evolutionary optimization algorithms.</sentence>
+    <sentence>The genetic algorithm is also often employed to select significant features (Acosta-Gonzalez &amp; Fernandez-Rodriguez; 2014), sometimes this approach is combined with parameter optimization.</sentence>
+    <sentence>For example, Zhou et al.</sentence>
+    <sentence>(2014) used the genetic algorithm for simultaneous SVM's feature selection and parameter optimization.</sentence>
+    <sentence>Such approach allows receiving the classifiers that consider particular features of subject domain more precisely.</sentence>
+    <sentence>One of the elements required for accurate prediction by using an ensemble is recognized to be an error ``diversity” (Brown, Wyatt, Harris, &amp; Yao, 2005).</sentence>
+    <sentence>If there are many different classifiers to be combined, one would expect an increase in the overall accuracy when combining them, if they are diverse.</sentence>
+    <sentence>Kim and Kang (2012) proposed a genetic algorithms-based coverage optimization system for ensemble learning.</sentence>
+    <sentence>Let us note that the majority of ensembles creation techniques operate with the classifiers of one type.</sentence>
+    <sentence>The alternative direction in the development of classification methodology is the combination of several classifier systems, which can be built following either the same or different models and/or data sets building approaches (Wozniak, Grana, &amp; Corchado, 2014).</sentence>
+    <sentence>Such systems exceed the traditional approaches relying on classifiers of one type.</sentence>
+    <sentence>They use a combination of various rules and methods of information extraction for decision making.</sentence>
+    <sentence>The approach based on creation of ensemble from classifiers of various type is known as Multi-Classifier Systems (MCS) and is actively developing.</sentence>
+    <sentence>This paper follows the MCS approach and describes a two-stage classification method (TSCM) using genetic algorithms.</sentence>
+    <sentence>In our TSCM method we suggest using a combination of several approaches: training of individual classifiers at training set with simultaneous features selection for each individual classifier based on GA; determination of each classifier significance in ensemble also through GA.</sentence>
+    <sentence>The choice of ordinary classifiers is the first problem in case of algorithm creation.</sentence>
+    <sentence>Thammasiri and Meesad (2012) used DT, SVM and ANN.</sentence>
+    <sentence>Tsai (2014) used a combination of MLP, DT, and LR as the hybrid classifier, other models of classifiers haven't been researched.</sentence>
+    <sentence>In our research, we choose the most popular unary classifiers kNN, LR, NB, DT and SVM.</sentence>
+    <sentence>The second problem concerns the feature selection.</sentence>
+    <sentence>The feature selection problem deals with selection of an optimal relevant set of attributes that are necessary for the recognition process (Han, Kamber, &amp; Pei, 2012; Mukhopadhyay, Maulik, &amp; Bandyopadhyay, 2014).</sentence>
+    <sentence>It helps reduce the dimensionality of the measurement space and facilitates the use of easily computable algorithms for efficient classification.</sentence>
+    <sentence>Liang et al.</sentence>
+    <sentence>(2015) noted that since there is no general agreement about financial ratios as input features for model development for financial distress prediction.</sentence>
+    <sentence>A number of studies consider feature selection as a pre-processing step in data mining before modeling.</sentence>
+    <sentence>Some of the collected variables may contain noise that could affect the prediction result.</sentence>
+    <sentence>On the other hand, if too many features were used for data analysis, it can cause high dimensionality problems.</sentence>
+    <sentence>The simplest algorithm of feature selection is to test each possible subset of features finding the one which minimizes the error rate, and the choice of evaluation metric heavily influences such method (Guyon &amp; Elisseeff, 2003), in addition, a full bust of all possible combinations requires a lot of time.</sentence>
+    <sentence>Subset selection approaches include a lot of techniques, significant part of which is also inspired by nature: genetic algorithm, particle swarm, simulated annealing, etc.</sentence>
+    <sentence>For example, Acosta-Gonzalez and Fernandez-Rodriguez (2014) used GA for selecting the financial ratios employed in the LR model.</sentence>
+    <sentence>In our research, we will also rely on GA as evolutionary technique allows to research parameters space with the smallest costs and to choose optimum feature set for each individual classifier.</sentence>
+    <sentence>Also, the random subspace method (RSM) offered by Ho (1998) is widely applied to feature selection, this approach is also called attribute bagging (Bryll, 2003) or feature bagging.</sentence>
+    <sentence>According to this approach, the features are randomly sampled with replacement for each classifier.</sentence>
+    <sentence>This causes individual classifiers to not over-focus on features that appear highly predictive/ descriptive in the training set, but fail to be as predictive for points outside that set.</sentence>
+    <sentence>When RSM is combined with bagging of decision trees, the resulting models are called random forests (RF).</sentence>
+    <sentence>Similar approach is used also in models which are named extremely randomized trees (Geurts, Ernst, &amp; Wehenkel, 2006) or ExtraTrees (ET).</sentence>
+    <sentence>Peculiarity of this technique is that top-down splitting in the tree classifier is randomized instead of computing the locally optimal feature/split combination.</sentence>
+    <sentence>We also use random subspace method when training individual classifiers to avoid over-focusing.</sentence>
+    <sentence>The third problem is the choice of classifiers ensemble architecture.</sentence>
+    <sentence>We use the voting classifier since it is the simplest way to realize MCS.</sentence>
+    <sentence>The advantage of voting classifier use over AdaBoost, bagging, random subspace, and majority voting has been proved in the research of Onan, Korukoglu, and Bulut (2016).</sentence>
+    <sentence>Thus, we solve a quite standard problem regarding the development of the model with high prognostic ability.</sentence>
+    <sentence>The higher accuracy of our method (TSCM) is achieved through the inclusion of a stage in which a genetic algorithm-based feature selection is made for each individual classifier that is trained on the random subspace.</sentence>
+    <sentence>In addition, we have significantly expanded the set of variables for analysis.</sentence>
+    <sentence>We added to the traditional financial ratios (liquidity, financial stability, turnover and profitability) the ratios used in the Altman model, and the factors chosen according to the frequency of applying in various studies (Bellovary et al., 2007).</sentence>
+    <sentence>Similar sets were used in many works (du Jardin, 2016; Fedorova et al., 2013; Lee &amp; Choi, 2013).</sentence>
+    <sentence>Also, we consider that it is important to estimate the external environment factors of the firm.</sentence>
+    <sentence>Researchers in a bankruptcy forecasting area often use various external indicators and most often economic conjuncture indicators, such as: GDP and its derivatives, various market indices, PMI (purchasing managers index), etc.</sentence>
+    <sentence>(Alifiah, 2014; Karas &amp; Režňáková, 2014; Vlamis, 2007).</sentence>
+    <sentence>In our research, we adhere to the classification of external factors proposed by Delas et al.</sentence>
+    <sentence>(2015).</sentence>
+    <sentence>However, we have excluded some indirect indicators (for example, the cultural environment) and concretized macroeconomic external factors, attributing them to an economic environment or to a policy of the Central Bank (the rate of license revocation from credit institutions, the market indexes, the price index of manufactured goods).</sentence>
+    <sentence>In addition, the characteristics of the firms being investigated were included in the data set (e.g.</sentence>
+    <sentence>inclusion of the firm in the public list of unreliable suppliers).</sentence>
+  </section>
+  <section name="Two step classification method">
+    <sentence>The main issues in the hybrid classifier system (MCS) design (Wozniak et al., 2014) are: system topology (how to interconnect individual classifiers), ensemble design (how to drive the generation and selection of a pool of valuable classifiers) and fuser design (how to build a decision combination function).</sentence>
+    <sentence>System design We use a parallel architecture as the overwhelming majority of MCS reported in the literature is structured in a parallel topology (Kuncheva, 2004; Wozniak et al., 2014).</sentence>
+    <sentence>In this architecture, each classifier is fed by the same input data, so that the final decision of the ensemble is based on the individual classifiers outputs, obtained independently.</sentence>
+    <sentence>Ensemble design The design algorithm of hybrid ensemble should support the involvement of mutually complementary individual classifiers that provide high diversity and accuracy.</sentence>
+    <sentence>Two problems should be considered on the way to design such algorithm.</sentence>
+    <sentence>First, there are no commonly accepted methods of diversity measurement (Brown et al., 2005).</sentence>
+    <sentence>In addition, according to Kuncheva (2004), it is impossible to raise diversity of classifier pool through manipulation with inputs and model of individual classifiers.</sentence>
+    <sentence>Secondly, it is impossible to predict what classifiers can be complementary.</sentence>
+    <sentence>It depends on type of task and specific data set.</sentence>
+    <sentence>Therefore, we suggest using the combination of three approaches: (1) training of individual classifiers on subsets of training data and the calculation of their accuracy as the average accuracy on these subsets (random sampling); (2) features selection for each individual classifier based on GA; (3) calculation of the weight of each classifier in ensemble also by GA. 3.3.</sentence>
+    <sentence>Fuser design We use voting ensemble with majority voting rule.</sentence>
+    <sentence>Output value is formed as the weighted sum of individual classifiers responses.</sentence>
+    <sentence>For this purpose, the class of each object is determined by values 1 (bankrupt) and −1 (not bankrupt).</sentence>
+    <sentence>The sign of the ensemble outcome determines to the object class, the outcome absolute value corresponds to the degree of confidence.</sentence>
+    <sentence>Two-stage ensemble evolutionary training The offered algorithm is implemented in two stages.</sentence>
+    <sentence>At the first stage, training of individual classifiers and selection of the most adequate feature set is made for each of them.</sentence>
+    <sentence>As it is mentioned above, it is impossible to predict what classifiers will have complementary properties, so one can use any available models in this phase.</sentence>
+    <sentence>We use the most widely applied models of ordinary classifiers: kNN, NB, LR, DT and SVM.</sentence>
+    <sentence>First stage.</sentence>
+    <sentence>Training of classifiers set Coding.</sentence>
+    <sentence>The features set used for the ordinary classifier training is coded by an array of bits G(N), here N is number of features in the initial dataset.</sentence>
+    <sentence>Array elements can take values 0 or 1.</sentence>
+    <sentence>If the element of G is equal to 0, the corresponding feature is excluded from training set.</sentence>
+    <sentence>Initial population.</sentence>
+    <sentence>Initial population of size s is created from classifiers of one type.</sentence>
+    <sentence>Value 1 is assigned to all elements of a genotype G of each population member.</sentence>
+    <sentence>Thereby training of each classifier begins with full range of features.</sentence>
+    <sentence>Selection.</sentence>
+    <sentence>The best individual in population is always copied in new population without any changes (the principle of elitism).</sentence>
+    <sentence>Selection of other individuals is rank-based.</sentence>
+    <sentence>Mutation.</sentence>
+    <sentence>Mutation is applied to randomly selected element of genotype G of selected individual, its value is replaced by opposite, i.e.</sentence>
+    <sentence>0 becomes 1, and 1 becomes 0.</sentence>
+    <sentence>Crossover.</sentence>
+    <sentence>Two-points crossover is applied with probability pc to two selected individuals, their offsprings are added in new population.</sentence>
+    <sentence>Fitness function.</sentence>
+    <sentence>Fitness of each population member is calculated as an average classification accuracy value according to an Algorithm 1.</sentence>
+    <sentence>The initial training set T contains L observations.</sentence>
+    <sentence>It is randomly split in two not crossed subsets: Ttrain of size (1 – 1/nfold)L and Ttests of size L⁄nfold.</sentence>
+    <sentence>The first set is used for classifier C training, the second one is used for its accuracy assessment.</sentence>
+    <sentence>This procedure is repeated nfold times, fitness is calculated as a mean accuracy by all nfold attempts.</sentence>
+    <sentence>Such approach allows to avoid overfitting.</sentence>
+    <sentence>The accuracy calculated as Here TP is true positives (positives classified as positives), FP is false positives (negatives classified as positives), TN is true negatives (negatives classified as negatives) and FN is false negatives (positives classified as negatives).</sentence>
+    <sentence>At the first stage of training a set of classifiers types that will be used for ensemble creation is specified (denote the number of types in this set by M).</sentence>
+    <sentence>The classifier of each type is trained according to the algorithm described above.</sentence>
+    <sentence>The set of the trained classifiers is transferred to the following stage.</sentence>
+    <sentence>Second stage.</sentence>
+    <sentence>Creation of ensemble In the second stage, the voting ensemble with majority voting rule is designed from the set of the classifiers trained at the first stage.</sentence>
+    <sentence>Coding.</sentence>
+    <sentence>The ensemble is coded by an array of w real numbers, big or equal to zero of size M. They set value of weight coefficient to corresponding classifier.</sentence>
+    <sentence>During creation of initial population, the elements wi, i = 1 … M are set in a random way, at the same time the normality condition is satisfied .</sentence>
+    <sentence>Selection.</sentence>
+    <sentence>Selection rules are the same as at the first stage: principle of elitism and selection according to the rank of individual.</sentence>
+    <sentence>Mutation.</sentence>
+    <sentence>Mutation is applied to all weight coefficients w of the selected individual.</sentence>
+    <sentence>These weights wi are changed by the random values vi uniformly distributed in the interval (−0.1; 0.1).</sentence>
+    <sentence>If negative value of wi is received, it is replaced by 0.</sentence>
+    <sentence>At the same time, the normality condition isn't satisfied.</sentence>
+    <sentence>These parameters were determined during experimental launches of an algorithm.</sentence>
+    <sentence>Crossover.</sentence>
+    <sentence>Two-point crossover operation is similar to the crossover at the first stage.</sentence>
+    <sentence>Fitness function.</sentence>
+    <sentence>Fitness of ensemble is calculated as the accuracy value on training set T. Let CE be the class of object that is calculated as the weighed sum of outcomes of ordinary classifiers: , where Ci is an outcome of ith ordinary classifier.</sentence>
+    <sentence>If the sign of CE matches the sign of object class (1 for bankrupts and −1 for the successful company), then an object is considered as correctly recognized.</sentence>
+    <sentence>Absolute value of CE corresponds to degree of confidence.</sentence>
+    <sentence>The program code, which realized the method, was developed using the Python language on base of machine learning library scikit-learn (Pedregosa, et al., 2011).</sentence>
+  </section>
+  <section name="Analysis of data">
+    <sentence>To assess the quality of the proposed method a balanced data set was used.</sentence>
+    <sentence>It consists of 912 observations (456 bankrupts and 456 successful companies) of Russian firms and 55 features.</sentence>
+    <sentence>The original data in the data set were normalized so that their values lied in the range (−1; 1).</sentence>
+    <sentence>This data set was divided into 2 sets – the training set and the test set, taken in the proportion of 80/20, which included 729 and 183 observations, respectively.</sentence>
+    <sentence>The list of variables for analysis included standard financial ratios (liquidity, financial stability, turnover, and profitability), the ratios of Altman (1968) model and the financial ratios selected according frequency of their occurrence in researches in various countries (Bellovary et al., 2007).</sentence>
+    <sentence>We also added indicators that reflect the economic situation and the policy of the Central Bank, and factors that describe firm's non-financial characteristics: the presence of the government control, the presence of economic sanctions of different States, market share, inclusion of the firm in the public list of unreliable suppliers, etc.</sentence>
+    <sentence>Table 4 lists all features selected for method evaluation.</sentence>
+  </section>
+  <section name="The results and discussion">
+    <sentence>The results of basic classifiers training (the first stage of a method) are given in Table 1, for all classifiers the following parameters were used: the population size is 50, number of generations is 50, nfold = 4, pc = 0.5.</sentence>
+    <sentence>Accuracy before training was calculated before start of a genetic algorithm when the features set included all 55 elements.</sentence>
+    <sentence>Such widely known models as kNN, LR, NB, DT and SVM were used as the basic classifiers with the default parameters of scikit-learn library.</sentence>
+    <sentence>The average accuracy reached after training is given in the column with caption ``after training” with borders of 95% confidence interval.</sentence>
+    <sentence>The highest accuracy is received for DT method (0.892) with the border of 95% confidence interval ±0.028.</sentence>
+    <sentence>The narrowest confidence interval belongs to SVM method (±0.012).</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Results of basic classifiers training (the first stage of the method).</sentence>
+    <sentence>Classifier model Training set Test set Weights in ensemble wi Before training (N = 55) After training Accuracy Precision Recall Accuracy Accuracy Accuracy Precision Recall Number of Growth features (N) kNN 0.830 0.871 ± 0.055 1.05 0.851 0.911 34 0.831 0.787 0.871 0.283 LR 0.808 0.829 ± 0.024 1.03 0.810 0.868 51 0.825 0.773 0.882 0.013 NB 0.557 0.602 ± 0.070 1.08 0.598 0.669 33 0.579 0.540 0.635 0.122 DT 0.878 0.892 ± 0.028 1.02 0.895 0.892 46 0.847 0.852 0.812 0.184 SVM 0.848 0.855 ± 0.012 1.01 0.839 0.884 54 0.845 0.816 0.856 0.287 The most essential indicators of the classification quality are the precision and the recall, which are defined by the following formulas: The precision is the ability of the classifier not to label a sample as positive that is actually negative.</sentence>
+    <sentence>The recall is the ability of the classifier to find all the positive samples.</sentence>
+    <sentence>These values correspond to the two types of errors.</sentence>
+    <sentence>Type I errors are the misclassification of bankrupt firms as non-bankrupts, this error is measured via recall.</sentence>
+    <sentence>Type II errors are, on the contrary, non-bankrupt firms misclassified as bankrupts, this error is measured via precision.</sentence>
+    <sentence>Also, Table 1 shows the number of features, which were recognized as important in the process of training.</sentence>
+    <sentence>Various basic classifiers choose different number of features, the SVM method selects the largest number (54), and the NB method selects the smallest number of features (33).</sentence>
+    <sentence>The values of accuracy, precision and recall on the test sample are given in the columns with caption ‘Test set’.</sentence>
+    <sentence>The DT model also demonstrates the highest accuracy on a test set.</sentence>
+    <sentence>Fig 1 presents the evolution of accuracy during training of ensemble (the second stage of method), which combines classifiers trained at the first stage.</sentence>
+    <sentence>The following parameters are used: the population size is 40, number of generations is 40, probability of crossover pc = 0.5.</sentence>
+    <sentence>As follows from Fig 1, the final accuracy of ensemble is 0.963.</sentence>
+    <sentence>Weights wi of the trained ensemble are specified in an extreme right column of Table 1.</sentence>
+    <sentence>The SVM model has the largest weight (0.</sentence>
+    <sentence>287), the second is kNN model (0.</sentence>
+    <sentence>283).</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Training of ensemble at training set.</sentence>
+    <sentence>Classification accuracy rate vs number of generations.</sentence>
+    <sentence>Table 2 shows the results of training and testing of the proposed method in comparison with the results of other popular methods.</sentence>
+    <sentence>First, we tested the two most popular models of bankruptcy forecasting (Bellovary et al., 2007), namely DA and ANN.</sentence>
+    <sentence>It can be seen from Table 2 that the Z-score with the coefficients determined in Altman (1968) has a significant Type II error, it misclassifies many successful firms as bankrupts (precision = 0.467, recall = 0.906).</sentence>
+    <sentence>This confirms that it is impossible to reuse models prepared for certain industries, markets and countries in other conditions.</sentence>
+    <sentence>To further investigate this problem, the new discriminant function was calculated with help of Linear Discriminant Analysis (LDA) on the full set of features.</sentence>
+    <sentence>It significantly improved the results of classification (see Table 2, line `LDA'), but the analysis of the scaling vector for the new model showed that the largest contribution to class separation is provided not by the features identified by Altman (1968).</sentence>
+    <sentence>In descending order of significance, the new top-5 factors are R5 (profitability), S8 (the ratio of own working capital), T3 (total assets turnover), E22 (growth of HSBC PMI index) and T4 (net income to net capital).</sentence>
+    <sentence>A significantly better discriminant function can be obtained by a Quadratic Discriminate Analysis (QDA).</sentence>
+    <sentence>We note, however, that the method of features selection based on GA proposed here (the first stage of TSCM) works very poorly for the LDA and QDA classifiers, tests have shown that there is no reduction in number of features.</sentence>
+    <sentence>Therefore, classifiers based on the discriminant analysis were not included in the list of basic classifiers of TCSM.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Accuracy of various models of bankruptcy prediction.</sentence>
+    <sentence>Method Training set Test set Accuracy Precision Recall Accuracy Precision Recall POPULAR BANKRUPTCY PREDICTION MODELS Altman's Z-score 0.506 0.509 0.865 0.475 0.467 0.906 LDA 0.890 0.888 0.898 0.880 0.846 0.906 QDA 0.973 0.953 0.995 0.902 0.868 0.976 MLP (45) 0.986 0.976 0.997 0.923 0.875 0.976 MLP (40,5) 0.997 0.995 1.000 0.929 0.909 0.941 ENSEMBLE METHODS BAGGING – DT 0.999 0.997 0.999 0.913 0.906 0.906 BAGGING – KNN 0.962 0.939 0.989 0.923 0.874 0.976 BAGGING – SVM 0.909 0.902 0.922 0.918 0.880 0.953 BAGGING – NB 0.658 0.657 0.687 0.497 0.467 0.576 BAGGING – LR 0.896 0.889 0.908 0.880 0.846 0.906 ADABOOST – DT 0.999 1.000 0.999 0.880 0.846 0.906 ADABOOST – SVM 0.509 0.509 0.999 0.464 0.464 0.999 ADABOOST – NB 0.824 0.846 0.801 0.776 0.762 0.753 Gradient Boosting 0.984 0.969 0.999 0.858 0.824 0.882 Voting Classifier 0.929 0.916 0.946 0.891 0.857 0.918 RandomForest 0.999 0.999 0.999 0.831 0.855 0.765 ExtraTrees 0.999 0.999 0.999 0.929 0.901 0.953 PROPOSED METHOD TSCM 0.963 0.943 0.987 0.934 0.910 0.953 Of the many ANN models, we tested Multi-Layer Perceptron (MLP), as it is the most popular model in the field of bankruptcy prediction.</sentence>
+    <sentence>After the tests, two models were selected: a network with one hidden layer with 45 neurons (MLP (45)) and a network with two hidden layers consisting respectively of 40 and 5 neurons (MLP (40,5)).</sentence>
+    <sentence>Both MLP models showed results that exceed the results of discriminant analysis, and this is consistent with Bellovary et al.</sentence>
+    <sentence>(2007) and Liang et al.</sentence>
+    <sentence>(2016).</sentence>
+    <sentence>However, our tests showed that for MLP models, the feature selection also shows a relatively poor performance.</sentence>
+    <sentence>In addition, the training time of these models significally exceeds that of the other models.</sentence>
+    <sentence>Therefore, MLP models were also not included in the set of basic classifiers.</sentence>
+    <sentence>A significant number of ensemble methods have already been developed.</sentence>
+    <sentence>Results of their comparison on training and test sets described above are also shown in Table 2.</sentence>
+    <sentence>We tested five bagging methods (with DT, kNN, SVM, NB and LR base classifiers), three AdaBoost methods (with DT, SVM and NB base classifiers), methods of stochastic design of ensembles of the decision trees (RandomForest and ExtraTrees), gradient boosting and voting classifier.</sentence>
+    <sentence>The accuracy of the proposed TSCM method is at the level of the best techniques (Table 2).</sentence>
+    <sentence>Only the ExtraTrees and MLP (40,5) have the comparable characteristics by check results on the test set.</sentence>
+    <sentence>It should be noted that the TSCM shows a poorer performance on the training set than some other methods but it exceeds them on the objects recognition accuracy on the test set.</sentence>
+    <sentence>It means that it avoids overfitting much more successfully unlike the other methods.</sentence>
+    <sentence>Besides this, the TSCM shows rather balanced ratio of precision and recall ratios, i.e.</sentence>
+    <sentence>it finds bankrupts (recall = 0.953) and not bankrupts (precision = 0.910) with rather high exactness.</sentence>
+    <sentence>Thus, the TSCM is the best in the studied group of methods in terms of the balance of Type I and Type II errors.</sentence>
+    <sentence>Table 3 shows four examples of how the proposed method can be applied in practice.</sentence>
+    <sentence>Consider four companies: • Gazprom Gaz Distribution Barnaul.</sentence>
+    <sentence>This successful company builds and maintains gas distribution networks in the Altai region, is part of the Gazprom group.</sentence>
+    <sentence>• Vanino Commercial Sea Port.</sentence>
+    <sentence>This is the successful stevedore company in the Khabarovsk region, which provides loading and freight forwarding services.</sentence>
+    <sentence>• VZK.</sentence>
+    <sentence>This company produces wall tiles and porcelain stoneware.</sentence>
+    <sentence>The Arbitration Court of the Voronezh Region declared it as bankrupt on October 7th, 2014.</sentence>
+    <sentence>• Ru-Energy Group.</sentence>
+    <sentence>This is a holding, which included companies that produce oil and gas equipment.</sentence>
+    <sentence>The enterprise was declared bankrupt by the Arbitration Court of Moscow on May 15th, 2015 and is currently in the process of liquidation.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Examples of method application.</sentence>
+    <sentence>Firm Classifiers outcomes Ci CE Decision kNN LR NB DT SVM Gazprom Gas Distribution Barnaul −1 −1 −1 −1 −1 −0889 non bankrupt Vanino Commercial Sea Port −1 1 −1 −1 1 −0289 non bankrupt VKZ 1 1 -1 1 1 0645 bankrupt Ru-Energy Group 1 1 1 1 1 0889 bankrupt According to the proposed method, outcomes Ci of ordinary classifiers trained on the first stage were obtained and their values are presented in Table 3.</sentence>
+    <sentence>The final decision of ensemble is calculated as the sum , where wi is the weight of ith ordinary classifier defined on the second stage of training.</sentence>
+    <sentence>Weights are presented in Table 1, values of CE are presented in Table 3.</sentence>
+    <sentence>As it was defined above, the sign of CE defines the object class; the value CE &gt; 0 corresponds to bankrupts and the value CE &lt; 0 corresponds to successful companies.</sentence>
+    <sentence>The absolute value of CE corresponds to the degree of confidence.</sentence>
+    <sentence>Table 3 shows that sometimes basic models can misclassify firms (e.g.</sentence>
+    <sentence>LR for Vanino Commercial Sea Port and NB for VKZ), but weighted summation supresses these errors.</sentence>
+    <sentence>It is necessary to note that the proposed method requires more computation time because of GA usage.</sentence>
+    <sentence>The time complexity of GA can be estimated as O(P*G*O(f)*(pc*O(c) + pm*O(m))), here P is population size; G is number of generations; f, c, and m are functions to calculate fitness, crossover and mutation respectively; pc and pm are probabilities of crossover and mutation.</sentence>
+    <sentence>Crossover and mutation operations in our case are simple, and their complexity is O(c) = O(m) = O(1).</sentence>
+    <sentence>So, overall complexity is O(P*G*O(f)), where O(f) is complexity of calculation of accuracy of basic classifier.</sentence>
+    <sentence>Therefore, the basic classifiers trining time (the first stage) can be estimated as , here ti is a time to assess the accuracy of ith basic classifier (this time includes fitting on train set, prediction on test set and accuracy evaluation).</sentence>
+    <sentence>Similar estimation can be obtained for the second stage of method, but in the last case ti includes only operations of prediction and accuracy evaluation.</sentence>
+    <sentence>So, we can conclude that time required for the first stage of ensemble training according to the proposed method exceeds the training time of the base classifiers approximately by P*G times, in our case (P = 50 and G = 50) by 2500 times.</sentence>
+    <sentence>Time required for the second stage (P = 40 and G = 40) exceeds the accuracy check time for base classifiers by 1600 times.</sentence>
+    <sentence>This is not a serious problem, since the training of one classifier with the help of scikit-learn takes little time (less than 0.1s), the speed measurements on a computer with two 1.5 GHz CPU cores have shown that the average training time of the ensemble is about 400 s with consecutive training of each classifier.</sentence>
+    <sentence>It is obvious, that this time can be extremely reduced with the parallel training of basic classifiers.</sentence>
+    <sentence>Commonly the main issue of GA is not the time complexity but the convergence rate (Oliveto, He, &amp; Yao, 2007; Rabinovich &amp; Wigderson, 1999), which is dependent on the number of iterations (i.e.</sentence>
+    <sentence>P*G).</sentence>
+    <sentence>These parameters were chosen experimentally to balance the computational time and the convergence rate.</sentence>
+    <sentence>It should be noted that proposed method has yet another important advantage: it allows selecting the optimal features set to solve the problem.</sentence>
+    <sentence>The complete list of features which are available in the research data set provided in Table 4.</sentence>
+    <sentence>Table 4 also lists informataion, whether the given feature is significant from the point of view of various classifiers (1 in the corresponding column).</sentence>
+    <sentence>This information is obtained from the genome G of classifiers, trained at the first stage.</sentence>
+    <sentence>The overall significance of each feature can be judget by summing the data for individual classifiers.</sentence>
+    <sentence>It is given in the column ``Total”.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Features of firms in the research data set.</sentence>
+    <sentence>Feature name Description kNN LR NB DT SVM Total L1 The coefficient of current liquidity 1 1 1 1 1 5 L2 Quick (urgent) liquidity ratio 1 1 0 1 1 4 L3 Absolute liquidity ratio 0 1 1 1 1 4 L4 The liquidity ratio at raising funds 1 1 0 1 1 4 T1 Receivables turnover ratio 0 1 0 1 1 3 T2 The turnover ratio of funds 1 1 0 1 1 4 T3 Total assets turnover 1 1 0 1 1 4 T4 Net income to net capital ratio 0 1 1 1 1 4 S1 The ratio of own and borrowed funds 0 1 0 1 1 3 S2 Leverage ratio 1 1 1 1 1 5 S3 Retained earnings to total assets 1 1 0 1 1 4 S4 Current assets to total assets 1 1 1 1 1 5 S5 Net working capital to total assets 1 1 0 1 1 4 S6 Ratio of financing 0 1 0 1 1 3 S7 The rate of investment 0 1 0 1 0 2 S8 The ratio of own working capital 1 1 0 1 1 4 S9 The flexibility ratio of own funds 0 1 1 1 1 4 S10 The ratio of EBITDA to interest paid 1 0 1 1 1 4 S11 EBITDA 0 0 1 1 1 3 S12 Net assets 0 1 1 1 1 4 S13 The coefficient of autonomy 1 1 1 1 1 5 S14 The degree of solvency in current liabilities 1 1 0 1 1 4 S15 The ratio of own and borrowed funds 0 1 1 1 1 4 R1 Profitability of sold products 0 1 1 1 1 4 R2 Return on assets (ROA) 0 0 1 0 1 2 R3 EBIT to Total Assets.</sentence>
+    <sentence>0 1 1 1 1 4 R4 Return on net assets by net profit 1 1 0 1 1 4 R5 Profitability 1 1 0 0 0 2 R6 Profitability of sales 1 1 0 1 1 4 I1 Government control 0 1 1 1 1 4 I2 Being under sanctions of foreign States 0 1 0 1 0 2 I3 Unreliable supplier 1 1 1 1 1 5 I4 The ratio of the number of arbitration claims against the firm by the number of claims of the firm to other companies 0 1 1 1 1 4 E1 GDP in % to the previous year 1 1 0 1 1 4 E2 Consumer price index 0 1 0 1 1 3 E3 The product price index of industrial goods 1 1 1 1 1 5 E4 Summary index of product prices (cost services) investment destination 0 1 1 1 1 4 E5 The average monthly accrued wages of organizations employees in % to the previous year 1 1 1 1 1 5 E6 Unemployment rate 0 1 0 1 1 3 E7 The level of overdue accounts payable 0 1 0 1 1 3 E8 Herfindahl-Hirschman Index 0 1 1 0 1 3 E9 The company occupies a significant market share 1 1 1 1 1 5 E10 Natural monopoly 1 1 1 0 1 4 E11 The company occupies a significant market share 1 1 0 0 1 3 E12 The average long-term interest rate of the loan 1 1 0 1 1 4 E13 The growth rate of the US Dollar 0 1 1 0 1 3 E14 The rate of revocation of licenses of credit organizations 1 1 1 1 1 5 E15 MICEX index 1 1 1 0 1 4 E16 The growth of the MICEX index 1 1 0 1 1 4 E17 RTS index 1 1 0 1 1 4 E18 The growth of the RTS index 1 1 1 1 1 5 E19 The price of Brent crude 1 1 0 1 1 4 E20 The increase in the price of Brent crude 1 1 0 1 1 4 E21 HSBC PMI index 1 1 0 1 1 4 E22 Growth of HSBC PMI index 1 1 0 1 1 4 As expected, 4 coefficients of company financial condition (current liquidity, financial independence, current assets, equity ratio) have been included in the most significant 10 factors (for which Total = 5 in Table 4).</sentence>
+    <sentence>The financial indicators are most important factors predicting the bankruptcy.</sentence>
+    <sentence>In fact, the classical models of bankruptcy (Altman, 1968; Beaver, 1966; Fulmer, Moon, Gavin, &amp; Erwin, 1984; Ohlson, 1980; Springate, 1978; Taffler &amp; Tisshaw, 1977; Zmijewski, 1984) use only financial ratios.</sentence>
+    <sentence>However, according to our technique, the factors indentified, e.g.</sentence>
+    <sentence>by Altman (1968), are not included in the 10 most significant.</sentence>
+    <sentence>It is consistent with the result of LDA modeling described above.</sentence>
+    <sentence>It means that it is impossible to predict the bankruptcy reliably using only financial ratios, especially for developing economies, including Russia.</sentence>
+    <sentence>In our case, six environmental factors were also included in the list of most significant.</sentence>
+    <sentence>Among these factors are the changes in the macroeconomic situation: the rate of revocation of licenses of credit institutions, the increase of the RTS index and the price index of industrial goods.</sentence>
+    <sentence>These factors act as signs of crisis situations provoking an additional stress for the firms.</sentence>
+    <sentence>The importance of the macroeconomic factors for bankrupts forecasting has been proved recently (Alifiah, 2014; Karas &amp; Režňáková, 2014; Tinoco &amp; Wilson, 2013).</sentence>
+    <sentence>In this paper, the microeconomic indicators of the external environment were significant as well, although they are not taken into consideration in the other studies so often.</sentence>
+    <sentence>Therefore, in order to predict a firm's bankruptcy in Russia, it is crucial to know what part of the market the company occupies, and the fact whether it is on the list of unscrupulous suppliers and level of the average monthly salary.</sentence>
+    <sentence>18 factors of the firm financial condition and 13 factors of the external environment have put together a less important group of 31 factors (Total = 4 in Table 4).</sentence>
+    <sentence>Indicators of the stock indexes, oil price and GDP were significant at the macro level.</sentence>
+    <sentence>Natural monopoly, the government control and the number of claims were also classified as significant factors.</sentence>
+    <sentence>Therefore, we confirm results of numerous studies (e.g., Tinoco &amp; Wilson, 2013) that consolidation of external environment indicators and financial performance provides higher prognostic capability of model.</sentence>
+    <sentence>In our research the proposed algorithm selected external environment indicators at the micro level in addition to standard macroeconomic environment indicators (the stock indexes, GDP, inflation, an oil price).</sentence>
+    <sentence>The different types of indicators of competition are the level of industry monopolization (whether the firm is a natural monopoly, and the presence of government control), and possible issues with firm suppliers along with the number of claims to the firm.</sentence>
+    <sentence>So, it is necessary to consider the wide set of external and internal environment factors for entity bankruptcy forecasting.</sentence>
+    <sentence>Three variants of feature sets were constructed, including 51 (Total &gt; 2 in Table 4), 41 (Total &gt; 3) and 10 (Total &gt; 4) factors to assess the ability of the proposed method to solve the features selection problem.</sentence>
+    <sentence>The data of the proposed method testing on different features sets are shown in Table 5.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Testing of feature selection quality.</sentence>
+    <sentence>Features selection rule Number of features Training set Test set Accuracy Precision Recall Accuracy Precision Recall all features 55 0.963 0.943 0.987 0.934 0.910 0.953 Total &gt; 2 51 0.971 0.992 0.989 0.951 0.932 0.965 Total &gt; 3 41 0.956 0.929 0.989 0.929 0.900 0.953 Total &gt; 4 10 0.937 0.909 0.973 0.918 0.880 0.953 Algorithm 1. for Ttrain, Ttest in split(T, nfold) C = train(Ttrain) s[i] = accuracy(C, Ttest) f = mean(s) f.std = std(s) All characteristics of the method increase in case of exception of features that are significant for less than 50% of the classifiers included in ensemble (the rule of sample is Total &gt; 2).</sentence>
+    <sentence>The characteristics degrade in case of further reduction of number of features.</sentence>
+    <sentence>Thus, GA based features selection can be used as the preprocessing tool in case of significant number of factors.</sentence>
+    <sentence>However, the choice of the rule of insignificant features cutting off shall be researched for each problem.</sentence>
+  </section>
+  <section name="Conclusion and future research">
+    <sentence>The obtained results allow taking a fresh look at the conclusions of Bellovary et al.</sentence>
+    <sentence>(2007) and other authors.</sentence>
+    <sentence>Although the methods for bankruptcy prediction based on discriminant analysis and ANN models yield good results, they could be greatly improved by contemporary methods of machine learning.</sentence>
+    <sentence>This means that future research should not be confined to already known models, it is particularly important for studies in developing countries.</sentence>
+    <sentence>The key factor of success is the use of new indicators reflecting the characteristics of the external environment, the specifics of the economic situation, the peculiarities of the management of the firm, the firm size, etc.</sentence>
+    <sentence>This increases substantially the predictive ability of models in comparison with use of only financial ratios.</sentence>
+    <sentence>However, in this case, the problem of selecting only significant features arises, since larger number of variables does not mean an increase in the predictive ability of model.</sentence>
+    <sentence>Our results show that an effective tool for selecting features can be based on genetic algorithms.</sentence>
+    <sentence>In addition, the genetic algorithm is an effective technique for combining different models of ordinary classifiers into the ensemble.</sentence>
+    <sentence>In combination with the features selection, it allows to propose a method that exceeds in the accuracy and balance of Type I and Type II errors all other methods.</sentence>
+    <sentence>In our opinion, such approach allows one to design models featuring quick adaptability to the various conditions and bridging the gap between theory and practice.</sentence>
+    <sentence>The disadvantage of this approach is its relatively high computational complexity.</sentence>
+    <sentence>This disadvantage, however, is not critical since modern computers have sufficient performance.</sentence>
+    <sentence>Tests show that the full retraining of the model takes about 5 minutes even on an ordinary PC.</sentence>
+    <sentence>Regarding the future research direction, there are few important issues to be empirically investigated.</sentence>
+    <sentence>First, the proposed method should be tested on data sets of other countries.</sentence>
+    <sentence>It is necessary not only to assess its performance in other conditions, the features that will be significant for other countries are of particular interest.</sentence>
+    <sentence>This can provide valuable information on the differences in firm behavior and external factors in various countries.</sentence>
+    <sentence>Similar studies can be carried out separately for differnet industries, large and small enterprises, etc.</sentence>
+    <sentence>Another very interesting question is the set of basic classifiers.</sentence>
+    <sentence>In this work, we employed only five simple models (kNN, LR, NB, DT, SVM).</sentence>
+    <sentence>LDA, QDA and MLP were excluded as they were not yield to the feature selection.</sentence>
+    <sentence>More complex classifiers, such as RandomForest and ExtraTrees, can also be used as the base.</sentence>
+    <sentence>Our preliminary tests showed that the inclusion of these models in the set of basic classifiers does not improve the quality of forecasting on the Russian data set, but from a practical point of view it is advisable to have as diverse basic set as possible.</sentence>
+    <sentence>The third research direction concerns the comparison of the proposed method with techniques such as blending and stacking, which also support a reduction of feature set (however, in this case the explanatory power is lost) and the combination of base classifiers.</sentence>
+    <sentence>The last but not the least research direction is due to the bankruptcy procedure takes a long time.</sentence>
+    <sentence>Therefore, in addition to forecasting the fact of bankruptcy itself, the following research questions arise: (1) forecasting the results of bankruptcy (liquidation, accession, settlements with creditors) and (2) forecasting the duration of bankruptcy procedure.</sentence>
+  </section>
+</article>

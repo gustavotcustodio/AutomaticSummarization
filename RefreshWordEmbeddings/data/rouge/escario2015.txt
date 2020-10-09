@@ -1,0 +1,785 @@
+This paper studies of the performance of Ant Colony Extended to the Travelling Salesman Problem. The algorithm includes two kinds of ants: patrollers (exploration search) and foragers (exploitation search). The algorithm includes a population dynamics allows the algorithm to self-organise. The algorithm is able to solve the Travelling Salesman Problem successfully compared with other classical ant algorithms.
+
+0.180970 - Ant Colony Extended (ACE) is a novel algorithm belonging to the general Ant Colony Optimisation (ACO) framework.
+0.156368 - Two specific features of ACE are: the division of tasks between two kinds of ants, namely patrollers and foragers, and the implementation of a regulation policy to control the number of each kind of ant during the searching process.
+0.090395 - In addition, ACE does not employ the construction graph usually employed by classical ACO algorithms.
+0.111111 - Instead, the search is performed using a state space exploration approach.
+0.251909 - This paper studies the performance of ACE in the context of the Travelling Salesman Problem (TSP), a classical combinatorial optimisation problem.
+0.158853 - The results are compared with the results of two well known ACO algorithms: ACS and MMAS.
+0.023392 - ACE shows better performance than ACS and MMAS in almost every TSP tested instance.
+0.119769 - Recently, the Ant Colony Extended (ACE) has been introduced in Escario, Jimenez, and Giron-Sierra (2012) using, as an application example, the optimisation of ship manoeuvring.
+0.182199 - With respect to ACO, the new algorithm includes two significant contributions: The use of a state space representation instead of the conventional graph representation, and a partition of the ant population into explorers and foragers ants.
+0.000000 - It has been shown in Escario et al.
+0.054422 - (2012) that ACE can tackle problems related with dynamic systems.
+0.186890 - The target of the present article is to present a detailed description of the algorithm, and to confirm that ACE is comparable with well established ant algorithms when applied to a standard benchmark.
+0.079096 - Our results show that in most TSP tested cases, ACE outperforms the chosen reference algorithms.
+0.102044 - Ant Colony Optimisation (ACO) metaheuristic was originally developed to solve combinatorial optimisation problems (Blum, 2005; Dorigo & Stützle, 2004, 2010).
+0.147264 - The algorithm is inspired by the foraging activity of ants in the nature and, more specifically, by the pheromone trail used by some ants species for marking paths from food sources to the nest (Goss, Aron, Deneubourg, & Pasteels, 1989).
+0.044776 - In ACO, artificial ants build solutions by performing randomised walks in a completely connected graph known as construction graph.
+0.136995 - The nodes of the graph, C, are components for constructing solutions of the combinatorial optimisation problem.
+0.129856 - The edges of the graph, L, fully connect the nodes.
+0.136431 - Using the construction graph, the original combinatorial problem can be reduced to a search of the minimum paths in this graph.
+0.059701 - Ants move through neighbour nodes applying a stochastic decision policy that makes use of pheromone trails and heuristic information.
+0.156557 - The pheromone trails accumulate the collective knowledge of the quality of those solutions the ants have found since the start of the algorithm.
+0.122790 - The heuristic information contains also knowledge about the quality of the solutions, yet heuristic information is problem dependent and it is provided by some source other than the ants.
+0.045198 - A complete description of ACO metaheuristic can be found in Dorigo and Stützle (2004).
+0.121212 - The first ACO algorithm developed was Ant System (AS) (Dorigo, Maniezzo, & Colorni, 1996).
+0.166602 - It was tested using the Travelling Salesman Problem (TSP) (Johnson & McGeoch, 1997).
+0.081967 - This classical NP-hard problem has been extensively used as a benchmark for testing optimization algorithms.
+0.102733 - Ant System proved that the methodology was promising, but it also showed some drawbacks: its performance tends to decrease as the size of the TSP instance increases (Dorigo & Stützle, 2010).
+0.087874 - After AS, there were attempts to improve its performance that result in two classical ACO algorithms: Ant Colony System (ACS) (Dorigo & Gambardella, 1997) and Max–Min Ant System (MMAS) (Stützle & Hoos, 2000).
+0.134503 - These two algorithms have been selected to perform the comparison in the present article.
+0.090909 - As already mentioned, ACE includes new features with respect to standard ACO algorithms.
+0.165196 - These are the use of a state space representation (Allen & Herbert, 1972; Russell & Norvig, 2010), and the partition into to kinds of ants.
+0.114744 - The change of the representation opens new possibilities of application, like it was shown with the ship manoeuvring optimisation.
+0.140131 - Essentially, the idea is to adopt a more flexible representation compared with the conventional graph, while keeping the possibility of tackling problems typically treated with graphs.
+0.098592 - Actually, in the present article, we demonstrate that ACE can deal with the TSP problem, which is normally represented with graphs.
+0.127786 - With graphs one has to deal the complete topology of the problem; with the state space you only work with the explored part of the topology.
+0.016260 - Therefore, ACE is less time consuming.
+0.013605 - As said before, ACO combines pheromone trails and heuristic information.
+0.042553 - In ACE instead, ants use pheromone or heuristic information.
+0.066860 - In order to promote exploration, which is convenient to avoid stagnation (Dorigo & Stützle, 2004), ACE uses explorer ants (Patrollers) that can opt for heuristics or for pheromone.
+0.099415 - At the same time ACE uses also exploitative ants (Foragers) that only employ pheromone.
+0.060101 - In this way, we take new inspiration from the studies of biological researchers (Bonabeau, Theraulaz, & Deneubourg, 1996; Bonabeau, Dorigo, & Theraulaz, 1999; Camazine et al., 2003; Gordon, 2000, 2002, 2007, 2010).
+0.132778 - There are, among others, two remarkable features of some ant species: The existence of different roles associated to different tasks and the self-regulation of the organization by direct communication among ants.
+0.132589 - The details of the self-organization will be explained in further sections.
+0.196635 - The Patroller ants tend to increase the dispersion of the search.
+0.155039 - The foragers ants tend to reduce it.
+0.174085 - Therefore, the balance of the search is done through the balance of a population, using a similar self-organisation dynamics than real ants.
+0.193609 - The advantage of this dynamics is that it reduces the number of parameters needed by the algorithm to regulate the search.
+0.092896 - In fact, ACE uses lower number of parameters than the typical ones present in ACO algorithms.
+0.081871 - Besides, ACE parameters are rather different than the common ones used in ACO algorithms.
+0.197747 - The present article includes a short description of the population dynamics.
+0.033898 - A more extended account can be found in Escario, Jimenez, and Giron-Sierra (2013, chap.
+0.000000 - 3).
+0.169597 - According with Dorigo and Stützle (2004), the main reason to use TSP as a benchmark is its simplicity, allowing to focus the study in the performance of the algorithms.
+0.126316 - The use of TSP for testing ACE is aimed to this same purpose: To perform a parameters study, and a comparison of ACE performance with two well established ACO algorithms: ACS and MMAS.
+0.124444 - In addition, the paper presents the pseudo-codes of ACE procedures, with the aim to facilitate the use of ACE to interested readers.
+0.079096 - It is opportune to note, that ACS and MMAS are recognised as very good algorithms.
+0.113237 - In fact, they are commonly used to develop more specialised version of ACO algorithms to solve other problems different from TSP.
+0.084893 - An actual review of the modifications and applications of ACO can be found in Chandra Mohan and Baskaran (2012).
+0.152488 - Another recent trend consists in the combination of ACO algorithms with other optimisations algorithms.
+0.159905 - There is a large number of these hybrid algorithms, which try to explode the best features of the combined original algorithms.
+0.147423 - In the context of the TSP problem, when dealing with large instances ACO is usually hybridised with a suitable local search algorithm (Stutzle, 1997).
+0.063067 - ACO has also been combined, among others, with Genetic algorithms to solve the production scheduling problem (Hecker, Stanke, Becker, & Hitzmann, 2014), with Fuzzy logic to for ACO parameters dynamic adaptation (Valdez, Melin, & Castillo, 2014), with Data Envelopment Analysis for Knowledge sharing Assessment (Kuah, Wong, & Tiwari, 2013), with Tabu Search for K-minimum spanning tree problems (Katagiri, Hayashida, Nishizaki, & Guo, 2012) and Vehicle Routing Problem (Yu, Yang, & Yao, 2011), with Neural Networks for feature selection (Kabir, Shahjahan, & Murase, 2012), and with Beam Search for the TSP with time windows (López-Ibáñez & Blum, 2010).
+0.192840 - The proposed Ant Colony Extended algorithm is not a specialised algorithm, and it is neither a hybridisation of ACO with other algorithms.
+0.155184 - ACE is a general ant algorithm that may be applied to solve a broad collection of problems, including new ones.
+0.054422 - As it will be shown, the results obtained are promising.
+0.061033 - When ACE is applied to TSP, it achieves results that in many case are better than those of MMAS and ACS.
+0.046512 - In addition, ACE tends to be faster.
+0.131531 - The rest of the paper is organised as follows: Section 2, describes the main ACE features.
+0.118283 - Section 3 explains how TSP is represented and how is handled by the algorithm.
+0.165097 - Section 4 studies, in the context of TSP, the influence of ACE parameters on the algorithm performance.
+0.052288 - Section 5 presents a comparative study among MMAS, ACS and ACE.
+0.000000 - Eventually, Section 6 draws some conclusion.
+0.093333 - The general ACO metaheuristic is described as the interplay of three procedures: solution construction, pheromone update, and daemon actions (Dorigo & Stützle, 2004).
+0.111111 - The first procedure, solution construction, manages the search for solutions that is carried out by each ant.
+0.111552 - The second procedure, pheromone table update, manages the updating of the pheromone table entries.
+0.106667 - The last procedure, daemon actions, is aimed to implement centralised computations, if there are any, that cannot be performed by a single ant.
+0.016260 - ACE follows a quite similar scheme.
+0.029630 - A general view is presented in Fig 1.
+0.156081 - The solution construction is implemented by the Search step procedure: Each ant belonging to the (active) Population of current searching ants takes a step.
+0.050314 - I.e it adds a new component to its under-construction solution.
+0.120773 - The pheromone update is performed by those ants that, after taking the last search step, have finished constructing their solutions.
+0.041026 - Only solutions which reach a certain degree of quality are considered successful, that is, suitable for pheromone updating.
+0.127175 - This quality is evaluated comparing the cost, , of the solution constructed with an average cost μ calculated over successful solutions which have been found by the algorithm in previous iterations.
+0.026144 - Daemon actions are included in Fig 1 as an optional procedure.
+0.000000 - ACE pseudo-code description: main loop Fig 1.
+0.000000 - ACE pseudo-code description: main loop.
+0.146405 - ACE adds to the three ACO procedures a fourth one, the population dynamics.
+0.062893 - Once an ant has finished a search, it may recruit new ants.
+0.161238 - The number of ants to be recruited is calculated according to the failure or success of the ant (Failure() and Success() procedures in Fig 1).
+0.162963 - Eventually, the ant is removed from the population.
+0.061224 - When active ants have completed an iteration, population is updated.
+0.085106 - This updating is carried out by the Recruitment procedure.
+0.152488 - This completes the Population dynamics, Notice that in this scheme, the ants work asynchronously.
+0.107981 - An ant does not need to wait that the rest finish constructing their solutions, in order to perform the remaining procedures.
+0.052632 - This is particularly convenient when dealing with problems where solutions can differ in length.
+0.118285 - The construction of shorter solutions is not slowed down by waiting for the construction of the longer ones.
+0.169470 - Besides, the population dynamics is designed to release the ants asynchronously and it should be adapted to work synchronously.
+0.103030 - ACO algorithms hold the pheromone trail information in the, so called, pheromone table.
+0.103286 - Following the adopted problem representation, the pheromone table of ACE is an associative table which holds information about states and actions.
+0.123248 - The keys of the table are states, and the data are pairs action-probability.
+0.115806 - These probability values will be used by the ants to randomly choose which action to perform when they arrive to the (key) state.
+0.070922 - The pheromone table scheme is represented in Fig 2.
+0.000000 - ACE pheromone table structure Fig 2.
+0.000000 - ACE pheromone table structure.
+0.072727 - The symbol q represents a state, u an action and τ a probability value.
+0.104621 - Only those states previously visited by the ants are keys of the pheromone table and only those actions actually performed at a state have an entry there.
+0.129669 - The pheromone table is initialised empty, and it is gradually filled according to the information provided by successive searches.
+0.098361 - A detailed description of each ACE procedure is given below, following the scheme of Fig 1.
+0.093897 - Solution construction Each time an ant calls the procedure Search step inside the main ACE loop, the ant selects an action.
+0.152227 - This selection depends on the kind of ant (forager or patroller) that calls the procedure and, also, on the information available (pheromone table, heuristic).
+0.084131 - Whenever the information held in the pheromone table is used, the probability of selecting the action for an ant visiting the state is defined by Eq (1), (1) where is the probability value of the action at state and is the number of actions available.
+0.131455 - On the other hand, if the ant uses the heuristic information, the probability of selecting an action, , is defined according to some probability distribution derived from some kind of a priori knowledge on the problem.
+0.085106 - The Search step procedure is shown in Fig 3.
+0.150235 - If the ant is a forager, it uses the information contained in the pheromone table and to select the next action.
+0.086142 - Only when there is not information available in the pheromone table, i.e the current state has never been visited before by another ant, forager ants use the heuristic information.
+0.014184 - ACE pseudo-code description: search step procedure Fig 3.
+0.015504 - ACE pseudo-code description: search step procedure.
+0.141553 - If the ant is a patroller, it can use both, the pheromone table, and the heuristic information to select its next action.
+0.054264 - To ascertain which one will employ, the procedure implements a decision policy: – If the last information used was the pheromone one ( ), or the current state is the initial state (): (2) – If the last information used was the heuristic one ( ): (3) where χ is a random number generated from an uniform distribution, .
+0.077519 - The terms and are user defined parameters.
+0.109673 - The symbols “” and “” indicate respectively the use of the pheromone (Eq (1)) or the heuristic information.
+0.159204 - The term NS is the number of steps that an ant must perform in order to build a solution.
+0.107692 - Obviously, this process takes place provided that the pheromone table has available information, otherwise the ant uses directly.
+0.058480 - For problems where NS is not known beforehand, it is necessary to estimate it.
+0.122066 - A simple way to do it, is to take the number of steps used to build the best-so-far solution.
+0.097046 - Notice that until a first solution is found, there is no information available in the pheromone table and the ants can only employ the heuristic.
+0.076023 - Parameters and can be used for regulating the use of heuristic information, i.e.
+0.138211 - the exploration rate, of patrollers search.
+0.105288 - Notice that a major difference between ACE and other standard ACO algorithm is the way in which the pheromone table is used.
+0.137778 - The standard ACO algorithms combine pheromone and heuristic information to obtain the probability of adding a new element to a solution under construction.
+0.082192 - In ACE, for adding an element to a solution, the pheromone information or the heuristic information can be used, but not both.
+0.101695 - In ACE the pheromone table contains directly the probability for taking decisions to construct solutions.
+0.103633 - Pheromone update When an ant finishes building a solution, it can update the pheromone table with the information of the states visited and the actions performed in these states.
+0.145168 - The content of the table belonging to non-visited states remains unchanged.
+0.084656 - As it was pointed out above, the pheromone table is only updated by successful ants, i.e.
+0.090395 - ants that have found a solution which cost is below the mean μ ( , in Fig 1).
+0.076923 - When an ant fails to find a solution below μ, it is considered unsuccessful and it is just discarded.
+0.126984 - Before updating the pheromone table, a successful ant updates the value of μ, which is a moving average.
+0.124294 - The number of samples-backwards involved in the calculation of μ is defined by the parameter .
+0.025157 - This procedure is quite straightforward, as can be seen in Fig 4.
+0.091503 - The procedure updates also the best-so-far solution when necessary.
+0.135593 - Although it is not shown in the pseudocode description, the value of μ is initialised to .
+0.000000 - ACE pseudo-code description: mean update procedure Fig 4.
+0.000000 - ACE pseudo-code description: mean update procedure.
+0.145455 - The symbol represents the list of samples used to calculate the moving average.
+0.097785 - The procedure for updating the pheromone table is as follows: for each state visited while building a solution, a successful ant modifies the content of the pheromone table increasing the probability of the actions performed.
+0.151457 - The probability of the unused actions, belonging to visited states, is decreased.
+0.017778 - This updating process is carried out using Eq (4), which is based on AntNet equations (Di Caro & Dorigo, 1998; Dorigo & Stützle, 2004).
+0.053743 - (4) where S is the solution built by the successful ant, is the probability value of selecting the action u at state represents the actions used by the ant to build the solution are actions, also available in the pheromone table for state q, but that have not been used by the ant, represents the states visited by the ant while it was building the solution S. Lastly, the term λ is the quality associated to the solution built by the ant, (5) Eq (5) normalises the quality assigned to a solution.
+0.124705 - Where, is the cost of the best-so-far solution, and μ have been already defined.
+0.062016 - Fig 5 shows the pheromone update procedure.
+0.000000 - It uses Eqs.
+0.019048 - (4) and (5).
+0.088608 - It also adds new states and/or actions whenever the ant has visited states and/or executed actions that were not contained in the table.
+0.000000 - ACE pseudo-code description: pheromone update procedure Fig 5.
+0.000000 - ACE pseudo-code description: pheromone update procedure.
+0.156863 - The symbol represents the number of actions performed by the ant.
+0.085324 - Population dynamics procedure This procedure implements a mechanism for regulating exploration and exploitation.
+0.133333 - In a first stage, once an ant has completed the construction of a solution it is removed from the population of active ants.
+0.096618 - Depending on whether the ant has succeeded or not, it activates the procedure Success(ant) or the procedure Failure(ant).
+0.014184 - (See line 9 and line 11 in Fig 1).
+0.177127 - These procedures determine the kind and number of ants to be recruited.
+0.116457 - In a second stage, once the whole population of active ants has been processed, the prescribed number of ants are recruited using the procedure Recruitment() (line 16 in Fig 1).
+0.107692 - These three procedures share the following common set of variables (counters), – RP, number of patrollers to be recruited.
+0.093023 - – RF, number of foragers to be recruited.
+0.088435 - – UP, number of unsuccessful patrollers since the last successful one.
+0.102041 - – SP, number of successful patrollers since the last successful foragers.
+0.048780 - – FR, current number of active foragers.
+0.048780 - – PR, current number of active patrollers.
+0.103704 - Success Fig 6 shows the Success(ant) pseudocode.
+0.000000 - ACE pseudo-code description: success case Fig 6.
+0.000000 - ACE pseudo-code description: success case.
+0.115152 - A successful forager recruits a patroller and resets to zero the counter SP.
+0.084175 - A successful patroller increases the counter SP, resets the counter UP and recruits a patroller or a forager depending on the number of foragers already active and the number of successful patrollers counted by SP.
+0.103704 - Failure Fig 7 shows the Failure(ant) pseudocode.
+0.000000 - ACE pseudo-code description: failure case Fig 7.
+0.000000 - ACE pseudo-code description: failure case.
+0.113208 - An unsuccessful forager limits itself to decrease the counter of active foragers.
+0.116281 - On the other hand, an unsuccessful patroller first increments in one the counter of unsuccessful patroller UP and then, recruits patrollers according to the value of UP, using the function: .
+0.165160 - Lastly, the procedure, no matter which kind of ant it has been applied to, calculates and normalises the difference between μ and .
+0.144928 - If this quantity is greater than the rate of foragers in the active ant population, a new forager is recruited.
+0.088889 - Recruitment Fig 8 represents the procedure of recruitment.
+0.035088 - Until a first solution has been found, a patroller is released at every cycle.
+0.106179 - This is particularly useful for those problems in which finding feasible solutions is part of the problem.
+0.164380 - Once this initialisation phase ends, the population is updated according to the values of RP and RF.
+0.014184 - ACE pseudo-code description: recruitment and initialisation Fig 8.
+0.015504 - ACE pseudo-code description: recruitment and initialisation.
+0.122066 - Self-regulating exploration and exploitation In ACE, the pheromone table contains a probability distribution of actions to perform at each state.
+0.113208 - The foragers tends to make this distribution converge towards a single action.
+0.132075 - In contrast, the patrollers tend to spread the probability over different actions.
+0.058201 - For instance, a patroller may add new actions that previously were not present in the pheromone table.
+0.054726 - Usually, the solutions provided by foragers are not significant: they just repeat solutions that were first discovered by patrollers.
+0.111470 - They are suitable instead for redirecting and maintaining the search into promising areas of the solution space.
+0.077295 - Patrollers, meanwhile, are suitable to discover new solutions, but they can easily disperse the search far from these promising areas.
+0.156556 - The population dynamics attempts to coordinate patroller and forager populations in order to maintain the search capacities of the patrollers bounded into promising zones.
+0.118721 - The basic way of coordination relies on the recruiting made by successful ants: they always recruit an ant from the other kind.
+0.109453 - For instance, if patrollers are succeeding, they tend to become inactive, and the number of foragers tend to increase.
+0.078014 - Once the foragers have succeeded, they recruit new patrollers.
+0.122066 - This helps to avoid that patrollers disperse themselves too much, because the foragers help to converge the search towards suitable zones.
+0.133333 - In general, a low number of foragers is enough to do the work.
+0.127273 - In addition, a high number of them can lead the search to stagnation.
+0.123077 - That is why the mechanism to recruit new foragers is ruled by the number of them already active.
+0.139477 - Besides, their number is also adjusted using the mean and the best-so-far solution, which is a rough estimation of the algorithm convergence.
+0.075398 - Patrollers, in contrast, are recruited whenever a forager succeeds and, also, when they are not able to find good enough solutions.
+0.124294 - In this last case, the exploration is failing and it is mandatory to reinforce it.
+0.203727 - The behaviour of the population dynamics varies from problem to problem.
+0.000000 - An interesting example can be found in Escario et al.
+0.061538 - (2012) where, after finding a suboptimal solution, foragers and patrollers cooperate to improve it as much as possible.
+0.152941 - Later on, the algorithm jumps to another solution, found by patrollers, avoiding stagnation.
+0.092369 - Fig 9 shows a comparison of active ant population evolutions, during a run of 1000 iterations, for three different problems: The ship manoeuvring optimisation, Fig 9(a).
+0.097561 - In this problem the ants have to find a sequence of values (discrete pairs of course and speed ) for an automatic control device that guides a ship, the solutions may have different sizes and their length is not bounded beforehand, it is set during the execution time.
+0.146893 - In the figure the ants are finding sequences from 10 to 20 pairs of values.
+0.085524 - Example of population dynamic evolution for three different problems Fig 9.
+0.092858 - Example of population dynamic evolution for three different problems.
+0.070617 - Fig 9(b) shows an instance of the TSP, Eil51, which has 51 cities.
+0.092308 - Fig 9 shows a classical Genetic Programming (GP) problem called Artificial ant, the Santa Fe trail (Koza, 1992).
+0.105105 - In this problem the ants must develop an expression tree according to a formal grammar (3 terminal terms and 3 functor terms), like in the ship problem, the possible solutions have a variable size and this size is not bounded beforehand.
+0.117647 - In the figure the ants start building simple expression trees, with 3 to 5 nodes, and later the size of trees starts to grow: 10 to 20 nodes.
+0.158666 - In all of the examples, the algorithm self-organizes, varying the size of the population and the relationship among the number of foragers and patrollers, according to the difficulty of finding satisfactory solutions.
+0.129096 - In the ship maneuvering problem, quick short oscillations of the population can be observed.
+0.078431 - These oscillations are because the patrollers alternate successful and unsuccessful periods.
+0.094527 - In the TSP case, the population does not oscillate but instead shows a large peak in the patrollers number.
+0.136230 - This peak is due to the patrollers failure on finding solutions, and their number is increased in order to raise the exploratory component of the search.
+0.121048 - Finally, in the GP problem, it is relatively easy at first to find a solution, thus the whole population remains small in order to avoid an excessive dispersion of the search.
+0.105263 - Once the current solution has been improved, the difficulty to find an alternative increases.
+0.164253 - At this point, the population of patrollers becomes larger, increasing the dispersion of the search.
+0.082192 - This preliminary section details the TSP state space representation and the heuristic function that will be used in the following experimental sections.
+0.058480 - A state is represented by a pair of cities: departure city and arrival city.
+0.065728 - An initial state is a pair with an auxiliary symbol as a first component, and a city as the second one.
+0.081871 - This represents the initial situation: being on a city before visiting any other one.
+0.136004 - Before an ant starts searching, it is randomly assigned to one of the initial states.
+0.095238 - An action is represented by a city to travel to.
+0.134944 - Therefore, the set of actions is the set of cities of the TSP instance.
+0.112435 - More Formally, this definition could be as follows: where Θ represents the auxiliary symbol used to define the initial states, and V is the set of the cities that an ant has already visited.
+0.082622 - Suitable functions are also defined for solving the problem: Goal test: (6) Cost function: (7) Successor function: (8) where ⧹ Heuristic function: (9) Where d is a function that gives the distance between two cities.
+0.103046 - ⧹ are the cities which are in C but not in V, and nn is the nearest neighbour heuristic: for a given city, and a set of cities; nn returns the city of the set closest to the given one.
+0.070175 - The goal test is a function that checks whether all cities have been visited.
+0.115646 - The cost function is the distance covered by a tour.
+0.091503 - The successor function gives the resulting state after applying an action.
+0.132685 - The heuristic function, , is the inverse of the distance between two cities, raised to a power of B (an user defined parameter).
+0.111111 - Using this function, the probability of selecting the action for an ant visiting the state can be defined as the probability of selecting a city among the unvisited cities .
+0.077295 - More formally: (10) In ACE, the pheromone table entries for a certain state only contains a few cities to select.
+0.069652 - Therefore, when an ant uses it, it is likely that all cities in the table have already been visited.
+0.136953 - Instead of discarding the search, it is relatively easy in the TSP to include a correction mechanism using the closest (not visited) city to the current one.
+0.014184 - A similar approach can be found in Walters (1998).
+0.085106 - This correction mechanism is implemented by the successor function.
+0.094118 - Since a correction made by the successor function is not an action taken by the ants but a repair, the pheromone table content is not affected by it.
+0.147423 - This allows preventing the addition of new information to the pheromone table by whatever cause different to a heuristic choice taken by an ant.
+0.066667 - For example, in a hypothetical TSP instance of five cities, the pheromone table may look like Table 1.
+0.103030 - An ant could perform a search like the one shown in Table 2.
+0.108844 - The transition from state , is done selecting the city 1.
+0.075117 - As this city has been visited, the successor function gives the closest city not visited: 4, which results in the state .
+0.065359 - But the action responsible for that transition is 1, not 4.
+0.141125 - Finally, the ant should update the table according to the following list of associations: , and , in order to complete the cycle.
+0.000000 - Table 1.
+0.000000 - Pheromone table example.
+0.000000 - Keys (state) Entries (action, probability) Table 2.
+0.000000 - Tour construction example.
+0.013333 - Search step List of actions Visited cities Current state 0 [] [1] (Θ,1) 1 [2] [1,2] (1,2) 2 [2,3] [1,2,3] (2,3) 3 [2,3,1] [1,2,3,4] (3,4) 4 [2,3,1,5] [1,2,3,4,5] (4,5)
+0.136986 - This section studies the user defined parameters, and the inclusion of a best solution reinforcement as a procedure to improve the results.
+0.102564 - Parameters study: and The parameter (Eq (2)) represents the probability that a patroller ant selects at least one action using the heuristics when building a solution that requires NS search steps.
+0.099567 - A suitable range of values to study is: , given that a patroller should use at least once the heuristic to be considered as such.
+0.105263 - The second parameter (Eq (2)) represents the conditional probability of performing consecutively heuristic choices.
+0.099291 - Therefore, a suitable range of values to study is: .
+0.125288 - The effect of these parameters, for each value of and , was analysed by applying the algorithm to the following TSPlib (Reinelt, 1995) instances: ry48p (ATSP), eil51, st70, ftv70 (ATSP), pr76, rat99, kroA100, eil101, and gr137.
+0.111111 - The TSPLib instance name indicates the number of cities, e.g.
+0.000000 - ry48p has 48 cities.
+0.065359 - For each instance, a batch of 100 independent executions is performed.
+0.117949 - A single execution builds up to tours, where nc is the number of cities in the TSP instance.
+0.095970 - For each execution, the error is defined as the difference between the length of the solution achieved and the length of the shortest possible tour (optimum) for the instance.
+0.093023 - The error is used as performance measure.
+0.101075 - In addition, to obtain a final estimation of the algorithm performance, errors coming from executions belonging to the same batch are averaged and expressed as a percentage of the optimal distance, (11) where is the distance of the best tour found in execution i and n the number of execution carried out in the batch.
+0.115127 - Besides the error, it is interesting to measure the distance of the best solution found in the complete batch, and the probability of finding a solution of this quality.
+0.096618 - Usually, when a TSP instance has not a large number of cities, the best solution found is the optimal solution.
+0.107649 - Thus in this study of parameters the measure of the best solution found is expressed as the probability of finding the optimal distance (the shortest tour for the instance).
+0.106076 - It is possible to obtain a general overview of the effect of the parameters by averaging the results over the different instances for each set of parameter values.
+0.101449 - The average error is shown in Fig 10 and the average probability of finding the optimal solution in Fig 11.
+0.028369 - Parameters γ1 and γ2 study: average error Fig 10.
+0.034188 - Parameters and study: average error.
+0.021505 - ( and ).
+0.090395 - Probability of finding the optimal value for different combinations of γ1 and γ2 Fig 11.
+0.104575 - Probability of finding the optimal value for different combinations of and .
+0.021505 - ( and ).
+0.131477 - As it can be seen in these figures, the algorithm tends to over-exploit the pheromone for because patrollers do not use frequently the heuristics.
+0.165062 - As increases, this over-exploitation tends to disappear and the algorithm performance improves.
+0.119241 - For and , the performance is good even with .
+0.128319 - If is moderately increased the performance tends to improve.
+0.126300 - But larger values of lead to an excessive dispersion of the search.
+0.087719 - It is important to notice how the value of determines the effect of : if the value of is low, the probability of using the heuristic will be low for almost any value of .
+0.104478 - In contrast, high values of combined with high values of can increase significantly the probability of using the heuristic.
+0.170933 - For , the algorithm is less affected by different values of than in the case of or .
+0.081301 - The TSP heuristic is very reliable.
+0.102041 - Obviously, this may be not the case for other problems.
+0.128119 - Thus, when the heuristic is poor, it would be reasonable to experiment with low values of , favouring the use of the pheromone.
+0.138798 - But, in general, the value of should be high enough to guarantee a reasonable use of the heuristic.
+0.146381 - In tests carried out by the authors on different problems, values lower than 0.9 seems to worsen the algorithm performance.
+0.093897 - Since the impact of depends on the value of can be considered as a reasonable default value for a general purpose.
+0.097046 - As a rule of thumb, or close to 0.99 could be used when the heuristic is reliable enough and close to 0.9 otherwise.
+0.145820 - Parameters study: B The purpose of the next experiments is to study the influence of parameter B in the ACE performance.
+0.125196 - For each value of B, we run the algorithm for the same scenarios, and conditions described in the and experiments (Section 4.1).
+0.129856 - The results of the experiments are shown in Table 3.
+0.133333 - They include the probability of finding the optimal value, and the average error.
+0.073059 - The last entry, marked as NN, contains the result when the closest available city is directly chosen, without doing a stochastic election.
+0.092308 - It can be observed that the best values for B are in the range from 5 to 7.
+0.138642 - Lower values make the search become too disperse, and higher ones lead the algorithm towards premature convergence.
+0.000000 - Table 3.
+0.017094 - Parameter B study experimental results.
+0.062016 - The best results are written in bold.
+0.021505 - ( , and ).
+0.010336 - Probability of finding optimal value Error (%) 0 16.59 0 4.59 0.04 1.07 0.22 0.4 0.38 0.36 0.43 0.37 0.43 0.39 0.41 0.43 0.39 0.47 0.35 0.52 NN 0 4.31 4.3.
+0.159311 - Parameters study: The purpose of the next experiments is to study the influence of parameter in ACE performance.
+0.128648 - For each value of , we run the algorithm for the same scenarios, and conditions described in the and experiments (Section 4.1).
+0.099010 - Since the impact of limiting the number of samples to calculate the mean value (μ) is better shown on larger instances, the experimental study was also carried out on several larger instances: d198, gil262, gr431, and d493.
+0.059259 - The experimental results are shown in Table 4.
+0.134006 - Values of for the experiment are taken proportional to the number of cities of the TSP instance (nc).
+0.133333 - They include the probability of finding the optimal value, and the average error.
+0.097271 - The upper part of the table contains the averaged results for the shorter instances and the lower part, the averaged results of the larger ones.
+0.000000 - Table 4.
+0.018018 - Parameter study experimental results.
+0.062016 - The best results are written in bold.
+0.021505 - (, and ).
+0.034769 - Probability of finding optimal value Error (%) 0.437 0.359 0.50 0.34 0.53 0.32 0.54 0.31 0.55 0.31 0.56 0.30 0.54 0.32 0.53 0.33 0.53 0.33 0.52 0.33 0.52 0.33 Larger instances 0.0 1.3 0.0 1.05 0.0 1.09 0.0 1.13 0.0 1.15 0.0 1.26 0.0 1.37 0.0 1.47 0.0 1.54 0.0 1.62 As it can be seen, on shorter instances the results tend to improve with respect to the use of a cumulative average (case ).
+0.112536 - This is because the reduction of the number of samples increases the convergence speed of the average value toward the best solution found, making the search to become less disperse.
+0.146405 - However, in short instances the performance is almost identical independently of the value.
+0.141951 - On the other hand, limiting the number of samples has a greater impact when the algorithm is applied to larger instances, as can be seen in Table 4.
+0.210628 - Now, the performance of the algorithm varies depending on the value of .
+0.155481 - Lower values of make the search become too exploitative, and higher ones lead the algorithm towards an excessively dispersed search.
+0.170549 - As the experiment shows, using a moving average limited by helps to control the algorithm performance.
+0.047619 - In most common situations, can be set to , which is equivalent to use a cumulative moving average.
+0.165442 - But in cases where the algorithm is expected to run for a long period, the number of samples may be very large.
+0.099502 - It happens that the convergence of μ towards the best solution may be too slow, making the search becomes dispersed.
+0.121553 - In those cases, it is recommended to set a value for which guarantees that the rate of convergence for μ is not affected by the time the algorithm is running, i.e.
+0.097561 - by the number of samples collected.
+0.073059 - Best-so-far solution reinforcement Best-so-far solution reinforcement consists on focusing the search around the best solution found so far.
+0.161946 - The researches carried out by Dorigo (ACS) and Stützle (MMAS) show that the performance of ant algorithms improves by the exploitation of the best-so-far solution.
+0.136995 - ACE includes also, an auxiliary procedure to increase the exploitation of the best-so-far solution.
+0.090535 - Procedure to implement the best-so-far solution reinforcement The best-so-far solution reinforcement can make the search to get stuck due to over-exploitation.
+0.153118 - To prevent this, the reinforcement procedure has been adapted to the algorithm dynamics: first there is no reinforcement while the number of samples is lower than .
+0.106917 - Once that the number of samples reaches this value, the reinforcement is triggered only by the accumulated worsening of the last found solutions.
+0.109453 - This assures that the reinforcement is under control, since it is controlled by the search itself, avoiding over-exploitation.
+0.096618 - For every ant that updates the pheromone with a quality of solution (Eq (5)) below 1, a counter is increased.
+0.102881 - When this counter exceeds a user’s defined threshold (W), it is reset to 0 and the pheromone is updated with the best-so-far solution.
+0.120773 - Besides, the counter is reset to 0 any time that an ant finds a solution with quality equal to 1.
+0.101152 - Results A set of tests, intended to study the benefits of the best-so-far solution reinforcement and the influence of W, were performed under the same scenarios and conditions already described in previous experiments.
+0.137379 - Values of W are taken proportional to the number of cities of the TSP instance (nc).
+0.062016 - The results are shown in Table 5.
+0.131376 - Comparing them with the results shown in Table 4, it can be observed that the reinforcement with the best solution improves the performance of the algorithm on larger instances.
+0.116307 - On shorter instances, taking a finite value for ( ), has the same impact in the performance of the search than using best solution reinforcement.
+0.143575 - Different values of the parameter W do not seem to have a clear impact over the performance.
+0.000000 - Table 5.
+0.000000 - Best-so-far solution reinforcement experimental results.
+0.062016 - The best results are written in bold.
+0.021505 - ( and ).
+0.006504 - Probability of finding optimal value Error (%) 0.56 0.29 0.56 0.30 0.56 0.30 0.56 0.29 0.55 0.30 0.56 0.29 0.55 0.30 0.56 0.30 0.56 0.30 0.57 0.29 Larger instances 0.0 0.77 0.0 0.71 0.0 0.74 0.0 0.73 0.0 0.72 0.0 0.74 0.0 0.72 0.0 0.77 0.0 0.72 0.0 0.76
+0.082388 - In this section, ACE is compared with ACS (Dorigo & Gambardella, 1997) and MMAS (Stützle & Hoos, 2000) algorithms.
+0.090395 - The comparison is done using twenty-five different TSP instances, including symmetric and asymmetric ones.
+0.087719 - The study has been done using the source code provided by Stützle (2002).
+0.081761 - ACE is implemented including the best-so-far solution reinforcement described before.
+0.096970 - The parameter values for ACS and MMAS are those suggested by the literature.
+0.081819 - These values are shown in Table 6, where “ ” means that the parameter is not present in the algorithm, cl is the number of elements in the candidate list, is the tour length produced by the nearest neighbour heuristic, is the tour length of the best-so-far solution, and nc is the number of cities.
+0.163743 - The table also includes the equations used to set the limits, and , of MMAS.
+0.064426 - Lastly, it must be said that MMAS uses another parameter to regulate the pheromone update that is not included in the table: the pheromone is updated using the iteration-best solution, but every 25 iterations the pheromone is updated using the best-so-far solution.
+0.000000 - Table 6.
+0.065041 - Parameter values used in the experiments.
+0.051491 - Parameter value ACE W B 6 0.99 0.5 ACS MMAS α 1 1 β 2 2 m 10 nc ρ 0.1 0.02 0.9 ξ 0.1 cl 20 20 The parameter values for ACE, also included in Table 6, are those obtained in the preliminary study.
+0.165062 - Performance comparison Clearly, a first aspect of interest is the algorithm performance.
+0.165446 - Then, we focus on how good the results are, and the algorithm behaviour along the searching process, paying attention to the stagnation problem.
+0.102564 - A set of experiments have been done to compare ACE with ACS and MMAS in terms of performance.
+0.134335 - Comparison of the algorithms results According with the literature (Stutzle, 1996), it is known that AS does not perform well over 75 cities.
+0.044444 - ACS and MMAS can afford much larger problems.
+0.043478 - In our comparison, we first tried TSP instances smaller than 200 cities, and the results are shown in Table 7.
+0.075117 - In a second step, we tried even larger instances up to 1400 cities and the results are shown in Table 8.
+0.051282 - Table 7 has been obtained with batches of 1000 tries, and Table 8 with batches of 100 tries.
+0.000000 - Table 7.
+0.107345 - ACE, ACS and MMAS performance comparison, the results are the average of 1000 independent executions.
+0.070453 - The columns shows the best solution found and the frequency of finding it (probability), the worst solution, the average solution and the normalized error (Eq (11)), the median, the standard deviation, and the results of the Wilcoxon–Mann–Whitney test.
+0.046512 - Instance Algorithm Best Worst Mean Median Std.
+0.000000 - Dev.
+0.000000 - U-test ry48p(ATSP) (14422) ACE 14422.
+0.000000 - (0.06) 14883 14495.8 (0.511) 14495 26.0637 −14.622 (819139.)
+0.000000 - ACE vs ACS ACS 14422.
+0.000000 - (0.09) 15106 14546.9 (0.866) 14519 102.304 −23.468 (708254.)
+0.000000 - ACE vs MMAS MMAS 14422.
+0.000000 - (0.058) 14914 14533.3 (0.772) 14516 59.1655 −1.898 (976155.)
+0.000000 - ACS vs MMAS eil51 (426) ACE 426.
+0.000000 - (0.228) 432 426.818 (0.192) 427 0.580701 −13.542 (866899.)
+0.000000 - ACE vs ACS ACS 426.
+0.000000 - (0.079) 435 427.799 (0.422) 427 2.16363 −13.454 (857205.)
+0.000000 - ACE vs MMAS MMAS 426.
+0.000000 - (0.124) 432 427.229 (0.288) 427 0.865626 −0.321 (997064.)
+0.000000 - ACS vs MMAS berlin52 (7542) ACE 7542.
+0.000000 - (0.994) 7715 7543.04 (0.014) 7542 13.3669 −19.923 (830305.)
+0.000000 - ACE vs ACS ACS 7542.
+0.000000 - (0.654) 7954 7613.21 (0.944) 7542 107.145 1.892 (1.003.106) ACE vs MMAS MMAS 7542.
+0.000000 - (0.999) 7715 7542.17 (0.002) 7542 5.47074 20.312 (1.17303 ) ACS vs MMAS ftv70 (ATSP) (1950) ACE 1950.
+0.000000 - (0.292) 2060 1968.16 (0.931) 1959 25.4609 −31.86 (592965.)
+0.000000 - ACE vs ACS ACS 1950.
+0.000000 - (0.012) 2136 2019.26 (3.552) 2033 31.7608 −13.809 (827632.)
+0.000000 - ACE vs MMAS MMAS 1950.
+0.000000 - (0.014) 2049 1972.52 (1.155) 1971 21.0501 27.89 (1.35872 ) ACS vs MMAS st70 (675) ACE 675.
+0.000000 - (0.772) 691 676.418 (0.21) 675 2.68747 −20.499 (759623.)
+0.000000 - ACE vs ACS ACS 675.
+0.000000 - (0.334) 702 680.121 (0.759) 680 4.68105 −13.238 (848107.)
+0.000000 - ACE vs MMAS MMAS 675.
+0.000000 - (0.4) 691 677.338 (0.346) 677 3.04155 12.375 (1.15567 ) ACS vs MMAS eil76 (538) ACE 538.
+0.000000 - (0.895) 546 538.311 (0.058) 538 1.13823 −24.455 (727030.)
+0.000000 - ACE vs ACS ACS 538.
+0.000000 - (0.361) 552 540.64 (0.491) 539 3.14552 −21.605 (765581.)
+0.000000 - ACE vs MMAS MMAS 538.
+0.000000 - (0.405) 545 539.033 (0.192) 539 1.40495 9.351 (1.11548.106) ACS vs MMAS pr76 (108159) ACE 108159.
+0.000000 - (0.9) 109085 108251.
+0.000000 - (0.085) 108159 277.077 −18.591 (809876.)
+0.000000 - ACE vs ACS ACS 108159.
+0.000000 - (0.525) 112888 108689.
+0.000000 - (0.49) 108159 632.89 −4.444 (967142.)
+0.000000 - ACE vs MMAS MMAS 108159.
+0.000000 - (0.843) 111497 108391.
+0.000000 - (0.214) 108159 574.023 13.77 (1.14667 ) ACS vs MMAS gr96 (55209) ACE 55209.
+0.000000 - (0.031) 55856 55428.4 (0.397) 55403 85.8201 −11.964 (851089.)
+0.000000 - ACE vs ACS ACS 55209.
+0.000000 - (0.018) 57926 55594.8 (0.699) 55428 321.15 −4.369 (949020.)
+0.000000 - ACE vs MMAS MMAS 55291.
+0.000000 - (0.007) 55688 55440.2 (0.419) 55403 57.5951 9.514 (1.11813 ) ACS vs MMAS rat99 (1211) ACE 1211.
+0.000000 - (0.633) 1246 1213.29 (0.189) 1211 4.11577 −24.095 (697997.)
+0.000000 - ACE vs ACS ACS 1211.
+0.000000 - (0.114) 1271 1223.07 (0.997) 1217 13.3369 7.672 (1.08164 ) ACE vs MMAS MMAS 1211.
+0.000000 - (0.744) 1228 1211.56 (0.046) 1211 1.41002 31.713 (1.39242 ) ACS vs MMAS kroA100 (21282) ACE 21282.
+0.000000 - (0.591) 21600 21298.6 (0.078) 21282 42.4646 −20.167 (752932.)
+0.000000 - ACE vs ACS ACS 21282.
+0.000000 - (0.268) 22291 21401.
+0.000000 - (0.559) 21373 159.949 3.268 (1.03613 ) ACE vs MMAS MMAS 21282.
+0.000000 - (0.717) 21389 21303.9 (0.103) 21282 39.8216 20.205 (1.24503 ) ACS vs MMAS eil101 (629) ACE 629.
+0.000000 - (0.242) 644 633.619 (0.734) 632 3.90398 −19.623 (748070.)
+0.000000 - ACE vs ACS ACS 629.
+0.000000 - (0.018) 654 637.978 (1.427) 639 4.8163 −10.627 (864154.)
+0.000000 - ACE vs MMAS MAMAS 629.
+0.000000 - (0.007) 644 634.904 (0.939) 635 2.13479 16.217 (1.20901 ) ACS vs MMAS lin105 (14379) ACE 14379.
+0.000000 - (0.934) 14514 14385.5 (0.045) 14379 26.2161 −21.739 (773977.)
+0.000000 - ACE vs ACS ACS 14379.
+0.000000 - (0.472) 14623 14419.4 (0.281) 14401 54.3329 0.927 (1.00551 ) ACE vs MMAS MMAS 14379.
+0.000000 - (0.942) 14547 14382.1 (0.022) 14379 15.7499 22.988 (1.23889 ) ACS vs MMAS kro124p (ATSP) (36230) ACE 36230.
+0.000000 - (0.228) 37777 36460.8 (0.637) 36345 314.608 −25.675 (669415.)
+0.000000 - ACE vs ACS ACS 36230.
+0.000000 - (0.021) 39026 36941.1 (1.963) 36863 477.55 −23.077 (702965.)
+0.000000 - ACE vs MMAS MMAS 36230.
+0.000000 - (0.044) 38215 36844.3 (1.696) 36709 431.735 4.704 (1.06124 ) ACS vs MMAS ch130 (6110) ACE 6110.
+0.000000 - (0.055) 6259 6153.96 (0.72) 6150 26.0286 −16.049 (793465.)
+0.000000 - ACE vs ACS ACS 6110.
+0.000000 - (0.051) 6392 6179.96 (1.145) 6170 42.2916 12.074 (1.15535 ) ACE vs MMAS MMAS 6110.
+0.000000 - (0.16) 6251 6138.98 (0.474) 6140 16.738 26.008 (1.33513 ) ACS vs MMAS gr137 (69853) ACE 69853.
+0.000000 - (0.927) 70163 69863.5 (0.015) 69853 39.4683 −29.31 (668931.)
+0.000000 - ACE vs ACS ACS 69853.
+0.011696 - (0.302) 73656 70130.1 (0.397) 69989 372.1 −37.025 A(555419.)
+0.000000 - ACE vs MMAS MMAS 69853.
+0.000000 - (0.089) 70379 70099.2 (0.352) 70132 119.983 −7.72 (901455.)
+0.000000 - ACS vs MMAS ch150 (6528) ACE 6528.
+0.000000 - (0.141) 6670 6550.
+0.000000 - (0.337) 6549 13.6072 −18.459 (763875.)
+0.000000 - ACE vs ACS ACS 6528.
+0.000000 - (0.032) 6778 6571.18 (0.661) 6563 32.6274 −13.661 (829334.)
+0.000000 - ACE vs MMAS MMAS 6533.
+0.000000 - (0.018) 6582 6554.29 (0.403) 6554 4.02529 13.719 (1.17268 ) ACS vs MMAS pr152 (73682) ACE 73682.
+0.000000 - (0.628) 74802 73766.8 (0.115) 73682 149.099 −29.18 (632926.)
+0.000000 - ACE vs ACS ACS 73682.
+0.000000 - (0.071) 77340 74137.4 (0.618) 74087 326.161 −22.448 (722154.)
+0.000000 - ACE vs MMAS MMAS 73682.
+0.000000 - (0.019) 74333 73877.5 (0.265) 73818 92.6384 20.26 (1.25578 ) ACS vs MMAS u159 (42080) ACE 42080.
+0.000000 - (0.752) 43816 42199.8 (0.285) 42080 227.218 −18.05 (787460.)
+0.000000 - ACE vs ACS ACS 42080.
+0.000000 - (0.342) 45922 42581.2 (1.191) 42388 787.248 4.804 (1.0452 ) ACE vs MMAS MMAS 42080.
+0.000000 - (0.814) 42899 42135.3 (0.131) 42080 122.938 23.42 (1.27206 ) ACS vs MMAS ftv170 (ATSP) (2755) ACE 2755.
+0.000000 - (0.002) 3007 2824.08 (2.508) 2818 50.612 −15.752 (797201.)
+0.000000 - ACE vs ACS ACS 2755.
+0.000000 - (0.001) 3105 2873.37 (4.296) 2864 74.4405 −3.565 (954776.)
+0.000000 - ACE vs MMAS MMAS 2787.
+0.000000 - (0.028) 2897 2821.44 (2.412) 2828 18.8537 17.075 (1.21965 ) ACS vs MMAS d198 (15780) ACE 15780.
+0.000000 - (0.015) 15899 15813.3 (0.211) 15812 15.5542 −36.148 (305683.)
+0.000000 - ACE vs ACS ACS 15813.
+0.000000 - (0.001) 16833 16078.6 (1.892) 16057 137.185 −36.249 (304635.)
+0.000000 - ACE vs MMAS MMAS 15844.
+0.071846 - (0.001) 16073 15969.1 (1.198) 15969 23.4597 23.752 (1.3072 ) ACS vs MMAS The best results and the statistical significance of the U-test are written in bold.
+0.000000 - Table 8.
+0.107345 - ACE, ACS and MMAS performance comparison, the results are the average of 100 independent executions.
+0.070453 - The columns shows the best solution found and the frequency of finding it (probability), the worst solution, the average solution and the normalized error (Eq (11)), the median, the standard deviation, and the results of the Wilcoxon–Mann–Whitney test.
+0.046512 - Instance Algorithm Best Worst Mean Median Std.
+0.000000 - Dev.
+0.000000 - U-test gil262 (2378) ACE 2378 (0.01) 2413 2390.06 (0.507) 2389 7.62216 −9.667 (6094.5) ACE vs ACS ACS 2381 (0.01) 2453 2414.14 (1.52) 2412 17.691 −4.417 (8245.)
+0.000000 - ACE vs MMAS MMAS 2379 (0.01) 2412 2394.45 (0.692) 2393 7.43779 8.309 (13448.5) ACS vs MMAS gr431 (171414) ACE 171516 (0.01) 175392 172937.
+0.000000 - (0.889) 172837 806.212 −11.979 (5147.)
+0.000000 - ACE vs ACS ACS 173936 (0.01) 186362 176841.
+0.000000 - (3.166) 176312 2204.72 −2.147 (9171.)
+0.000000 - ACE vs MMAS MMAS 172400 (0.01) 173757 173043.
+0.000000 - (0.95) 173003 303.075 12.216 (15050.)
+0.000000 - ACS vs MMAS d493 (35002) ACE 35123 (0.01) 35770 35449.3 (1.278) 35459 142.039 −12.168 (5069.5) ACE vs ACS ACS 35628 (0.01) 37755 36545.6 (4.41) 36514 449.757 −10.168 (5888.)
+0.000000 - ACE vs MMAS MMAS 35445 (0.01) 36289 35692.7 (1.973) 35693 116.267 11.698 (14838.)
+0.000000 - ACS vs MMAS rat783 (8806) ACE 8868 (0.01) 9010 8936.7 (1.484) 8936 29.5667 −10.609 (5708.)
+0.000000 - ACE vs ACS ACS 8893 (0.01) 9090 9002.81 (2.235) 9002 32.4693 9.613 (13984.5) ACE vs MMAS MMAS 8852 (0.01) 8946 8891.12 (0.967) 8889 20.8401 12.042 (14978.5) ACS vs MMAS fl1400 (20127) ACE 20328 (0.01) 21067 20491.7 (1.812) 20458 130.518 −11.793 (5223.)
+0.000000 - ACE vs ACS ACS 20598 (0.01) 22270 21159.4 (5.13) 21070 344.042 −10.837 (5050.)
+0.000000 - ACE vs MMAS MMAS 21793 (0.01) 22362 22113.3 (9.869) 22097 116.677 −10.52 (5145.)
+0.102900 - ACS vs MMAS The best results and the statistical significance of the U-test are written in bold.
+0.095238 - Each table details: • The best solution found in the batch and the frequency of finding it (probability).
+0.076190 - • The worst solution.
+0.113475 - • The average solution and the normalized error (Eq (11)).
+0.080808 - • The median.
+0.076190 - • The standard deviation.
+0.076190 - • The U-test.
+0.100888 - The last column (U-test) shows the results of the Wilcoxon–Mann–Whitney test (Gibbons & Chakraborti, 2003).
+0.121693 - This is a two tailed non-parametric test used to compare if two populations are the same.
+0.089552 - More specifically, the null hypothesis is that both populations have equal medians, against the alternative that they have not.
+0.099804 - The table shows the results of the test using the value of the z-statistic and the value of the rank sum test statistic.
+0.053140 - Compared to ACS, ACE has a better performance in almost all tested instances, as shown in Tables 7 and 8.
+0.016260 - It has a lower average error.
+0.115556 - The best solution found is in many cases the optimal solution for both algorithms, but ACE has a better probability of finding it.
+0.076509 - Moreover, the results of the Wilcoxon test show clearly that for all the instances, the results obtained by ACE are significantly better than those obtained by ACS.
+0.128541 - Compared to MMAS, ACE performs better, according with the Wilcoxon test, for 18 of the 25 tested instances.
+0.019900 - There are 5 instances were MMAS is better, and 2 instances were there is no significant difference between them.
+0.014815 - ACE performance results are summarised in Fig 12.
+0.159311 - This figure shows the ranking of each algorithm for every instance according to the Wilcoxon–Mann–Whitney test.
+0.079507 - As it can be observed ACE outperforms MMAS in a 72% of the tested instances.
+0.111834 - Compared with ACS, the improvement is a 100%.
+0.078014 - Comparison of algorithm performance for each instance Fig 12.
+0.085271 - Comparison of algorithm performance for each instance.
+0.165675 - The plot shows whether a performance is significative better or equal than the rest of the algorithms, according to the results of the Wilcoxon–Mann–Whitney test.
+0.118774 - Comparison of algorithms behaviour The search dispersion achieved by each algorithm can be illustrated using the average distance among the tours built by the ants (Dorigo & Stützle, 2004).
+0.109705 - The distance between two tours is measured counting the number of edges that are present in one tour and are not present in the other.
+0.096045 - For each tour built in the same iteration, the distance with the rest is obtained.
+0.121212 - Finally, the mean of these distances is calculated to obtain an average value.
+0.099291 - Fig 13 shows the average distance for the instance .
+0.096935 - Comparing ACS with MMAS, it is evident that ACS goes quickly to good solutions but then it may not be able to improve the results as the number of tour constructions increases.
+0.063927 - MMAS instead, advances gradually, and seems to need a higher number of tours construction to reach a certain level of solution quality.
+0.123248 - Evolution of the averaged distance of 100 tours for the instance kroA100 Fig 13.
+0.137811 - Evolution of the averaged distance of 100 tours for the instance .
+0.074074 - As it is also shown in Fig 13, in the beginning, like ACS, ACE reduces the dispersion quickly, but it keeps a larger dispersion thus it has better possibilities to improve the solution over time.
+0.103030 - Notice that at the end the curves ACE surpasses the dispersion of MMAS.
+0.074288 - In summary, If you allow for a fast searching with a low number of tours, then ACE would be able to find good solutions as ACS.
+0.067633 - On the other hand, if you allow for larger explorations, then ACE will give you high quality solution like MMAS.
+0.113208 - The next experiment has the purpose to gain insight in these differences.
+0.067797 - Computational effort The computational effort is a common measure used in genetic programming (Koza, 1992).
+0.094737 - It measures the number of objective function evaluations, i.e the number of solutions, that must be processed in order to obtain a solution of certain quality, (δ), with a certain probability (e.g.
+0.000000 - 0.99).
+0.215511 - We adopt this measure to investigate the behaviour of the ants algorithms along the search.
+0.065041 - We apply the following procedure: 1.
+0.118724 - The algorithm is executed for N independent runs, building M solutions in each run.
+0.094527 - Every time a best solution is found, this and the total number of solutions built so far are saved.
+0.094527 - From the experimental data, the probability, , of finding a solution equal or better than δ, after processing solutions is obtained.
+0.093023 - Where is a number in the range, .
+0.074906 - The number of independent runs with solutions, necessary to find with probability z at least one solution equal or better than δ: where ceil means rounding up to next highest integer.
+0.089202 - The computational effort is obtained as: The computational effort comparison is done using the same experimental conditions of Section 5.1.
+0.065359 - For each instance, the solution quality (δ) is defined as follows: , where .
+0.093333 - As can be seen, this is the difference, expressed as a percentage, between the solution and the optimal value: , and 0%, i.e.
+0.076190 - the optimal value.
+0.122346 - , is defined for each instance from 0 to in steps of , where nc is the number of cities of the instance.
+0.000000 - Lastly, .
+0.132589 - The results of the experiment are shown in Tables 9 and 10.
+0.175704 - None of the algorithms has any difficulty to reach a solution within 10% or 5% from the optimum.
+0.059701 - On instances below 200 cities, the effort needed by ACS and ACE is similar and lower than MMAS one.
+0.000000 - Table 9.
+0.052632 - ACE, ACS and MMAS computational effort comparison, the results are obtained using 1000 executions.
+0.007117 - Instance Algorithm 10% 5% 1% 0% ry48p (ATSP) (14422) ACE 4800 9600 96000 8.8704 × 106 ACS 4800 19200 240000 1.77216 × 107 MMAS 14400 24000 316800 1.3728 × 107 eil51 (426) ACE 5100 5100 40800 979200 ACS 5100 5100 61200 1.7952 × 106 MMAS 15300 20400 71400 1.9176 × 106 berlin52 (7542) ACE 5200 10400 26000 41600 ACS 5200 10400 46800 57200 MMAS 10400 15600 26000 31200 ftv70 (ATSP) (1950) ACE 14000 42000 644000 5.46 × 106 ACS 21000 294000 1.2852 × 107 2.0349 × 108 MMAS 21000 70000 784000 4.0866 × 107 st70 (675) ACE 7000 14000 140000 735000 ACS 7000 14000 140000 4.018 × 106 MMAS 21000 42000 252000 2.8 × 106 eil76 (538) ACE 7600 15200 106400 532000 ACS 7600 15200 319200 3.1464 × 106 MMAS 22800 38000 136800 1.216 × 106 pr76 (108159) ACE 7600 22800 304000 706800 ACS 7600 15200 144400 912000 MMAS 22800 45600 273600 547200 gr96 (55209) ACE 9600 19200 230400 6.04128 × 107 ACS 9600 19200 134400 1.49818 × 108 MMAS 28800 48000 192000 – rat99 (1211) ACE 9900 19800 178200 1.683 × 106 ACS 9900 29700 415800 1.98198 × 107 MMAS 39600 49500 79200 623700 krA100 (55209) ACE 10000 20000 24000 2.28 × 106 ATS 10000 20000 100000 3.76 × 106 MMAS 40000 50000 90000 2.21 × 106 eil101 (629) ACE 10100 50500 1.1514 × 106 5.7267 × 106 ACS 10100 30300 1.5655 × 106 3.09666 × 107 MMAS 50500 101000 1.5554 × 106 1.54833 × 108 lin105 (14379) ACE 10500 21000 189000 1.2285 × 106 ACS 10500 10500 115500 945000 MMAS 31500 42000 63000 147000 kro124p (ATSP) (36230) ACE 12400 124000 1.488 × 106 1.64424 × 107 ACS 24800 186000 6.448 × 106 9.486 × 107 MMAS 49600 148800 8.7048 × 106 1.00688 × 108 ch130 (6110) ACE 13000 39000 1.716 × 106 8.19 × 107 ACS 13000 26000 1.95 × 106 3.731 × 107 MMAS 52000 78000 676000 1.4508 × 107 gr137 (69853) ACE 13700 27400 205500 1.0686 × 106 ACS 13700 27400 438400 9.316 × 106 MMAS 54800 68500 164400 5.23614 × 107 ch150 (6528) ACE 15000 30000 360000 1.6125 × 107 ACS 15000 30000 345000 6.027 × 107 MMAS 60000 75000 150000 – pr152 (73682) ACE 15200 15200 273600 1.2768 × 106 ACS 15200 15200 547200 2.53536 × 107 MMAS 45600 60800 182400 5.58144 × 107 u159 (42080) ACE 159000 31800 477000 2.385 × 106 ACS 31800 47700 492900 6.0102 × 106 MMAS 63600 79500 413400 4.2135 × 106 ftv170 (ATSP) (2755) ACE 51000 612000 2.8288 × 107 3.05113 × 109 ACS 102000 748000 1.7136 × 107 4.85156 × 109 MMAS 38000 204000 – – d198 (15780) ACE 19800 79200 475200 4.73933 × 108 ACS 19800 138600 4.7124 × 107 – MMAS 79200 158400 1.56816 × 108 – The best results are written in bold.
+0.000000 - Table 10.
+0.052632 - ACE, ACS and MMAS computational effort comparison, the results are obtained using 100 executions.
+0.010695 - Instance Algorithm 10% 5% 1% 0% gil262 (2378) ACE 52400 314400 4.0872 × 106 1.01017 × 109 ACS 26200 78600 1.4148 × 107 – MMAS 183400 288200 2.8296 × 106 – gr431 (171414) ACE 215500 991300 1.9395 × 107 – ACS 129300 775800 – – MMAS 387900 732700 1.23697 × 107 – d493 (35002) ACE 394400 1.5283 × 106 6.34491 × 107 – ACS 295800 2.465 × 106 – – MMAS 640900 1.9227 × 106 – – rat783 (8806) ACE 861300 2.6622 × 106 4.16556 × 108 – ACS 78300 548100.
+0.090395 - In the case of reaching a solution below 1%, ACS lies behind ACE and MMAS.
+0.133344 - While ACE performs slightly better in short instances, in the larger ones MMAS seems to be the algorithm which requires the lower effort among all the algorithms.
+0.090395 - When the solution is the optimal one, ACE needs the lowest effort, followed by MMAS.
+0.099415 - ACE shows, along with ACS, the fastest convergence to solutions under 10% and 5%.
+0.089947 - Although the efforts increase to reach solutions under 1%, these efforts are similar to those of MMAS.
+0.159620 - But in general, ACE is the algorithm that needs less efforts to reach the optimal solution.
+0.056604 - These results are in line with the behaviour shown in Fig 13.
+0.134960 - Time comparison This experiment compares the time consumed by each algorithm to solve several TSP instances taken from TSPlib.
+0.137271 - None of the algorithms have been implement in an efficient way, thus, only the relative differences of time consumption are important.
+0.065844 - The experiments were performed in a Mac-Pro 4.1 with GHz Quad-Core Intel Xeon, OS Mac OSX 10.9 and gcc version 4.8.
+0.124705 - In order to perform the comparison, every algorithm is executed 200 times for each instance.
+0.142973 - A single execution consists in running the algorithm, until it builds a fixed number of tours: , where nc is the number of cities.
+0.109566 - It is measured the average time, in seconds, taken to solve each instance.
+0.070922 - Table 11 shows a comparison among the results achieved.
+0.170673 - ACE is the less time consuming of the three algorithms.
+0.025157 - ACE is roughly 52% faster than ACS, and 33% faster than MMAS.
+0.111111 - This time differences are mostly due to differences on the solution construction procedure and the representation used.
+0.000000 - Table 11.
+0.105263 - ACE, ACS and MMAS time comparison, the results are the average of 200 executions.
+0.046512 - Instance Algorithm Best Worst Mean Median Std.
+0.000000 - Dev U-test ry48p (ATSP) ACE 3.94 6.2 5.6 5.79 0.41 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 6.7 9.58 9.41 9.51 0.52 −17.3 (20100.)
+0.000000 - ACE vs MMAS MMAS 6.53 9.49 9.31 9.42 0.5 15.87 (58452.5) ACS vs MMAS eil51 ACE 4.81 7.61 6.81 6.96 0.46 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 7.73 10.92 10.73 10.83 0.48 −16.21 (21360.)
+0.000000 - ACEvs MMAS MMAS 6.17 8.52 8.37 8.47 0.39 16.47 (59144.)
+0.000000 - ACS vs MMAS berlin52 ACE 4.8 7.8 7.41 7.52 0.51 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 7.85 11.42 11.04 11.16 0.61 −15.98 (21628.)
+0.000000 - ACE vs MMAS MMAS 6.34 8.81 8.66 8.75 0.42 15.97 (58564.)
+0.000000 - ACS vs MMAS ftv70 (ATSP) ACE 7.97 13.45 12.29 12.41 0.85 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 14.83 21.58 21.09 21.34 1.16 −17.3 (20100.)
+0.000000 - ACE vs MMAS MMAS 14.85 21.08 20.75 20.99 1.16 15.37 (57868.)
+0.000000 - ACS vs MMAS st70 ACE 8.14 13.33 11.94 11.98 0.74 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 14.76 21.24 20.72 20.92 1.12 −16.98 (20463.)
+0.000000 - ACE vs MMAS MMAS 12.01 16.69 16.39 16.58 0.87 15.97 (58564.)
+0.000000 - ACS vs MMAS eil76 ACE 10.05 16.47 14.71 14.72 0.94 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 17.32 25.11 24.51 24.78 1.31 −16.04 (21553.)
+0.000000 - ACE vs MMAS MMAS 13.91 19.51 19.09 19.24 1 15.97 (58564.)
+0.000000 - ACS vs MMAS pr76 ACE 9 15.07 13.42 13.57 0.88 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 17.66 25.14 24.61 24.92 1.37 −17.29 (20112.)
+0.000000 - ACE vs MMAS MMAS 14.17 19.54 19.28 19.49 0.92 15.97 (58564.)
+0.000000 - ACS vs MMAS gr96 ACE 13.5 23.97 21.42 21.38 1.55 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 28.31 40.71 39.93 40.33 2.18 −17.26 (20145.)
+0.000000 - ACE vs MMAS MMAS 22.9 31.71 31.12 31.4 1.49 15.97 (58564.)
+0.000000 - ACS vs MMAS rat99 ACE 16.73 27.52 24.13 23.55 1.8 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 29.88 42.77 41.88 42.3 2.29 −16.86 (20605.)
+0.000000 - ACE vs MMAS MMAS 24.28 33.24 32.79 33.13 1.68 15.97 (58564.)
+0.000000 - ACS vs MMAS kroA100 ACE 17.71 27.73 26.32 26.87 1.8 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 32.01 45.49 44.83 45.33 2.43 −16.19 (21379.)
+0.000000 - ACE vs MMAS MMAS 25.43 35.48 34.96 35.35 1.91 15.97 (58564.)
+0.000000 - ACS vs MMAS eil101 ACE 16.92 28.06 26.13 26.36 1.78 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 31.68 45.44 44.43 44.9 2.44 −16.59 (20918.)
+0.000000 - ACE vs MMAS MMAS 25.35 35.7 34.87 35.19 1.74 15.97 (58564.)
+0.000000 - ACS vs MMAS lin105 ACE 18.17 32.82 26.85 26.87 1.7 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 32.95 47.
+0.000000 - (20443.)
+0.000000 - ACE vs MMAS ACS 26.87 37.04 36.57 36.94 1.82 15.97 (58564.)
+0.000000 - ACS vs MMAS kro124p (ATSP) ACE 15.21 26.58 23.79 24.11 1.6 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 32.1 44.81 43.99 44.47 2.31 −17.3 (20100.)
+0.000000 - ACE vs MMAS MMAS 29.85 43.27 42.48 42.98 2.28 15.96 (58554.)
+0.000000 - ACS vs MMAS gr137 ACE 33.24 54.43 48.4 48.83 3.11 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 60.24 88.51 86.07 87.56 4.92 −17.03 (20414.)
+0.000000 - ACE vs MMAS MMAS 49.3 67.27 66.39 67.08 3.36 15.97 (58564.)
+0.000000 - ACS vs MMAS d198 ACE 68.27 121.59 106.75 108.24 7.92 −17.3 (20100.)
+0.000000 - ACE vs ACS ACS 125.72 185.84 180.4 182.46 10.63 −17.22 (20191.)
+0.000000 - ACE vs MMAS MMAS 110.26 153.55 150.84 152.51 7.62 15.97 (58564.)
+0.102900 - ACS vs MMAS The best results and the statistical significance of the U-test are written in bold.
+0.130107 - In ACS and MMAS, the ants move in a graph so they have to choose a node from the neighbourhood of the current one.
+0.108614 - In the TSP, this means that every time that an ant has to visit a new city, it has to choose over a list of cl (the candidate list) elements.
+0.115152 - In ACE, the ants search in a state space with an unknown topology.
+0.090535 - When an ant uses the pheromone, it only chooses over the set of previously used actions for a certain state, which is a relative small list.
+0.107692 - Only when an ant uses the heuristic it has to choose over a set of all possible operators.
+0.093897 - Since the pheromone election dominates over the heuristic, in average, the ants build tours using lists with fewer elements than cl.
+0.069652 - Like it was pointed out previously in the text, the pheromone table in ACE starts as an empty structure.
+0.123077 - Since the state space is unknown, the information provided by the ants searches is what fills the table.
+0.046784 - Typically, for a certain state there is only a short list of available operators.
+0.099291 - This makes the use of this table computationally efficient.
+0.096970 - In comparison, in ACO the table is an adjacency matrix of a graph.
+0.097976 - Thus, using this table to build a solution may be a costly operation, which may require the use of auxiliary techniques like candidate lists in the case of the TSP or, in other problems, more refined solutions (Alba & Chicano, 2007).
+0.175077 - Hybridisation with local search This comparison has the purpose to investigate the algorithms effectiveness guiding a local search heuristics.
+0.081871 - The experiments are done using the so called 3-opt heuristic (Johnson & McGeoch, 1997).
+0.109769 - The source code was provided by Stützle (2002), using a fixed radius limited to the 40 nearest neighbours.
+0.146893 - In all algorithms, the local search is applied to every tour built by an ant.
+0.082474 - It is necessary to modify MMAS in order to obtain a reasonable performance when it is combined with local search, the modification consists on updating always the pheromone with the best-so-far solution.
+0.066667 - ACE also needs to be modified when it is combined with local search.
+0.088050 - Like MMAS, only the best-so-far solution updates the pheromone table.
+0.117647 - This means that only ants with a solution quality (Eq (5)) equal to 1 are allowed to update the pheromone with the optimised tour provided by local search.
+0.079096 - In order to perform the comparison, we selected several large symmetric TSP instances from TSPlib.
+0.103825 - The number of executions depends on the instance size (see number of tries in Table 12).
+0.137836 - A single execution consists of running the algorithm until it builds a fixed number of tours: , where , and nc is the number of cities in the TSP instance.
+0.000000 - Table 12.
+0.043716 - ACE, ACS and MMAS hybridisation with local search (3-opt) comparison allowing 100 · nc tours constructions.
+0.070453 - The columns shows the best solution found and the frequency of finding it (probability), the worst solution, the average solution and the normalized error (Eq (11)), the median, the standard deviation, and the results of the Wilcoxon–Mann–Whitney test.
+0.057143 - Instance Algorithm No.
+0.000000 - Tries Best Worst Mean Median Std.
+0.000000 - Dev U-test gr431 (171414) ACE 100 171414 (0.38) 172135 171451 (0.02) 171416 117.193 −4.14 (8412.)
+0.000000 - ACE vs ACS ACS 100 171414 (0.22) 171739 171466 (0.03) 171421 78.4349 −12.32 (5050.)
+0.000000 - ACE vs MMAS MMAS 100 172328 (0.01) 173382 172864 (0.85) 172865 237.898 −12.23 (5050.)
+0.000000 - ACS vs MMAS d493 (35002) ACE 100 35002 (0.26) 35092 35012.3 (0.03) 35004 22.4877 −4.55 (8235.)
+0.000000 - ACE vs ACS ACS 100 35002 (0.13) 35132 35033.4 (0.09) 35009 38.5883 −12.29 (5050.)
+0.000000 - ACE vs MMAS MMAS 100 35202 (0.01) 35436 35351 (1.)
+0.000000 - 35363 49.4176 −12.24 (5050.)
+0.000000 - ACS vs MMAS d657 (48912) ACE 50 48913 (0.12) 49006 48957 (0.09) 48962 24.1542 −1.31 (2335.)
+0.000000 - ACE vs ACS ACS 50 48913 (0.06) 49034 48963.8 (0.11) 48968 31.9174 −8.62 (1275.)
+0.000000 - ACE vs MMAS MMAS 50 49336 (0.02) 49663 49547.7 (1.3) 49563 62.6657 −8.62 (1275.)
+0.000000 - ACS vs MMAS gr666 (294358) ACE 50 294358 (0.2) 295095 294569 (0.07) 294481 209.826 −2.97 (2093.5) ACE vs ACS ACS 50 294358 (0.02) 295038 294627 (0.09) 294582 162.337 −8.62 (1275.)
+0.000000 - ACE vs MMAS MMAS 50 297471 (0.02) 299379 298519 (1.41) 298582 381.487 −8.61 (1275.)
+0.000000 - ACS vs MMAS rat783 (8806) ACE 50 8806 (0.48) 8840 8811.68 (0.06) 8810 7.20669 −1.98 (2246.)
+0.000000 - ACE vs ACS ACS 50 8806 (0.3) 8834 8814.46 (0.1) 8814 7.68569 −8.68 (1275.)
+0.000000 - ACE vs MMAS MMAS 50 8970 (0.02) 9005 8990.02 (2.09) 8990 8.41643 −8.63 (1275.)
+0.000000 - ACS vs MMAS pr1002 (259045) ACE 25 259045 (0.52) 260258 259342 (0.11) 259045 354.239 0.32 (653.5) ACE vs ACS ACS 25 259045 (0.44) 259912 259264 (0.08) 259048 276.108 −6.11 (325.)
+0.000000 - ACE vs MMAS MMAS 25 263566 (0.04) 264968 264490 (2.1) 264597 310.459 −6.09 (325.)
+0.000000 - ACS vs MMAS u1060 (224094) ACE 25 224094 (0.04) 224752 224246 (0.07) 224184 156.987 −3.49 (457.)
+0.000000 - ACE vs ACS ACS 25 224168 (0.04) 224654 224380 (0.13) 224378 144.596 −6.05 (325.)
+0.000000 - ACE vs MMAS MMAS 25 227373 (0.04) 228484 227899 (1.7) 227887 262.915 −6.05 (325.)
+0.000000 - ACS vs MMAS fl1400 (20127) ACE 25 20127 (0.88) 20165 20131.5 (0.02) 20127 12.3832 −3.
+0.000000 - (507.)
+0.000000 - ACE vs ACS ACS 25 20127 (0.44) 20176 20140.1 (0.06) 20129 18.484 −6.33 (325.)
+0.000000 - ACE vs MMAS MMAS 25 20212 (0.04) 20289 20240.7 (0.57) 20237 17.8314 −6.09 (325.)
+0.000000 - ACS vs MMAS u2152 (64253) ACE 25 64301 (0.04) 64563 64399.4 (0.23) 64390 69.7316 −0.55 (608.5) ACE vs ACS ACS 25 64265 (0.04) 64665 64415.6 (0.25) 64414 99.0281 −6.05 (325.)
+0.000000 - ACE vs MMAS MMAS 25 66420 (0.04) 66826 66637.3 (3.71) 66639 107.381 −6.05 (325.)
+0.000000 - ACS vs MMAS pcb3038 (137694) ACE 25 137810 (0.04) 138297 138045 (0.26) 138039 124.384 2.16 (749.5) ACE vs ACS ACS 25 137811 (0.04) 138186 137970 (0.2) 137961 95.081 −5.33 (325.)
+0.000000 - ACE vs MMAS MMAS 25 142413 (0.06) 142780 142611 (3.57) 142638 124.82 −5.33 (325.)
+0.102900 - ACS vs MMAS The best results and the statistical significance of the U-test are written in bold.
+0.059259 - The results are detailed in Tables 12–14.
+0.184500 - A comparison of the algorithm performance according to the results of the Wilcoxon–Mann–Whitney test can be found in Figs.
+0.000000 - 14–16.
+0.000000 - Table 13.
+0.043716 - ACE, ACS and MMAS hybridisation with local search (3-opt) comparison allowing 1000 nc tours constructions.
+0.070453 - The columns shows the best solution found and the frequency of finding it (probability), the worst solution, the average solution and the normalized error (Eq (11)), the median, the standard deviation, and the results of the Wilcoxon–Mann–Whitney test.
+0.057143 - Instance Algorithm No.
+0.000000 - Tries Best Worst Mean Median Std.
+0.000000 - Dev U-test gr431 (171414) ACE 100 171414 (0.89) 171653 171418 (0.)
+0.000000 - 171414 26.6166 −3.65 (8979.)
+0.000000 - ACE vs ACS ACS 100 171414 (0.68) 171653 171430 (0.01) 171414 49.9109 −4.3 (8738.5) ACE vs MMAS MMAS 100 171414 (0.63) 171534 171423 (0.01) 171414 30.5986 −0.58 (9850.5) ACS vs MMAS d493 (35002) ACE 100 35002 (0.38) 35078 35005.4 (0.01) 35004 10.5163 −2.74 (9030.5) ACE vs ACS ACS 100 35002 (0.25) 35105 35014.2 (0.03) 35004 26.5705 −4.51 (8371.5) ACE vs MMAS MMAS 100 35002 (0.13) 35085 35005.6 (0.01) 35004 8.48539 −1.39 (9530.)
+0.000000 - ACS vs MMAS d657 (48912) ACE 50 48913 (0.22) 49025 48948.8 (0.08) 48948 29.868 −0.36 (2472.)
+0.000000 - ACE vs ACS ACS 50 48913 (0.1) 49000 48949.2 (0.08) 48938 26.9749 0.58 (2608.)
+0.000000 - ACE vs MMAS MMAS 50 48913 (0.28) 48987 48945.8 (0.07) 48948 26.3923 0.83 (2644.5) ACS vs MMAS gr666 (294358) ACE 50 294358 (0.28) 295059 294500 (0.05) 294476 183.894 −2.86 (2112.5) ACE vs ACS ACS 50 294358 (0.1) 295064 294549 (0.06) 294518 154.991 −0.39 (2468.5) ACE vs MMAS MMAS 50 294358 (0.22) 294596 294461 (0.03) 294476 86.69 2.74 (2921.5) ACS vs MMAS rat783 (8806) ACE 50 8806 (0.88) 8820 8807 (0.01) 8806 2.89264 −1.5 (2382.5) ACE vs ACS ACS 50 8806 (0.78) 8830 8808.62 (0.03) 8806 5.45441 0.5 (2565.)
+0.000000 - ACE vs MMAS MMAS 50 8806 (0.9) 8811 8806.3 (0.)
+0.000000 - 8806 1.05463 1.91 (2702.5) ACS vs MMAS pr1002 (259045) ACE 25 259045 (0.84) 259949 259151 (0.04) 259045 257.992 −0.23 (629.)
+0.000000 - ACE vs ACS ACS 25 259045 (0.8) 260134 259155 (0.04) 259045 255.974 −3.78 (453.5) ACE vs MMAS MMAS 25 259045 (0.12) 259787 259163 (0.05) 259117 156.548 −3.29 (476.)
+0.000000 - ACS vs MMAS u1060 (224094) ACE 25 224094 (0.08) 224343 224177 (0.04) 224152 64.6248 −3.58 (453.)
+0.000000 - ACE vs ACS ACS 25 224139 (0.04) 224828 224332 (0.11) 224217 207.583 −4.88 (386.)
+0.000000 - ACE vs MMAS MMAS 25 224177 (0.08) 224684 224343 (0.11) 224340 139.308 −1.16 (577.)
+0.000000 - ACS vs MMAS fl1400 (20127) ACE 25 20127 (0.96) 20164 20128.5 (0.01) 20127 7.4 −1.01 (612.5) ACE vs ACS ACS 25 20127 (0.88) 20164 20131.4 (0.02) 20127 12.2715 −3.98 (467.5) ACE vs MMAS MMAS 25 20127 (0.4) 20168 20133.3 (0.03) 20129 12.6449 −3.04 (502.5) ACS vs MMAS u2152 (64253) ACE 25 64253 (0.04) 64475 64370.6 (0.18) 64360 56.872 −0.5 (611.)
+0.000000 - ACE vs ACS ACS 25 64294 (0.04) 64548 64383.6 (0.2) 64382 67.1199 −5.31 (363.5) ACE vs MMAS MMAS 25 64405 (0.04) 64676 64524.5 (0.42) 64534 78.8808 −4.98 (380.5) ACS vs MMAS pcb3038 (137694) ACE 25 137757 (0.05) 137985 137903 (0.15) 137897 58.4097 −3.26 (317.)
+0.000000 - ACE vs ACS ACS 25 137699 (0.04) 138129 137975 (0.2) 137983 103.767 −5.65 (210.)
+0.000000 - ACE vs MMAS MMAS 25 138914 (0.04) 140030 139588 (1.38) 139589 283.872 −5.99 (325.)
+0.102900 - ACS vs MMAS The best results and the statistical significance of the U-test are written in bold.
+0.000000 - Table 14.
+0.043716 - ACE, ACS and MMAS hybridisation with local search (3-opt) comparison allowing 5000 · nc tours constructions.
+0.070453 - The columns shows the best solution found and the frequency of finding it (probability), the worst solution, the average solution and the normalized error (Eq (11)), the median, the standard deviation, and the results of the Wilcoxon–Mann–Whitney test.
+0.057143 - Instance Algorithm No.
+0.000000 - Tries Best Worst Mean Median Std.
+0.000000 - Dev U-test gr431 (171414) ACE 100 171414 (1) 171414 171414 (0) 171414 0 −2.01 (9850.)
+0.000000 - ACE vs ACS ACS 100 171414 (0.96) 171534 171416 (0) 171414 16.8812 −3.06 (9600.)
+0.000000 - ACE vs MMAS MMAS 100 171414 (0.91) 171534 171419 (0) 171414 23.6171 −1.42 (9801.)
+0.000000 - ACS vs MMAS d493 (35002) ACE 100 35002 (0.41) 35018 35003.3 (0) 35004 1.78025 −1.34 (9575.)
+0.000000 - ACE vs ACS ACS 100 35002 (0.35) 35073 35005.4 (0.01) 35004 10.2748 −2.73 (9122.)
+0.000000 - ACE vs MMAS MMAS 100 35002 (0.24) 35009 35003.7 (0) 35004 1.37862 −1.17 (9650.)
+0.000000 - ACS vs MMAS d657 (48912) ACE 50 48913 (0.36) 48982 48935.1 (0.05) 48915 27.6892 −2.43 (2177.)
+0.000000 - ACE vs ACS ACS 50 48913 (0.14) 48982 48947.3 (0.07) 48948 25.7765 −0.1 (2510.)
+0.000000 - ACE vs MMAS MMAS 50 48913 (0.32) 48980 48935.3 (0.05) 48924 24.4502 2.51 (2886.)
+0.000000 - ACS vs MMAS gr666 (294358) ACE 50 294358 (0.36) 294549 294418 (0.02) 294361 66.5551 −2.18 (2215.5) ACE vs ACS ACS 50 294358 (0.28) 294867 294466 (0.04) 294476 120.113 0.57 (2604.5) ACE vs MMAS MMAS 50 294358 (0.46) 294757 294423 (0.02) 294361 90.8856 2.29 (2848.5) ACS vs MMAS rat783 (8806) ACE 50 8806 (0.94) 8820 8806.72 (0.01) 8806 2.96262 1.74 (2600.)
+0.000000 - ACE vs ACS ACS 50 8806 (1) 8806 8806 (0) 8806 0 1.74 (2600.)
+0.000000 - ACE vs MMAS MMAS 50 8806 (1) 8806 8806 (0) 8806 0 – ACS vs MMAS pr1002 (259045) ACE 25 259045 (1) 259045 259045 (0) 259045 0 −1.4 (612.5) ACE vs ACS ACS 25 259045 (0.92) 259460 259078.
+0.000000 - (0.01) 259045 114.908 – ACE vs MMAS MMAS 25 259045 (1) 259045 259045 (0) 259045 0 1.4 (662.5) ACS vs MMAS u1060 (224094) ACE 25 224094 (0.2) 224381 224152 (0.03) 224152 56.2408 −1.73 (549.5) ACE vs ACS ACS 25 224113 (0.2) 224294 224173 (0.04) 224170 50.951 −1.81 (544.5) ACE vs MMAS MMAS 25 224094 (0.08) 224480 224202 (0.05) 224170 104.775 −0.3 (621.5) ACS vs MMAS fl1400 (20127) ACE 25 20127 (1) 20127 20127 (0) 20127 0 – ACE vs ACS ACS 25 20127 (1) 20127 20127 (0) 20127 0 – ACE vs MMAS MMAS 25 20127 (1) 20127 20127 (0) 20127 0 – ACS vs MMAS u2152 (64253) ACE 25 64293 (0.2) 64478 64333.8 (0.13) 64319 48.8601 −2.7 (498.)
+0.000000 - ACE vs ACS ACS 25 64293 (0.04) 64507 64372.2 (0.19) 64354 60.2313 1.35 (707.5) ACE vs MMAS MMAS 25 64253 (0.16) 64388 64311.3 (0.09) 64314 36.879 3.83 (835.)
+0.000000 - ACS vs MMAS pcb3038 (137694) ACE 25 137785 (0.04) 138019 137885 (0.15) 137878 67.4885 1.09 (474.)
+0.000000 - ACE vs ACS ACS 25 137711 (0.04) 138006 137857 (0.12) 137862 73.8422 1.19 (389.5) ACE vs MMAS MMAS 25 137759 (0.04) 137926 137855 (0.12) 137853 42.7416 0.1 (542.)
+0.102900 - ACS vs MMAS The best results and the statistical significance of the U-test are written in bold.
+0.056497 - Comparison of ACE, ACS and MMAS hybridisation with local search (3-opt), when… Fig 14.
+0.109453 - Comparison of ACE, ACS and MMAS hybridisation with local search (3-opt), when the number of tours allowed is .
+0.056497 - Comparison of ACE, ACS and MMAS hybridisation with local search (3-opt), when… Fig 15.
+0.109453 - Comparison of ACE, ACS and MMAS hybridisation with local search (3-opt), when the number of tours allowed is .
+0.056497 - Comparison of ACE, ACS and MMAS hybridisation with local search (3-opt), when… Fig 16.
+0.109453 - Comparison of ACE, ACS and MMAS hybridisation with local search (3-opt), when the number of tours allowed is .
+0.096386 - When the number of tours allowed is low ( ), ACE is better than MMAS in all tested instances, and better than ACS in 6 over the 10 instances.
+0.129252 - When the number of tours increases, ( ), the MMAS performance improves.
+0.088889 - However, it is still worse than the others.
+0.078988 - ACE still dominates over ACS in 5 of the 10 instances.
+0.125931 - Finally, when the number of tours allowed is very high1 ( ) MMAS is able to achieve the same performance of ACE in almost all the instances, moreover, it improves the results of ACS.
+0.142476 - Although there are small differences depending on the instance, the algorithms have a similar performance.
+0.151752 - This is due to the search capacities of each algorithm are overshadowed by the local search procedure which is what really dominates the search.
+0.093897 - As this and previous experiments show, ACE offers an interesting behaviour from the point of view of hybridization with local search.
+0.154688 - Since this kind of local search operators increases the search coverage of the algorithm, it could be expected a high quality solution without requiring to build a high number of tours.
+0.134678 - Moreover, if the algorithm is run during more time, an improvement on the solutions quality can be expected.
+0.140792 - Compared with MMAS and ACS, none of those algorithms show the flexibility of ACE.
+0.044025 - MMAS requires to run during more time to obtain a reasonable solution.
+0.124705 - ACS is not able to improve the solution quality in the same way that ACE.
+0.109890 - In this article, it has been shown that ACE is an interesting novel approach, which includes the possibility to apply the ACO meta-heuristic to problems represented in a state space.
+0.222530 - It also includes a self-organisation dynamics of real ants population to provide adaptive capacities to the algorithm.
+0.141951 - A experimental study has been carried out, using 9 TSP instances and batches of 100 tries, to provide an deep insight in the effect of the algorithm parameters.
+0.137251 - The ACE algorithm has been extensively compared with ACS and MMAS using the 25 TSP instances and batches up to 1000 tries.
+0.085106 - The experiments cover their performance, behaviour and time consumption.
+0.142886 - In addition, the algorithms are hybridised with local search and compare using 10 larger instances.
+0.081633 - The experimental results demonstrate that ACE is a feasible approach.
+0.194912 - Although it was not designed to solve the TSP, the comparison with the other classical ant algorithms shows that ACE is able to improve their performance.
+0.125108 - The details of the experiments reveal that ACE is able to obtain a solution of reasonable quality as fast as ACS, but it does not get stuck.
+0.161502 - In general, if the algorithm is allowed to explore more solutions, it is able to obtain solutions of even better quality than MMAS.
+0.082313 - These improvements on both, ACS and MMAS come from the biological inspired population dynamics.
+0.114744 - Another interesting result is that ACE consumes less time due to the approach of searching in a state space.
+0.057971 - An example of application of ACE was referenced in previous sections concerning a ship manoeuvring problem (Escario et al., 2012).
+0.112347 - Following this line of investigation, the future works are focused on the extension of the ACE applications to dynamic problems in which the constrains, the state transition function, the cost function, etc may change with time.
+0.057471 - Two examples are: Autonomous Marine Surface Vehicle (ASV) path planning in realistic environments, where manoeuvres can be affected by tidal forces, wind, waves, the presence of other ships, etc.
+0.085106 - The coordinated path planning of several ASVs manoeuvring together.
+0.074433 - We expect also to apply ACE to other kind of autonomous vehicles, like Unmanned Ground Vehicles (UGV).
+0.128419 - Another interesting research directions, including some possible applications of the algorithm, can be summarised as follows: 1.
+0.151457 - To explore more deeply the capabilities of population dynamics, and recruitment policies.
+0.154539 - It is the personal opinion of the authors that the algorithm can be even further improved.
+0.176374 - To explore the algorithm behaviour in problems where the heuristic is poor or non-existent.
+0.082305 - For instance, some preliminary attempts have been carried out by the authors (See Fig 9) using the Santa Fe Trail problem and the results are promising.
+0.146117 - To apply the algorithms to continuous optimisation problems such for example, Liao, Stützle, Montes de Oca, and Dorigo (2014).
+0.076923 - A preliminary work in this area has been presented to ANTS conference 2010 (Escario, Jimenez, & Giron-Sierra, 2010).
+0.176397 - Lastly, it will be interesting to apply the algorithms to other combinatorial problems similar to the TSP.
+0.057971 - For example, to Software Project Scheduling Problem were MMAS has been, recently, successfully applied (Crawford, Soto, Johnson, Monfroy, & Paredes, 2014).
+0.087719 - 1 Notice that without local search the number of tours allowed was 10000·nc.
+
+[Frase 5] This paper studies the performance of ACE in the context of the Travelling Salesman Problem (TSP), a classical combinatorial optimisation problem.
+[Frase 9] With respect to ACO, the new algorithm includes two significant contributions: The use of a state space representation instead of the conventional graph representation, and a partition of the ant population into explorers and foragers ants.
+[Frase 63] The proposed Ant Colony Extended algorithm is not a specialised algorithm, and it is neither a hybridisation of ACO with other algorithms.
+[Frase 759] Although it was not designed to solve the TSP, the comparison with the other classical ant algorithms shows that ACE is able to improve their performance.

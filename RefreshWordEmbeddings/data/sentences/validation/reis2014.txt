@@ -1,0 +1,568 @@
+In several domains , software applications have intensively used Knowledge Organization Systems ( KOS ) like database schemas , ontologies , taxonomies and thesauri and their associated semantic correspondences ( i.e. , mappings ) .
+This underlines the relevance and capabilities of KOS and mappings to manage and integrate vast amounts of data .
+However , the dynamic nature of domain knowledge forces knowledge engineers to constantly modify KOS , to keep them up to date and useful .
+In this context , the maintenance of mappings affected by KOS evolution still remains an open research issue .
+Although this problem appears relevant for many different computer science fields , ranging from database to artificial intelligence , literature has so far only superficially addressed it to enable more flexible , automatic and precise solutions .
+This article presents , discusses and compares existing approaches for maintaining mappings and describes open research challenges .
+Semantic correspondences , or mappings , connect entities of different Knowledge Organization Systems ( KOS ) ( Hodge , 2000 ) , like ontologies , database schemas and thesauri to improve the capabilities of software applications in sharing , integrating and managing wide variety of data .
+Mappings allow computers to interpret data whose semantics are expressed using different KOS , through the definition of semantic relations that exist between their entities .
+For example , the biomedical concept named “ torso ” is an equivalent concept to “ trunk ” of another KOS .
+KOS and their associated mappings play a key role in a wide range of tasks including data annotation ( Bodenreider & Stevens , 2006 ) , information retrieval ( Kitamura & Segawa , 2008 ) , data integration ( Lambrix , Strömbäch , & Tan , 2009 ) as well as knowledge representation ( Bonacin , Pruski , & Da Silveira , 2013 ) , and more generally , semantic interoperability .
+Taking biomedical KOS as an example , mappings between two distinct KOS , named Systematized Nomenclature of Medicine-Clinical Terms1 ( SNOMED CT® ) ( SCT for short ) , and International Classification of Disease – Clinical Modification2 ( ICD-9-CM ) ( ICD for short ) , can easily support users accessing external data annotated with ICD from clinical records annotated with SCT .
+In this case , data referring to the same entity may be represented by different concepts ’ identifiers .
+This context requires that mappings remain consistent ( from the semantic point of view ) over time , especially when KOS entities involved in mappings evolve .
+This problematic scenario occurs in many dynamic and knowledge-intensive domains where knowledge engineers might frequently modify interconnected KOS .
+In the Semantic Web for instance , up-to-date mappings could allow more trustable semantic searches and reasoning over integrated ontologies ( Kitamura & Segawa , 2008 ) .
+In biomedicine , mappings provide a semantic reference for understanding the meaning of data between different systems ( Lambrix et al. , 2009 ) .
+Thus , updated mappings guarantee a consistent integration of models and effectively support software applications of different nature .
+The huge size and dynamics of existing KOS , especially in the biomedical domain , forces knowledge engineers to periodically revise hundreds of thousands of mappings making it a time consuming , error prone and tedious task .
+The critical part played by mappings in decision support applications thus requires automatic tools to support engineers and domain experts in the maintenance process .
+However , the design and implementation of such tools must deal with several factors and can be tackled from various perspectives with their own drawbacks and advantages .
+These aspects represent serious obstacles towards a fully automatic solution , requiring a complete and exhaustive survey of existing approaches addressing the problem .
+This article provides a thorough survey on mapping maintenance .
+In summary , we make the following contributions : • We formally define and illustrate the mapping maintenance problem , highlighting the complexity of the problem .
+We borrow examples from the biomedical domain , which are explored throughout this article .
+• We systematically review the literature on the mapping maintenance problem , offering a complete state-of-the-art by presenting , comparing and discussing existing proposals in different suggested categories .
+• We analyze lacks of existing approaches discussing general open issues that literature fails to address to reach fully automatic mapping maintenance .
+This allows us to underscore open research challenges .
+We achieve the results through a careful and articulated analysis of the reviewed literature combined with our previously conducted empirical studies .
+The obtained results highlight various innovative and useful aspects that are essential for addressing mapping maintenance in a more complete and refined manner .
+We structure the remainder of this article as follows : Section 2 describes the mapping maintenance problem and its specificities , providing necessary definitions .
+Section 3 reviews existing proposals organizing them by suggested categories .
+We provide an analytical comparison between them .
+Section 4 discusses our findings and challenges of different nature , representing open research issues .
+Finally , Section 5 wraps up with concluding remarks and outlines future work .
+A KOSK specifies a set of concepts interrelated by directed relationships .
+We define a set of concepts of a KOS at time j , such that , as .
+Each concept has a unique identifier and is associated with a set of attributes ( e.g. , label , synonym , definition , etc .
+) , where p is the number of attributes characterizing concept c. Furthermore , each attribute is defined for a particular objective , e.g. , “ label ” for denoting concept names or “ definition ” for giving the meaning in the context where the concept is used .
+A relationship rel between two concepts , and interrelates a particular concept and another one in the same KOS , e.g. , , where the label of refers to “ brain cancer ” , and “ cancer ” is the label of , respectively .
+Mappings denote the semantic correspondences between entities ( most usually concepts ) of different , but domain related KOS .
+More formally , given two KOS namely and , we define as the source KOS and the target KOS of mappings .
+A mapping , established at time j , between two concepts ( namely source concept ) and ( namely target concept ) is given by : ( 1 ) where refers to the semantic relation between and .
+The stands for unmappable , [ ] equivalent , [ ⩽ ] more specific than , [ ⩾ ] less specific than and [ ] partially matched , respectively .
+For instance , concepts can be equivalent ( e.g. , “ torso ” “ trunk ” ) , one concept can be less or more specific than the other ( e.g. , “ lower limbys ” ⩽ “ limb segment ” ) or concepts can be somehow related ( ) .
+We define as the set of different mappings at time j between KOS and .
+Mappings are usually created either manually or using ( semi- ) automatic alignment methods ( Euzenat & Shvaiko , 2007 ) .
+This definition of mapping differs from the one largely accepted by the database community where a schema mapping specifies how data instances of one schema correspond to data instances of another ( Velegrakis , Miller , & Popa , 2004a ) .
+Mapping maintenance has been historically studied in database schemas .
+In this context , they represent mappings in a declarative way as queries or view definitions , having a very general form of mapping .
+They describe a mapping q from a schema S ( called the source schema ) to schema T ( called the target schema ) , as an assertion of the form : , where consists in a query over S and refers to a query over T ( Velegrakis et al. , 2004a ) .
+When handling mappings between XML models they use a similar definition of mapping .
+Observe that the definition of KOS mappings in terms of correspondences between concepts differs from a schema view or query .
+A unique query may involve a set of dependent equivalent schema correspondences , which changes the abstraction level of the mapping definition .
+The evolution of a KOS ( Klein & Noy , 2003 ) in terms of atomic or complex changes affecting its entities may invalidate previously determined mappings ( Dos Reis , Pruski , Silveira , & Reynaud , 2012 ) .
+In other words , given a mapping , due to the modifications affecting the concept or , the type of semantic relation no longer represents the correct semantic link between and .
+Fig 1 presents the investigated scenario of the mapping maintenance problem .
+Given two versions of the same source KOS , namely at time j and at time , we always have at least one target KOS and an initial set of valid mappings between and at time j .
+Since we consider KOS evolution , we examine different versions of each KOS .
+The mapping maintenance problem Fig 1 .
+The mapping maintenance problem .
+This figure shows the mapping maintenance problem .
+A source and a target KOS interrelated via a sets of mappings .
+New versions of these KOSs may trigger KOS changes that can affect existing mappings .
+If or evolves ( cf.Fig 1 ) , represented by a set of KOS change operations ( diff ) , we need to determine the set of updated mappings , since the evolution probably impacts mappings in .
+This problem consists in determining how to perform changes in existing mappings , which for instance includes redefining the semantic relation between the new version of and .
+The semantic validity stands for the logical consistency of the mappings .
+For instance , we might handle mappings established with removed concepts .
+We can have a simplified view of the investigated scenario considering the evolution of only one KOS per time .
+The results of the mapping maintenance task must consist in a set of up-to-date and most complete possible mappings in .
+Complete means that the highest coverage between both KOSs is obtained .
+More generally , we define mapping maintenance as follows : Mapping maintenance refers to the task aiming to keep existing mappings in an updated and valid state , reflecting changes affecting KOS ’ s entities at evolution time ( Dos Reis , Pruski , Da Silveira , & Reynaud-Delaître , 2014 ) .
+Based on this definition , the problem can be further refined into various sub-problems classified as follows : • The identification of changes in KOS entities defining mappings that can potentially invalidate them .
+• The decision concerning the impact of the identified KOS changes on the validity of mappings ( e.g. , do the affected mappings require modifications according to the identified KOS changes ? ) .
+• The determination of the appropriate actions to apply to the mappings to restore their validity .
+This includes the definition of the new source and target concepts as well as the new semantic relation that exists between these concepts .
+• The implementation of specified actions for executing modifications on mappings .
+Fig 2 illustrates an example of a problematic scenario with the evolution of biomedical KOSs .
+The concept “ diabetes ” in corresponds to the concept named “ diabetes ” in .
+Similarly , “ blood tumor ” and “ blood cancer ” are stated as equivalent .
+The evolution of affects both concepts in .
+In ( i.e. , new version of ) , the concept “ blood tumor ” is deleted and the concept “ diabetes ” is split into “ diabetes type I ” and “ diabetes type II ” .
+Example of the problem Fig 2 .
+Example of the problem .
+This figure presents an example of the mapping maintenance problem .
+We depict concepts with their label .
+The KOS evolves to a new version .
+KOS changes revising and removing concepts require the maintenance of existing mappings .
+We therefore need to maintain existing mappings affected by KOS evolution whose definition depends on the changed concepts .
+This may involve analyzing KOS changes and eventually propagate their consequence to depending mappings .
+Note that the total removal of a concept consists in a relatively easy case to handle mapping maintenance , because we can propose to remove mappings .
+However , scenarios where only some concept attributes are removed or their values are changed , pose a more challenging circumstance to decide on a possible action to guarantee an up to date state for mappings .
+In the following , we present the investigated survey for the different approaches addressing the mapping maintenance problem .
+We explain in detail the principles of each technique as well as their advantages and drawbacks , providing concrete example to illustrate the proposals .
+A thorough analysis of the literature dealing with mapping maintenance allows us classifying existing approaches into four distinct categories : • Mapping revision ( Section 3.1 ) .
+• Mapping calculation ( Section 3.2 ) .
+• Mapping adaptation ( Section 3.3 ) .
+• Mapping representation ( Section 3.4 ) .
+Mapping revision We consider two dimensions on approaches in this category : the first aims at only identifying invalid mappings ; the second detects invalid mappings via debugging methods and repairs them .
+Consider the example depicted in Fig 2 on “ Blood disease ” .
+The specialization of concept “ Diabetes ” of into “ Diabetes type I ” and “ Diabetes type II ” in may invalidate existing mappings .
+The first dimension we mentioned consists in identifying the mapping between “ Diabetes ” of and “ Diabetes ” of which is no longer valid , while the second dimension aims also at removing this mapping because “ Diabetes ” does not exist in .
+These approaches are usually implemented to correct the bias induced by matching algorithms at KOS alignment time , but rarely to maintain mappings affected by the evolution of one of the involved KOS .
+Fig 3 presents the mapping revision proposal .
+Mapping revision category Fig 3 .
+Mapping revision category .
+This figure shows the proposition of mapping revision , where a subset of mappings is identified and/or repaired .
+Identification of invalid mappings We found different approaches aiming to monitor and identify invalid mappings .
+They mostly apply to database schemas and rely on different techniques .
+McCann et al .
+( 2005 ) proposed monitoring and detecting invalid mappings between dynamic relational schemas in an automatic way , through the MAVERIC system .
+This system periodically checks source schemas and compares query answers to prior known answers .
+Once query answers differ , the system sends an alert about a potential broken link to the administrator .
+The approach utilizes mainly three components : sensors , learning and filtering .
+Several types of sensors aim to monitor the characteristics of the schemas .
+The learning component refers to a training of the sensors with other sources .
+The filtering component aims to filter false alarms of broken mappings comparing them against known formats and values .
+Similar to MAVERIC , Mawlood-Yunis ( 2008 ) investigated fault-tolerance techniques to detect temporal semantic mapping inconsistencies in peer-to-peer systems .
+They suggest making the distinction between the permanent and temporary semantic incompatibilities .
+This temporal dimension refers to the duration in which a mapping fault stays effective ( temporary or permanent ) .
+In their solution they explore a replication of query and the verification of answer consistency comparing their results .
+Therefore , sequential queries are submitted in place of one query every time query submission is performed .
+The method compares for consistency reasons query answers from replicated queries .
+Instead of monitoring information sources continuously as the MAVERIC approach , they suggest detecting invalid mappings only when is necessary to query information sources .
+Motivated by the same problem , Li , Miao , and Jia ( 2010 ) presented an automatic solution to detect broken mappings based on fuzzy theory .
+The authors introduced fuzzy aggregation operators to evaluate whether the mapping is broken .
+They also provide a new fuzzy reasoning algorithm based on fuzzy aggregation operators .
+As shown in Li et al .
+( 2010 ) , this approach allowed better detecting inconsistent mappings in database schemas .
+The work of Colazzo and Sartiani ( 2009 ) presented a similar goal , but introduced different properties in the identification method .
+In their approach , mappings consist in XQuery clauses ( Chamberlin , 2002 ) and they identify corrupted ones relying on the comparison of XQueries results when applied to instances of the source schema with the instances of the target schema .
+Firstly , they assume that each initial mapping is valid , and therefore focus on the detection of errors with respect to the target schema .
+The identification is based on the suggested notion of schema mapping correctness .
+This relies on the comparison between the semantics of the mapping , i.e. , the set of its results when applied to instances of the source schema , and the semantics of the target schema .
+The method follows the notions of mapping validity and correctness in which no wrong rules can be found with respect to the source and target schemas .
+The defined technique combines two proposed properties namely type projection and type inference and thus according to the authors it is independent from queries posed against the integrated database .
+Based on these properties , they prove the decidability ( completeness ) of the solution in the sense that there is absence of false negatives when checking correctness .
+Inspired by these investigations on database schemas , recent studies have addressed the broken link problem in the context of open linked data.3 Popitsch and Haslhofer proposed a change detection framework ( DSNotify ) ( Popitsch & Haslhofer , 2011 ) for dynamic datasets applied to linked data sources , to inform actors about various types of events ( create , remove , update ) .
+This allows actors to maintain links to resources in distributed linked datasets fixing broken links in their local data , thus preserving link integrity .
+The proposal remains especially relevant for applications that have linked their local datasets with resources in remote datasets and need to be informed when remote resources change or disappear .
+In contrast to previous solutions for identifying invalid mappings , this work focuses on the identification of events that can lead to broken links ( mappings ) .
+The work of Pathak and Chute ( 2009 ) aims at using a reasoning mechanism based on distributed description logics to detect inconsistent mappings between biomedical ontologies .
+In their approach , the authors consider equivalence and subsumption in mappings and assume that the ontologies are consistent and therefore , semantic inconsistencies obtained when reasoning on it are produced by the mappings .
+In consequence , they are able to detect inconsistent mappings .
+Repairing of mappings Detecting invalid mappings accounts for the first step to maintain them .
+Only considering the detection remains insufficient for the full maintenance , since this still may require a lot of human intervention to realize how to proceed with invalid mappings .
+Techniques applied for the identification may support part of a more complete solution for mapping maintenance .
+Knowledge engineers need additional support to better perform the maintenance in a complete process .
+Towards this objective , the first attempts proposed to categorize suspicious mappings suggesting different types of errors and warnings in mapping revision ( Wang & Xu , 2008 ) .
+Errors consist in the confirmed wrong mappings , but warnings concern the possibly wrong , the right or the imprecise ones .
+Wang and Xu ’ s work automatically repairs some errors and warnings or presents them to users with revision suggestions .
+They further refine the proposed categorization including : redundant mappings ( mappings inferred from existing ones ) , imprecise mappings ( inaccurate ) , inconsistent mappings ( mappings that may disobey declared axioms ) and abnormal mappings ( mappings having an inappropriate behavior ) .
+To improve the automated aspect in mapping revision , several proposals have suggested solutions mostly based on logical reasoning methods and conflict detection .
+Meilicke , Stuckenschmidt , and Tamilin ( 2007 ) suggested a debugging method to check the consistence of established mappings .
+They argue on the need for debugging mappings because of the inefficiency of existing matchers .
+These authors apply a procedure in which they consider two sets made up of inconsistent and valid mappings , respectively .
+They addressed the problem of how to determine the intersection between both sets .
+Since the reference mappings ( gold standards ) often appear inaccessible or even unknown , they reformulated the problem partitioning the set of mappings into correct and incorrect correspondences with respect to the set of reference .
+Therefore , repairing a set of correspondences means to determine for each correspondence whether it belongs to the set of correct or incorrect mappings , and eventually deleting the set of incorrect correspondences .
+In this context , Meilicke , Stuckenschmidt , and Tamilin ( 2008 ) presented an approach that eliminates inconsistencies caused by erroneous mappings through logical diagnostic reasoning , exploiting disjointedness axioms and machine learning techniques .
+The underlying assumption affirms that mappings model semantic correspondences between concepts in different ontologies without introducing inconsistencies , i.e. , a set of mappings that correctly describes the semantic relations between ontologies should not cause inconsistencies in any of the ontologies .
+To detect these inconsistencies , the authors explored distributed description logics as a basis for formalizing mappings .
+The proposition of Meilicke has been extended by Nikitina , Rudolph , and Glimm ( 2011 ) .
+They described consistency criteria for revision states and introduced the notion of revision closure , based on which the revision of ontologies is partially automatized .
+Moreover , to optimize the revision process , they suggested the notion of axiom impact to determine a beneficial order of axiom evaluation .
+Similar to the work of Meilicke , Jimenez et al .
+developed the LogMap system ( Jiménez-Ruiz & Grau , 2011 ) able to repair , using reasoning techniques , inconsistent mappings .
+Also in this direction , Qi , Ji , and Haase ( 2009 ) proposed the so-called conflict-based mapping revision operator based on the notion of conflict set to detect erroneous mappings .
+This refers to a subset of the mappings which is in conflict with ontologies .
+They show a set of different mapping revision algorithms by using revision operator in description logics , which are based on distinct fundamentals such as relevance-based selection function and a scoring function .
+These algorithms result in a conflict-based mapping revision operator .
+Aligned with approaches based on reasoning methods , Castano , Ferrara , Lorusso , Näth , and Ralf ( 2008 ) suggested a probabilistic reasoning approach to validate mappings with respect to the semantics of the involved ontologies .
+The particularity of this work considers mappings as probabilistic and hypothetical relations among KOS entities expressed in description logics .
+The proposal performs a probabilistic reasoning over mappings and revises them according to the reasoning results .
+The method discards mappings causing inconsistent reasoning and infers new mappings from the valid ones .
+More recently , Ivanova and Lambrix ( 2013 ) proposed an unified framework for debugging taxonomies and their alignments , which aims to detect and repair wrong or missing relations and mappings in a network of taxonomies .
+Advantages : Techniques applying mapping revision use reasoning method to check the validity of mappings .
+As mapping revision relies on strong mathematical background , the identification phase performs with good quality , since no bias is introduced by a human agent , and therefore does not require advanced and expensive validation by experts .
+This can somehow speed up the maintenance task by automatizing the specification and implementation of the changes at mapping level .
+Drawbacks : On the other hand , such techniques usually exploit the logic based formalism of aligned KOSs , which can not be applied to more informal KOSs like thesaurus .
+Moreover , these methods were especially designed to correct wrong mappings at KOS alignment time and not at KOS evolution time .
+In consequence , they fail to integrate information gained from the analysis of KOS evolution to derive the updated mappings .
+Also , they fail to integrate information derived from the existing mappings .
+Mapping calculation In contrast to the previous category of approaches , mapping calculation performs no identification of invalid mappings .
+This consists in a total or partial , recalculation of existing mappings to maintain them up-to-date .
+Fig 4 shows the different approaches in the mapping calculation proposal .
+Regarding the example of Fig 2 , it consists in removing all mappings that exist between and ( i.e. , the mapping between “ Diabetes ” and “ Diabetes ” , and the one between “ Blood tumor ” and “ Blood cancer ” ) and recompute the whole KOS alignment using and by applying existing matching techniques .
+Mapping calculation category Fig 4 .
+Mapping calculation category .
+This figure presents the proposition of mapping calculation .
+The full recalculation approach removes the whole set of mappings and a matching between source and target KOS happens .
+The partial recalculation approach uses the KOS diff to remove the mappings affected by KOS evolution and applies a matching between the partial part of the source KOS and the whole target KOS .
+Full recalculation In this approach , all mappings are considered as invalid ones , therefore they are deleted and recomputed from scratch .
+Hence , considering the evolution of interconnected KOSs , a naïve approach recalculates the whole set of mappings each time an organization in charge releases a new version of a source or target KOS .
+In the context of relational schemas this solution implements schema matching techniques ( Gal , Anaby-Tavor , Trombetta , & Montesi , 2005 ) , while when considering ontologies and taxonomies , knowledge engineers may use ontology matching algorithms and alignment methods ( Euzenat & Shvaiko , 2007 ) .
+Despite the recent advances on ontology matching ( Shvaiko & Euzenat , 2013 ) , the literature highlights that the process of automatic mapping calculation is error-prone and time-consuming with respect to the size of both mapping sets and KOS , and demands a laborious human effort for validation ( Velegrakis et al. , 2004a ) .
+Yu and Popa ( 2005 ) argue that besides the involved costs , these approaches fail to consider the original mappings during the recalculation , creating a loss of information .
+In consequence , the recalculated mappings may differ from the original and desired ones ( Kondylakis , Flouris , & Plexousakis , 2009 ) .
+Overcoming these limitations requires novel approaches to reduce human efforts and to improve the quality and reliability of resulting mappings .
+This has led to proposals focusing on techniques to restrict the number of entity combinations for the recalculation of mappings .
+Partial recalculation Proposals following the partial recalculation of mappings aim at decreasing the reconciliation time of dynamic KOS .
+Zurawski , Smaill , and Robertson ( 2008 ) investigated how to deal with logical consistency of autonomous and dynamic KOSs interconnected in a distributed way .
+The distributed ontologies are connected by means of mappings , and they argue that both ontology and mapping evolution must take place , at the same time as a whole system .
+Their objective is thus to provide an approach exploring methods to maintain distributed and dynamic knowledge infrastructures globally consistent in the same time they are autonomous .
+The authors define and formalize the property of semantic autonomy .
+This refers to the ability of supporting decentralized semantics that can evolve according to their own local needs at the same time that a type of coherence keeps them together .
+According to the authors this property remains important for an organizational distributed knowledge management system .
+In this context , they propose an ontology-based layered framework which shows how to design a scalable system as a specification of a knowledge infrastructure having the property of semantic autonomy .
+This framework can be used for specifying a knowledge infrastructure that maintains incremental bounded consistency .
+In the framework , operations of addition and removal of mappings are proposed in run time .
+Since a change in ontology is triggered then the framework investigates its consequences .
+Mappings are generally maintained by removal of associated mappings , which is always proposed when a removal of concept takes place .
+Also , the framework attempts to generate proposals that would put in correspondence a new concept to other local contexts ( related knowledge infrastructures ) .
+The proposition of Khattak , Pervez , Latif , and Lee ( 2012 ) aims to modify only mappings associated with changed KOS entities ( concepts , relationships and attributes ) and eliminates the staleness from mappings .
+According to them , this reduces the time required to maintain mappings updated without affecting their precision .
+This approach explores an ontology change history ( CHL ) ( Khattak , Latif , Khan , & Ahmed , 2008 ) to explore KOS evolution and identifies the subset of mappings associated with changed entities by recovering these entities from the CHL .
+Their solution removes this subset of affected mappings .
+The solution further adds new mappings calculated using matching techniques considering the whole target KOS .
+Partial recalculation methods tackle mapping maintenance with a simplified approach .
+They keep ontology evolution process simple enabling only the addition or removal of mappings as a consequence .
+In this sense , elements of mappings , such as the type of semantic relation , are not fully adapted to adequate their consistency .
+The positive aspect of them is the potentiality of decreasing the time of maintenance compared to the full-calculation of mappings approach .
+In the first approach for partial recalculation the proposed framework aims at creating new mappings with other contexts , but detail in how it is performed is not available .
+In the second approach , some points deserve further discussion : 1 .
+The reuse of already determined and curated mappings is not promoted .
+Since mappings are removed and totally new mappings are proposed , these new mappings still require a human validation .
+Therefore , it can not be considered a fully automatic solution .
+Logged KOS changes are only explored to detect the changed entities , but they fail to take into consideration their influence for the reconciliation .
+CHL remains a particular solution , which is not largely used by major managers of knowledge bases .
+In this case , existing change detection systems such as diff algorithms could also be further used replacing the role played by the CHL without lost .
+We judge it reasonable because CHL is only used to detect the changed KOS entities and it does no provide further information to improve the process of mapping maintenance .
+The proposed approach is also high dependent of the performance of KOS matching techniques .
+From a technical point of view , the proposed method seems to be only applicable between ontologies described with the same formalism ( OWL ) .
+Advantages : We can apply recalculation of mappings to any kind of KOS if there exist matching algorithms dealing with the involved KOSs .
+The sub-problems linked to the mapping maintenance ( cf .
+Section 2 ) do not raise in this approach because it only considers the new version of the KOS and the former version of mappings are completely removed .
+Drawbacks : The mapping recalculation techniques remain very time consuming since they include the recalculation time as well as the validation time .
+It may therefore requires an unacceptable time if the involved KOSs are huge , in terms of number of entities , like those of the biomedical domain , or used in critical systems .
+Moreover , depending on the used matching algorithm , the outcome results may differ even if some KOS entities do not change .
+Mapping adaptation Proposals in this category take various dimensions of KOS evolution into consideration to tackle the mapping maintenance , including : • Mapping composition • Mapping rewriting in database schemas • Synchronization of models • Change impact minimization • Change propagation • Mapping change strategies .
+Fig 5 represents the mapping adaptation proposal , where approaches explore KOS evolution change mappings .
+Mapping adaptation category Fig 5 .
+Mapping adaptation category .
+This figure illustrates the mapping adaptation proposal .
+The KOS diff representing the KOS evolution is used to change mappings with different strategies .
+Consider the example of Fig 2 , the approaches in the mapping adaptation category will first try to analyze the evolution of the KOS .
+In this case , the specialization of the concept “ Diabetes ” of into “ Diabetes type I ” and “ Diabetes type II ” in will be reused to define the new relation that will link these two newly created concept to “ Diabetes ” of .
+As it refers to a specialization , the new relation expressed in the mapping would be “ is_a ” .
+Moreover , as the evolution to to observes the removal of the concept “ Blood tumor ” , this statement can serve to remove the mapping that linked Blood tumor ” in to Blood cancer ” in in the next version of the mapping .
+Mapping composition The mapping composition principle suggests composing various mappings to generate new ones .
+Yu and Popa ( 2005 ) proposed the MACES system to reuse the original mappings and adapt them in a way that : ( 1 ) the system preserves the original intention of the original mappings as much as possible , and ( 2 ) it takes into account schema changes .
+Yu and Popa presented the design and implementation of the MACES mapping maintenance system in order to preserve these properties by following the mapping composition principle .
+In this principle , schema evolution ( difference between versions ) is captured by formal and accurate schema mappings , and it achieves mapping adaptation by composing the evolution mapping with the original mapping .
+Therefore , mapping composition lays on the principle of aggregating mappings between schemas and mappings that represent the evolution of schemas .
+Consider a set of mappings M between two schemas S and T. If one of the schemas , e.g. , the source S evolves to a new schema , the mapping composition for schema mapping adaptation will compose the original mappings from the set M with evolution mappings between S and to generate a new set of mappings between and T. More recent work has proposed other types of operators to complement the composition .
+Fagin , Kolaitis , Popa , and Tan ( 2011 ) presented how to explore an inversion operator , together with the composition , to address the mapping maintenance problem using schema evolution .
+They discuss both operators and use concrete examples of schema evolution to illustrate the main developments and challenges of composition and inversion .
+Groß , Dos Reis , Hartung , Pruski , and Rahm ( 2013 ) proposed to enhance the mapping composition principle in the context of large life science ontologies .
+They completed the resulting set of mappings using matching techniques over newly added concepts .
+Results comparing mapping composition with other techniques for mapping adaptation have shown the potentials of this technique ( Groß et al. , 2013 ) .
+Although the composition principle enhances the reuse of mappings , in some more complex contexts of KOS evolution such as the split of concepts , composition generates many mapping candidates and among them false positives , which decreases the precision of this technique .
+Mapping rewriting in database schemas Unlike previous approaches , the schema mapping rewriting technique performs mapping adaptation by incrementally rewriting the elements in queries representing mappings between database schemas .
+Velegrakis , Miller , Popa , and Mylopoulos ( 2004b ) presented the ToMAS framework for automatically adapting mappings as database schemas evolve .
+In this work schema mappings basically specify how data instances of one schema correspond to data instances of another schema .
+As we have described , schema mappings are defined in a declarative way as queries .
+In this sense , a mapping q from a schema S to schema T refers to an assertion of the form : , where consists in a query over S and is a query over T. This definition of schema mapping remains relevant in the context of this work since they are primarily used for translating ( transform ) a data instance under a source schema to a data instance under a target schema ( data exchange process ) .
+Therefore , if a schema mapping turns semantically inconsistent , then the data exchange process will fail to produce an adequate target instance .
+The approach proposed by Velegrakis et al .
+follows the proposition that schema changes must be reflected on the schema mappings and they aim at maintaining mappings under schema changes by finding rewritings that are consistent with the semantics of the new schema , and with the current semantics of the mapping .
+They suggest techniques for modeling and reusing the semantics embedded within a mapping and when the semantics of a mapping must change , they perform the minimum necessary of modification to achieve a mapping which remains consistent with the new schema .
+The approach incrementally adapts schema mappings each time a primitive change occurs in the schema .
+The proposal considers both constraint and structural changes on relational database schemas .
+The types of changes they taken into account are for instance : addition and removal of constraints ( e.g. , a new join between two different elements ) , schema expansion ( e.g. , addition of a new column in a table ) , schema pruning and restructuring that reshape the schema structure by moving , copying or renaming elements of the schema .
+They use the proposed primitive changes that describe the evolution of schemas considering small steps of change .
+The proposed ToMAS tool firstly detects mappings that have become inconsistent by a schema change and enumerates possible rewritings according to the schema change , and such generated rewritings shall be consistent with the structure and semantics of the evolved schema .
+The tool incrementally adapts each schema mapping by applying local modifications in elements of the mapping .
+For each type of change that may occur then schema mappings are modified independently .
+The authors propose specific algorithms for each type of change for adapting mappings .
+For instance , when addition of constraint exist , algorithms modify affected mappings to reflect the new semantics of the schema according to the new constraint .
+When they observe removal of schema constraints , affected mappings are those that use some join condition ( s ) based on the removed constraint .
+According to the authors , schema expansion does not affect mappings and all mappings affected by schema pruning are removed .
+Xue and Kedad ( 2007 ) proposed a three-step incremental mapping adaptation process relying on changes occurring in XML schemas .
+This proposal refers to an incremental mapping adaptation approach for XML data sources .
+The proposed approach aims at automatically adapting a mapping after source schema evolutions .
+They express original mappings in XQuery clauses ( Chamberlin , 2002 ) following specific patterns .
+However , the authors argue that the proposed process does not make assumption about the way mappings are generated .
+The method combines mappings with schema elements that may become invalid according to the schema changes .
+Their work considers a set of changes that can occur in XML schemas and it applies a specific mapping adaptation procedure ( algorithm ) for each one of the schema changes including : ( i ) element additions , ( ii ) element removals , and ( iii ) element renaming .
+The proposed process adapts mappings in three steps : firstly , it checks whether the original mapping is invalidated ( affected ) by the schema change .
+If so , a procedure checks if a solution exists to adapt the mapping regarding the new schema , then generates new mappings .
+This solution slightly differs from that proposed by Velegrakis et al .
+since the former proposes a more defined process for adapting mappings .
+However , the types of primitive schema changes tackled remain similar to those proposed by Velegrakis et al .
+( 2004b ) .
+Despite improvements in mapping rewriting approaches , literature points out some drawbacks , mainly criticizing two points ( Yu & Popa , 2005 ) : ( 1 ) the definition and acquisition of primitive schema changes , and ( 2 ) the semantics of the adaptation operations and their impact .
+In the first point , researchers have criticized that the list of changes may not be given and therefore schema changes must be discovered ( in the case when it is unknown how one schema evolved into another ) .
+As a consequence , when drastic schema evolution occurs , it remains unclear how feasible is to extract the list of primitive changes .
+Moreover , since the list of schema changes may be potentially long , existing proposals can inefficiently apply such adaptation algorithms for each change .
+Studies have also argued that the set of primitive of changes explored stands for a not expressive enough to capture complex schema evolution .
+In the second point , a negative aspect refers to the fact that the adapted mappings may not always capture the intention of the original mappings , given the new format of the incoming data .
+This is due to a lack of precise criterion of the incremental approach under which the adapted mapping remains indeed the adequate result ( Yu & Popa , 2005 ) .
+Therefore , no guarantee exists that after repeatedly applying the adaptation algorithms proposed by Velegrakis et al. , the semantics of the resulting mappings will stay the desired one ( Yu & Popa , 2005 ) .
+Kondylakis et al .
+( 2009 ) questioned the applicability of such approaches in the context of data integration for highly dynamic ontologies by discussing the main differences between schemas and ontologies .
+They aimed to observe whether such approach could be applied in an ontology-based data integration scenario .
+They concluded that such solution remains not fully adequate for ontology-based data integration settings due mainly to the fact that changes in relational database schema differ greatly from changes in conceptual models such as ontologies .
+They clarify the technical differences in maintaining mappings between databases and between ontologies , but a solution for adapting mappings between ontologies is not tackled .
+They present solid and enough arguments describing the limitations of relational schema solutions to cope with the maintenance of mappings between ontologies showing their inefficiency .
+The incremental mapping rewriting refers to a first interesting proposal for mapping maintenance , but due to the specificities of the solution regarding the particular types of changes concentrated to relational database schemas and the specific definition of mappings , it remains hard to constitute a generic solution for KOS on this basis .
+We could reuse general principles for mapping adaptation as , for instance , to remove mappings associated to deleted entities in KOS .
+However , it is far away to represent a complete solution that could couple with the possible complexity of the evolution of KOS models .
+Moreover , the wide used definition of KOS mappings interrelating entities through a semantic relation symbol raises other specificities which mapping rewriting fails to tackle .
+Synchronization of models Some scenarios require establishing mappings between heterogeneous models like database schemas and ontologies .
+In this context , the work conducted by Hu , Song , and An ( 2010 ) consists in incrementally updating both models and existing mappings as a synchronization process to reflect changes in the schema or ontology .
+They define mappings as links between columns of relational tables and properties of concepts in ontology , and represent mappings as formulas relating tables in a schema with a subset of conjunctive formulas encoding a sub-tree in the ontology graph ( s-tree ) .
+They characterize the validity of mappings by these formulas , where they associate columns of the tables uniquely with attributes of the concepts in the s-tree .
+The authors attempt to maintain the validity of each formula when the schema or the ontology related by the formula evolves .
+Valid semantic mapping formula expresses semantic compatible instances between the relational table and the s-tree .
+They propose to maintain the semantic validity of mappings through incremental updates on the mappings as well as on associated ontologies/schemas .
+Therefore , a synchronization process occurs between relational tables and the s-tree according to changes affecting one or other where ( semi- ) automatically both mappings and the schema/ontology are adapted to maintain the mapping ’ s validity .
+This approach characterizes changes in schemas and ontologies by means of mappings between different versions ( similar to the composition approach ) .
+Domain experts are required to declare the similarities between the old version and the new version , and to select the adopted strategies .
+In order to maintain mappings valid , this solution requires adapting at least one of the associate models along with the mappings .
+This potentially minimizes the applicability of this technique since in many situations of mapping maintenance source and target models are provided and adaptation on them remains impossible .
+As in the mapping composition and rewriting approaches , mappings in this solution strictly stand for correspondences between columns and attributes in concepts .
+These specificities make difficult to directly apply this solution for KOS , since in many domains mappings are usually correspondences between concepts of different KOS .
+Moreover , synchronization of models clearly depend on the specificities of database schemas , such as properties like foreign key , which also creates difficulties for its generalization .
+Additional investigation is required to examine if the proposed technique can be directly applied to other KOS like ontology and thesaurus , for example .
+Change propagation Existing approaches also emphasize the impact of KOS evolution to support the mapping adaptation .
+Tang and Tang ( 2010 ) aimed to find a minimal sequence of changes ( i.e. , addition and removal of axioms ) , exploiting the ABox and TBox of ontology , to perform evolution , i.e. , to control the impact of ontology change propagation on mappings for which in particular they only consider the removal type of change .
+Similarly , Chu , Trinh , Barker , and Alhajj ( 2008 ) proposed a dynamic ontology mapping architecture in the grid .
+They defined a dynamic ontology mapping architecture in the context of grid systems .
+The maintenance of mappings in this context is performed through contracts with an expiration time from on ontology to another .
+According to the authors , the contract for the mapping between a pair of resources guarantees that the resource specified in the ontology will remain unchanged until the expiration time .
+This refers to a strategy to avoid the impact of ontology changes on mappings .
+In this sense , they can guarantee that while a non-expired contract exists , mappings will be valid since the associated concepts will not change .
+Forecasting ontology evolution impact remains an interesting way to minimize difficulties in the task of mapping maintenance .
+However , this method should be largely adopted for users in charge of the maintenance of knowledge bases .
+Even in these situations ontology changes shall be mandatory applied since the evolution must occur , what can still potentially impact on mappings .
+Therefore , although the proposed technique stands for an important support for avoiding many changes impacting mappings , it is insufficient to tackle the mapping maintenance problem by itself .
+It requires combining this sort of approach with others for a complete solution , coping adequately with the mapping maintenance .
+The second approach proposes the concept of contracts to guarantee the validity of mappings .
+This solution fails to promote flexibility for ontology evolution and its application on dynamic domains , which demand fast ontology evolution and new releases , remains very limited .
+A more adequate solution for mapping maintenance demands freedom for performing KOS changes when necessary and the adaptation of mappings in function of that .
+Mapping change strategies To overcome the lack of change propagation approaches , Martins and Silva ( 2009 ) proposed two approaches to adapt mappings impacted by KOS changes .
+Both approaches are based on the called Semantic Bridge Ontology ( SBO ) ( Silva & Rocha , 2005 ) describing the semantic relations between ontologies entities .
+The authors assume that all mappings are instances of SBO and only removal change operations in ontology impact such instances .
+Therefore , for each mapping resolution point , the work proposes one or many elementary mapping adaptation strategies .
+In the first approach , the user defines mapping evolution strategies from a list of corrective actions and the system executes them .
+Users can choose how to solve each resolution point either every time it occurs or they can always apply a specific strategy for every specific type of resolution point .
+In the second approach , they propose an automatic method based on the semantic of the ontology evolution information .
+The methods imitates strategies applied during ontology evolution to evolve mappings in SBO .
+This aims to automatically suggest the best ontology mapping evolution ( corrective ) strategy based on the ontology evolution information provided .
+The method explores ontology evolution logs recording elementary change operations to capture the semantics of ontology evolution .
+For every invalid mapping , the ontology mapping evolution process identifies the ontology evolution strategy adopted .
+Despite the potentiality of this work , we observe some limitations .
+The proposed approach remains very dependent on the SBO model , which is generally not a common way to define mappings .
+As a consequence , we can not explore classical mappings without largely adaptations because they are not SBO instances .
+The user-centric approach still does not provide enough support for guiding users .
+We can image that identifying invalid mappings and providing a list of possible mapping changes without further support can lead users to situations where they do not know how to proceed , e.g. , which combination of mapping changes to apply .
+Although the automatic approach presents an interesting proposition , it still only handles concept removal change operation .
+Ontology change operations like modification of attributes , moving and other more complex ontology change operations are not considered in the designed approach .
+The generalization of this study for other types of KOS changes is also not a so trivial task , since it is not all ontology types of change that are subject of different strategies of evolution such as the removal .
+Moreover , it is reasonable to interrogate whether the adopted strategy for mapping evolution in function of the ontology evolution strategy lead always to the most adequate adapted mapping .
+For instance , after a concept removal , even if orphaned concepts are reconnected to the root concept in the ontology evolution strategy , it would be more appropriated to replace the removed concept of the mapping by its parent concept instead of the root concept .
+Groß , Hartung , Thor , and Rahm ( 2012 ) investigated ontology mapping adaptation through an analysis of the correlation between mapping evolution and ontology evolution in the domain of life sciences .
+This study aimed to empirically observe which ontology change operations can lead to an addition or removal of mappings in their evolution .
+They proposed a measure of impact ratio for the impact of ontology changes on mapping evolution with respect to three general categories of ontology change types .
+The findings of the aforementioned study have motivated a new study quest to gain a more in-depth understanding of how a more fine-grained classification of KOS changes would affect mapping evolution , considering also real-world mapping sets in the conducted experiments ( Dos Reis et al. , 2014 ) .
+More recently , Groß et al .
+( 2013 ) proposed an algorithm to semi-automatically adapt mappings .
+This proposal utilized a diff of KOS changes calculated between two ontology versions to determine the set of occurring ( complex ) change operations .
+The proposal promotes the reuse of unaffected mappings , and maintains outdated ones according to specific change handlers .
+This work preliminarily addresses the modification in the relation of mappings by combining , through initial rules , the semantic type of the old correspondences with the semantic relation assumed between the involved concepts in change .
+In the adaptation process , the proposed algorithm assigns the different status for the correspondences such as handled or need verification by an expert in function of the adaptation strategy applied .
+The former study presents interesting results on general correlations observed empirically between ontology evolution and mappings change .
+As an extension of this study , the role played by semantic mappings and how to handle their modifications could be further investigated .
+Also , it is interesting to observe the KOS change influence of different entities with more fine-grained change operations related to the concepts associated to mappings .
+For instance , to observe how the impact on mappings differs when adding a concept and adding an attribute .
+Examining the influence by groups of change remains an initial approach and can be detailed for better understanding the role played by each different KOS change operation .
+The latter study proposing the algorithm for mapping adaptation revealed relevant results in the conducted evaluation .
+This proposal could be further refined by more finely studying the adaptation of the semantic types .
+In the actual proposition all correspondences related to one type of change are adapted following the same strategy .
+However , to determine the most adequate mapping adaptation action considering each individual correspondence under the same type of KOS change still remains a research issue , which we will further discuss in the next section .
+Advantages : Approaches in this category aim to benefit from the evolution of KOS .
+This allows them to identify potential mappings that are impacted by KOS evolution , limiting thus the number of mappings to deal with .
+Existing proposals are preliminarily able to further compose this information with that provided by the initial version of mappings to reach their correct new definition .
+Drawbacks : The central drawback is that proposed studies mostly apply an equal mapping adaptation strategy to a given type of KOS change operation , which makes the mapping adaptation process inflexible .
+In addition , uncovered aspects exist that may provide supplementary information to adapt mappings ( e.g. , the context of an interrelated concept and its evolution in a refined way ) , which requires further investigations .
+Mapping representation Proposals in this category focus on representing mappings to support maintenance and alignment with a particular emphasis on user interfaces and mapping description languages .
+Fig 6 presents the proposal of mapping representation .
+This involves visualization tools and end-users .
+So , if we consider the example of Fig 2 , this technique consists in the proposition of methods for showing the mappings between “ Diabetes ” of and “ Diabetes ” of , and between “ Blood tumor ” of and “ Blood cancer ” of to the users and offering him facilities for the maintenance task .
+Mapping representation category Fig 6 .
+Mapping representation category .
+This figure shows the mapping representation proposal .
+End users explore visualization tools to determine incorrect mappings and validate them .
+In Maedche , Motik , Silva , and Volz ( 2002 ) , authors proposed the MAFRA framework to support the mapping of ontologies as well as alignment visualization .
+As an extension of the KAON4 tool , MAFRA provides an intuitive graphical user interface ( GUI ) that allows users to visualize the ontologies being mapped together with the so-called semantic bridges between them .
+This framework allows knowledge engineers to modify the existing bridges that require maintenance .
+Qian and Dong ( 2005 ) argued that despite techniques for bringing improvements of automatic proposals on mapping maintenance , users will always need to refine and adapt mappings manually .
+Therefore , to spare knowledge engineers from having to deal with maintainable mappings , the authors propose a maintainable mapping model in which they first create atomic mappings , and then they combine the initial mappings with operators to construct global mappings for the whole target XML schema .
+This approach represents combined mappings as mapping trees expressed using the XQuery language ( Chamberlin , 2002 ) .
+Tang et al .
+provided a tool named View Graph for visualizing mappings ( Tang , Yao , Sun , & Qian , 2009 ) .
+This retains the semantics discovered during the process of mapping calculation , and reuses such semantics during the mapping maintenance .
+Visualizing mappings based on View graph illustrates the semantics involved in mappings , and then can help understanding those mappings for maintaining them .
+Mapping representation is also addressed at mapping definition language level .
+To this end , Cali et al .
+have provided a rule-based framework to support the resolution of inconsistencies on a symbolic and a numeric level ( Cali , Lukasiewicz , Prodoiu , & Stuckenschmidt , 2007 ) for representing ontology mappings .
+Advantages : Techniques for mapping representation emphasize on visual aspects on the validation phase .
+Offering user-friendly visualization tools can facilitate the human experts ’ work at mapping validation time .
+Drawbacks : None of the problems describe at Section 2 are addressed .
+The graphical representation of huge KOS , together with their associated mappings , can make the maintenance task even more complex by virtue of the quantity of displayed information .
+This will rather disturb end-users instead of helping them .
+This study allows to point out open key issues which existing approaches to mapping maintenance have neglected .
+Our main observation relies on the fact that literature lacks a complete and well-studied solution addressing mapping maintenance when KOS evolves .
+Performing mapping maintenance through revisions stands for an incomplete process .
+This might help , but it remains insufficient since it is restricted to only removing inadequate correspondences .
+Moreover , existing techniques require logically expressive KOS with well-defined semantics at a high level of formalization , making this approach unavailable for information systems that rely on semantic resources of low formalization level such as nomenclatures , thesauri , etc .
+Even though mapping calculation for the maintenance task has suggested methods enabled to minimize the comparisons between KOS ’ s entities and consequently reduce time , this still remains very costly .
+The partial re-calculation avoids analysing both KOSs involved in mappings entirely , because this technique applies matching algorithms to perform a new alignment between changed concepts issued from source KOS and the whole target KOS .
+However , large KOS like in the biomedical domain so far represent a big challenge for methods relying on mapping calculation , since time and efforts required to generate and evaluate mappings still remain very huge .
+Mapping adaptation seems the most adequate approach that might provide more advantages to cope with mapping maintenance according to our findings .
+However , our results analysis indicates that this still lacks adequate methods to fully perform mapping adaptation in an automatic way according to KOS evolution .
+Existing approaches fail to accurately use information derived from KOS evolution and mappings .
+Moreover , we could hardly use mapping representation approaches to maintain a huge set of mappings due to the high necessary efforts from users , but we might combine them in addition to the previously mentioned techniques to assist domain experts in their validation task .
+Analyzing the conducted survey together with empirical observations on the way mappings evolve over time ( Dos Reis et al. , 2014 ; Dos Reis , Pruski , Da Silveira , & Reynaud-Delaitre , 2013 ) enables us to define a set of open issues concerning the mapping maintenance problem .
+We present four major research challenges categorized by different aspects as follows : • KOS evolution ( Section 4.1 ) .
+• Mapping interpretation ( Section 4.2 ) .
+• Mapping adaptation ( Section 4.3 ) .
+• KOS models ( Section 4.4 ) .
+To better illustrate the defined research issues , Fig 7 presents a running example .
+This figure shows a scenario with concepts and associated mappings before evolution ( left part of the figure ) and the scenario after evolution with the updated status of concepts and mappings ( right part of the figure ) .
+We represent concepts in ICD as circles while those in SCT are represented as squares .
+Light blue concepts are modified concepts and green concepts ( with larger borders ) denote new concepts .
+Mappings are represented as orange arrow lines connecting the concepts between SCT and ICD .
+We also present the value of attributes for the concepts .
+Running example of KOS and mapping evolution in biomedical domain Fig 7 .
+Running example of KOS and mapping evolution in biomedical domain .
+This figure shows the evolution of ICD biomedical KOS with associated mappings linked to SCT .
+It also presents the value of attributes describing concepts .
+When analyzing two consecutive versions of the ICD ( Dos Reis et al. , 2013 ) , we found that textual statements , which are values of attributes describing concepts , are completely transferred from one concept to its siblings .
+This has affected the associated mappings since their definition relies on such textual information .
+We observed this case with the concept ‘ 560.39 ’ of the ICD .
+Such concept contains three attributes and one of them has as value “ Fecal impaction ” ( release 2009 ) .
+Five mappings are defined with this concept as domain , and one of these mappings has a range called “ Fecal impaction ( disorder ) ” , from SCT .
+After evolution ( i.e. , ICD release 2010 ) , the attribute value “ Fecal impaction ” is no longer associated with the ICD concept and the previously mentioned mapping has been removed .
+Moreover , the concept “ Fecal impaction ” has been newly created in ICD ( release 2010 ) and is reconnected to “ Fecal impaction ( disorder ) ” of SCT .
+KOS evolution issues The provided definition of the mapping maintenance problem ( cf .
+Section 2 ) clearly suggests that the leading cause for invalidating previously correct mappings concerns the evolution of entities of the interconnected KOS .
+This statement has been strengthened by empirical observations on the evolution of mappings ( Dos Reis et al. , 2014 ) , where we emphasize the correlation between KOS and mapping evolution .
+Therefore , information regarding the evolution of KOS remains cornerstone for mapping maintenance .
+However , this aspect is often neglected in the majority of the surveyed approaches , which put the stress on the result of KOS alignment process .
+Only some of the adaptation-based approaches take KOS evolution into account , but they still extensively miss considering complex changes ( Klein & Noy , 2003 ) like split , merge or move of concepts , and other KOS evolution characteristics .
+Considering our running example , the concept ‘ 560.39 ’ in ICD v.2009 has several attributes including “ Fecal impaction ” .
+In its next version , this attribute has been removed and has become the label of a new concept ( ‘ 560.32 ’ ) .
+This indicates a split of concept as a complex KOS change .
+At a closer look at the mappings associated with concept ‘ 560.39 ’ , we observe that one links this concept with a concept of SCT with label “ Fecal impaction ( disorder ) ” .
+Therefore , the adaptation of this mapping ( i.e. , change of source concept in ICD to ‘ 560.32 ’ ) would require a realignment of the new concepts if only KOS atomic changes are considered , but knowing that the new ICD concept is the result of a split would facilitate the identification of the impacted mappings as well as the new potential source concepts ( Dos Reis et al. , 2013 ) .
+This work also underlines the fact that mappings are defined based on partial information ( e.g. , some attributes ) that describe concepts .
+It is therefore important to be able to identify these attributes first before characterizing their evolution for mapping maintenance purpose .
+To this end , we have provided methods and algorithms based on similarity measures able to identify relevant attributes that define mappings ( Dinh , Dos Reis , Pruski , Da Silveira , & Reynaud-Delaître , in press ) .
+This concrete example underlines the key role that statements gained from the analysis of KOS evolution could play in the mapping maintenance process .
+The example shows that the analysis of KOS evolution should not only be restricted to the source concept involved in a mapping , but that we must make a broader analysis considering the neighborhood of this concept ( parent , children and sibling concepts ) , therefore rendering the learned information from KOS evolution richer in terms of semantics of change .
+For example , the result of a concept split can lead to the definition of new concepts that remain sub-concepts of the concept that was originally split .
+This can impact the relation of associated mappings ( e.g. , changing relation from “ Equivalent ” [ ≡ ] to “ More specific than ” relation [ ⩽ ] ) .
+To identify complex changes might play a key role in the mapping maintenance task , as concepts in complex changes may represent the restricted context of source concepts affected by a change .
+Complex changes could account for an adequate set of sufficient concepts judged as candidates in an adaptation process .
+This issue appears even more so true when dealing with very large KOS .
+Therefore , maintaining mappings requires a deeper understanding of KOS evolution .
+This includes the nature of changes ( e.g. , atomic or complex ) , the type of changes ( e.g. , addition , removal , split , merge ) , the structure and semantics of the changes ( e.g. , leading to a generalization or specialization of the information ) as well as the impact of the changes on related entities ( e.g. , Does a change on super/sub concepts of a source concept of a mapping impact the considered one ? ) .
+In addition , this understanding shall include the identification of the flow of conceptual information between concepts .
+For instance , information contained in a concept may be transferred or copied to another one when this concept is split ( cf .
+in the running example that the attribute “ Fecal impaction ” is transferred from concept ‘ 560.39 ’ to ‘ 560.32 ’ in ICD ) .
+We have investigated methods for this purpose ( Dinh , Dos Reis , Pruski , Da Silveira , & Reynaud-Delaitre , 2014 ) .
+Our work performs linguistic analysis of the attributes values before and after evolution to characterize the flow of information at evolution time to further support the maintenance process .
+To this end , we need to recognize and describe the explicit share or transfer of information between different concepts in scenarios of complex changes , and to investigate how the information of this nature ( describing the KOS changes in more fine-grained detail ) provides useful details for a mapping maintenance process .
+For instance , these aspects will allow deciding the best mapping adaptation strategy to adopt which , in turn , will facilitate mapping maintenance .
+However , existing approaches seem in general to only explore primitive axioms of KOS changes .
+As a result , adapting the semantic relation in mappings for instance creates difficulties and forces realigning the involved KOS .
+This explains the reasons why most of the existing approaches only remove outdated mappings .
+Mapping interpretation issues Another aspect highlighted by our empirical analysis of mapping evolution concerns the definition of mappings .
+The semantics of established mappings are poorly interpreted to propose changes in the maintenance process .
+Our results reveal that literature lacks adequate methods suited to fully understand and explain correspondences by generating supplementary data on them .
+Actually , our empirical studies reveal that even if concepts are mapped in their entirety , only partial conceptual information ( e.g. , attributes ) serve to define mappings ( Dos Reis et al. , 2013 ) .
+However , when matching systems create a mapping , they fail to keep the entities used to justify such mapping in its definition , preventing a correct interpretation of mappings and their reuse for maintenance purposes .
+To overcome this barrier requires proposing new methods to identify KOS entities that defined mappings together with an exploitation of this information for maintenance .
+Considering our running example , the mapping that exist between ICD concept ‘ 560.39 ’ and SCT concept labeled “ Fecal impaction ( disorder ) ” , and observing the evolution of this mapping , clearly shows that the attribute value “ Fecal impaction ” in concept ‘ 560.39 ’ and the label of the corresponding SCT concept define such mapping .
+In consequence , we indicate that to identify the conceptual information that defines mappings and to provide the adequate analysis of its evolution play a central role to support mapping maintenance .
+In this sense , we need further studies to realize and recognize what kind of KOS entities related to existing mappings are relevant to support their maintenance and how to explore this information .
+The use of similarity measures to identify this information seems promising ( Dinh et al. , in press ) because most of the matching algorithms used to create KOS mappings implement these .
+Many research questions remain open to take this aspect into account for mapping maintenance , including : • How to identify a significant and sufficient subset of attributes of a source concept that served to define a mapping with respect to a target concept ?
+• Is it possible to determine the importance of each attribute in the definition of the mappings , and the impact of KOS changes in each attribute value can engender on mappings ?
+• What is the role played by the neighborhood of a concept in the mapping definition ( e.g. , Is a super concept more important than a sibling ? )
+and the impact of its evolution in the maintenance process ?
+Related to these issues , we could enrich the formalization of the description of mappings to take into account the complementary information needed to better interpret the existing correspondences as suggested in Dos Reis , Da Silveira , Dinh , Pruski , and Reynaud-Delaître ( 2014 ) Thomas , O ’ Sullivan , and Brennan ( 2009 ) .
+Furthermore , no approach has highlighted the relevance of considering conceptual information explaining existing mappings to support mapping maintenance .
+Therefore , additional research efforts improving this aspect can bring novel insights on techniques to tackle the mapping maintenance problem .
+Mapping adaptation issues A fully automatic mapping adaptation process entails many issues uncovered by existing approaches .
+Due to the difficulties of creating mappings and the huge human efforts for curating and validating them , approaches for mapping maintenance should promote the reuse of mappings , not impacted by KOS evolution as much as possible .
+Although one could judge trivial to identify the cases where KOS changes affect the attributes of a source concept involved in a mapping and would recommend the direct reuse of such mapping , other scenarios pose much more complicated situations to decide the impact of KOS changes on mappings .
+For instance , let us imagine a source concept of a mapping containing a set of five attributes describing it .
+Even if we could compute that a user has deleted two attributes among them from one KOS version to another , many further issues remain open .
+• How to determine that deletion of attributes impacts a particular mapping and semantically invalidates it ?
+We can find situations where even when changes affect a source concept , these changes do not really impact associated mappings .
+For example , if we consider a concept more specific than a concept , after evolution changes in concept can make it even more specific , which does not invalidate the relation that exist between the new version of and .
+• How to design efficient adaptation strategies to guarantee that mappings remain valid after suffering KOS changes ?
+Literature lacks a systematic method to explicitly determine when occurred KOS changes really influence mappings .
+When assigning an impacted mapping we will need to carefully adapt it .
+Furthermore , mapping maintenance aims , as its utmost and non-trivial objective , at preserving the right semantic relation expressed by mappings as much as possible when at least one of the KOS evolves .
+Existing approaches still need to achieve concrete and evaluated experimental results concerning how to determine a new type of semantic relation at mapping adaptation time .
+We must further investigate what information from existing mappings and KOS evolution to use as a support to determine the new type of semantic relation , and how to identify and use that information .
+Studied approaches have only superficially addressed this aspect , which deserves further research efforts to understand how the mapping adaptation process might take the different types of semantic relations of mappings into consideration .
+Indeed , the majority of the approaches only consider mappings as equivalent ones , which delimit their power of expressiveness and of adaptation .
+A closer analysis on the existing work targeting mapping maintenance reveals that this is mostly performed through removing outdated or problematic mappings .
+Although this operation avoids having inconsistent mappings as a result , this has many drawbacks .
+For instance , by only removing mappings we obtain a less complete final set of adapted mappings .
+Applications relying on the initial mappings may require the removed correspondences in a near future .
+Therefore , we should perform mapping maintenance in a way that removal of mappings occurs in the last option of adaptation , i.e. , to have additional , sufficiently rich mapping adaptation actions to apply more complex operations in the mapping adaptation process .
+For instance , we could have techniques that allow replacing a removed source concept of mapping by another adequate current concept .
+This kind of adaptation strategy leads to a more complete set of updated mappings , but entails many open issues .
+For example , how to determine the most adequate new source concept to replace the outdated one ?
+In this sense , we must investigate what kind of more meaningful mapping adaptation actions , representing complex behaviors of adaptation to perform , offer the option of removing outdated mappings as the last one .
+This includes , among other aspects , to understand which elements of mappings to change and which conditions to require for applying such actions in the adaptation process .
+Another aspect leveraged by the aforementioned issues concerns deciding an adaptation strategy applied in a personalized way for each individual mapping .
+For instance , we need to adapt two mappings associated with the same source concept , affected by KOS evolution , independently from each other , i.e. , we could apply different mapping adaptation actions for these mappings .
+However , the existing literature lacks of solutions for the issue of determining the adequate and personalized set of mapping adaptation actions suited to handle each mapping individually .
+KOS model issues If ontologies have become the de facto standard for representing knowledge on the Semantic Web , many domains like biomedicine are much older and still use various knowledge representation models ( e.g. , thesaurus , taxonomy , classification schema , etc . )
+that are more or less expressive , formal and complex , making their management different .
+Actually , very expressive knowledge models can make the characterization of their evolution more complex because of the huge variety of ways to represent the same piece of knowledge .
+Representing a split of concepts remains therefore very dependant of the underlying KOS models .
+Languages for designing KOS also remain different in their formalism , which gives more of less flexibility to express and understand ( from the semantic point of view ) changes that lead one KOS to its next version .
+For instance , the ICD terminology seems to be structured in a “ is-a ” taxonomy according to the definition of the concept identifiers , while SCT is expressed in a EL++ description logic , which refers to a more reliable language for reasoning and decision making .
+While different studies have often investigated mapping maintenance problems in a context where they handle connected models of the same nature ( especially expressive models like relational database schemas and ontologies ) , they have neglected studying interrelated KOS based on heterogeneous models like ontologies and thesauri , or database schemas and taxonomies , whose expressiveness differs substantially , although real applications , mainly those of the biomedical domain , use such interconnected KOS , implementing various heterogeneous models .
+Devising a mapping maintenance process requires retaining a minimum set of KOS typed entities .
+For instance , explicit subsumption relationships between concepts and attributes containing textual descriptions that define concepts .
+Therefore , we could boost a feasible automatic approach for mapping maintenance with more precise techniques if KOS models allowed the expression of a set of KOS properties relevant to enable accurate analysis of the represented semantics .
+However , so far very few studies have investigated the influence of KOS models on mapping maintenance , which could contribute to refine this under dynamic KOS with different semantic expressiveness .
+Semantic-enabled software applications have widely used KOS and their associated mappings , that currently grow in relevance for a diversified range of domains and objectives .
+To guarantee interoperability , mappings must therefore remain up-to-date over time .
+We may hardly accomplish mapping maintenance manually due to the large size and high frequency of new releases of current KOS .
+Approaches addressing this problem as automatically as possible may play a key role in making this task less tedious and error-prone , but literature still lacks a coherent survey on existing techniques despite the importance of the problem .
+This article has investigated related work of the mapping maintenance field via a thorough and systematic literature review , classifying proposals in different categories of approaches .
+We conducted an analysis on these studies elucidating their advantages and drawbacks .
+Our investigation combined with empirical results on analysing mapping evolution pointed out many open research issues , which existing approaches have failed to address .
+These issues lead to future research directions as follows : First , KOS evolution refers to one of the main reason to make mappings invalid ( Dos Reis et al. , 2014 ) .
+It is therefore crucial to exploit this information to maintain mappings .
+However , the attributes describing concepts on which mappings rely on are usually expressed using natural language .
+To be able to understand their evolution , we have to further study techniques based on linguistics .
+Moreover , richer KOS models such as OWL ontologies rely on a formal knowledge representation model like Description Logics .
+In consequence , we need to investigate the semantics of changes to enable characterizing KOS evolution , since changes can interfere not only in the labels of concepts , but also in their associated axioms .
+This can impact their semantics and , in turn , the underlying mappings .
+Second , the interpretation of mappings still remains challenging .
+We showed that even if concepts are interrelated in their entirety , only partial information from concepts defines mappings ( Dos Reis et al. , 2013 ) .
+While we have studied a method to recognize such information ( Dinh et al. , in press ) , we observe that the identified attributes do not have the same importance in the definition of mappings , i.e. , it seems that weights exist to each attribute defining a mapping and they play a role in the definition of the semantic relations of mappings .
+Further investigations is required aiming at measuring the evoked weights in the maintenance process .
+Third , regarding the definition of mappings ( cf .
+Eq ( 1 ) ) , our studies carried out around this thematic consider the types of semantic relations from interrelated KOSs of the biomedical domain , which are also defined in the SKOS model .
+However , mappings linking OWL ontologies are potentially not restricted to the 5 relations explored , but can be further defined using OWL expressivity .
+The study of the semantic features for mappings according to the OWL specificities that can define object properties ( e.g. , transitivity , symmetry , etc . )
+is still an open issue .
+This aspect can enhance the maintenance process .
+The indicated issues deserve further research to reduce the human work in the task of mapping maintenance .
+We discussed different aspects representing important sources of information , e.g. , KOS evolution , and novel requirements in the mapping adaptation that can further bridge the gap towards a fully automatic approach for mapping maintenance , between heterogeneous and dynamic KOS .
+For future work , we aim to investigate a complete framework to support automatic mapping adaptation suited to cope as much as possible with the detected challenges .
+1 www.ihtsdo.org/snomed-ct. 2 www.cdc.gov/nchs/icd/icd9cm.htm .
+3 linkeddata.org .
+4 http : //kaon.sourceforge.net/ .

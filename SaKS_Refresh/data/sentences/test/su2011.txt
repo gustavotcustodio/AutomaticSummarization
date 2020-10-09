@@ -1,0 +1,197 @@
+The essential work of sewer rehabilitation is a sewer inspection through diagnoses of sewer pipe defects.
+At present, image processing and artificial intelligence techniques have been used to develop diagnostic systems to assist engineers in interpreting sewer pipe defects on CCTV images to overcome human’s fatigue and subjectivity, and time-consumption.
+Based on the segmented morphologies on images, the diagnostic systems were proposed to diagnose sewer pipe defects.
+However, the environmental influence and image noise hamper the efficiency of automatic diagnosis.
+For example, the central area of a CCTV image, where is always darker than the surrounding due to the vanishing light and slight reflectance, causes a difficulty to segment correct morphologies.
+In this paper, a novel approach of morphological segmentation based on edge detection (MSED) is presented and applied to identify the morphology representatives for the sewer pipe defects on CCTV images.
+Compared with the performances of the opening top-hat operation, which is a popular morphological segmentation approach, MSED can generate better segmentation results.
+As long as the proper morphologies of sewer pipe defects on CCTV images can be segmented, the morphological features, including area, ratio of major axis length to minor axis length, and eccentricity, can be measured to effectively diagnose sewer pipe defects.
+Regular sewer rehabilitation, which traditionally involves sewer inspection, assessment of structural conditions, computation of structural condition grades, and determination of rehabilitation methods and substitution materials, is necessary for modern cities (Yang & Su, 2006).
+Among the above four stages of sewer rehabilitation, sewer inspection is the most critical and has the greatest impact on efficacy of sewer rehabilitation.
+At present, many types of equipment, such as closed circuit television (CCTV) or sewer scanner evaluation technology (SSET) cameras mounted on robots, ground piercing radar (GPR), sonar and infrared thermograph, are developed to assist engineers in sewage inspection (Fenner, 2000; Gokhale & Graham, 2004; Makar, 1999; Yang & Su, 2008, 2009).
+Moreover, several researches had used image processing and artificial intelligence techniques to develop diagnostic systems to assist engineers in interpreting sewer pipe defects on SSET or CCTV images due to human’s fatigue and subjectivity, and time-consumption (Iyer & Sinha, 2005; Mckim & Sinha, 1999; Moselhi & Shehab-Eldeen, 2000; Sinha & Fieguth, 2006; Wirahadikusumah, Abraham, Iseley, & Prasanth, 1998; Yang & Su, 2009).
+Nowadays, morphological segmentation, one of popular image processing techniques, has been widely applied to many image interpretations.
+For morphological segmentation, erosion and dilation are the two basic operators and usually applied in tandem (Hsiao, Chuang, Lu, & Jiang, 2006).
+Zana and Klein (2001) performed these two basic operators with the linear structural elements to segment the vessel-like patterns which are very common in medical images.
+Then, a cross-curvature evaluation was implemented to differentiate vessels from analogous background patterns.
+Also, the approach based on mathematical morphology and curvature evaluation was employed in detecting crack patterns in pipeline images (Iyer & Sinha, 2005).
+Sinha and Fieguth (2006) performed opening operation, where firstly an image was operated erosion and dilation in tandem by a type of structural element, secondly the opening operated image was subtracted from its SSET pipeline image, so-called opening top-hat operation, and finally the opening top-hat operated image was transferred into a binary one by Otsu’s technique to segment the patterns of crack, hole/joint, laterals, and pipe collapse.
+Yang and Su (2009) indicated that SSET comparative to CCTV is much less commercialized so to employ opening operation and Otsu’s technique to segment the morphologies of sewer pipe defects, including broken, crack, fracture, and open joint, on CCTV images.
+However, the central area of a CCTV image is always darker than the surrounding due to the vanishing lighting and reflectance so that the sewer pipe defect on the CCTV image could not be segmented its correct morphology (Moselhi & Shehab-Eldeen, 2000).
+To effectively and correctly segment the morphologies of sewer pipe defects, a novel approach, morphological segmentation based on edge detection (MSED), is presented.
+Edge detection is considered as an important pre-processing step in image segmentation (Chen, Wu, Rahmani-Torkaman, & Hughes, 2002).
+Intuitionally, the MSED approach is based on performances of edge detection to attempt to segment correct morphologies for sewer pipe defects on CCTV images.
+Hsiao et al.
+(2006) presented a hybrid approach, including mathematical morphological edge detection, contour-based image segmentation, and trajectory estimation, to track multiple objects in video frames.
+Their contour-based image segmentation algorithm involves region growing and merging processes, so several initial growing seeds are needed for searching the morphologies of the contoured objects.
+Also, region growing and merging processes are involved in the MSED approach, but merely initial growing seeds are unneeded.
+This paper adopts eight typical defect CCTV images of sewer inspection from the manual of sewer condition classification (UK water industry engineering and operations committee, 1994) to be the experimental materials (see Fig 1).
+Two morphological segmentation approaches, opening top-hat operation and MSED, are experimented, compared, and followed by the measurement of the morphological features such as area, major axis length, minor axis length, ratio of major axis length to minor axis length, and eccentricity.
+Fig 2 shows the schematic outline of this research.
+This paper is organized as follows.
+Section 2 briefly introduces the opening top-hat operation and the Otsu’s technique.
+The edge detection approaches, including Sobel, Prewitt, and Roberts, are employed in this paper and simply described in Section 3.
+Section 4 illustrates the procedure of the MSED approach.
+In Section 5, the experimental results obtained by the opening top-hat operation and the MSED are demonstrated, and their result comparison is discussed.
+Finally, morphology measurements, and conclusions and suggestions are presented in Sections 6 and 7, respectively.
+Gray level CCTV images of typical sewer defects, such as (a) fractures… Fig 1.
+Gray level CCTV images of typical sewer defects, such as (a) fractures multiple, (b) debris, (c) hole, (d) spalling large, (e) collapse, (f) open joint, (g) broken, and (h) deformed sewer.
+Schematic outline of this research Fig 2.
+Schematic outline of this research.
+Opening top-hat operation The light and dark portions of an image can be reshaped or morphed in various ways under a control of a structuring element which can be considered as a parameter to morphological operation (Sinha & Fieguth, 2006).
+Dilation and erosion are the two basic morphological operations (Dong, 1997).
+Sets A and B in Z2 are defined to represent an image consisting of pixels p(x, y) and a structuring element, respectively: (1) (2) The dilation of A by B, denoted A ⊕ B, is the union of all pixels in A surrounded by the shape of B and defined as: (3) Similarly, the erosion of A by B, denoted A Θ B, removes all pixels within a “distance” B from the edge of A and is defined as: (4) The opening operation is defined as: (5) The effect of opening operation is to remove image regions which are lightly relative to the structuring element while preserving image regions greater than structuring elements (Sinha & Fieguth, 2006).
+Based on the opening operation, the opening top-hat operation is defined as: (6) Both of dilation and erosion need a structuring element, which is a matrix consisting of only 0’s and 1’s, to probe the morphologically segmented image.
+In the matrix, the eight-neighbor pixels of 1’s can be assigned as arbitrary shape and size.
+Diamond, disk, line, rectangular, and square are the common structuring elements; nevertheless, line structuring elements are not frequently adapted because they can just detect a single border (Li, Wang, & Zhao, 2009).
+In this paper, the structuring elements of square and disk as shown in Fig 3 are employed into the opening top-hat operation to probe the morphologies of sewer pipe defects.
+Samples of structuring elements, such as (a) square of 3×3 and (b) disk of… Fig 3.
+Samples of structuring elements, such as (a) square of 3 × 3 and (b) disk of radius as 3.
+Binary processing via Otsu’s technique Otsu’s technique, which is a thresholding method based discriminant analysis, determines the optimal thresholds for the opening top-hat operation images by maximizing the following measure of class separability (Yan, 1996): (7) The parameters in Eq (7) had been described in the literature of Yang and Su (2009).
+By maximizing the criterion function in Eq (7), the means of the light and dark image regions can be separated as well as possible and the variances of the two image regions can be minimized.
+Thus, in this paper the CCTV images are transformed through the opening top-hat operation into the binary ones to segment the sewer pipe defects.
+Edge detection is the most common approach for detecting meaningful discontinuities in gray level (Gonzalez & Woods, 1992).
+Taking an image of a light stripe on a dark background for example, edge detection is used to search the edges of the light stripe based on the first and second derivatives of the gray level profile of the light stripe along a horizontal scan line of the image.
+The positive values, negative values, and zero of the first derivative represent the leading edge of a transition, the trailing edge of a transition, and areas of constant gray level, respectively.
+The second derivative is positive for the transition associated with the dark side of the edge, negative for the transition association with the light side of the edge, and zero in areas of constant gray level.
+The gradient of an image f(x, y) at location (x, y) is the vector (8) In edge detection, an important quantity is the magnitude of this vector, where (9) Shown as Eqs.
+(8) and (9), computation of the gradient of the image is based on obtaining the partial derivatives ∂f/∂x and ∂f/∂y at every pixel.
+Sobel Fig 4 shows a 3 × 3 image region, where Z’s denote the values of gray levels.
+The Sobel operator masks are (10) and (11) The advantages of Sobel operators include both effective differencing light image regions (with pixel values of 255) from dark backgrounds (with pixel values of 0) and enhanced noises.
+(a1) Gx and (a2) Gy Sobel operators, (b1) Gx and (b2) Gy Prewitt operators, and… Fig 4.
+(a1) Gx and (a2) Gy Sobel operators, (b1) Gx and (b2) Gy Prewitt operators, and (c1) Gx and (c2) Gy Roberts operators, respectively.
+Prewitt Taking a 3 × 3 image region as shown in Fig 4 for example, an approximation of Eq (9) using the Prewitt operator is (12) In Eq (12), the difference between the third and first rows of the 3 × 3 image region approximates the derivative in the x-direction, and that between the third and first columns approximates the derivative in the y-direction.
+Roberts Fig 4(d1) and (d2) show the Roberts operators, by which Eq (9) can be rewritten while being approximating at point Z5 as (13)
+To illustrate how the MSED algorithm to segment the morphologies of the sewer pipe defects, a manually produced rectangle edge shown as Fig 5(a) is tested.
+The rectangle edge consists of twelve pixels (six pixels each side) in the column direction and ten pixels (five pixels each side) in the row direction.
+(a) An image of manually produced rectangle edge, (b) illustration of the MSED… Fig 5.
+(a) An image of manually produced rectangle edge, (b) illustration of the MSED algorithm implementation.
+In the beginning, the value, either 255 or 0, of the pixel (1, 1) of the entire binary image is interpreted.
+If the value is 255, the pixel is regarded as an initial segmented light image region.
+Otherwise, the pixel belongs to the dark background of the binary image.
+Next, a pixel distance d (d ≧ 2) is given, and the MSED algorithm interprets the value of the pixel (1, 1 + d).
+If the values of the pixels (1, 1) and (1, 1 + d) both are 255, all pixel values between the pixels (1, 1) and (1, 1 + d) are directly assigned as 255.
+Otherwise, the original pixel values between the pixels (1, 1) and (1, 1 + d) are remained.
+The MSED algorithm repeats the above implementation in the row direction until the pixel location (m, n − d).
+m and n denote the numbers of the pixels in the row and column directions, respectively.
+Then, the same process is also implemented in the columns.
+Consequently, the dark image region within the light rectangle edge will be transformed into the light image region so to complete the morphological segmentation of the rectangle.
+Fig 5(b) shows the illustration of the MSED implementation, in which the four corners of rectangle are (2, 3), (2, 8), (6, 3), and (6, 8).
+In order to transform the dark image regions between the pixel locations (3, 3) and (3, 8), (4, 3) and (4, 8), and (5, 3) and (5, 8) into the light ones, the operative d must be set as 5.
+In this paper, the MSED algorithm is encoded in Matlab and shown as follows: For d = 2: dlim % dlimis an integer, andd = 2, 3, 4, … , dlim are tested For i = 1: m % mandndenote the pixel number of the image region in the row and col For j = 1: n − d If (image (i, j) = = 1 & image (i, j + d) = = 1) % image (i, j) is edge detection binary image image (i, j + 1: j + d − 1) = 1; End End End For j = 1: n For i = 1: m − d If (image (i, j) = = 1 & image (i + d, j) = = 1) Image (i + 1: i + d − 1, j) = 1; End End End End
+In this section, the opening top-hat operation and the MSED approach are applied to the eight typical defect CCTV images of sewer inspection to demonstrate their performances of morphological segmentation.
+Performances of the opening top-hat operations A proper choice of structuring elements (SEs) is essential and important for an opening top-hat operation because the types of SEs determine the morphological segmentation.
+The square SEs of 3 × 3, 5 × 5, 7 × 7, and 9 × 9 and the disk SEs of radius as 3, 5, 7, and 9 were tested in this research.
+Figs.
+6 and 7 show the morphological segmentation results of the eight CCTV images using the opening top-hat operations with the square and disk SEs, respectively.
+The indices of (a)–(h) represent the sewer pipe defects of fractures multiple,… Fig 6.
+The indices of (a)–(h) represent the sewer pipe defects of fractures multiple, debris, hole, spalling large, collapse, open joint, broken, and deformed sewer, respectively.
+The numeral indices of 1–4 denote the morphological segmentations derived by the opening top-hat operations with the square SEs of 3 × 3, 5 × 5, 7 × 7, and 9 × 9, respectively.
+The indices of (a)–(h) represent the sewer pipe defects of fractures multiple,… Fig 7.
+The indices of (a)–(h) represent the sewer pipe defects of fractures multiple, debris, hole, spalling large, collapse, open joint, broken, and deformed sewer, respectively.
+The numeral indices of 1–4 denote the morphological segmentation derived by the opening top-hat operations with the disk SEs of radius as 3, 5, 7, and 9, respectively.
+Obviously, the opening top-hat operations with smaller SEs, i.e.
+the square SEs of 3 × 3 or 5 × 5, and the disk SEs of radius as 3 or 5, cannot effectively eliminate many meaningless surroundings segmentations (see Figs.
+6(b1), (b2), (f1), (h1), 7(b1), and (f1)) and detect the morphologies of the sewer pipe defects (see Figs.
+6(a1), (a2), (d1), (d2), 7(a1), and (d1)).
+However, the disk SEs have better performances than the square SEs (see Figs.
+7(c4) vs. 6(c4), 7(d4) vs. 6(d4), 7(e4) vs. 6(e4), and 7(f4) vs. 6(f4)) due to more sensitive to the difference of reflected lights from the sewer pipe defects and from the surroundings.
+Among the various types of SEs, the disk SE of radius of 9 has the best performance, even though remains some drawbacks.
+In Fig 7(a4), the segmented morphology of the fractures multiple remains sparse spots in the northwestern part so to cause an incomplete segmentation compared with several circuitous lines in the original figure of fractures multiple shown as Fig 1(a).
+In Fig 7(b4), the segmented morphology of the debris, some noises appear around the pipe circle.
+The morphologies of the hole in Fig 1(c) and the deformed sewer in Fig 1(h) appear in a blade-shape and an ellipse-shape, respectively, that were not be successfully segmented by the opening top-hat operations.
+Moreover, Fig 7(f4) shows that the disk SE of radius as 9 is not large enough to probe the entire open joint until the radius being expanded to 15 (see Fig 8).
+The morphological segmentation of the open joint derived by the opening top-hat… Fig 8.
+The morphological segmentation of the open joint derived by the opening top-hat operation with the disk SE of radius as 15.
+Performances of the MSED approach Prior to the execution of the MSED algorithm, the most suitable edge detection method must be determined among Sobel, Prewitt, and Roberts.
+Fig 9 shows the three edge detection methods applied to the CCTV image of the fractures multiple.
+Obviously, Sobel has better performance and is adopted in the MSED approach in this paper to apply to the eight CCTV images shown in Fig 10.
+Edge detection of the fractures multiple on CCTV image using (a) Sobel, (b)… Fig 9.
+Edge detection of the fractures multiple on CCTV image using (a) Sobel, (b) Prewitt, and (c) Roberts.
+Applications of the Sobel edge detection method to (a) fractures multiple, (b)… Fig 10.
+Applications of the Sobel edge detection method to (a) fractures multiple, (b) debris, (c) hole, (d) spalling large, (e) collapse, (f) open joint, (g) broken, and (h) deformed sewer.
+Figs.
+11–18 show the performances of MSED with various d values applied to the eight sewer pipe defects, and validate the efficiency of MSED in morphology segmentation of the sewer pipe defects.
+In Fig 11(a), the detected edges of the fractures multiple occur in the upper left figure, based on which the morphology of the fractures multiple can be approximately segmented while a d of 5 is assigned (see Fig 11(f)).
+In addition, a high d value can result in an intensive region merge of objects and surrounding, and seems to have better segmentation.
+Nevertheless, an extreme d value could result in over region-growing and -merging.
+The determination of an appropriate d value takes two principles into considerations, such as the completion of morphology segmentation and the avoidance of over region-growing and -merging.
+Figs.
+11–18 reveals the most appropriate d values applied to the morphological segmentations of the fractures multiple, debris, hole, spalling large, collapse, open joint, broken, and deformed sewer as 8, 12, 12, 8, 14, 8, 9, and 6, respectively.
+MSED implemented to the debris on CCTV image by assigning (a) d=2, (b) d=4, (c)… Fig 12.
+MSED implemented to the debris on CCTV image by assigning (a) d = 2, (b) d = 4, (c) d = 6, (d) d = 8, (e) d = 9, (f) d = 10, (g) d = 12, and (h) d = 13.
+MSED implemented to the hole on CCTV image by assigning (a) d=2, (b) d=4, (c)… Fig 13.
+MSED implemented to the hole on CCTV image by assigning (a) d = 2, (b) d = 4, (c) d = 8, (d) d = 10, (e) d = 12, (f) d = 14, (g) d = 15, and (h) d = 16.
+MSED implemented to the spalling large on CCTV image by assigning (a) d=2, (b)… Fig 14.
+MSED implemented to the spalling large on CCTV image by assigning (a) d = 2, (b) d = 3, (c) d = 4, (d) d = 5, (e) d = 6, (f) d = 7, (g) d = 8, and (h) d = 9.
+MSED implemented to the collapse on CCTV image by assigning (a) d=2, (b) d=4,… Fig 15.
+MSED implemented to the collapse on CCTV image by assigning (a) d = 2, (b) d = 4, (c) d = 6, (d) d = 8, (e) d = 11, (f) d = 12, (g) d = 13, and (h) d = 14.
+MSED implemented to the open joint on CCTV image by assigning (a) d=2, (b) d=4,… Fig 16.
+MSED implemented to the open joint on CCTV image by assigning (a) d = 2, (b) d = 4, (c) d = 6, (d) d = 8, (e) d = 9, (f) d = 10, (g) d = 11, and (h) d = 12.
+MSED implemented to the broken on CCTV image by assigning (a) d=2, (b) d=3, (c)… Fig 17.
+MSED implemented to the broken on CCTV image by assigning (a) d = 2, (b) d = 3, (c) d = 4, (d) d = 5, (e) d = 6, (f) d = 7, (g) d = 8, and (h) d = 9.
+MSED implemented to the deformed sewer on CCTV image by assigning (a) d=2, (b)… Fig 18.
+MSED implemented to the deformed sewer on CCTV image by assigning (a) d = 2, (b) d = 3, (c) d = 4, (d) d = 5, (e) d = 6, (f) d = 7, (g) d = 8, and (h) d = 9.
+MSED implemented to the fractures multiple on CCTV image by assigning (a) d=2,… Fig 11.
+MSED implemented to the fractures multiple on CCTV image by assigning (a) d = 2, (b) d = 3, (c) d = 4, (d) d = 5, (e) d = 6, (f) d = 7, (g) d = 8, and (h) d = 9.
+Comparison of the performances of the opening top-hat operations and the MSED approach Table 1 lists the discovered light regions on the binary segmented images varying with eight sewer pipe defects.
+Obviously, the numbers of the light regions derived from the MSED approach are much less than those derived from the opening top-hat operations, which can significantly facilitate the morphology interpretations of the sewer pipe defects.
+In this paper, the size of a light region is measured in pixel number.
+Tables 2 and 3 are the statistics of the sizes of the light image regions based on Table 1, and record the numbers of the light regions consisting of the different numbers of pixels.
+Compared with Tables 2 and 3, the numbers of the light image regions consisting of equal to or less than 9 pixels in Table 3 are much less than those in Table 2.
+This statistics means that the MSED approach can effectively avoid many meaningless segmented image regions.
+Based on Tables 2 and 3, Tables 4 and 5 show the proportions of the numbers of the light image regions, respectively.
+Tables 4 and 5 are seen that the light image regions consisting of equal to or less than 9 pixels obviously occupy the most proportion, but most of those light image regions belong to the meaningless morphological segmentations.
+Moreover, they are difficult to be seen on the binary segmented images due to their too small sizes.
+Table 1.
+The number of the light regions on the binary segmented images.
+Pipe defect Opening top-hat operation⁎ MSED Fractures Multiple 240 48a Debris 222 20b Hole 420 43b Spalling large 118 54a Collapse 276 22c Open joint 100 51a Broken 332 71d Deformed sewer 136 94e ⁎ With the disk SEs of radius as 15 and 9 for the segmentations of the open joint and other sewer pipe defects, respectively.
+a,b,c,d,e With the best d values of 8, 12, 14, 9, and 6, respectively.
+Table 2.
+The number of the light regions derived by the opening top-hat operation.
+Pipe defect Size of the light regions (pixels) 1 2 3 4 5 6 7 8 9 10–20 21–50 51–100 >100 Fractures Multiple 83 38 22 14 10 10 3 5 3 27 11 6 8 Debris 65 48 17 15 8 8 9 2 3 17 18 4 8 Hole 151 90 47 27 11 18 10 5 5 23 15 5 13 Spalling large 32 22 13 11 2 3 3 1 5 11 3 3 9 Collapse 67 40 19 19 8 17 12 7 1 27 23 14 22 Open joint 36 10 7 4 4 7 2 2 1 12 3 3 9 Broken 50 54 39 23 20 10 9 5 6 47 27 18 24 Deformed sewer 37 28 12 6 2 5 5 2 3 9 12 3 12 Table 3.
+The numbers of the light regions derived by MSED.
+Pipe defect Size of the light regions (pixels) 1 2 3 4 5 6 7 8 9 10–20 21–50 51–100 >100 Fractures multiple 10 5 3 6 1 2 – – – 3 6 2 10 Debris 7 5 1 – – – – – 1 – 2 1 3 Hole 16 5 2 3 1 1 – – 2 3 1 2 7 Spalling large 11 5 3 4 1 1 1 2 2 7 6 1 10 Collapse 6 1 – 1 – – – 2 1 2 2 1 6 Open joint 14 3 3 3 2 1 3 1 – 9 3 4 5 Broken 18 4 7 5 1 2 1 1 3 7 5 5 12 Deformed sewer 28 11 6 3 2 3 4 2 1 12 11 2 9 Table 4.
+The proportion of the light regions derived by the opening top-hat operation.
+Pipe defect Sizes of the light image regions (pixels) 1–9 10–20 21–50 51–100 >100 Fractures Multiple 78.3 11.3 4.6 2.5 3.3 Debris 78.8 7.7 8.1 1.8 3.6 Hole 86.7 5.5 3.6 1.2 3.0 Spalling large 78.0 9.3 2.5 2.5 7.7 Collapse 68.8 9.8 8.3 5.1 8.0 Open joint 73.0 12.0 3.0 3.0 9.0 Broken 65.1 14.2 8.1 5.4 7.2 Deformed sewer 73.5 6.6 8.8 2.2 8.9 Table 5.
+The proportion of the light regions derived by MSED.
+Pipe defect Sizes of the light image regions (pixels) 1–9 10–20 21–50 51–100 >100 Fractures Multiple 56.3 6.3 12.5 4.2 20.7 Debris 70.0 – 10.0 5.0 15.0 Hole 69.8 7.0 2.3 4.7 16.2 Spalling large 55.6 13.0 11.1 1.9 18.4 Collapse 50.0 9.1 9.1 4.5 27.3 Open joint 58.8 17.6 5.9 7.8 9.9 Broken 59.2 9.9 7.0 7.0 16.9 Deformed sewer 63.8 12.8 11.7 2.1 9.6 The light regions over 100 pixels are noticed in this research and are marked in yellow and red1 (see Figs.
+19 and 20).
+Especially, the regions in red were specified as the morphology representatives of the sewer pipe defects by referring to the gray level sample images in Fig 1.
+Except for the spalling large and the open joint, the sewer pipe defects in Fig 19 seem not to be appropriately illustrated in red.
+In contrast, the MSED segmentation has better morphological illustrations for most sewer pipe defects in Fig 20.
+Nevertheless, the red region in Fig 19(f) is better than those in Fig 20(f) due to its perfect solid ∩-shape.
+Compared to the opening top-hat operation, overall MSED can offer better morphological segmentation for sewer pipe defects on CCTV images.
+Areas segmented through the opening top-hat operation represent noise… Fig 19.
+Areas segmented through the opening top-hat operation represent noise (<100 pixels and marked in white), non-defect (≧100 pixels and marked in yellow), and defect (≧100 pixels and marked in red), such as (a) fractures multiple, (b) debris, (c) hole, (d) spalling large, (e) collapse, (f) open joint, (g) broken, (h) deformed sewer.
+Areas segmented through the MSED approach represent noise (<100pixels and… Fig 20.
+Areas segmented through the MSED approach represent noise (<100 pixels and marked in white), non-defect (≧100 pixels and marked in yellow), and defect (≧100 pixels and marked in red), such as (a) fractures multiple, (b) debris, (c) hole, (d) spalling large, (e) collapse, (f) open joint, (g) broken, (h) deformed sewer.
+To extract the morphological features, area, major axis length, minor axis length, ratio of major axis length to minor axis length (major/minor), and eccentricity, are measured for the sewer pipe defects.
+“Area” is defined as size of sewer pipe defect on CCTV image in pixels.
+“Major axis length” and “Minor axis length” are defined as length of the major axis and the minor axis of the “Area”, respectively.
+“Eccentricity” is a ratio of the distance between the foci and the length of major axis.
+Table 6 lists the morphology measurement of the sewer pipe defects based on their morphology representatives which are marked in red in Figs.
+19(f) and 20(a), (e), (g) and (h).
+Especially for Figs.
+20(a), (c), (d), and (g), remarkably the morphology representatives of the sewer pipe defects consist of multi red regions.
+For each red region, the morphological features are individually measured in this paper.
+Table 6 reveals that a higher ratio of the major/minor gets higher eccentricity.
+Furthermore, the fractures multiple and the spalling large have the significantly high values of major/minor (above 5.0) and eccentricities (above 0.98) that provide meaningful morphological features for discriminating the fractures multiple and spalling large from the other sewer pipe defects.
+Table 6.
+The measured morphological features.
+Pipe defect Region no.
+Area Major axis length Minor axis length Maj/Min⁎ Eccentricity Fractures Multiple 1 617 149.54 26.76 5.5882 0.9839 2 314 50.20 21.66 2.3176 0.9021 Debris – 1871 128.59 88.42 1.4543 0.7261 Hole 1 1333 105.21 62.67 1.6788 0.8032 2 4478 186.91 83.22 2.2460 0.8954 Spalling large 1 1140 159.38 21.34 7.4686 0.9910 2 732 209.25 12.34 16.9571 0.9983 3 1268 318.08 28.92 10.9986 0.9959 Collapse – 12070 343.73 162.75 2.1120 0.8808 Open joint – 7798 340.39 191.20 1.7803 0.8273 Broken 1 2244 154.85 58.12 2.6643 0.9269 2 1766 91.55 51.74 1.7694 0.8250 3 1899 113.54 52.57 2.1598 0.8864 Deformed sewer – 1032 250.46 115.88 2.1614 0.8865 ⁎ The ratio of major axis length to minor axis length.
+For debris, collapse, open joint, and deformed sewer, the average and the standard deviation of major/minor ratio are 1.8770 and 0.3287, respectively, with the eccentricities of 0.8302 and 0.0743, respectively.
+Based on the above statistics, the debris, open joint, and deformed sewer may be well discriminated from each other due to the significant differences of major/minor ratio and eccentricity.
+Although major/minor ratio and eccentricity cannot discriminate the deformed sewer from the collapse due to their similarity, area can be a useful discriminant because the area of the collapse is much larger than the deformed sewer.
+A novel approach of morphological segmentation based on edge detection (MSED) has been presented and applied to find the morphology representatives for the sewer pipe defects on CCTV images.
+Moreover, the opening top-hat operation was also adopted to compare the MSED performance.
+The results indicate that both of the opening top-hat operation and the MSED approach can effectively eliminate the impact of the central area of a CCTV images being always darker than the surrounding.
+For the opening top-hat operation, the different sizes or shapes of structuring elements produced the significantly different segmentation results, and a larger disk structuring element could offer better segmentation result.
+The MSED approach was experimented by giving the different d values in order to find the ideal morphologies for the sewer pipe defects on CCTV images.
+A high d value gets better morphological segmentation; however, over image-growing and -merging should be avoided.
+Although the MSED approach is superior to the opening top-hat operation, some sewer pipe defects, such as debris, hole, and broken, remained incompletely segmented so to hamper the acquisitions of their morphology representatives.
+Thus, it is suggested that various d values should be examined when the MSED algorithm is implemented in the column and row directions in the further study.
+In addition, the morphological features, including area, ratio of major axis length to minor axis length, and eccentricity, may be useful for the discriminant of sewer pipe defects, so the accuracy of diagnosis of sewer pipe defects based on those morphological features should be further estimated.
+1 For interpretation of colour in Figs.
+19 and 20, the reader is referred to the Web version of this article.

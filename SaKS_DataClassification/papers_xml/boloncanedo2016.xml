@@ -1,0 +1,400 @@
+<article>
+  <title>A unified pipeline for online feature selection and classification</title>
+  <abstract>
+    <sentence>With the advent of Big Data, data is being collected at an unprecedented fast pace, and it needs to be processed in a short time.</sentence>
+    <sentence>To deal with data streams that flow continuously, classical batch learning algorithms cannot be applied and it is necessary to employ online approaches.</sentence>
+    <sentence>Online learning consists of continuously revising and refining a model by incorporating new data as they arrive, and it allows important problems such as concept drift or management of extremely high-dimensional datasets to be solved.</sentence>
+    <sentence>In this paper, we present a unified pipeline for online learning which covers online discretization, feature selection and classification.</sentence>
+    <sentence>Three classical methods—the k-means discretizer, the χ2 filter and a one-layer artificial neural network—have been reimplemented to be able to tackle online data, showing promising results on both synthetic and real datasets.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Machine learning</keyword>
+    <keyword>Online learning</keyword>
+    <keyword>Classification</keyword>
+    <keyword>Feature selection</keyword>
+    <keyword>Discretization</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>During the last years and with increasing frequency, real-time production systems generated tremendous amount of data at unprecedented rates, such as network event logs, telephone call records or sensoring and surveillance video streams.</sentence>
+    <sentence>To deal with data streams that flow continuously, classical batch learning algorithms cannot be applied and it is necessary to employ online approaches.</sentence>
+    <sentence>Online data mining consists of continuously revise and refine a model by incorporating new data as they arrive (Wang, Fan, Yu, &amp; Han, 2003).</sentence>
+    <sentence>Note that any online method is inherently incremental.</sentence>
+    <sentence>This type of learning has been applied in fields such as classification of textual data streams, financial data analysis, credit card fraud protection, traffic monitoring and predicting customer behavior (Elwell &amp; Polikar, 2009; Katakis, Tsoumakas, &amp; Vlahavas, 2006; Wang et al., 2003).</sentence>
+    <sentence>Most of these applications present a great challenge for machine learning researches due to the high amount of data available.</sentence>
+    <sentence>Theoretically, it could seem logical that having more features could lead to better results, but this is not always the case due to the so-called curse of dimensionality (Bellman, 1966).</sentence>
+    <sentence>This phenomenon happens when the dimensionality increases and the time required by the machine learning algorithm to train the data increases exponentially.</sentence>
+    <sentence>To overcome these problems, feature selection is a well-known dimensionality reduction technique.</sentence>
+    <sentence>Feature selection consists of selecting the relevant features and discarding the irrelevant ones to obtain a subset of features that describes properly the problem with a minimum degradation of performance (Guyon, Gunn, Nikravesh, &amp; Zadeh, 2006).</sentence>
+    <sentence>A special case of feature selection is known as online feature selection (Glocer, Eads, &amp; Theiler, 2005; Nguyen, Wu, &amp; Mukherjee, 2015; Perkins &amp; Theiler, 2003; Wang, Zhao, Hoi, &amp; Jin, 2014; Wu, Yu, Wang, &amp; Ding, 2010), which can be very useful, being one of the most interesting when a concept drift appears.</sentence>
+    <sentence>This phenomenon is present in situations where the underlying data distribution changes.</sentence>
+    <sentence>These changes make the model built on old data inconsistent with the new data, and regular updating of the model is necessary (Tsymbal, 2004).</sentence>
+    <sentence>Applied to feature selection, a concept drift may cause that the subset of relevant features changes over the time.</sentence>
+    <sentence>In other words, as time goes by, different sets of features become important for classification and some totally new features with high predictive power may appear.</sentence>
+    <sentence>Online feature selection has been faced mostly individually, i.e., by selecting features previously in a single step independent of the online machine learning step, or performing online feature selection without performing online classification afterwards.</sentence>
+    <sentence>Notice that after an online feature selection process, where the set of relevant features changes across the time, the classification algorithm has to be capable of updating its model according not only to new samples but also to new features, limiting the alternatives available capable of coping with both requirements.</sentence>
+    <sentence>Therefore, in this work we propose a method that covers both online feature selection and online learning.</sentence>
+    <sentence>Our proposal includes an algorithm that performs online feature selection and classification at the same time, by modifying a classical feature selection algorithm and introducing a novel implementation for a classification training algorithm.</sentence>
+    <sentence>Among the different feature selection methods available, we chose a representative of so-called filter methods (Guyon et al., 2006) since they are known for being fast, simple, classifier-independent and having a low computational cost (Bolón-Canedo, Sánchez-Maroño, &amp; Alonso-Betanzos, 2013).</sentence>
+    <sentence>Specifically, we reimplemented the χ2 metric (Liu &amp; Setiono, 1995), chosen because of its simplicity and effectiveness, as well as having some characteristics that make it inherently incremental.</sentence>
+    <sentence>However, this filter requires data to be discrete, and thus, well-known k-means discretizer (MacQueen et al., 1967; Tou &amp; González, 1977; Ventura &amp; Martinez, 1995) was also adapted to make it incremental.</sentence>
+    <sentence>The last step of our proposed online pipeline requires an incremental classifier, however, those available in the literature are incremental in the instance space, but not in the feature space.</sentence>
+    <sentence>Up to the authors’ knowledge, a complete pipeline as the one introduced here has not been presented elsewhere.</sentence>
+    <sentence>In fact, the popular machine learning tool Weka (Hall et al., 2009) provides methods able to receive new instances, but they do not support different sets of features, perhaps with different sizes, in each iteration.</sentence>
+    <sentence>Thus, an online training algorithm for one-layer artificial neural networks ANNs is also introduced in this paper, which continuously adapts the input layer to those features, that remind might vary in number, selected at each time.</sentence>
+    <sentence>In order to achieve this, we are presenting a new implementation of our previously proposed algorithm (Fontenla-Romero, Guijarro-Berdiñas, Pérez-Sánchez, &amp; Alonso-Betanzos, 2010), which reaches a minimum error in a few epochs of training and exhibits a higher speed when compared to other classical methods.</sentence>
+    <sentence>Moreover, the structure of this algorithm makes it suitable for a dynamic input space, as happens when selecting features on-line.</sentence>
+    <sentence>In this research, we propose a novel implementation, which continuously adapts the size of the input layer to those features selected at each time.</sentence>
+    <sentence>In summary, the contribution of this paper consists of introducing an approach that uses three components together conforming a pipeline: (a) an online discretizer, (b) an online filter, and (c) an online learning algorithm; that will be applied to either online or large data.</sentence>
+    <sentence>The rest of the paper is organized as follows: Section 2 presents the state of the art in the field of online machine learning, Section 3 describes the method proposed in this research, Section 4 describes the experimental settings, Section 5 shows the experimental results, Section 6 is focused on a case study about the influence of the order of occurrence of the samples (data order) on the performance of the pipeline, finally, Section 7 presents the discussion and conclusions.</sentence>
+  </section>
+  <section name="Background">
+    <sentence>Online learning has become a trending area in the last few years since it allows to solve important problems such as concept drift or managing extremely high-dimensional datasets.</sentence>
+    <sentence>For this reason, advances in this field have recently appeared.</sentence>
+    <sentence>However, online feature selection has not evolve in line with online learning.</sentence>
+    <sentence>Zhang, Ruan, and Tan (2011) proposed an incremental computation feature subset selection algorithm which, originated from Boolean matrix technique, selects useful features for the given data objective efficiently.</sentence>
+    <sentence>Nevertheless, the efficiency of the feature selection method has not been tested with an incremental machine learning algorithm.</sentence>
+    <sentence>Keerthika and Priya (2015) examined various feature reduction techniques for intrusion detection, where training data arrive in a sequential manner from a real time application.</sentence>
+    <sentence>Katakis et al.</sentence>
+    <sentence>(2006) mentioned the idea of a dynamic feature space.</sentence>
+    <sentence>The features that are selected based on an initial collection of training documents are the ones that are subsequently considered by the learner during the operation of the system.</sentence>
+    <sentence>However, these features may vary over time and in some applications an initial training set is not available.</sentence>
+    <sentence>In the approach presented inhere, we are interested in flexible feature selection methods able to modify the selected subset of features as new training samples arrive, in both subset size and specific features selected.</sentence>
+    <sentence>It is also desirable that these methods can be executed in a dynamic feature space that would be empty at the beginning and add features when new information arrives (e.g., documents in their text categorization application).</sentence>
+    <sentence>Katakis et al.</sentence>
+    <sentence>(2006) applied incremental feature selection combined with what they called a feature based learning algorithm to deal with online learning in high-dimensional data streams.</sentence>
+    <sentence>This framework is applied to a special case of concept drift inherent to textual data streams, which is the appearance of new predictive words over time.</sentence>
+    <sentence>The problem with this approach is that they assume that features have discrete values.</sentence>
+    <sentence>Perkins, Lacker, and Theiler (2003) presented a novel and flexible approach, called grafting, which treats the selection of suitable features as an integral part of learning a predictor in a regularized learning framework.</sentence>
+    <sentence>To make it suitable for large problems, grafting operates in an incremental iterative fashion, gradually building up a feature set while training a predictor model using gradient descent.</sentence>
+    <sentence>Perkins and Theiler (2003) tackle the problem in which, instead of all features being available from the start, features arrive one at a time.</sentence>
+    <sentence>Online Feature Selection (OFS) assumes that, for any reason, is not affordable to wait until all features have arrived before learning begins, therefore one needs to derive a mapping function f from the inputs to the outputs that is as “good as possible” using a subset of just the features seen so far.</sentence>
+    <sentence>By Wu et al.</sentence>
+    <sentence>(2010), a promising alternative method, Online Streaming Feature Selection (OSFS), to online select strongly relevant and non-redundant features is presented.</sentence>
+    <sentence>Glocer et al.</sentence>
+    <sentence>(2005) demonstrated the power of OFS in the image processing domain by applying it to the problem of edge detection.</sentence>
+    <sentence>Mao, Yuan, Wu, Qu, and Li (2014) proposed a real-time compressive tracking algorithm based on online feature selection to address the problems of drifting and tracking lost caused by changes in the appearance of the tracked object.</sentence>
+    <sentence>The discriminating features selected are then integrated to construct a classifier to carry out the tracking process.</sentence>
+    <sentence>And Nguyen et al.</sentence>
+    <sentence>(2015) presented an online unsupervised feature selection method for background suppression in video sequences, that allows them to prune the feature set avoiding any combinatorial search.</sentence>
+    <sentence>Finally, some other researches have been found in the literature comprising online feature selection and classification.</sentence>
+    <sentence>Kalkan and Çetisli (2011) presented an online learning algorithm for feature extraction and classification, implemented for impact acoustics signals to sort hazelnut kernels.</sentence>
+    <sentence>Levi and Ullman (2010) proposed to classify images by ongoing feature selection.</sentence>
+    <sentence>However, their approach only uses at each stage a small subset of the training data.</sentence>
+    <sentence>Carvalho and Cohen (2006) performed online feature selection based on the weights assigned to each input of the classifiers.</sentence>
+    <sentence>Note, however, that this method is highly dependent on the classifier.</sentence>
+    <sentence>Another method that is strongly dependent on the classifier was presented by Wang et al.</sentence>
+    <sentence>(2014).</sentence>
+    <sentence>They addressed two different tasks of OFS: (1) learning with full input, where the learner is allowed to access all the features to decide the active ones, and (2) learning with partial input, where only a limited number of features is allowed to be accessed for each instance by the learner.</sentence>
+    <sentence>In a recent work, Roy (2015) proposed an interesting algorithm for streaming big data and for highly parallel implementation on Apache Spark based on Kohonen networks.</sentence>
+    <sentence>It examines some streaming data to select the features with a high discriminative power and then uses those features to learn pattern classifiers.</sentence>
+    <sentence>Kohonen networks trained in the first phase are discarded once features are selected.</sentence>
+    <sentence>So online feature selection has been dealt with mostly on an individual basis, or by performing online feature selection without subsequent online classification.</sentence>
+    <sentence>In the few researches that comprise online feature selection and classification, the methods proposed are highly dependent on the classifier.</sentence>
+    <sentence>Therefore, achieving real-time analysis and prediction for high-dimensional datasets remains a challenge for computational intelligence on portable platforms.</sentence>
+    <sentence>The question now is to find flexible feature selection methods capable of modifying the selected subset of features as new training samples arrive (Bolón-Canedo, Sánchez-Maroño, &amp; Alonso-Betanzos, 2015).</sentence>
+    <sentence>It is also desirable for these methods to be executed in a dynamic feature space that would initially be empty but would add or remove features as new information arrived (e.g., documents in their text categorization application).</sentence>
+    <sentence>In this paper, we propose a unified pipeline that tries to fill the gap detected in the literature.</sentence>
+    <sentence>On the one hand, our proposal is able to modify the selected subset of features as new samples arrive (in both the number and the specific features selected) and, on the other hand, the classifier we include can be updated according not only to new samples but also to new features.</sentence>
+  </section>
+  <section name="Description of the method">
+    <sentence>The proposed method consists of three independent stages that can be used alone or in a pipeline, bearing in mind that the filter requires discrete data.</sentence>
+    <sentence>Besides, we propose a general method that could be applied to a wide range of problems.</sentence>
+    <sentence>As explained before, the method introduced in this research consists of three online stages: discretizer, filter and classifier.</sentence>
+    <sentence>Fig 1 shows the flowchart of this method (parameters k and λ will be explained in the corresponding subsections).</sentence>
+    <sentence>Each step of the methodology and the reimplementation of the algorithms will be following described in depth.</sentence>
+    <sentence>Notice that not all the existing algorithms can be reimplemented to tackle online data, as they need to have some properties that make them inherently incremental (remember that the classifier must be incremental not only in the samples space but also in the feature space).</sentence>
+    <sentence>For this reason, the methods we have chosen to be reimplemented are the k-means discretizer, the χ2 filter, and a one-layer artificial neural network.</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Flowchart of the proposed method.</sentence>
+    <sentence>Discretizer Many feature selection algorithms are shown to work on discrete data, as it is the case of the filter selected in this work (χ2), therefore the first stage of our proposed method is devoted to online discretization.</sentence>
+    <sentence>However, due to the incremental nature of online learning, we cannot assume a range of input values for each feature a priori.</sentence>
+    <sentence>This fact prevents the use of well-known discretization algorithms such as entropy minimization discretization (EMD), equal width discretization (EWD) or equal frequency discretization (EFD).</sentence>
+    <sentence>For this reason, the k-means discretization algorithm (Tou &amp; González, 1977; Ventura &amp; Martinez, 1995) was chosen.</sentence>
+    <sentence>K-means has been selected by Wu et al.</sentence>
+    <sentence>(2008) as one of the most influential algorithms in data mining.</sentence>
+    <sentence>This algorithm moves the representative weights of each cluster along an unrestrained input space, making it suitable for our purposes.</sentence>
+    <sentence>It is important to note that each feature is discretized independently.</sentence>
+    <sentence>This clustering algorithm operates on a set of data points and assumes that the number of clusters to be determined (k) is given.</sentence>
+    <sentence>The partition is done based on certain objective function.</sentence>
+    <sentence>The most frequently used criterion function in k-means is minimizing the squared error ϵ criterion between the centroids μi of clusters and the samples x in those clusters Let C be the set of clusters and |C| its cardinality.</sentence>
+    <sentence>For each new sample x, the discretizer works as follows: • If |C| &lt; k and x ∉ C then i.e., if the maximum number of cluster was not already reached and the new sample is not in C, then create a new cluster with its centroid in x.</sentence>
+    <sentence>• (else) 1.</sentence>
+    <sentence>Find the closest cluster to x.</sentence>
+    <sentence>Update its centroid μ as the average of all values in that cluster.</sentence>
+    <sentence>The method assigns at most k clusters.</sentence>
+    <sentence>Notice that the number of clusters is the minimum between the parameter k and the number of different values in the feature.</sentence>
+    <sentence>It is important to remark that in online methods there is no convergence criterion.</sentence>
+    <sentence>The system is continuously adapted while data arrives.</sentence>
+    <sentence>In Section 5 a discussion on the impact of k on the algorithm is presented.</sentence>
+    <sentence>Filter The χ2 metric (Liu &amp; Setiono, 1995) was chosen because it evaluates each feature based on cumulative statistics concerning the number of times that it appears for a different class, which render it inherently incremental.</sentence>
+    <sentence>So, in our reimplementation, when a new instance appears, the statistics are updated and the evaluation can be calculated without the need of re-processing past data.</sentence>
+    <sentence>The χ2 method evaluates features individually by measuring their chi-squared statistic with respect to the classes.</sentence>
+    <sentence>The χ2 value of an attribute is defined as: (1) where (2) k being the number of intervals (number of different values in a feature), c the number of classes, Aij the number of samples in the ith interval, jth class, Ri the number of samples in the ith interval, Cj the number of samples in the jth class, S the total number of samples, and Eij the expected frequency of Aij.</sentence>
+    <sentence>Note that the size of the matrices is related to the number of intervals.</sentence>
+    <sentence>In this manner, a very large k in the discretizer will lead to a very large size of the matrices A and E. A very large matrix is computationally expensive to update and should be taken into account for real-time applications.</sentence>
+    <sentence>After calculating the χ2 value of all considered features, these values can be sorted with the largest one at the first position, as the larger the χ2 value, the more important the feature is.</sentence>
+    <sentence>This will provide an ordered ranking of features.</sentence>
+    <sentence>To automatically select the important features in an online manner a threshold needs to be added to the original algorithm.</sentence>
+    <sentence>The problem of selecting a threshold for rankers is still one of the open issues in Feature Selection research.</sentence>
+    <sentence>At present, there is not yet a general and automatic method that allows researchers to establish a threshold for any given data set (Bolón-Canedo et al., 2013).</sentence>
+    <sentence>Some authors have tried some kind of automatic threshold that is related with the means and variance of the weights obtained for the features in the rankers (Molina, Belanche, &amp; Nebot, 2002), others with the largest gap between two consecutive attributes (Mejía-Lavalle, Sucar, &amp; Arroyo, 2006).</sentence>
+    <sentence>However, the most frequent approach is to test the results of a classifier after retaining different percentages of the ranked features (Khoshgoftaar, Golawala, &amp; Hulse, 2007), and thus the threshold should be tailored for the specific problem being studied.</sentence>
+    <sentence>In this paper, we propose a threshold λ which works in the following way.</sentence>
+    <sentence>On each iteration, given the χ2 value for each feature, the mean and the standard deviation of these values is computed.</sentence>
+    <sentence>Note that the initial set of features is the full set of features.</sentence>
+    <sentence>For each feature i and iteration t: • if then the feature i is not selected.</sentence>
+    <sentence>• if then the feature i is selected.</sentence>
+    <sentence>• otherwise, the feature i maintains the same state as in the previous iteration.</sentence>
+    <sentence>When λ is 0, the features selected in each iteration fluctuate significantly.</sentence>
+    <sentence>On the other hand, when λ tends to infinity, there is no feature selection process.</sentence>
+    <sentence>A further discussion about the impact of different values of λ can be found in Section 5.2.</sentence>
+    <sentence>Fig 2 shows an example of the use of λ in the filter.</sentence>
+    <sentence>In the current iteration, features with a χ2 value over are selected (features 1, 2 and 9) while features with a χ2 value under are not selected (features 3, 4, 5, 7 and 8).</sentence>
+    <sentence>Those features with a χ2 value between mean ± λstd maintains the same state as in the previous iteration.</sentence>
+    <sentence>In this case, assuming that feature 6 was selected in the previous iteration then it will be also selected now.</sentence>
+    <sentence>Fig 2.</sentence>
+    <sentence>Example of the use of λ in the feature selection process.</sentence>
+    <sentence>Classifier For the classification step of our online pipeline, a one-layer artificial neural network was chosen.</sentence>
+    <sentence>Notice that in online applications, real-time response is often demanded.</sentence>
+    <sentence>Thus, a light-weight machine learning algorithm is an appropriate election.</sentence>
+    <sentence>Moreover, the algorithm must be incremental in both input and sample space, which is not a characteristic supported by most of the available classification algorithms.</sentence>
+    <sentence>In a previous work, we proposed an incremental training algorithm for one-layer ANNs (Fontenla-Romero et al., 2010), which reaches a minimum error in a few epochs of training and exhibits a higher speed when compared to other popular methods.</sentence>
+    <sentence>Besides these characteristics, the structure of this algorithm makes it suitable for a dynamic input space, as it is the case in this research.</sentence>
+    <sentence>A new implementation is proposed herein, so as to be able to continuously adapt the input layer to the features selected in each iteration.</sentence>
+    <sentence>Our proposal is a one-layer neural network which is fast and has the capability of adapting its number of inputs to the number of features that are selected at a given step, adding or removing neurons as needed.</sentence>
+    <sentence>In a one-layer ANN (see Fig 3), the set of equations relating inputs and outputs is given by (3) where I, J, S are the number of inputs, outputs and training samples, respectively, wji is the weight of the connection between the ith input neuron and the jth output neuron, and fj is the nonlinear activation function of jth output neuron.</sentence>
+    <sentence>The system described by Eq (3) has J × S equations in unknowns.</sentence>
+    <sentence>However, since the number of samples of data is often large , in practice, this set of equations and wji is overdetermined and has no solution.</sentence>
+    <sentence>Thus, as the errors ϵjs between the real (yjs) and the desired output (djs) of the network are defined by (4) djs being the desired output for neuron j, and usually the sum of squared errors is minimized to learn the weights wji.</sentence>
+    <sentence>(5) Fig 3.</sentence>
+    <sentence>Architecture of a one-layer ANN.</sentence>
+    <sentence>However, if it is assumed that the nonlinear activation functions fj are invertible (as it is the case for the most commonly used functions), alternatively, the system of equations in Eq (4) can be rewritten in the following way (Fontenla-Romero et al., 2010): (6) where and .</sentence>
+    <sentence>Eq (6) measures the errors in terms of the inputs (xis).</sentence>
+    <sentence>It is important to note that in Eq (6) the unknowns (weights of the network) are not affected by the nonlinear activation function fj, i.e., the error is linear with respect to weights.</sentence>
+    <sentence>Then, an alternative objective function is obtained to be minimized (Fontenla-Romero et al., 2010): (7) whose global minimum can be computed by solving the system of equations obtained by equalizing its derivative to zero: (8) where (9) For every output j, Eq (9) has linear equations and unknowns and, thereby, there exists only one real solution which corresponds to the global optimum of the objective function.</sentence>
+    <sentence>Several computationally efficient methods can be used to solve this kind of systems with a complexity of where I and J are the number of inputs and outputs of the ANN, respectively (Bojańczyk, 1984; Carayannis, Kalouptsidis, &amp; Manolakis, 1982).</sentence>
+    <sentence>Furthermore, this training algorithm is able to learn incrementally since the coefficients Api and bpj are calculated as a sum of terms (see Eq (9)).</sentence>
+    <sentence>Due to the commutative and associative properties of the sum, the same solution is obtained independently of the order of occurrence of the samples.</sentence>
+    <sentence>The structure of the matrices A and b is also suitable for a dynamic space of input features.</sentence>
+    <sentence>On the one hand, removing a feature only comprises removing the row and column corresponding with that feature.</sentence>
+    <sentence>On the other hand, adding a new feature only comprises adding a row and a column of zeros.</sentence>
+    <sentence>Note that a row and a column of zeros in the matrices A and b corresponds with learning from the scratch that feature.</sentence>
+    <sentence>Thus, this method is able to adapt the architecture of the one-layer ANN and deal with changing environments in which the relevant features may be different at one time or another.</sentence>
+  </section>
+  <section name="Experimental evaluation: material and methods">
+    <sentence>The experiments presented in this section are focused on the evaluation of the online method proposed in this work.</sentence>
+    <sentence>The three methods (discretizer, filter and classifier) will be evaluated both independently and also integrated in the unified pipeline.</sentence>
+    <sentence>Materials Five different classification datasets were used during this research.</sentence>
+    <sentence>Corral, LED, and Friedman are synthetic while Connect and Forest were selected from the UCI Machine Learning Repository (Asuncion &amp; Newman, 2007).</sentence>
+    <sentence>Table 1 depicts the characteristics of these datasets: number of features, number of instances, number of classes, and percentage of the majority class.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Characteristics of the datasets.</sentence>
+    <sentence>Dataset No.</sentence>
+    <sentence>features No.</sentence>
+    <sentence>instances No.</sentence>
+    <sentence>classes % maj. class (%) Corral-100 100 10 000 2 56.02 LED-100 100 10 000 10 10.00 Friedman-100 100 10 000 2 54.57 Connect4 42 67 557 3 65.83 Forest 54 101 241 7 48.69 4.1.1.</sentence>
+    <sentence>Corral-100 In this research, a modified version of the CorrAL dataset (John, Kohavi, &amp; Pfleger, 1994) will be used.</sentence>
+    <sentence>The original dataset has four binary relevant features one irrelevant feature f5 and one feature f6 correlated with the output.</sentence>
+    <sentence>Its class value is (f1∧f2)∨(f3∧f4).</sentence>
+    <sentence>This research is not focused on detecting correlation, but on discarding irrelevant features.</sentence>
+    <sentence>The correct behavior for a given feature selection method is to select the four relevant features and to discard the irrelevant ones.</sentence>
+    <sentence>A new dataset called Corral-100 will be employed, consisting of the 4 relevant features plus 96 irrelevant binary features randomly generated.</sentence>
+    <sentence>The LED-100 problem The LED problem (Breiman, 1984) is a simple classification task that consists of identifying the digit that the display is representing.</sentence>
+    <sentence>Given the active leds described by seven binary attributes (seven segments display), the task to be solved is its classification in ten possible classes available .</sentence>
+    <sentence>A 1 in an attribute indicates that the led is active, and a 0 indicates that it is not active.</sentence>
+    <sentence>The LED-100 problem was constructed by adding 93 irrelevant features.</sentence>
+    <sentence>Friedman-100 This synthetic dataset uses a function suggested by Friedman (1991).</sentence>
+    <sentence>It is defined by the equation , where σ(0, 1) is zero mean unit variance Gaussian noise and the inputs are sampled independently from a uniform distribution in the interval [0, 1].</sentence>
+    <sentence>This dataset is a regression task.</sentence>
+    <sentence>We transformed it into a classification task where the goal was to predict class 1 for the examples of output under 15 (prevalence around 55%) and class 2 for the other examples (prevalence around 45%).</sentence>
+    <sentence>The Friedman-100 dataset was constructed by adding 95 irrelevant features to the previous Friedman dataset.</sentence>
+    <sentence>The data for the added features were generated randomly from a uniform distribution [0, 1].</sentence>
+    <sentence>Connect4 This database contains all legal 8-ply positions in the game of connect-4 in which neither player has won yet, and in which the next move is not forced.</sentence>
+    <sentence>The outcome class is the game theoretical value for the first player (win, loss, draw).</sentence>
+    <sentence>The number of features is 42.</sentence>
+    <sentence>All features are categorical with 3 possible values.</sentence>
+    <sentence>Forest This dataset is a classification task with 7 classes (representing forest cover types).</sentence>
+    <sentence>Predicting forest cover type from cartographic variables only (no remotely sensed data).</sentence>
+    <sentence>The actual forest cover type for a given observation (30 × 30 meter cell) was determined from US Forest Service (USFS) Region 2 Resource Information System (RIS) data.</sentence>
+    <sentence>Independent variables were derived from data originally obtained from US Geological Survey (USGS) and USFS data.</sentence>
+    <sentence>Data is in raw form (not scaled) and contains binary (0 or 1) columns of data for qualitative independent variables (wilderness areas and soil types).</sentence>
+    <sentence>The number of features is 54.</sentence>
+    <sentence>Performance measures Discretization is concerned with the process of translating continuous values of features into discrete values.</sentence>
+    <sentence>As a result, some error is committed during the process.</sentence>
+    <sentence>The discrepancy between the exact value and some approximation to it is called approximation error.</sentence>
+    <sentence>The absolute approximation error is defined as the magnitude of the difference between the exact value and the approximation.</sentence>
+    <sentence>Given some value v and its approximation the absolute error is computed as follows: (10) The relative approximation error is the absolute error divided by the magnitude of the exact value, and it is computed as follows: (11) Respect to the filter method, its efficiency was evaluated in terms of precision, recall, percentage of selected features, and stability.</sentence>
+    <sentence>Precision is the fraction of the selected features that are relevant and it is computed as follows: (12) Recall is the fraction of the relevant features that are selected and it is computed as follows: (13) Note that the relevant features of the dataset have to be known to compute these measures.</sentence>
+    <sentence>The percentage of selected features is simply computed as the fraction of the features selected and the total number of features.</sentence>
+    <sentence>To evaluate the stability of the filter the Jaccard index will be used.</sentence>
+    <sentence>The Jaccard similarity coefficient (Paul, 1901) is a measure used for comparing the similarity of two sets of features A and B.</sentence>
+    <sentence>It is defined as the fraction of the cardinality of the intersection and the cardinality of the union of the features (14) In an online environment, the stability of the filter will be related with the set of features selected in the current step in comparison with the set of features selected in the previous step.</sentence>
+    <sentence>Finally, the performance of the classifier is computed in terms of standard classification error (Weiss &amp; Kulikowski, 1990) which is defined as the fraction of samples incorrectly classified over the data.</sentence>
+  </section>
+  <section name="Experimental evaluation: results">
+    <sentence>The experimental results obtained for each of the three methods and the proposed pipeline are presented in this section.</sentence>
+    <sentence>Discretizer For this experiment, we chose the first feature from the Friedman dataset.</sentence>
+    <sentence>Note that every feature in this set is sampled independently from a uniform distribution in the interval [0, 1].</sentence>
+    <sentence>Fig 4 shows the absolute approximation error of the discretizer.</sentence>
+    <sentence>The variable k indicates the number of clusters used in the discretizer.</sentence>
+    <sentence>Notice that the values of the feature appear in random order along the interval [0, 1].</sentence>
+    <sentence>If the values of the features lay approximately along all their possible values the discretizer shows a very fast adjustment to the data, as seen in the graph.</sentence>
+    <sentence>As expected, the larger the number of clusters, the better the adjustment.</sentence>
+    <sentence>Note however that a very large number of clusters increases computations at the expense of a decrement in terms of approximation error that should be evaluated.</sentence>
+    <sentence>For example, using instead of increases computation by 60% but only decreases the approximation error by 20% (from 0.06 to 0.04, see Fig 4).</sentence>
+    <sentence>Note also that a larger number of k implies larger matrices in the feature selection filter.</sentence>
+    <sentence>Fig 4.</sentence>
+    <sentence>Absolute approximation error of the online discretizer in a feature sampled independently from a uniform distribution in the interval [0, 1].</sentence>
+    <sentence>Filter To check the efficiency of the feature selection method proposed, the two synthetic datasets Corral-100 and LED-100 were employed.</sentence>
+    <sentence>We have chosen to use artificially generated data because the desired output is known, therefore a feature selection algorithm can be evaluated with independence of the classifier.</sentence>
+    <sentence>The main advantage of artificial datasets is the knowledge of the set of optimal features that must be selected; thus, the degree of closeness to any of these solutions can be assessed in a confident way.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>5 and 6 show the performance of the feature selection filter for the Corral-100 and LED-100 datasets, respectively, in terms of precision, recall, percentage of selected features, and stability for different values of the parameter λ (threshold for the filter, see Section 3.2 for further details).</sentence>
+    <sentence>Fig 5.</sentence>
+    <sentence>Performance measures of the online feature selection filter in the Corral-100 dataset.</sentence>
+    <sentence>Fig 6.</sentence>
+    <sentence>Performance measures of the online feature selection filter in the LED-100 dataset.</sentence>
+    <sentence>As can be seen in both Figs.</sentence>
+    <sentence>5 and 6, the lower the value of the parameter λ the faster the curve of precision converges.</sentence>
+    <sentence>Moreover, the percentage of selected features is lower but at the expense of a more unstable behavior.</sentence>
+    <sentence>On the other hand, the higher the value of λ the slower the curve of precision converges.</sentence>
+    <sentence>However, the filter shows a more stable behavior, because the number of selected features is larger in this case.</sentence>
+    <sentence>Note that the classifier needs to learn from scratch each new feature.</sentence>
+    <sentence>If the subset of features selected by the filter changes frequently then the classifier will lose partial knowledge many times during the learning process.</sentence>
+    <sentence>Thus an appropriate selection of this parameter plays a crucial role in the different measures, for example in this case appears to be the most sensible solution.</sentence>
+    <sentence>Notice that a large value of the parameter λ will not find the optimum subset of features (the curve of precision does not converge for ).</sentence>
+    <sentence>Classifier The efficiency of the classifier is also shown on the two synthetic datasets Corral-100 and LED-100.</sentence>
+    <sentence>The objective is to train the classifier when the input space is changeable by adding or removing features as happens in online feature selection.</sentence>
+    <sentence>Synthetic datasets are useful here to check the impact in terms of classification error when adding or removing relevant features.</sentence>
+    <sentence>Data were divided using holdout validation, i.e., a subset of samples is chosen at random to form the test set and the remaining observations are retained as the training set.</sentence>
+    <sentence>In this research, the 10% of data were used for testing while the 90% were used for training.</sentence>
+    <sentence>In other words, after a new training sample arrives and the model is updated, its performance is tested on the 10% data left as test set.</sentence>
+    <sentence>Regarding the set of features selected in each step, three different situations were considered: • The set of selected features contains all relevant features and none irrelevant.</sentence>
+    <sentence>• The set of selected features contains all relevant features and some irrelevant.</sentence>
+    <sentence>• The set of selected features contains some relevant features and some irrelevant.</sentence>
+    <sentence>Fig 7 shows the classification error in the Corral-100 and LED-100 datasets when the input space changes.</sentence>
+    <sentence>Fig 7(a) shows the performance of the classifier on the Corral-100 dataset in the following situations, • From 1 to 3000 samples, the set of selected features contains all (4) relevant features and 96 irrelevant.</sentence>
+    <sentence>• From 3001 to 5000 samples, the set of selected features contains all relevant features and none irrelevant.</sentence>
+    <sentence>• From 5001 to 8000 samples, the set of selected features contains 2 relevant features and some irrelevant.</sentence>
+    <sentence>• From 8001 to 10000 samples, the set of selected features contains 1 relevant feature and some irrelevant.</sentence>
+    <sentence>Fig 7.</sentence>
+    <sentence>Classification error of the classifier.</sentence>
+    <sentence>As can be seen in Fig 7(a), the classifier reaches its minimum classification error in few epochs.</sentence>
+    <sentence>At this point, if the set of selected features is reduced to contain only relevant features (from 3001 to 5000 samples), the classifier maintains its performance.</sentence>
+    <sentence>However, if the set of selected features only contains some of the relevant features (from 5001 to 10000 samples), the classification error of the classifier increases because it is only able to converge to a local minimum.</sentence>
+    <sentence>As expected, the lesser the relevant features selected the worse the performance of the classifier.</sentence>
+    <sentence>It is also interesting to check the performance of the classifier when adding relevant features.</sentence>
+    <sentence>In a similar manner to above, Fig 7(b) shows the performance of the classifier on the LED-100 dataset in the following situations, • From 1 to 1000 samples, the set of selected features contains all (7) relevant features and 94 irrelevant.</sentence>
+    <sentence>• From 1001 to 3000, the set of selected features contains 3 relevant features and 44 irrelevant.</sentence>
+    <sentence>• From 3001 to 5000 samples, the set of selected features contains 5 relevant features and 94 irrelevant.</sentence>
+    <sentence>• From 5001 to 10000 samples, the set of selected features contains all relevant features and 44 irrelevant.</sentence>
+    <sentence>As can be seen in Fig 7(b), the classifier improves its performance according as the set of selected features contains more relevant features.</sentence>
+    <sentence>Notice that if only some (or none) relevant features are selected as the set of current features, the classifier is only able to reach a local minimum.</sentence>
+    <sentence>Finally, as can be inferred from both Fig 7(a) and (b), the online classifier proposed in this research is able to efficiently adapt its structure to changes in the input feature space.</sentence>
+    <sentence>Pipeline For testing the unified pipeline (discretized plus filter plus classifier), the classification error will be used along with the number of features selected.</sentence>
+    <sentence>Note that a slight degradation in the performance of the classifier may be acceptable if the number of features is significantly reduced.</sentence>
+    <sentence>The following procedure was followed for each new sample: 1.</sentence>
+    <sentence>Discretize the sample using the k-means discretizer.</sentence>
+    <sentence>Select the most relevant features using the χ2 filter.</sentence>
+    <sentence>Update the one-layer ANN using those features.</sentence>
+    <sentence>Compute the test classification error and the percentage of selected features.</sentence>
+    <sentence>The goal here is to compare the performance of the system with and without feature selection.</sentence>
+    <sentence>The experimental setup was the same as in the previous section.</sentence>
+    <sentence>Data were divided using holdout validation, 10% of data were used for testing while the 90% were used for training.</sentence>
+    <sentence>After a new training sample arrives, the model is updated and its accuracy is measured on the 10% data left as test set.</sentence>
+    <sentence>This type of validation is appropriate because the size of the datasets is large.</sentence>
+    <sentence>Moreover, every experiment was repeated 10 times in order to ensure unbiased results.</sentence>
+    <sentence>Finally, a Kruskal–Wallis test (Wolfe &amp; Hollander, 1973) was applied to check if there are significant differences among the medians of the methods for a level of significance .</sentence>
+    <sentence>If there are differences among the medians, we then applied a multiple comparison procedure (Hsu, 1996) to find the method whose performance is not significantly different from the method with the best mean performance.</sentence>
+    <sentence>In this work, a Tukey’s honestly significant criterion (Hsu, 1996) was used as multiple comparison test.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>8–10 show the classification error of the online classifier and the percentage of features selected by the online filter in Friedman, Connect4 and Forest datasets, respectively.</sentence>
+    <sentence>Note that the percentage of selected features when no features selection is applied ( ) is always 1.</sentence>
+    <sentence>For purposes of simplicity, only the first 10, 000 samples are shown.</sentence>
+    <sentence>The classifier and the filter maintain their behavior for the remainder samples.</sentence>
+    <sentence>Fig 8.</sentence>
+    <sentence>Performance measures of the proposed method in Friedman dataset in which means that no feature selection was applied.</sentence>
+    <sentence>Fig 9.</sentence>
+    <sentence>Performance measures of the proposed method in Connect dataset in which means that no feature selection was applied.</sentence>
+    <sentence>Fig 10.</sentence>
+    <sentence>Performance measures of the proposed method in Forest dataset in which means that no feature selection was applied.</sentence>
+    <sentence>In any case, the statistical tests indicate that the classification error obtained when no feature selection is applied is similar to that obtained when the less aggressive λ is used, with the additional advantage, in this last case, that only 37%, 44% and 56% of the relevant features are used for Friedman, Connect4 and Forest, respectively.</sentence>
+    <sentence>If a more aggressive feature selection is performed, the percentage of features used for learning is significantly reduced but at the cost of a significant higher error.</sentence>
+    <sentence>Finally, the issue of selecting the parameter λ in real datasets is an open question.</sentence>
+    <sentence>It will depend, on the first term, on the tradeoff between accuracy and speed (lower or higher number of features) and, on the last term, it will need to be determined by trial and error.</sentence>
+    <sentence>As a rule of thumb, we suggest not using very low lambda values (next to 0.0) because it will tend to select smaller sets of features, consequently the filter will have a more unstable behavior.</sentence>
+  </section>
+  <section name="Experimental evaluation: a case study on data order">
+    <sentence>In this section we introduce an exhaustive analysis of how the order of appearance of the samples affects the performance of the machine learning algorithms chosen in this work, an important aspect for on-line algorithms.</sentence>
+    <sentence>In the previous experiments, samples appeared in a random order.</sentence>
+    <sentence>However, notice that in an online environment data may arrive in a certain order, i.e., following biased distributions of data.</sentence>
+    <sentence>It is possible that either all the data keep the same distribution, or that a so-called concept drift appears, leading to data following different distributions at different times of the process.</sentence>
+    <sentence>Discretization In Section 5.1 we have shown discretization experiments when the values of the feature (the first feature of Friedman dataset) appeared in a random order along the interval [0, 1].</sentence>
+    <sentence>However, as the discretizer is not order independent, it is also important to check its efficiency when data arrives in a certain order.</sentence>
+    <sentence>The curve of error depicted in Fig 11 assumes a certain order of appearance of samples.</sentence>
+    <sentence>In particular, the values of the feature are as follows: • From 1 to 250 samples its values lay in [0, 0.33].</sentence>
+    <sentence>• From 250 to 500 samples its values lay in [0.34, 0.66].</sentence>
+    <sentence>• From 500 to 750 samples its values lay in [0.67, 1].</sentence>
+    <sentence>• From 750 to 1000 samples its values lay in [0, 1].</sentence>
+    <sentence>Fig 11.</sentence>
+    <sentence>Absolute approximation error of the online discretizer in a feature, the first one of Friedman dataset, sampled independently from a uniform distribution in the interval [0, 1], with biased order of appearance of samples.</sentence>
+    <sentence>As can be seen, the discretizer is also able to tackle with biased distributions of the values of a feature by storing past knowledge.</sentence>
+    <sentence>At the end, the centroids of the clusters are located in averaged positions along the samples.</sentence>
+    <sentence>Thus, the discretizer is considered to be quite robust to biased distributions.</sentence>
+    <sentence>Finally, Fig 12 displays the curve of error of each execution when the feature values appear in random order.</sentence>
+    <sentence>In this experiment, 1000 samples extracted from a uniform distribution in the interval [0, 1] were employed.</sentence>
+    <sentence>For each value of k (number of clusters), 50 executions were carried out.</sentence>
+    <sentence>As expected, the larger the number of clusters, the larger the number of samples needed to reach the minimum error.</sentence>
+    <sentence>It is interesting to note that this experiment proves that the order of appearance is not critical given a certain number of samples, since the error of each execution converges to similar values.</sentence>
+    <sentence>Fig 12.</sentence>
+    <sentence>Absolute approximation error of the online discretizer of each execution when the feature values appear in random order (first feature of Friedman dataset).</sentence>
+    <sentence>Feature selection In an online scenario, data order can also affect the feature selection process, so an experiment was carried out on Friedman dataset.</sentence>
+    <sentence>For this sake, 10 features are considered, where the first five are relevant and the remaining ones are irrelevant (see Section 4.1.3).</sentence>
+    <sentence>The dataset used consists of 2000 samples where the order of appearance was randomly generated in each one of the 100 executions.</sentence>
+    <sentence>For the discretization stage, different values of k (number of clusters) were employed, from 1 to 100.</sentence>
+    <sentence>After seeing the whole dataset, the χ2 value of each feature is computed.</sentence>
+    <sentence>Fig 13 shows the distance between the minimum and maximum χ2 values of the relevant and irrelevant features, respectively –i.e., the minimum margin between relevant and irrelevant features.</sentence>
+    <sentence>The pale lines represent each one of the 100 executions, whilst the mean ± standard deviation are also displayed in bold lines.</sentence>
+    <sentence>The margin increases until around and from this point on, it stabilizes.</sentence>
+    <sentence>In this case, data order seems to have a low impact on the performance of the filter because the maximum standard deviation is around 10%.</sentence>
+    <sentence>Fig 13.</sentence>
+    <sentence>Minimum distance between relevant and irrelevant features according to χ2 values on Friedman dataset.</sentence>
+    <sentence>Classification Finally, we test the influence of data order when the last step of classification is included in the learning process on Forest dataset.</sentence>
+    <sentence>So far, it has been shown that the data order has little influence on the discretizer (see Section 5.1) and consequently, on the filter (see Section 5.2).</sentence>
+    <sentence>Fig 14 displays the effect of the data order on the proposed pipeline.</sentence>
+    <sentence>The parameter λ was established to 0.8, since it has been proved to obtain a good performance with this dataset.</sentence>
+    <sentence>The training dataset used consists of 5000 balanced samples where the order of appearance was randomly generated in each execution.</sentence>
+    <sentence>For assessing the classification error, a set of 1000 independent samples was used, and a total of 100 executions were accomplished.</sentence>
+    <sentence>Fig 14.</sentence>
+    <sentence>Data order effect on the overall pipeline in Forest dataset.</sentence>
+    <sentence>On the one hand, Fig 14(a), (c) and (e) (first column) depict the classification error trace of each execution for different values of k (number of clusters for the discretization stage).</sentence>
+    <sentence>On the other hand, Fig 14(b), (d) and (f) (second column) display the percentage of times that a feature is selected in average for all the executions, again for different values of k. Remind that the smaller the k, the more information is missed in the discretization step.</sentence>
+    <sentence>For this reason, when it can be seen that there are more differences among the different executions.</sentence>
+    <sentence>This fact may be caused by the information lost in the discretization stage, which also affects to the features selected by the filter, resulting in an irregular classification, where the data order plays an important role.</sentence>
+    <sentence>However, when k increases, the behavior of the pipeline is more stable and independent of the order, as can be seen in Fig 14(c) and (e).</sentence>
+    <sentence>The classification error decreases and the stability of the selected features raises.</sentence>
+    <sentence>Finally, Fig 14(g) visualizes the average classification error for the three values of k tested.</sentence>
+    <sentence>As can be seen, the classification error improves notably from to higher values, whilst no significant differences are found between and .</sentence>
+    <sentence>In light of the above, it seems reasonable to select the lowest value for k without compromising the classification error.</sentence>
+    <sentence>In this case, might be the optimal, since it converges to the same error than and decreases computations, as mentioned in Section 5.1.</sentence>
+  </section>
+  <section name="Discussion and conclusions">
+    <sentence>In this work, we have presented a complete pipeline (covering discretization, feature selection and classification) which is capable of continuously updating its model to learn from online data.</sentence>
+    <sentence>One of the strengths of the proposed method is that it consists of three independent stages that can be used alone or in a pipeline.</sentence>
+    <sentence>Up to the authors’ knowledge, there is no other work in the literature that covers efficiently these three stages, since some of the existing approaches apply feature selection in an off line fashion (because the online classifiers cannot deal with changing subsets of features) or they apply online feature selection but then this is not connected with an online classification stage.</sentence>
+    <sentence>Therefore, the main advantage of our proposed method is that it allows researchers to perform both online feature selection and classification.</sentence>
+    <sentence>The key contributions of this paper are the following ones: • Adaptation and reimplementation of the χ2 filter to perform online feature selection.</sentence>
+    <sentence>• Since the χ2 filter requires data to be discrete, adapting the k-means discretizer to be used in an online fashion.</sentence>
+    <sentence>• The adaptation of a learning algorithm for one layer neural network to be incremental not only in the instance space, but also in the feature space, allowing for feature subsets that changes, increasing or reducing in number during the learning process.</sentence>
+    <sentence>• Since an important aspect of on-line algorithms is the impact of data order on the performance of the methods, this issue is specially assessed, showing the robustness of the method.</sentence>
+    <sentence>This is crucial in some real life environments in which concept-drift situations might appear.</sentence>
+    <sentence>However, although to the best of our knowledge a complete pipeline as this one has not been presented elsewhere, our proposal has some limitations.</sentence>
+    <sentence>Most of all, it is important to notice that not all the machine learning methods available in the literature can be adapted to deal with online data.</sentence>
+    <sentence>Therefore, although more sophisticated learning methods exist, they cannot be adapted to learn in an online manner, and we had to choose simpler models such as the χ2 filter and an ANN.</sentence>
+    <sentence>Although simple, the chosen methods demonstrated to be adequate for this type of learning, exhibiting promising results, both separately and when combined in a pipeline.</sentence>
+    <sentence>Experimental results showed that the classification error is decreasing over the time, adapting to the appearance of new data.</sentence>
+    <sentence>Plus, the number of features is reduced while maintaining the classification performance.</sentence>
+    <sentence>Another restriction, which is not specific of the pipeline, but general for machine learning methods (including preprocessing methods, such as discretization and feature selection), is the need for parameter estimation, that should be adapted to each problem under consideration.</sentence>
+    <sentence>At this respect, some general recommendations are given through the specific subsections of the paper, although this issue is still an open problem, in which researchers are still working.</sentence>
+  </section>
+</article>

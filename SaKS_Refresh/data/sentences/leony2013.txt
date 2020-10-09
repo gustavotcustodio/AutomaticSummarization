@@ -1,0 +1,215 @@
+One of the challenges of intelligent systems for education is to use low-level data collected in computer environments in the form of events or interactions to infer information with high-level significance using artificial intelligence techniques, and present it through visualizations in a meaningful and effective way.
+Among this information, emotional data is gaining track in by instructors in their educational activities.
+Many benefits can be obtained if an intelligent systems can bring teachers with knowledge about their learner’s emotions, learning causes, and learning relationships with emotions.
+In this paper, we propose and justify a set of visualizations for an intelligent system to provide awareness about the emotions of the learners to the instructor based on the learners’ interactions in their computers.
+We apply these learner’s affective visualizations in a programming course at University level with more than 300 students, and analyze and interpret the student’s emotional results in connection with the learning process.
+Learning analytics has emerged as a new powerful tool (Campbell, Deblois, & Oblinger, 2007).
+Current technology-enabled educational scenarios generate large amounts of data about the interactions of learners with course material, tools and with other learners.
+The collection of this data is the first of three stages that compose the cycle of a learning analytics process (Clow, 2012).
+Solutions for collecting this low level data from different distributed sources have been proposed such as the Contextualized Attention Metadata approach (Wolpers, Najjar, Verbert, & Duval, 2007) where data is stored as XML.
+The information can also be stored in other formats as RDF (Muñoz-Merino et al., 2010).
+Low-level data is analyzed and processed in a second stage, with the goal of inferring higher-level information that can be used to improve the learning experience for both instructor and the learner.
+Visualizations are an important artifact to represent this information and can be of low or high level data (Soller, Martínez Monés, Jermann, & Muehlenbrock, 2005).
+Students can use visualizations for self-reflection (Florian, Glahn, Drachsler, Specht, & Fabregat, 2011) (Govaerts, 2010), but visualizations for providing awareness of students to teachers is also an important aspect, as supported by the fact that the relationship stakeholders are more interested for learning analytics is in teachers helping their students (Drachsler & Greller, 2012).
+The design and development of intelligent systems that are able to transform from low-level educational data into information that is meaningful for teachers using artificial intelligence techniques is a challenge.
+This high level information requires a processing of the low level data and includes the generation of visualizations that are at the same time easy to understand by stakeholders but also complete enough so that important details about the learning process are not obscured.
+An example of higher-level information valuable by instructors is the emotion that a learner is feeling in a given moment.
+There is evidence of the relationships of emotions and learning (Goleman, 1995; Klein, Moon, & Picard, 2002; Zakharov, 2007) and a consequence is that teachers can use their students’ affective knowledge for improving learning.
+Therefore, it is common for educational practitioners to consider the emotions of learners in order to intervene accordingly (Baker et al., 2006; Zakharov, 2007).
+For instance, when a learner is feeling frustrated the instructor might intervene with an explanation of the topic being studied by the learner.
+Similarly, if a learner is enthusiastic the instructor might want to take advantage and try to achieve more difficult learning challenges.
+These interventions occur in the third stage of the learning analytics cycle.
+In order to intervene, the instructor must be aware of the emotional state of the learners at an individual and group level.
+It is a challenge how to represent the emotional information and which information to show in an intelligent system so that instructors can intervene easily and with a complete and precise information derived from low-level data.
+In this paper, we propose a set of visualizations to provide awareness of the emotions inferred.
+These high-level visualizations have been applied in a programming course with 334 students, in the context of higher education, in a second course of a degree at Universidad Carlos III de Madrid.
+We show how teachers can analyze and interpret the learner’s emotional results in connection with the learning process based on the visualizations given by the intelligent system.
+The rest of this paper is structured as follows.
+Section 2 presents a review of the literature related to the visualization of emotions in learning scenarios, as well as other visualizations for learning analytics.
+In Section 3 we briefly explain the mechanisms to collect data and to infer emotions based on the low-level data.
+Section 4 describes the proposed visualizations to provide awareness of emotions and presents the results for learners of a programming course, while Section 5 presents a discussion of the visualizations as well as future work.
+One of the shortcomings of several expert systems is the difficulty for presenting powerful but at the same time easy to understand visualizations for the stakeholders about the inferences that are the result of certain processing of data.
+Research about how to obtain easy to use and interpret visualizations for involved stakeholders in these systems has been addressed in several works.
+In this direction, an improved visualization method for self-organizing map is proposed for making easier to understand the related information (Shieh & Liao, 2012), or some techniques have been applied for visualization of blogs (Tsai, 2011) Visualizations related to the learning process are an important issue.
+Different works presented useful visualizations for technology enhanced learning that do not include emotions.
+These visualizations include resource accesses over time (Mazza & Milani, 2005), detailed information about the interactions with exercises and hints (Khan Academy, 2012), activities on an LMS (Zhang, Almeroth, Knight, Bulger, & Mayer, 2007), number and types of events and items (Govaerts, Verbert, Duval, & Pardo, 2012; Leony, Pardo, de la Fuente Valentín, Sáanchez de Castro, & Delgado Kloos, 2012; Santos, Govaerts, Verbert, & Duval, 2012) or social interactions (Schmitz et al., 2009).
+Nevertheless, only few works have addressed the visualization of emotions in a learning context.
+Most of the existing works represent emotions as a color palette that matches each emotional state with a different color (Tian, Zhang, Li, Zheng, & Yang, 2011).
+In addition, most works focus on the detection of emotions in texts based on semantic analysis (Krcadinac, Jovanovic, & Devedzic, 2012).
+In this line, Skynesketch (Krcadinac et al., 2012) is a tool integrated in Moodle that recognizes emotions from text and is able to represent some emotions during time.
+Our approach supports representations of emotions over time as in (Krcadinac et al., 2012) but we recognize emotions based on the sequence and user interactions with learning resources instead of with text recognition.
+For this reason, our approach enables the presence of other visualizations such as the learning causes of emotions.
+Furthermore, our approach gives new visual high level representations for emotions, e.g.
+if learners are constant or change a lot in their emotions, or emotional connections with final grades.
+In order to explain the visualizations presented later in this paper, this section explains the raw data originally collected in a learning activity and the methodology used to analyze and process such data to infer emotions.
+The evaluation and accuracy of the model to detect emotions described below are out of the context of the paper, which focuses in the visualizations to provide awareness of learners’ emotions.
+The data described in this section has been collected in a C programming course of a second year of an engineering degree.
+The duration of the course was four months and data was recorded during laboratory activities done in the university and when learners did homework on a provided environment.
+Learning environment and data collection Learners are provided with a virtual machine with all of the tools they need during the term.
+The virtual machine is also configured to record the interaction of learners with a set of applications.
+Some tools are specific to the domain of the class (compiler, debugger, memory profiler, command prompt and code versioning system) while others are of generic use (text editor and web browser).
+The interaction with the listed tools, including the time and type of action performed by the learner, is stored in a file known as log.
+Learners are asked to submit their work through a control versioning system; along with their work the tool logs are sent to the server following a piggyback approach.
+Given that logs stored in the central server have different formats according to the tool information they contain, they must be normalized.
+Logs are parsed and inserted into a database that follows the Contextualized Attention Metadata (CAM) format (Wolpers et al., 2007).
+For more information of the data collection process, Romero Zaldívar et al.
+provide further details in (Romero-Zaldívar, Pardo, Burgos, & Delgado Kloos, 2012).
+Inferring emotions from low-level data Several models relate the occurrence of events to the appraisal of emotions (Ding & Marchionini, 1997; Ortony, Clore, & Collins, 1990; Roseman & Evdokas, 2004; Scherer, 2000).
+A common characteristic among the models is that events are classified as favorable or unfavorable towards the achievement of a goal.
+In our setting, the goal of the learner is to complete a learning activity successfully.
+This has been the main characteristic to define a model to translate event sequences to emotional states.
+Given the need to detect patterns in a sequence of observations, we are using Hidden Markov Models (HMM).
+HMMs have two sets of elements: set of possible observations and a set of states.
+Three arrays of probabilities define the behavior of the model: a vector of probabilities for each state to be the initial one, a matrix of probabilities for each state to generate each possible observation, and a matrix of transitions between states.
+Our model defines five states in the HMM: Working on task, finding a problem, looking for solution, solving a problem, and being distracted.
+The set of observations is defined by the actions that the learner can perform in the virtual environment.
+Some examples of the observations are compiling a program successfully, compiling a program unsuccessfully, editing a program, visiting course material in the browser, and visiting web content other than the course material.
+The transition probabilities between states are different for each emotion.
+For the visualizations we will focus on four emotions: happiness, frustration, confusion and boredom.
+Although the last two are classified usually as cognitive states, we include them in the models given the option to map them with action patterns.
+For example, a confused learner in our scenario tries to program on a trial-and-error approach.
+A bored learner would most likely do tasks unrelated to the learning activity such as browsing web content other than course material.
+Then, we calculate the probability for a sequence of observations to be generated by the model of each emotion and map that probability to a scale from zero to one that indicates the level of the emotion in that moment.
+In this section we present several visualizations with the main objective of reflecting the emotional state of the learners, as individuals and as a group.
+Time-based visualizations The timeline visualization (Fig 1) presents the fluctuations of each emotion for a given learner whose identity has been kept private.
+The X-axis represents the timeline, starting from date when the learner generated her first event, until the date when the learner generated her last event.
+The Y-axis represents the level detected for the emotion.
+As explained previously, the emotion level in our model goes from zero to one.
+Timeline visualization of the emotion levels during a term Fig 1.
+Timeline visualization of the emotion levels during a term.
+In the example figure, the learner had a peek of confusion and frustration by late September.
+In addition, the instructor can observe that by early November there was a peek of boredom detected in the learner; and the emotions kept in a controlled range during the rest of the term.
+In addition, the visualization annotates interesting points that fall outside of a threshold, as well as the learning event that is related to that emotional state.
+The method used to identify the outstanding points is based on selecting those points higher than the mean plus a standard deviation.
+In the example, the highest peak occurs right after the learners had a problem to compile her program.
+Thus, an instructor is able to identify when a learner is experiencing an extraordinary emotion.
+The instructor is also able to identify the event that caused the change of emotion in the model.
+This data combined give the instructor a considerable amount of intervention to act into the learning activity and assist the learner.
+It is possible to superimpose the evolution of all students’ emotions over time in the plot (as in Fig 1 but including all students).
+Furthermore, the mean for the emotions of the classroom can be included.
+This is very useful to detect e.g.
+students with problems because are under the mean most of the time, students with punctual problems in the time, or periods where the emotion of most students are weak.
+In the latter case, instructors can think in reviewing the learning activities during this period, as they produced a specific emotion for most students.
+The visualization of daily accumulated events by their associated emotion is our other proposal of a time-based visualization.
+As seen in Fig 2, the visualization displays two aspects that are of interest for the instructor: the daily activity of the learner, deduced from the amount of events generated that day, and the emotion that was associated to each of those events.
+In the example, the learner was very active during the last week of October, but her activity was practically null the first two weeks of December.
+The color of confusion is not green as in the rest of the visualizations in order to distinguish it better from the boredom bar.
+Daily accumulative of events grouped by emotions Fig 2.
+Daily accumulative of events grouped by emotions.
+Context-based visualizations The objective of this set of visualizations is to reflect the learning context in which the emotions were detected.
+This can help to understand the learning causes of some emotions.
+The first proposal in this set is the visualization of emotions by tool and type of emotion (Fig 3).
+This visualization shows the occurrences of events generated by a specific learner when expressing a given emotion and using a specific tool.
+With this type of graphic, instructors can know which tools generated better affective states to their students.
+In addition, comparing this type of graph with the mean of the classroom can lead to introduce clusters of students depending on the different effects generated by different tools.
+Emotions of events by tool and type of emotion for two given learners Fig 3.
+Emotions of events by tool and type of emotion for two given learners.
+In the example, the learner on the left felt confused, frustrated and even got bored while using the memory profiler (Valgrind, third from left to right).
+The compiler (GCC, first on the left) shows a similar level of confusion and frustration but these are overcome by the large amount of events associated to happiness.
+It is also worth noticing that the level of boredom while using the text editor (Kate, second from left to right) is relatively high compared with other emotions; this likely means that the learner constantly interrupted her programming task by accessing web content unrelated to the class.
+As a point of comparison, the learner on the right generated many events associated to confusion while using the memory profiler.
+The amount of events is even more than twice of those of the compiler.
+This indicates that the learner is having issues in particular with the memory profiler tool, and the instructor could reinforce topics related to the topic of memory management.
+Another concept proposed as a context for emotions is the final score that the learners obtained in the course.
+The emotion, score and activity visualizations (Fig 4) display the relation between learners’ emotions, the amount of events they generated in the learning scenario, and their final score in the course.
+Emotion, score and activity visualizations Fig 4.
+Emotion, score and activity visualizations.
+Unlike the previous visualizations, the score-related visualizations are not created upon the dataset of only one learner but upon the whole class group.
+This allows a direct comparison of the scores obtained by learners and their relation to the emotions that each learner expressed the most during the term.
+In the visualization on the left of Fig 4, each circle or globe corresponds to the emotion of a learner, and a set of concentric globes represents a learner.
+One different color is used for each different type of emotion.
+The occupied area is proportional to the level of the emotion.
+In some cases the circle is close to be of only one color, which means that this was the predominant emotion for a user.
+The position of the globe set on the X axis is defined by the final grade that the learner obtained in the course.
+Learners pass the course with a grade of 5.0, thus every learner on the left half of the square failed to pass while the right half passed the class successfully.
+The Y axis is set according to the amount of events received from the learning environment.
+The closest a learner is to the bottom of the square, the less active she was during the learning activities of the class.
+Learners at the top of the square are outliers that generated large amounts of events.
+The separation between the ratios of the circles depends on the average level for each emotion.
+The set of circles is sorted by size in descendant order, meaning that those circles with a large cyan circle in the center have felt more confused in average than those with a small cyan circle.
+One example that illustrates this difference is the two outliers at the top.
+The confusion area on the one that failed to pass the course is rather larger than the one on the right, who actually passed the course.
+A second version of the globes visualization is included on the right of Fig 4.
+The same information is contained in this representation but the number of events is not taken into account.
+The X axis is still associated to the final score of the learner in the course, and the size of the globes is also ruled by the average level for the given emotion and the given learner.
+There are two significant changes in this version.
+First, a learner is not represented by concentric circles anymore but by a set of circles aligned vertically.
+The second difference is that he position at Y axis is fixed according the reflected emotion.
+From both of these last visualizations, it is interesting and also expected to see learners with a high level of confusion to fail the course.
+In general, it is also interesting that for most learners the feeling of happiness was the highest one, disregarding whether they passed the class at the end of not.
+In addition, happiness and boredom are the predominant emotions for students with high scores and few events.
+Visualizations of change in emotion The third type of visualizations is related to changes of emotions during the learning activity.
+The visualization is this category (see Fig 5) is about the changes of emotions produced by each tool that the learner used.
+The example shows this information for the same learners of the Fig 3.
+It is interesting to see that actually the memory profiler (Valgrind) generated most of the changes into the state of confusion, while the compiler (GCC) provoked changes to the state of happiness.
+Visualization of tools that provoked emotion changes for two learners Fig 5.
+Visualization of tools that provoked emotion changes for two learners.
+The learner on the right shows a different pattern although with some similarities.
+Compiler and web browser keep (firefox) on causing the learner fall into the happiness emotion, but here the web browser does not provoke to fall into the confusion state.
+In addition and unlike the first learner, command prompt (bashcmd) and text editor (Kate) are relevant tools for the learner to feel confused.
+An additional characteristic of interest for the instructor is the constancy for each emotion expressed by the learner.
+The definition of constancy used in this work is the standard deviation of each emotion detected.
+An example of this visualization is provided in Fig 6, composed of four panels, one for each of the histograms of the constancy level.
+The 1green histogram corresponds to the constancy level of confusion, and in this case it shows how many learners are indeed consistent on their level of confusion.
+A similar insight can be obtained from the boredom category, colored cyan.
+However, frustration and happiness (red and blue, respectively) indicate that the learner have fluctuated more than in the other emotions.
+Histograms of the constancy of each emotion during the term Fig 6.
+Histograms of the constancy of each emotion during the term.
+Visualizations of accumulated information In this set we include four visualizations that represent the emotions of the whole class during the term.
+The objective of this kind of visualizations is to provide the instructor with a complete overview of the emotions expressed by learners in her class.
+This information is used to act on a specific learner but to analyze aspects that affect the group (e.g.
+learning material, environment and tools).
+The first visualization is a pie graph of the average level of each emotion for the whole group of learners.
+The example (Fig 7) shows that the average level is almost the same among the emotions.
+Happiness level is slightly higher than the rest of emotions, being the one frustration rather smaller.
+Average levels of emotion for the group of learners Fig 7.
+Average levels of emotion for the group of learners.
+The second visualization in this set shows the total amount of events from each tool and associated to each emotion.
+It is interesting to see that happiness is the predominant emotion during the observation of events.
+The command prompt is the tool mostly used during the course and also the one that generated the most events associated with happiness.
+As it could be foreseen, the tool that learners used the most while feeling bored was the web browser, giving that they used it to access external web content.
+The next visualization is the average level of each emotion while using each tool in the learning activity.
+While the highest level of happiness is shown by the command prompt as in the previous visualization, there are other points worth to analyze.
+First, the level of happiness is maintained at a medium point by most of the tools, except memory profiler, development environment (kdevelop) and debugger (gdb).
+Although this could mean these tools had a negative impact on the learners’ happiness in general, it should also be considered that the tools are also the least used (refer to Fig 8).
+Compare for example the happiness average between the text editor (Kate, third from left to right) and the development environment (seventh from left to right); although learners do similar tasks on them, the text editor shows a considerable higher average level of happiness.
+Thus, the comparison is affected by the how much learners used each tool.
+Number of events by tool and emotion for all learners Fig 8.
+Number of events by tool and emotion for all learners.
+Another interesting fact shown in Fig 9 is the high level of confusion shared by tools like the LMS (moodle, first on the left) and the web browser.
+This indicates that learners tried to solve their programming errors by looking for explanations in the class material, and also by looking for information in any other web site.
+Average level of each emotion by tool Fig 9.
+Average level of each emotion by tool.
+As expected, command prompt and compiler are the tools that show the highest averages of confusion and frustration in learners.
+This fact relies also on the model used to infer emotions since having a problem while compiling a program is one of the events most associated to those emotions.
+The last visualization (Fig 10) is built using the same information than the previous one (i.e.
+the average level of each emotion when using each tool, for all learners).
+The difference relies on the information being presented in a radial format rather than linear.
+The learning tools are allocated around the circumference having four angular bars each.
+The ratio of each bar within the circumference is set by the average level of the associated emotion.
+Radial visualization of the average level of each emotion by tool Fig 10.
+Radial visualization of the average level of each emotion by tool.
+We have presented ten types of visualizations to provide awareness of the affective state of learners and we have applied them in the context of education in a programming course.
+These visualizations are high level information that is derived as a result of a processing from low level data of users’ interactions with different technological educational tools.
+The visualizations are grouped in four categories: time-based, context-based, emotional changes, and accumulated information.
+Time-based visualizations allow the instructor to analyze the changes of each emotion during the term of the class.
+The instructor is then able to see any pattern in the emotional changes of the learner and to know what caused the learner to change an emotion abruptly.
+An interesting use of these visualizations is to analyze academic and social activities that occurred when the changes of emotions appear.
+For example, emotion of learners is expected to change during the exam period of the university.
+Examples of social activities that could affect the emotion that learners show in class are relevant sport events or political announcements.
+Context-based visualizations were presented as a way to analyze the effect of contextual elements onto a learner’s emotions.
+Our proposals focused on two contextual elements: learning tools and final grades.
+Other options to be considered could be learning material in order to detect specific content that affects negatively the learning experience.
+Another important part of context is learner location localization, since this could provide valuable information about on how emotions are affected by doing a learning activity at home instead of the university.
+These new elements can also be analyzed in the context of changes of emotions and allow solving questions like: Does the place where the learning activity is done provoke a change of emotion?
+What place generates more frustration when a learner uses the compiler?
+Do learners get more bored at home than at the university?
+Future work includes the evaluation of the visualizations proposed in this paper.
+We are planning two evaluations, one performed by experts in the area of emotions in learning scenarios and another one with instructors of the course represented in the visualizations.
+The main purpose of the evaluation is to identify those visualizations that better reflect the emotions of the learners, thus helping the instructor to be aware of the emotional context of her learning activities.
+Another possible line of work is the implementation of these visualizations into a system accessible to instructors through the whole term.
+In this line, the chosen approach could be to implement several modules into Gradient Learning Analytics System (LearnGLASS) (Leony et al., 2012).
+Finally, we are also interested on designing new visualizations by enhancing or by combining the ones proposed in this paper.
+This approach could include also the exploration of including dynamic or interactive elements into the visualizations.
+Thus, the visualization could use movement to represent variations in emotional information along dimensions such as time, person, learning tool, and learner location.
+1 For interpretation of color in Fig 6, the reader is referred to the web version of this article.

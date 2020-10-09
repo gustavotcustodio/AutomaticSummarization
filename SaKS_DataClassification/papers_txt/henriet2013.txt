@@ -1,0 +1,341 @@
+Introduction of a combination vector to optimise the interpolation of numerical phantoms
+
+Abstract
+
+Phantoms are 3-dimensional (3D) numerical representations of the contours of organs in the human body. The quality of the dosimetric reports established when accidental overexposures to radiation occur is highly dependent on the phantom’s reliability with respect to the subject. EquiVox is a Case-Based Reasoning platform which proposes an interpolation of the 3D Lung Contours (3DLC) of subjects during its adaptation phase. This interpolation is conducted by an Artificial Neural Network (ANN) trained to learn how to interpolate the 3DLC of a learning set (LS). ANN is a well-suited tool when known results are numerous. Since the cardinality of our learning set is restrained, the imperfections of each 3DLC have a great impact on interpolations. Thus, we explored the possibility of ignoring some of the 3DLC of LS via implementation of a new learning algorithm which associated Combination Vectors (CV) to LS. The results proved that this method could optimise interpolation accuracy. Furthermore, this study highlights the fact that some of the 3DLC were harmful for some interpolations whereas they increased the accuracy of others.
+
+Keywords
+Interpolation
+Adaptation
+Optimisation
+Case-Based Reasoning
+Artificial Neural Network
+
+1. Introduction
+
+In the case of accidental exposure to radiation, a dosimetry evaluation must be established as soon as possible for each subject. In most cases, this evaluation is based on available 3D voxel phantoms, numerical models created from medical images to represent the subject’s organs with maximum realism. Examples of voxel phantoms for dosimetric assessment following internal contamination or external exposure can be found (Broggio et al., 2009; Huet et al., 2009). However, even when medical images are available, the subject’s specific phantom is not always accessible since its construction is delicate. Moreover, medical images are avoided so as to prevent any additional exposure to radiation. Thus, existing models are used even if their characteristics differ from the subject’s biomedical data. Dosimetry assessment accuracy and the resulting decontaminating medical actions are nevertheless highly dependent on the similarity between phantom and subject. Hence, the actual work aims at assisting the physician in choosing the fittest phantom from the existing ones available.
+
+EquiVox is a platform based on Case-Based Reasoning (CBR) which is a problem solving method that uses similar solutions from similar past problems in order to solve new problems (Kolodner, 1993). CBR is a tool for retrieving, adapting, revising and storing experiences. A large number of CBR designed for Health Science (CBR-HS) can be found (Bichindaritz, 2008). Combinaisons with other Artificial Intelligence tools can also be found in Diaz, Fdze-Riverola, and Corchado (2006), El Balaa, Strauss, Uziel, Maximini, and Traphoner (2003) and Monati (2007). EquiVox is a CBR-HS system that uses an AI tool (ANN) during its adaptation phase. The ambition of EquiVox can be seen as giving parameters and tools so as to create prototypical cases (Bichindaritz, 2007) or samples for underrepresented classes of subjects (Little, Colatino, Salvetti, & Perner, 2009). In addition, EquiVox provides an adaptation tool which can create missing samples. Nevertheless, its adaptation knowledge acquisition is automatic since based on the training of an ANN, thus not very intelligible as highlighted by M. D’Aquin et al. in D’Aquin, Lieber, and Napoli (2006). B. Pandey and R.B. Michra also proposed a CBR-based systems that uses ANN but during the retrieval phase (Pandey & Michra, 2009).
+
+Many adaptation strategies can be found in the literature. Adaptation by generalisation/specialisation requires a hierarchical organisation of the CBR source cases according to generalisation/specialisation relations. Some characteristics are hidden in the generalisation process whereas special ones are added to the general case during the specialisation process. Adaptation using Adaptation Rules (Melis, Lieber, & Napoli, 1998) consists of computing a solution for a target case applying a function which takes as its parameters the target case, a source case that presents some similarities and its solution. Differential Adaption (Fuchs, Lieber, Mille, & Napoli, 2000) is based on the evaluation of the variations between the source and target cases: an approximate solution of the target case is computed by applying the variations between the two cases to the solution for the source case under consideration. Conservative Adaptation (Lieber, 2007) is based on the Revision Theory which considers knowledge updates. This kind of adaptation consists of minimising the modifications to be applied to the knowledge. A cost for the possible adaptations must be computed. The EquiVox adaptation phase is based on rules known from experience. After having retrieved the phantom the most similar to the subject’s thorax (Bopp, Henriet, Chebel-Morello, Makovicka, & Broggio, 2009; Henriet et al., 2010), EquiVox proposes an original tool based on Artificial Neural Networks (ANN) (McCulloch & Pitts, 1943) to create the 3D contour of the subject’s lungs (Henriet et al., 2012) during the CBR adaptation phase (Farah et al., 2011). The present study goes a step further since it introduces a new concept capable of determining the best subsets of phantoms for the construction of Contours in 3 Dimensions of the Lungs (3DLC) of a given subject with the greatest accuracy.
+2. Requirements, hypothesis and method
+
+A large number of phantoms can be found in the literature (ICRP89, 2002; ICRUReport48, 1992; Kramer, Zankl, Williams, and Dexter, 1982; Tanaka, Kawamura, and Nakahara, 1979; Xu, Chao, and Bozkurt, 2000; Zankl et al., 1988; Zubal et al., 1994), and radiation protection is also divided into numerous sub-domains. Indeed, some phantoms are commonly used by experts for external radiotherapy, while different ones are used by other physicians for evaluation of internal doses received. In fact, each expert has his own set of 10 to 20 phantoms. When a physician’s usual phantoms are all too distant from the subject, the expert must create a new one. Using interactive 3D dilatations and contractions, physicians modify the contours of the 3D organs of their phantoms until they correspond to those of the subject. They then put them together and obtain the final phantom on which the computations will be based (Farah, Broggio, & Franck, 2011). Thus, adaptation rules are guided by the experience and knowledge of the experts. EquiVox is able to produce the same transformation process automatically, without human intervention, using an ANN (Henriet et al., 2012). ANN is an interpolation tool which requires a training phase. For the 3DLC construction of EquiVox, the training set was the entire set of known 3DLC (Farah, Broggio, & Franck, 2010).
+
+Nevertheless, we assumed that if the subject is a baby, for example, it is relevant to learn how to create 3DLC using an ANN trained on a set of known 3DLC of other babies and to exclude adult ones. Thus, in this study we propose to optimise the subjects’ 3DLC construction, taking into account their specific characteristics after the ANN training. We introduced a vector to express whether or not it was relevant to include each known 3DLC in the learning set of subject characteristics: the Combination Vector for Interpolation Optimisation (CVIO).
+2.1. The EquiVox platform
+
+Fig. 1 presents the technologies that were used and the data flows over the EquiVox architecture. All the phantoms are stored in Rhino3D files (Kramer et al., 1982). Their characteristics are stored in a database (data flow #0 in Fig. 1), the lung contours are extracted (data flow #1) and then transmitted to the ANN training module (data flow #2) which creates the ANN (data flow #3). When a new phantom is required (flow #4), the target case description is transmitted to the retrieval module (data flow #5) which determines the similarity and confidence indices taking into account the source case (data flow #6). If required by the experts, the lung adaptation module sends the characteristics of the source cases (data flow #7) to the ANN interpolation module (data flow #8) which loads the trained ANN (data flow #9) and the coordinates of the contour of the lungs in question (data flow #10) in order to create interpolated contours suited to the target case (data flow #11). Then, the experts can edit and modify manually (create the other organs) the adapted solution of the target case (i.e. the interpolated 3DLC, flow #12) and eventually retain it if the entire 3D phantom is satisfying (flow #13).
+Data flows over EquiVox architecture
+
+   
+
+Fig. 1. Data flows over EquiVox architecture.
+
+The adaptation module of EquiVox is not complete yet. Since lungs are the first organs that are designed by experts, we focused on their adaptation while the EquiVox retrieval phase is able to compare the entire phantoms. Thus, the adaptation module of EquiVox deals with the Lung Contours in 3 Dimensions (3DLC). Other studies have been begun to focus on the adaptation of the other organs. Thus, the revision process (flow #12) can only be performed manually at this state of the work.
+2.1.1. Case modelisation
+
+When radiation overexposure occurs, a dosimetric report must be established for all subjects. For each one, the experts’ first task is to choose the most accurate 3D phantom considering the information known about the subject. Each phantom has its own characteristics and is chosen by comparing subjects’ available measurements and information to their characteristics. The phantom is thus chosen by analogy.
+
+We exhausted the list of useful characteristics furnished by the physicians of the French Institute of Radiation and Protection (IRSN).
+
+Thus, in EquiVox, a problem is described as a set of r descriptors {d1, … , dr}.
+
+Each expert has his own set of n phantoms: SP = {P1, ,… , Pn}.
+
+Each Pi is the solution part of a case and represents the contours of m organs:
+
+.
+
+Each organ O is a set of q points joined by a Delaunay mesh (Christensen, 1994):
+where
+
+denotes the 3D coordinates of point j of organ O of phantom Pi. O ∈ {lung, heart, liver, sternum, ribs, scapulae, spine, breasts, skin, oesophagus and thorax}.
+
+Finally, a case i is:
+
+. We will note the target case as t.
+2.1.2. Adaptation of 3DLC
+
+Once a matching case is retrieved (Bopp et al., 2009), the expert can decide either to use the the most similar source-case phantom, or to require the EquiVox platform to generate a new phantom, adapting the source cases to the target one. Indeed, if some available phantom measurements are too different from those of the subject, the expert may decide to adapt one of them or even to create a new phantom which may be reused for other problems later. Thus, when the expert requires the generation of a new phantom, the contours of the m organs are expected.
+
+Actually, the first organs that experts create in such a personalised process are the lungs. The positions and volumes of the other organs are deduced from those of the lungs. Thus, we first considered the adaptation of 3DLC.
+2.1.2.1. Solution space modelisation for 3DLC
+
+As previously presented, the 3DLC of phantom Pi are defined in 3D by a set of q points joined by a Delaunay mesh:
+where denotes the 3D coordinates of point k:
+
+. For each 3DLC, q is equal to 26,723 points. The points were plotted in the same order and in the same Cartesian coordinate system. Thus, the task of the lung contour-adaptation phase of EquiVox consists of interpolating the 3D coordinates of the points of t in the same order and in the same Cartesian coordinate system. A Delaunay mesh can then be applied so as to create the contours of the lungs of t.
+2.1.2.2. Adaptation rules
+
+In fact, lung contours and volumes depend mostly on the height of the subject. Indeed, for the lungs, Clairand et al. (2000) proved that the height of a person prevailed for their geometry and volume.
+
+Thus, when experts decide to create the 3DLC of a subject, they choose the one from the stored phantom whose height is the closest without taking into account any other characteristic. The adaptations are usually done manually, applying mathematical transformations (2D and 3D contractions and dilations (Farah et al., 2011)). These transformations are carried out through 3D modelling tools (such as Rhinoceros (McNeel, 2003) or CATIA (Dassault Systems, 2011)).
+2.1.2.3. Method
+
+Since the mesh and the number of points are not variable, the adaptation must be carried out on the point coordinates of the lung contours, point by point. Since no formal equation exists, we had to discover through a learning method the rules that transform the coordinates of the points on one lung contour into other coordinates.
+
+Consequently, data-driven methods using inductive reasoning are the most suitable approaches; ANN and Fuzzy-ANN respond to these requirements. We chose ANN as the tool for this step, assuming this could serve as the basis for further work with Fuzzy-ANN if the first results were not convincing.
+
+We explored the possibility of using a multi-layer perceptron trained with a backpropagation-based method. Other interpolation methods were tested: polynomial and Spline ones (cf. Section 2.1.2.5).
+2.1.2.4. ANN inputs, outputs and topology
+
+To interpolate the 3DLC, the patient’s height must be known. Actually, this is one of the descriptors of the EquiVox target and source cases. Let us note hi the descriptor corresponding to the height of the case i and ht, the height of the target case t.
+
+An ANN with 9 inputs and 3 outputs was designed. Two phantoms were considered:
+
+•
+
+    The source case inf for which hinf is inferior and the closest to ht.
+•
+
+    The source case sup for which hsup is superior and the closest to ht.
+
+The trained ANN interpolates the 3 coordinates of each point of the lung contours separately. Thus, the 9 inputs permitting interpolation of the coordinates
+of point k of t are:
+
+•
+
+    The 3 coordinates of point k of the lung contours of inf: 
+
+    .
+•
+
+    The height of inf: hinf.
+•
+
+    The 3 coordinates of point k of the lung contours of sup: 
+
+    .
+•
+
+    The height of sup: hsup.
+•
+
+    The height of the target case: ht.
+
+The designed ANN is perceptron having one hidden layer. Ten neurons are on the hidden layer with a sigmoid activation function. The activation function of the neurons belonging to the output layer is linear.
+
+Such topologies were also chosen and successfully tested on the NEMOSIS platform (Laurent et al., 2011) for a similar issue: considering a point inside the patient’s lung, at both the initial and final position (maximum and minimum respiration respectively), a similar ANN interpolated the positions of the point during an entire breathing cycle with an error inferior to the spatial resolution of the medical images on which the point had been plotted. For NEMOSIS, the number of neurons on the hidden layer was optimised using a validation set in addition to the learning set used for the learning step. In the case of EquiVox, regarding the small number of 3DLC (12 3DLC), we decided not to consider a validation set. Thus, the learning set was composed of 9 3DLC, while the 3 remaining 3DLC belonged to the test set. We assumed that such a topology would deliver sufficiently accurate results. Nevertheless, such a strategy to optimise the number of neurons on the hidden layer would have to be implemented in later work.
+
+In Fig. 2, the 9 heights of the 3DLC P1 to P9 used for the training are reported on the axis. The 3 heights of the 3 new 3DLC T1, T2 and T3 are also reported on the same axis. All the thorax organs are represented in P1 to P9 whereas only the lungs were drawn in T1, T2 and T3.
+Available 3DLC
+
+   
+
+Fig. 2. Available 3DLC.
+2.1.2.5. ANN learning set and training step
+
+Training ends when the difference between the expected and the obtained values is minimised. Hsieh (2009) distinguished four algorithms based on the backpropagation method:
+
+•
+
+    The BFGS method (Broyden-Fletcher-Goldfarb-Shanno) is a quasi-Newton method, which approximates the value of the Hessian matrix of the second derivatives of the function to be minimised.
+•
+
+    The L-BFGS method (Limited memory–BFGS) is an adaptation of the BFGS method which optimises the computational resources to use. Both of these methods must be coupled with a Wolfe linear search in order to determine an optimal step size between two iterations.
+•
+
+    The Rprop (Resistant backpropagation) method proposes a first order algorithm, but its complexity increases linearly with network topology.
+•
+
+    The iRpropPlus method is one of the fastest and also one of the most accurate algorithms (Vasseur et al., 2008). This evolution of the Rprop method allows some synaptic weight updates to be cancelled in the neural network if a negative effect is observed.
+
+All of these methods were previously implemented and tested in the EquiVox adaptation phase of 3DLC. Different required precisions were also tested. The coordinates of 10 points were randomly extracted from the 3DLC of P1 to P9 and a cross validation was performed. Table 1 shows that the algorithm giving the best interpolations is that which used BFGS as backpropagation method and that obtained a precision equal to 10−6. Thus, the chosen ANN configuration has been compared to a polynomial (Newton, of degree 2) and a Spline interpolation method. The Newton interpolation function proposed by Ponce and Brette (2006–2007) and the Spline one proposed by Scilab (Digiteo, xxxx) were implemented with Scilab 5.3.2. For each method, a cross-validation for the same 10 points was undertaken using the same 3DLC of P1 to P9. Fig. 3 presents the mean distances between interpolated and expected coordinates. This figure shows that the polynomial interpolation produced the greatest errors among the three tested interpolations. A factor nearly equal to 10 can be observed between the polynomial interpolation and that of the Spline or the ANN. The Spline and the ANN interpolations gave closer errors. Nevertheless, for all the tested cases, the ANN interpolation errors were inferior to the Spline ones 6 times and were equal only once. These results prove the superiority of the ANN interpolations over the other methods since the ANN interpolation gave a more accurate result in all the tested cases.
+
+Table 1. ANN configuration (learning method and required precision) obtaining the best preliminary results.
+	Phantom height	Required precision	Best learning method
+ANN	1783.1	1E−006	BFGS
+interpolations	1807.1	1E−006	BFGS
+	1830.3	1E−006	BFGS
+Mean distances obtained between interpolated and expected coordinates for 10…
+
+   
+
+Fig. 3. Mean distances obtained between interpolated and expected coordinates for 10 points and 3 interpolation algorithms.
+2.2. The Combination Vector for Interpolation Optimisation
+2.2.1. Previous performance of the ANN interpolation of EquiVox
+
+Tests were previously performed with the entire learning set LS = {P1, … , P9} to interpolate the Test Set TS = {T1, … , T3}. The heights of each Ti has been carefully chosen to test all the possible cases: as shown in Fig. 2, the height of T1 is just above the smaller stored one (P1), the third one (T3) is just below the higher stored one (P9), and the second (T2) is in the middle of the stored panel of heights. Since the 3DLC alone were designed for the 3DLC of TS, these ones were used only for these last tests and not stored in the EquiVox case-base, nor were they used during the ANN learning. In addition, the same manual creation process was followed for all 3LDC of LS and TS.
+
+Table 2 shows the mean distances observed between the interpolated and expected points for each ht. The mean distances vary from 0.55 mm to 1.65 mm. The calculations of dosimetric reports are usually computed using a voxelised phantom. The commonly used voxel dimensions are 1.8 mm by 1.8 mm by 4.8 mm (Farah et al., 2011, 2010). The largest mean error is equal to 1.65 mm (inferior to the spatial resolution of commonly used phantoms). Thus, all the 3DLC generated by this ANN can be used to establish dosimetric reports.
+
+Table 2. Mean error between ANN and expected outputs associated with target case height.
+Value of the descriptor “height” of the target case (ht) [mm]	Mean error [mm]	Std error [mm]
+1650	1.65	0.53
+1790	0.55	0.18
+1850	0.80	0.37
+2.2.2. Optimisation of the ANN learning set
+
+Nevertheless, this adaptation strategy is based on 3DLC that may contain errors in comparison with the expected lung contours of a real subject: these contours are already representations of reality with uncertainties. Thus, biases might be introduced by one or more incorrectly designed 3DLC. The ANN implemented in the EquiVox adaptation phase for 3DLC may reduce the impact of these errors since an ANN is an interpolation tool, but the purpose of this study is to verify the accuracy of LS to construct one particular 3DLC. We explored the possibility that a sub-set of LS could give more accurate results.
+
+We introduced u vectors Vi to stipulate weather each 3DLC was used or excluded from LS:
+We also introduced two functions, for the local c() and global C() combinations respectively and defined as:
+
+2.2.3. Cardinality
+
+As explained in sub-section II-A-2-d, not all the possible learning sets obtained with C() allowed the interpolation of the 3DLC of TS. Let’s note Cardi the cardinality of
+which allows the construction of Ti, and L the cardinality of LS.
+
+Proposition 1
+
+Proof 1
+
+On the one hand, in order to interpolate Tk, a minimum of 3 3DLC must be included in the learning set, and a minimum of one 3DLC in
+and one in .
+
+•
+
+    There are 2L vectors in V.
+•
+
+    There are 
+
+    possibilities such that fewer than 3 3DLC are chosen among LS.
+•
+
+    Card(LSinf) = j.
+•
+
+    Card(LSsup) = L − j.
+•
+
+    There are 
+
+    possibilities such that exactly 3 to j 3DLC of LSinf are chosen and no LSsup.
+•
+
+    There are 
+
+    possibilities such that exactly 3 to (L − j) 3DLC are chosen of LSsup are chosen and no LSinf.
+
+Consequently,
+
+2.2.4. New ANN learning algorithm
+
+A new algorithm for the learning phase was also implemented. Indeed, in the first algorithm LAglobal, the backpropagation ended when the global mean square error between expected and computed coordinates considering all the points of all the 3DLC was inferior to 10−6 (cf. sub-section II-A-2-e). Thus, one mean square error was found for the entire learning set in LAglobal.
+
+In the new version of the learning phase, the algorithm LACVIO computed the mean square error between expected and computed coordinates considering all the points of each 3DLC. Thus, in this new version, if the vector was v, there were Card(C(v)) mean square errors, and the backpropagation algorithm was applied until each error was inferior to 10−6.
+3. Results
+
+The results presented in Figs. 4–6 show the accuracy obtained according to the Combination Vector (CV). In these figures, the red1 lines are the accuracies obtained using CV1 = (1, 1, 1, 1, 1, 1, 1, 1, 1) and LAglobal, and the green lines the accuracies obtained using CV1 and LACVIO. Only accuracies inferior to those obtained with CV1 and LAglobal are reported.
+Best results obtained interpolating the 3DLC of T1
+
+   
+
+Fig. 4. Best results obtained interpolating the 3DLC of T1.
+Best results obtained interpolating the 3DLC of T2
+
+   
+
+Fig. 5. Best results obtained interpolating the 3DLC of T2.
+Best CV for the interpolation of T3
+
+   
+
+Fig. 6. Best CV for the interpolation of T3.
+3.1. Results for TC1
+
+Fig. 4 shows the lesser errors obtained and the CV used with LACVIO to interpolate T1. The error obtained with CV1 and LAglobal is about 0.16 mm (the red line). The error obtained with CV1 and LACVIO is about 0.04 mm (the green line). Fig. 4 shows that 51 CV showed errors inferior to CV1 and LAglobal. We can also note that 10 CV among these 51 allowed interpolation of T1 with smaller errors than CV1 and LACVIO. These CV excluded some of the 3DLC from LS.
+
+The CV of the “top 6” are reported in Table 3. The best CV for the interpolation of T1 are the ones that excluded P6 and P7, and used all the others. Also noteworthy is that the second configuration excluded P5 and P6, and included all the others. This last CV is also one of the best for T2 and T3. In addtion, we note that CV1 does not figure in this “Top 6”: it was not necessary to learn how to construct all the 3DLC to obtain the most accurate 3DLC for T1. 3 CV excluded 2 3DLC, 2 CV excluded 1 3DLC, and 1 CV excluded 3 3DLC. Finally, only one CV of this “Top 6” included P6.
+
+Table 3. CV of the “ Top 6 ” for T1.
+									
+3.2. Results for TC2
+
+Fig. 5 reports that the CV with which the interpolated 3DLC of T2 were more accurate than the 3DLC interpolated using CV1 and LAglobal. The error obtained using CV1 and LAglobal was superior to 0.04 mm (the red line) whereas the error obtained using CV1 and LACVIO was inferior to 0.04 mm (the green line). The error with 27 CV were inferior to CV1 and LAglobal, and 10 CV among them excluded some of the 3DLC of LS.
+
+Table 4 presents the 6 best CV: 4 of them excluded 2 3DLC, 1 CV excluded 1 3DLC, and 1 CV excluded 3 3DLC. The CV which excluded P5 and P6 appears also in this Table ranked #6. Furthermore, P6 is systematically excluded from the CV of this “Top 6”.
+
+Table 4. CV of the “ Top 6 ” for T2.
+									
+3.3. Results for TC3
+
+Fig. 6 shows the 13 CV that allowed greater accuracy than CV1 and LAglobal for the interpolation of T3. The mean square error obtained interpolating T3 using CV1 and LAglobal was equal to 0.07 mm (the red line) whereas 0.04 mm using CV1 and LACVIO. One subset of LS permitted greater accuracy than CV1 and LACVIO.
+
+Table 5 shows the “Top 6” best CV: 2 CV excluded 2 3DLC, 2 CV excluded 1 3DLC, and 1 CV excluded 3 3DLC. CV1 ranks #2 and the CV that excluded P5 and P6 is at rank #4. For this 3DLC, P6 was excluded twice from the CV of this “Top 6”.
+
+Table 5. CV of the “ Top 6 ” for T3.
+									
+
+These results prove that it was possible to optimise the ANN interpolation excluding some of the 3DLC from the learning set. The CVIO improved the accuracy of the construction of personalised 3DLC.
+3.4. 3DLC inclusion and exclusion
+
+Nevertheless, the example of P6 is interesting: P6 was excluded from most of the best learning sets for T1 and T2 whereas it was required in most of the best learning sets for T3. Thus, we studied the impacts of the 3DLC on the interpolation accuracy of T1, T2, and T3. For each 3DLC of TS, we extracted the “Top 20” best and the “Top 20” worst CV. We then counted the number of times each 3DLC of LS appeared in the “Top 20” best and in the “Top 20” worst.
+
+Table 6 shows the ranking for T1. P1 and P3 were almost always used in the best learning sets. P2 ranks #2, before P4, P8, P7, P6 (ex-aequo with P9), and finally P5. This ranking has to be put in the perspective of the ranking for the worst learning sets. For the former, P1 was also always used, then come P2, P7 ex-aequo with P8, before the others in the following order: P3, P6 and P9, P5 and P4. Since it is not possible to interpolate T1 without P1, it is absolutely normal for P1 to be first for these 2 rankings. We can note that P3 and P4 are in good positions in the “Top 20” best and in the worst position in the “Top 20” worst. In contrast, P7 is among the worst ranks of the bests and the best ranks of the worsts. Thus, P7 seems to introduce a bias in the learning set. Consequently, we can deduce from Table 6 that P1, P3 and P4 are required whereas P7 is to be excluded from the learning set in order to optimise the interpolation of T1.
+
+Table 6. 3DLC rankings for T1.
+Rank	In the “Top 20” best CV	In the “Top 20” worst CV
+1	P1, P3	P1
+2	P2	P2
+3	P4	P7, P8
+4	P8	P3
+5	P7	P6, P9
+6	P6, P9	P5
+7	P5	P4
+
+Table 7 presents the rankings for T2. P8 is at the top of the best, before P9, P7, P3 and P4. Then come P1, P2, P5 and P6, whereas P3 is at the top of the worst before P1, P2 and P7. Then come P9, P4 and P8 (ex-aequo), and finally P5. Thus, we can note the positive influence of P8 whereas P1, P2 and P3 seem to perturb the accuracy of the interpolations of T2.
+
+Table 7. 3DLC rankings for T2.
+Rank	In the “Top 20” best CV	In the “Top 20” worst CV
+1	P8	P3
+2	P9	P1, P2, P7
+3	P7	P9
+4	P4, P3	P4, P8
+5	P1, P2, P3	P5
+6	P6	P6
+
+As it is always required for the interpolation of T3, P9 is at the head of the rankings in Table 8. For the best learning sets, this 3DLC comes before P1, P8, P4, P7 ex-aequo with P6, followed by P3, and finally P2 and P5 (ex-aequo). For the “Top 20” worst, P9 is followed by P3, P2, P1 and P4, P5, P6, P7 and P8. Thus, P8 is required whereas P3 and P2 should be excluded in order to optimise the interpolation of T3.
+
+Table 8. 3DLC rankings for T3.
+Rank	In the “Top 20” best CV	In the “Top 20” worst CV
+1	P9	P9
+2	P1	P3
+3	P8	P2
+4	P4	P1, P4
+5	P6, P7	P5
+6	P3	P6
+7	P2, P5	P7, P8
+
+At last, Table 9 presents the global ranking for all the 3DLC of TS. P3 was used in most of the best learning sets, then come P2, P4 and P8, before the others. P1, P6 and P9 are the last of this ranking. P9 was used in most of the worst learning sets, then P6 ex-aequo with P8. At last P4, P5 and P3 appear. These last rankings tend to prove that the use of P3 in the learning phase ensures good interpolations, but it is the opposite when considering the rankings of T2 and T3. Furthermore, P6 and P9 seem to introduce a bias in the general case. This tends to prove that it is necessary to divide the definition domain into sub-domains since the learning of each 3DLC of LS has a very different influence over the interpolation of each 3DLC of TS.
+
+Table 9. 3DLC rankings for T1, T2, and T3.
+Rank	In the “Top 20” best CV	In the “Top 20” worst CV
+1	P3	P9
+2	P2, P4, P8	P6, P8
+3	P5	P2, P7
+4	P7	P1, P4, P5
+5	P1, P6	P3
+6	P9	
+4. Discussion
+
+This study enables us to imagine a new kind of adaptation strategy between the one based on rules and the Conservative one: the Fuzzy Adaptation. Indeed, in our application domain, there are different and (sometimes) conflicting rules (described by different trained ANN) that can be applied to compute a solution. Moreover, some of the source cases introduced distortions for the interpolation of one particular case, whereas they were strongly required in order to obtain an accurate result in other cases. Noting sol(pbs) as the solution to a problem of the source case pbs, and pbt the problem of the target case, an adaptation rule is commonly defined as a set of 2 elements (r, Ar) where r is a relation between pbs and pbt, and Ar(pbs, pbt, sol(pbs)) a function that computes a solution corresponding to pbt. The adaptation using the rules consists of factorising the solution of the target case into solutions for elementary problems.
+
+In our application, more than one rule can be used for adapting a problem: considering (pbs, pbt, sol(pbs)), the set of rules R, a rule Ri ∈ R is a set of 2 elements
+
+. Our ambition is to explore the possibility of combining and creating new rules from the set of rules specified by experts Rexp ⊂ R.
+
+For this purpose, we define the operator +R as the operator of combination for 2 rules and the operator ·R as the operator of restriction.
+
++R:R × R → R and ·R:FuzzyCV × R → R, where FuzzyCV is a set of Fuzzy Combination Vectors.
+
+It is now possible to define Card(Rexp) weights wi associated to each Ri ∈ Rexp.
+
+Consequently, the adaptation of a problem in the Fuzzy Adaptation will be resolved through a rule defined as a combination of a set of rules specified by experts:
+
+.
+
+A future study will have to specify in greater detail the terms of the combination and restriction operators.
+5. Conclusion
+
+We proposed a study of the construction of patient 3DLC interpolating a subset of the entire learning set (LS) available to us. The results obtained show the value of this method since it stresses the optimisation of accuracy when the interpolation tool is learned using a subset of LS. These subsets depended on the person’s height. This new algorithm (LACVIO) forced the learning phase to continue until the mean square error between the coordinates expected and interpolated of each 3DLC of the subset was inferior to a determined precision, whereas the older version of the learning algorithm (LAglobal) took into consideration the global mean square error (considering all the 3DLC).
+
+The best subset of LS for each 3DLC of our Test Set (TS) was different from the others: one 3DLC guaranteed optimal precision for the interpolation of one 3DLC of TS when it was used in the learning phase, whereas the same one introduced a bias for the interpolation of another 3DLC of TS. Nevertheless, the sub-learning set which used all the 3DLC of LS, without P5 and P6, seemed to guarantee optimal precision for most of the 3DLC of TS.
+
+Consequently, we must continue to study the influence of each 3DLC on the definition domain first. Secondly, a particular effort will be devoted to the improvement of LACVIO and turning the Combination Vector (CV) into a Fuzzy CV (a vector of pertinence for each 3DLC of LS). The determination of the components of the Fuzzy CV becomes a more complex problem that could be treated through the Genetic Algorithm and/or use of metaheuristics as Liao et al. proposed in Liao, Maoa, Hannam, and Zhao (2012) or Hippolyte et al. in Hippolyte, Boch, Chatonnay, Espanet, and Chamagne (2007).
+
+1
+
+    For interpretation of color in Figs. 4–6, the reader is referred to the web version of this article.

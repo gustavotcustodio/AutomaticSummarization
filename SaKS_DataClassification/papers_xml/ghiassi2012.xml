@@ -1,0 +1,441 @@
+<article>
+  <title>Automated text classification using a dynamic artificial neural network model</title>
+  <abstract>
+    <sentence>Widespread digitization of information in today’s internet age has intensified the need for effective textual document classification algorithms.</sentence>
+    <sentence>Most real life classification problems, including text classification, genetic classification, medical classification, and others, are complex in nature and are characterized by high dimensionality.</sentence>
+    <sentence>Current solution strategies include Naïve Bayes (NB), Neural Network (NN), Linear Least Squares Fit (LLSF), k-Nearest-Neighbor (kNN), and Support Vector Machines (SVM); with SVMs showing better results in most cases.</sentence>
+    <sentence>In this paper we introduce a new approach called dynamic architecture for artificial neural networks (DAN2) as an alternative for solving textual document classification problems.</sentence>
+    <sentence>DAN2 is a scalable algorithm that does not require parameter settings or network architecture configuration.</sentence>
+    <sentence>To show DAN2 as an effective and scalable alternative for text classification, we present comparative results for the Reuters-21578 benchmark dataset.</sentence>
+    <sentence>Our results show DAN2 to perform very well against the current leading solutions (kNN and SVM) using established classification metrics.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Classification</keyword>
+    <keyword>Textual document classification</keyword>
+    <keyword>Dynamic artificial neural networks</keyword>
+    <keyword>Pattern recognition</keyword>
+    <keyword>Machine learning</keyword>
+    <keyword>Artificial intelligence</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Widespread adoption of the Internet, popularity of social networking, and the digitalization of information within organizations have led to large collections of digital documents.</sentence>
+    <sentence>Automatic categorization and labeling are essential in processing digital information for all applications.</sentence>
+    <sentence>For textual documents, classification is an important technique often utilized by researchers and practitioners.</sentence>
+    <sentence>Text categorization research has its roots in the 1960s (Maron, 1961).</sentence>
+    <sentence>Until the late 1980s, text categorization systems, based on knowledge-engineering, were built manually.</sentence>
+    <sentence>In this approach, expert knowledge is encoded into a set of logical rules and is used to classify documents.</sentence>
+    <sentence>An example of this approach is the categorization of news stories into a broad set of topical categories using pattern-matching techniques (Hayes, Knecht, &amp; Cellio, 1988).</sentence>
+    <sentence>This approach has been superseded by the machine learning approach in which the text classifier is automatically built by learning from an already classified text collection (the training set), as identified by domain experts.</sentence>
+    <sentence>This approach is shown to be comparable with human performance while offering significant savings in costs and manpower (Sebastiani, 2002).</sentence>
+    <sentence>However, despite advances in automated text categorization, manual categorization still remains the dominant approach in practice (Manning, Raghavan, &amp; Schütze, 2008).</sentence>
+    <sentence>The MEDLINE database, a bibliographic index of life sciences and biomedical documents, requires more than two million US dollars to categorize 350,000 new entries per year manually.</sentence>
+    <sentence>To help reduce this cost, Hersh and Haynes (1991) developed an experimental information retrieval system with support for automatic indexing and natural language retrieval.</sentence>
+    <sentence>Another application of machine learning approach is the work of Creecy, Masand, Smith, and Waltz (1992), who applied machine learning for the classification of responses to the 1990 Decennial Census.</sentence>
+    <sentence>Their work is estimated to have saved 15 million US dollars.</sentence>
+    <sentence>Automated text classification methods have also been used for document filtering, personalized news filters (Lang, 1995), Spam filters (Wang, Jones, &amp; Pan, 2006), Web site categorization (Joachims, Freitag, &amp; Mitchell, 1997), customer reviews, product evaluations and ratings with new applications sprouting out frequently.</sentence>
+    <sentence>In these machine learning methods, unprocessed texts are first preprocessed in order to create a representation of the text in vector space.</sentence>
+    <sentence>This approach results in a very large vector of features; often 10,000s features.</sentence>
+    <sentence>A common characteristic of this approach is that the matrix representing the text to be classified is often sparse.</sentence>
+    <sentence>This is due to the fact that most words only appear in a few documents.</sentence>
+    <sentence>Typical text classification experiments include a feature set ranging from 20,000 to more than 60,000 features.</sentence>
+    <sentence>For instance, the two Spam filter datasets used by Wang et al.</sentence>
+    <sentence>(2006), have initial dimensionalities of 24,749 and 65,694.</sentence>
+    <sentence>Similarly, the Reuters RCV1 document collection (Lewis, Yang, Rose, &amp; Li, 2004) includes 804,414 documents and consists of 47,152 features.</sentence>
+    <sentence>In this research, we introduce a dynamic artificial neural network (DAN2) algorithm as an alternative approach for text classification.</sentence>
+    <sentence>We use a standard text corpus, Reuters-21578, to demonstrate that DAN2 can be used as a machine learning tool with excellent results.</sentence>
+    <sentence>We also demonstrate that the transformation and dimensionality reduction techniques used in DAN2 render its scalability and show that it can be used for classification problems of any dimension.</sentence>
+    <sentence>Finally, the dynamic architecture of DAN2 does not require experimentation with parameter settings or network architecture configuration.</sentence>
+    <sentence>These last two properties of DAN2 offer researchers an attractive alternative to existing approaches for automatic text classifications.</sentence>
+    <sentence>The benchmark used for this study is the Reuters dataset.</sentence>
+    <sentence>This dataset has been studied extensively and is often used for benchmarking competing methods.</sentence>
+    <sentence>Despite widespread usage, the prominent methods still struggle with achieving high levels of correct classification in all categories.</sentence>
+    <sentence>The selection of this dataset allows us to compare and contrast our findings with results from other researchers.</sentence>
+    <sentence>We discuss how we perform data preprocessing, the computational environment used, and the statistical measurements employed to study the effectiveness of our approach.</sentence>
+    <sentence>We will use “performance” as a generic term for measures that evaluate the quality and accuracy of classification decisions, including precision, recall and F1 measure.</sentence>
+    <sentence>Additionally, we will include the time required for training and testing of the DAN2 model to record a benchmark of computational efficiency for future researchers.</sentence>
+    <sentence>The remainder of this paper is as follows: Section 2 presents a summary of existing strategies for text classification including text preprocessing steps, feature engineering methods, leading text classification methods, and the performance measurements metrics used to assess effectiveness of various strategies.</sentence>
+    <sentence>The DAN2 algorithm and its properties are discussed in Section 3.</sentence>
+    <sentence>Section 4 presents performance assessment of DAN2 and characterizes the Reuters dataset, followed by the document preprocessing steps applied, the feature engineering approach used and discusses DAN2 results.</sentence>
+    <sentence>Finally, Section 5 presents our conclusion.</sentence>
+  </section>
+  <section name="Background and literature review">
+    <sentence>Text classification problems are complex in nature and are always characterized by high dimensionality (Yang &amp; Pedersen, 1997).</sentence>
+    <sentence>To reduce this complexity researchers begin by applying preprocessing techniques to the original documents in order to produce a more simplified text.</sentence>
+    <sentence>We group these preprocessing techniques into basic steps and standard steps.</sentence>
+    <sentence>The basic steps include: (1) transforming the original, often XML-based files into plain text, (2) removing white spaces, (3) changing all words to lower case, and (4) removing punctuation and numbers.</sentence>
+    <sentence>Once the basic preprocessing steps have been performed the document is ready for standard preprocessing activities.</sentence>
+    <sentence>These are: (1) removing stop words, (2) stemming, (3) transforming the data into the vector space, (4) term weighting, (5) feature selection, and (6) splitting the data into training and test sets.</sentence>
+    <sentence>These preprocessing steps transform the documents into a simpler form and a vector representation of the documents is produced (stages 1- 4 of standard steps).</sentence>
+    <sentence>This vector is called the bag-of-words.</sentence>
+    <sentence>Literature on information retrieval lists approaches commonly used for preprocessing activities and the steps necessary to produce such a vector (Frakes &amp; Baeza-Yates, 1992; Korfhage, 1997; Kowalski, 1997; Lewis, 1992c; Lewis &amp; Jones, 1996; van Rijsbergen, 1979).</sentence>
+    <sentence>The transformed document’s value for each term is defined using various term weighting methods.</sentence>
+    <sentence>Common term weighting methods are binary weighting, the term frequency approach (TF), and the term-frequency/inverse document frequency (TF/IDF) method (Manning et al., 2008; Salton &amp; Buckley, 1988).</sentence>
+    <sentence>Automated software tools are available to perform some or all of these steps.</sentence>
+    <sentence>In this research we use software tools from the R (Feinerer, 2009; Venables &amp; Smith, 2009) and Weka (Hornik, Zeileis, Hothorn, &amp; Buchta, 2006) systems to perform these activities.</sentence>
+    <sentence>Even after preprocessing, for large scale documents, the size of the resulting matrix is still very large and further activities are required to reduce its size.</sentence>
+    <sentence>Feature engineering methods are introduced to reduce the size of such matrices.</sentence>
+    <sentence>In text classification models, a feature represents a variable.</sentence>
+    <sentence>Most real life text classification problems, including the Reuters benchmark used in this study, often involve 1000s or 10,000s of features.</sentence>
+    <sentence>Feature engineering is applied in order to reduce the number of features.</sentence>
+    <sentence>This is a common step for classification methods in order to reduce complexity (Yang &amp; Pedersen, 1997).</sentence>
+    <sentence>Additionally, feature engineering serves as a means to remove noise from the input documents (Manning et al., 2008).</sentence>
+    <sentence>The most widely used feature engineering approaches are the information gain (IG) (Joachims, 1998; Lewis &amp; Ringuette, 1994; Mitchell, 1996; Moulinier, Raskinis, &amp; Ganascia, 1996; Quinlan, 1986), document frequency thresholding (DF) (Yang &amp; Pedersen, 1997), mutual information (MI) (Manning et al., 2008), term strength (TS) (Yang &amp; Pedersen, 1997), latent semantic indexing (LSI) (Deerwester, Dumais, Furnas, Landauer, &amp; Harshman, 1990), and the χ2statistic (CHI) (Yang &amp; Pedersen, 1997).</sentence>
+    <sentence>We also use feature engineering to reduce complexity in our analysis.</sentence>
+    <sentence>Once the document is fully preprocessed and feature engineering techniques have been applied, the documents are divided into training and testing datasets and the process of classifying the documents can begin.</sentence>
+    <sentence>The classification strategies used for analysis are binary and multi-class categorization.</sentence>
+    <sentence>In binary classification only two categories are present: either the document belongs to the class or it does not.</sentence>
+    <sentence>Most multi-class classification strategies are multiple iterations of binary classification.</sentence>
+    <sentence>The most commonly used multi-class approaches are one-against-all approach (Manning et al., 2008; Sebastiani, 2002), one-against-one approach (Anthony, Gregg, &amp; Tshilidzi, 2007; Friedman, 1996; Hsu &amp; Lin, 2002; Kreßel, 1999), and the hierarchical approach (Ghiassi &amp; Burnley, 2010; Lewis &amp; Jones, 1996; Mahinovs &amp; Tiwari, 2007).</sentence>
+    <sentence>The only “true” multi-class approaches are decision tree methods (which are not efficient for large scale text classification problems) and the kNN method.</sentence>
+    <sentence>The methods and algorithms used for text classification using these strategies are few in number.</sentence>
+    <sentence>The large number of possible features in text classification presents a problem for many classification algorithms.</sentence>
+    <sentence>For instance the Bayesian approach will become computationally intractable for large applications (Yang &amp; Pedersen, 1997).</sentence>
+    <sentence>In order to address computational complexity issues, the number of features has to be reduced significantly.</sentence>
+    <sentence>For example, Lewis has used Naïve Bayes approach with only 10 features on the Reuters-21450 dataset (Lewis, 1992a, 1992b).</sentence>
+    <sentence>Using the same dataset, the best decision tree model used 90 features.</sentence>
+    <sentence>Wiener, Pedersen, and Weigend (1995) report that their neural network based approach yielded the best average classification performance using about 20 features on the Reuters-22173 dataset, which is comparable to other research results (Apté, Damerau, &amp; Weiss, 1994; Lewis, 1992a; Lewis &amp; Ringuette, 1994).</sentence>
+    <sentence>They also report that when using more than 20 features, the classification performance on the test set quickly decreases.</sentence>
+    <sentence>The authors concluded that the neural network model used in their research was not able to extract features to generalize well on the test dataset.</sentence>
+    <sentence>Alternatively, they suggest using much more than six hidden layers in their model; however, they found out that the classification performance increased only slightly.</sentence>
+    <sentence>Schütze, Hull, and Pedersen (1995) evaluated linear discriminant analysis (LDA), logistic regression, and neural networks on the TREC-2 and TREC-3 (Harman, 1995a, 1995b) collections.</sentence>
+    <sentence>They selected the 200 most relevant features using the χ2 statistic.</sentence>
+    <sentence>They also experimented with Latent Semantic Indexing (LSI) (Deerwester et al., 1990) with 100 features.</sentence>
+    <sentence>From their experiments, they conclude that LDA and neural networks show significantly better classification performance compared to a simple baseline classifier which ranks documents according to the proximity to the query vector in the vector space.</sentence>
+    <sentence>Logistic regression performed better only when LSI was used for indexing.</sentence>
+    <sentence>Other experiments with LSI have been performed by Yang (1994).</sentence>
+    <sentence>In his experiments, he used medical data from the MEDLINE database to evaluate noise reduction strategies for Linear Least Squares Fit (LLSF) mapping.</sentence>
+    <sentence>He evaluated strategies including removing non-informative words from the training dataset, using truncated singular value decomposition, and eliminating non-influential components in the LLSF matrices (Yang, 1994).</sentence>
+    <sentence>He concludes that text classification of documents with a large number of features requires “aggressive” feature selection due to the noise in the training dataset and the computational requirements.</sentence>
+    <sentence>Alternatively, some methods such as k-Nearest Neighbors (kNN) do not have problems with the large dimensionality of the feature space.</sentence>
+    <sentence>This method has been used since the beginning of the machine learning approach for text categorization (Iwayama &amp; Tokunaga, 1995; Masand, Linoff, &amp; Waltz, 1992; Yang, 1994) and continues to be one of the better performing methods (Yang &amp; Liu, 1999).</sentence>
+    <sentence>Most recently, Support Vector Machines (SVM) have been shown to outperform kNN (Joachims, 1998, 1999, 2002).</sentence>
+    <sentence>However, both methods are still limited by the size of the training corpus (Joachims, 2006).</sentence>
+    <sentence>New attempts, such as parallel processing (Chang et al., 2007; Zhang, Li, &amp; Yang, 2005) and the use of a Cutting-Plane Algorithm for solving the SVM optimization problem (Joachims, 2006) have been utilized to overcome the training size limitation problem.</sentence>
+    <sentence>Finally, in order to assess the effectiveness of various classification methods, performance measurement metrics are required.</sentence>
+    <sentence>When evaluating the performance of a classifier, the classifier’s judgment is evaluated against the judgment of a domain expert (Lewis, 1997).</sentence>
+    <sentence>It is assumed that the expert’s judgment is correct (Table 1).</sentence>
+    <sentence>The relationship between the expert judgment and the classifier system judgment can be best expressed by a contingency table (Lewis, 1997).</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Contingency table.</sentence>
+    <sentence>Expert says no Expert says yes System says no d (correct) c (incorrect) c + d = n − k System says yes b (incorrect) a (correct) a + b = k b + d = n − r a + c = r a + b + c + d = n The number of documents classified by both the classifier and the expert as being within the given category are called true positives (a).</sentence>
+    <sentence>False positives (b) are documents assigned as being within the class but the experts disagree.</sentence>
+    <sentence>If the system assigns a document as out of the class but the expert judges the document the opposite, the judgment is called a false negative (c).</sentence>
+    <sentence>True negatives (d) are the judgments by both the experts and the system that put the document out of the class.</sentence>
+    <sentence>(r) is the sum of all documents the experts classified as part of the class (thus n–r the opposite), and (k) is the sum of all documents the system classified as part of the class.</sentence>
+    <sentence>(n) is the total number of judgments (i.e., the total number of documents in the test dataset).</sentence>
+    <sentence>The easiest approach to evaluate the performance of a classifier is to compare the number of right decisions (true positives and true negatives) with the number of wrong decisions (false positives and false negatives).</sentence>
+    <sentence>This is defined as the error rate (a measure of accuracy).</sentence>
+    <sentence>This approach works well with balanced datasets, i.e., where the number of documents per class is about the same as in the training set as it is in the test dataset (Ghiassi &amp; Burnley, 2010).</sentence>
+    <sentence>However, many text classification problems are outbalanced, including the Reuters benchmark dataset used in this study.</sentence>
+    <sentence>To overcome this limitation of error rate and accuracy, researchers in text classification often use other metrics, for example precision, recall, fallout, and the F1 measure.</sentence>
+    <sentence>Precision is the percentage of documents correctly assigned to the class, i.e., these documents have also been assigned by the experts as part of the class (Lewis, 1997), or in other words: “How many positive decisions by the classifiers are true?” An alternative to precision is fallout.</sentence>
+    <sentence>This “is the proportion of non-class members that the system assigns to the class,” (Lewis, 1997).</sentence>
+    <sentence>Precision has some limitations: it does not give guidance if all truly positive documents have been classified as such.</sentence>
+    <sentence>Recall, on the other hand, is a measure that provides this information: it “is the proportion of class members that the system assigns to the class,” (Lewis, 1997).</sentence>
+    <sentence>In other words, of all positive expert judgments, how many have been “found” by the classifier?</sentence>
+    <sentence>A perfect classifier would have an accuracy, precision and recall of 1.0 and error-rate and fallout of 0.0 (Lewis, 1997).</sentence>
+    <sentence>However, both quantities trade off against each other: it is easy to achieve a recall of 1.0 but very low precision, just by classifying all documents into the class (Manning et al., 2008).</sentence>
+    <sentence>The precision/recall break-even point is the point where both metrics are in balance (Manning et al., 2008).</sentence>
+    <sentence>This metric is widely used in text categorization research (Joachims, 1998, 2006).</sentence>
+    <sentence>An alternative solution to trade-off precision versus recall is the F measure, commonly written as the F1 measure (Manning et al., 2008).</sentence>
+    <sentence>For the Reuters benchmark dataset, researchers have used various performance measures.</sentence>
+    <sentence>The variety of metrics used in the literature as well as the actual texts selected in their analysis do not allow for an easy and direct comparison of competing methods (Yang &amp; Liu, 1999).</sentence>
+    <sentence>To allow assessment of our results and to ensure compatibility with other researchers, we present DAN2’s results using many metrics in order to compare with corresponding values offered in the literature.</sentence>
+    <sentence>Another difficulty in comparing and evaluating performance of various algorithms is lack of consistency in feature selections.</sentence>
+    <sentence>For most published results, there are insufficient details about the feature list and/or size of the training and testing datasets.</sentence>
+    <sentence>We present our approach in detail and compare our results with the best published results we have found for each algorithm in order to avoid any biases.</sentence>
+  </section>
+  <section name="A dynamic architecture for artificial neural networks">
+    <sentence>We have developed a neural network model, DAN2 (A Dynamic Architecture for Artificial Neural Networks), which employs a different architecture than the traditional neural network (FFBP) models.</sentence>
+    <sentence>The general philosophy of the DAN2 model is based upon the principle of learning and accumulating knowledge at each layer, propagating and adjusting this knowledge forward to the next layer, and repeating these steps until the desired network performance criteria are reached.</sentence>
+    <sentence>Fig 1 presents the overall DAN2 architecture.</sentence>
+    <sentence>The DAN2 network architecture Fig 1.</sentence>
+    <sentence>The DAN2 network architecture.</sentence>
+    <sentence>As in classical neural networks, the DAN2 architecture is composed of an input layer, hidden layers and an output layer.</sentence>
+    <sentence>The input layer accepts external data to the model.</sentence>
+    <sentence>In DAN2, unlike classical neural nets, the number of hidden layers is not fixed a priori.</sentence>
+    <sentence>They are sequentially and dynamically generated until a level of performance accuracy is reached.</sentence>
+    <sentence>Additionally, the proposed approach uses a fixed number of hidden nodes (four) in each hidden layer.</sentence>
+    <sentence>This structure is not arbitrary, but justified by the estimation approach.</sentence>
+    <sentence>At each hidden layer, the network is trained using all observations in the training set simultaneously, so as to minimize a stated training accuracy measure such as mean squared error (MSE) value or other accuracy measures such as F1.</sentence>
+    <sentence>As shown in Fig 1, each hidden layer is composed of four nodes.</sentence>
+    <sentence>The first node is the bias or constant (e.g.</sentence>
+    <sentence>1) input node, referred to as the C node.</sentence>
+    <sentence>The second node is a function that encapsulates the “Current Accumulated Knowledge Element” (CAKE node) during the previous training step.</sentence>
+    <sentence>The third and fourth nodes represent the current residual (remaining) nonlinear component of the process via a transfer function of a weighted and normalized sum of the input variables.</sentence>
+    <sentence>Such nodes represent the “Current Residual Nonlinear Element” (CURNOLE nodes).</sentence>
+    <sentence>In Fig 1, the “I” node represents the input, the “C” nodes are the constant nodes, the “Gk” and “Hk” nodes represent CURNOLE nodes, and the “Fk” nodes are the CAKE nodes.</sentence>
+    <sentence>The final CAKE node represents the dependent variable or the output.</sentence>
+    <sentence>At each layer, the previous four nodes (C, Gk, Hk, and Fk-1) are used as the input to produce the next output value (Fk).</sentence>
+    <sentence>The parameters on the arcs leading to the output nodes, (ak, bk, ck, dk), represent the weights of each input in the computation of the output for the next layer.</sentence>
+    <sentence>The parameter connecting the CURNOLE nodes, μk, is used as part of the argument for the CURNOLE nodes and reflects the relative contribution of each input vector to the final output values at each layer.</sentence>
+    <sentence>A detailed description of the architecture and its properties are fully presented in Ghiassi and Saidane (2005).</sentence>
+    <sentence>The training process begins with a special layer where the CAKE node captures the linear component of the input data.</sentence>
+    <sentence>Thus, its input (content) is a linear combination (weighted sum) of the input variables and a constant input node.</sentence>
+    <sentence>These weights are easily obtainable through classical linear regression.</sentence>
+    <sentence>If the desired level of accuracy is reached, we can conclude that the relationship is linear and the training process stops.</sentence>
+    <sentence>This step is used as the starting point.</sentence>
+    <sentence>For classification problems this step can be replaced with alternative methods described in Section 3.2.</sentence>
+    <sentence>For nonlinear relations additional hidden layers are required.</sentence>
+    <sentence>At each subsequent layer the input to the CAKE node is a weighted sum (linear combination) of the previous layer’s CAKE, CURNOLE, and C nodes.</sentence>
+    <sentence>Throughout training, the CAKE nodes carry an adequate portion of learning achieved in previous layers forward.</sentence>
+    <sentence>This process ensures that the performance or knowledge gained so far is adjusted and improved but not lost.</sentence>
+    <sentence>This property of DAN2 introduces knowledge memorization to the model.</sentence>
+    <sentence>Ghiassi and Saidane (2005) show that the DAN2 algorithm ensures that during network training, the residual error is reduced in every iteration and the accumulated knowledge is monotonically increased.</sentence>
+    <sentence>The training process defines creation of partitions among classes that could include linear and nonlinear components.</sentence>
+    <sentence>The linear component of the input data is captured in the first CAKE node using ordinary least squares (OLS) or other simple and easy to compute approaches.</sentence>
+    <sentence>The algorithm next transforms the input dataset to model the nonlinearity of the process in subsequent iterations.</sentence>
+    <sentence>DAN2 uses a vector projection approach to perform data transformation.</sentence>
+    <sentence>The transformation process defines a reference vector R = {rj;j = 1, 2, … , m}, where m represents the number of attributes of the observation records, and projects each observation record onto this vector to normalize the data as discussed in Ghiassi and Saidane (2005).</sentence>
+    <sentence>This normalization defines an angle, αi, between record i and the reference vector R. DAN2 uses the set of αi’s to train the network, and updates their values in every iteration.</sentence>
+    <sentence>In Ghiassi and Saidane (2005), the authors show that this normalization can be represented by the trigonometric function Cosine (μkαi + θk).</sentence>
+    <sentence>In every hidden layer k of the architecture we vary (μkαi + θk) and measure the impact of this change on the output value.</sentence>
+    <sentence>The modification of the angle (μkαi + θk) is equivalent to rotating μk and shifting θk, the reference vector, thus changing the impact of the projected input vectors and their contribution to the output for that iteration.</sentence>
+    <sentence>The Cosine (μkαi + θk) uses two (nonlinear) parameters, μk and θk.</sentence>
+    <sentence>The use of the latter can be avoided through the expansion of the cosine function in the form: A Cosine (μkαi) + B Sine (μkαi).</sentence>
+    <sentence>We use this functional form as the transfer function in our model.</sentence>
+    <sentence>The two CURNOLE nodes in Fig 1 represent this formulation.</sentence>
+    <sentence>At any given hidden layer k, if the Cosine (μkαi + θk) terms captured in previous layers do not adequately express the nonlinear behavior of the process, a new layer with an additional set of nodes is automatically generated, including a new Cosine (μkαi + θk) term.</sentence>
+    <sentence>This process is analogous to how the Fourier series adds new terms to improve function approximation.</sentence>
+    <sentence>Therefore, the number of layers in the DAN2 architecture is dynamically defined and depends upon the complexity of the underlying process and the desired level of accuracy.</sentence>
+    <sentence>Thus, the output of this model is represented by the linear combination of the constant, CAKE, and CURNOLE nodes.</sentence>
+    <sentence>Eq (1) represents the functional form of this relationship at iteration (layer) k (1) where Xi represents the n independent input records, Fk(Xi) represents the output value at layer k, Gk(Xi) = Cosine (μkαi), and Hk(Xi) = Sine (μkαi) represent the transferred nonlinear components, and ak, bk, ck, dk, and μk are parameter values at iteration k. The training process initially captures the linear component by using OLS or other simple and easy to compute approaches.</sentence>
+    <sentence>If the desired level of accuracy is reached, the training terminates.</sentence>
+    <sentence>Otherwise, the model generates additional layers to capture the nonlinear component of the process by minimizing a measure of total error as represented by SSEk = Σi[Fk(Xi) − F^(Xi)]2.</sentence>
+    <sentence>Substituting Fk(Xi) from Eq (1) results in: (2) where F^(Xi) are the observed output values.</sentence>
+    <sentence>Minimizing Eq (2) requires the estimation of five parameters.</sentence>
+    <sentence>This formulation is linear in the parameter set Ak, where Ak = {ak, bk, ck, dk} and nonlinear in parameter μk.</sentence>
+    <sentence>In Ghiassi and Saidane (2005), they present several nonlinear optimization strategies to estimate the nonlinear parameter μk.</sentence>
+    <sentence>They also show that following this approach, at each layer the knowledge gained is monotonically increased, total error is reduced, and the network training improves.</sentence>
+    <sentence>In Ghiassi, Saidane, and Zimbra (2005), the authors compare DAN2 with traditional FFBP and recurrent neural network (RNN) models.</sentence>
+    <sentence>The comparison spans both theoretical and computational perspectives using several benchmark datasets from the literature.</sentence>
+    <sentence>Performance of DAN2 against these models as well as non neural network alternatives is also presented.</sentence>
+    <sentence>Their study shows that DAN2 outperforms all other alternatives and produces more accurate training and testing results in every case.</sentence>
+    <sentence>DAN2 for text classification DAN2 has been shown to effectively solve a variety of continuous problems (including forecasting and functional approximation) (Ghiassi &amp; Saidane, 2005; Ghiassi et al., 2005).</sentence>
+    <sentence>Classification differs in that its output is discrete.</sentence>
+    <sentence>However, classification can also be viewed as the process of drawing a partition between classes.</sentence>
+    <sentence>DAN2 can be used to approximate a function that identifies this partition.</sentence>
+    <sentence>Unlike linear and quadratic discriminant analysis, DAN2 does not assume the shape of the partition.</sentence>
+    <sentence>In contrast to the kNN method, DAN2 does not require storage of training data.</sentence>
+    <sentence>Once the model has been trained, DAN2 performs much faster than kNN because it does not need to iterate through individual training samples.</sentence>
+    <sentence>Finally, DAN2 does not require experimentation and final selection of a kernel function and a penalty parameter as is required by SVM.</sentence>
+    <sentence>DAN2 solely relies on a training process in order to identify the final classifier model.</sentence>
+    <sentence>In Ghiassi and Burnley (2010), the authors demonstrate the effectiveness of DAN2 for a large number of classification benchmark datasets.</sentence>
+    <sentence>This research extends DAN2’s application to the text classification domain.</sentence>
+    <sentence>Ideally, the DAN2 model should be trained on some measure of classification error rates.</sentence>
+    <sentence>However, this is not always practical since the misclassification error may remain constant for several training cycles and then change by a relatively small amount.</sentence>
+    <sentence>This lack of sensitivity to small changes reduces the efficiency of the gradient descent algorithm.</sentence>
+    <sentence>Instead of inching along a hill looking for the direction of descent, the algorithm would need to follow a flat plain for a long distance before finding out if the direction results in a step up or a step down.</sentence>
+    <sentence>For this reason, DAN2 was trained using the mean squared error (MSE) of its output before the output was transformed into the discrete class.</sentence>
+    <sentence>The training algorithm could take advantage of the small changes in MSE, which would not have been measurable in the misclassification rate.</sentence>
+    <sentence>The assumption is that improvements in MSE will eventually result in improvements in the misclassification error.</sentence>
+    <sentence>A lower MSE indicates that more of the output points are closer to the target class values.</sentence>
+    <sentence>With more training samples near their target class values, less samples will be closer to the incorrect class value.</sentence>
+    <sentence>As the classification of each sample is determined by the class value to which it is closest, fewer misclassifications should occur, resulting in a lower classification error rate.</sentence>
+    <sentence>Throughout this process, classification error rates (F1 and others) are also generated and used to assist with error rate search optimization.</sentence>
+    <sentence>Starting point DAN2’s algorithm, at every iteration, solves a nonlinear minimization problem represented by Eq (2).</sentence>
+    <sentence>Specifically, the nonlinear optimization strategy used in DAN2 estimates the nonlinear parameter μk.</sentence>
+    <sentence>Like all nonlinear optimization methods for non-convex/non-concave functions obtaining global optimum is never guaranteed.</sentence>
+    <sentence>Similar to other optimization applications choice of a good starting point can improve convergence to local optimum and beginning the search at various starting points can facilitate reaching multiple local optima.</sentence>
+    <sentence>For large scale problems, like the Reuters dataset, selection of a good starting point can be very helpful.</sentence>
+    <sentence>In Ghiassi and Saidane (2005), they identify the starting point as F0(X) and use the training data and the standard linear regression to obtain its value.</sentence>
+    <sentence>In classification problems, F(X) only takes binary values.</sentence>
+    <sentence>For the classification problem examined in this research, in addition to the standard MLR, we have experimented with alternative methods to compute starting point values.</sentence>
+    <sentence>These include simple methods such as random assignment of 0 or 1 for F0(X), assigning all records to one class (either 0 or 1), as well as a rudimentary kNN solution.</sentence>
+    <sentence>The advantage of the random assignment is the simplicity and speed of computation.</sentence>
+    <sentence>However, this approach often does not offer good starting solutions.</sentence>
+    <sentence>The kNN approach used to capture a starting point is a simplified method that only considers one or two values for k and uses only a subset of the features from the actual problem in order to quickly obtain a starting point value.</sentence>
+    <sentence>For example, for the Reuters dataset we only used two values for k (k = 1 or 5) and limited the number of features to only 500.</sentence>
+    <sentence>We then use values with the best error statistics as the starting point for DAN2.</sentence>
+    <sentence>Scalability DAN2’s algorithm is highly scalable.</sentence>
+    <sentence>The algorithm is composed of a series of layers that are automatically and dynamically generated without requiring any input from the analysts.</sentence>
+    <sentence>At each layer the observation vectors are projected into the reference vector to create the angle αi as discussed in Section 3.</sentence>
+    <sentence>The training and optimization at each layer only uses the transformed data to obtain the five parameters of Eq (2).</sentence>
+    <sentence>Therefore, regardless of the original size of the dataset, DAN2 only needs to compute the set of four linear parameters, Ak = {ak, bk, ck, dk}, and one nonlinear parameter μk at each iteration.</sentence>
+    <sentence>For instance, for text classification problems with large feature sets, once the starting point is computed, each observation record, as represented by its many features, is projected onto the reference vector and its angle, αi, is computed.</sentence>
+    <sentence>The training process only uses the αi values and only needs to compute the five parameters.</sentence>
+    <sentence>Therefore, the original problem with a large feature set is converted to a 5-parameter model at each layer; thus scaling the problem size and demonstrating the scalability of the model.</sentence>
+    <sentence>The scalability of DAN2 is a distinguishing strength of the approach from traditional artificial neural networks.</sentence>
+    <sentence>Hierarchical DAN2 for multiple class classification The additional complexity inherent in multiple class classification problems presents a challenge to many classification methods.</sentence>
+    <sentence>An approach that has been used to improve multiple class performance of classifiers is hierarchical models.</sentence>
+    <sentence>Common hierarchical classifiers include hierarchical neural networks and decision trees.</sentence>
+    <sentence>Decision trees often identify one or more attributes used to split data at each node, until each sample reaches a leaf node at which it is assigned to a class (Amasyali &amp; Ersoy, 2008).</sentence>
+    <sentence>Hierarchical neural networks may come in a variety of architectures.</sentence>
+    <sentence>Both Porter and Liu (1996) and Lee and Ersoy (2007) describe a hierarchical neural network in which difficult training samples are rejected from the first layer and used for training in subsequent layers (Kim, Kehtarnavaz, Yeary, &amp; Thornton, 2003).</sentence>
+    <sentence>The hierarchical neural network model first branches into classes that separate easily and then uses feature selection to build additional branches for the remaining classes, determining which features to use at each node of the tree.</sentence>
+    <sentence>Finally, neural networks were used at each node to improve the performance of the tree.</sentence>
+    <sentence>Reasons for using hierarchical classifiers focus on reducing complexity.</sentence>
+    <sentence>Porter and Liu (1996) describe hierarchical classifiers as a subset of modular classifiers.</sentence>
+    <sentence>They suggest that modular classifiers often arise when a combination of factors include a large number of classes, classes have difficult shapes (are not compact, convex, or connected), classes do not have distinct boundaries, boundaries are highly nonlinear, and misclassification of some points carries a high penalty.</sentence>
+    <sentence>Lee and Ersoy (2007) describe hierarchical classification as a way in which to detect data which are more difficult to classify in order to classify these data differently.</sentence>
+    <sentence>In Ghiassi and Burnley (2010), they follow this same reasoning and have developed a hierarchical DAN2 model.</sentence>
+    <sentence>They postulate that if a class can be removed from the dataset, the remaining classes may become easier to classify without the influence of the removed class.</sentence>
+    <sentence>Clearly, this approach assumes samples only belong to one class.</sentence>
+    <sentence>Following research can examine DAN2’s accuracy improvements using alternative approaches, such as those described in Kim et al.</sentence>
+    <sentence>(2003), Lee and Ersoy (2007) and Porter and Liu (1996).</sentence>
+    <sentence>Since in the Reuters-21578 dataset, a sample can belong to multiple classes, therefore, most hierarchical models, including hierarchical DAN2, are not suitable.</sentence>
+    <sentence>In order to simplify the training of DAN2 and improve its performance, the multiple class classification problem is broken down into several two-class datasets.</sentence>
+    <sentence>Linear and quadratic discriminant analysis methods follow a similar approach, as both of these classification methods rely on functions that only apply in the case of two class datasets.</sentence>
+    <sentence>Similar to the approach used by these two methods, DAN2 can also be trained on a collection of one-versus-all versions of the dataset.</sentence>
+    <sentence>Similar to the case of discriminant analysis, these methods are then reconciled by classifying a sample as belonging to the version in which it had the highest output.</sentence>
+    <sentence>As with the linear and quadratic discriminant analysis, a one-versus-all model for each class is constructed and run.</sentence>
+  </section>
+  <section name="Performance assessment of DAN2 on a text classification benchmark">
+    <sentence>This section presents the results of using DAN2 on a benchmark dataset.</sentence>
+    <sentence>We first present information about the choice of the benchmark used and follow that with a discussion of the computational environment for our study and the choice of metrics used to assess DAN2’s effectiveness.</sentence>
+    <sentence>The actual results of DAN2 on these benchmarks are then presented.</sentence>
+    <sentence>The Reuters benchmark dataset To assess the effectiveness of DAN2 in solving text classification problems, we will evaluate its performance using the widely used Reuters benchmark dataset.</sentence>
+    <sentence>This corpus has been used extensively in the literature and has become a de-facto benchmark (Joachims, 2006; Lewis, 1995; Sebastiani, 2002).</sentence>
+    <sentence>Since we seek to demonstrate and evaluate the effectiveness of DAN2 for text classification and compare it with leading alternative models, we needed a benchmark which had been thoroughly researched with well documented test results.</sentence>
+    <sentence>Reuters-21578 possesses these properties.</sentence>
+    <sentence>This dataset, consisting of 21,578 documents, is based on newswire data from 1987 (Lewis, 1997).</sentence>
+    <sentence>Similar to other researchers, we use the widely adopted ApteMod split of Reuters-21578.</sentence>
+    <sentence>This version is obtained by eliminating unlabelled documents and selecting the categories with at least one document in both the training and test datasets (Yang &amp; Liu, 1999).</sentence>
+    <sentence>It consists of 118 topic categories.</sentence>
+    <sentence>The ten largest classes in training and test datasets are presented in (Joachims, 1998; Manning et al., 2008).</sentence>
+    <sentence>As stated by other researchers (Sebastiani, 2002; Yang &amp; Liu, 1999) although this corpus is the most widely used benchmark dataset, researchers have used many configurations of this dataset in their analysis.</sentence>
+    <sentence>Some have included “unlabeled” articles while others have only considered articles with more than 2000 words (Umar &amp; Khiyal, 2007) resulting in the size of the dataset to range from high of 10,667 articles to low of 479 articles.</sentence>
+    <sentence>The choice of categories have also varied from 93 to only five categories (Sebastiani, 2002; Umar &amp; Khiyal, 2007).</sentence>
+    <sentence>Unfortunately, this wide variation of test data and categories does not allow for a reliable comparison.</sentence>
+    <sentence>Yang and Liu (1999) and Sebastiani (2002) have outlined three conditions for experimentation using this corpus.</sentence>
+    <sentence>They are: (1) experimentation with the same dataset and same categories; (2) same split of the training and testing datasets; and (3) same measurement metrics.</sentence>
+    <sentence>Sebastiani (2002) and others suggest the Reuters-21578 as the “standard” variant of Reuters, with 10 categories and use of BEP or F1 as the measurement metrics.</sentence>
+    <sentence>Table 2 lists the most widely used number of training and test articles for each category.</sentence>
+    <sentence>We developed DAN2 classification models for these ten classes and compared our results with other methods using the datasets described in Table 2.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Training and testing documents for Reuters-21578.</sentence>
+    <sentence>Category Training Testing Total Earn 2877 1087 3964 Acq 1650 719 2369 Money fx 538 179 717 Grain 433 149 582 Crude 389 189 578 Trade 369 118 487 Interest 347 131 478 Ship 197 89 286 Wheat 212 71 283 Corn 182 56 238 Total 7194 2788 9982 As discussed earlier, the raw text from this dataset first needs to be preprocessed.</sentence>
+    <sentence>The basic and standard preprocessing steps discussed earlier are applied first.</sentence>
+    <sentence>We follow the index representation approach used by other researchers (Lewis, 1992c; Lewis &amp; Jones, 1996).</sentence>
+    <sentence>In this approach, for each unique word in the document, a dimension is added to the document vector.</sentence>
+    <sentence>The document’s value for each dimension depends on the feature generation method employed.</sentence>
+    <sentence>Once again, we follow earlier researchers’ choice of feature generation and have adopted the TF/IDF weighting method (Joachims, 1998; Lewis et al., 2004) for our research.</sentence>
+    <sentence>Finally, following studies of feature selection (Joachims, 1998; Lewis &amp; Ringuette, 1994; Mitchell, 1996; Moulinier et al., 1996; Quinlan, 1986), we have selected the information gain (IG) approach as the method for this process.</sentence>
+    <sentence>The splitting of the datasets into training and testing sets also followed earlier studies.</sentence>
+    <sentence>Computational strategies, requirements, and environment Complex text classification problems require significant computational capabilities.</sentence>
+    <sentence>A fast computer with sufficient memory and computing power and appropriate software systems is always needed for such computation.</sentence>
+    <sentence>Below we briefly describe the hardware and software configuration used in this research.</sentence>
+    <sentence>The computer system used for this experiment consists of a multi-core server with the following configuration: (a) 2 × Intel Quad Core Xeon @ 3.2 GHz, (b) 16 GB of RAM, (c) Adaptec Raid Controller with 4 SAS hard drives in RAID 1/0 configurations.</sentence>
+    <sentence>The operating system used on this computer was the 64-bit version of the SuSE Linux Enterprise Server (SLES, 11).</sentence>
+    <sentence>We added the VMWare Server (VMWare, 2009) software system to provide support for our own tools.</sentence>
+    <sentence>The primary modeling environment for preprocessing was the R environment (Feinerer, 2009; Venables &amp; Smith, 2009) with, rWeka, tm (Hornik et al., 2006), and the latest version of the Java Runtime Environment (Java, 2009).</sentence>
+    <sentence>In order to support the multiprocessor environment the Message Passing Interface (MPI) libraries were added to the system.</sentence>
+    <sentence>This interface is a library that is used on clusters and super computers to distribute workloads for computation among multiple nodes.</sentence>
+    <sentence>One such open-source MPI implementation is OpenMPI (Open MPI, 2009) which was installed on our system.</sentence>
+    <sentence>We found these tools to offer the best available software environment for our research.</sentence>
+    <sentence>Performance measurement metrics In order to compare our results with existing research we have selected the performance measurement metrics that were employed in earlier studies.</sentence>
+    <sentence>The primary statistics used for performance measurement were break-even-point (Joachims, 1998) and F1 (Manning et al., 2008) measures.</sentence>
+    <sentence>We report our results using the exact same performance statistics in order to be able to offer a comparative analysis.</sentence>
+    <sentence>As noted by Sebastiani (2002) and Yang and Liu (1999), although many researchers have used the Reuters-21578 dataset to assess effectiveness of various methods, it has been difficult to compare and contrast reported results for these methods.</sentence>
+    <sentence>The reasons for the difficulties are due to researchers’ choices of “non-comparable performance measures” and/or the choice of selecting only a subset of the dataset (Yang &amp; Liu, 1999).</sentence>
+    <sentence>The authors, however, have presented results of a controlled study in which kNN and SVM were identified as the two best performing methods.</sentence>
+    <sentence>These results were consistent with findings of Joachims (1998) and Manning et al.</sentence>
+    <sentence>(2008).</sentence>
+    <sentence>A comparative assessment based on these results can offer researchers guidelines on the effectiveness of available algorithms, even though as noted by other researchers, a controlled and statistically proven comparison is not feasible.</sentence>
+    <sentence>Our goal is to present DAN2 as an effective alternative approach for text classification rather than claiming superior performance.</sentence>
+    <sentence>We present a detailed discussion of our experiment to clarify how our results are obtained.</sentence>
+    <sentence>As such we have selected to first present our results using a host of performance metrics to show its effectiveness.</sentence>
+    <sentence>Presenting DAN2’s results using multiple measurement metrics avoids biases that might favor the algorithm as stated by Yang and Liu (1999).</sentence>
+    <sentence>We then compare our results with kNN and SVM values using the specific metrics used by these approaches.</sentence>
+    <sentence>Since there are multiple reported results for some of the algorithms, we use the best (most favorable) values from the literature and compare DAN2’s results against them.</sentence>
+    <sentence>DAN2 results for the Reuters-21578 Even once the Reuters-21578 dataset has been preprocessed, the results remain very large.</sentence>
+    <sentence>In any text processing problem, feature engineering techniques are used to further reduce the size of the resulting vector space to lessen the problem of complexity.</sentence>
+    <sentence>Although DAN2 is a scalable approach, the convergence of the internal nonlinear optimization algorithms employed in DAN2 improves with reduced dimensionality.</sentence>
+    <sentence>Reducing the feature size, therefore, can greatly enhance performance.</sentence>
+    <sentence>Similar to other researchers we have used the “information gain” measure to select an appropriate set of features.</sentence>
+    <sentence>We also show, confirming earlier studies (Yang &amp; Wilbur, 1996), that reducing features beyond a certain level will result in less accurate models.</sentence>
+    <sentence>Accordingly, choosing the number of features selected for each model is a challenging decision.</sentence>
+    <sentence>We experimented with various feature sizes by starting at 1000 features and incrementing by 250.</sentence>
+    <sentence>We noted that beyond 3000 features the model does not gain additional benefit.</sentence>
+    <sentence>Specifically, we noticed a drop of 5% in forecasting precision when using more than 2500 features.</sentence>
+    <sentence>We also noticed the same drop off of 5% for the precision/recall break-even point metric for feature size set beyond the 2000–2250 range.</sentence>
+    <sentence>We further explored this region by incrementing the feature set by only 50 features and found the best number of features at around 2200.</sentence>
+    <sentence>Fig 2 shows this analysis which confirms findings of Yang and Wilbur (1996).</sentence>
+    <sentence>Number of features for training Fig 2.</sentence>
+    <sentence>Number of features for training.</sentence>
+    <sentence>The selection and choice of feature set has been a challenging topic for all researchers using the Reuters dataset.</sentence>
+    <sentence>Yang and Liu (1999) report using either χ2 statistics or information gain criterion and experimenting with 1000 features for the NN model, 2000 features for the NB model, 2415 features for the kNN model (with k = 45), 2415 features for the LLSF model, and 10,000 features for the SVM model to optimize performance of each classifier using global F1 score.</sentence>
+    <sentence>The authors do not clarify which approach was used for each case.</sentence>
+    <sentence>Similarly, Joachims (1998) reports experimenting with 500, 1000, 2000, 5000, and 10000 features for all classifiers.</sentence>
+    <sentence>He uses the information gain criterion for feature selection and the “tfc” method for feature vector scaling.</sentence>
+    <sentence>For the kNN model values of k = 1, 15, 30, 45, and 60 were used.</sentence>
+    <sentence>The best results were reported in (Joachims, 1998).</sentence>
+    <sentence>Clearly, there is no established approach for selecting the best feature set for each model.</sentence>
+    <sentence>However, researchers acknowledge that a small feature set masks effectiveness of the classifier and including a very large feature set beyond a “critical” level degrades classifiers’ performance.</sentence>
+    <sentence>In this study, we perform a systematic experimentation to identify a range for the feature set that offers the best performance.</sentence>
+    <sentence>Our experimentation supports the general guidelines suggested by other researchers.</sentence>
+    <sentence>Furthermore, we show that a feature set beyond a critical point indeed decreases classification effectiveness (Fig 2).</sentence>
+    <sentence>Although our experimentation is limited to the Reuters-21578 dataset, the approach used can be effective for all text classification models.</sentence>
+    <sentence>Similar to other studies, once the feature set was selected we developed ten models, one for each class of the Reuters-21578 dataset.</sentence>
+    <sentence>For each model we used a rudimentary kNN with only 500 features and k = 1 or k = 5 to generate a starting point for DAN2.</sentence>
+    <sentence>For each model we used the training dataset to train the model and the testing dataset to measure its generalization accuracy.</sentence>
+    <sentence>To avoid under/over fitting of the model we made sure that the accuracy measures for both the training and testing datasets were reasonably close.</sentence>
+    <sentence>We report both these values for all models.</sentence>
+    <sentence>Table 3 presents our results using precision, recall, break-even-point, and F1 measures for both the training and testing datasets.</sentence>
+    <sentence>Similar to other studies, the best results were obtained for categories that were more balanced (earn, acq, and grain), and the worst results were for less balanced categories (interest and trade).</sentence>
+    <sentence>When comparing the effect of the metrics used, we observed that for compound metrics such as F1 and break-even-point measures, (a) the absolute break-even-point values are slightly better (higher values) than the corresponding F1 values, (b) the relative performance measures within the categories for both metrics follow the same direction with both metrics identifying “earn” as the most accurate and “interest” as the least accurate models, and (c) both metrics offer results that are very close to one another.</sentence>
+    <sentence>To assess the effectiveness of DAN2 against other approaches, therefore, we could have used any one of these metrics without the loss of generality.</sentence>
+    <sentence>Overall, the performance of DAN2 for text classification, using the Retuers-21578 dataset, has shown remarkable results and is consistent with its performance using other classification benchmarks as reported in Ghiassi and Burnley (2010).</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>DAN2 training and testing results for Reuters-21578 (in percent).</sentence>
+    <sentence>Category Precision training Precision testing Recall training Recall testing BEP training BEP testing F1 training F1 testing Earn 98.87 98.80 99.77 99.66 99.32 99.23 99.32 99.23 Acq 99.51 97.56 93.62 90.14 96.56 93.85 96.47 93.70 Money-fx 96.14 97.69 63.58 68.65 79.86 83.17 76.54 80.63 Grain 98.43 94.74 98.94 97.67 98.68 96.21 98.68 96.18 Crude 98.05 99.13 81.18 89.06 89.62 94.10 88.82 93.83 Trade 96.33 99.06 62.87 69.08 79.60 84.07 76.09 81.40 Interest 97.98 98.67 91.62 68.52 94.80 83.59 94.69 80.87 Ship 95.65 95.00 89.19 89.06 92.42 92.03 92.31 91.94 Wheat 98.04 96.55 96.62 80.00 97.33 88.28 97.30 87.50 Corn 97.94 100.00 93.60 97.06 95.77 98.53 95.72 98.51 Table 4 presents results for kNN, SVM, and DAN2 for the top ten most common categories of the Reuters-21578 dataset.</sentence>
+    <sentence>We note that although the literature presents multiple results for kNN and SVM methods, Joachims (1998, 2002), Manning et al.</sentence>
+    <sentence>(2008) and Yang and Liu (1999) published results for kNN and SVM lack detailed information about the individual training and testing datasets for each category.</sentence>
+    <sentence>For SVM, specifically, results are reported for linear, polynomial, and RBF kernels.</sentence>
+    <sentence>The choices of measures used for feature selection and accuracy reporting also vary (Joachims, 2002; Manning et al., 2008).</sentence>
+    <sentence>However, the most widely reported results are the Joachims (1998) results for both kNN and SVM.</sentence>
+    <sentence>We use these values for our comparisons and they are presented in Table 4.</sentence>
+    <sentence>We note that (a) the purpose of this comparison is to demonstrate effectiveness of DAN2 as measured in comparison with other methods as opposed to claiming or demonstrating superiority of the approach, and (b) various reported results for kNN and SVMs, even though the training and testing dataset sizes are not clearly stated, do not significantly differ from values reported in Table 4, and (c) values reported for kNN and SVM in Table 4 use the break-even-point metrics which allow us to directly compare with DAN2 values.</sentence>
+    <sentence>Therefore, we report kNN values and the best overall SVM values (as measured by the combined micro average value) for the RBF-based SVM with the parameter value of γ = 0.8 (Joachims, 1998).</sentence>
+    <sentence>Table 4 shows break-even-point values for DAN2 (testing dataset) to be uniformly better than the corresponding values for kNN, with the corn category showing the most improvement (up to 26%).</sentence>
+    <sentence>When comparing DAN2 break-even-point values with the corresponding ones from the best SVM values reported (testing dataset), DAN2 produces better results in all cases except the “Acq” category.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>DAN2 break-even-point value comparison with kNN and SVM (in percent).</sentence>
+    <sentence>Category DAN2 BEP training DAN2 BEP testing kNN BEP SVM BEP Earn 99.32 99.23 97.30 98.50 Acq 96.56 93.85 92.00 95.30 Money-fx 79.86 83.17 78.20 75.40 Grain 98.68 96.21 82.20 91.90 Crude 89.62 94.10 85.70 89.00 Trade 79.60 84.07 77.40 78.00 Interest 94.80 83.59 74.00 75.00 Ship 92.42 92.03 79.20 86.50 Wheat 97.33 88.28 76.60 85.90 Corn 95.77 98.53 77.90 85.70 To statistically assess DAN2’s results against kNN and SVM values, we use the “Macro T-test” significance test suggested in Yang and Liu (1999).</sentence>
+    <sentence>This is a T-test for comparing the means of two systems.</sentence>
+    <sentence>We present the difference between any two values for each category by Xi for i = 1, 2, … , 10.</sentence>
+    <sentence>Let to be the simple average for Xi.</sentence>
+    <sentence>The null hypothesis is with the alternative hypothesis as .</sentence>
+    <sentence>The computed T-value is defined as: We use the testing dataset BEP values for DAN2, kNN and SVM from Table 4 to compute the T-values.</sentence>
+    <sentence>For DAN2 vs. kNN the computed T-value is 5.29 and for DAN2 vs. SVM the computed T-value is 2.11.</sentence>
+    <sentence>The computed T-values are compared against the t-student values with (n − 1) degrees of freedom at P = 0.05 (1.833).</sentence>
+    <sentence>The statistical test of significance shows that DAN2 performs better than kNN and SVM at P = 0.05.</sentence>
+    <sentence>Clearly, the results show DAN2 to be a very effective alternative to existing approaches for text categorization, as measured in this experiment.</sentence>
+    <sentence>DAN2 computational times for Reuters-21578 All machine learning algorithms, including DAN2, NN, SVM and kNN, require experimentation to find the best training model.</sentence>
+    <sentence>For example, for SVM, the value of the penalty parameter and the choice of the kernel function needs to be selected experimentally (Joachims, 1998), while with kNN, the best k value can only be determined by trial and error.</sentence>
+    <sentence>For NN models, the architecture (number of layers and number of hidden nodes) is experimentally defined, and then the parameters of the model are computed.</sentence>
+    <sentence>Similarly, training of a DAN2 model requires experimentation.</sentence>
+    <sentence>DAN2 initially defines a set of stopping conditions.</sentence>
+    <sentence>These conditions include the maximum number of iterations and the target accuracy (the algorithm will stop at whichever condition is met first).</sentence>
+    <sentence>At each iteration, DAN2 solves a nonlinear optimization problem.</sentence>
+    <sentence>In Ghiassi and Saidane (2005), the authors offer a number of alternatives to solve the intermediate nonlinear optimization problem.</sentence>
+    <sentence>The implementation used in this research utilizes the grid search approach.</sentence>
+    <sentence>In DAN2 a 2-dimensional search (interval and step sizes) is employed to find the best μk at each iteration.</sentence>
+    <sentence>The algorithm begins with larger intervals and step sizes to determine promising search regions.</sentence>
+    <sentence>When promising sectors are identified, subsequent more granular 2-D searches are performed on each sector to find the (local) optima.</sentence>
+    <sentence>When a step produces inferior results, it is discarded and the process starts over with a different interval and step size.</sentence>
+    <sentence>Once the desired level of training accuracy is reached, the search terminates.</sentence>
+    <sentence>The algorithm uses internally set metrics to avoid over fitting as described in Ghiassi et al.</sentence>
+    <sentence>(2005).</sentence>
+    <sentence>We timed the computational effort required to train each category to assess DAN2’s efficacy.</sentence>
+    <sentence>Table 5 reports training and testing times required for each of the ten models.</sentence>
+    <sentence>We note that although the size of the training set is an important variable in model training time, it is not the only significant factor.</sentence>
+    <sentence>Clearly, the complexity of the problem, the underlying nonlinear model and the starting points, are also influential.</sentence>
+    <sentence>As presented in Table 5, in our computational environment, the largest category (earn) takes the longest (410 s) to train.</sentence>
+    <sentence>The shortest training times were for trade and crude models, at 4 and 9 s, respectively.</sentence>
+    <sentence>Once the models are trained, however, the actual runtime of the model for testing sets is very short and is mostly proportional to the size of the test sets.</sentence>
+    <sentence>For this data set, the longest testing time for the trained DAN2 models is 9.6 seconds for earn and the shortest time is for wheat 0.008 s. Similar information for SVM and kNN was not provided in the literature and thus, we cannot directly compare DAN2’s computational times with others.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Training and testing times for reuters categories with DAN2.</sentence>
+    <sentence>Category DAN2 training time (s) DAN2 testing time (s) Earn 410.2969 9.5859 Acq 203.1875 8.2891 Money-fx 9.3828 0.1563 Grain 71.7500 0.3359 Crude 8.9390 0.3460 Trade 4.0781 0.0586 Interest 11.3672 0.3281 Ship 27.4453 0.7109 Wheat 30.0469 0.0081 Corn 23.9453 0.2500</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>This paper presented DAN2 as an alternative approach for automated text categorization.</sentence>
+    <sentence>DAN2 is scalable and can be used for document text categorization without requiring experimentation with parameter settings or network architectural configurations.</sentence>
+    <sentence>We first presented a summary of DAN2’s theoretical foundations and then showed DAN2’s effectiveness by comparing its performance against the leading text categorization methods (kNN and SVM) using the established Reuters-21578 benchmark dataset.</sentence>
+    <sentence>Results show DAN2 as outperforming kNN for all cases and SVM for nine out of the ten cases.</sentence>
+    <sentence>Overall, results show that DAN2 performs better than both kNN and SVM, at P = 0.05 level of significance, for this dataset.</sentence>
+    <sentence>The excellent uniform performance of DAN2 indicates the robustness of the approach and its generality.</sentence>
+    <sentence>Finally, the transformation and dimensionality reduction property of DAN2 makes its application to text classification especially important.</sentence>
+  </section>
+</article>

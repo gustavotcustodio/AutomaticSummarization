@@ -1,0 +1,310 @@
+<article>
+  <title>Automatic planning for machine tool calibration: A case study</title>
+  <abstract>
+    <sentence>Machine tool owners require knowledge of their machine’s capabilities, and the emphasis increases with areas of high accuracy manufacturing.</sentence>
+    <sentence>An aspect of a machine’s capability is its geometric accuracy.</sentence>
+    <sentence>International Standards and best-practice guides are available to aid understanding of the required measurements and to advise on how to perform them.</sentence>
+    <sentence>However, there is an absence of any intelligent method capable of optimising the duration of a calibration plan, minimising machine down-time.</sentence>
+    <sentence>In this work, artificial intelligence in the form of automated planning is applied to the problem of machine tool pseudo-static geometric error calibration.</sentence>
+    <sentence>No prior knowledge of Artificial Intelligence (AI) planning is required throughout this paper.</sentence>
+    <sentence>The authors have written this paper for calibration engineers to see the benefits that automated planning can provide.</sentence>
+    <sentence>Two models are proposed; the first produces a sequential calibration plan capable of finding the optimal calibration plan.</sentence>
+    <sentence>The second model has the additional possibility of planning for concurrent measurements, adding the possibility of further reducing machine down-time.</sentence>
+    <sentence>Both models take input regarding a machine’s configuration and available instrumentation.</sentence>
+    <sentence>The efficacy of both models is evaluated by performing a case study of a five-axis gantry machine, whereby calibration plans are produced and compared against both an academic and industrial expert.</sentence>
+    <sentence>From this, the effectiveness of this novel method for producing optimal calibration plan is evaluated, stimulating potential for future work.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Machine tool calibration</keyword>
+    <keyword>Pseudo-static geometric errors</keyword>
+    <keyword>Planning</keyword>
+    <keyword>HTN</keyword>
+    <keyword>PDDL</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Machine tool calibration is a fundamental process for engineering companies, especially those manufacturing to a high level of accuracy, such as aerospace manufacturing.</sentence>
+    <sentence>The machine owner will systematically calibrate their machines to International Standards to maintain a comprehensive understanding of their capabilities.</sentence>
+    <sentence>The duration between calibrations is subjective to the machine’s reliability and historical data, but in most cases it is in the machine owner’s interest to calibrate their machine periodically.</sentence>
+    <sentence>Planning a full geometric machine tool calibration requires expert knowledge and is subject to the machine’s configuration, known test methods and available instrumentation to produce a sequence of measurements that tests for all the identified component errors.</sentence>
+    <sentence>Ordering this sequence to ensure that the calibration process is optimal to minimise machine down-time is challenging and requires significantly more consideration.</sentence>
+    <sentence>This challenge can be considered even greater for an engineer with less experience, making the process of understand the pseudo-static geometric error components and plan a suitable way of measuring each a longer process.</sentence>
+    <sentence>There has been great research effort into the classification of machine tool geometric errors (Bohez et al., 2007; Ramesh, Mannan, &amp; Poo, 2000; Schwenke et al., 2008; Seng Khim &amp; Chin Keong, 2010; Srivastava, Veldhuis, &amp; Elbestawit, 1995; Uddin, Ibaraki, Matsubara, &amp; Matsushita, 2009; Wan, Xiong, Zhao, &amp; Wang, 2008) and there is a wealth of literature and guidance to aid with error measurement (ISO230, 1996, 2006a, 2006b, 2007), but there is an absence of literature indicating that effective strategies have been developed to improve machine tool calibration planning, aiming to significantly reduce machine down-time.</sentence>
+    <sentence>This is surprising because it is still challenging for machine tool manufacturers, owners and calibration companies to determine the most efficient calibration plan because of the wealth of different machine configurations, available instrumentation, time and physical constraints.</sentence>
+    <sentence>One author correctly identified that there is little correlation between the selection of a measurement and the machine tool’s configuration.</sentence>
+    <sentence>However their work is concentrating on improving the selection of the best test-piece to use for geometric calibration (Bringmann, Besuchet, &amp; Rohr, 2008; Bringmann &amp; Knapp, 2009).</sentence>
+    <sentence>Muelaner, Cai, and Maropoulos (2010) produced a piece of software that aids with the instrumentation selection based on the dimensional characteristics of a large artefact.</sentence>
+    <sentence>Although this method is not aimed at optimising the sequence of measurements, it does help to optimise the selection of instrumentation for measuring each dimensional characteristic.</sentence>
+    <sentence>Aspects of how the method maps instrumentation to the dimensional characterises in terms of degrees-of-freedom, resolution and cost are both interesting and relevant to the models being created in this paper.</sentence>
+    <sentence>Artificial intelligence planners have been implemented in many areas of manufacturing planning, each with a significantly different motivation.</sentence>
+    <sentence>Significant work has been undertaken by Liu, Jiang Sun, Wei Yan, and Song Kang (2011) to produce a genetic algorithm for single piece, small-batch job-shop scheduling demonstrate the potential for finding optimal solutions.</sentence>
+    <sentence>Other work by authors such as Choy et al.</sentence>
+    <sentence>(2011), to minimise job tardiness in make-to-order manufacturing and Mok (2009) to optimise semiconductor packaging assembly lines are all examples that demonstrate where domain-independent decision making support and planning techniques have been implemented to work with domain specific knowledge.</sentence>
+    <sentence>Previous research efforts resulted in the production of a decision support tool implemented in the computational programming language PROLOG, for aiding with the construction of a calibration plan (Parkinson et al., 2011c).</sentence>
+    <sentence>Although this tool can help to produce a complete calibration plan, it takes little consideration to finding the optimal solution that aims to minimise machine down-time.</sentence>
+    <sentence>This shortcoming motivated the work into producing a model which was able to automatically produce a complete, optimised sequence of measurements to minimise machine down-time.</sentence>
+    <sentence>In addition to minimising machine down-time, systematically producing a calibration plan which is by a repeatable process can aid to reduced measurement uncertainty.</sentence>
+    <sentence>In this paper, a novel calibration planning method using computational intelligence is proposed for producing both complete and optimal calibration plans.</sentence>
+    <sentence>This starts by firstly presenting the process of calibration planning, showing how it can be modelled, which serves the requirements for the model.</sentence>
+    <sentence>Next, a description of two different models that have been developed is presented; the first is encoded in the form of a Hierarchical Task Network (HTN), and the second in Planning Domain Definition Language (PDDL).</sentence>
+    <sentence>The motivation behind the evolution of each model is discussed.</sentence>
+    <sentence>The description is in enough detail for a calibration engineer who the authors assume will have little if no prior experience with artificial intelligence (AI) planning.</sentence>
+    <sentence>To verify both models, a case study is then performed by creating the calibration plans for a five-axis gantry machine.</sentence>
+    <sentence>These two produced calibration plans are then compared with those produced by an industrial and an academic expert.</sentence>
+    <sentence>A discussion then takes place to evaluate the quality and efficiency of the automated plans in terms of time.</sentence>
+  </section>
+  <section name="Modelling">
+    <sentence>Modelling the pseudo-static geometric errors of a machine tool is an essential fundamental to planning a calibration because it provides an understanding of which component errors should be tested.</sentence>
+    <sentence>There are many well established kinematic models for the classification of machine tool geometric errors.</sentence>
+    <sentence>For example, the one presented by Srivastava et al.</sentence>
+    <sentence>(1995) in the year 1995 is sufficient to model the geometric errors and their relationship in a five-axis machine tool.</sentence>
+    <sentence>Advancements in the last decade have resulted in models like this being expanded to include dynamic, load dependent and thermal errors (Ramesh et al., 2000).</sentence>
+    <sentence>There are many novel calibration techniques which aim to provide an easier and more clear process of calibration.</sentence>
+    <sentence>Bringmann et al.</sentence>
+    <sentence>(2008) use a Monte Carlo simulation to evaluate calibration methods which can be used to help find a suitable calibration routine.</sentence>
+    <sentence>The author reports that the simulation works successfully for many different machine configurations, however the extent of its flexibility and ability to optimise calibration plans is not clear.</sentence>
+    <sentence>This section contains a detailed description of the considerations taken to produce our pseudo-static geometric error model.</sentence>
+    <sentence>Machine configuration Machine tools are typically constructed from an arrangement of linear and rotary that which is heavily influenced by its manufacturing requirements.</sentence>
+    <sentence>The material and size of the part being manufactured are two of the factors that influence the implementation of a specific machine configuration.</sentence>
+    <sentence>For example, it is less efficient to use a machine configuration where the workpiece is situated on a moving table for the manufacturing of large, heavy parts.</sentence>
+    <sentence>This is because the machine would be required to move the workpiece during manufacturing.</sentence>
+    <sentence>Conversely, a gantry machine would move around the workpiece, reducing the amount of energy required to machine the item as well as reducing the structural strain on the machine from the workpiece, but has a larger overall footprint.</sentence>
+    <sentence>The quantity of different machine tool configurations is large, one researcher identified that there are two hundred and sixteen possible configurations of vertical machining centres alone (Moriwaki, 2008), not taking into consideration the many different configurations of horizontal and double column (gantry) machining centers.</sentence>
+    <sentence>Although a calibration plan can be manually generated quickly for a common machine configuration because an engineer will be familiar with their design, the more rare configurations must be examined thoroughly to identify their pseudo-static geometric errors.</sentence>
+    <sentence>Axis errors As illustrated in Fig 1, it is well known that an axis of linear motion has the six-degree-of-freedom plus a squareness error with each perpendicular axis (Mekid, 2009; Schwenke et al., 2008).</sentence>
+    <sentence>Equally well know, as shown in Fig 2, a rotary axis will have four motion errors and four location errors (Bohez et al., 2007; Seng Khim &amp; Chin Keong, 2010; Srivastava et al., 1995).</sentence>
+    <sentence>Six-degrees-of-freedom and squareness errors for the X-axis of a machine tool… Fig 1.</sentence>
+    <sentence>Six-degrees-of-freedom and squareness errors for the X-axis of a machine tool with three perpendicular linear axes.</sentence>
+    <sentence>Motion and location errors of an axis of rotation (C-axis) Fig 2.</sentence>
+    <sentence>Motion and location errors of an axis of rotation (C-axis).</sentence>
+    <sentence>Error magnitude Each geometric component error can translate to the workpiece during manufacturing, however, the magnitude of some component errors is greater.</sentence>
+    <sentence>This magnitude can be a result of the machine’s configuration, or the machining requirements on the artifact.</sentence>
+    <sentence>Mekid (2009) present a way of classifying the severity and measurability of a pseudo-static geometric error into three sets of low, medium and high.</sentence>
+    <sentence>Although in most cases their classification might be correct, the severity is subjective to the machine’s configuration and the characteristics of the part that it is being used to produce, meaning that it should be evaluated on an individual machine basis, not globally.</sentence>
+    <sentence>For example, considering a three-axis vertical machining centre, the roll of the vertical Z-axis can be regarded as having a lower importance when compared to the roll error of the Y- and X-axis.</sentence>
+    <sentence>This is because any Z about Z (roll) movement along the Z-axis will only affect the rotation of machine’s cutting tool position (which during milling rotates anyway), whereas any roll in the X- and Y-axis would result in the rotation of the workpiece.</sentence>
+    <sentence>However, the significance of the Z about Z component error for a five-axis gantry machine is greater.</sentence>
+    <sentence>This machine has a kinematic chain where the C-axis is mounted on the Z-axis and the A-axis is mounted on the C-axis.</sentence>
+    <sentence>As seen in Fig 3, any error of the Z-axis roll will be propagated down the kinematic chain resulting in the incorrect positioning of the A-axis, which would be directly evident on any machining procedures that involve the rotation of the A-axis.</sentence>
+    <sentence>Z about Z error resulting in A-axis positional error on a five-axis gantry… Fig 3.</sentence>
+    <sentence>Z about Z error resulting in A-axis positional error on a five-axis gantry machine tool.</sentence>
+    <sentence>Test method The aim of the calibration procedure is to quantify the machine’s error.</sentence>
+    <sentence>This is done by selecting a suitable test method that can measure a component error.</sentence>
+    <sentence>International Standards and best-practice guides are used as a source for providing test methods.</sentence>
+    <sentence>A test will require the movement of the associated axis, stopping at predefined positions to measure the different between the expected and actual position.</sentence>
+    <sentence>For example, when testing the linear positioning, the difference between the machine’s expected and actual position is examined at multiple locations throughout the travel range of the axis.</sentence>
+    <sentence>Instrumentation The selection of equipment will usually be done in unison with the test method, influenced by the engineer’s preference.</sentence>
+    <sentence>However, there are many cases where many different instruments can be used for performing the same test method, where each require a different duration to install and perform the test.</sentence>
+    <sentence>For example, both a laser interferometer and a granite straight edge can be used to measure the straightness of a linear axis.</sentence>
+    <sentence>The laser interferometer might take longer to set-up, but if the machine has an axis with a long travel, the granite straight edge might need to be repositioned multiple times to measure the entire axis, therefore, taking more time to perform.</sentence>
+    <sentence>In addition, there are many cases where the possibility to perform multiple tests simultaneously could result in significant time savings.</sentence>
+    <sentence>This would require that it is physically possible to install and use two instruments simultaneously and that there is no interference between them.</sentence>
+    <sentence>For example, testing for linear positioning using laser interferometry and roll using an precision level have the potential to be performed simultaneously, providing that the precision level does not obstruct the laser beam and the laser equipment does not, induce heat in the level.</sentence>
+    <sentence>In addition to any physical constraints, the parameters of the measurements must also agree.</sentence>
+    <sentence>The following list provides the parameters which are considered in the current models presented in this paper.</sentence>
+    <sentence>While this is not a comprehensive set, the model considers enough parameters to allow for an accurate representation of machine tool calibration that can optimise based on machine down-time.</sentence>
+    <sentence>Future implementations of the model will consider many more parameters that allow for the calibration plan to be optimised for different metrological indicators.</sentence>
+    <sentence>The speed at which the machine moves between the target positions (feedrate).</sentence>
+    <sentence>The position of the first and last target on the axis.</sentence>
+    <sentence>The number of target positions throughout the axis travel between the first and last position.</sentence>
+    <sentence>The dwell time at each target, which includes the time required for the machine to stabilise from any dynamic motion errors and the time to take the measurement.</sentence>
+  </section>
+  <section name="Related work">
+    <sentence>Luger (2005) describes AI as being a branch of computer science that is concerned with automating intelligent behaviour.</sentence>
+    <sentence>This definition is true for what we are trying to achieve by replacing the knowledge and intelligence of a calibration engineer with an automated planning system.</sentence>
+    <sentence>In addition to reduced the required effort to generate calibration plans, the automated planning system will be tested to evaluate whether they can actually produce more efficient calibration plans, which minimise machine down-time.</sentence>
+    <sentence>This section shows how the modelled problem can be suitably expressed and interpreted by two different planning techniques.</sentence>
+    <sentence>Two models were produced for comparison; the first was using an HTN, and the second in PDDL.</sentence>
+    <sentence>The section describes the architecture of each model and highlights their differences.</sentence>
+    <sentence>The abstract description of both models is suitable for a calibration engineer.</sentence>
+    <sentence>However, a detailed description of both models and their development can be found in (Parkinson, et al., 2011; Parkinson, Gregory, Longstaff, &amp; Crampton, 2011).</sentence>
+    <sentence>HTN model The first model (Parkinson, et al., 2011), produced as an HTN was designed and tested using the SHOP2 architecture (Nau et al., 2003).</sentence>
+    <sentence>The motivation behind the selection of a HTN was because the process of machine tool calibration can naturally be expressed as a sequence of smaller tasks.</sentence>
+    <sentence>A HTN is a form of automated planning where the dependency among actions can be represented.</sentence>
+    <sentence>The developed HTN domain allows for solving a complex problem by the use of task decomposition.</sentence>
+    <sentence>This process is where the planner recursively decomposes an abstract task, by the use of the domain’s methods and operators, into smaller subtasks until ‘primitive’ tasks are reached, which can be decomposed no further.</sentence>
+    <sentence>The following list describes the abstract tasks that are included in our HTN, and Fig 4 illustrates this.</sentence>
+    <sentence>Find all linear, rotary and cross-axis errors based on the machine’s configuration.</sentence>
+    <sentence>Select component error for measuring.</sentence>
+    <sentence>Select the suitable equipment for measuring the component error.</sentence>
+    <sentence>Set-up the equipment in a suitable way to measure the component error.</sentence>
+    <sentence>Measure the component error using the instrumentation and the current set-up.</sentence>
+    <sentence>Task decomposition tree Fig 4.</sentence>
+    <sentence>Task decomposition tree.</sentence>
+    <sentence>The produced HTN model would solve a calibration problem based on the specification of several predicates.</sentence>
+    <sentence>Fig 5 shows some sample predicates which constitute the initial state.</sentence>
+    <sentence>It can be seen that the axis type, geometric error, equipment and the measurement procedure are represented.</sentence>
+    <sentence>HTN model predicates Fig 5.</sentence>
+    <sentence>HTN model predicates.</sentence>
+    <sentence>Optimisation Given enough time and computation resources, the HTN model is capable of finding all the possible solutions to a given calibration problem.</sentence>
+    <sentence>However, the set of potential solutions can be very large, so it is important to restrict the set to only contain those calibration plans that are planned to be completed in the shortest duration.</sentence>
+    <sentence>The SHOP2 tool implements the branch-and-bound optimisation algorithm to identify the lowest cost plan (Nau et al., 2003).</sentence>
+    <sentence>The exposed cost of an SHOP2 operator is used for this evaluation.</sentence>
+    <sentence>Experiments performed using this model demonstrated that the optimal solution was always found within a maximum sixty second time period for a different variety of calibration scenarios (Parkinson, et al., 2011).</sentence>
+    <sentence>Fig 6 shows the HTN operators and shows their exposed cost.</sentence>
+    <sentence>The following list describes what the cost for each operator consists of: (1) Error selection: This is the importance of an component error.</sentence>
+    <sentence>A component error that is regarded as having a high significance, or that should be measured first, is assigned a lower cost value.</sentence>
+    <sentence>The branch-and-bound algorithm will select an component error with a high importance (low assigned cost value) first.</sentence>
+    <sentence>(2) Equipment set-up cost: The cost in minutes that is required for setting up the instrumentation out of the box.</sentence>
+    <sentence>(3) Equipment adjustment cost: This is the cost in minutes for adjusting the equipment if it is already set up on the axis.</sentence>
+    <sentence>For example, realigning the optics of a laser interferometer from linear to angular measurement.</sentence>
+    <sentence>(4) Performing the measurement cost: This is the cost in minutes for measuring the component error using the selected equipment.</sentence>
+    <sentence>Data capture is normally automatic, but often requires manual intervention.</sentence>
+    <sentence>HTN operators which expose the cost values of ’?c’ for the error selection,… Fig 6.</sentence>
+    <sentence>HTN operators which expose the cost values of ’?c’ for the error selection, equipment set-up, adjustment and measurement cost.</sentence>
+    <sentence>The combined result from these operators is that a plan is produced where the component errors with the highest significance are selected first and the chosen equipment minimise the set-up, adjustment and measurement time.</sentence>
+    <sentence>PDDL model Limitations in the HTN model highlighted that simultaneous measurements could not be accounted for.</sentence>
+    <sentence>This led to the implementation of the model in PDDL and resulted in the production of a second, more advanced model.</sentence>
+    <sentence>Unlike the HTN model, the PDDL model can be interpreted by many different state-of-the-art planning algorithms.</sentence>
+    <sentence>This model (Parkinson, Gregory, et al., 2011) was developed to allow for algorithms that can handle the simultaneous measurement of multiple component errors.</sentence>
+    <sentence>Similar to the HTN model, the PDDL model contains three different object types: axis, instrument and error.</sentence>
+    <sentence>The schematic for the PDDL model can be seen in Fig 7.</sentence>
+    <sentence>The model contains four operators: set-up, adjust, measure and teardown.</sentence>
+    <sentence>In the PDDL model we introduced additional constraints to handle the concurrency.</sentence>
+    <sentence>These were: (1) Set-up on same axis: All concurrency measurements must be on the same axis of movement.</sentence>
+    <sentence>It would not be possible to test linear errors for the X-axis, while testing the linear errors of the Y-axis for a machine tool with because it would compromise alignment.</sentence>
+    <sentence>(2) Number of simultaneous tests: Each instrument has a maximum number of errors that it can measure simultaneously (degrees-of-freedom).</sentence>
+    <sentence>(3) Compatibility: It is often the case that it is simply not possible to set-up simultaneous tests because of physical restrictions.</sentence>
+    <sentence>E.g.</sentence>
+    <sentence>laser beam obstruction.</sentence>
+    <sentence>Diagrammatic illustration of the timeline of instrument and error objects in… Fig 7.</sentence>
+    <sentence>Diagrammatic illustration of the timeline of instrument and error objects in the PDDL model.</sentence>
+    <sentence>Model comparison Fig 8 illustrates the results from an initial experiment that was performed testing both models for twelve different calibration problems for comparison.</sentence>
+    <sentence>The full details of this investigation are published by Parkinson, Gregory, et al.</sentence>
+    <sentence>(2011).</sentence>
+    <sentence>The results from this experiment have shown that without enabling the ability for simultaneous measurements, there is no clear winner between the HTN (SHOP2) and PDDL (LPGs) model as regards to the optimum plan length.</sentence>
+    <sentence>However, once the ability for simultaneous measurements is enabled, the plan length produced by the PDDL (LPGc) model is significantly shorter, with savings reaching 50% of that generated by the HTN model.</sentence>
+    <sentence>Plan comparison Fig 8.</sentence>
+    <sentence>Plan comparison.</sentence>
+  </section>
+  <section name="Case study">
+    <sentence>Previous work has shown the capabilities of both models.</sentence>
+    <sentence>However, litter comparison between expert calibration plans has been made.</sentence>
+    <sentence>For this reason, this section contains a controlled case study is performed to compare the calibration plans produced by both an industrial and academic expert against those of the two different models.</sentence>
+    <sentence>First, evaluation of both expert’s plans will take place to extract empirical data regarding the instrumentation and estimated timings to implement in the problem definitions.</sentence>
+    <sentence>It is necessary to feed this expert knowledge into our model, as they require realistic information to produce the most efficient sequence of measurements.</sentence>
+    <sentence>Once a variety of expert, empirical data has been observed and incorporated in the model, the time will arise where enough knowledge is represented for the model to work autonomously, without the use of any additional expert data.</sentence>
+    <sentence>Following the creation of the problem definition files, both the HTN and PDDL planners will be executed for a ten minute period with optimisation enabled to find a complete and optimal solution.</sentence>
+    <sentence>Comparisons will then be made between the expert and automated plans to evaluate their efficiency and quality.</sentence>
+    <sentence>Problem scenario The problem that we are going to consider is the calibration of a five-axis gantry machine as seen in Fig 9.</sentence>
+    <sentence>In total the machine has 41 pseudo-static geometric errors.</sentence>
+    <sentence>Each linear axis has the component errors that can be seen in Fig 1 and each rotary axis has the component errors that can be seen in Fig 2.</sentence>
+    <sentence>In addition to the geometric errors of the linear (X-, Y- and Z-axis) and the rotary (C- and A-axis) pseudo-static geometric errors, the spindle (S-axis) errors will also be considered.</sentence>
+    <sentence>The spindle can be considered as an additional rotary axis requiring the measurement of the: 1.</sentence>
+    <sentence>Spindle position in X and Y.</sentence>
+    <sentence>Spindle axial run out.</sentence>
+    <sentence>Spindle radial run out.</sentence>
+    <sentence>Spindle taper run out.</sentence>
+    <sentence>Five axis machine Fig 9.</sentence>
+    <sentence>Five axis machine.</sentence>
+    <sentence>Expert’s plan Fig 10 shows the ordering and expected duration of the two expert calibration plans.</sentence>
+    <sentence>The first by an industrial expert, and the second by an academic expert with extensive experience in on-machine measurement.</sentence>
+    <sentence>These plans have been validated by performing the measurements.</sentence>
+    <sentence>Expert calibration plan Fig 10.</sentence>
+    <sentence>Expert calibration plan.</sentence>
+    <sentence>Expert’s plan comparison It is noticeable from Fig 10 that both the industrial and academic calibration plans have differences in terms of ordering, test duration and equipment selection.</sentence>
+    <sentence>Firstly, it is necessary to establish the difference related to the different motivation behind performing the calibration.</sentence>
+    <sentence>The industrial calibration plan is ordered in the way that the geometric errors manifest.</sentence>
+    <sentence>This method allows them to correct an error that they might discover during their work, minimising the effect that the modification has on the errors that have already been tested.</sentence>
+    <sentence>The academic’s motivation is different, they will perform all the measurements first and then analyse the data before recommending any corrective action.</sentence>
+    <sentence>The industrial calibration plan is also subject to the resource constraints of other concurrent calibration jobs, so company-wide resource allocation can have a significant impact on the produced calibration plan.</sentence>
+    <sentence>It is also possible that the academics’ might be working on more than one calibration job at one time, but at the time that the calibration plan was produced for the five-axis machine in question, they were not.</sentence>
+    <sentence>Additionally, the academic calibration plan was produced under the psychological reason of performing the measurements in the most convenient order, measuring the largest axes first.</sentence>
+    <sentence>It is also evident from Fig 10 that the industrial calibration plan contains the use of a granite straight edge to test for the straightness component errors.</sentence>
+    <sentence>The academics, on the other hand, use the laser interferometer because using the granite straight-edge for a machine tool with a large axis travel will take more time, whereas the laser can measure an axis with a longer travel without adjustment.</sentence>
+    <sentence>Another difference is the selection of the equipment for measuring the perpendicular squareness errors.</sentence>
+    <sentence>The industrial calibration plan contains the use of a granite square, meanwhile the academics plan makes use of a ball bar.</sentence>
+    <sentence>This is due to the ball bar being more convenient to use for the academics, and that it possesses the capability to also capture data regarding the dynamic errors of the machine tool.</sentence>
+    <sentence>Automated planning Using both the HTN and PDDL models as seen in Sections 3.1 and 3.2, the problem can be encoded in suitable form allowing the planning algorithms to attempt to solve the planning problem.</sentence>
+    <sentence>Problem definition The following section contains the motivation behind the parameters selected for the model definition.</sentence>
+    <sentence>• Component errors: Both problem definitions contain the same component errors as both expert plans.</sentence>
+    <sentence>The component errors represent the measurements that need to be taken to perform a full pseudo-static geometric machine tool calibration.</sentence>
+    <sentence>For some of the rotary component errors, the measurements involve more than one component error.</sentence>
+    <sentence>For example, the single measurement of C-axis position in X and Y covers the two position component errors which can be seen in Fig 2.</sentence>
+    <sentence>• Equipment: Where both industrial and academic plans use the same equipment for the measurement of a specific component error, both the problem definitions will contain only this instrument.</sentence>
+    <sentence>However, if both plans contain different instrumentation, the problem definitions will contain both instruments.</sentence>
+    <sentence>• Measurement timing: If both expert plans use the same instrumentation for a specific measurement, the time will be taken from the calibration plan where the estimate time is greater.</sentence>
+    <sentence>This allows for the model to work with the ‘worst-case’ scenario.</sentence>
+    <sentence>Where the calibration plans use different instrumentation, the problem definitions will use the exact timing.</sentence>
+    <sentence>• Adjustment reduction: If the instrumentation is being adjusted, it has been calculated that this will reduce the time taken to configure and perform the measurement by on average 20%.</sentence>
+    <sentence>Taking the squareness test using the ball bar as an example.</sentence>
+    <sentence>Even though each of the three linear squareness tests work in a different plane, if the ball bar equipment is already set-up, it is more time efficient to measure them all sequentially.</sentence>
+    <sentence>This is because the equipment has already been taken out of the box, set-up, connected to the computer and the software has been configured.</sentence>
+    <sentence>Test environment All experiments were carried out on an Ubuntu 11.04 computer with a QuadCore AMD Phenom II X4 970 3.50 GHz processor and 4 GB RAM.</sentence>
+    <sentence>The HTN model was executed using the SHOP2 (Nau et al., 2003) architecture, and for the PDDL model, we use the LPG-TD planner (Gerevini, Saetti, &amp; Serina, 2006).</sentence>
+    <sentence>Each algorithm was allocated ten minutes of CPU-time to solve the given problem.</sentence>
+    <sentence>The HTN algorithm used the ‘branch-and-bound’ search optimisation functionality, and for the PDDL, we use the ‘best-quality’ functionality to find the lowest cost plan in a specified time-frame.</sentence>
+    <sentence>Sequential HTN Fig 11 shows the most efficient plan identified by the HTN algorithm within a ten minute period.</sentence>
+    <sentence>It is immediately noticeable that the planner has grouped the measurements into axis order, much like that of the academic’s calibration plan.</sentence>
+    <sentence>The exception to this ordering is where the squareness measurements have been grouped together because the model has evaluated that it is more efficient for them to be performed directly after each other.</sentence>
+    <sentence>HTN calibration plan Fig 11.</sentence>
+    <sentence>HTN calibration plan.</sentence>
+    <sentence>It is also noticeable that the model has selected the equipment which can perform the required measurement in the lowest time.</sentence>
+    <sentence>It is evident that the model has selected equipment, and prioritised the measurements, based on instrumentation that can be adjusted to save time.</sentence>
+    <sentence>Simultaneous PDDL Differently from the both expert and HTN calibration plans, the PDDL model has produced a plan that contains measurements that can be performed simultaneously.</sentence>
+    <sentence>The PDDL produced plan contains the same ordering as the HTN produced plan, but there are differences in terms of test instrumentation section.</sentence>
+    <sentence>For this reason, only an excerpt of the PDDL produced plan is shown.</sentence>
+    <sentence>Taking the first two measurements that can be seen in Fig 12 ‘Y position’ and ‘Y about Y’ can be performed simultaneously.</sentence>
+    <sentence>This is possible because both tests involve moving the axis by the predefined amount, over the same range but with different equipment.</sentence>
+    <sentence>This agreement of parameters, and the absence of physical obstruction or interferences, means that both the measurements can be performed simultaneously.</sentence>
+    <sentence>PDDL Calibration plan Fig 12.</sentence>
+    <sentence>PDDL Calibration plan.</sentence>
+  </section>
+  <section name="Discussion">
+    <sentence>This section contains a detailed comparison of the produced automated plans.</sentence>
+    <sentence>This starts by comparing the planners in terms of duration (time), the followed by a discussion of the quality (measurement order and instrumentation selection).</sentence>
+    <sentence>Plan duration Table 1 shows the estimated time for the four calibration plans.</sentence>
+    <sentence>It is can be seen that the industrial expert’s plan is one hour shorter than the academic expert’s plan, which results from different calibration objective, experience and different equipment as described in Section 4.2.1.</sentence>
+    <sentence>It is also evident that the HTN produced calibration plan is forty five minutes more efficient that the academics plan in terms of time, but does not give any time-saving over the industrial plan, even though the HTN planner has optimised the plan to cluster the use of instrumentation together so that it only has to be adjusted, rather than set-up.</sentence>
+    <sentence>The reason that the HTN produced plan is longer is because the timings used in the problem definition were the highest taken from the expert and academic plan to ensure that the planner did not under estimate.</sentence>
+    <sentence>Taking this into consideration, planning definitions were created to contain the best-case timings.</sentence>
+    <sentence>The results can be seen in the lower section of Table 1.</sentence>
+    <sentence>It is evident that if the best-case timings are taken, the HTN produced calibration plan is reduced by thirty five minutes to twelve hours and ten minutes, which is twenty minutes shorter than the industrial expert’s plan.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Comparison of estimated calibration time for different plans.</sentence>
+    <sentence>Generation method Time in hours Industrial expert 12.30 Academic expert 13.30 HTN worst-case 12.45 PDDL worst-case 11.52 HTN best-case 12.10 PDDL best-case 11.18 On the other hand, as seen in Table 1, the plan produced by the PDDL model has an estimated execution time of eleven hours and fifty two minutes.</sentence>
+    <sentence>This is a fifty three minutes shorter than the HTN produced plan, and thirty eight minutes shorter than the industrial expert’s calibration plan.</sentence>
+    <sentence>The reasoning for that reduction in estimated time is the simultaneous measurements that have been identified and incorporated into the produced calibration plan.</sentence>
+    <sentence>Producing a version of the PDDL problem definition using the best-case timings resulted in an additional reduction in plan length of thirty four minutes, making the new total for the lowest cost plan eleven hours and eighteen minutes, which is one hour and twelve minutes shorter than the best expert plan.</sentence>
+    <sentence>Plan quality Both the automated plans follow the same structure of measuring the X, Y and Z linear pseudo-static errors followed by measuring the squareness between each.</sentence>
+    <sentence>Next, the C and A rotary axis errors are measured, followed lastly the measurement of the spindle errors (S axis).</sentence>
+    <sentence>The pseudo static geometric errors of a linear axis are testing in what the model has determined to be the most convenient and efficient order.</sentence>
+    <sentence>Taking the X axis for example, the positional (X position) error is measured using the Renishaw XL-80 followed by the accuracy and repeatability (X acc and rep) test.</sentence>
+    <sentence>Sequencing these two measurements is logical because they both use the same equipment set-up, only the accuracy and repeatability test is repeated a set amount of times.</sentence>
+    <sentence>Next, the pitch (X about Z) and yaw (X about Y) angular errors are measured using laser interferometry.</sentence>
+    <sentence>Both these measurements use the same equipment and machine parameters, making it logical for them to be clustered together, even if the angular optics are aligned differently.</sentence>
+    <sentence>Similarly, laser interferometry is then used to measure the two (X in Y and X in Z) straightness errors because the only difference is the orientation of the optics’.</sentence>
+    <sentence>Finally, the roll error (X about X) is measured using a Wyler BlueMeter.</sentence>
+    <sentence>This measurement is scheduled as the last for the pseudo static geometric error because it requires the use of different instrumentation, which in this case is a precision level.</sentence>
+    <sentence>Once all the six-degree-of-freedom errors have been measured for each linear axes, the squareness errors between each are then measured (X squareness to Y, X to Z and Z to X).</sentence>
+    <sentence>These three measurements are sequenced together because they all make use of the ball bar equipment as well as the movement of two linear axis in the working plane making it more efficient to group them together.</sentence>
+    <sentence>These three measurements are sequenced together because they all make use of the ball bar equipment as well as the movement of two linear axis, making it not only more time efficient to group them together, but also an altogether more repeatable metrological process.</sentence>
+    <sentence>When measuring the linear component errors, it would be bad practice to measure the squareness error half way through because it would involve changing the position of the machine’s other axes, reducing the measurements repeatability.</sentence>
+    <sentence>Next, the rotary axes are measured starting with the C axis.</sentence>
+    <sentence>Firstly, the positioning error of the C axis is using the Renishaw XR20-w.</sentence>
+    <sentence>This is the followed by the accuracy and repeatability measurement because, like for the linear axes, the same instrumentation and test set-up is used.</sentence>
+    <sentence>The XR20-w is then no longer required for the C axis, so the C axis squareness to the X and Y axis is then measured using a test bar and two clocks.</sentence>
+    <sentence>This is then followed by measurement of the pivot length using the same equipment.</sentence>
+    <sentence>Next the plan focuses its attention to the measurement of the A axis errors that can be measured using the instrumentation that is already set-up on the C axis.</sentence>
+    <sentence>The planner has identified that the measuring the squareness in X and Y, followed by the measurement of the position in X and Y is the most efficient choice in terms of time.</sentence>
+    <sentence>Once the planner has accounted for the measurements that can be performed using the test bar and two clocks, it then finds the suitable way of measuring the A position and A accuracy and repeatability sequentially using the XR20-w.</sentence>
+    <sentence>The final two component errors that require planning for are the two zero settings errors, which are measured using the test bar and two clocks.</sentence>
+    <sentence>The remainder of the calibration plan contains the spindle component errors.</sentence>
+    <sentence>The first spindle component error to be measured is the spindle position in X and Y because the instrumentation that was last used on the rotary A-axis, which is the test bar and two clocks.</sentence>
+    <sentence>Following this, the spindle’s axial and radial runout are measured using a clock and a test bar, which are subcomponents of the previous instrumentation.</sentence>
+    <sentence>The final component error left to measure is the spindle taper which is performed using a single clock.</sentence>
+    <sentence>This same ordering is evident in the plan produced from the PDDL model.</sentence>
+    <sentence>The difference being that some of the measurements are scheduled concurrently rather than sequentially.</sentence>
+    <sentence>Taking the concurrent planning of the Y position and Y about Y (roll) that can be seen in Fig 12 as an example, we can evaluate the effect this scheduling has on the plan’s quality.</sentence>
+    <sentence>Based on the machine’s configuration and available instrumentation it is a viable choice to set-up the instrumentation and then measure both simultaneously, and does not, therefore reduce the plans quality.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>This study presents the challenge of pseudo-static machine tool calibration, and demonstrates the associated complexities.</sentence>
+    <sentence>A method of calibration planning using computational intelligence is then presented in the form of two different models.</sentence>
+    <sentence>The first model is produced as a HTN and can produce optimal calibration plans where the measurements are carried out sequentially.</sentence>
+    <sentence>It has been shown that the HTN model can reduce the overall calibration plan by ordering the measurements based on instrumentation set-up, adjustment and measurement duration.</sentence>
+    <sentence>Similarly, the second model using PDDL can produce optimal calibration plans, however, the ability to plan for concurrent measurements reduced the overall plan duration further.</sentence>
+    <sentence>A case study scenario for the calibration of a five-axis gantry machine was then considered, where a calibration plan from an academic and an industrial expert were used for comparison against the calibration plan produced by both the HTN and PDDL models.</sentence>
+    <sentence>This highlighted that planning for concurrent measurements is beneficial and can reduce the overall calibration plan length.</sentence>
+    <sentence>This novel application of automated planning to machine tool calibration presents a potential for future expansion to allow for optimisation based on other metrological factors and not just time.</sentence>
+  </section>
+</article>

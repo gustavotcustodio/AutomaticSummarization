@@ -1,0 +1,217 @@
+Clustering is an important and popular technique in data mining.
+It partitions a set of objects in such a manner that objects in the same clusters are more similar to each another than objects in the different cluster according to certain predefined criteria.
+K-means is simple yet an efficient method used in data clustering.
+However, K-means has a tendency to converge to local optima and depends on initial value of cluster centers.
+In the past, many heuristic algorithms have been introduced to overcome this local optima problem.
+Nevertheless, these algorithms too suffer several short-comings.
+In this paper, we present an efficient hybrid evolutionary data clustering algorithm referred to as K-MCI, whereby, we combine K-means with modified cohort intelligence.
+Our proposed algorithm is tested on several standard data sets from UCI Machine Learning Repository and its performance is compared with other well-known algorithms such as K-means, K-means++, cohort intelligence (CI), modified cohort intelligence (MCI), genetic algorithm (GA), simulated annealing (SA), tabu search (TS), ant colony optimization (ACO), honey bee mating optimization (HBMO) and particle swarm optimization (PSO).
+The simulation results are very promising in the terms of quality of solution and convergence speed of algorithm.
+Clustering is an unsupervised classification technique which partitions a set of objects in such a way that objects in the same clusters are more similar to one another than the objects in different clusters according to certain predefined criterion (Jain, Murty, & Flynn, 1999; Kaufman & Rousseeuw, 2005).
+The term unsupervised means that grouping is establish based on the intrinsic structure of the data without any need to supply the process with training items.
+Clustering has been applied across many applications, i.e., machine learning (Anaya & Boticario, 2011; Fan, Chen, & Lee, 2008), image processing (Das & Konar, 2009; Portela, Cavalcanti, & Ren, 2014; SiangTan & MatIsa, 2011; Zhao, Fan, & Liu, 2014), data mining (Carmona et al., 2012; Ci, Guizani, & Sharif, 2007), pattern recognition (Bassiou & Kotropoulos, 2011; Yuan & Kuo, 2008), bioinformatics (Bhattacharya & De, 2010; Macintyre, Bailey, Gustafsson, Haviv, & Kowalczyk, 2010; Zheng, Yoon, & Lam, 2014), construction management (Cheng & Leu, 2009), marketing (Kim & Ahn, 2008; Kuo, An, Wang, & Chung, 2006), document clustering (Jun, Park, & Jang, 2014), intrusion detection (Jun et al., 2014), healthcare (Gunes, Polat, & Sebnem, 2010; Hung, Chen, Yang, & Deng, 2013) and information retrieval (Chan, 2008; Dhanapal, 2008).
+Clustering algorithms can generally be divided into two categories; hierarchical clustering and partitional clustering (Han, 2005).
+Hierarchical clustering groups objects into tree-like structure using bottom-up or top-down approaches.
+Our research however focuses on partition clustering, which decomposes the data set into a several disjoint clusters that are optimal in terms of some predefined criteria.
+There many algorithms have been proposed in literature to solve the clustering problems.
+The K-means algorithm is the most popular and widely used algorithm in partitional clustering.
+Although, K-means is very fast and simple algorithm, it suffers from two major drawbacks.
+Firstly, the performance of K-means algorithm is highly dependent on the initial values of cluster centers.
+Secondly, the objective function of the K-means is non-convex and it may contain many local minima.
+Therefore, in the process of minimizing the objective function, the solution might easily converge to a local minimum rather than a global minimum (Selim & Ismail, 1984).
+K-means++ algorithm was proposed by Arthur and Vassilvitskii (2007), which introduces a cluster centers initialization procedure to tackle the initial centers sensitivity problem of a standard K-means.
+However, it too suffers from a premature convergence to a local optimum.
+In order to alleviate the local minima problem, many heuristic clustering approaches have been proposed over the years.
+For instance, Selim and Alsultan (1991) proposed a simulated annealing approach for solving clustering problems.
+A tabu search method which combines new procedures called packing and releasing was employed to avoid local optima in clustering problems (Sung & Jin, 2000).
+Genetic algorithm based clustering method was introduced by Maulik and Bandyopadhyay (2000) to improve the global searching capability.
+In Fathian, Amiri, and Maroosi (2007), a honey-bee mating optimization was applied for solving clustering problems.
+Shelokar, Jayaraman, and Kulkarni (2004) proposed an ant colony optimization (ACO) for clustering problems.
+A particle swarm optimization based approach (PSO) for clustering was introduced by Chen and Ye (2004) and Cura (2012).
+A hybrid technique for clustering called K-NM-PSO, which combines the K-means, Nedler–Mead simplex and PSO was proposed by Kao, Zahara, and Kao (2008).
+Zhang, Ouyang, and Ning (2010) proposed an artificial bee colony approach for clustering.
+More recently, black hole (BH) optimization algorithm (Hatamlou, 2013) was introduced to solve clustering problems.
+Although these heuristic algorithms address the flaws of K-means but they still suffer several drawbacks.
+For example, most of these heuristic algorithms are typically very slow to find optimum solution.
+Furthermore, these algorithms are computationally expensive for large problems.
+Cohort intelligence (CI) is a novel optimization algorithm proposed recently by Kulkarni, Durugkar, and Kumar (2013).
+This algorithm was inspired from natural and society tendency of cohort individuals/candidates of learning from one another.
+The learning refers to a cohort candidate’s effort to self-supervise its behavior and further adapt to the behavior of other candidate which it tends to follow.
+This makes every candidate to improve/evolve its own and eventually the entire cohort behavior.
+CI was tested with several standard problems and compared with other optimization algorithms such as sequential quadratic programming (SQP), chaos-PSO (CPSO), robust hybrid PSO (RHPSO) and linearly decreasing weight PSO (LDWPSO).
+CI has been proven to be computationally comparable and even better performed in terms of quality of solution and computational efficiency when compared with these algorithms.
+These comparisons can be found in the seminal paper on CI (Kulkarni et al., 2013).
+However, for clustering problems, as the number of clusters and dimensionality of data increase, CI might converge very slowly and trapped in local optima.
+Recently, many researchers have incorporated mutation operator into their algorithm to solve combinatorial optimizing problems.
+Several new variants of ACO algorithms have been proposed by introducing mutation to the traditional ACO algorithms and achieve much better performance (Lee, Su, Chuang, & Liu, 2008; Zhao, Wu, Zhao, & Quan, 2010).
+Stacey, Jancic, and Grundy (2003) and Zhao et al.
+(2010) also have integrated mutation into the standard PSO scheme, or modifications of it.
+In order to mitigate the short-comings of CI, we present a modified cohort intelligence (MCI) by incorporating mutation operator into CI to enlarge the searching range and avoid early convergence.
+Finally, to utilize the benefits of both K-means and MCI, we propose a new hybrid K-MCI algorithm for clustering.
+In this algorithm, K-means is applied to improve the candidates’ behavior that generated by MCI at each iteration before going through the mutation process of MCI.
+The new proposed hybrid K-MCI is not only able to produce a better quality solutions but it also converges more quickly than other heuristic algorithms including CI and MCI.
+In summary, our contribution in this paper is twofold: 1.
+Present a modified cohort intelligence (MCI).
+Present a new hybrid K-MCI algorithm for data clustering.
+This paper is organized as follows: Section 2 contains the description of the clustering problem and K-means algorithm.
+In Sections 3 and 4, the details of cohort intelligence and the modified cohort intelligence are explained.
+In Section 5, we discussed the hybrid K-MCI algorithm and its application to clustering problems.
+Section 6 presents the experimental results that prove our proposed method outperforms other methods.
+Finally, we conclude and summarize the paper in Section 7.
+Let , where , be a set of N data objects to be clustered and be a set of K clusters.
+In clustering, each data in set R will be allocated in one of the K clusters in such a way that it will minimize the objective function.
+The objective function, intra-cluster variance is defined as the sum of squared Euclidean distance between each object and the center of the cluster which it belongs.
+This objective function is given by: (1) Also, • • and • In partitional clustering, the main goal of K-means algorithm is to determine centers of K clusters.
+In this research, we assume that the number of clusters K is known prior to solving the clustering problem.
+The following are the main steps of K-means algorithm: • Randomly choose K cluster centers of from data set as the initial centers.
+• Assign each object in set R to the closest centers.
+• When all objects have been assigned, recalculate the positions of the K centers.
+• Repeat Steps 2 and 3 until a termination criterion is met (the maximum number of iterations reached or the means are fixed).
+Arthur and Vassilvitskii (2007) introduced a specific way of choosing the initial centers for K-means algorithm.
+The procedure of K-means++ algorithm is outlined below: • Choose one center , uniformly at random from R. • For each data point , compute , the distance between and the nearest center that has already been chosen.
+• Take new center , choosing with probability .
+• Repeat Steps 2 and 3 until K centers have been chosen.
+• Now that the initial centers have been chosen, proceed using standard K-means clustering.
+Cohort intelligence (CI) is a new emerging optimization algorithm, which is inspired from natural and society tendency of cohort candidates of learning from one another.
+The term cohort refers to a group of candidates competing and interacting with one another to achieve some individual goal which is inherently common to all the candidates.
+Each candidate tries to improve its own behavior by observing every other candidates in a cohort.
+Every candidate might follow certain behavior in the cohort which according to itself may result improvement in its own behavior.
+This allows every candidate to learn one another and improves cohort’s behavior.
+If the candidates behavior does not improve considerably after a number of iterations, the cohort behavior is considered saturated.
+For instance, a general unconstrained problem (in minimization sense) is given by: Minimize .
+The sampling interval, is given by , i = 1,2,…,N Assume the objective function acts as the behavior of an individual candidate in a cohort, whereby the individual will naturally tries to enrich itself by modifying its qualities/features, .
+In a cohort with C number of candidates, every individual candidate c has its own set features which makes the behavior of .
+The individual behavior of each candidate c will be observed by every other candidate as well as by itself within that cohort.
+To be more specific, a candidate has a natural tendency to follow if it is better than , i.e.
+.
+Since is better than , the candidate will tend to follow the features of , which is given by with certain variations t. The following describes the implementation of CI: Step 1: Initialize the number of candidates C, sampling interval for each quality , sampling interval reduction factor , convergence parameter ∊ , number of iterations n and number of variations t. Step 2: The probability of selecting the behavior of every associated candidate c is calculated using: (2) Step 3: Every candidate generates a random number rand ∊ [0,1] and using the roulette wheel approach decides to follow corresponding behavior and its features .
+The superscript indicates that the behavior is selected by the candidate and not known in advance.
+The roulette wheel approach could be most appropriate as it provides chance to every behavior in the cohort to get selected based purely on its quality.
+In addition, it also may increases the chances of any candidate to select the better behavior as the associated probability presented in Eq (2) is directly proportional to the quality of the behavior .
+In other words, the better the solution, higher the probability of being followed by the candidates in the cohort.
+Step 4: Every candidate shrinks the sampling interval for its every features to its local neighborhood.
+This is performed as follows: (3) where .
+Step 5: Each candidate samples t qualities from within the updated sampling interval for every its features and computes a set of associated t behaviors, i.e.
+and selects the best behavior from set .
+This makes cohort with C candidates updates its behavior and can be expressed as .
+Step 6: If there is no significant improvement in the behavior of every candidate in the cohort, the cohort behavior could be considered saturated.
+The difference between the individual behaviors is not very significant for successive considerable number of iterations, if: (4) (5) (6) Step 7: Accept any of the behaviors from current set of behaviors in the cohort as the final objective function value and stop if either of the two criteria listed below is valid or else continue to Step 2: 1.
+If maximum number of iterations exceeded.
+If cohort saturates to the same behavior by satisfying the conditions of Eqs.
+(4)–(6).
+In this paper, we present a modified cohort intelligence (MCI) to improve the accuracy and the convergence speed of CI.
+Premature convergence may arise when the cohort converges to a local optimum or the searching process of algorithm is very slow.
+Therefore, we introduced a mutation mechanism to CI in order to enlarge the searching range, expand the diversity of solutions and avoid early convergence.
+Assume for ith iteration, a candidate in a particular cohort is represented by a set of K number of cluster centers, , where and represents the cluster’s center.
+For an example, Fig 1 depicts a candidate solution of a problem with three clusters, and all the data objects have four dimensions, .
+Thus, the candidate solution illustrated in Fig 1 can be represented by , where .
+Then, each candidate in that cohort will undergo mutation process to generate mutant candidate as following: (7) Variables and are three candidates which are selected randomly from C candidates in such a way that .
+(8) The selected candidate would be: (9) (10) where is a random number between 0 and 1, is a random number less than 1 and D is the dimensionality of data objects.
+Thus, the new features for candidate c in the ith iteration are selected based on its objective function: (11) This mutation process is performed to other remaining candidates in cohort.
+Example of a candidate solution Fig 1.
+Example of a candidate solution.
+In this paper, we propose a novel algorithm referred to as the hybrid K-means modified cohort intelligence (K-MCI) for data clustering.
+In this algorithm, K-means is utilized to improve the candidates’ behavior generated by MCI.
+After a series run of K-means, then each candidate will go through the mutation process as described in Section 4.
+The new proposed algorithm benefits from the advantages of both K-means and MCI.
+This combination allows the proposed algorithm to converge more quickly and achieve a more accurate solutions without getting trapped to a local optimum.
+The application of the hybrid K-MCI on the data clustering is presented in this section.
+In order to solve the clustering problem using the new proposed algorithm, following steps should be applied and repeated: Step 1 : Generate the initial candidates.
+The initial C candidates are randomly generated as described below: (12) (13) (14) where is the number of clusters, and D is the dimensionality of cluster center .
+Thus, (15) The sampling interval is given by , where, and (each feature of center) are minimum and maximum value of each point belonging to the cluster .
+Step 2 : Perform K-means algorithm for each candidate as described in Section 2.
+Step 3 : Perform mutation operation for each candidate as described in Section 4.
+Step 4 : The objective function for each candidate is calculated using Eq (1).
+Step 5 : The probability of selecting the behavior of every candidate is calculated using Eq (2).
+Step 6 : Every candidate generates a random number rand [0,1] and by using the roulette wheel approach decides to follow corresponding behavior and its features .
+For example, candidate may decide to follow behavior of candidate and its features .
+Step 7 : Every candidate shrinks the sampling interval for its every features to its local neighborhood according to Eq (3) Step 8 : Each candidate samples t qualities from within the updated sampling interval of its selected features .
+Then, each candidate computes the objective function for these t behaviors and selects the best behavior from this set.
+For instance with , candidate decides to follow the behavior of candidate and its features .
+Then, candidate will sample 15 qualities from its updated sampling interval features of .
+Next, candidate will compute the objective function of its behaviors according to Eq (1), i.e.
+and selects the best behavior from within this set.
+Step 9 : Accept any of the C behaviors from current set of behaviors in the cohort as the final objective function value and its features and stop if either of the two criteria listed below is valid or else continue to Step 2: 1.
+If maximum number of iterations exceeded.
+If cohort saturates to the same behavior by satisfying the conditions given by Eqs.
+(4)–(6).
+The flow chart of the hybrid K-MCI is illustrated in Fig 2 The flow chart of the hybrid K-MCI Fig 2.
+The flow chart of the hybrid K-MCI.
+Six real data sets are used to validate our proposed algorithm.
+Each data set from UCI Machine Learning Repository has a different number of clusters, data objects and features as described below (Bache & Lichman, 2013): Iris data set (N = 150, D = 4, K = 3): which consists of three different species of Iris flowers: Iris Setosa, Iris Versicolour and Iris Virginica.
+For each species, 50 samples with four features (sepal length, sepal width, petal length, and petal width) were collected.
+Wine data set (N = 178, D = 13, K = 3): This data set are the results of a chemical analysis of wines grown in the same region in Italy but derived from three different cultivators: class 1 (59 instances), class 2 (71 instances), and class 3 (48 instances).
+The analysis determined the quantities of 13 features found in each of the three types of wines.
+These 13 features are alcohol, malic acid, ash, alkalinity of ash, magnesium, total phenols, flavanoids, non-flavanoid phenols, proanthocyanins, color intensity, hue, OD280/OD315 of diluted wines, and proline.
+Glass data set (N = 214, D = 9, K = 6): which consists of six different types of glass: building windows float processed (70 objects), building windows non-float processed (76 objects), vehicle windows float processed (17 objects), containers (13 objects), tableware (9 objects), and headlamps (29 objects).
+Each type of glass has nine features, which are refractive index, sodium, magnesium, aluminum, silicon, potassium, calcium, barium, and iron.
+Breast Cancer Wisconsin data set (N = 683, D = 9, K = 2): This data set contains 683 objects.
+There are two categories: malignant (444 objects) and benign (239 objects).
+Each type of class consists of nine features, which includes clump thickness, cell size uniformity, cell shape uniformity, marginal adhesion, single epithelial cell size, bare nuclei, bland chromatin, normal nucleoli and mitoses.
+Vowel data set (N = 871, D = 3, K = 6): which consist of 871 Indian Telugu vowels sounds.
+There are six-overlapping vowel classes: (72 instances), a (89 instances), i (172 instances), u (151 instances), e (207 instances) and o (180 instances).
+Each class has three input features corresponding to the first, second, and third vowel frequencies.
+Contraceptive Method Choice data set (N = 1473, D = 9, K = 3): This data set is a subset of the 1987 National Indonesia Contraceptive Prevalence Survey.
+The samples are married women who either were not pregnant or did not know if they were at the time of interview.
+The problem is to predict the choice of current contraceptive method (no use has 629 objects, long-term methods have 334 objects, and short-term methods have 510 objects) of a woman based on her demographic and socioeconomic characteristics.
+The performance of our proposed algorithm on these selected data set is compared with several typical stochastic algorithms such as the CI, MCI, ACO (Shelokar et al., 2004), PSO (Kao et al., 2008), SA (Niknam & Amiri, 2010; Selim & Alsultan, 1991), GA (Maulik & Bandyopadhyay, 2000), TS (Niknam & Amiri, 2010), HBMO (Fathian & Amiri, 2008), K-means and K-means++.We have utilized two criteria to evaluate the performance of these algorithms: (i) the intra-cluster distances, as defined in Eq (1) and (ii) the number of fitness function evaluation (NFE).
+For the first criteria, numerically smaller the value of the intra-cluster distances indicates higher the quality of the clustering is.
+As for the second criteria, NFE represents the number of times that the clustering algorithm has calculated the objective function equation (1) to reach the optimal solution.
+The smaller NFE value indicates the high convergence speed of the considered algorithm.
+The required parameters for the implementation of hybrid K-MCI, MCI and CI for clustering are shown in Table 1.
+The algorithms are implemented with Matlab 8.0 on a Windows platform using Intel Core i7-3770, 3.4 GHz and 8 GB RAM computer.
+Table 2 shows the summary of the intra-cluster distances obtained by the clustering algorithms on the selected data sets.
+The results are best, average, worst and the standard deviation of solutions over 20 independent runs.
+The NFE criteria in Table 2 indicates convergence speed of the respective algorithms.
+Table 1.
+Parameters of hybrid K-MCI, MCI and CI for data clustering.
+Data CI Modified CI MCI-Kmean c t r c t r c t r Iris 5 15 0.95 5 15 0.95 0.7 5 15 0.92 0.7 Wine 5 15 0.95 5 15 0.95 0.7 5 15 0.70 0.7 Cancer 5 15 0.95 5 15 0.95 0.7 5 15 0.95 0.7 Vowel 5 15 0.99 5 15 0.99 0.7 5 15 0.98 0.7 CMC 5 15 0.99 5 15 0.99 0.7 5 15 0.99 0.7 Glass 5 15 0.99 5 15 0.99 0.7 5 15 0.98 0.7 Table 2.
+Simulation results for clustering algorithms.
+Dataset Criteria K-means K-mean++ GA SA TS ACO HBMO PSO CI MCI K-MCI Iris Best 97.3259 97.3259 113.9865 97.4573 97.3659 97.1007 96.7520 96.8942 96.6557 96.6554 96.6554 Average 106.5766 98.5817 125.1970 99.9570 97.868 97.1715 96.9531 97.2328 96.6561 96.6554 96.6554 Worst 123.9695 122.2789 139.7782 102.0100 98.5694 97.8084 97.7576 97.8973 96.657 96.6554 96.6554 S.D 12.938 5.578 14.563 2.018 0.530 0.367 0.531 0.347 0.0002 0 0 NFE 80 71 38128 5314 20201 10998 11214 4953 7250 4500 3500 Wine Best 16555.68 16555.68 16530.53 16473.48 16666.22 16530.53 16357.28 16345.96 16298.01 16295.16 16292.44 Average 17251.35 16816.55 16530.53 17521.09 16785.45 16530.53 16357.28 16417.47 16300.98 16296.51 16292.70 Worst 18294.85 18294.85 16530.53 18083.25 16837.53 16530.53 16357.28 16562.31 16305.06 16297.98 16292.88 S.D 874.148 637.140 0 753.084 52.073 0 0 85.497 2.118 0.907 0.130 NFE 285 261 33551 17264 22716 15473 7238 16532 17500 16500 6250 Cancer Best 2988.43 2986.96 2999.32 2993.45 2982.84 2970.49 2989.94 2973.50 2964.64 2964.4 2964.38 Average 2988.99 2987.99 3249.46 3239.17 3251.37 3046.06 3112.42 3050.04 2964.78 2964.41 2964.38 Worst 2999.19 2988.43 3427.43 3421.95 3434.16 3242.01 3210.78 3318.88 2964.96 2964.43 2964.38 S.D 2.469 0.689 229.734 230.192 232.217 90.500 103.471 110.801 0.094 0.007 0 NFE 120 112 20221 17387 18981 15983 19982 16290 7500 7000 5000 CMC Best 5703.20 5703.20 5705.63 5849.03 5885.06 5701.92 5699.26 5700.98 5695.33 5694.28 5693.73 Mean 5704.57 5704.19 5756.59 5893.48 5993.59 5819.13 5713.98 5820.96 5696.01 5694.58 5693.75 Worst 5705.37 5705.37 5812.64 5966.94 5999.80 5912.43 5725.35 5923.24 5696.89 5694.89 5693.80 S.D 1.033 0.955 50.369 50.867 40.845 45.634 12.690 46.959 0.482 0.198 0.014 NFE 187 163 29483 26829 28945 20436 19496 21456 30000 28000 15000 Glass Best 215.73 15.36 278.37 275.16 279.87 269.72 245.73 270.57 219.37 213.03 212.34 Mean 218.70 217.56 282.32 282.19 283.79 273.46 247.71 275.71 223.31 214.08 212.57 Worst 227.35 223.71 286.77 287.18 286.47 280.08 249.54 283.52 225.48 215.62 212.80 S.D 2.456 2.455 4.138 4.238 4.190 3.584 2.438 4.550 1.766 0.923 0.135 NFE 533 510 199892 199438 199574 196581 195439 198765 55000 50000 25000 Vowel Best 149398.66 149394.56 149513.73 149370.47 149468.26 149395.6 149201.63 148976.01 149139.86 148985.35 148967.24 Mean 151987.98 151445.29 159153.49 161566.28 162108.53 159458.14 161431.04 151999.82 149528.56 149039.86 148987.55 Worst 162455.69 161845.54 165991.65 165986.42 165996.42 165939.82 165804.67 158121.18 150468.36 149102.38 149048.58 S.D 3425.250 3119.751 3105.544 2847.085 2846.235 3485.381 2746.041 2881.346 495.059 43.735 36.086 NFE 146 129 10548 9423 9528 8046 8436 9635 15000 13500 7500 The simulations results given in Table 2, shows that our proposed method performs much better than other methods for all test data sets.
+Our proposed method is able to achieve the best optimal value with a smaller standard deviation compared to other methods.
+In short, the results highlighted the precision and robustness of the proposed K-MCI compared to other algorithms including CI and MCI.
+For Iris data set, K-MCI and MCI algorithm are able to converge to global optimum of 96.5554 for each run, while the best solutions for CI, K-Means, K-means++, GA, SA, TS, ACO, HBMO and PSO are 96.6557, 97.3259, 97.3259, 113.9865, 97.4573, 97.3659, 97.1007, 96.752 and 96.8942.
+The standard deviation for K-MCI is zero, which is much less than other methods.
+K-MCI is also able to achieve the best global result and has a better average and worst result for the Wine data set compared to other methods.
+As for CMC data set, K-MCI has the best solution of 5693.73, while the best solutions for CI, MCI, K-Means, K-means++, GA, SA, TS, ACO, HBMO and PSO are 5695.33, 5694.28, 5703.20, 5703.20, 5705.63, 5849.03, 5885.06, 5701.92, 5699.26 and 5700.98.
+Furthermore, K-MCI has a much smaller standard deviation than the other methods for CMC data set.
+For vowel data set, our proposed method also manages to achieve best, average, worst solution and standard deviation of 148967.24, 148987.55, 149048.58 and 36.086.
+These obtained values are much smaller than other methods.
+We notice the effect of applying mutation operator to CI by comparing the results between MCI and CI from Table 2.
+For instance, MCI has achieved a best, average, worst solutions of 16295.16, 16296.51 and 16297.98 with a standard deviation of 0.907 for Wine data set while CI has obtained best, average, worst solutions of 16298.01, 16300.98 and 16305.60 with a standard deviation of 2.118.
+Thus, by applying mutation operator, MCI is able to produce a better quality solution compared to the original CI.
+The simulation results from Table 2 for K-MCI, MCI and CI points out the advantages of hybridizing K-means into MCI.
+The best global solution of K-MCI, MCI and CI for the Wine data set are 16292.44, 16295.16 and 16298.01.
+These results prove that the K-MCI provides a higher clustering quality than the standalone MCI and CI.
+Besides improving the clustering quality, the combination of K-means with MCI, will further enhance the convergence characteristics.
+CI and MCI need 17,500 and 16,500 function evaluations, respectively to obtain the best solution for Wine data set.
+On the other hand, K-MCI only takes 6250 function evaluations to achieve the best optimal solution for the same data set.
+Hence, K-MCI converges to optimal solution very quickly.
+Although standalone K-means and K-means++ algorithms converge much faster than other algorithms including K-MCI, they have a tendency to prematurely converge to a local optimum.
+For instance, K-means++ algorithm only needs 261 function evaluations to obtain the best solution for Wine data set but these solution results are suboptimal.
+In summary, the simulation results from Table 2 validates that our proposed method is able to attain a better global solution with a smaller standard deviation and fewer numbers of function evaluations for clustering.
+Finally, we have included Tables 3–5 to illustrate the best centers found by K-MCI in the test data.
+Table 3.
+The achieved best centers on the Iris, Wine and CMC data set.
+Dataset Center 1 Center 2 Center 3 Iris 5.01213 5.93432 6.73334 3.40309 2.79781 3.06785 1.47163 4.41787 5.63008 0.23540 1.41727 2.10679 Wine 13.81262 12.74160 12.50086 1.83004 2.51921 2.48843 2.42432 2.41113 2.43785 17.01717 19.57418 21.43603 105.41208 98.98807 92.55049 2.93966 1.97496 2.02977 3.21965 1.26308 1.54943 0.34183 0.37480 0.32085 1.87181 1.46902 1.38624 5.75329 5.73752 4.38814 1.05368 1.00197 0.94045 2.89757 2.38197 2.43190 1136.97230 687.01356 463.86513 CMC 43.64742 24.41296 33.50648 2.99091 3.03823 3.13272 3.44673 3.51059 3.55176 4.59136 1.79036 3.65914 0.80254 0.92502 0.79533 0.76971 0.78935 0.69725 1.82586 2.29463 2.10130 3.42522 2.97378 3.28562 0.10127 0.03692 0.06151 1.67635 2.00149 2.11479 Table 4.
+The achieved best centers on the glass and vowel data set.
+Dataset Center 1 Center 2 Center 3 Center 4 Center 5 Center 6 Glass 1.52434 1.51956 1.51362 1.52132 1.51933 1.51567 12.03344 13.25068 13.15690 13.74692 13.08412 14.65825 0.01215 0.45229 0.65548 3.51952 3.52765 0.06326 1.12869 1.53305 3.13123 1.01524 1.36555 2.21016 71.98256 73.01401 70.50411 71.89517 72.85826 73.25324 0.19252 0.38472 5.33024 0.21094 0.57913 0.02744 14.34306 11.15803 6.73773 9.44764 8.36271 8.68548 0.23039 0.00433 0.67322 0.03588 0.00837 1.02698 0.15156 0.06599 0.01490 0.04680 0.06182 0.00382 Vowel 506.98650 623.71854 407.89515 439.24323 357.26154 375.45357 1839.66652 1309.59677 1018.05210 987.68488 2291.44000 2149.40364 2556.20000 2333.45721 2317.82688 2665.47618 2977.39697 2678.44208 Table 5.
+The achieved best centers on the cancer data set.
+Dataset Center 1 Center 2 Cancer 7.11701 2.88942 6.64106 1.12774 6.62548 1.20072 5.61469 1.16404 5.24061 1.99334 8.10094 1.12116 6.07818 2.00537 6.02147 1.10133 2.32582 1.03162
+CI is a new emerging optimization method, which has a great potential to solve many optimization problems including data clustering.
+However, CI may converge very slowly and prematurely converge to local optima when the dimensionality of data and number of clusters increase.
+With the purpose of assuaging these drawbacks, we proposed modified CI (MCI) by implementing mutation operator into CI.
+It outperforms CI in terms of both quality of solution and the convergence speed.
+Finally in this paper, we proposed a novel hybrid K-MCI algorithm for data clustering.
+This new algorithm tries to exploit the merits of two algorithms simultaneously, where K-means is utilized to improve the candidates’ behavior at each iteration before these candidates are given back again to MCI for optimization.
+This combination of K-means and MCI allows our proposed algorithm to convergence more quickly and prevents it from falling to local optima.
+We tested our proposed method using the standard data sets from UCI Machine Learning Repository and compared our results with six state-of-art clustering methods.
+The experimental results indicate that our algorithm can produce a higher quality clusters with a smaller standard deviation on the selected data set compare to other clustering methods.
+Moreover, the convergence speed of K-MCI to global optima is better than other heuristic algorithms.
+In other words, our proposed method can be considered as an efficient and reliable method to find the optimal solution for clustering problems.
+There are a number of future research directions can be considered to improve and extend this research.
+The computational performance is governed by parameters such as the sampling interval reduction, r. Thus, a self-adaptive scheme can be introduced to fine tune the sampling interval reduction.
+In this research, we assumed the number of clusters are known a prior when solving the clustering problems.
+Therefore, we can further modify our algorithm to perform automatic clustering without any prior knowledge of number of clusters.
+We may combine MCI with other heuristic algorithms to solve clustering problems, which can be seen as another research direction.
+Finally, our proposed algorithm may be applied to solve other practically important problems such as image segmentation (Bhandari, Singh, Kumar, & Singh, 2014), traveling salesman problem (Albayrak & Allahverdi, 2011), process planning and scheduling (Seker, Erol, & Botsali, 2013) and load dispatch of power system (Zhisheng, 2010).

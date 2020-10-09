@@ -1,0 +1,470 @@
+Pre-run-time scheduling in real-time systems: Current researches and Artificial Intelligence perspectives
+
+Abstract
+
+This paper presents the taxonomy of real-time systems with special emphasize on pre-run-time scheduling problem. Firstly, we present real-time systems, real-time tasks, timing, precedence and exclusion constraints. Then, we describe the problem of pre-run-time scheduling of tasks under constraints. After that, we present the most existing efficient techniques to deal with the latter problem. We summarize the discussion of existing techniques and possible research perspectives after surveying the Artificial Intelligence’s point of view about the problem of pre-run-time scheduling of real-time tasks. The Artificial Intelligence survey includes Constraint Satisfaction Problems class since pre-run-time scheduling belongs to the latter class. The Artificial Intelligence survey includes also Path-finding Problems from which intelligent algorithms could be observed such as Learning-Real-Time-A∗(LRTA∗) thanks to its important properties (optimality, linear space complexity and determinism). The development of an algorithm like LRTA∗ to solve Constraints Satisfaction Problems and particularly the pre-run-time scheduling of real-time tasks problem is one clear research direction to deal with large-scale real-time systems. The overall objective of this paper is to show what are the perspectives to Artificial Intelligence literature that could be beneficial firstly to Artificial Intelligence community itself and secondly to real-time systems community.
+
+Keywords
+Real-time systems
+Pre-run-time scheduling
+Artificial Intelligence
+Problem solving
+
+1. Introduction
+1.1. Overview
+
+The wide-spread of real-time systems is remarkable in our daily life. Automobiles, aeronautics, communications,… etc are examples of such systems. Usually, those systems are under timing constraints. Failing to guarantee specified timing requirements can lead to disastrous consequences. Typically, in a real-time system, there is a computing unit of one or more processors that is connected to several devices. A real-time program runs on the computing unit. This program is a set of tasks to be executed concurrently. It acquires continuously data from sensors to get information about the state of the physical process, computes these inputs, and then produces outputs to be sent to the process throughout actuators (Fig. 1). This data reflects, the current state of the process. In the simplest case, inputs are produced at regular intervals of time (periodic inputs are produced) and outputs to be sent are also periodic. If the process needs to be adjusted according to the desired outputs, then the corresponding computer programs have to produce the relevant data to be sent throughout the actuators.
+Physical process Control Model
+
+    
+
+Fig. 1. Physical process Control Model.
+
+Scheduling the concurrent tasks in the computing unit has a central role to guarantee the predictability of the system along its life-cycle. The scheduling problem is known to be NP-Hard in its general form (Garey & Johnson, 1979). Proposed scheduling techniques in literature are either run-time or pre-run-time. In the present paper we will focus only on pre-run-time scheduling techniques.
+1.2. Motivations
+
+In fact, the content of this paper is a literature review from 2 different communities : (1) Artificial Intelligence (AI) and (2) real-time systems (RTS) namely problem solving techniques used in both communities. Often, both communities are working independently from each others to solve sometimes the same problems. For example, RTS community is using some branch-and-bound techniques, which have been developed initially by AI community, to solve specific problems such as real-time scheduling. At the same time branch-and-bound techniques are not preferred in AI community since they suffer both space and time complexities which limits their use in small size problem instances. Further, more efficient techniques have been proposed in AI literature to deal with such limitations but it has not used by RTS community. The overall objective of this paper is to show what are the perspectives to AI literature that could be beneficial firstly to AI community itself and secondly to RTS community.
+
+The present paper is organized as follows : Section 2 contains the definition of real-time tasks. Section 3 describes the pre-run-time scheduling problem while Section 4 is devoted to the presentation of RTS community works to solve the pre-run-time scheduling problem. Works described in the latter section (number 4) are organized according to AI problem solving area point of view. Section 5 is dedicated to the presentation of the major developments in problem solving area from AI. Section 6 discusses the major developments in AI and RTS. The paper ends at Section 7 describing possible research directions in AI problem solving area which help RTS community.
+2. Real-time systems
+
+Definition 2.1 real-time system
+
+A real-time system is a system in which the computing unit follows the evolution of the controlling physical process in order to keep its safe operating.
+
+The above definition emphasizes the evolution speed of the physical process and the semantic of a safe operation. According to the evolution speed, time intervals to read and process data by the computing unit are defined. Higher speeds require tighter time intervals. They require also a short time analysis of the acquired data. The semantic of a safe operating depends on the nature of the physical process and the expected performances. Reading a video data from camera for a surveillance purpose is quite different from reading altitude data in avionic systems. A bit delay (few milliseconds) in the former will not affect the surveillance task while the same delay in the latter could cause a human/financial losses. In the former systems, specified timing parameters (also timing constraints) could be violated while in the latter no timing constraints are allowed to be missed. Therefore, the semantic of a safe operating makes the difference between three classes of real-time systems : soft-real-time, hard-real-time and mixed real-time systems. In a hard-real-time system, there is no violation of initially specified timing constraints. This class of real-time systems is defined in critical systems such as : aeronautics, military systems,… etc. Our work in the present paper belongs to this class of systems. In soft-real-time systems, violating initially specified timing constraints involve a cost that should be minimized. Reading data from a camera in a video surveillance system is an example of a soft-real-time system. The delay of reading data from the camera affects particularly, the Quality-of-Service that should be improved. In a mixed-real-time system, both soft and hard timing constraints are present in which the cost involved by the violation of soft-real-time constraints should be minimized and the stringent timing (or hard) constraints should be strictly respected.
+2.1. Real-time tasks
+
+A typical hard-real-time application is a finite set of tasks
+
+. Tasks are specified in a high level language and then analyzed according to their timing parameters. In the common design of real-time systems1, tasks are considered as periodic i.e., each task will be released infinitely at regular time intervals. Tasks can be also sporadic or aperiodic. Sporadic tasks differs from periodic tasks in the fact that in the former only the minimum time slot between two releases is known. This assumption will facilitate the integration of sporadic tasks in periodic servers (Mok, 1983). Aperiodic tasks are difficult to handle in hard-real-time systems since their activation intervals are not known in advance. Usually, this type of tasks are considered in soft-real-time systems (Sprunt, Sha, & Lehoczky, 1989). The scope of the present paper is the problem of scheduling only periodic tasks; neither sporadic nor aperiodic tasks are considered.
+2.2. Timing constraints
+
+A periodic real-time task Ti from Γ has the following timing parameters : <r,C,D,P> where :
+
+•
+
+    r(Ti) : is called the release date, it is the first time for the task Ti to be ready for execution.
+•
+
+    C(Ti) : is the computation time. We assume that C(Ti) is a finite and a fixed value.
+•
+
+    P(Ti) : is the activation period. item D(Ti) : is called the obsolete deadline. It is the amount of time given to the task to complete its execution. For each task, it is assumed that D(Ti) is less than or equal to P(Ti). We define d(Ti) = r(Ti) + D(Ti) as the relative deadline so that the task Ti must complete before it. For each task Ti, it is also assumed that its deadline D(Ti) must be greater than or equal to its computation time C(Ti).
+
+We note that all timing parameters are positive integer values and real values are often not used. Further, all parameters are fixed particularly, the computation time of each task. The presence of if/else statements in a task’s source code may lead to different computation times of the same task which will increase the complexity to analyze the whole real-time system. The reader is invited to the following reference for more details about tasks with variable computation times (Eles, Kuchcinski, Peng, Doboli, & Pop, 1998). (see Fig. 2)
+Periodic Task Model
+
+    
+
+Fig. 2. Periodic Task Model.
+
+The following notations and definitions are used along the present paper:
+
+•
+
+    T[k]: it is the kthinvocation of the task T. It is also called request or job.
+•
+
+    r(T[k]) = (k-1)x(P(T)) + r(T): it is the release date of the kth invocation of the task T.
+•
+
+    d(T[k]) = (k-1)x(P(T)) + D(T): it is the absolute deadline date of the kth invocation of the task T.
+•
+
+    Start(T[k]): called the start time of the invocation T[k]. It is the instant when T[k] starts its execution.
+•
+
+    End(T[k]): called the time of yielding the processor to another invocation different from T[k].
+•
+
+    UT: it is the contribution of T to the total system load.
+    (1)
+
+•
+
+    U(Γ): is the utilization of the system and also called system load.
+    (2)
+
+•
+
+    Lateness(T): is the time slot after the end of execution of T until its absolute deadline.
+    (3)
+
+Definition 2.2 Satisfied/Unsatisfied invocation
+
+An invocation J in a given schedule is said to be Satisfied when its timing constraints are met and it is said to be Unsatisfied when its deadline is missed.
+
+A satisfied invocation J means that its execution is strictly within its release date and its relative deadline. If J is unsatisfied, then this would mean that at least one computation unit from C(J) has been delayed after d(J). Often, the satisfaction of timing constraints is expressed using the lateness function. If a task has a lateness below or equal to 0, then it is satisfied. Otherwise, it is unsatisfied.
+2.3. Exclusion constraints
+
+Exclusion constraints, denoted “ ⊗ ”, are binary constraints defined between pairs of tasks to prevent simultaneous access to shared resources. For example, if a task Ti has entered a critical section x, then all other tasks using the same critical section x would not be able to enter x until releasing x by Ti. This would mean that tasks must mutually exclude each others during the use of the shared resource. In fact, exclusion constraints are needed in case of preemptive scheduling. If the scheduling algorithm is non-preemptive, then there is no need to specify exclusion constraints since no interleaved execution of tasks could happen. The specification of exclusion constraints needs to divide each task into several segments2 (Xu & Parnas, 1990, 1992) according to each used shared resource. In fact, a segment S is a sub-task of a task Ti with its corresponding timing constraints < r,C,D > where at least one resource is used by S. A task Ti with n shared resources could have n segments : Si,1,Si,2,…,Si,n. Release dates of each segment are determined according to initial release date of the task Ti and when the resource has been requested. For example, if the resource has been requested at the beginning of the task, then the segment release date is the same to the task’s release date. The computation time for each segment is determined according to how long the shared resource has to be used by Ti. Segments’ deadlines are determined according to the task deadline and computation times of each segment. For example, if the following exclusion constraint (S1,1, S1,2) ⊗ (S2,1) have been specified between two tasks T1 and T2, then this would mean that T1 has at least 2 segments S1,1 and S1,2 and T2 has a least one segment S2,1 and all the segments S1,1,S1,2 and S2,1 are using the same resource. The reader is invited to the Xu and Parnas’s papers for more examples and explanations (Xu & Parnas, 1990, 1992, 1993; Xu, 2003).
+2.4. Precedence constraints
+
+Precedence constraints, denoted “↦”, are binary constraints and they are defined between pairs of tasks to ensure the correct order of segments belonging to the same task and to force the Producer/Consumer paradigm between segments belonging to different tasks. The key property of precedence constraints is the transitivity i.e. if T1 ↦ T2 and T2 ↦ T3, then T1 ↦ T3. The set of all precedence constraints can be modeled as a precedence graph Gp defined as follows : Gp(Γ,E) such that Γ is the set of all tasks and E is the set of edges between tasks where each edge is a precedence constraint. Notice that Gp is a Direct Acyclic Graph (Gp) which would mean that there is no cycle within Gp. Further, precedence constraints are specified between tasks with the same periods (Abdelzaher & Shin, 2000) because often communications are required between tasks having the same period.
+3. Pre-run-time scheduling
+
+Pre-run-time scheduling, also known as static scheduling, is the fact of finding the sequence of satisfied tasks (or the feasible schedule) out-filed i.e., before starting the whole real-time system. To this end, it is assumed that all system’s characteristics (timing, precedence and exclusion constraints) are known in advance. Once, the sequence of satisfied tasks has been found, then it will be saved in a static data structure which will be integrated into a run-time kernel. The latter has one component called Dispatcher which takes tasks from the static data structure into the processing elements according to specified timing constraints (start times). It is clear that the Dispatcher has O(1) time complexity since there is no computation at run-time and the whole computation efforts are made off-line with an exponential time complexity. In fact, pre-run-time scheduling has been proposed to bridge the limitation of run-time techniques. The latter techniques have a polynomial (or pseudo-polynomial) time complexity at run-time3 since the run-time scheduler does not have a pre-computed sequence of satisfied tasks. Such limitation may not lead all the times to find a sequence of satisfied tasks since the problem of scheduling is NP-Hard in its general form (Garey & Johnson, 1979) unless P is equal to NP. The task of the scheduler is to produce a feasible schedule for the input set Γ which is the order of executing tasks such that all timing, precedence and exclusion constraints are met.
+
+Definition 3.1
+
+[feasible schedule] A feasible schedule is a set that contains all invocations from Γ together with their corresponding start times such that all timing, precedence and exclusion constraints are met.
+
+In other words, a feasible schedule has a maximum lateness value (it is the lateness with the maximum value among all tasks from the input set) below or equal to 0 and all precedence and exclusion constraints are met. But, how to find the feasible schedule for a given system (tasks plus constraints)?
+
+In fact, the word finding means searching which would mean the use of a search algorithm. In computation intelligence point of view, the algorithm which is able to find an existing feasible schedule is said to be optimal. Further, an optimal algorithm is also able to report failure when the feasible schedule does not exist.
+
+Definition 3.2
+
+[optimal algorithm (Abdelzaher & Shin, 1999; Xu & Parnas, 1992)] An algorithm A is said optimal if it is able: to find an existing feasible schedule and to report failure if the feasible schedule does not exist.
+
+The above definition of the optimality property has been proposed in real-time systems literature. We will see in the next sections that this definition is different from the one proposed in AI literature.
+3.1. System periodicity
+
+Since tasks are executed periodically, the whole hard-real-time system would also be executed periodically and infinitely. It is well known that after the Least Common Multiple (LCM) of all task periods, the same scheduling sequence would be reproduced (Xu & Parnas, 1993). Therefore, if the scheduling sequence is feasible during [0, LCM] time interval, then the whole system will remain feasible infinitely and no constraint would be violated. Thus, it is quite enough to generate the feasible schedule for the set of invocations defined within the interval [0, LCM]. Hence, each task T from Γ will be requested many times during the interval [0, LCM]. A task T has exactly LCM/P(T) invocations over [0, LCM] interval. Timing parameters of the all invocations are derived from the main task initially specified. We note the set of all invocations Π where :
+(4)
+(5)
+
+After dealing with the system periodicity, the new input set to the scheduling algorithm is Π instead of Γ. Additional precedence and exclusion constraints should also be considered accordingly. The reader is invited to the following reference for further details (Xu & Parnas, 1993).
+3.2. Natural precedence constraints
+
+It is clear that after dealing with the system periodicity, invocations belonging to the same task must execute serially. Such serial execution can be forced using precedence constraints which are called natural precedence constraints. It is worth to note that additional constraints on a given system may reduce the number of possible solutions in the state-space which can be considered as a pruning technique. For example, at the beginning of the search, all invocations are stored in the set Π. Assume that T1 and T2 are belonging to the same task T where T1 is requested before T2. The search algorithm would never produce a schedule within which T2 is selected before T1 since such schedule is obviously not feasible. To avoid generating unnecessary solutions, the initial set could be constrained using natural precedence constraints. Then, the search algorithm would select only invocations without predecessors. Invocations with predecessors would be selected only if all the corresponding predecessors have been already scheduled. Thus, instead of having the whole set Π as the input set to the scheduling algorithm, the new set Πready will be beneficial since it contains only ready invocations. The latter set Πready will be updated (removing scheduled invocations and appending invocations with scheduled predecessors) along the search process. The step of constraining the input set Π needs a pre-processing time and more space before the scheduling step. But it speeds up significantly the search for feasible schedules (Dechter & Frost, 2002).
+3.3. Preemptive/non-preemptive scheduling
+
+The problem of pre-run-time scheduling can be either preemptive or non-preemptive. The latter does not allow stopping a running task to give the processor to another one. Once a task has taken the processor, it will continue its execution until completion of all its units. In practice, non-preemptive schedulers are preferred because of the following benefits:
+
+•
+
+    Non-preemptive schedulers offer much less switching context and system overhead which can result to much power savings.
+•
+
+    Non-preemptive schedulers in uniprocessor systems guarantee exclusive access to shared resources without utilizing complex resource management protocols.
+•
+
+    Non-preemptive schedulers simplify task migration in distributed multiprocessor architectures.
+•
+
+    Non-preemptive schedulers are much easier to implement compared to preemptive schedulers in particular when the target architecture is a set of more than one processor with task migration possibility.
+•
+
+    Non-preemptive schedulers are widely used in message scheduling in distributed systems where the atomic unit to send and receive data is a frame with a fixed size.
+•
+
+    Non-preemptive schedulers are more suitable in real-time data bases where transactions are usually performed non-preemptively.
+•
+
+    Device access and I/O tasks are performed non-preemptively.
+
+Unfortunately, it is not possible to find all the times a non-preemptive schedule for a given input set of tasks even if the search algorithm is optimal. Simply because the feasible schedule does not exist in the state-space. In such a case, the system designer takes the option of updating the system timing constraints and try to find the feasible schedule again as it was stated above. But, the problem is that it is not possible to change the system specification all the times. Such limitation restricts significantly the use of non-preemptive schedulers. For example, Xu& Parnas has developed the pre-run-time scheduling in non-preemptive context in Xu and Parnas (1990) and due to the limitation of this algorithm, they developed a preemptive version of the same algorithm in Xu and Parnas (1992) which is able to find more feasible schedules than the initial version.
+3.4. Uniprocessor/multiprocessor systems
+
+Nowadays, multiple processing elements (PE) architectures are becoming very popular. They vary from single processor with multiple cores to superscaler and networked systems. Those parallel processing systems are used to solve problems which are hard or impossible to solve in single PE systems. In real-time systems, parallel architectures are called when the system load exceeds the capacity of a single PE system. the number of PEs is proportional to the system load. The following condition is necessary for the existence of feasible schedules for an input set of n tasks on a single PE system (Liu & Layland, 1973):
+(6)
+This condition is not sufficient since there is no guarantee that a task set with a system load below 1 is schedulable on a single PE system. Furthermore, there is no guarantee that the same task set is schedulable on two PEs using the same scheduling algorithm (e.g., EDF). This is due to the limitation of plain heuristics and the NP-Hardness of the scheduling problem (Dertouzos & Mok, 1989). Nevertheless, the maximum number of processors, denoted m, is well known bellow the task set size n:m ⩽ n. The generalization of the above necessary condition to multiple PEs systems is known in real-time systems literature to be as follows :
+(7)
+
+This would mean that when the system load exceeds a positive integer value k, then (k + 1) PEs are required for possible existence of feasible schedules. The communications between PEs either in local multiprocessor systems or in distributed systems is one of the major issues related to parallel architectures. Communications in the former architectures are done via a shared bus while in the latter they are done via a network where both communication links need an adequate management to guarantee the imposed constraints. Often, the Time-Division-Multiple-Access (TDMA) access protocol is used to access to the shared bus (Eles, Doboli, Pop, & Peng, 2000). In TDMA, each PE is allocated a time-slot during which it can send data to other PEs. In distributed real-time systems, the Controller Area Network (CAN) has gained a widespread use (Davis, Burns, Bril, & Lukkien, 2007) to deal with communication issues.
+
+Unlike uniprocessor systems, in parallel architecture (local multiprocessor systems) there is a needed to protect shared resources even if the scheduler is non-preemptive. In pre-run-time scheduling, high level synchronization tools such as semaphores, monitors, etc. are not used and the scheduling algorithm has to take into account the issue of shared resources between tasks. In other words, the pre-run-time scheduler has to prevent all simultaneous accesses to shared resource according to the initially specified exclusion constraints. One more remark is that multiprocessor schedulers are more complicated than uniprocessor schedulers. The former requires the assignment of tasks to the available PEs. This can be done before the scheduling process i.e., partitioned scheduling (Abdelzaher & Shin, 1999) or at run-time i.e., global scheduling (Xu, 1993). In partitioned scheduling, an assignment algorithm is needed which will affect significantly the scheduling step. The assignment algorithm should be able to find the relevant partitioning of tasks on available PEs so that the feasible schedule would be reachable by the scheduling algorithm. The optimality of the scheduling algorithm is not enough since it depends on the efficiency of the assignment algorithm (Peng, Shin, & Abdelzaher, 1997).
+3.5. Why pre-run-time scheduling ?
+
+Although pre-run-time schedulers are less flexible than run-time schedulers4, they are more powerful. In the following, we summarize the motivations of using pre-run-time scheduling approaches instead of run-time ones (Xu & Parnas, 2000):
+
+•
+
+    It is very difficult to handle complex constrained real-time applications using run-time techniques. When a very big number of tasks are present with a huge amount of shared resources and precedence relationships, it is impossible to guarantee the predictability of the system using run-time schedulers. The problem of predicting the system behavior is the difficulty to define analytical conditions (necessary and/or sufficient) and the existing ones are defined for simple real-time task sets without shared resources and data dependencies (Baruah, 2006; Liu & Layland, 1973).
+•
+
+    Complex real-time systems increase the computational complexity which will increase the risk of violating timeliness. An example of this case is clear when the number of tasks in the Ready queue is great. This will increase the time of finding the task with the highest priority, at least linearly. As a result, the risk of violating timing requirements will also be increased.
+•
+
+    When analytical conditions are defined in run-time scheduling techniques, the system load remains lower than pre-run-time schedulers. For example, the condition to schedule a task set using the Rate Monotonic (RM) technique is 0.69 (Liu & Layland, 1973) which is far from the full utilization 1.00.
+•
+
+    Complex protocols are needed in run-time approaches in order to avoid problems such as simultaneous access to shared resources, deadlocks and priority inversions. Furthermore, the task is also difficult to the programmers to carefully use high level synchronization tools to avoid such problems. Pre-run-time schedulers were proposed to facilitate the tasks of design and implementation of real-time systems.
+•
+
+    The system overhead is much higher in run-time approaches compared to pre-run-time approaches particularly in preemptive schedulers. This problem can be avoided in pre-run-time schedulers by using enumerative techniques to take the best feasible schedule with the lowest number of preemptions.
+
+4. Related works on pre-run-time scheduling
+
+According to the algorithm’s ability in finding an existing feasible schedules, there are two classes of scheduling algorithms : exact and non-exact algorithms. The latter class include heuristic and meta-heuristic techniques. Exact techniques are optimal and they guarantee to find an existing feasible schedule. Often, they require an exponential time and space complexities. Heuristic techniques are plain techniques and they could fail to find an existing feasible schedule. This class is related to run-time scheduling and they have a polynomial time and space complexities. Meta-heuristics as well as heuristics have been proposed in AI area to reduce the exponential costs of exact techniques to reasonable values but their efficiency is limited since they can fail to find existing feasible schedules.
+4.1. Exact algorithms
+4.1.1. Blind algorithms: Depth-First-Search
+
+Depth-First-Search (DFS), was used in Barreto, Cavalcante, and Maciel (2004), together with Petri-Nets as the modeling tool, to solve the problem of preemptive scheduling on single PE systems. The same work is extended in Tavares et al. (2004) to take into account the power constraints metric. DFS technique was also used in Eles et al. (1998) to deal with the problem of non-preemptive scheduling of tasks with variable execution times in heterogeneous multiprocessor embedded systems. The main advantage of DFS algorithm is the linear space complexity with the guarantee to find existing feasible schedules even in case of task sets with precedence relationships since it is assumed that there is no cycle in the related graph (Direct Acyclic Graph). The major problem in DFS algorithm is the exponential time complexity since the search is performed chronologically in a spanning tree from left to right.
+4.1.2. Branch-and-Bound-First algorithms
+
+Branch-and-Bound-First (BBF) search techniques have been proposed in the literature to tackle the problem of the chronological search in blind algorithm such as DFS algorithm. In BBF algorithms, there is a bounding function used to prune non-promising branches in the search tree and the search process is driven by this function. This class of algorithms is able to find an existing feasible schedule and to report failure if a feasible schedule does not exist in the state-space. There is one drawback related to BBF algorithms which is the size of the search tree. This size increases exponentially in function of the problem size since the most of scheduling problems are HP-Hard.
+4.1.2.1. Xu & Parnas algorithms:
+
+Xu & Parnas proposed in Xu and Parnas (1990) a BBF approach to solve the problem of scheduling tasks under timing precedence and exclusion constraints on uniprocessor architecture without preemptions. The authors used a division of tasks on segments according to shared resources to increase the chances of finding a feasible schedule. The proposed algorithm is optimal in the sense that it can find a schedule if one exists. The authors in Xu and Parnas (1992) extended the approach proposed in Xu and Parnas (1990) to allow preemptions between tasks to explore more feasible schedules which are not reachable in non-preemptive context. The latter Xu& Parnas algorithm (Xu & Parnas, 1992) has gained a wide use in real-time systems area. It was the keystone of many other algorithms which have been appeared in literature. Xu& Parnas algorithm (Xu & Parnas, 1992) starts the search in a root node in which an initial schedule is generated using preemptive Earliest Deadline First (EDF) heuristic according to initially specified timing, precedence and exclusion constraints. If the schedule is not feasible, then more child nodes would be created. Before the creation of more nodes, the algorithm locates first the latest segment Sl according to its lateness in the current schedule. It is clear that if Sl is satisfied, then all the other segments would also be satisfied since it is the latest one. All segments (e.g., S) scheduled between Sl and its release date would also be located attempting to schedule Sl before those segments. Then, each child node would take the same problem (precedence, exclusion and preemption constraints) plus precedence and preemptions constraints. Preemptions constraints were added to prevent some possible preemptions between segments during the generation of the schedule using EDF technique. Each node, will take at least one more precedence or preemptions constraints between Sl and S. Once all child nodes of the current node are created, the EDF technique is applied to generate a schedule for each node. If one feasible schedule has been found, then the algorithm can stop. Otherwise, the current child nodes would be expanded (generation of children) one by one according to the previous procedure until finding a feasible schedule or all nodes have been closed according to the bounding function. The algorithm would also be stopped if the memory has been exhausted due to the increased size of the search tree. The initial Xu& Parnas’s algorithm was proposed to address the problem of scheduling in single PE systems. In Xu (1993), Xu has extended his previous algorithm to homogeneous multiprocessor systems. For difficulty reasons, the author considered that preemptions are not allowed, he limited the new version of his algorithm to the initial division of tasks according to used shared resources. Further, the new algorithm is using global scheduling instead of partitioned scheduling.
+4.1.2.2. Cavalcant algorithm:
+
+Partitioned scheduling in heterogeneous architectures was proposed in Cavalcante (1997) using the Xu& Parnas’s idea (Xu & Parnas, 1992). The author integrated shared resources and inter-task communications in a preemptive model in order to solve the scheduling problem in Hardware/Software co-design environments. According to the author, the partitioning phase is intentionally left to the system designer instead of doing a global scheduling.
+4.1.2.3. Shepard & Gagne algorithm:
+
+Shepard and Gagne in Shepard and Gagne (1991) have used the same BBF technique proposed in Xu and Parnas (1990), which is the initial Xu& Parnas algorithm in non-preemptive context, to address the problem of partitioned scheduling of tasks in multiprocessor architectures. But, it seems that their technique suffers some problems and it can fail to find a feasible schedule even if one exists in the state-space (Abdelzaher & Shin, 1997).
+4.1.2.4. Abdalzaher & Shin algorithm:
+
+Abdelzaher and Shin in Abdelzaher and Shin (1999) have used the previous idea of Xu& Parnas Xu and Parnas (1992) to schedule preemptive real-time tasks in heterogeneous and distributed multiprocessor systems. Their technique takes into account precedence and exclusion constraints where the message scheduling problem was also addressed. The schedule is partitioned using the enumerative technique described in Peng and Shin (1993).
+4.1.3. A∗ and IDA∗ algorithms
+
+To the best of our knowledge, the work described in Fohler (1994) is the only one in which a heuristic optimal search algorithm has been used to solve the problem of scheduling real-time tasks. The author combined a lookahead mechanism with an adaptation of the so called Iterative Deepening A* (IDA*) due to the less memory space that it takes compared to A* (see subsection 5.1.2) algorithm. The problem is that both A* and IDA* algorithms are preferred in Pathfinding problems not in Constraints Satisfaction Problems where the problem of pre-run-time scheduling is belonging to the latter class as we will see in the next sections. Further, the same author has developed a branch-and-bound technique later in Fohler and Ramamritham (1997) to address the problem of scheduling pipelined real-time tasks in distributed systems.
+4.2. Heuristic and meta-heuristic algorithms
+4.2.1. Heuristic techniques
+
+Rate Monotonic (RM), Deadline Monotonic (DM), Earliest Deadline First (EDF) and Least Laxity First (LLF) are plain heuristic techniques since the resulting schedule for each one is generated in polynomial time complexity using plain timing parameters. For example in RM algorithm, the first selected task has the lowest period P. Often, those techniques are used in run-time scheduling (Xu & Parnas, 2000). Due to their limitation in terms of ability of finding feasible schedule, they are combined with other complex improvements to be used off-line (Abdelzaher & Shin, 1999; Cavalcante, 1997; Xu & Parnas, 1990). Many other heuristic techniques have been proposedin real-time systems literature which are more powerful than plain techniques. One of those techniques was described by Zhao et al. in Zhao, Ramamritham, and Stankovic (1987) to schedule real-time tasks with resource requirements in distributed systems. It is a tree search technique and it aims to reduce the fact of scanning a complete spanning tree by pruning non-promising branches. Zhao’s technique remains non-optimal and it could fail to find a feasible schedule if one exists.
+4.2.2. Meta-heuristic techniques
+
+The branch of using meta-heuristics in scheduling real-time tasks includes Genetic Algorithms, Simulated Annealing and Ant Colonies. Meta-heuristics remain Incomplete algorithms since they don’t have neither the ability to guarantee finding an existing feasible schedule nor the ability of reporting failure if the feasible does not exist in the state-space. Genetic Algorithms (GA) was used by Roman in Nossal (1998) to tackle the problem of preemptive scheduling of inter-related tasks with precedence and exclusion constraints in multiprocessor architectures. Navet et al. in Navet and Migge (2003) have also used GA to handle the problem of policies (Round Robin or FIFO scheduling) and priorities assignment to tasks in POSIX1003.1b compliant systems. It is well known that GA technique is suffering premature convergence to sub-optimal solutions. Simulated Annealing (SA) was used by Tindell et al in Tindell, Burns, and Wellings (1992) to handle the problem of scheduling in distributed environment with a special communication protocol. It was also used by Stankovic et al in Dinatale and Stankovic (1995) to handle the problem of scheduling real-time tasks in multiprocessor architectures with jitter minimization in non-preemptive context. It is well known that SA is a slow technique in problem solving. Ant Colony Optimization (ACO) was proposed in Chen and Cheng (2005) to address the deadline scheduling problem. A framework for heterogeneous and non-preemptive multiprocessor scheduling was described. The problem of ACO approaches is the stagnation situation which can cause the failure of the scheduling algorithm to find feasible schedules. Authors in Laalaoui, Drias, Bouridah, and Ahmad (2009) proposed a solution to deal with the stagnation situation and they show the efficiency of their solution in non-preemptive scheduling on uniprocessor systems.
+4.3. Summary on related works on pre-run-time scheduling
+
+This section presents process control and some real-time taxonomy with special emphasise on pre-run-time scheduling of real-time tasks. Pre-run-time scheduler seems to offer relatively better benefits than run-time schedulers. Algorithms to generate a feasible schedule in pre-run-time schedulers can be exact, heuristic or meta-heuristic. Exact algorithms include blind search and branch-and-bound search where both still suffering the time and space limitations since the problem is NP-Hard in its general form. A∗ and IDA∗ algorithms have been used in pre-run-time scheduling thanks to their optimality. But, the issue in using A∗ and IDA∗ algorithms is the admissible heuristic function which is very difficult to find. Plain heuristic techniques (RM, DM, EDF, and LL) are limited to run-time schedulers and the utilization of these techniques in pre-run-time scheduling needs more complex improvements to obtain better efficiency. Meta-heuristics are also used in pre-run-time schedulers to reduce the time and space complexities to reasonable costs. GA suffers premature convergence, SA is a slow technique and ACO techniques have the stagnation caveat. Furthermore, meta-heuristics are probabilistic algorithms, they have been used especially to solve large problem instances. However, their efficiency is limited since they don’t provide the guarantee of finding existing feasible schedules. The next section presents classification of problems in AI. We aim by the next section to understand the class in which pre-run-time scheduling of tasks is belonging. This will allow us to explore the most suitable algorithms to address this problem rather than algorithms proposed in real-time systems literature.
+5. Problem solving in AI
+
+The concern of problem solving branch in AI is the development of powerful search and optimization algorithms to deal with complex problems. The power of each developed algorithm is measured in terms of optimality, completeness, time complexity and space complexity. This section is devoted to the most important vocabulary related to this area. First, we introduce the major two classes of problems: pathfinding problems and Constraints Satisfaction Problems. Then, we clarify each class independently from the other. We emphasize the class of the problem of pre-run-time scheduling of tasks under study in this paper.
+5.1. Pathfinding problems
+
+Robot exploring a 2D map is an example of pathfinding problems. The task of the robot is to find the optimal (shortest or with the lowest cost) path from some goal states to one goal state. This example is widely used in game theory and it has many practical use (e.g, autonomous robots (Bulitko & Lee, 2006)). There are two situations, the map can be known or unknown in advance. If the map is known in advance, then there is a planning and scheduling tasks by the autonomous robot in order to reach the goal state. The planning task consists in preparing the set of moves from the start state to the goal state while the scheduling task consists in executing the prepared plan (Baptiste, Laborie, Le Pape, & Nuijten, 2006). A concrete example is Traveling Salesman Problem (TSP) . If the map is not known in advance, then the robot has to take decisions according to local information in its lookahead distance. In the latter case, there are real-time5 decisions when moving between states (Korf, 1990). A concrete example is a future robot of exploring an unknown city. From the above description, we conclude that the problem of pre-run-time scheduling tasks is not a pathfinding problems since the target in pre-run-time scheduling is a complete solution with all tasks instead of one target state in pathfinding problems.
+
+Definition 5.1 state space
+
+The state space is a set of finite states S where :
+
+•
+
+    S0 is a subset of S and it contains the start states.
+•
+
+    g is the goal state.
+•
+
+    (si, sj) is an action of moving from si to sj.
+•
+
+    feasible(si, sj) : if the link between si to sj exists, then the action of moving from si to sj is said feasible. An example of such moves is path linking two cities in TSP problems or a state without an obstacle in the sensor lookahead for an autonomous robot navigation.
+•
+
+    c(si, sj) is the cost function related to a move from the state si to the state sj.
+
+Often, the state space is implemented as a search graph in which there is a set of connected nodes and each node represents a state. The graph is said directed if for some states si and sj, the fact of moving from si to sj is allowed in one direction only. Similarly, the graph is said undirected if there is no restriction of moving between connected states of the search space in both directions.
+
+Definition 5.2 feasible solution
+
+The set of feasible moves that leads to the goal state from a given start states is said a feasible solution.
+
+Definition 5.3 optimal solution
+
+An optimal solution is a feasible solution with the lowest cost.
+
+Definition 5.4 stationary state-space
+
+The state space is said stationary if the set of all existing feasible solutions remain the same along the search process.
+
+This definition of a stationary state-space is related to the dynamic of the environment and the appearance of obstacles in paths leading to goal states. In a stationary state-space, there are no obstacles that can change the state-space structure. Therefore, all existing feasible solutions don’t change along the whole search process.
+
+Definition 5.5 Completeness
+
+An algorithm is said Complete if it is able to find an existing feasible solution or to report that there is no feasible solution in the state-space if really it is the case.
+
+Definition 5.6 Optimality
+
+An algorithm is said optimal if it is able to find a feasible solution with an optimum cost.
+
+There may exist many optimal solutions in the state-space and the search algorithm has to find one of them. If the search is repeated again, then not necessarily the previous optimal solution should be found. The ability of finding more optimal solutions in the state space explains the informative exploration of the state-space by a given algorithm.
+5.1.1. Blind search
+5.1.1.1. Blind search: Breadth-First-Search (BFS)
+
+BFS is a search algorithm in which a spanning tree is constructed blindly in breadth manner. This algorithm starts to expand all possible start states from a root node of the spanning tree. Then, it proceeds for expanding each node of the first level to create the second level of the tree. The next (third) level of the spanning tree will not be created until the expansion of all nodes of the first level of the tree. The process is repeated for what remains of nodes until the desired solution is found. A feasible solution is a branch from the root to a leaf node of the tree. A FIFO queue is used to implement such expansion of nodes. The root node is expanded first, then its children are appended to the tail of the FIFO. The next expanded node is taken from the head of the FIFO until the expansion of all nodes. In finite state-spaces, the Completeness of BFS is proved since all existing feasible solutions are reachable from the root node of the spanning tree where the shallowest solutions are encountered first. BFS is also an Optimal algorithm since it guarantees to find the optimal solution. The spanning tree in BFS traversal is growing exponentially and it has a space complexity O(bd) where b is the branching factor (it is the number of expanded children for a given node) and d is the search depth. The time complexity provided by BFS search is also exponential and it is bounded by O(bd). We can say that BFS is time and space limited algorithm and it is used, in general, to solve small problem instances.
+5.1.1.2. Blind search: Depth-First-Search(DFS)
+
+Rather similar to BFS, DFS has been proposed to address the space complexity of BFS search. The expansion of nodes in the search tree is performed in depth manner. The next neighbor is not expanded until the expansion of all nodes of the current branch. A Last-In-First-Out data structure (a stack) is used to implement the DFS traversal. Usually, the DFS procedure is implemented recursively and the stack is constructed implicitly. The DFS spanning tree is growing linearly and it has a space complexity O(bd) when DFS searches to a depth d using a branching factor b. The time complexity provided by DFS search is exponential and it is bounded by O(bd). What we can say on DFS is that it is time limited algorithm instead of time and space limited DFS can generate an infinite tree in graphs with cycles. Further, DFS can go downward in wrong path even when a feasible or optimal solution exists in shallowest levels. A well known solution to this problem is to impose a limit depth. However, this limit is not known in advance to localize the desired solution in the search tree. If the limit is less than the depth solution, then DFS will fail to find this solution. Furthermore, the desired solution may not exist in the earliest branches and the DFS will take a very long time when the limit depth is larger than the solution depth. Therefore, DFS is neither Complete nor Optimal when the limit depth is not known in advance.
+5.1.1.3. Blind search: Depth-First Iterative Deepening
+
+Depth-First Iterative Deepening (DFID) combines both benefits of BFS and DFS (Korf, 1985). The idea behind this algorithm is that it explores in DFS-limited manner iteratively. At each iteration the search depth is increased by one infinitely until a desired solutions is encountered. This idea remedies the problem of DFS where going deeply without possible recover to shallowest solutions since existing solutions at depth d are not explored until a complete DFS search to a depth (d-1) is finished. Unlike DFS, DFID explores shallower levels first instead of going down deeply. One caveat of DFID is the multiple expansion of the shallowest levels in the search tree. The first level is expanded many times as long as the desired solution depth. The second level is expanded the same number of times as the first level minus one and so on. The time complexity provided by DFID search is exponential and it is at most O(bd) and the space complexity is still modest and it is only O(bd). Both the Completeness and Optimality are provided by DFID and it is a good alternative to both BFS and DFS algorithms in most cases particularly in graphs with cycles.
+5.1.2. Heuristic search
+
+The origin of the word Heuristic is heuriskein which goes back to the Greek civilization where this word has been used to express the ability of finding and discovering (Russell & Norvig, 1995). Archimedes said “Heureka” after discovering the principle of floating in his bath. Heuristic search techniques have been developed in AI area in early of 70’s aiming at tackling the problem of exponential search costs in blind methods. The search is driven toward feasible and optimal solutions non-systematically. During the search process, the problem solver is more informed about the state-space using the moving cost and other information such as the distance to the goal state. Commonly used term is a heuristic function according to the problem under study.
+
+Definition 5.7 heuristic function
+
+A heuristic function is a mathematical function defined from S to the set of real values
+as follows :
+
+Without loss of generality, there is an inexpensive numerical evaluation for each heuristic function. An estimation of the cost to the goal state is the expected value of this heuristic function. The following are examples of such heuristic functions :
+
+•
+
+    In Eight-puzzle the number of misplaced tiles is the heuristic function. This evaluation requires O(r2) here r is the number of rows (or columns) of the square.
+•
+
+    In Euclidean distance, it is supposed that s(x, y) is the current position of the problem solver in a 2D map and (xg, yg) is the goal position. The Euclidean distance to the goal is as follows :
+    (8)
+
+•
+
+    Manhattan distance : if s(x, y) is the current position of the problem solver in a 2D map, then the heuristic function is the following :
+    (9)
+
+5.1.2.1. Heuristic search: A* algorithm
+
+The famous heuristic search algorithm proposed in the literature is A∗ by Hart, Nilson, and Raphael (1968, 1972). A∗ is pruning a bit memory space and it guarantees to find the optimal solution under certain conditions on the state space and the used heuristic function. A∗ is using a global cost function f (n) = g(n) + h(n) where g is the cost function of the path from the initial state to the node n and h is the heuristic function that estimates the cost from n to the goal state. A∗ is a best-first search algorithm and it expands the node with the lowest f value. When the goal state is selected for expansion, then the algorithm terminates the search. A∗ is not Optimal unless the following conditions are satisfied (Nilson, 1999):
+
+•
+
+    Each state in the search space has a finite number of neighbors.
+•
+
+    Each moving cost is greater than some positive amount ∊.
+•
+
+    h is a non-overestimating function of the actual value i.e., for all states n in the state-space, 
+
+    .
+
+The efficiency of the heuristic search in A∗ remains modest since the memory requirement of this algorithm is not too much than BFS search. A∗ succeeds in finding the target configuration in the Eight-puzzle problem while the memory space is exhausted for the fifteen-puzzle problem (Korf, 1998). Furthermore, the heuristic function, which depends on the problem to be solved, is very difficult to find particularly a function that satisfies the conditions stated above.
+5.1.2.2. Heuristic search : iterative deepening A∗ algorithm
+
+Similarly to DFS and DFID, Iterative Deepening A∗ (IDA∗) has been proposed to reduce the memory requirement of A∗ (Korf, 1985). In IDA∗, each iteration is a modified depth-first search. The new modification of DFS in IDA∗ is the use of a cost limit costlimit rather than a depth limit. Each expanded node during a given iteration is not above the current limit costlimit. Once an iteration is terminated and the goal state is not reached yet, the search is started again using a new increased costlimit. The cost limit is initialized to the
+
+where s0 is the start state. Each new iteration will be started if the optimal path cost is longer than the costlimit of the previous iteration. The new costlimit is determined according to the lowest cost to a state among all generated states and have not been expanded yet. The search terminates when the goal state is reached. IDA∗ is Complete and it is able to find the optimal solution if the heuristic function is admissible. The space complexity of IDA∗ seems to be linear with respect to the longest path. In most cases, a good estimation of the space complexity in IDA∗ is bd (Russell & Norvig, 1995). In addition, IDA∗ runs faster than A∗ in most cases since the overhead is much less than A∗ and there is no Open and Closed sets to be managed. IDA∗ is known to be the only optimal and memory-bounded algorithm for several years. One well known problem of IDA∗ is the monotonicity of the heuristic function. The algorithm owner (Korf) proposed one more algorithm called Recursive Best-First-Search (RBFS) to address IDA∗ problem if the heuristic function is not monotone (Korf, 1993).
+5.1.3. Branch-and-Bound-First search
+
+Branch-and-Bound-First (BBF) methods are proposed to improve the efficiency of pruning non-promising branches in the search tree and as a result more memory space could be gained (Xu & Parnas, 1990, 1992). In BBF, there is a bounding function. After expanding each node of the search tree, the cost of each generated child is calculated. If such a cost is lower than a given bound, then this child is closed since it will never lead to a desired solution. The problem solver continue the process of branching (child generation) and bounding until a desired solution is found or all encountered nodes are closed. This process of branching and bounding is performed according to the cost order and the node with the lowest cost is selected at first. The problem in BBF methods remains how to develop the bounding function which is not usually an easy task. One of such difficulties is the close dependency to the underlying problem because a bounding function for the deadline scheduling is not the same to TSP problem.
+5.1.4. Real-Time Heuristic search
+
+A∗, IDA∗ and many other algorithms make an off-line search of the path leading from the start state to the goal state which supposes that the search space is well known in advance. What about if the search space is unknown? From the agent technology point of view, the problem solver (or the agent6) has to make decisions according to local information and decision are made at real-time. This type of search is called agent-centered search where the agent looks only for states around its current state (Bulitko & Lee, 2006).
+5.1.4.1. Real-Time Heuristic search: Real-Time A∗ (RTA∗) :
+
+RTA∗ algorithm was introduced to interleave the planning and scheduling steps (Korf, 1990). Unlike A∗, the cost function g in RTA∗ is the cost to a neighbor state from the current state instead of the initial state in A∗. The problem solver moves to the next state having the lowest
+
+value and it backtracks from s′ if the cost of moving back plus the estimate cost of reaching the goal state from that state is lower than the cost of moving to the next state s′. After moving to the new state s′, the problem solver stores with the previous state s the best f value among all remaining neighbors other than s′. RTA∗ is Complete and it finds an existing feasible solution whatever the used heuristic h. The Optimality of RTA∗ is not proved even if decisions made locally are optimal.
+5.1.4.2. Real-Time Heuristic search: Learning-Real-Time A∗ (LRTA∗)
+
+LRTA∗ has been proposed by R. korf in 1990 in the same paper as RTA∗ (Korf, 1990) to address large scale pathfinding problems. This algorithm is almost the same like RTA∗ where the difference between both algorithms lies in the fact that LRTA∗ updates h(s) to the best f value among all neighbors including s′. LRTA∗ repeats the process of heuristic updating until convergence to optimal values which corresponds to the optimal path (Fig. 3). Therefore, LRTA∗ is Complete and Optimal. One more benefit of LRTA∗ is the much less memory that it takes when searching for the optimal path since no trees are used.
+Pseudo-code of the LRTA∗ Algorithm
+
+    
+
+Fig. 3. Pseudo-code of the LRTA∗ Algorithm.
+
+As shown in Fig. 3, the search agent looks first the neighbor state s′ with the lowest f = g + h value (step 04 in LRTA∗-Trial procedure). Then, there is an update of the heuristic h(s) of the current state s if f(s′) is the greatest. Since s precedes s′ in the current solution, since LRTA∗ repeats the same process of heuristic updating and reaching the goal state at each trial, then LRTA∗ propagates back information about all states that lead to high cost paths to the goal state. Therefore, LRTA∗ will select the optimal path containing only states with the lowest heuristic information (step 04) avoiding all states with their f values greater than the optimal states. We note that there is no propagation on the optimal path and all states belonging to that path would remain unchangeable. The convergence of heuristics to their optimal values is defined by the non-updating of them along a whole trial. After convergence, if LRTA∗ is executed for one more trials, then there will be no heuristic updates since the optimal path is reached and LRTA∗ loops infinitely on the same optimal path. It is worth noting that tree search algorithms were proposed to address typically two problems: (1) searching the optimal solution and (2) deciding about the possibility of reaching that optimal solution. Thus, one clear drawback of LRTA∗ is its inability to decide about the existence of possible feasible solutions since it was proposed only to look for the optimal solution. LRTA∗ loops infinitely in state-spaces with unreachable goal states.
+5.2. Constraint Satisfaction Problems
+
+Constraint Satisfaction Problems (CSP) have many practical use. Examples of CSP problems include Satisfiability, Component placement in VLSI design, Scheduling, N-Queens, Graph Coloring, … etc. The most of existing CSP problems are NP-Hard and they require an other class of efficient algorithms. The state-space in CSP problems is a finite set of n variables X = (x1,x2, … , xn), a set of finite value domains Di for each variable xi and a set of constraints to restrict the set of final solutions. Each variable xi is assigned a value from its corresponding value domain Di subject to satisfy all specified constraints. A variable xi is instantiated when it is assigned a value from its domain Di. A Partial instantiation consists of assigning a partial set of values to a partial set of variables. We note a partial assignment (x1, a1), (x2, a2), … (xk, ak) where k ⩽ n; or merely, (a1, a2, … , ak). A complete instantiation represents a complete solution. If all constraints are satisfied, then the solution is said feasible or satisfiable (Tsang, 1993). Similarly to pathfinding problems, the optimality and completeness definitions remains the same for CSP problems (Tsang, 1993). An optimal algorithm is using an objective function and it targets a solution with an optimal value. A Complete algorithm is targeting a solution with all constraints are satisfied. Further, Complete algorithms are used to check that a given CSP instance is not satisfiable while Incomplete algorithms are used to search one existing satisfiable solution (Rossi, Van Beek, & Walsh, 2006).
+5.2.1. N-Queens Problem
+
+The N-Queens problem is well known to be a standard benchmark for CSP solvers in AI area (Minton, Johnston, Philips, & Laird, 1992). The wide practical applications of this problem has allowed the involvement of many research interests. This problem consists of placing N queens on N × N chessboard so that no two queens are in conflict. The set of variables X is the set of queens Q = (Q1, Q2, … , QN), the set of domains is Di=1,…,N = {(ai, bi)∣ai, bi ∈ [1, N]} and the set of constraints is the set of conflicts. Conflicts are defined when two queens share the same row, column or diagonal (left or right). Fig. 4 (a) shows an example of a feasible solution to the 4-queens problems. As it is shown, no two queens are in conflicts.
+N-Queens vs Task scheduling
+
+    
+
+Fig. 4. N-Queens vs Task scheduling.
+5.2.2. Pre-run-time scheduling as a Constraint Satisfaction Problem
+
+From the above description, the problem of pre-run-time scheduling of real-time tasks is a CSP problem. Tasks are variables. The interval defined by the task’s release date and deadline is the domain of the variable. Imposed constraints are timing, precedence and exclusion constraints. A scheduling algorithm is a CSP solver which assigns start times to tasks so that all specified constraints should be met. Further, in generic CSP problems all variables belong to the final solution which is the same case to the problem of pre-run-time scheduling where all tasks belong to the final solution. The above figure (Fig. 4) shows the close similarity of pre-run-time scheduling problem to the standard CSP problem (N-Queens). This figure shows a feasible placement of 4 queens on 4 × 4 chessboard and a feasible solution to 4 real-time tasks A,B,C and D. A task can be seen as a queen to be placed in one specific row in the chessboard under the condition of respecting imposed constraints. For example, task A is the first queen (first row) and it is placed on third time unit which corresponds to third tile on the first row of the chessboard. Algorithms that solve CSP problems are either Complete-and-Repair or Backtracking algorithms according to the number of conflicts appeared in each intermediate solution as we will see in the next section.
+5.2.3. Complete-and-repair algorithms
+
+In complete-and-repair techniques, the problem solver generates an initial complete assignment, then it proceeds for possible repairs of arising conflicts7 throughout the state-space. Usually, in this class of algorithms, it is assumed that only one feasible solution is existing in the state-space which means that the problem solver has only one target solution to be reached. It is also assumed that conflicts are independent (Minton et al., 1992). Such assumptions are domain dependent since in many real-life problems the target solution is not known in advance and the repair of one conflict may cause the appearance of other conflicts due the close dependency between conflicts. Pre-run-time scheduling problem is one of such CSP problems, too dense feasible solutions can exist in the state-space without any prior knowledge about the final solution and as a result no assumption can be made in advance. In Branch-and-Bound approaches proposed in Xu and Parnas (1990, 1992), the problem solver performs one repair rather than multiple repairs to deal with both limitations of complete-and-repair techniques. The task candidate for repairing is selected according to a specific and problem dependent heuristic. One more limitation of complete-and-repair techniques is the close dependency to the initial assignment. A good heuristic may lead to few repairs. Often, it is not an easy task to find such a heuristic since a good guess to one problem instance does not mean a good guess again to another problem instance.
+5.2.4. Backtracking algorithms
+
+Backtracking techniques gradually extend a partial feasible solution until a complete feasible solution is found. The problem solver proceeds for one repair instead of multiple repairs since there is only one conflict at the end of each partial solution. Historically, this method was introduced more than five decades ago (Bitner & Reingold, 1975). Nowadays, it is an efficient technique in solving CSP problems thanks to its modest linear space complexity cost. When a backtracking technique is applied to pre-run-time scheduling problem, it consists of selecting tasks according to a specific criteria (systematically or heuristically). When such selection leads to violating specified constraints of one task which is the last task in the partial schedule, the search stops to retract one of the partial schedules previously found (possibly the empty schedule). The last task should be sent back to a prior position, otherwise it is impossible to extend the current partial schedule and such a case is called a dead-end situation (Van Beek, 2006). The action of sending back the last selected task depends on the algorithm nature whether it performs one backward move or more. The former is called Chronological Backtracking while the latter bears the name Backjumping algorithms.
+
+Definition 5.8 backtracking search
+
+In backtracking search, there is only one conflict at most for each partial solution and the backtracking algorithm uses one of the partial solutions previously found for each extension.
+
+The word extension in the above definition means one task is appended to the current solution which is an assignment of a start time to that task. The extension of the current solution is continued under the condition of satisfying specified constraints. If one constraint has been violated during the extension, then such process stops to try another search direction.
+5.2.4.1. Chronological backtracking: (DFS)
+
+DFS is an example of backtracking algorithms that perform chronological traversal of a spanning tree from left-to-right order. The well known implementation of the DFS is the use of a Last-In-First-Out data structure i.e., a stack. The bottom of the stack is a root node of a search tree which is also the first task of the schedule.The top of the stack is the last task successfully scheduled. When a task has missed its individual timing constraints, one backward move involves unstacking one task in order to explore the next candidate task (Barreto et al., 2004). Notice that the content of the stack is the required set of nodes that allow moving chronologically throughout the search tree which is much less than the size of the search tree. When DFS searches to a depth d with a branching factor b, the required space complexity is O(b∗d) while the size of the search tree is O(bd). In fact, DFS is a search algorithm time limited rather than time space limited since its time complexity to traverse the whole search tree is O(bd). One drawback of DFS is the sensitivity to the distribution of solutions in the search space. The spanning tree depicted in Fig. 5 is an example of a DFS traversal of the input task set shown in Table 1. Each possible solution is a branch in that tree. If the solution is feasible then the leaf of this branch is a square; otherwise, the corresponding leaf is a triangle. This figure shows that there are 2 feasible solutions. Suppose that there is only one solution which is the order {D, C, B, A} i.e., the last feasible solution, then DFS has to spent a long time in scanning all branches before that feasible solution. It is worth noting that the assignment of values to each task in the DFS tree is implicit. Each task is assigned an order in a possible solution. Such order is then used to determine the start time of each task. If the task T is the first in a given solution, then its start time is equal to its release date. Otherwise, the corresponding start time is determined according to the end time of the predecessor task. Idle times are inserted if the release date of the task is strictly greater than the end time of the predecessor task.
+DFS spanning tree of the above example
+
+    
+
+Fig. 5. DFS spanning tree of the above example. Circles denote satisfied tasks, triangles denote unsatisfied tasks and squares are satisfied tasks of a complete feasible solution. 22 possible solutions, among them only 2 are feasible.
+
+Table 1. Example of a real-time task set.
+	A	B	C	D
+r	0	0	0	0
+C	5	3	2	2
+d	15	10	5	5
+P	15	15	15	15
+5.2.4.2. Intelligent backtracking
+
+Backjumping schemes have been proposed in the literature to deal with unlucky backward moves of chronological backtracking techniques. When a conflict occurs, the last selected task will be sent back so far attempting to avoid such conflict and continue the extension of the current partial schedule in a new direction. Many techniques have been proposed in AI papers that perform Non-chronological Backtracking search (Bruynooghe, 1981; Chen & van Beek, 2001; Dechter, 1990; Dechter & Frost, 2002; Gaschnig, 1978; Ginsberg, 1993; Schiex & Verfaillie, 1994). There are two common properties of all those techniques: (1) they are tree-based search with linear space complexity and (2) they are non-orthogonal i.e., two or more techniques are combined in one global algorithm.
+5.2.4.3. Variable ordering
+
+In fact, the sensitivity to the distribution of feasible solutions in a DFS-tree is caused by the chronological search from the left to right. The reason behind such a sensitivity is the arriving order of tasks. When the DFS-traversal reaches a feasible solution in the first branch, then a lucky search is happened and the arriving order of the input tasks coincides with such a feasible solution. Therefore, the DFS is significantly affected by the order of tasks in the input queue. A bit modification of this order could lead to a short time or even to a very long time of reaching a feasible solution. In the previous example (Fig. 5), if the input order of tasks is D,C,B,A, then DFS finds the feasible solution in the first branch. This order is the same provided by the naive heuristic Earliest Deadline First (EDF) since tasks are ordered according to the closest deadline which represents an ordering from most constrained (tight deadlines) to least constrained (large deadlines). Thus, one possible solution to the sensitivity to the distribution of solutions in the spanning tree is the use of heuristics to order the set of variables first, then proceeds for searching feasible solutions. Many works have been done in AI area trying to find a relevant order of the input tasks so that the search time is minimized (Dechter & Pearl, 1989; Haralick & Elliot, 1980; Sadeh & Fox, 1996; Smith & Sturdy, 2005). The problem remains very hard to be handled since solving this problem will result in finding the target feasible solution which is a very hard task. The ordering of variables has a benefit when the CSP-solver targets only one feasible solution. If all solutions are searched, then there is no need to change the order of variables. Further, variable ordering heuristics have no benefits when all variables have the same domain. An example of such a case is the N-Queens problem where all queens are candidates in all positions (columns).
+5.2.4.4. Summary on problem solving in AI
+
+So far we provided a brief description of blind search algorithms in pathfinding problems. One remark on this class of algorithms is the time complexity which is exponential. In terms of space complexity, DFS and DFID are the only algorithms taking the less memory space and their complexity is bounded by. DFID is preferred than DFS since it provides both Completeness and Optimality properties. Heuristic search such as A∗, IDA∗, RTA∗ and LRTA∗ have been proposed to address particularly pathfinding problems. This class of algorithms was proposed to deal with the systematic search problem in blind techniques. This would mean that the time to find an existing solution in heuristic techniques is lesser than the time taken in blind techniques. Nevertheless, the time complexity remains exponential according to the problem size due to the NP-Nardness of tackled problems. The space complexity is linear in IDA∗ and LRTA∗ while in A∗ and RTA∗, it is exponential. Further, IDA∗ is using a tree while LRTA∗ is a treeless algorithm with the ability of finding the optimal solution. But, recall that LRTA∗ has never been applied to solve CSP problems because it was initially designed to solve only pathfinding problems. It is worth to mention that a feasible solution in pathfinding problems could be easily reached in polynomial time algorithm. For example, LRTA∗’s pseudo-code depicted in Fig. 3 shows that the target state is reachable after the first trial (only one loop) using the decision heuristic rule in step 04. Therefore, the difficulty in pathfinding problems lies in how to obtain the optimal solution and not the feasible one.
+
+CSP problems differ from pathfinding problems in the state-space model and the content of the final solution. In general, not all states are required to be present in the final solution in pathfinding problems. In contrast, a CSP instance needs an acceptable assignment to all variables in the final solution which would mean that the size of the final solution is know a priori. This would significantly help the search algorithm in CSP problems. For example, DFS applied to solve a CSP instance would never be stopped (to find the target solution) a shallowest level since the desired solution would have a size of the input set of variables. Therefore, DFID would never been applied to solve CSP problems. In contrast to pathfinding problems, CSP solvers are often targeting feasible solutions not only optimal solutions since the former are also difficult to find. For example, the problem of finding a feasible solution to the generic SAT problem is known to be NP-Complete and such difficulty restrict the use of plain heuristics with polynomial time complexity in solving CSP problems. Fig. 6 shows major developments in AI search techniques devoted to solve pathfinding and CSP problems after 1960. Straightforwardly, pathfinding field includes much more developments than CSP field. Further, all the major developments in pathfinding field are heuristic search techniques while CSP field includes only DFS variants. Gashning backjumping was the first DFS variant proposed in literature, after that many other variants have been proposed.
+Major developments in AI search techniques
+
+    
+
+Fig. 6. Major developments in AI search techniques.
+6. Discussions
+
+Pre-run-time scheduling is a computation intelligence problem and Branch-and-bound-First algorithms are the widely used techniques to solve this problem according to real-time systems literature. According to AI literature, the problem of pre-run-time scheduling is a CSP problem. Algorithms that solve CSP problems are either complete-and-repair or backtracking techniques (Minton et al., 1992; Rossi et al., 2006). Often, backtracking are preferred than complete-and-repair since the latter are based on Branch-and-Bound and Dynamic Programming techniques with an exponential time and space complexities (Van Beek, 2006). DFS is the preferred algorithm in solving CSP problem thanks to its linear space complexity, its Completeness and its ease of implementation according to AI literature (Van Beek, 2006). In some circumstances, DFS algorithm is not optimal and it might generates infinite branches if the input graph contain cycles (Korf, 1998). This DFS problem appears especially in pathfinding problems where real-life problem instances could be full of cycles. In real-time tasks, the problem of generating infinite branches never appear since the dependency between tasks is experessed as A Direct Acyclc Graph (DAG) (Eles et al., 1998; Xu & Parnas, 1990, 1992, 1993). When DFS goes deeply in each branch of the spanning tree, then next states which are at shallow levels in the spanning tree would not be reached quickly since all the current states at deep d should be visited first. It is worth to note that this problem of DFS in going deeply is related to pathfinding problems and it would never be raised in CSP problems. Recall that solving a CSP problem instance would mean the instantiation of all the n input variables which would mean that the final feasible solution has exactly a size of n elements. In contrast, a feasible solution to a pathfinding problem instance contains only a subset of elements from the input problem instance. One drawback of DFS is its sensitivity to the distribution of feasible solutions in the spanning tree due to the systematic search from left to right. If an existing solution lies in the last branches of the spanning tree, then DFS will return the result after a very long time since its time complexity is exponential (O(bd) where b is the branching factor and d is the search depth).
+
+The major problem in DFS technique remains the exponential time complexity due to the systematic search in the spanning tree. To overcome the problem of exponential time in DFS algorithm, Backjumping schemes have been proposed in the literature. The idea behind Backjumping techniques is to deal with unlucky backward moves in chronological backtracking (DFS). When a conflict occurs, the last selected variable will be sent back so far attempting to avoid such conflict and continue the extension of the current partial schedule in a new direction. The task of Backjumping algorithms is to avoid the exploration of unnecessary non-feasible solutions and the search time would be spent in searching in promising branches. Extensive work has been done in this research direction (Bruynooghe, 1981; Chen & van Beek, 2001; Dechter, 1990; Dechter & Frost, 2002; Gaschnig, 1978; Ginsberg, 1993; Schiex & Verfaillie, 1994). There are three common properties of all those techniques: (1) they are tree-based search with linear space complexity and (2) they are non-orthogonal i.e., two or more techniques are combined in one global algorithm, and (3) all backjumping schemes are facing an extra challenge which is the ability of skipping only non-feasible solutions during the search process. If a feasible solution is skipped, when jumping back so far, then the backjumping algorithm loses its optimality. It is clear that such properties (except the first one) increase the computational cost in finding the suitable position to send the last instantiated variable (the variable which causes the conflict). Furthermore, such properties increase also the implementation complexity. Moreover, all backjumping algorithms inherit the tree data-structure either implicitly (recursive implementation) or explicitly (non-recursive implementation). Thus, the problem of scanning the spanning tree from left to right still existing. Since the size of the spanning tree is exponential, then whatever a backjumping technique skips it would not suffices to reduce the time complexity to a reasonable cost.
+
+To overcome the problem of time in backtracking algorithms, variable ordering heuristics has been proposed in literature. It is well known that the arriving order of variables affects significantly the search time if one feasible solution is required (Dechter & Pearl, 1989; Haralick & Elliot, 1980; Sadeh & Fox, 1996; Smith & Sturdy, 2005). Nevertheless, if the target is to answer that there is no feasible solution or to find all feasible solutions, then ordering heuristics became useless. Further, there is no general heuristic for all CSP problems. We have also seen that there are many heuristic search algorithms proposed in literature to solve pathfinding problems such as A∗, IDA∗ and LRTA∗. The latter algorithms are beneficial in terms of time and space complexities. It is worth to note that most of algorithms belonging to pathfinding class are not preferred in dealing with CSP problems (Rossi et al., 2006) since they are deigned initially to address only pathfinding problems. For example, Fohler et al. in Fohler (1994) have used IDA∗ algorithm, which is a pathfinding technique, to tackle pre-run-time scheduling problem, which is a CSP problem, but their approach still not very efficient and the same authors have developed one more Branch-and-Bound algorithm to address a similar CSP problem (Fohler & Ramamritham, 1997). One restriction cause of using heuristic search algorithms to address CSP problems is how to choose an admissible heuristic function h since this function is very difficult to find or sometimes it is an impossible task. One common important property of all algorithms that solve pathfinding problems (except LRTA∗) is the use of trees when searching for desired solutions. The size of the tree is growing at least linearly according to the search depth and the branching factor. The role of the tree is to keep track of visited regions in the state-space. Thus, the tree is used to help in finding one optimal solution or to say that no optimal solution is existing in the state-space. Rather similar to tree-base search algorithms, LRTA∗ assigns a heuristic value for each state in the search space. Then, those heuristics are refined along repeated trials until convergence to the corresponding optimal values. No tree is used by LRTA∗ when searching for the optimal solution i.e., only a fixed memory space is spent to store assigned heuristic values. LRTA∗ seems to be interesting due to its linear space complexity and its non-systematic search i.e. lesser time is taken to find the optimal solution compared to all tree search algorithms that exhaust the RAM space in large problem instances. LRTA∗ is optimal without a search tree. To the best of our knowledge, only LRTA∗ has such important property in solving pathfinding problems. However, LRTA∗ is not suitable to solve pre-run-time scheduling and CSP problems because it was initially proposed to address Pathfinding problems and it requires an admissible heuristic to ensure its Optimality. To the best of our knowledge, an algorithm with LRTA∗’s properties to solve CSP problems does not exist. The following reasons show the difficulties that makes LRTA∗’s framework not suitable for CSP problems: (1) The target solution in LRTA∗ has the lowest cost while in CSP problems the first found with satisfied constraints is enough, (2) LRTA∗ guarantees to find a feasible solution to the goal state every trial while in CSP problems a feasible solution is the final target.
+7. Perspectives
+7.1. Complete treeless algorithm for CSP problems
+
+By the coming active research years, we strongly expect the development of algorithm in CSP area, particularly to solve the problem of scheduling tasks under timing constraints, with the following properties either a backtracking or complete-and-repair algorithm8:
+
+1.
+
+    Treeless algorithm: an algorithm without explicit tree construction during the search process. This could be done similarly to LRTA∗ with repeated update of some heuristic values until convergence to a feasible schedule.
+2.
+
+    Complete: this would mean, it has the ability to find feasible schedules in state-spaces with existing feasible schedules like LRTA∗. As it was stated above, the condition of the optimality of LRTA∗ is the reachability of the target solution. Otherwise LRTA∗ would run forever.
+3.
+
+    Deterministic: this would mean an algorithm without a probabilistic behavior like meta-heuristics. It is clear that decisions should be made according to returned values of some predefined heuristic functions. Each decision to take a direction should be made without probabilities. The only exception is the situation of tee between two or more alternatives which can be handled randomly like in LRTA∗.
+4.
+
+    Non-systematic: the search should not be systematic in one direction(e.g. from left to right) to avoid the same exponential time complexity in blind search techniques. Recall that in blind search, nodes are expanded chronologically according to their order in the open queue. The non-systematic search would be done either in backtracking or complete-and-repair manners.
+
+7.2. Linear space complexity algorithm for the decision problem
+
+In state-spaces where the target state is not reachable LRTA∗ would run forever. To the best of our knowledge this shortcoming is not solved yet and LRTA∗ remains complete only in state-spaces with a reachable target states. This shortcoming is not related to LRTA∗ only, it is also related to treeless heuristic and meta-heuristic techniques due to the absence of the tree which keeps track of visited regions in the state-space. Therefore, if a treeless algorithm has been developed to solve CSP problems, then we strongly believe that it would suffer the problem of deciding whether a feasible schedule exist or not for the input task set. If a feasible schedule has been found, then the algorithm stops to report success. Otherwise, there is no way to know about the existence of feasible schedules same as meta-heuristics and LRTA∗. The ability to report failure, in treeless algorithms, if the feasible schedule does not exist in the state-space is exactly the halting problem which was proved by Turing to be undecidable (Turing, 1936). The ability to report failure is a decision problem whether the algorithm would stop (a feasible solution is found) or run forever. The latter case means, there is nothing to say about the existence of a feasible solution because either we didn’t wait enough to reach the target solution or the target solution is not existing. Turing proved that this decision problem is undecidable which would mean that the algorithm to solve this problem does not exist. In this research direction, works in Laalaoui and Drias (2010), Laalaoui et al. (2012) proposed a necessary condition based on machine-learning to decide stopping Incomplete algorithms namely meta-heuristic techniques. Their idea seems to be promising and it is based on learning possible encountered preemptions in a set called ListPmpt until all reachable preemptions have been found. In such case, if the feasible schedule is not reached, then either there is no feasible non-preemption schedule or the algorithm is not able to find an existing feasible schedule. In both bases, the algorithm has to be stopped. In Laalaoui and Drias (2010), the authors used this learning technique to increase the success rate (number of success to find a feasible schedule) of the ACO algorithm in preemption context. In Laalaoui et al. (2012), the authors attempt to generalize their technique to other scheduling problems but they applied this technique only to the deadline scheduling problem in non-preemptive context.
+
+
+1.
+
+    This design is related to pre-run-time scheduling which is the scope of the current paper and not to run-time scheduling (Xu & Parnas, 1993).
+
+2.
+
+    In literature, segments are also called modules (Abdelzaher & Shin, 1999).
+
+3.
+
+    If the computation effort is increased at run-time (above pseudo-polynomial time), then the satisfaction of the imposed constraints would not be possible and tasks’ deadlines would be exceeded.
+
+4.
+
+    pre-run-time schedulers are less flexible than run-time schedulers in the sense that if the system has been changed (e.g., adding tasks), then a new feasible schedule has to be found off-line and uploaded to the in-filed system. In fact, this is not a very big issue since it can be considered as a task of upgrading the system which is a common task in software engineering area.
+
+5.
+
+    The word real-time here does not mean a real-time system. It means taking decision locally i.e., according to local available information.
+
+6.
+
+    We mean by an agent an entity designed to execute one specific action under some conditions.
+
+7.
+
+    A conflict means there is one unsatisfied assignment
+
+8.
+
+    The development of LRTA∗ algorithm makes us more confident about the existence of algorithms with such properties.

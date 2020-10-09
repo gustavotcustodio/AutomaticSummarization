@@ -1,0 +1,320 @@
+A new saliency map is developed to detect salient trajectories in a video. Low-rank matrix recovery is introduced to help background trajectory subtraction. Salient foreground trajectories for realistic action recognition are obtained.
+
+0.058804 - Human action recognition has great potential in many applications relevant to artificial intelligence, which can accelerate some research on expert and intelligent systems, such as feature selection.
+0.196362 - To improve the performance on human action recognition in realistic scenarios, a novel Salient Foreground Trajectory extraction method based on saliency detection and low-rank matrix recovery is proposed to learn the discriminative features from complicated video context.
+0.161220 - Specifically, a new trajectory saliency combining appearance saliency and motion saliency is proposed to divide the dense trajectories into salient trajectories and non-salient ones.
+0.146801 - The salient trajectories are approximately corresponding to the interested foreground region, while the non-salient subset is mainly composed of the dominating background trajectories.
+0.141195 - Furthermore, according to the low rank property of background motion, if the video has background motion, the background trajectory subspace is further constructed on the non-salient trajectory subset via low-rank matrix recovery method.
+0.156430 - Then the possible background trajectories in the salient subset could be subtracted.
+0.128815 - Finally, the resulting salient foreground trajectory features are encoded by the approach of Bag of Features or Fisher Vector for action classification.
+0.106140 - Experiments on KTH, UCF Sports and Olympic Sports have shown that the proposed Salient Foreground Trajectory method is effective and achieves comparable results to the state of the art.
+0.093275 - Human action recognition from videos is a very attractive topic in the fields of computer vision and image processing due to its wide applications in video surveillance, man-machine interface device, etc.
+0.043573 - Meanwhile, the study of human action recognition can also speed up the research on some aspects in intelligent and expert systems, such as feature selection.
+0.092522 - For the past few years, researchers have begun to study the human action recognition under wild realistic scenarios.
+0.087743 - Action recognition from videos in real scenes is much more challenging compared with that from videos under stationary cameras or controlled environments, since a moving camera may cause complex background motion in a video and make it very difficult to infer the features of interests.
+0.068027 - Sometimes, to learn a discriminative set of foreground features, a pre-processing step like background subtraction (Cui, Huang, Zhang, & Metaxas, 2012; Haque & Murshed, 2013; Sheikh, Javed, & Kanade, 2009) or motion compensation (Jain, Jégou, & Bouthemy, 2013) is necessary.
+0.039683 - Compared with the videos under surveillance, realistic videos generally have two main problems for identifying the targets.
+0.059621 - One is that the video may contain cluttered background, and the other is that the background would be moving due to the camera motion or the movement of background itself.
+0.057348 - These two problems would possibly lead to noise in the process of feature extraction and further reduce the recognition rate.
+0.031746 - Aiming at these problems, many researchers have proposed plenty of novel methods to extract more expressive features.
+0.157186 - In recent years, visual saliency is often employed to detect salient features for action recognition (Rapantzikos, Avrithis, & Kollias, 2009; Vig, Dorr, & Cox, 2012; Wang & Zhao, 2011).
+0.000000 - Rapantzikos et al.
+0.069136 - (2009) used saliency for feature point detection in videos, and they incorporated color and motion to compute saliency as the solution of an energy minimization problem that involves a set of spatio-temporal constraints.
+0.000000 - Vig et al.
+0.052009 - (2012) pruned densely extracted descriptors based on a sparse saliency mask of the underlying video to acquire good features, while Wang and Zhao (2011) adopted a saliency-based feature selection to prune sparsely extracted interest points.
+0.069841 - However, all these methods for salient feature detection often fail in complex scenarios, especially when the salient regions do not correspond to the targets.
+0.085983 - Video motion under orthographic cameras has a low rank constraint (Tomasi & Kanade, 1992), thus some approaches employ low-rank matrix recovery method for background modeling and background motion subtraction (Cui et al., 2012; Wen et al., 2014; Wu, Oreifej, & Shah, 2011).
+0.116673 - Low-rank matrix recovery is based on two assumptions: the base matrix is low-rank and the noise is sparse.
+0.072222 - To satisfy the second condition, current approaches usually assume that foreground objects only occupy a small portion of the scene, which however, does not hold in most realistic videos.
+0.167692 - Considering the mentioned problems of action recognition from videos in realistic scenes, this paper proposes a novel Salient Foreground Trajectory (SFT) extraction approach to obtain the most salient and discriminative trajectory subset by combing video saliency and low-rank matrix recovery.
+0.113821 - To be specific, trajectory saliency is used to roughly separate the primary dense trajectories into two sunsets, a salient one and a non-salient one, according to the saliency values.
+0.171813 - The salient subset with higher saliency values is identified to represent foreground motion and the trajectories in it are assigned to label human actions.
+0.128205 - Accordingly, the non-salient one with smaller saliency values is corresponding to the background motion.
+0.100529 - In more complicated environment, the trajectories belonging to the background might perhaps obtain higher saliency values and might be wrongly labeled as “salient” which leads to undesirable quality of trajectory features.
+0.140543 - The potential background trajectories are dominant in the non-salient subset, thus the non-salient subset can form a low dimensional background motion subspace built by a low-rank matrix recovery approach.
+0.120370 - Once the background motion subspace is constructed, the trajectories in the subspace could be pruned.
+0.054054 - The rest trajectories are described by trajectory-aligned motion boundary histogram (MBH) descriptors and encoded by Bag of Features (BoF) or Fisher Vector (FV) for classification.
+0.069444 - Compared with the related approaches, the newly proposed method contributes to generating discriminative trajectories based on the popular dense trajectory method.
+0.143468 - First, we extend the existing trajectory saliency to acquire the salient trajectories mainly focusing on the foreground.
+0.129451 - Second, if the video is with dynamic background, by utilizing the non-salient trajectories to construct a background motion model, the trajectories with background motion are filtered out from the salient trajectories.
+0.215152 - Thus the salient foreground trajectories are obtained for identifying human action.
+0.094737 - The goal of these two steps aims at removing both of non-salient and background trajectories so as to retain the features corresponding to the human action of interests.
+0.036036 - The rest of this paper is organized as follows: Section 2 gives a brief review of the related work and Section 3 presents the proposed approach.
+0.000000 - Section 4 describes the details of experiments followed by Section 5 summarizing the whole paper.
+0.030651 - Recognizing an action from videos mainly involves three essential steps, including feature extraction, feature representation, and action classification.
+0.044444 - Lots of efforts have been made to address these issues (Poppe, 2010) and one of the most crucial problems yet to be solved is how to select good features.
+0.029630 - The research related to feature selection can be divided into two categories: pre-processing selection and post-processing selection.
+0.031746 - The former primarily concentrates on how to exploit salient points or regions and eliminate redundant ones, such as the negative-space-based features by Rahman, Song, Leung, Lee, and Lee (2014), while the latter incorporates feature selection into specific classification models to make the selected features suitable for classification, such as multiple kernels learning (MKL) (Song et al., 2011).
+0.096825 - Here, a brief review on the pre-processing feature selection is introduced, which is closely related to our work.
+0.030556 - Traditional feature points detectors like Harris corner detector (Harris & Stephens, 1988; Mainali, Yang, Lafruit, Gool, & Lauwereins, 2011), Gabor filtering (Dollár, Rabaud, Cottrell, & Belongie, 2005), and scale-invariant feature transform (SIFT) detector (Lowe, 1999) detect the points that have spatial and temporal variations, whose resulting features may be intuitive and informative, but come with no guarantee of being the best for representing the actions, especially in realistic dynamic sceneries.
+0.207977 - In order to detect the area of interests, saliency is developed to exploit salient foreground.
+0.050179 - Contrast and uniqueness are the main influencing factors for saliency detection (Cheng, Zhang, Mitra, Huang, & Hu, 2011; Ma & Zhang, 2003).
+0.044829 - Itti, Koch, and Niebur (1998) performed center-surround operators on a set of feature maps and integrated the results as the final saliency map.
+0.017778 - Ma and Zhang (2003) proposed a local contrast-based method, while Cheng et al.
+0.049383 - (2011) introduced a global contrast-based method.
+0.012698 - Hou and Zhang (2007) treated saliency as the residual of the image log-spectrum compared with the average log-spectrum of an image sets.
+0.063222 - Saliency filters (Perazzi, Krähenbühl, Pritch, & Hornung, 2012) decompose a given image into several super-pixels and measure the uniqueness and spatial distribution of these super-pixels to compute their saliency, then, a fine-gained pixel-wise saliency map is achieved.
+0.043011 - Zhu, Liang, Wei, and Sun (2014) proposed a boundary connectivity measure to characterize the spatial layout of the image regions.
+0.076348 - To robustly feature the saliency, a saliency tree is developed by integrating global contrast, spatial sparsity, and object prior with regional similarities (Liu, Zou, & Le Meur, 2014).
+0.034798 - The saliency method by Wang, Lin, Lu, Li, and Shi (2015) overcomes the limitations of previous methods, which aggregates multiple saliency cues in a global context with their spatial priors in the image domain.
+0.052288 - By extending the spatial saliency to spatio-temporal domain, some dynamic saliency detection approaches are suggested to handle the video saliency (Kim, Lee, & Bovik, 2014; Rapantzikos et al., 2009; Ren et al., 2014; Vig et al., 2012; Wang & Zhao, 2011).
+0.066852 - Wang, Shen, and Shao (2015) proposed a new spatial and temporal saliency detector to estimate salient regions based on the gradient flow field and energy optimization and this detector can handle complex scenes with dramatic appearance and motion variations.
+0.057613 - Video processing is more complex than image processing with requiring both recognition accuracy and processing speed.
+0.067688 - If dealing with each frame of a video takes too long, the whole video pre-processing of human action recognition framework could be fairly slow so as to influence the system performance.
+0.111111 - Moreover, we employ saliency to process trajectories which have a fixed size and the frame-by-frame saliency is more adaptive.
+0.055556 - Hence, to balance the computation cost and detection accuracy, this paper adopts center-surround saliency detection in image processing and extends the work of Yi and Lin (2013), which computes fast and detects the salient regions well.
+0.140351 - Another way to identify foreground is background subtraction.
+0.048611 - The earlier attempt on background subtraction is frame-difference method (Jain & Nagel, 1979), and many studies focus on modeling the background.
+0.074690 - In the literature by Wren, Azarbayejani, Darrell, and Pentland (1997), a single Gaussian model that addresses each pixel in a video frame with a Gaussian distribution is presented.
+0.029412 - To resolve dynamic natural environments, Stauffer and Grimson (1999) proposed a Gaussian mixture model (GMM) by using more than one Gaussian distribution per pixel to handle more complex backgrounds, and lots of improvements of GMM have been developed (Sen-Ching & Kamath, 2004; Yang, Tan, Tian, & Liu, 2007; Zhang, Wu, Wang, & Yin, 2010; Zivkovic & van der Heijden, 2006).
+0.061728 - Without the Gaussian assumption for the pixel intensity distribution, Elgammal, Harwood, and Davis (2000) utilized a non-parametric kernel density estimation to describe the background.
+0.044444 - Moreover, subspace learning is employed in the literature by Oliver, Rosario, and Pentland (2000) and Tsai and Lai (2009).
+0.000000 - Cui et al.
+0.076852 - (2012) presented a unified framework for background subtraction under both stationary and moving cameras using low rank and group sparsity constraints.
+0.099711 - Liu, Zhao, Yao, and Qi (2015) regarded the sequence as two parts, i.e., a low-rank matrix (background) and a structured sparse outlier matrix (foreground), and employ a saliency measurement to dynamically remove the background.
+0.043698 - So far, more algorithms have been developed to deal with dynamic background problems (Laptev, Marszał ek, Schmid, & Rozenfeld, 2008; Lin et al., 2009; Mandellos, Keramitsoglou, & Kiranoudis, 2011; Sheikh et al., 2009; Sprechmann, Bronstein, & Sapiro, 2015).
+0.055556 - The videos from realistic scenarios are often shot by moving cameras and contain dynamic background, which would result in noise features and affect the classification performance on target recognition.
+0.000000 - Inspired by the work of Wu et al.
+0.149452 - (2011), this paper employs the low-rank matrix recovery method to remove the features from camera motion for further purifying the trajectories.
+0.100794 - Motion trajectory has shown to be a powerful and successful video representation for action recognition because of its ability to capture spatio-temporal motion information (Wang, Kläser, Schmid, & Liu, 2011).
+0.083333 - The objectives of this paper are to obtain the ideal trajectories closely related to human action and to reject the trajectories being lack of interests or belonging to background.
+0.060606 - Based on the dense trajectory extraction method by Wang et al.
+0.208395 - (2011), two trajectory selection strategies are developed to acquire the salient foreground trajectories in this paper.
+0.131971 - Fig 1 gives the flowchart of the proposed framework, including Non-salient Trajectory Filtration and Background Trajectory Subtraction.
+0.000000 - Fig 1.
+0.158025 - Flowchart of the proposed Salient Foreground Trajectory extraction approach.
+0.098448 - Green curves are salient trajectories and blue curves are non-salient ones while red dots indicate the point positions in the current frame.
+0.133848 - The approach consists of two stages, including the Non-salient Trajectory Filtration for the salient trajectories and the Background Trajectory Subtraction for the salient foreground trajectories.
+0.074074 - (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)
+0.144358 - Non-salient Trajectory Filtration Salient trajectories are obtained by filtering dense trajectories according to the saliency value of each trajectory.
+0.105301 - Once the trajectory saliency is generated, the dense trajectories can be divided into two subsets, i.e., the salient trajectories and the non-salient one.
+0.090433 - Trajectory saliency map construction Dense trajectories are extracted in multiple spatial scales by tracking densely sampled feature points using optical flow fields (Wang et al., 2011).
+0.111111 - However, the dense trajectories often contain some noise in realistic videos, such as cluttered background.
+0.074074 - To extract more discriminative features from foreground objects, this paper employs saliency to prune most of the unrelated background.
+0.077778 - Visual saliency is used as an effective tool to measure the conspicuity and attractiveness of visual data, and saliency detection approaches are good at finding outstanding regions and objects.
+0.058559 - Generally, for video saliency detection, two aspects are taken into account, including appearance saliency (or called spatial saliency) detection to detect interesting objects in an image, however, whose ability to capture motion information is very limited, and motion saliency (or called temporal saliency) detection to exploit motion areas in video sequences, unfortunately, whose capability of concentrating on targets is always insufficient (Rapantzikos et al., 2009).
+0.051127 - In order to make full use of both appearance saliency and motion saliency, we propose a saliency map which integrates appearance saliency map and motion saliency map by extending the saliency work of Yi and Lin (2013).
+0.084084 - In this work, the saliency value of a trajectory is defined as the mean of saliency values of the points across the frames on the trajectory.
+0.082540 - Define the ith trajectory as , where denotes the 2D coordinates of the point in this trajectory, and L is the length of a trajectory.
+0.080080 - Note that L means the number of the segments between every two consecutive points, while (L + 1) is the number of the points or frames in a trajectory.
+0.075544 - Let be the saliency value of point , thus the saliency of the trajectory ti is as (1) A center-surround contrast-based approach for saliency detection is adopted (Achanta, Estrada, Wils, & Süsstrunk, 2008) in the process of calculating the saliency map of each frame.
+0.056738 - Saliency is taken as the local contrast value of an image pixel with respect to its surrounding region at various scales, and then three scales are defined to compute the local, symmetric and global contrast values.
+0.038647 - Fig 2 demonstrates the fundamental principle of computing saliency in this study.
+0.052632 - At a given scale, the saliency of a pixel is calculated as the value difference between its 3 × 3 neighborhood (center region) and its three surrounding regions.
+0.116543 - The final trajectory saliency map is determined by the sum of three maps from different scales.
+0.000000 - Fig 2.
+0.026144 - Illustration of the saliency calculation principle.
+0.049383 - The red point is the center point.
+0.040404 - The red square is its 3 × 3 neighborhood (the center region).
+0.028674 - The three yellow rectangles growing from small to large, represent three region scales R1, R2, and R3 (the surrounding regions).
+0.055556 - The saliency of the red point is related with its three surrounding regions.
+0.074074 - (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)
+0.067633 - The appearance saliency of a pixel is computed by the gray value.
+0.103785 - For a video frame, pixel-wise appearance saliency detection is applied on its Gaussian blurred gray image.
+0.022723 - Let SA denote the appearance saliency map, and pg,q denote a pixel with coordinate pair (g, q), then the appearance saliency value of pixel pg,q is (2) where Center(pg,q) denotes the 3 × 3 neighborhood of pixel pg,q, Rk(pg,q) is the kth surrounding region, and Mean(*) is the average gray value computing operation, thus Mean(Center(pg,q)) is the average gray value of Center(pg,q), and Mean(Rk(pg,q)) is the average gray value of Rk(pg,q).
+0.041929 - Specifically, R1(pg,q), R2(pg,q) and R3(pg,q) are defined as (3) (4) (5) where w is the frame width, assumed to be smaller than the image height h, or else h is chosen to decide the surrounding areas.
+0.033816 - To compute motion saliency, we employ the optical flow map as input, and compute the saliency of each pixel as the local contrast of its 3 × 3 neighborhood and surrounding regions at three different scales.
+0.038095 - The center and surrounding regions are represented by histograms of optical flow (HOF), and the contrast is measured by χ2 distance between the histograms.
+0.103030 - Let SM be the motion saliency map of a video frame.
+0.042328 - The motion saliency value of pixel pg,q is defined as (6) where H(*) is the average HOF of a region and H(*) is 9-dimensional since HOF has 9 bins.
+0.048215 - To integrate the appearance saliency and the motion saliency to obtain the combined saliency map, the appearance saliency map and motion saliency map are normalized to [0,255], then the combined saliency map S can be obtained by (7) where is the normalized appearance saliency map, is the normalized motion saliency map, and α is the impact factor between appearance saliency and motion saliency.
+0.060606 - When α equals 1, it means only the appearance saliency is needed.
+0.070175 - If α is 0, only motion saliency is used.
+0.042735 - It can be deduced that the bigger α is, the greater influence the appearance saliency exerts.
+0.076628 - For the videos with clean or simple background, the appearance saliency is usually more powerful than motion saliency.
+0.078609 - This paper aims to solve the human action recognition problem from realistic videos which are shot under different environments, e.g., scenes with little camera motion or violent background motion, or situations with a flat background or a cluttered one.
+0.074074 - In order to adapt to all kinds of videos in realistic environments, the appearance saliency and the motion saliency are empirically believed to have almost the same effect in the recognition.
+0.044444 - Hence, following the setting of Yi and Lin (2013), we set for all video sequences to take both of the two factors into account.
+0.096352 - The samples of saliency maps are shown in Fig 3.
+0.000000 - Fig 3.
+0.056790 - Samples of the saliency maps by our saliency method.
+0.000000 - The first column displays the original frames.
+0.028674 - The other three columns illustrate the static saliency, the dynamic saliency, and the combined saliency of the video frames, respectively.
+0.101347 - Compared with the salient trajectory extraction method by Yi and Lin (2013), our saliency map extends the symmetric surrounding areas.
+0.077290 - Yi and Lin (2013) followed the center-surround principle using merely one surrounding regions to compute the saliency value of each pixel in a frame, which would lead to roughness in the foreground, suffering loss in target trajectories.
+0.046296 - We extend to three surrounding areas, so as to smooth the saliency distribution.
+0.058191 - A comparison of our extended saliency detector and theirs are showed in Fig 4, from which we can see that our saliency map smoothly retains more interested areas and also filter out the background ones.
+0.000000 - Fig 4.
+0.043447 - Comparison of the saliency maps between the method by Yi and Lin (2013) and ours.
+0.000000 - The first row displays the original frames.
+0.012012 - The second row shows the saliency result of our saliency method while the third row illustrates the effect of the method by Yi and Lin (2013).
+0.083796 - Our saliency maps are smoother since we extend one surrounding region into three ones in order to average the saliency distribution.
+0.107440 - Hence, our saliency maps can theoretically reserve more effective trajectories without introducing irrelevant noise.
+0.178307 - Salient trajectory detection A saliency threshold value is set to select salient trajectories and filter out non-salient ones.
+0.079012 - For a trajectory set T whose trajectories are tracked across the same video sequence with length L, the saliency threshold is computed by the average saliency value of all the related (L + 1) frames.
+0.081798 - At first, the average saliency value MeanSalj of frame j is computed as (8) Then the saliency threshold thresholdS to determine whether a trajectory is saliency or not is defined as (9) where μ is a parameter determining the size of salient trajectory set, whose value is empirically set as 1.5 in the experiment of this study.
+0.131362 - A trajectory ti ∈ T is salient if its saliency value is bigger than the value of thresholdS, then it will be assigned to the salient trajectory subset Tsalient.
+0.098765 - Otherwise, it is identified as non-salient and assigned to the non-salient subset Tnon-salient.
+0.093275 - (10) (11) Obviously, the trajectories in Tnon-salient are either related to the background motion or holding little information, so they will be used for the subsequent construction of background motion subspace.
+0.128381 - Still, it is pretty difficult to estimate how many trajectories in Tsalient are related to the interested objects in the dynamic scenarios.
+0.122853 - Moreover, when a video has sharp motion variation or rich background content, the Non-salient Trajectory Filtration cannot work well.
+0.058411 - As shown in Fig 5, the runner moves so fast and the camera also follows the person's movement, leading to a blur in a frame, which makes the motion saliency ineffective; and the diving video contains outstanding background, causing that the appearance saliency cannot effectually detect the requiring target.
+0.196128 - Therefore, a Background Trajectory Subtraction is necessary to process Tsalient for further selection.
+0.000000 - Fig 5.
+0.145534 - Failures of Non-salient Trajectory Filtration.
+0.027778 - The first row represents the video with sharp motion variation while the second row shows the video with rich background content.
+0.128815 - From left to right: the original frames, the combined saliency maps, and the visualizations of salient trajectories after Non-salient Trajectory Filtration.
+0.117609 - Background Trajectory Subtraction Under dynamic cameras, to reduce errors, it is necessary to determine whether the background is dynamic or not before carrying out Background Trajectory Subtraction.
+0.019841 - In this paper, we suggest randomly selecting several positions where the optical flow is zero (or nearly zero) from the first frame, and extracting the SIFT descriptors of the same positions from the first frame, the middle frame and the last frame of the sequence.
+0.035842 - If all of the positions have the fixed SIFT descriptors over the three frames, the background is regarded as static.
+0.143768 - Otherwise, the background is determined as dynamic and the Background Trajectory Subtraction is executed.
+0.024691 - Background motion subspace construction Theoretically, video background motion only depends on the 3D structure of the scene and the camera motion (Sheikh et al., 2009).
+0.047619 - Due to the consistency of camera motion, the relative movements of background points usually have great similarities.
+0.100065 - It has been proved that the subspace of the background trajectories has a low rank constraint, and its rank is at most 3 (Sheikh et al., 2009).
+0.160648 - In the non-salient trajectory subset, the trajectories belonging to the background are dominant and form a latent low-rank structure.
+0.154630 - Thus the background motion subspace can be constructed based on non-salient trajectories by an approach of low-rank matrix recovery.
+0.068376 - Given a trajectory ti, its displacement sequence is defined as , where and , u and v denote the displacements of x-coordinate and y-coordinate of the trajectory, respectively.
+0.109167 - Given a non-salient trajectory subset with size N, the set can be arranged into a 2L × N matrix, which is (12) It is noticed that the background trajectories often have similar shape and displacement sequence.
+0.084921 - In ideal cases, the background trajectories are all the same in shape, which means that the column vectors of D are all the same and the rank of D is 1.
+0.123782 - In realistic situations, the potential background trajectory vectors in D obey the low rank constraint, and other vectors which come from potential foreground trajectories are rather sparse.
+0.136892 - Thus D can be decomposed to a low rank matrix B and a sparse error matrix E, where B represents the background trajectory motion space.
+0.063492 - (13) Eq (13) can be solved by seeking the lowest rank of B subject to the constraint that the error matrix E is sparse.
+0.054422 - (14) As this problem is NP-hard, usually a tractable optimization problem is obtained by relaxing Eq (14): (15) where ‖ · ‖* is the nuclear norm of a matrix, ‖ · ‖number represents the L-number norm, and γ is a weighting parameter.
+0.000000 - The dual method by Lin et al.
+0.077295 - (2009) is taken to resolve this problem, and we set as recommended.
+0.098765 - In experiments, the resulting value of rank B is about 3 to 5 in most cases.
+0.116329 - Foreground trajectory detection Let B0 be the basis matrix of the background motion space.
+0.042328 - Obviously, it could be easily computed once B is known.
+0.075269 - The projection matrix P of the background can be constructed as (16) The likelihood that a given trajectory ti belongs to the background is measured by the projection error as follows (17) A threshold is set to determine whether a trajectory is likely to come from a background point or not.
+0.121212 - First the average projection error ɛ of all the non-salient trajectories is computed.
+0.093275 - Then the criterion to filter out the background trajectories is defined as ɛ , where β is an impact factor to adjust the amount of subtracted trajectories, and is set to be 0.5 experimentally.
+0.061603 - Pseudo-code of the proposed algorithm Through Non-salient Trajectory Filtration and Background Trajectory Subtraction, the resulting salient foreground trajectory set is constituted by (18) Fig 6 gives an illustration of the performance of different trajectory selection stages, including the dense trajectories, salient trajectories and salient foreground trajectories, from which we can see that by Non-salient Trajectory Filtration, the resulting trajectories usually focus on the salient foreground region and still contain unfavorable ones from background.
+0.129630 - Further, Background Trajectory Subtraction can remove the background features to make the trajectories more expressive.
+0.000000 - Fig 6.
+0.138889 - Visualizations of the trajectories in different stages of the proposed Salient Foreground Trajectory extraction method.
+0.178451 - From top to bottom: original images, dense trajectories, salient trajectories, salient foreground trajectories.
+0.098448 - Green curves are salient trajectories, and blue curves are non-salient trajectories while red dots indicate the point positions in the current frame.
+0.074074 - (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)
+0.124786 - Algorithm 1 summarizes the proposed SFT extraction algorithm for realistic action recognition, utilizing two trajectory-level feature selection strategies to improve the dense trajectories into a more favorable salient foreground trajectory set which has a smaller size but contains abundant information.
+0.081243 - In order to demonstrate the performance of the proposed approach, we conduct the experiments on three popular datasets for human action recognition.
+0.035842 - Datasets Three benchmarks are employed for recognizing human actions, including the KTH, the UCF Sports, and the Olympic Sports datasets.
+0.018913 - The KTH dataset (Schüldt, Laptev, & Caputo, 2004) contains six human action classes: walking, jogging, running, boxing, waving, and clapping, with each action class consisting of 100 sequences performed by 25 subjects in four different scenarios.
+0.038647 - Note all sequences were shot with a static camera over homogeneous backgrounds.
+0.056645 - The UCF Sports dataset (Rodriguez, Ahmed, & Shah, 2008) has 150 video sequences in total and includes ten human actions, and the dataset is enriched by adding a horizontally flipped version of each sequence to the dataset like Wang et al.
+0.000000 - (2011).
+0.047109 - Different from KTH, the sequences in UCF Sports are featured in a wide range of scenes and viewpoints under unconstrained environments, containing a lot of camera motion.
+0.064815 - The Olympic Sports dataset (Niebles, Chen, & Fei-Fei, 2010) which is considered to be challenging due to its complicated backgrounds, moving cameras and varying resolution, has 16 sports action categories, including 783 video clips collected from YouTube.
+0.037037 - In experiments, 649 sequences are used for training and 134 sequences for testing as recommended by Niebles et al.
+0.000000 - (2010).
+0.077778 - Feature encoding and classifier Dense trajectories method (Wang et al., 2011) is adopted for primitive trajectory extraction and the relative parameters are set as recommended by Wang et al.
+0.083333 - (2011), i.e., the sampling step size W is set to be 5, the amount of spatial scales is 8, and the length of a trajectory L is 15.
+0.126984 - Besides, trajectory-aligned MBH descriptors are employed to represent trajectories.
+0.085778 - MBH is obtained by computing both the horizontal derivative and vertical derivative of the optical flow, which is robust to camera motion in a way (Wang & Schmid, 2013).
+0.102564 - For KTH and UCF Sports, a regular BoF method is employed to encode the features.
+0.069444 - The descriptors are clustered into visual words using K-means algorithm and the number of clusters is set to be 4000.
+0.064516 - Then a non-linear SVM (Support Vector Machine) with a χ2 kernel (Laptev et al., 2008) is used for classification.
+0.065359 - A leave-one-out cross-validation setting is adopted for UCF sports while a leave-one-group-out setup is employed for KTH.
+0.065844 - Finally, the average accuracy over all the action classes as performance measure is reported in detail.
+0.055556 - For Olympic Sports, FV (Perronnin, Sánchez, & Mensink, 2010) is used for feature encoding since it shows to be more powerful and efficient than BoF on large-scale features.
+0.080808 - A linear SVM with fixed C = 100 is used for classification.
+0.015326 - We use one-against-rest approach for multi-class classification and select the class with the highest score.
+0.140278 - Experimental results In this section, the results of action recognition by our Salient Foreground Trajectory approach on three datasets are presented.
+0.080808 - Further, the effectiveness of these two trajectory selection strategies is evaluated.
+0.031746 - And the comparative results on recognition rates with other state-of-the-art approaches are also provided.
+0.022792 - Preliminary data experiments With the proposed SFT algorithm, the average recognition rates on KTH, UCF sports and Olympic Sports are 97.50%, 91.37%, and 85.46%, respectively.
+0.057971 - The confusion matrices on the three datasets are presented in Fig 7.
+0.000000 - Fig 7.
+0.024691 - Confusion matrixes by SFT on three datasets.
+0.026936 - Fig 7(a) shows that on KTH, jogging and running have the lowest recognition accuracy with 0.96 and 0.93, respectively.
+0.051282 - The two classes are wrongly recognized as each other since jogging is basically a kind of running with a steady speed, which has similar motion pattern with running.
+0.040404 - On UCF Sports, the accuracy of skateboarding is just 0.33.
+0.057613 - Most skateboarding videos are classified into walk and golf-swing due to the complexity of skateboarding.
+0.036176 - As for Olympic Sports in Fig 7(c), triple-jump is falsely identified as long-jump because of the similarity between the two classes, with both classes containing run-up and jump.
+0.054201 - From the three confusion matrices, we could infer that our computation framework is not quite robust to rather complicated motion pattern, even though the SFT method extracts the effective features.
+0.057348 - The future work would focus on feature representation to better depict the relationship between the action parts in an action.
+0.100159 - Evaluation of trajectory selection strategies To evaluate the performance of the two phases within the computation process of our Salient Foreground Trajectory method, we compare the recognition accuracy between dense trajectories (obtained by method of Wang et al.
+0.101772 - (2011), abbreviated as DT), salient trajectories (acquired by applying Non-salient Trajectory Filtration to the DT set, abbreviated as ST), and salient foreground trajectories (achieved by applying Background Trajectory Subtraction to the ST set, abbreviated as SFT) on KTH, UCF Sports and Olympic Sports.
+0.055556 - The accuracy of each class on the three datasets is compared in Figs.
+0.000000 - 8, 9 and 10, respectively.
+0.000000 - Fig 8.
+0.000000 - Accuracy comparison of each class by DT, ST and SFT on KTH.
+0.000000 - Fig 9.
+0.000000 - Accuracy comparison of each class by DT, ST and SFT on UCF sports.
+0.000000 - Fig 10.
+0.000000 - Accuracy comparison of each class by DT, ST and SFT on Olympic Sports.
+0.031008 - As shown in Fig 8, compared with DT, SFT can achieve higher accuracy for 4 out of 6 classes on KTH, while the same results can be obtained on the rest classes.
+0.051680 - For all the classes, none of the results on accuracy of ST is worse than those of DT, and meanwhile the results of SFT is better or equal to those of ST.
+0.149735 - Moreover, the improvement of Non-salient Trajectory Filtration is much greater than that of Background Trajectory Subtraction on KTH.
+0.026144 - Fig 9 shows that SFT behaves well for all action classes on UCF sports dataset, with higher recognition rates on 6 out of 10 classes than those of DT, especially on the easily confusing “golf swing” class and “skateboarding” class.
+0.017778 - Similarly, SFT gets better performance than ST on most classes while others are equal.
+0.052288 - Besides, ST is superior to DT on five classes, which however, especially gets much lower accuracy than DT on the “horse-riding” class.
+0.096618 - The reason lies in that the background is salient with camera motion.
+0.126455 - Hence, the effect of Non-salient Trajectory Filtration is poor, filtering out some target trajectories and introducing background features.
+0.111795 - When Background Trajectory Subtraction is carried out, the background trajectories in the salient subset are removed, to some extend remedying the false selection by the Non-salient Trajectory Filtration, so that the accuracy of SFT is near to that of DT.
+0.010101 - Fig 10 demonstrates that on Olympic Sports, SFT works better than both of DT and ST on 9 out of 16 classes, while ST can always obtain better results than those from DT.
+0.068376 - Averagely, the improvement of SFT to ST is greater than that of ST to DT.
+0.053333 - The average recognition rates by the above three methods are conducted in Table 1.
+0.049383 - On KTH, the average accuracy of SFT is slightly outperforms that of ST by 0.5% while ST is superior to DT by 1.33%.
+0.024024 - On UCF sports, SFT achieves an average accuracy of 91.37% and is over 3% better than ST while ST is 4.23% better than DT.
+0.030651 - On Olympic Sports, SFT greatly outperforms ST by 8.6% while ST is 6.9% better than DT.
+0.000000 - Table 1.
+0.017778 - The comparison of average recognition rate by DT, ST, and SFT on three datasets.
+0.038647 - The recognition rate in bold indicates the best result on three benchmarks.
+0.058132 - Dataset DT ST SFT KTH 95.67% 97.00% 97.50% UCF Sports 84.00% 88.23% 91.37% Olympic Sports 69.92% 76.83% 85.46% From the recognition rate comparison of each selection stage, we can conclude that the Non-salient Trajectory Filtration method is more powerful than the Background Trajectory Subtraction on simple datasets like KTH, since in the cases of clean background or outstanding moving objects with no camera motion, saliency analysis can remove most background trajectories.
+0.108213 - The Background Trajectory Subtraction method shows greater improvement on complex datasets like Olympic Sports.
+0.119619 - The reason is that Non-salient Trajectory Filtration often fails in multi-objects scenes or fast moving cases, while Background Trajectory Subtraction effectively models the background motion and prunes the background trajectories.
+0.111988 - As shown in Table 2, through Non-salient Trajectory Filtration and Background Trajectory Subtraction, SFT removes 25% features for KTH, 41% for UCF Sports, and 53% for Olympic Sports.
+0.015326 - With less features, better performance can be obtained, which confirms the advantage and effectiveness of the proposed method.
+0.000000 - Table 2.
+0.131971 - The comparison of feature subtraction rate by Non-salient Trajectory Filtration and Background Trajectory Subtraction on three datasets.
+0.085003 - Dataset Non-salient Trajectory Filtration Background Trajectory Subtraction Total KTH 22% 3% 25% UCF Sports 32% 9% 41% Olympic Sports 39% 14% 53% In conclusion, the above results show that the performance of ST is much better than DT, and by employing Background Trajectory Subtraction, SFT can further increase the recognition rate.
+0.148942 - It is indicated that both of the phases of Non-salient Trajectory Filtration and Background Trajectory Subtraction are useful to filter out the noise and generate discriminative trajectories from realistic videos.
+0.000000 - Comparison with the state of the art Tables 3, 4 and 5 compare the proposed method with the state of the art on KTH, UCF Sports and Olympic Sports, respectively.
+0.000000 - Table 3.
+0.024691 - Comparison of recognition rate on KTH dataset.
+0.028674 - The recognition rate in bold indicates the better result than ours or our result if the proposed method performs best.
+0.000000 - Method Accuracy Proposed method 97.5% Yi and Lin (2013) 97.0% Chakraborty et al.
+0.000000 - (2012) 96.35% Abdul-Azim and Hemayed (2015) 95.36% Wang et al.
+0.000000 - (2013) 95.3% Rahman et al.
+0.000000 - (2014) 94.49% Le, Zou, Yeung, and Ng (2011) 93.9% Shi et al.
+0.000000 - (2013) 93% Table 4.
+0.023392 - Comparison of recognition rate on UCF Sports dataset.
+0.028674 - The recognition rate in bold indicates the better result than ours or our result if the proposed method performs best.
+0.000000 - Method Accuracy Proposed method 91.37% Shabani et al.
+0.000000 - (2011) 91.5% Yi and Lin (2013) 90.08% Abdul-Azim and Hemayed (2015) 89.97% Wu et al.
+0.000000 - (2011) 89.7% Wang et al.
+0.000000 - (2013) 89.1% Boyraz, Masood, Liu, Tappen, and Foroosh (2014) 80.95% Table 5.
+0.023392 - Comparison of recognition rate on Olympic Sports dataset.
+0.028674 - The recognition rate in bold indicates the better result than ours or our result if the proposed method performs best.
+0.000000 - Method Accuracy Proposed method 85.46% Ni et al.
+0.000000 - (2015) 92.3% Wang and Schmid (2013) 91.1% Wang et al.
+0.000000 - (2014) 84.9% Jain et al.
+0.000000 - (2013) 83.2% Wang et al.
+0.000000 - (2013) 77.2% Laptev et al.
+0.000000 - (2008) 58.2% Algorithm 1.
+0.211966 - Salient Foreground Trajectory extraction.
+0.101323 - Input: Dense trajectory set T; Output: Salient foreground trajectory set Tfinal; Step 1: Compute the appearance saliency map SA and motion saliency map SB of all the video frames by Eqs.
+0.055726 - (2) and (6); Step 2: Construct the trajectory saliency map S by Eq (7); Step 3: Compute the saliency value S(ti)of all the trajectory ti in T by Eq (1); Step 4: Divide T into two subsets by Eqs.
+0.058652 - (10) and (11), i.e., the salient trajectory subset Tsalient and the non-salient trajectory subset Tnon-salient; Step 5: Judge whether the video is with dynamic background by SIFT descriptors of sample points in the first, middle, and last frames of a video; if it is with dynamic background, go to Step 6; or else go to end; Step 6: Utilize Tnon-salient to construct the background trajectory motion space B by Eq (15); Step 7: Compute the projection matrix P of the background trajectory motion space B by Eq (16); Step 8: Compute the projection error of every ti by Eq (17) in Tnon-salient to obtain the background subtraction criterion thresholdB; Step 9: for each tiin Tsalient Compute the projection error e(ti) by Eq (17) if ti > thresholdBthen put ti into Tfinal end if end for As shown in Table 3, the average recognition rate on KTH in this study which is 97.5% is the best among all the related work.
+0.044444 - It is much better than the results by the method using a novel local feature sampling strategy by Shi, Petriu, and Laganiere (2013) with 93% and the dense trajectories combined with multiple descriptors by Wang, Kläser, Schmid, and Liu (2013) with 95.3%.
+0.084630 - Moreover, it is comparable to the results of the salient trajectory method by Yi and Lin (2013) with 97.0% and the selective spatio-temporal interest point detector by Chakraborty, Holte, Moeslund, and Gonzàlez (2012) with 96.35%.
+0.082305 - The latest trajectory-based representation by Abdul-Azim and Hemayed (2015) is still a little inferior.
+0.059259 - On UCF sports, the accuracy is 91.37% which is comparable to the state of the art, i.e.
+0.088044 - Our result is better than the that of salient trajectories by Yi and Lin (2013) with 90.08%, dense trajectories and multiple features by Wang et al.
+0.057971 - (2013) with 89.1%, and Lagrangian particle trajectories by Wu et al.
+0.000000 - (2011) with 89.7%.
+0.056738 - As shown in Table 5, the recognition rate of SFT on Olympic Sports dataset is worse than that of the improved trajectories method by Wang and Schmid (2013), which uses multiple features with warped optical flow.
+0.071685 - Also, Ni, Moulin, Yang, and Yan (2015) employed discriminative trajectories to generate mid-level motion parts, doing a better work.
+0.012012 - However, our result still outperforms other approaches, such as the latent hierarchical models for temporal structure learning by Wang, Qiao, and Tang (2014) with 84.9%.
+0.076628 - Besides, it is over 2% better than the residual motion trajectory pruning method proposed by Jain et al.
+0.000000 - (2013).
+0.130719 - According to the identification rate on the three benchmarks, we can indicate that Non-salient Trajectory Filtration and Background Trajectory Subtraction indeed improve the performance.
+0.000000 - However, compared with some mid-level representation method, such as the motion part proposed by Ni et al.
+0.046784 - (2015), our simple local representation is rather disadvantageous.
+0.023392 - Meanwhile, the approach by Wang and Schmid (2013) using feature point match to eliminate the camera motion and human detector to locate the subjects also outperforms ours.
+0.067183 - Therefore, even though our method extracts discriminative trajectories but still lacks the ability to represent more complicated action, which inspires us to attempt to construct a more robust representation for better performance.
+0.037037 - Meanwhile, the pre-processing selection needs further exploration to select more robust features.
+0.090703 - Understanding the human actions from realistic environment is a hotspot in the fields of video recognition and image processing, and how to improve the overall recognition accuracy rate, especially under the complicated background situation, is a great challenge.
+0.189421 - In this paper, a novel Salient Foreground Trajectory extraction method is proposed to improve the identification for the videos under realistic situations.
+0.102357 - It could not only abandon spatiotemporally non-salient trajectories by detecting trajectory saliency, but also filter out background trajectories by constructing background motion subspace.
+0.097222 - Thus redundant or irrelevant trajectories are removed as far as possible so as to obtain a discriminative and crucial feature set.
+0.012012 - The experimental results on popular benchmarks show that the proposed method improves the quality and quantity of the final features, with the increase of recognition accuracy.
+0.103077 - To pursuit much better performance on human action recognition from all kinds of videos, we will focus on the construction of feature representation since the proposed salient foreground trajectories are not enough to represent much more complex actions under complicated scenes.
+0.084967 - Moreover, the more advanced foreground target detection and background motion subtraction are equally important to be studied for the improvement on system performance.
+0.030952 - In effect, our newly proposed feature extraction method can not only apply to human action recognition (Rahman, Song, Leung, Lee, & Lee, 2014; Yoon & Kuijper, 2013), but also inspire some research of intelligent and expert systems, such as image classification (Larese et al., 2014), target tracking (Cancela, Ortega, Fernández, & Penedo, 2013; Walia & Kapoor, 2014), and emotion recognition (Zhang, Zhang, & Hossain, 2015).
+0.047619 - Hence, we are willing to extend our method to try to work out some other related problems.
+
+[Frase 2] To improve the performance on human action recognition in realistic scenarios, a novel Salient Foreground Trajectory extraction method based on saliency detection and low-rank matrix recovery is proposed to learn the discriminative features from complicated video context.
+[Frase 48] In order to detect the area of interests, saliency is developed to exploit salient foreground.
+[Frase 3] Specifically, a new trajectory saliency combining appearance saliency and motion saliency is proposed to divide the dense trajectories into salient trajectories and non-salient ones.
+[Frase 259] It is indicated that both of the phases of Non-salient Trajectory Filtration and Background Trajectory Subtraction are useful to filter out the noise and generate discriminative trajectories from realistic videos.

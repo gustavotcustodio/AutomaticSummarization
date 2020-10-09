@@ -1,0 +1,373 @@
+An expert system manipulating knowledge to help human learners into virtual environment
+
+Abstract
+
+This research is situated within the context of the creation of human learning environments using virtual reality. We propose the integration of a generic and adaptable intelligent tutoring system (Pegase). The aim is to instruct the learner, and to assist the instructor. The multi-agent system emits a set of knowledge (actions carried out by the learner, knowledge of the field, etc.) used by an artificial intelligence to make pedagogical decisions. Our study focuses on the representation of knowledge about the environment, and on the adaptable pedagogical agent providing instructive assistance.
+
+Keywords
+Knowledge representation
+Multi-agent system
+Intelligent tutoring system
+Classifiers system
+Virtual learning environment
+
+1. Introduction
+
+Many fields of learning, such as driving, or the professional training undergone by firemen, requires the learners to experience the setting in which they will work. These learners must therefore acquire not only knowledge, but real hands-on skills. Virtual environments (VE) immerse the learners in situations such as these. For example, Fig. 1 represents a road safety application (ARe´ViRoad) (Herviou & Maisel, 2006), a SEVESO plant application (Edward, Lourdeaux, Lenne, Barthes, & Burkhardt, 2008) and Gaspar for logistics on aircraft carriers (Marion, Septseault, Boudinot, & Querrec, 2007).
+From left to right: screenshots from the ARe´ViRoad, Virthualis and Gaspar…
+
+    
+
+Fig. 1. From left to right: screenshots from the ARe´ViRoad, Virthualis and Gaspar applications.
+
+The work is designed for teaching decision-making in VE. Tutoring system to instruct the learner and to assist the instructor already exists (Lourdeaux, Burkhardt, Bernard, & Fuchs, 2002; Rickel & Johnson, 1999), but are dedicated to a specific VE. In this paper, we propose an independent VE tutoring system, called Pegase,2 in the domain of procedural and collaborative work.
+2. Context: acquisition of skills using virtual environments
+
+Traditionally, most training programmes aim to teach knowledge. In this context, we propose the use of Intelligent Tutoring Systems (ITS) in which this knowledge is used in conjunction with the training setting. In this case, knowledge can be manipulated (Romero & Ventura, 2007), to automatically question the learner, for example. To be competent does not only mean acquiring knowledge, but also how to use that knowledge. In order to facilitate the acquisition of knowledge, we must provide the learner with the right setting. In order to do so, we suggest using interactive systems by which the learners can be immersed in VEs in which they can make trial attempts, take initiatives, make mistakes, and try again in similar situation (which may not be possible in reality). The simulation therefore provides an environment common to the learner, the instructor, and to the skill to be acquired. It mediates the learning relationship (learner-skill) as well as the instructive relationship (instructor-learner). Thus, computer-generated simulations, combined with an ITS, create the opportunity to improve learners’ skills by associating knowledge with the opportunity to put their skills into practice.
+
+ITS have already been used without being associated to virtual reality. As Wenger (1987) has shown, they usually conform to one of four models. The first, known as the domain model, contains a representation of the knowledge linked to the skill to be acquired. ITS also use a learner model which defines his/her personal characteristics and ascertains the condition of the knowledge at a given moment. Using the domain and learner models, the ITS is able to evaluate the knowledge acquired by the learner by comparing his/her activity with information about the field (Keles, Ocak, Keles, & Gülcü, 2009). However, the main objective of the ITS is to the provide appropriate assistance to the learner (Wang, 1997) or the instructor, depending on the setting (following the activities or offering assistance). In this context, the pedagogical model can be used to make choices with regards to the training objective, with the aim of facilitating learning. Finally, an interface model is used to exchange information between the system and the user. For now, this model has not been reified in existing VEs designed for learning.
+
+Within the context of our VE, we consider an ITS as a system which is part of the human Virtual Learning Environment (VLE). We propose to evaluate the extent to which ITS are integrated within existing VLE. We have grouped VLE according to three categories:
+
+1.
+
+    VLE as classical simulators
+
+    This first category groups together those applications which include none of the four models, such as the application designed to assist both in the maintenance and control of mobile cranes (Levesque, 2003). In this kind of VE, the system provides no explanations about the task to be performed, which would require a domain model. The environment is therefore unable to adapt to the learner, as this would require a learner model. Finally, the teaching method is the instructor’s responsibility. The system is not able to make decisions regarding instructive interventions, however, a system like this one can help learners to improve or modify pre-existing skills.
+2.
+
+    VLE with domain and/or learner models
+
+    This second category of VE is made up of applications which include a domain model and/or a learner model (Hubal, 2008). The most well-known example of this type of VE is Steve, a virtual character who assists in both teaching and learning procedural tasks (Rickel & Johnson, 1999). Using the domain model, Steve can demonstrate and explain the procedure and above all, verify the learner’s actions. However, Steve intervenes on demand. He is incapable of knowing when, how and why to intervene, which would require a pedagogical model. In a system such as this it is possible to acquire skills, but the participation of the instructor is still required for all pedagogical interventions.
+3.
+
+    VLE with domain, learner, and pedagogical models
+
+    This final category groups together the VEs presenting not only domain and learner models, but also a pedagogical model (Amokrane, Lourdeaux, & Burkhardt, 2008). Let us examine the example of the educational agent Hal, from the Fiacre system (Lourdeaux et al., 2002). The application is designed to instruct individuals in learning to drive TGV trains (Train Grande Vitesse), using virtual reality (intervention on railways). As well as having all of Steve’s abilities, Hal assists the instructors in structuring pedagogical discourse. In concrete terms, each anticipated behavior corresponds to a different instructive assistance (additional information, explanation of an object, etc.). The instructor must therefore list the possible errors for each piece of knowledge to be acquired. Furthermore, for each of these errors, the instructor must specify the way in which these pedagogical strategies should be conducted through instructive assistance, and indeed he must do so for each exercise. The main advantage of this kind of VLE lies in the assistance to the instructor in terms of the educational relationship linked to the learner, and in the didactic relationship linked to the skill to be learnt. However, the instructor must specify all of the knowledge to be acquired for each exercise.
+
+Thus, most VLE only include the representation of knowledge about one specific domain. Systems proposing a diagnostic component only provide a mechanism for instructive assistance. Hal seems to us to be the most successful of these systems. However, the instructor must still make a list of the possible errors and specify the pedagogical strategies for each exercise. Furthermore, the impact of the instructive assistance on the learner is not taken into consideration. In concrete terms, any proposed assistance which does not help the learner to make progress will be reproposed each time that specific situation occurs.
+
+In order to resolve these shortcomings, we propose the integration of an intelligent tutoring system within a VE. This system must propose a flexible pedagogical model, i.e. a model in which instructive concepts can be easily added, modified or deleted. Furthermore, a model such as this must be generic, in so much as the pedagogical model must be exploitable independently of the task to be performed. Finally, the knowledge of the pedagogical model, along with its past experience, could be used to automatically suggest the appropriate interventions by taking into account both the learner and the context of the simulation: the system therefore becomes adaptive. Our model is called Pegase (PEdagogical Generic and Adaptive SystEm).
+
+In the next section, we will describe the global architecture of Pegase. We will then go onto present our domain model (see Section 4). This will then lead to our description of our pedagogical model (see Section 5). We shall then go onto discuss the advantages of our proposed models (see Section 6). It must be noted that the proposal described here is applicable within the context of the learning of procedural and collaborative tasks and cannot be used in general learning situations.
+3. Proposing an intelligent tutoring system: Pegase
+
+Our proposal consists of reifying the four classical ITS models (domain, learner, pedagogical, interface), within a VE. We believe that errors can provide crucial information and thus decided to introduce a model called “error model”. It is through the use of this new model that we will be able to generalize (where Hal could not do so). Furthermore, we have also added an “instructor model”, in which the instructor specifies the knowledge about the exercise to be performed. He defines the guidelines which describe the procedure(s) to be carried out, and the role(s) played by the learner (and consequently those which must also be activated automatically).
+
+These models must provide solutions to the shortcomings of the existing systems as detailed above and must therefore display two important characteristics: genericity and adaptability. We therefore suggest that, from a VE, it is possible to transplant a generic and adaptive ITS by reifying the 6 ITS models.
+
+In order for each model to be able to share its information and conduct its analyzes autonomously (independently of both the situation and of other models), an autonomous entity (known as an agent) is associated to each model. The agents interact by exchanging messages containing data (see Fig. 2). This data can be extracted from the situation or inferred from the agent’s internal reasoning from its knowledge (the model to which it is linked).
+
+    Step 1.Observation:
+
+    Using the interface model, the system analyzes the learner’s activity. The elements that are important for learning are supplied to the learner model. This information concerns the learner’s actions, those elements which the learner can observe, and the learner’s movements.
+
+    Step 2.Detecting and identifying an error:
+
+    The system analyzes the learner’s actions (learner model) and compares them to the actions to be performed (domain model). This confrontation is used in order to detect errors. If an error has been detected, an error identification mechanism is set up (using the error model).
+
+    Step 3.Proposing instructive assistance:
+
+    Using the learner model (characteristics, activities, errors, etc.), and the domain model (knowledge of the organisational structures), a mechanism stimulating instructive reasoning recommends the instructive assistance for the given situation. It must be noted that this step is not optional; it intervenes even if no error is detected.
+
+    Step 4.Choosing instructive assistance:
+
+    The instructor can choose one specific instructive assistance amongst those proposed.
+
+    Step 5.Representing instructive assistance:
+
+    The instructive assistance selected is presented in the VE.
+
+The instructive process of our five-stage system
+
+    
+
+Fig. 2. The instructive process of our five-stage system.
+
+To use the information from the VE, we must inform the environment in order to obtain controllable knowledge: we thus achieve an informed VE (see Section 4). We must therefore reify the environment. This knowledge is complemented by additional information contained within the 6 ITS models. This data makes up a knowledge base for the pedagogical model which we call the pedagocical situation. This knowledge fuels the ITS’s motor for making instructive decisions (see Section 5). An example of the way in which the rules governing this motor are specified is presented in Section 5.3.
+4. Domain model
+
+For reification, we define the Veha (VE for Human Activity) metamodel. The aim of Veha is to provide a metamodel to describe the VE, not in terms of geometric space, but by providing the semantics required for the artificial agents (ITS, autonomous characters) or humans (learners or instructors) to be able to construct for themselves a representation of the environment and to act together to reach their goals. The Veha metamodel is based on Uml and enables the construction of domain patterns from VEs and from the corresponding concrete VEs (see Table 1). However, the metamodel does not allow us to define the specific concepts of virtual reality. In Veha, we propose to extend Uml in order to represent these concepts. The aim of this extension is to reify the realistic VE in which humans carry out activities. However, it is not adapted to all VE (metaphoric, phenomenological, etc.).
+
+Table 1. Layers of modeling (Mi): the positioning of Veha within the Mof guidelines, in parallel to Uml.
+M4	Mof (Uml limitation)
+M3	Meta–model Uml	Veha metamodel
+M2	Umluser model	VE1 model	…
+M1	User object	VE1a	VE1b	…	…
+4.1. The Veha metamodel
+
+The ITS needs to know which objects make up the VE, how to access it, its properties, its behavior and how to interact with it. Three kinds of knowledge can be expressed using Veha:
+
+1.
+
+    Domain concepts: This entails the semantic description of the concepts relating to the field of activity concerned. This represents some of the knowledge that the learner must acquire (Section 4.1.1).
+2.
+
+    The possibility of structuring and interacting with the environment: These concepts resemble those suggested in smart objects (Kallmann & Thalmann, 1998) which reify those properties required for interactions. The means available to the learner or to the ITS must be specified in order to modify the environment (Section 4.1.2).
+3.
+
+    Entities’ behavior: Within the framework of a VLE the environment’s reactions to the learner’s actions must be simulated. Entities’ behavior also represents one of the elements of the knowledge to be transmitted and must be enforceable (Section 4.1.3).
+
+In the following part of this section, we shall explain how Veha can be used to express these three kinds of knowledge.
+4.1.1. Domain concepts
+
+Knowledge of the domain is expressed both at the model (concept) level, and at the level of the occurrences of these concepts (tangible objects populating the environment). In Veha as in Uml, this knowledge is represented by classes (Class) and instances (InstanceSpecification).
+
+In Veha, the notion of class is used to define a type of object Fig. 8 from domain-specific ontology. The aim is to be able to apply semantics to each of the domain concepts, whether or not they are tangibly represented in the VE (concepts vs concrete objects). All classes stem from the Element class. This class enables the identification of each of the elements of a domain model from its name and the addition of a textual comment. This can be useful when providing the user with explanations regarding the significance of an object.
+
+The structural properties (Property) and behavioral features (BehavioralFeature) of the classes are assigned to the Classifier3via the Feature class. The Property class represents the structural component of the Classifier (as much the attributes as the relationships with other domain concepts). As in Uml, the Operation class is the only tangible sub-class of BehavioralFeature. It is used to express the effect that an object or a user can have on another object. It does this by defining the object’s actual behavior rather than the method used to achieve that behavior. The way in which the behaviors associated with Operation are modeled is described using behavioral models (see Section 4.1.3).
+
+After the notion of Class, Instance, synonymous of object, is Veha’s second key concept. The InstanceSpecification, Slot and AssociationInstance classes represent the instantiation of de Class, Property and Association respectively. The term InstanceSpecification indicates that here, we represent an M1 level entity Table 1, independently of the circumstances in which it is implemented.
+
+The set of knowledge about the environment as specified in Veha can be accessed by the ITS and by the users (learners or instructors). The ITS can, for example, suggest to the learner a list of operations to be performed on one specific kind of object. Likewise, the instructor can modify the environment during the simulation by changing the attribute values of a tangible object.
+4.1.2. The possibility of structuring and interacting with the environment
+
+Within the context of VEs, most of the tangible objects within those environments are represented geometrically, and are situated within the environment. The learner must be able to observe, recognize and manipulate these objects. The ITS also needs to be able to manipulate them within the context of the instructive assistance that it will implement (transparency, refocusing from the learner’s point of view, etc.). Knowledge about the geometry of these objects must also be specified so that the ITS will be able to recontextualize its suggestions within the VE. These objects are entities and all have the properties of the instances veha::Class as well as geometric and topological properties Fig. 7.
+
+Each entity is located at a global reference point. The Shape class is used to assign an instance of EntityClass to a graphical representation in the VE. It is possible to assign many forms to one class of entity. The ITS can use this knowledge to highlight an object or, on the contrary, to hide it. The TopologicalProperty class supports the notion of location (position and orientation) and is used to describe the topological properties of the elements within the VE Fig. 7. It is possible to assign informed points to an entity (Point) which can be used to create an interaction. This information is used by the ITS to turn the learner’s attention to a specific object, for example.
+
+Any entity within the VE is an instance of EntityClass: the Entity class, which derives from Kernel::InstanceSpecification. The values of an entity’s properties are defined by its slots. These therefore depend on the semantic, morphological, geometric and topological properties of the objects within the VE (supplied by InstanceSpecification).
+4.1.3. Entities’ behaviors
+
+When the learner carries out an action in the environment, that environment must react in a realistic way for the learner to be able to understand the consequences of his actions. The learner therefore constructs a representation of the entities’ behavior. For the ITS to be able to regulate this representation, the knowledge of entities’ behaviors must also be specified, as for the two previous kinds of knowledge, and it must also could be executed.
+
+The role of the Behavior package is to model the possible behaviors of the entities within the VE; the objective being for the model to be interpreted in real-time by a behavioral controller, and to be introspected online. As for the structural aspects, introspection relies both on the behavioral model (M2) and on its “instantiation”, that is to say, the way it is carried out (M1). The two classes which support these notions are Behavior and BehaviorExecution (Fig. 6). The Veha entities have reactive behaviors which are triggered by events that can be caused either by the learner or by another of the VE’s entities.
+
+Traditionally, behaviors are assigned pre-conditions and post-conditions concerning the entities and the environment. Behavioral modeling relies on state machines and the Uml activity model. Finally, it can also be based on functions written in programming language that can be consulted online (OpaqueBehavior). The first two methods are introspectable; the ITS can therefore describe or check the way the behavior is carried out.
+
+The tutor can thus analyze, explain or check the context in which an entity’s behavior is carried out by the learner. Better still, if a particular behavior has been specifically described (state machine or activity) it can also explain the way it will be carried out.
+4.2. Example of an environment in Veha
+
+The Veha metamodel can automatically interpret a model described in Uml. Fig. 5 shows the class diagram for an example of a VE in Veha. This example comes from an application created in Veha, but which has been greatly simplified for demonstration purposes. The application (Gaspar, Marion et al., 2007) is made up of around fifty classes and more than one thousand entities. This model shows the classes Deflector and CatapultControlPod (left window). The catapult control pod shields the operators working on the catapult deck of an aircraft carrier. A pod can open (raise above the deck) or close (drop back down into the deck). The domain model specifies all of the pod’s properties (height, speed, etc.). The reactive behavior of a pod is specified by a state machine (top right-hand window). This state machine is sensitive to the signals Open and Close. Therefore, when the pod is Closed, if it receives the signal to Open, it changes to the Open state and performs the operation: Open ( ). Within the context of this application, this operation is detailed by an OpaqueBehavior, a C++ code which carries out the visual displacement of the pod depending on the speed attribute, and updates the height attribute.
+
+In much the same way, deflectors also react sensitively. Due to the additional needs of this demonstration, we added a testing operation (Test). This operation takes its settings from a catapult control pod. The behavior of this operation is specified by an activity diagram (bottom right-hand window). Therefore, when a Test operation is evoked in an instance of the Deflector class, the operation sends the signal Open to the predefined pod.
+
+This model is defined using Objecteering modeling software. It is then exported in an XMI file. The first proposal is to add an interpreter to the Veha metamodel within the AReVi virtual reality platform. The interpreter reads the XMI file and, for each class of Uml metamodel, creates an instance of the corresponding class in the Veha metamodel. Thus, for each domain class defined in the XMI file, the interpreter creates a new instance of the class class from the Veha metamodel. In the context of our example, an instance of the Class class is created for the Deflector class, and another created for the CatapultControlPod class. The interpreter enables the reification of the domain model and provides an set of methods facilitating the introspection of this model. It is therefore possible to ask the interpreter for the set of a class’s properties, the signal which enables the passing from one state to another, and the operation which will then be conducted, all independently of any tangible object.
+
+The VE is populated with entities; instances of the Entity class of the Veha metamodel. From a technical standpoint, these instances are defined in an XML file. Using Uml, class instances can also be described and exported in the XMI file. However, no Uml modeler can make it simple to attribute a geometry and a position to these instances. The geometric design of the VE is, in general, the result of specialist modelers such as 3DS MAX or Blender. We therefore suggest using an export plugin for 3DS Max which would generate the instance file read by the interpreter. Fig. 4 show the visual result of the file defining the model (XMI) and the instance file (XML) in an application implemented using ARéVi. The interpreter also provides the methods for interrogating and manipulating the entities. It is therefore possible to ask an entity for its property values, to carry out an operation, or to send it a signal in order to change its state.
+Example of a procedure written using an activity diagram
+
+    
+
+Fig. 3. Example of a procedure written using an activity diagram.
+Visualisation of the instances of CatapultControlPod and Deflector
+
+    
+
+Fig. 4. Visualisation of the instances of CatapultControlPod and Deflector.
+Class diagram for a deflector and a catapult control pod
+
+    
+
+Fig. 5. Class diagram for a deflector and a catapult control pod.
+Class diagram from the Veha metamodel: Behavior::Common package, the…
+
+    
+
+Fig. 6. Class diagram from the Veha metamodel: Behavior::Common package, the BehaviorExecution class.
+4.3. Procedure and collaboration
+
+Here we shall examine the acquisition of skills. The domain model not only contains knowledge about the environment in use, but also knowledge about the task which must be performed within that environment by the learners. Within this context, activities are defined by the procedures describing the Actions to be performed by a number of entities, each with specifically defined roles. The procedures are therefore defined by UML activity diagrams. This kind of diagram uses the traditional possibilities for organizing its Actions (parallelism, sequence, junction, condition, etc.) As we are dealing with representing human activity, we consider that the sequence of activities takes place in an asynchronous manner.
+
+The organization roles are represented by activity corridors. The name of the corridor defines its role and its type, as well as the type of agent that is authorized to take this role. As in Uml 2.1, there are many different types of activity. This could be the execution of an agent’s operations, a basic virtual action (playing an animation, reaching a given position, etc.) or sending a signal to a specific resource. The resources are played by the environment’s entities and represented by objects in Uml. The conditions are expressed in Ocl and stem from the roles and resources participating in the procedure. Fig. 3 illustrates the example of a procedure expressed using an activity diagram. This procedure solicits the intervention of three roles (such as CabinOperator) which must be played by characters of a pre-defined type (PEH for example). The characters which play these roles are those which are effectively instantiated in the environment. This procedure aims to make the airplane which is to be catapulted advance towards a given point by manipulating the deflector (a protective plate). The example of the procedure in Fig. 3 illustrates the complementary nature of the state machines used to define the reactive behavior of the objects in the environment and the activity diagrams defining a procedure. A procedure’s action can be represented by sending an event to a given object to be manipulated, and the conditions of moving onto the following action can depend on the current state of the object.
+
+We implemented agents’ behaviors using knowledge about the procedures to select their actions. The learner plays one or more roles in the context of these procedures. The ITS also draws on this knowledge in order to choose which assistance to suggest. As for the environment, there are two levels of modeling available to the agents (including the ITS) and the users (instructors): the organizational structure and the organisational instances. The intelligent tutor is therefore able to recognize the sequence of actions independently of all organization. It can also follow the precise progress of the procedure being carried out in the team in which the learner plays one or more roles. It is therefore able to detect the learner’s errors regarding the order of the actions to be completed and the respect for the conditions defined in the procedure (Trinh, Buche, Querrec, & Tisseau, 2009).
+5. Pedagogical model
+
+Knowledge about the environment (the entities and about the task to be performed) are represented with the Veha model. Our ITS can thus manipulate them in order to construct its own knowledge, as shown in Section 5.1, and can simulate pedagogical reasoning (Section 5.2). Finally, a tangible implementation of the ITS is proposed in Section 5.3 (specification of the rules of simulated pedagogical reasoning).
+5.1. Pedagogical situation
+
+It must here be emphasized that our work takes place within the context of in situ learning. Within this theoretical framework, the contextual elements are paramount in the ITS’s decision-making (Pomerol & Brézillon, 2001; Turner, 1993). In our case, we refer to context as the pedagogical situation which serves as a basis for decision-making. The aim is to define a context such as this from a “generic” standpoint, which would enable us to alter information without having to take into account the specific task being carried out. In order to do this, we must separate knowledge on the task to be performed (see Section 5.1.1) from knowledge about the learner (see Section 5.1.2).
+5.1.1. Information concerning the task to be performed
+
+We positioned our work within the context of training for procedural work. The aim of the ITS is to assist the learner in his/her progression through the procedure.
+
+First of all, we can consider the procedure as a sequence of actions defined by an expert. The elements to be considered are therefore subject to sequencing which cannot be questioned, and sometimes cannot be explained. Secondly, we think that memorization of the sequence of actions could be facilitated through understanding. In this context Richard (1990) suggests adding the notion of sub-objectives to the procedure. To meet this aim, i.e. the completion of the procedure, an set of causally linked sub-objectives must be conducted. The procedure must therefore be studied taking into the account the distance to the procedure’s goal from a causal, rather than a chronological standpoint.
+
+The above analysis thus highlights two ways of dealing with procedural learning: the study of the domain sequencing links which are strongly linked to the roles in the procedure, and the study of causal links between sub-objectives:
+
+1.
+
+    Sequencing links
+
+    Sequencing links conduct the relationships between the actions using the strict description of the procedure. They are the direct consequence of the sequencing of actions as defined by the expert. We are interested in the information linked to the actions closest to the action requested by the learner. More precisely:
+
+    •
+
+        the last correct action completed before that which the learner has just solicited;
+    •
+
+        the action which has just been solicited by the learner;
+    •
+
+        the correct actions to be carried out, taking into account the role(s) to be played (which are potentially different to the solicited action);
+    •
+
+        the correct actions to be performed, when considering that all roles are played by the learner;
+    •
+
+        those actions following all the correct actions.
+
+    We chose the actions closest to that which is solicited in order to try to reduce the “distance” between the goal (the end of the procedure) and the learner’s location in the procedure. Technically, this is done by carrying out plan recognition based on the Veha activity diagram shown in Section 4.3. The pedagogical situation thus retains the knowledge linked to the actions that are chronologically close to that which is requested.
+2.
+
+    Causal links between sub-objectives
+
+    The procedure can be considered like a graph representing the sequence of causal sub-objectives. We therefore contemplate all of the actions linked to that which the learner is performing. In concrete terms, this means the actions requiring the effect of the correct desired action (usage conditions, state of a resource, etc.). A distinction must be made between these links, which correspond to individual logic, and sequencing, whose links correspond to the organization of a collective procedure. Technically, we are dealing with the links between post-conditions and pre-conditions as mentioned in Section 4.1.3.
+
+It must be stressed that our objective here is to extract knowledge relating to the work to be carried out in order to assist pedagogical decision-making. Within this context, we shall consider the knowledge detailed in Table 2. All the actions which have been identified up to this point (sequential and causal links) make up the pedagogical situation. More specifically, we are interested in the information that relates to the selected actions. At this point, we must specify the knowledge relating to the concept of action. From this perspective, the “action context” is made up of knowledge that is directly linked to the Action (description, resources, etc.), knowledge relating to the Operation, which is the target of the Action, as well as knowledge relating to the agent that has requested the action, as that agent is the central character. We therefore use action contexts in order to represent the knowledge associated with particular actions (a sub-group of the environment made up of the entities and agents considered relevant in the context of the action).
+
+Table 2. The pedagogical situation: knowledge about the task to be performed.
+Knowledge	Nature	Description
+① Context of the previous action	Sequential	The last correct action to have been performed. This action serves as a point of reference from which one can position oneself in the procedure
+② Context of the requested action	Sequential	The requested action. This action could be correct or incorrect. The action has not necessarily been performed, in accordance with the pedagogical model
+③ Context of the correct action(s) without considering their roles	Sequential	In considering the last correct action, we can determine the actions to be performed within the context of the current procedure
+④ Context of the correct action(s)	Sequential	A sub-group of the previous item which does not take the roles played by the learner into account
+⑤ Context of the following action(s)	Sequential	For each correct action, we determine the actions which follow it according to the current procedure
+⑥ Context of related action(s)	Causal	In considering the actions to be performed following the last correct action, we retrieve the “causal” links between the actions independently of the procedure. We therefore obtain the actions which are related
+
+It is the responsibility of the pedagogical agent to construct this set of knowledge. The pedagogical agent retrieves or constructs the knowledge required about the task to be performed when it receives a message from the interface agent detailing an action which has been requested. This choice is be debatable and indeed another possible solution is to update the knowledge when an error occurs. We chose to reconstruct the knowledge of the actions in order to retain the option to intervene, even if the learner’s actions are correct. This means that we can provide pedagogical assistance in order to reassure the learner about the decisions that they make, or inversely to imply doubt if it looks like they are about to make a mistake (example: confirm false rules which contradict the choices the learner has made).
+5.1.2. Information concerning the learner
+
+The information about the learner comes from a number of sources, but are all collected by the learner model. This information relates both to static data (such as age) and dynamic data (such as elements of memory at a given time).
+
+It must be noted that the learner’s errors are recorded and are analyzed. Our error model is based on the Cognitive Reliability and Error Analysis Method (CREAM). This approach proposed a classification scheme which makes a distinction between observations of errors (phenotypes) and its causes (genotypes). The causal links between phenotype-genotype are represented using a number of consequent-antecedent links. Finally, the scheme could be associated with a method of retrospective analysis (the search for causes). The most probable cause-effect links is found using Dempster-Shafer’s theory presented in El-Kechaï and Després (2006).
+
+In much the same way, the contexts relating to the actions are also recorded. This information allows us to see whether or not learner has already used a particular resource, for example.
+
+In concrete terms, we have just defined the input information and the pertinent elements from which pedagogical decisions can be made.
+5.2. The pedagogical agent
+
+The pedagogical situation (Section 5.1) gives us the option of triggering pedagogical assistance relating to the elements detailed within it. It thus provides the possible outcomes of the pedagogical decision-making process. We shall now go onto define a model for simulating the behavioral decision-making of the pedagogical agent providing instructive assistance, that is to say, a model linking knowledge and the proposed assistance. It must be noted that we are working within the context of learning procedural and collaborative tasks. We must therefore consider:
+
+•
+
+    The atypical nature of the knowledge involved (knowledge stemming from basic pedagogical methods to virtual reality).
+•
+
+    Adaptability (the agent’s reasoning processes must auto-adapt in order to take past experience into account).
+•
+
+    This reasoning must be specified prior to the event (initial specifications can therefore be made by an instructor).
+
+The criteria which arise from these considerations are as follows: expressiveness, hierarchy, modularity, reactivity and adaptability. After having examined the existing families of behavioral architecture (connectionist, automata-based, rule-based), we opted for the rule-based families (Goran & Vladan, 2003) which best respond to the criteria outlined above. More precisely, we chose classifier systems (Sigaud & Wilson, 2007). This is a reactive and adaptive form of architecture, based on conditional rules.
+
+We propose the use of a model based on a hierarchical classifier system. This system organizes knowledge while taking into account the abstraction of the data involved. It structures knowledge according to three levels, from rules based on abstract knowledge of educational methods (the pedagogical approach), to the rules based on concrete knowledge of virtual reality (pedagogical techniques), via an intermediary level (pedagogical attributes).
+
+Each level of abstraction contains sets which group together a number of rules. One set represents a way of dealing with a particular approach, attitude or pedagogical technique. The rules are conditioned by the elements of the pedagogical situation, and favor the sets from the lower level. The system therefore uses a diffusion mechanism in all three levels which considers the rules matching the pedagogical situation. This gives rise to a list which then arranges the different suggestions for pedagogical assistance.
+
+Fig. 9 illustrates the structure and the dynamics of the pedagogical model controlling the pedagogical agent’s behavior. The information taken into account in the conditional part of the rules are retrieved by our ITS (pedagogical situation). These “inputs” are available at the three levels of data abstraction (approach, attitudes and pedagogical techniques). The rules whose conditional elements are satisfied in terms of input favor some of the sets of pedagogical rules from the lower level. The upper level (techniques), directly favors those pedagogical suggestions which can be applied within the environment. These suggestions are made to the instructor who chooses that which they consider to be the most relevant.
+Class diagram from the Veha metamodel: EntityClass
+
+    
+
+Fig. 7. Class diagram from the Veha metamodel: EntityClass.
+Class diagram from the Veha metamodel: Features of a Classifier
+
+    
+
+Fig. 8. Class diagram from the Veha metamodel: Features of a Classifier.
+Complete representation of the pedagogical model
+
+    
+
+Fig. 9. Complete representation of the pedagogical model.
+
+Simulating pedagogical reasoning has two advantages:
+
+1.
+
+    As instructors are not always teachers, they too are being given pedagogical assistance.
+2.
+
+    The instructors are not simulation software experts, so the pedagogical agent will offer assistance to the learner who will have the opportunity to make the most of the VE.
+
+5.3. Specifications of the pedagogical model
+
+In order to implement the pedagogical model, the teacher must specify:
+
+1.
+
+    The sets of rules for the three levels of abstraction.
+2.
+
+    The pedagogical rules for each of the sets of rules.
+
+Here, we will discuss information from the literature which can be used when specifying the pedagogical model.
+5.3.1. Specifying the sets of pedagogical rules
+
+We worked from the studies by Lourdeaux et al. (2002) in order to define the sets of pedagogical rules. We obtained the following Tables 3–5 corresponding to the three levels; approaches, attitudes and techniques, respectively. This information represents the opportunity to specify sets of rules at each of the three levels (see Fig. 10).
+
+Table 3. Examples of set definitions for the “pedagogical approach” level of abstraction based on (Lourdeaux et al., 2002).
+Pedagogical approach	Description
+Active/constructivist	An active approach is learner-centered, considering him/her the main actor in the learning process. This approach suggests techniques through which they can produce, create and search. The knowledge required can be found in the environment
+Expositive/affirmative	This is the most traditional approach which uses the display technique. It is based on a content-transfer approach. Knowledge is external
+Interrogative	This approach makes recommendations to the learner, guiding him/her towards the desired outcome. Learners may have the impression that they have discovered something new, but it is the instructor who will have guided the thought process. Knowledge is internal
+
+Table 4. Examples of set definitions for the “pedagogical attitudes” level of abstraction based on (Lourdeaux et al., 2002).
+Pedagogical attitudes	Description
+Perform	Perform the task in the place of the learner. This strategy can be used by the instructor to show the learner the correct technique or move
+Disruption	Some instructors tease and disrupt the learners by giving them incorrect information or potentially incorrect solutions in order to test the learners’ conviction of their ability to reason independently
+Suggest	Showing where the learners can find theoretical information or where to find information within the environment. These attitudes allow the instructor to show the learners that they can find the required information independently and therefore deal with the situation in a calm manner
+Independent learning	This attitude encourages the instructor to remain in the background as an observer rather than to intervene
+Explain	The explanations and information are also designed, quite simply, to explain the functioning of certain devices, rules of analysis, safety rules, etc.
+Encourage	Encouraging the learners when they perform a task correctly
+
+Table 5. Examples of set definitions for the “pedagogical techniques” level of abstraction based on (Lourdeaux et al., 2002).
+Pedagogical techniques	Description
+Improvement	Addition of visual and audio symbols or animated films
+Deterioration	Unrealistic images (erased points of reference, feed-back, proprioceptifs dégradés, altered colors, blurred background/surround, reduction of objects, iconization, etc.)
+Upscaling	Exageration of reality (representing objects on a larger scale, surreal, brighter or shinier objects, etc.)
+Simplification	Simplification of the virtual scene (a crowd can be represented by people with simplified movements, simplified objects, simplified kinetic systems, wireframe images, etc.), schematic representations of certain devices
+Restriction	Limitation of certain movements or actions (limiting the area within which the learner can move around, etc.)
+Animation	Animated sequence (automatic positioning, keys which turn automatically once in place, etc.)
+Perspective	Altering the learner’s normal viewpoint (view from behind, above, etc.)
+Modification	Changes in appearance and texture (colors, flickering objects, etc.)
+Modeling	The representation of abstract concepts, of physical phenomena invisible to the naked eye, types of errors, etc.
+Visualisation	Hidden mechanisms (the inside of a motor, gears, etc.)
+Specifying the three levels of the pedagogical decision-making model
+
+    
+
+Fig. 10. Specifying the three levels of the pedagogical decision-making model.
+5.3.2. Specifying the pedagogical rules
+
+Once the sets of pedagogical rules are defined, the teacher must specify the associated rules.
+
+A rule is represented by a sequence of characters. The effect and condition parts are based on the elements of the pedagogical situation.
+
+In the following example, we position ourselves at the Pedagogical Methods abstraction level, with an set of rules called Active. A first rule for this set is fulfilled is the learner is a novice (Learner.Level==novice), if they have performed an organization error (Learner.Error.type==procedural) and if the action performed is different from the correct action (!Task.RequestedAction in Task.CorrectActions). In this case, the rule favors the Explain set from the following level.
+
+    if (Learner.Level == novice && Learner.Error.type==procedural && ! Task.RequestedAction in Task.CorrectActions)
+
+    then (Explain)
+
+5.3.3. Use
+
+A specific pedagogical model was created from the structure described above, and from the papers by Lourdeaux et al. (2002). These sets are described in Fig. 10, with each set containing an average of five rules. This pedagogical model was applied to two distinct VEs designed for learning collaborative procedures. No modification of the pedagogical model (sets and rules) is required for either of these applications, which are very different, but which are both based on the same kind of learning. However, we believe that these changes would only need to be made at the intermediate level. For other types of learning (for example for a scientific practical), these rules would probably need to be changed.
+5.4. Artificial learning
+
+Thanks to artificial learning, the weight of the rules can be refined for adapting to the instructor’s preferences.
+
+The learning algorithm is inspired by the Bucket Brigade (Holland, 1986; Wilson, 1987). This system distributes remunerations to the rules which enabled them to be obtained. It is adapted to classifier systems (Sigaud & Wilson, 2007) with a list of rules which, when followed one after the other, lead to an action. In our case, this sequence of events corresponds to the passing from one level to another. Remuneration is reflected by the instructor’s choice: the pedagogical technique which they choose defines the rules in the third level which will be compensated. By back-chaining, the rules in levels one and two are also compensated. The weights of the rules which match the pedagogical situation, but which participate in activating a technique other than that chosen by the instructor will decrease. The algorithm shares out the remuneration, including a tax which means that the rules which rarely match are not put at a disadvantage, and that the strong rules are penalized in order to retain the adaptive nature of the system.
+
+Therefore, as the exercises progress, the pedagogical agent must make suggestions which correspond more and more closely to the instructor’s decisions. The pedagogical agent could therefore temporarily take over and directly apply the assistance that it has chosen itself, should there be more than one learner at a time.
+6. Discussion
+
+Before concluding, we would like to discuss the benefits of our proposal. The study put forward in this article begins by a examining previous studies in this field and analyzing the uses of pre-existing ITS within VLE. We then went onto show that the Hal system is the most successful, and underlined the elements which could be improved. Indeed, in this system, the pedagogical model depends partly on the exercise, and the errors and pedagogical strategies must be defined. Furthermore, the instructor can only choose between two pedagogical methods (active or explanatory). We believe that it is possible to resolve the pedagogical model’s problems of genericity and modularity.
+
+Without re-examining every element of our work, we can show how our proposal could solve some of the difficulties of existing models. The knowledge used for pedagogical reasoning does not depend on the specifics of the task to be performed. Therefore pedagogical rules do not and indeed do not need to consider specific information, (“if the learner can see aeroplane 2 then…”), but will rather use general knowledge independently of the exercise (“if the resources of the correct actions are visible, then…”). In much the same way, although the pedagogical assistance proposes tangible solutions to the instructor (”make the fireman flicker”), generic knowledge is also manipulated independently of the exercise (”make the characters involved in the following actions flicker”). Thus, the genericity of our proposal is one of its strongest characteristics, as illustrated by the inclusion of our ITS at the heart of numerous applications: the learning of collaborative procedures on aircraft carriers (Gaspar) (Marion et al., 2007) and for firemen intervening in Seveso areas (Se´cuRe´Vi) (Querrec, Buche, Maffre, & Chevaillier, 2004). In addition, the pedagogical model of our ITS has strong modularity, as it offers the option of adding, deleting or modifying each of its components that participates in pedagogical decision making (rules or sets of rules). Moreover, the artificial learning mechanism adapts the proposed pedagogical assistance to the learner-instructor pair. Therefore, our proposition offers solutions to the problems raised in our introduction. Finally, it must be emphasized that Pegase is directly based on the learner-instructor relationship.
+
+However, we must not forget that there will undoubtedly be limitations linked to the use of our ITS in the context of non-procedural learning. To be able to deal with this kind of training, we would have to rethink the elements which are so strongly linked to the notion of procedure, i.e. knowledge of the pedagogical situation.
+
+1
+
+    Tel.: +33 298058966; fax: +33 298058979.
+
+2
+
+    Pegase: PEdagocial Generic and Adaptable SystEm.
+
+3
+
+    UML metamodel class which generalizes the concept of class.

@@ -1,0 +1,331 @@
+<article>
+  <title>Applying Artificial Neural Networks to prediction of stock price and improvement of the directional prediction index – Case study of PETR4, Petrobras, Brazil</title>
+  <abstract>
+    <sentence>Predicting the direction of stock price changes is an important factor, as it contributes to the development of effective strategies for stock exchange transactions and attracts much interest in incorporating variables historical series into the mathematical models or computer algorithms in order to produce estimations of expected price fluctuations.</sentence>
+    <sentence>The purpose of this study is to build a neural model for the financial market, allowing predictions of stocks closing prices future behavior negotiated in BM&amp;FBOVESPA in the short term, using the economic and financial theory, combining technical analysis, fundamental analysis and analysis of time series, to predict price behavior, addressing the percentage of correct predictions of price series direction (POCID or Prediction of Change in Direction).</sentence>
+    <sentence>The aim of this work is to understand the information available in the financial market and identify the variables that drive stock prices.</sentence>
+    <sentence>The methodology presented may be adapted to other companies and their stock.</sentence>
+    <sentence>Petrobras stock PETR4, traded in BM&amp;FBOVESPA, was used as a case study.</sentence>
+    <sentence>As part of this effort, configurations with different window sizes were designed, and the best performance was achieved with a window size of 3, which the POCID index of correct direction predictions was 93.62% for the test set and 87.50% for a validation set.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Artificial Neural Network</keyword>
+    <keyword>Stock market</keyword>
+    <keyword>POCID</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The financial market is characterized by uncertainty, which is associated with the expectation of its future status in the short, medium and long terms.</sentence>
+    <sentence>Different prediction techniques have been applied to reduce the uncertainty of such market.</sentence>
+    <sentence>The design of models capable of capturing the market dynamics, aiming to reduce uncertainties, has been the subject matter of research and has attracted the interest of academic researchers and market professionals.</sentence>
+    <sentence>Financial analysts and investors observe the stock market trends in order to conduct purchase and sale transactions, in order to obtain financial return from such transactions.</sentence>
+    <sentence>They analyze the historical prices data and economic indicators for decision making.</sentence>
+    <sentence>Such decisions normally have two stages: firstly, a list of companies is selected based on their growth potential and economic fundamentals performance; secondly, price changes are examined, so that a correct negotiation strategy is executed at the appropriate time (Assaf, 2011; Francis, 1991; Frank &amp; Norton, 2008; Lima, 2008; Matsura, 2007).</sentence>
+    <sentence>In the literature, different methods have been applied to make predictions about the financial market.</sentence>
+    <sentence>Such methods may be grouped into four main categories: (i) Fundamental Analysis, (ii) Technical Analysis (iii) Prediction of Time Series with Traditional Models and (iv) Machine Learning Methods.</sentence>
+    <sentence>The Fundamental Analysis is based on the market economic factors.</sentence>
+    <sentence>Such analysis uses statistics, projections, conditions of supply and demand of goods and services and fundamentals of the economy and enterprise.</sentence>
+    <sentence>Technical Analysts, known as “chartists,” try to predict the market behavior by deriving patterns based on the study of charts that depict historical market data (Assaf, 2011; Francis, 1991; Frank, 2008; Lima, 2008; Matsura, 2007).</sentence>
+    <sentence>The Prediction of time series with traditional models is an attempt to design linear prediction models to track patterns in historical data.</sentence>
+    <sentence>In turn, such linear models are divided into two categories: univariate models and multivariate regression models.</sentence>
+    <sentence>Recently, various methods have been proposed under the same label of machine learning.</sentence>
+    <sentence>Such methods use a set of data samples to draw (linear or nonlinear) patterns so as to approximate the underlying function which generates the data.</sentence>
+    <sentence>Hellstrom and Holmstrom (1998) identified that the stock prices prediction task is not easy.</sentence>
+    <sentence>Within the scope of science, academic researchers are divided into two groups: those who believe that it is possible to design mechanisms to predict the market behavior and those who believe in the efficient market theory, proposed by Fama (1970), according to which the price of stock follows a random (unpredictable) walk.</sentence>
+    <sentence>One of the implications of this theory is that the prediction based on patterns is not possible, since it is not possible for any material to include the same information and for the market to receive it in the same manner (Morettin, 2008; Nayak &amp; Braak, 2007).</sentence>
+    <sentence>According to Póvoa (2008), the efficient markets hypothesis may not be considered “acceptable”.</sentence>
+    <sentence>The market’s practical reality, especially concerning dissemination and interpretation of information, is very different from the hypothesis presented that assume an ideal world.</sentence>
+    <sentence>Nonetheless, the author affirms that the hypothesis still has its merits, contributing to the progress of academic studies.</sentence>
+    <sentence>The author argues that assuming that the present and the future may repeat the past cannot be seen as unrealistic.</sentence>
+    <sentence>According to the literature, in order to make an economic prediction it is necessary to identify which variables determine or help to predict other economic variables.</sentence>
+    <sentence>This means looking to the past to identify which important variables may be used as indicators of other variables future behavior.</sentence>
+    <sentence>Furthermore, it also entails understanding the delayed influences of relationships between many variables, which are the most important ones to consider.</sentence>
+    <sentence>Many factors interact within the financial market, including political events, economic conditions, and market expectations itself (Gujarati, 2003; Morettin, 2008; Shue, Chen, &amp; Shiue, 2009; Tucnik, 2009).</sentence>
+    <sentence>The biggest challenge in predicting stock prices is the complex nature of the field.</sentence>
+    <sentence>Most prediction models are rather limited when it comes to determine the direction of future prices, POCID, by virtue of the inherent difficulty in making accurate predictions, especially when major fluctuations occur.</sentence>
+    <sentence>This situation is particularly discouraging, since it is not sufficient to have low formal quantitative measures of accuracy (chiefly theRMSE (Root Mean Square Error) or MAPE (Mean Absolute Percentage Error)), the model needs to have a high accuracy rate for changes in direction – POCID, as upward and downwards movements are what really matters for decision-making.</sentence>
+    <sentence>Some studies have analyzed the POCID, such as the one of Neto, Tavares, Alves, Cavalcanti, and Tsang (2010) which presented a model based on neural networks using a series of PETR4 prices and exogenous data.</sentence>
+    <sentence>The accuracy rate of POCID obtained with the model was 83%.</sentence>
+    <sentence>Faria, Albuquerque, Gonzalez, Cavalcante, and Albuquerque (2009) presented different models for predicting the Ibovespa index based on neural networks, and attained a POCID result of 60%.</sentence>
+    <sentence>Tsai and Chiou (2009) combined neural networks with decision trees to improve accuracy, attaining a POCID accuracy rate of 81.08%.</sentence>
+    <sentence>Kara, Boyacioglu, and Baykan (2011) proposed the use of Artificial Neural Networks and support vector machines to predict the shares price index direction of the Istanbul Stock Exchange.</sentence>
+    <sentence>The proposed models achieved a POCID of 75.74–71.52% for neural networks and support vector machines, respectively.</sentence>
+    <sentence>As observed, there is a latent challenge to improve the accuracy for POCID, and this challenge is the motivation for this work that aims to improve the accuracy rate in the prediction of the POCID direction.</sentence>
+    <sentence>This study proposes the design of a model based on ANN (Artificial Neural Networks) for the financial market, allowing short term predictions of stock closing prices future behavior negotiated in BM&amp;FBOVESPA, utilizing economic and financial theory, combining technical analysis, fundamental analysis and analysis of time series, so as to predict the behavior of prices.</sentence>
+    <sentence>Addressing the percentage of correct predictions of the direction of price series (POCID), as one of the main metrics for evaluating the performance of our model (Eq (1)).</sentence>
+    <sentence>This metric is important because it has direct effects on the financial gains and losses.</sentence>
+    <sentence>This research case study is Petrobras’ PETR4 stock.</sentence>
+    <sentence>The proposed methodology may be extended to stocks of enterprises in the same industry and adjusted to other industries.</sentence>
+    <sentence>This work considered, in addition to technical analysis, aspects of fundamental analysis.</sentence>
+    <sentence>This fact is considered a differential and a contribution to the context of forecasting stock prices, considering that the whole domain is interconnected to the share price.</sentence>
+    <sentence>In this example, one can cite the work of Atsalakis and Valavanis (2009), where the authors presented a study of several approaches to forecasting the stock market behavior, 75 studies used technical analysis and only 18 used fundamental analysis, a much smaller proportion.</sentence>
+    <sentence>(1) In this paper, the design of a model based on neural networks was carried out basing itself on tacit and explicit knowledge of the problem.</sentence>
+    <sentence>Prior studies and interviews with industry experts were conducted in order to acquire such tacit knowledge and to identify the components that may influence the future behavior of PETR4 stock prices.</sentence>
+    <sentence>The explicit knowledge was obtained and represented based on several existing theories.</sentence>
+    <sentence>Data and information allowed the construction of a database, which was submitted to pre-selection and pre-processing applying statistical analysis techniques.</sentence>
+    <sentence>With the data set, a model based on neural network was designed to predict the future stock price.</sentence>
+    <sentence>The remainder of this paper is organized as follows.</sentence>
+    <sentence>In Section 2, related works and theoretical grounds of process modeling and prediction for the financial market is presented.</sentence>
+    <sentence>Section 3 describes the methodology used for all stages of modeling and prediction of the financial market process.</sentence>
+    <sentence>Obtained results are discussed in Section 4.</sentence>
+    <sentence>Finally, Section 5 concludes the paper and presents the final considerations.</sentence>
+  </section>
+  <section name="Related works">
+    <sentence>As already mentioned, the main methods for analyzing stocks are fundamental analysis and technical analysis.</sentence>
+    <sentence>The two techniques have historically competed for the position of leading method in pricing of financial assets (Póvoa, 2008).</sentence>
+    <sentence>The fundamental analysis works with macroeconomic, industry and enterprise-specific fundamentals.</sentence>
+    <sentence>It studies the variation factors that affect the balance between supply and demand in the market, using variables that may affect the market in the present or in the future (Assaf, 2011; Francis, 1991; Frank, 2008; Lima, 2008; Póvoa, 2008).</sentence>
+    <sentence>The technical analysis or chartist analysis is a study dedicated to observe the evolution of markets based on its graphical representation in terms of purchase price, selling price, volume traded, among others.</sentence>
+    <sentence>The technical analysis assumes the premise that investors have a fairly uniform level of information and tend to repeat past behavior.</sentence>
+    <sentence>Graphics are simple, patterns are defined (price channels, head and shoulders, triangles, top and bottoms, gaps, flags, pennants etc.</sentence>
+    <sentence>), which are the main tools to determine trends and future prices.</sentence>
+    <sentence>Technical analysts are essentially focused on understanding and analyzing the historical behavior of prices and volumes of assets in the past, in order to determine the current price or market conditions.</sentence>
+    <sentence>It also uses statistical methods to project the assets future price (Francis, 1991; Frank, 2008; Lima, 2008; Assaf, 2011; Achelis, 2001; Murphy, 1999; Póvoa, 2008).</sentence>
+    <sentence>Many techniques to predict the stock market have been developed using the various existing computational techniques, such as LR (Linear Regression)(Clements &amp; Hendry, 1998; Clements, Milas, &amp; van Dijk, 2009), ANN (Artificial Neural Networks) (Faria et al., 2009; Kara et al., 2011), GA (Genetic Algorithms) (Nayak, Misra, &amp; Behera, 2012; Yang, Wu, &amp; Lin, 2012), SVM (Support Vector Machines) (Wang, Wu, &amp; Zhang, 2005; Wen, Yang, Song, and Jia (2010), CBR (Case-Based Reasoning) (Goswami, Bhensdadia, &amp; Ganatra, 2009) and others (Guresen, Kayakutlu, &amp; Daim, 2011).</sentence>
+    <sentence>ANN are non-linear computational models, capable of representation based on market behavior data, without previous knowledge of the relationships among input and output variables (Zhang, Patuwo, &amp; Hu, 1998).</sentence>
+    <sentence>ANN have been widely used and have resulted in satisfactory performance compared to other approaches, which may be seen in the literature (Cai, Lai, &amp; Lin, 2013; Chang, Liu, Lin, Fan, &amp; Ng, 2009; de Oliveira, Zárate, de Azevedo Reis, &amp; Nobre, 2011a, 2011b; González, Crespo, Palacios, Iglesias, &amp; Berbis, 2011; Kara et al., 2011; Tsai &amp; Chiou, 2009; Yoo, Kim, &amp; Jan, 2005).</sentence>
+    <sentence>Guresen et al.</sentence>
+    <sentence>(2011) describe ANN as one of the best techniques to model the stock market, because it does not contain standard formulas and may be easily adapted to market changes.</sentence>
+    <sentence>ANN have the ability to learn by example and make interpolations and extrapolations of what they learned.</sentence>
+    <sentence>The use of ANN in the solution of a task initially involves a learning phase, which is when the network extracts the patterns, thereby creating a specific representation of the problem (Braga, Carvalho, &amp; Ludermir, 2007).</sentence>
+    <sentence>The first model for prediction of stock price based on ANN was developed by White (1988).</sentence>
+    <sentence>The author used a feedforward network to detect unknown regularities in stock price changes.</sentence>
+    <sentence>The goal was to analyze the daily returns of IBM stock in order to test the efficient market theory, proposed by Fama (1970), which states that stock prices follow a random walk.</sentence>
+    <sentence>Although he has not obtained good predictive results, the research stressed the potential for such analysis.</sentence>
+    <sentence>Since then, a large number of researchers have actively participated in the development of predictive models that may be reliably applied in the stock market.</sentence>
+    <sentence>A later study conducted by Tsibouris and Zeidenberg (1995) tests the efficient market theory by analyzing six stocks of the US stock exchange, finding a capacity to predict prices based on historical series of prices.</sentence>
+    <sentence>Other studies, such as (Kolarik &amp; Rudorfer, 1994; Refenes, 1991; Refenes, Azema-Barac, &amp; Zapranis, 1993), observed that ANN obtain better prediction performance comparable to statistical techniques, such as the regression model and those obtained by ARIMA technique.</sentence>
+    <sentence>Nayak et al.</sentence>
+    <sentence>(2007) analyzed the clustering power of stock prices series and their ability to be utilized in predictive models using temporal recognition and brute force search to make the prediction.</sentence>
+    <sentence>Kolarik and Rudorfer (1994) proposed a univariate time series prediction system using neural networks.</sentence>
+    <sentence>In their research, they decided to use a fully connected feedforward network with one hidden layer and the backpropagation algorithm for network training.</sentence>
+    <sentence>The series used by the authors corresponds to common stock closing prices of IBM from May 1961 to November 1962.</sentence>
+    <sentence>Skabar and Cloete (2002) developed a methodology using trained neural networks, a genetic algorithm based on weight optimization was used to determine buying and selling points of financial products traded in the stock exchange.</sentence>
+    <sentence>They used four financial series where the price was compared to the returns obtained, by means of random data analysis from each one of the series.</sentence>
+    <sentence>The results indicated that the Dow Jones Industrial index was significantly higher than the expected price of the random series.</sentence>
+    <sentence>This supports the claim that some financial time series are not entirely random.</sentence>
+    <sentence>Some studies incorporated aspects of technical analysis.</sentence>
+    <sentence>For instance, Kim, Han, and Chandler (1998) used a recurrent Elman neural network to predict the price of stocks in the Japanese stock exchange.</sentence>
+    <sentence>Their method intended to find the ‘triangle’ graphic pattern to determine if price increases may be permanent, based on historical maximum, minimum and closing prices.</sentence>
+    <sentence>Technical indicators, such as moving averages, RSI (relative strength index) and other indicators were also used as input, along with the historical prices (de Oliveira et al., 2011a, 2011b; González et al., 2011; Kara et al., 2011; Leigh, Purvis, &amp; Ragusa, 2002; Nagarajan, 2005).</sentence>
+    <sentence>The two main approaches based on neural networks for prediction of time series are concentrated on time windowing and on the use of recurrent neural networks.</sentence>
+    <sentence>Both attempt to capture the dynamics of the system that underlies the series’ data (Swingler, 1996).</sentence>
+    <sentence>The neural network has as an input a representation of the system current status and as an output a prediction of the future status.</sentence>
+    <sentence>The authors Waibel (1988), Refenes (1991) and McElroy and Wildi (2013) have shown how the temporal dimension may be transposed into a space vector.</sentence>
+    <sentence>They used a feedforward network with n inputs, such network is fed with one step at a time until the moment t, then the output unit is represented by t + 1.</sentence>
+    <sentence>There are two types of prediction: one-step-ahead (which uses an output neuron) and multiple-steps-ahead.</sentence>
+    <sentence>Zhang et al.</sentence>
+    <sentence>(1998) describe the two methods presented in the literature to make multiple-steps-ahead predictions.</sentence>
+    <sentence>The first is called iterative prediction and is used in the Box–Jenkins model, in which the prediction values are iteratively used as inputs for future predictions.</sentence>
+    <sentence>In this case, only one output neuron is required.</sentence>
+    <sentence>The second, known as the direct method, consists in placing several outputs in the neural network, corresponding to the prediction horizon.</sentence>
+    <sentence>According to Zhang et al.</sentence>
+    <sentence>(1998), the predictions of multiple steps ahead using the direct method may be better than the iterative method for two reasons.</sentence>
+    <sentence>Firstly, the neural network may be built directly for predictions of multiple steps ahead; secondly, the iterative method builds only one function, which is used to predict one point at a time and, subsequently, repeats such function to predict points in the future.</sentence>
+    <sentence>Ferreira, Vasconcelos, and Adeodato (2005) presented a new prediction method using time series, which performs an evolutionary search of the minimum necessary number of dimensions to be considered in the problem of determining the spatial characteristics of the time series.</sentence>
+    <sentence>The method proposed was inspired by the theorem of F. Takens and consists in a smart hybrid model composed of an Artificial Neural Network, combined with a GA. Braga et al.</sentence>
+    <sentence>(2007) described an example of prediction of the Bovespa index, where the model chosen for prediction was a feedforward network.</sentence>
+    <sentence>The MRE (mean relative error) obtained with the model was 1.85.</sentence>
+    <sentence>This shows that the neural networks are capable of predicting the Ibovespa series with significant accuracy.</sentence>
+    <sentence>The comparison of the performance of traditional methods with neural networks began in the 1990s, drawing the attention of many researchers.</sentence>
+    <sentence>According to Palit (2005), the linear prediction using nonlinear mapping of neural networks cannot produce better results than the statistical algorithms.</sentence>
+    <sentence>In the opposite case, using neural networks could definitely lead to better results in dealing with data from non-linear time series when compared to traditional algorithms.</sentence>
+    <sentence>The literature shows that the use of neural networks, as a method for prediction of time series, presents interesting and satisfactory results, being a promising alternative to traditional methods (Zhang et al., 1998).</sentence>
+  </section>
+  <section name="Methodology for developing the neural model">
+    <sentence>The following steps (Fig 1) were used to build a neural model capable of making predictions of stocks closing prices short term future behavior traded in BM&amp;FBOVESPA: (1) understanding of the problem domain and identification of key variables; (2) pre-selection and collection of samples; (3) pre-processing of inputs; and (4) modeling and prediction.</sentence>
+    <sentence>The following sections describe each of these steps.</sentence>
+    <sentence>Prediction process steps Fig 1.</sentence>
+    <sentence>Prediction process steps.</sentence>
+    <sentence>Understanding the problem domain A domain analysis was conducted to capture information related to the financial market and to point out the variables that drive stock prices.</sentence>
+    <sentence>Such variables represent the possible inputs for the model being proposed.</sentence>
+    <sentence>Enterprises can be segmented according to the activities performed and economy sectors.</sentence>
+    <sentence>Each sector has variables that affect only companies inside it and the various sectoral economic indicators, macroeconomic and market.</sentence>
+    <sentence>Due to the particularity of each sector and enterprise, it was necessary to conceptualize the behavior of PETR4 stock in order to understand and be able to capture the information that influences such stock.</sentence>
+    <sentence>This process was divided into three steps: (1) capture of tacit knowledge; (2) capture of explicit knowledge; and (3) construction of a conceptual map based on tacit and explicit knowledge.</sentence>
+    <sentence>The following subsections describe each of these steps.</sentence>
+    <sentence>Capture of tacit knowledge Financial analysts and investors have knowledge acquired throughout their lives by experience in operating in the market, by “tips” received from third parties and/or even based on their so-called ‘gut feeling’.</sentence>
+    <sentence>A multiple choice questionnaire was designed and made available on the internet to gather this type of knowledge.</sentence>
+    <sentence>The objective of this questionnaire was to collect the opinion of qualified professions on models, techniques and indicators used in the pricing of stocks, which may help identify the changes in stock prices in the short, medium and long term.</sentence>
+    <sentence>This questionnaire, available electronically, was sent to 50 investors and analysts working in the stock market.</sentence>
+    <sentence>The questionnaire was available on the web for 30 days, being answered by 10 professionals, representing 20% of the initially selected universe.</sentence>
+    <sentence>The profile of respondents may be seen in Figs.</sentence>
+    <sentence>2 and 3, where 50% have more than 3 years of experience in the stock market and 80% operate in the medium and short term.</sentence>
+    <sentence>The figures are compatible with initial expectations, as they represent the opinion of qualified professionals who operate in the market.</sentence>
+    <sentence>Other interesting numbers were that 100% of the sample claimed to use technical analysis as a tool for decision-making and 80% were satisfied with the results of their model, technique and/or indicators used in pricing or market transactions.</sentence>
+    <sentence>Chart of stock pricing experience time Fig 2.</sentence>
+    <sentence>Chart of stock pricing experience time.</sentence>
+    <sentence>Chart with profile of financial market operation Fig 3.</sentence>
+    <sentence>Chart with profile of financial market operation.</sentence>
+    <sentence>The opinions of the qualified public on indicators used in their pricing models are shown in Tables 1–3, for a total of 22 indicators.</sentence>
+    <sentence>These indicators were considered to build a conceptual map, which is presented in Section 3.1.3.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Balance indicators sheet analysis used by the qualified public.</sentence>
+    <sentence>Indicators ROE return on equity Profit margin or return on sales Current liquidity ratio Immediate liquidity ratio Indebtedness ratio Price/earnings ratio Earnings per share EPS EBITDA Payout Dividend yield Cash flow from investment activities EVA (economic value added) Table 2.</sentence>
+    <sentence>Macroeconomic indicators used by the qualified public.</sentence>
+    <sentence>Indicators IPCA (extended consumer price index) Foreign direct investments Table 3.</sentence>
+    <sentence>Technical analysis indicators used by the qualified public.</sentence>
+    <sentence>Indicators MACD Relative strength index Stochastic index OBV index Moving averages Bollinger bands Momentum Williams’ percent range (%R) 3.1.2.</sentence>
+    <sentence>Capture of explicit knowledge The explicit knowledge was achieved by reading review, focusing on identifying the key variables that may help describe the behavior of the PETR4 stock.</sentence>
+    <sentence>As a result, was obtained the set of variables shown in Table 4, organized according to a fundamental and technical vision.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Variables identified in the study.</sentence>
+    <sentence>Technical vision Fundamentalist vision Opening price Brent oil price Closing price Actual average income of employed persons Maximum price Expanded payrolls Minimum price General price index Volume IPCA (extended consumer price index) Bovespa index percent variation Formal employment NYSE dow jones index Wage earners Ibovespa volume Brazilian unemployment rate US ending stocks Retail sales index MACD Fuel retail sales index Relative strength index Selic interest tax rate Stochastic index CDI interest tax rate OBV index Consumer confidence index Moving averages Future expectations index Bollinger bands Brazil energy commodities index Momentum Automobile sales Williams’ percent range (%R) Domestic market automobile sales Dollar percent variation Investors participation Current liquidity ratio Immediate liquidity ratio Indebtedness ratio Price/earnings ratio Earnings per share EPS EBITDA Payout Dividend yield 3.1.3.</sentence>
+    <sentence>Concept map based on the tacit and explicit knowledge A conceptual map was designed (Fig 4) to help the understanding and representation of the set of variables that describe PETR4 stock behavior.</sentence>
+    <sentence>This map was build using the gathered information on tacit and explicit knowledge.</sentence>
+    <sentence>The map shows two distinct structures, each bringing together a set of variables related to the fundamental and technical analysis.</sentence>
+    <sentence>Stock’s behavior∗ Conceptual Map Fig 4.</sentence>
+    <sentence>Stock’s behavior∗ Conceptual Map.</sentence>
+    <sentence>∗Stock’s behavior é o mais correto gramaticalmente, mas você encontra em textos Stock behavior, acredito que porque virou quase um termo padrão, assim como stock prices etc.</sentence>
+    <sentence>Não sei qual seria o mais correto usar, mas tomar o cuidado de usar da mesma forma no artigo inteiro.</sentence>
+    <sentence>Pre-selection and collection of samples The conceptual map (Fig 4) shows the variables which could form the set of necessary data for building a neural model to predict the PETR4 stock.</sentence>
+    <sentence>There were 46 variables in total.</sentence>
+    <sentence>The selection of variables was based on the conceptual map and depended on the availability and access to data required to build the sample set.</sentence>
+    <sentence>Table 5 shows the variables that were selected, because they had a sufficient number of samples and the access to historical series was available.</sentence>
+    <sentence>From all the variables identified using the conceptual map, the number of variables was reduced to 15, representing the technical vision, and 11 representing the fundamentalist vision.</sentence>
+    <sentence>Historical data were collected from sources in the public and private sectors.</sentence>
+    <sentence>The main sources of data were: Economatica, Brazil’s Central Bank, BM&amp;FBOVESPA and Thomson Reuters.</sentence>
+    <sentence>Coloquei Banco Central do Brasil em português porque no site do Banco Central quando você coloca a opção inglês os textos sempre se referem ao nome do Banco central em Português.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>List of selected variables.</sentence>
+    <sentence>Technical vision Fundamentalist vision Opening price Brent oil price Closing price Formal employment Maximum price Selic interest tax rate Minimum price CDI interest tax rate Volume Consumer confidence index NYSE dow jones index Future expectations index US ending stocks Brazil energy commodities index MACD Automobile sales Relative strength index Domestic market automobile sales Stochastic index Dollar percentage variation OBV index Investors participation Moving averages Bollinger bands Momentum Williams’ percent range (%R) Variables for which it was not possible to obtain samples, or data were insufficient and/or data were outdated were systematically excluded.</sentence>
+    <sentence>Table 6 shows the list of excluded variables.</sentence>
+    <sentence>Table 6.</sentence>
+    <sentence>List of excluded variables in the selection.</sentence>
+    <sentence>Technical vision Fundamentalist vision Bovespa index percentage variation Actual average income of employed persons Ibovespa volume Expanded payrolls General price index IPCA (extended consumer price index) Wage earners Brazilian unemployment rate Retail sales index Fuel retail sales index Current liquidity ratio Immediate liquidity ratio Indebtedness ratio Price/earnings ratio Earnings per share EPS EBITDA Payout Dividend yield 3.2.1.</sentence>
+    <sentence>Data collection The set of data samples was formed by the variables shown in Table 5.</sentence>
+    <sentence>The historical data refer to the monthly observations of variables over the period from January 2000 to December 2011, with 144 observations in total.</sentence>
+    <sentence>The periodicity of information is very important for the prediction process, because the lower the periodicity of the samples, the more difficult the prediction.</sentence>
+    <sentence>In the stock market, the prices may be sampled with the following periodicities: real-time, minute, hour, day, week, month etc.</sentence>
+    <sentence>In this research, the periodicity used was monthly, as most of the variables selected had their historical series available only with monthly observations, and stock prices with shorter periods were more subject to high volatility.</sentence>
+    <sentence>Cross-correlation analysis of variables The variables of the set of samples were analyzed using the cross-correlation function between the time series of the PETR4 stock closing price and other variables, to identify the relationship and statistical significance.</sentence>
+    <sentence>Table 7 shows the correlation coefficient between the variables.</sentence>
+    <sentence>The variables NYSE Dow Jones Index, MACD, Relative Strength Index, Stochastic Index, Momentum, Williams’ Percent Range (%R), Brazil Energy Commodities Index and Dollar Percentage Variation (marked in grey in Table 7) show correlation coefficient below 0.6 and were discarded from the set of samples as they were shown to have low representativeness.</sentence>
+    <sentence>The variables CDI interest tax rate and SELIC interest tax rate were considered because it evaluates the magnitude of the correlation.</sentence>
+    <sentence>Thus, the neural network model was built considering the remaining 18 variables; that is, the 17 variables listed in Table 7 plus the PETR4.</sentence>
+    <sentence>Table 7.</sentence>
+    <sentence>Correlation coefficient between PETR4 and other variables.</sentence>
+    <sentence>Attribute Correlation coefficient with PETR4 Minimum price 0.9939 Maximum price 0.9932 Moving averages 0.9916 Bollinger bands 0.9906 Opening price 0.9846 Volume 0.8926 OBV index 0.8661 Formal employment 0.8626 Brent oil price 0.8530 Domestic market automobile sales 0.8501 automobile sales 0.8346 Consumer confidence index 0.8090 US ending stocks 0.7893 Investors participation 0.7231 Future expectations index 0.6179 CDI interest tax rate −0.8137 Selic interest tax rate −0.8146 Brazil energy commodities index 0.5587 NYSE dow jones index 0.4217 MACD 0.3432 Momentum 0.0594 Williams’ percent range (%R) 0.0492 Stochastic index −0.0115 Relative strength index −0.0461 Dollar percentage variation −0.0940 3.2.3.</sentence>
+    <sentence>Setting the window size The window size (number of points of monthly series that is used as input of the neural network) is basically an empiric matter and impacts the learning and prediction capacity of the neural network (Zhang et al.</sentence>
+    <sentence>1998).</sentence>
+    <sentence>An empiric method for obtaining the lag (delay) and the time influence of a series is to calculate its AC (AutoCorrelation) function and its correlogram and to discard the lags where the PAC (Partial AutoCorrelation) function is statistically irrelevant (Gujarati, 2003).</sentence>
+    <sentence>Fig 5 shows the correlogram of the PETR4 stock closing price attribute.</sentence>
+    <sentence>As can be seen, the first lagt − 1 was statistically relevant.</sentence>
+    <sentence>From the second lag t − 2 on, the partial autocorrelation function drops substantially and all the following lags did not present significant values from the statistical point of view.</sentence>
+    <sentence>Correlogram of the closing price of action PETR4 Fig 5.</sentence>
+    <sentence>Correlogram of the closing price of action PETR4.</sentence>
+    <sentence>The same procedure was performed to determine the lag (window size) of each variable in the data set.</sentence>
+    <sentence>The statistical significance for all variables occurred in the second lag t − 2 at most.</sentence>
+    <sentence>Based on the empirical procedure, the window size could be set at 3 moments, i.e., t, t − 1 and t − 2.</sentence>
+    <sentence>In this research, the windows size chosen was changed according to W = {1, 2, 3, 4, 5} lags to allow assessment of the relevance of influence of time lags and ascertain if the proposed empirical procedure presented the best configuration for the model.</sentence>
+    <sentence>Pre-processing The set of samples had no missing data due to the monthly periodicity of the series, as the monthly value to be considered will always be the last sampling made in the month.</sentence>
+    <sentence>The same would not happen if the periodicity was daily, as some attributes could have missing data for holidays or days on which there was no trading.</sentence>
+    <sentence>An example is the series of the Dow Jones Index, which represents the average profitability of a stock portfolio of the New York Stock Exchange (NYSE), which, due to the Brazilian holidays, will cause that the series of Brazilian prices to have missing values for such days, or vice versa.</sentence>
+    <sentence>Data normalization As the series of samples had scales with different values, it was necessary to adjust the scale of values for each series within the range [0.2, 0.8], based on the fact that the non-linear activation functions typically present asymptotic limits of 0 and 1 for infinity.</sentence>
+    <sentence>These values are not achieved, and values between 0.2 and 0.8 introduce the neural network’s ability to extrapolate (Zárate, Dias, &amp; Song, 2008; Zhang et al., 1998).</sentence>
+    <sentence>The equation for data normalization is given by (Eq (2)).</sentence>
+    <sentence>(2) where: V′ is the normalized value; V the value to be normalized; Min the minimum value of the series to be normalized; Max the maximum value of the series to be normalized; nMax the maximum value of the range; and nMin the minimum value of the range.</sentence>
+    <sentence>Model based on ANN The following subsections describe the neural model proposed to perform the prediction of the closing price of PETR4 stock.</sentence>
+    <sentence>The direct method was used to build the model of prediction of the stock closing value, which is described in Eq (3).</sentence>
+    <sentence>(3) where: : refers to the predicted value of the stock price for the prediction horizon h. In this work, h = 1; Yt corresponds to the stock closing price serie; corresponds to a serie of the variable i; t for t = 1...wi, where each value corresponds to the observation periods of the serie.</sentence>
+    <sentence>Since Wi ∊ {1,2,3,4,5} is the set containing the window sizes considered in the tests, it is possible to determine Eqs.</sentence>
+    <sentence>(4) and (5).</sentence>
+    <sentence>(4) (5) 3.4.1.</sentence>
+    <sentence>Establishing the training and tests set The set of samples underwent the windowing process, taking into consideration the window sizes W = {1, 2, 3, 4, 5} and the prediction horizon defined as t + 1.</sentence>
+    <sentence>The variable used as expected output for the training and test set was the PETR4 stock closing price.</sentence>
+    <sentence>Subsequently, was used a holdout testing procedure (Rezende, 2003), in which the set of samples was divided into two subsets, selected randomly, without replacement, with about 2/3 of the data for training and 1/3 for testing.</sentence>
+    <sentence>Notice that, for each value of window size the number of observations is defined as {142, 141, 140, 139, 138}, respectively.</sentence>
+    <sentence>Establishing the network architecture The neural network model chosen for prediction was the feedforward multilayer perceptron, due to its efficiency in the process of prediction of time series, and its inherent ability to learn and recognize from non-linear data.</sentence>
+    <sentence>This model was also chosen by Kolarik and Rudorfer (1994), Hoptroff (1992), Waibel (1988), Refenes (1991) and Swingler (1996).</sentence>
+    <sentence>The network structure (Fig 6) is composed of 3 layers, including an input layer, a hidden layer and an output layer.</sentence>
+    <sentence>The number of neurons in the input layer is determined by the window size (period in months) multiplied by the number of series in the set of samples.</sentence>
+    <sentence>The number of neurons in the hidden layer is determined by the equation: (6) where m and N represent the number of neurons of the output and input layer, respectively.</sentence>
+    <sentence>This equation was proposed by Huang (2003) and was used due to significant evidence, its use improves the network learning process.</sentence>
+    <sentence>The number of neurons in the output layer is determined by the size of the prediction horizon.</sentence>
+    <sentence>The activation function chosen was the log-sigmoidal function.</sentence>
+    <sentence>Structure of the proposed network Fig 6.</sentence>
+    <sentence>Structure of the proposed network.</sentence>
+    <sentence>Training strategies Learning was performed by supervised process, where the intended inputs and outputs are entered in the network.</sentence>
+    <sentence>The algorithm chosen for the network training was the resilient backpropagation, an adaptation of the standard backpropagation algorithm.</sentence>
+    <sentence>It seeks to eliminate the negative influence of the partial derivative in the adjustment of weights.</sentence>
+    <sentence>For network convergence, the number of epochs was set at 10,000 or the minimum error rate at 0.0001.</sentence>
+    <sentence>In other words, the training ended when one of these two conditions were met.</sentence>
+    <sentence>To implement the neural networks of this work we used the Encog Artificial Intelligence Framework (Encog, 2009).</sentence>
+    <sentence>Determination of the model’s performance metrics To evaluate the performance of the model neural, four measures were used: MAPE, RMSE, THEIL Coefficient e POCID.</sentence>
+    <sentence>The Mean Absolute Percentage Error (MAPE), shown in Eq (6), is the mean or average of the absolute percentage errors of forecasts.</sentence>
+    <sentence>Error is defined as actual or observed value minus the forecasted value.</sentence>
+    <sentence>Percentage absolute errors are added to compute MAPE.</sentence>
+    <sentence>This measure is easy to understand because it provides the error in terms of percentages.</sentence>
+    <sentence>Also, because absolute percentage errors are used, the problem of positive and negative errors canceling each other out is avoided.</sentence>
+    <sentence>(7) The Root Mean Square Error (RMSE), shown in Eq (7), is employed as an indicator for the predictive power or prediction agreement.</sentence>
+    <sentence>A low RMSE indicates that the prediction agrees with the real data.</sentence>
+    <sentence>(8) The THEIL coefficient, Eq (8), evaluates the prediction performance in relation to the trivial prediction, meaning that the estimated future value is equal to the current value.</sentence>
+    <sentence>(9) where: If THEIL = 1, the model has a performance equal to a trivial prediction, if THEIL &gt; 1, the performance is worse than a trivial prediction; and if THEIL &lt; 1, the performance is better than a trivial prediction.</sentence>
+    <sentence>The Percentage of Correct (up/down) Directional Prediction – POCID, shown in Eq (9), measures the percentage of accuracy relating to the series trend.</sentence>
+    <sentence>(10) Where: (11)</sentence>
+  </section>
+  <section name="Experiments and analysis of results">
+    <sentence>This section presents the results according to the methodology described in this paper.</sentence>
+    <sentence>Experiments to evaluate the window size Extensive experiments were conducted with the aim of evaluating the best window size to predict the PETR4 stock closing price.</sentence>
+    <sentence>Experiments were performed for window sizes W = {1, 2, 3, 4, 5}.</sentence>
+    <sentence>A total of 144 observation time frames were used in the experiment, corresponding to the period from January 2000 to December 2011.</sentence>
+    <sentence>As mentioned, the algorithm chosen for network training was the resilient backpropagation algorithm.</sentence>
+    <sentence>The results of the training processes are shown in Table 8.</sentence>
+    <sentence>For all window sizes considered, the network converged with a maximum of 6,000 epochs.</sentence>
+    <sentence>The model with window size equal to 5 presented the lowest training error, although it is very close to the errors presented for windows 1, 2 and 4.</sentence>
+    <sentence>Table 8.</sentence>
+    <sentence>Comparison of the Network Training Results.</sentence>
+    <sentence>Window MSE Epochs 1 0.0001000 6028 2 0.0000999 4240 3 0.0001001 3487 4 0.0001000 6051 5 0.0000998 2450 The results of the validation process are shown in Table 9.</sentence>
+    <sentence>For all window sizes, THEIL metric shows that the models proposed are better than a trivial prediction or a random choice, being confirmed by the performance metric of trend prediction (THEIL &lt; 1) and POCID directional prediction.</sentence>
+    <sentence>Table 9.</sentence>
+    <sentence>Comparison of the Network Neural Validation Result.</sentence>
+    <sentence>Window MAPE (%) RMSE THEIL POCID (%) 1 6.41 0.04931799 0.04983509 87.50 2 5.58 0.04333996 0.02605494 89.36 3 5.45 0.04485328 0.03249950 93.62 4 5.60 0.04036768 0.04228181 91.49 5 5.63 0.04142632 0.03793813 84.78 Confirming the procedure indicated in Section 3.2.3 relating to the choice of the time window size from the models proposed, the best performance, based on the set of error metrics, for prediction is the model with window size equal to 3, as it presents a POCID direction correct rate of 93.62%, and MAPE of 5.45%.</sentence>
+    <sentence>Fig 7 shows the comparison chart between the actual data and the prediction performed for the model’s test set with a window size equal to 3.</sentence>
+    <sentence>As can be seen, the values predicted by the neural network followed the trend of PETR4 closing price series.</sentence>
+    <sentence>Chart with prediction of the test set with window size equal to 3 Fig 7.</sentence>
+    <sentence>Chart with prediction of the test set with window size equal to 3.</sentence>
+    <sentence>Experiments to evaluation the representativeness of the model To verify the significance level of the model, 10 training and test sets selected randomly were generated again, the average POCID error was 92.77% and confidence interval ±2.50% for a significance level of 95%.</sentence>
+    <sentence>Table 10 presents the points for which the neural model failed to identify the correct trend direction.</sentence>
+    <sentence>An analysis of the context and of the relevant facts in the period shows that the errors are due to atypical market conditions.</sentence>
+    <sentence>On December 2000, there was a crisis connected to the change of the enterprise name from Petrobras to PetroBrax and the 4% drop in fuel prices, causing the stock price to fall in this month, though the trend in this period was upward.</sentence>
+    <sentence>On November 2007, the discovery of the Tupi field, a giant oil reserve below the salt layer of the Campos Basin, was announced, causing the stock price to increase abnormally, and this fact created an upward trend that was only stopped with the beginning of the 2008 crisis.</sentence>
+    <sentence>Table 10.</sentence>
+    <sentence>Divergent points of the test set.</sentence>
+    <sentence>Date Actual Predicted Difference December 2000 3.31 3.75 0.44 November 2007 30.75 28.36 −2.39 4.3.</sentence>
+    <sentence>Validation of the model In order to better validate the results of the neural model with window size equal to 3, a new test basis for the period of January 2012 to November 2012 was composed, with a total of 11 observations.</sentence>
+    <sentence>The data were presented to the network and the results are shown in Table 11.</sentence>
+    <sentence>It is possible to observe, as expected, that the indicators presented poorer performance compared to the test model composed of the original dataset, but the POCID direction correct rate was 87.50%, considered satisfactory.</sentence>
+    <sentence>As seen in Fig 8, the actual data and the prediction follow the same trend, diverging only in 1 point, the residues presented higher dispersion, as revealed byMAPE e RMSE indicators.</sentence>
+    <sentence>Therefore, the chart of the actual and predicted values has a greater distance between the series.</sentence>
+    <sentence>Table 11.</sentence>
+    <sentence>Results of network evaluation with window size equal to 3.</sentence>
+    <sentence>MAPE RMSE THEIL POCID 26.47% 0.10498327 0.98139441 87.50% Chart of prediction of the evaluation set with window size equal to 3 Fig 8.</sentence>
+    <sentence>Chart of prediction of the evaluation set with window size equal to 3.</sentence>
+    <sentence>Table 12 presents the divergent point in the trend direction for the model validation set with window size equal to 3.</sentence>
+    <sentence>An analysis of the context and of the relevant facts in the period shows that the errors were also due to atypical market conditions.</sentence>
+    <sentence>In October 2012, oil production contracted to an average of 1,843 million barrels a day, the lowest since April 2008, which caused the stock price to drop in this month.</sentence>
+    <sentence>Table 12.</sentence>
+    <sentence>Divergent points of the evaluation set.</sentence>
+    <sentence>Date Actual Predicted Difference October 2012 20.80 22.58 1.78 The observation of the results presented in this research evidences that the proposed methodology was evaluated through empirical analysis of the results achieved, showing a good rate of the stock price changes, with POCID of 93.62%.</sentence>
+    <sentence>This was confirmed for the different window sizes proposed, underscoring the suitability of the methodology for creating models for prediction of future stock market values.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>In this research, we sought to understand the set of information present in the financial market and identify the variables that drive stock prices, taking into account the activities performed and economy sectors, the various industry, macroeconomic and market indicators.</sentence>
+    <sentence>The methodology presented may be adapted to other enterprises and their stocks.</sentence>
+    <sentence>Theoretically, the discussion on the predictions of stock prices is still controversial and unproductive.</sentence>
+    <sentence>However, from the empirical standpoint, this research proved to be very productive, with some methods for financial market prediction being developed and demonstrated.</sentence>
+    <sentence>Predicting the direction into which stock prices change is very important for the development of effective strategies to operate in the stock market.</sentence>
+    <sentence>The result of the questionnaire applied to qualified respondents revealed that 80% of the respondents believe that the models and methods they use are satisfactory, but they do not use computer techniques to operate in the stock market.</sentence>
+    <sentence>The assertive prediction of stock prices may promise attractive benefits for investors in general.</sentence>
+    <sentence>The methodology presented for use of Artificial Neural Networks to predict the closing price of PETR4, traded on BM&amp;FBOVESPA, adopted 4 prediction steps: (1) understanding the problem domain; (2) pre-selection and collection of samples; (3) pre-processing of inputs; and (4) modeling and prediction.</sentence>
+    <sentence>Considering the case study of PETR4 stock, the model that achieved the best performance was window size equal to 3, which showed a POCID direction correct rate of 93.62%, and MAPE of 5.45%.</sentence>
+    <sentence>The chart of predicted values and actual values shows that the predicted series follows the series of actual values.</sentence>
+    <sentence>Analyzing the results obtained in the experiments, it is possible to notice that the RMSE errors are relatively low.</sentence>
+    <sentence>However, the prediction behavior is best viewed with the MAPE metric, as it displays better a sense of deviation from the model.</sentence>
+    <sentence>The results show excellent correct direction rates and meets the objectives of this research.</sentence>
+    <sentence>It is important to note that not all the variables studied in this work could be used, by virtue of the economic characteristics of Brazil, from the structural instability of an economy that has not yet reached a stage of maturity to the lack of sufficiently long time series.</sentence>
+    <sentence>In general, the results were satisfactory as they successfully achieved the objective of this research to predict the closing price of the PETR4, following its behavior and tendency.</sentence>
+    <sentence>Thus, the use of ANN to predict the behavior and trends of stocks has shown to be a feasible alternative to conventional techniques, revealing the market behavior and offering privileged information to investors, in addition to the possibility of being used in combination with other techniques.</sentence>
+    <sentence>1 Tel.</sentence>
+    <sentence>: +55 31 3439 5204.</sentence>
+  </section>
+</article>

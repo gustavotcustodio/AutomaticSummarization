@@ -1,0 +1,631 @@
+<article>
+  <title>Formalizing dialectical explanation support for argument-based reasoning in knowledge-based systems</title>
+  <abstract>
+    <sentence>The concept of explanation has received attention from different areas in Computer Science, particularly in the knowledge-based systems and expert systems communities.</sentence>
+    <sentence>At the same time, argumentation has evolved as a new paradigm for conceptualizing commonsense reasoning, resulting in the formalization of different argumentation frameworks and the development of several real-world argument-based applications.</sentence>
+    <sentence>Although the notions of explanation and argument for a claim share many common elements in knowledge-based systems their interrelationships have not yet been formally studied in the context of the current argumentation research in Artificial Intelligence.</sentence>
+    <sentence>This article explores these ideas by providing a new perspective on how to formalize dialectical explanation support for argument-based reasoning.</sentence>
+    <sentence>To do this, we propose a formalization of explanations for abstract argumentation frameworks with dialectical constraints where different emerging properties are studied and analyzed.</sentence>
+    <sentence>As a concrete example of the formalism introduced we show how it can be fleshed out in an implemented rule-based argumentation system.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Knowledge-based systems</keyword>
+    <keyword>Explanation support</keyword>
+    <keyword>Abstract argumentation</keyword>
+    <keyword>Structured argumentation</keyword>
+    <keyword>Defeasible Logic Programming</keyword>
+  </keywords>
+  <section name="Introduction and motivations">
+    <sentence>The notion of explanation has received attention in different related areas of Computer Science, such as from the knowledge-based systems and expert systems communities (Guida &amp; Zanella, 1997; Lacave &amp; Diez, 2004; Ye &amp; Johnson, 1995).</sentence>
+    <sentence>An interesting review about explanations in heuristic expert systems is given in Lacave and Diez (2004), which offers the following appealing definition: “… explaining consists in exposing something in such a way that it is understandable for the receiver of the explanation – so that he/she improves his/her knowledge about the object of the explanation – and satisfactory in that it meets the receiver’s expectations.” In the last two decades, argumentation (Bench-Capon &amp; Dunne, 2007; Besnard &amp; Hunter, 2008; Chesñevar, Maguitman, &amp; Loui, 2000; Prakken &amp; Vreeswijk, 2002; Rahwan &amp; Simari, 2009) has evolved as an attractive paradigm for conceptualizing commonsense reasoning, resulting in the formalization of different argumentation frameworks and the development of several real-world argument-based applications.</sentence>
+    <sentence>Argumentation, as a research subarea of knowledge representation and reasoning, is of particular importance mainly because it allows to obtain conclusions from repositories containing often inconsistent, incomplete, and uncertain information thus becoming suitable to handle reasoning tasks in knowledge-based systems.</sentence>
+    <sentence>During the last decades, the use of argumentation has expanded at increasing pace, driven in part by theoretical advances but also by successful demonstrations of a substantial number of practical applications domains, such as legal reasoning (Prakken &amp; Sartor, 2002), knowledge engineering (Carbogim, Robertson, &amp; Lee, 2000), multiagent systems (Amgoud, Maudet, &amp; Parsons, 2002; Parsons, Sierrra, &amp; Jennings, 1998), and e-government (Atkinson, Bench-Capon, &amp; McBurney, 2005), among many others.</sentence>
+    <sentence>Moulin, Irandoust, Bélanger, and Desbordes (2002), present a review of the literature of explanation systems and argumentation systems.</sentence>
+    <sentence>The authors describe the work of researchers leading to the enhancement of the explanation capabilities of knowledge-based and decision support systems, while other researchers developed argumentative techniques for software systems.</sentence>
+    <sentence>They remark that “it would be interesting for the researchers belonging to these different communities to share their experiences and to develop systems that take advantage of the advances gained in each domain.”; concluding emphatically that “argumentation and explanation facilities in knowledge-based systems should be investigated in conjunction.” However, to the best of our knowledge, current state of the art of argumentation research in Computer Science, does not reflect the goal of studying these two notions of explanation and argument together as a research goal.</sentence>
+    <sentence>This article represents an effort to fill this gap by providing a new perspective on formalizing dialectical explanation support for argument-based reasoning.</sentence>
+    <sentence>With that intent, we introduce the concept of dialectical explanation that will denote δ-explanation; following the terminology of Lacave and Diez (2004), δ-explanations will be used to explain why an argument has a particular warranting status by exposing the context under which that argument is considered and the analysis carried out in order to obtain such status.</sentence>
+    <sentence>Hence, one of the contributions of this paper is to introduce a formalization of δ-explanations for a class abstract argumentation frameworks where dialectical constraints are included; for this formalization, our presentation explores and analyzes different emerging properties of δ-explanations.</sentence>
+    <sentence>As another interesting contribution, the proposed explanation formalisms is also applied to an implemented rule-based argumentation system.</sentence>
+    <sentence>Thus, as we will show below, δ-explanations can enhance both abstract and rule-based argumentation systems.</sentence>
+    <sentence>In abstract argumentation, δ-explanations can be a useful tool to comprehend and analyze the interactions among arguments that are under consideration.</sentence>
+    <sentence>On the other hand, in rule-based argumentation systems where arguments are endowed with structure (Besnard &amp; Hunter, 2001; Bondarenko, Dung, Kowalski, &amp; Toni, 1997; Chesñevar, Simari, Alsinet, &amp; Godo, 2004; García &amp; Simari, 2004; Prakken, 2010; Simari &amp; Loui, 1992), δ-explanations have the additional capability of aiding in the understanding of how knowledge should be represented and debugging of the underlying knowledge base.</sentence>
+    <sentence>Intuitively, an argument can be seen as a piece of reasoning that supports a claim from certain evidence.</sentence>
+    <sentence>Argumentation systems define a way for establishing which claims (or arguments) can be accepted as warranted.</sentence>
+    <sentence>In this context, abstract argumentation frameworks (Dung, 1995) have played a major role as a way of understanding argument-based inference, resulting in different semantics for argumentation (Baroni &amp; Giacomin, 2009).</sentence>
+    <sentence>The goal of an argumentation semantics is to characterize the set of arguments that should be rationally accepted as justified or warranted.</sentence>
+    <sentence>However, the information about why an argument, or its claim for that matter, is warranted remains usually hidden within the process.</sentence>
+    <sentence>Consider for example the following scenario where an agent has to decide about having an opera night.</sentence>
+    <sentence>Bob happens to be an aficionado to the opera and there is an opera show tonight (argument ).</sentence>
+    <sentence>Besides, today is Bob’s birthday and he usually gets together with friends .</sentence>
+    <sentence>Bob usually goes to the opera house with friends .</sentence>
+    <sentence>However, today Bob’s best friend is coming with her baby to celebrate his birthday, and is not a good idea to bring a baby to the opera .</sentence>
+    <sentence>Observe that the argument supports the claim “go to the show” that is defeated (or attacked) by and vice versa.</sentence>
+    <sentence>The argument is in turn defeated by (“opera with friends”), thus reinstating the argument .</sentence>
+    <sentence>Note also that the argument (“friend with baby”) defeats both and .</sentence>
+    <sentence>As has been mentioned, an argumentation semantics is needed to obtain the set of accepted arguments (e.g., ).</sentence>
+    <sentence>Fig 1 depicts a directed graph usually used for abstract argumentation frameworks where nodes are labeled with the arguments and directed edges, represented as arrows, the defeat relation.</sentence>
+    <sentence>Although the graph shows all existing arguments and how arguments defeat other arguments, this type of graph does not explain the analysis performed to establish if an argument can be accepted.</sentence>
+    <sentence>Even if we annotate the graph telling which arguments are accepted, there would be no indication regarding the analysis that produced the different statuses of these arguments.</sentence>
+    <sentence>Graph with argument labels and the defeat relation Fig 1.</sentence>
+    <sentence>Graph with argument labels and the defeat relation.</sentence>
+    <sentence>In our formalization, a δ-explanation will be a structure that shows why a particular claim (or argument) is considered warranted.</sentence>
+    <sentence>For instance, following the example above, the explanation will show why Bob finally decides not to go to the opera when faced to the described scenario.</sentence>
+    <sentence>Thus, an explanation will provide a useful tool to comprehend, analyze, develop, and debug argumentation systems.</sentence>
+    <sentence>In the context of the terminology used by Lacave and Diez (2004), we explain why an argument supporting a claim is warranted through exposing or presenting the whole set of arguments that have been considered and how these arguments are interrelated.</sentence>
+    <sentence>We postulate that this information is understandable from the receiver’s point of view, because all the arguments considered, their statuses (i.e., defeated/undefeated), and their interrelations are explicitly shown.</sentence>
+    <sentence>This type of information should be more satisfactory and useful for the receiver, because it contains all the elements at stake in the analysis that supports the answer.</sentence>
+    <sentence>Recently, in Walton (2004), Walton introduced a philosophical analysis of explanations.</sentence>
+    <sentence>He states that “the purpose of an explanation is to get the hearer to understand something that he already accepts as a fact”, and that “an explanation is seen as a transfer of understanding from a respondent to a questioner in a dialogue.” In accordance with that point of view, in our approach the purpose of an explanation is to transfer the understanding of how the warrant status of a particular argument has been obtained from a given argumentation framework.</sentence>
+    <sentence>Some preliminary work related to this paper has been reported in two workshop papers (García, Chesñevar, Rotstein, &amp; Simari, 2007; García, Rotstein, Chesñevar, &amp; Simari, 2009) and previously in García, Rotstein, and Simari (2007); nevertheless, the work presented here extends them in several ways.</sentence>
+    <sentence>The abstract formalization of δ-explanations is completely redefined and extended to cope with both abstract and rule-based argumentation frameworks.</sentence>
+    <sentence>A deeper analysis of the formalism is performed and several interesting properties are introduced.</sentence>
+    <sentence>The use of the formalism is shown through examples both in abstract frameworks and in an implemented argumentation system.</sentence>
+    <sentence>The rest of this paper is structured as follows.</sentence>
+    <sentence>Next, in Section 2 we will present the basic ideas of an abstract argumentation framework with dialectical constraints, which includes several concepts common to most argument-based formalisms.</sentence>
+    <sentence>Section 3 introduces the formalization of δ-explanations and shows several properties.</sentence>
+    <sentence>Section 4 presents a concrete reification of the proposed abstract framework based on Defeasible Logic Programming (DeLP).</sentence>
+    <sentence>Finally, Section 5 discusses related work and conclusions.</sentence>
+  </section>
+  <section name="Abstract argumentation frameworks with dialectical constraints">
+    <sentence>In this section we recall argumentation theories as introduced in Chesñevar and Simari (2007) and Chesñevar, Simari, and Godo (2005); they are built extending of an abstract argumentation framework (Dung, 1995) with a set of dialectical constraints.</sentence>
+    <sentence>This formal construct will be used in the following section for the definition of dialectical explanations (δ-explanations).</sentence>
+    <sentence>It is important to note that the aim of this paper is not to offer an alternative approach to the semantics of argumentation.</sentence>
+    <sentence>Instead, an argumentation theory provides an structure with two slots: one for an argumentation framework and another for a set of dialectical constraints.</sentence>
+    <sentence>The focus of the paper lies in the explanation formalism that will be applied to different argumentation systems together with a chosen associated semantics, just by defining an appropriate set of dialectical constraints.</sentence>
+    <sentence>Abstract argumentation frameworks are formalisms for modeling defeasible argumentation in which some components remain unspecified (Dung, 1995; Jakobovits &amp; Vermeir, 1999; Rahwan &amp; Simari, 2009); in them an argument is considered an abstract entity without any specific structure.</sentence>
+    <sentence>Roughly speaking, an argument is anything that may attack to or be attacked by another argument (Baroni &amp; Giacomin, 2009).</sentence>
+    <sentence>Thus, formally an argumentation framework Φ is a pair 〈Args, R〉, where Args is a finite set of arguments and R is a binary relation between arguments such that R ⊆ Args × Args.</sentence>
+    <sentence>The notation (or, equivalently, ) means that attacks, or defeats (Dung, 1995).</sentence>
+    <sentence>Example 2.1 Consider the argumentation framework 〈Args2.1, R2.1〉, where: and , .</sentence>
+    <sentence>An argumentation framework 〈Args, R〉 is graphically depicted as a directed graph; in it every node stands for an argument in Args, and there is an arc whenever .</sentence>
+    <sentence>For instance, Fig 2 depicts the argumentation framework 〈Args2.1, R2.1〉.</sentence>
+    <sentence>Argumentation framework 〈Args2 Fig 2.</sentence>
+    <sentence>Argumentation framework 〈Args2.1, R2.1〉 (Example 2.1).</sentence>
+    <sentence>In the literature of abstract argumentation frameworks, several semantics have been defined and studied (Amgoud et al., 2002; Baroni &amp; Giacomin, 2009; Baroni, Giacomin, &amp; Guida, 2005; Jakobovits &amp; Vermeir, 1999).</sentence>
+    <sentence>In particular, in this paper we will focus on skeptical semantics for argumentation that is based on a dialectical analysis of argumentation trees.</sentence>
+    <sentence>Dialectical analysis in argumentation involves the exploration of a search space to provide a proof-theoretic characterization of an argument-based semantics.</sentence>
+    <sentence>Dialectical proof procedures provide the mechanism for performing computations of warranted arguments, traversing this search space by generating tree-like structures which are referred to as argument trees (Besnard &amp; Hunter, 2001) or as dialectical trees (Chesñevar et al., 2004; García &amp; Simari, 2004) in the literature.</sentence>
+    <sentence>Given an argumentation framework 〈Args, R〉, to establish if one particular argument is warranted, each argument that defeats must be considered.</sentence>
+    <sentence>It is clear that the warrant status of will depend on the status of these s. Since each can be also defeated, and its defeater can be defeated, and so on, a sequence of arguments can arise where, apart from the last one of the sequence, each one is defeated by the subsequent.</sentence>
+    <sentence>For instance, in Example 2.1 is defeated by , which in turn is defeated by defeats , and defeats .</sentence>
+    <sentence>Therefore, the acceptance status of will depend on the acceptance status of , and .</sentence>
+    <sentence>Before introducing argumentation theories, we will present the notion of a sequence of defeating arguments and other auxiliary definitions.</sentence>
+    <sentence>Definition 2.1 Argumentation line Let Φ = 〈Args, R〉 be an abstract argumentation framework.</sentence>
+    <sentence>An argumentation line rooted in is either a singleton sequence () or any finite sequence of arguments (), such that , for 1 &lt; i ⩽ n. We will write to denote the set of all argumentation lines in Φ.</sentence>
+    <sentence>Consider the argumentation framework 〈Args2.1, R2.1〉 from Example 2.1.</sentence>
+    <sentence>Different argumentation lines rooted in can be obtained, namely: , , , and .</sentence>
+    <sentence>Note that although , in attacks , and hence defends .</sentence>
+    <sentence>An infinite number of argumentation lines rooted in can be obtained: , , , , etc.</sentence>
+    <sentence>; this is because and are members of R2.1 thus introducing a cycle in the associated graph (see Fig 2).</sentence>
+    <sentence>Argumentation lines define a domain over which different constraints can be defined.</sentence>
+    <sentence>As such constraints are related to sequences which resemble an argumentation dialog between two parties, we call them dialectical constraints.</sentence>
+    <sentence>Definition 2.2 Dialectical constraint Let Φ = 〈Args, R〉 be an abstract argumentation framework.</sentence>
+    <sentence>A dialectical constraintCin the context of Φ is any function .</sentence>
+    <sentence>A given argument sequence satisfies C in Φ when C(λ) = True.</sentence>
+    <sentence>Then, as we already mentioned, an argumentation theory is defined by combining an argumentation framework with a particular set of dialectical constraints.</sentence>
+    <sentence>Formally: Definition 2.3 Argumentation theory An argumentation theory T (or just a theory) is a pair (Φ, DC), where Φ is an abstract argumentation framework, and DC = {C1, C2, … , Ck} is a finite (possibly empty) set of dialectical constraints.</sentence>
+    <sentence>Therefore, in an argumentation theory, any set of dialectical constraints can be used (e.g., the empty set).</sentence>
+    <sentence>Thus, different argumentation systems can be obtained (with different semantics) by defining the appropriate set of dialectical constraints.</sentence>
+    <sentence>It must be noted that a full formalization for dialectical constraints is outside the scope of this work.</sentence>
+    <sentence>As they may vary from one particular argumentation framework to another, they are included as a parameter in an argumentation theory.1 Below, some illustrative examples of dialectical constraints are shown.</sentence>
+    <sentence>For instance, dialectical constraints can be used to impose conditions on argumentation lines to be considered rationally acceptable.</sentence>
+    <sentence>Such conditions are usually defined by disallowing certain moves which might lead to fallacious situations.</sentence>
+    <sentence>For example, it is forbidden to repeat the same argument in an argumentation line (Example 2.2), or it is not allowed that parties contradict themselves when advancing arguments (Example 2.3), or it is required that the attack relation has to be such that there is no pair of arguments that attack each other, achieving in this way that no argument in an argumentation line can be attacked by its successor (see Example 2.4).</sentence>
+    <sentence>Several examples follow.</sentence>
+    <sentence>Example 2.2 Dialectical constraint Cnc: non-circularity A dialectical constraint for preventing a circular argumentation line can be defined as follows.</sentence>
+    <sentence>Consider , then Cnc(λ) = True iff n = 1 or, for each in λ (2 ⩽ k ⩽ n), it holds that does not appear in ; conversely, Cnc(λ) = False iff there exist (2 ⩽ v ⩽ n) such that ().</sentence>
+    <sentence>Thus, the function Cnc returns True iff every argument appears only once in an argumentation line (and false otherwise).</sentence>
+    <sentence>Consider for instance the argumentation framework 〈Args2.1, R2.1〉 of Example 2.1.</sentence>
+    <sentence>In that case, as already remarked above, an infinite number of argumentation lines rooted in can be obtained, e.g., , , , and .</sentence>
+    <sentence>Nevertheless, only the first two satisfy Cnc: Cnc(λ1) = True, Cnc(λ2) = True, and Cnc(λ3) = False, and Cnc(λ4) = False.</sentence>
+    <sentence>Example 2.3 Dialectical constraint Cco: commitment Consider a line ; in it is attacking thus giving support for .</sentence>
+    <sentence>Therefore, should not contradict .</sentence>
+    <sentence>The same holds for and , and for and .</sentence>
+    <sentence>Observe that arguments in odd positions represent supporting arguments for , and that arguments in even positions represent interfering arguments for (indirect attack).</sentence>
+    <sentence>A dialectical constraint can be defined to impose that supporting (respectively interfering) arguments should not attack each other.</sentence>
+    <sentence>Consider the sets and .</sentence>
+    <sentence>We define Cco(λ) = True iff for any pair of arguments and of , and for any pair of arguments and of .</sentence>
+    <sentence>Otherwise, Cco(λ) = False.</sentence>
+    <sentence>Consider the argumentation framework 〈Args2.1, R2.1〉 of Example 2.1 where several lines rooted in can be obtained: and .</sentence>
+    <sentence>Note that Cco(λa) = True and Cco(λd) = False since .</sentence>
+    <sentence>Example 2.4 Dialectical constraint Cprop: proper attack Consider the argumentation line from an argumentation framework 〈Args, R〉.</sentence>
+    <sentence>We define Cprop(λ) = True iff n = 1 or, for each in λ (2 ⩽ k ⩽ n), it holds that ; conversely, Cprop(λ) = False iff there exist () such that ;.</sentence>
+    <sentence>Thus, the function Cprop returns True if every argument in the line attacks is predecessor but no argument in the line attacks its successor.</sentence>
+    <sentence>The definition of acceptable argumentation line corresponds to the use of these criteria, i.e., an argumentation line will be acceptable when complies with the constrains the theory requires.</sentence>
+    <sentence>Definition 2.4 Acceptable argumentation line Let T = (Φ, DC) be an argumentation theory.</sentence>
+    <sentence>An argumentation line is acceptable with respect to T iff for every C ∈ DC, C(λ) = True.</sentence>
+    <sentence>Example 2.5 Consider the argumentation framework 〈Args2.1, R2.1〉 defined in Example 2.1 and the dialectical constraints Cnc and Cco of Examples 2.2 and 2.3.</sentence>
+    <sentence>Then, with these elements we can define the argumentation theory T2.5 = (〈Args2.1, R2.1〉, {Cnc, Cco}).</sentence>
+    <sentence>The argumentation line is acceptable with respect to the argumentation theory T2.5 because Cnc(λa) = True and Cco(λa) = True.</sentence>
+    <sentence>Observe that is acceptable whereas is not acceptable with respect to T2.5 because Cnc(λc) = False.</sentence>
+    <sentence>The line is not acceptable with respect to T2.5 since Cco(λd) = False because .</sentence>
+    <sentence>Consider now the argumentation theory .</sentence>
+    <sentence>Here, and attack each other, and both attack .</sentence>
+    <sentence>The lines and are not acceptable with respect to T2.5b because they do not satisfy Cco.</sentence>
+    <sentence>Nevertheless, and are both acceptable with respect to T2.5b.</sentence>
+    <sentence>Remark 2.1 Observe that given a theory T, if an argumentation line λ satisfies Cnc then any subsequence of λ also satisfies Cnc and the same holds for Cco.</sentence>
+    <sentence>The justification can be found in Appendix A.</sentence>
+    <sentence>As we have stated before, in this paper we will focus on skeptical semantics for argumentation that is based on a dialectical analysis of argumentation trees.</sentence>
+    <sentence>Hence, we will adapt the definition of dialectical tree (García, Chesñevar, &amp; Simari, 1993; Simari, Chesñevar, &amp; García, 1994) to this abstract framework.</sentence>
+    <sentence>Definition 2.5 Dialectical tree Let T = (Φ, DC) be an argumentation theory, where Φ = 〈Args, R〉, and let be an argument in Args.</sentence>
+    <sentence>Let be the set of all the argumentation lines rooted in that are acceptable with respect to T. A dialectical tree for A1 in T (denoted TA1) is a tree of arguments from Args such that: 1.</sentence>
+    <sentence>The root of the tree is labeled with A1.</sentence>
+    <sentence>Let N be node of the tree labeled An, and [A1,…,An] be the sequence of labels of the path from the root to N. Let Attackers={B1,B2,…,Bk} be the set of all the arguments such that (Bi,An)∈R (1⩽i⩽k).</sentence>
+    <sentence>For each argument Bi such that the argumentation line λi=[A1,…,An,Bi] is acceptable with respect to the DC in T (i.e., λi∈Acc(A1)), the node N has a child Ni labeled Bi.</sentence>
+    <sentence>If Attackers = ∅ or there is no Bi such that λi∈Acc(A1), then N is a leaf.</sentence>
+    <sentence>Consider a dialectical tree TA1 in a theory T, and let paths(TA1) be the set of all paths from the root of TA1 to a leaf.</sentence>
+    <sentence>Observe that every element of paths(TA1) is an acceptable argumentation line λi=[A1,…,An] w.r.t.</sentence>
+    <sentence>DC in T. Also note that λi is exhaustive, in the sense that there cannot exist an argumentation line λi′=[A1,…,An,A] acceptable w.r.t.</sentence>
+    <sentence>DC in T, because in that case An will not be a leaf in that tree.</sentence>
+    <sentence>Definition 2.6 Exhaustive acceptable argumentation line Let T = (Φ, DC) be an argumentation theory.</sentence>
+    <sentence>An argumentation line λ∈LinesΦ is exhaustive with respect to T iff λ is acceptable with respect to DC in T and there is no acceptable argumentation line λ′∈LinesΦ extending λ.</sentence>
+    <sentence>Thus, dialectical trees can be characterized by the set of exhaustive acceptable argumentation lines; this set will be called exhaustive bundle set and it corresponds to all the paths from the root to a leaf in TA1.</sentence>
+    <sentence>Definition 2.7 Exhaustive bundle set Let T = (Φ, DC) be an argumentation theory, where Φ=〈Args,R〉, A∈Args.</sentence>
+    <sentence>The set ebundle(A)={λ1,λ2,…,λn} of all the argumentation lines rooted in A that are acceptable with respect to DC in T, is called an exhaustive bundle set for A in T if and only if all λi (1 ⩽ i ⩽ n) are exhaustive.</sentence>
+    <sentence>Example 2.6 Consider T2.5 = (〈Args2.1, R2.1〉, {Cnc, Cco}) (introduced in Example 2.5).</sentence>
+    <sentence>A dialectical tree for A5 is shown in Fig 3(a).</sentence>
+    <sentence>Observe that ebundle(A5)={[A5,A1,A4],[A5,A3],[A5,A2]}.</sentence>
+    <sentence>(a) Dialectical tree TA5 of Example 2 Fig 3.</sentence>
+    <sentence>(a) Dialectical tree TA5 of Example 2.6; (b)TA5 after applying and–or marking; (c, d) two other exhaustive dialectical trees belonging to the same equivalence class of TA5.</sentence>
+    <sentence>Definition 2.5 shows how to build a dialectical tree.</sentence>
+    <sentence>It is important to note that the “shape” of the resulting tree will depend on the order in which the subtrees are attached.</sentence>
+    <sentence>Each possible order will produce a tree with a different geometric configuration.</sentence>
+    <sentence>For instance, Fig 3(c) and (d) shows two different dialectical tree that are also associated with the bundle set ebundle(A5) of Example 2.6.</sentence>
+    <sentence>This observation is formalized by introducing the following relation which can be trivially shown to be an equivalence relation.</sentence>
+    <sentence>Definition 2.8 Let T be a theory, and let TreeA be the set of all possible dialectical trees rooted in an argument A in theory T. We will say that TA is equivalent to TA′, denoted TA≡τTA′ iff paths(TA)=paths(TA′)=ebundle(A).</sentence>
+    <sentence>As shown in the next proposition, a dialectical tree for any argument A can be proven to be unique up to ≡τ-equivalence.</sentence>
+    <sentence>Proposition 2.1 Let T be an argumentation theory.</sentence>
+    <sentence>For any argumentAin T there is a unique dialectical treeTAin T up to ≡τ-equivalence.</sentence>
+    <sentence>Proof See Appendix A.</sentence>
+    <sentence>□ Dialectical trees allow to determine whether the root node of the tree is to be accepted (ultimately undefeated) or rejected (ultimately defeated) as a rationally justified belief.</sentence>
+    <sentence>A marking or labeling criterion provides a definition of such acceptance criterion.</sentence>
+    <sentence>Connections between defeat status assignments and extensions in Dung’s argumentation frameworks have been firstly investigated by Verheij (1996); see also Caminada (2006), Verheij (2007) and Baroni and Giacomin (2009), Baroni, Caminada, and Giacomin (2011) for an extensive account of labeling and the corresponding references.</sentence>
+    <sentence>Our approach is based in similar ideas presented in García et al.</sentence>
+    <sentence>(1993), Simari et al.</sentence>
+    <sentence>(1994) and García and Simari (2004).</sentence>
+    <sentence>Formally: Definition 2.9 Marking criterion Let T be an argumentation theory and TreeT all the dialectical trees that can be obtained from a theory T. Let TreeT∗ be the set of all the dialectical trees where each node is marked D (defeated) or U (undefeated).</sentence>
+    <sentence>A marking criterion for T is a function marking:TreeT↦TreeT∗ such that given a dialectical tree TA for an argument A, it returns a marked dialectical tree, denoted TA∗, where each node of TA has been assigned a mark D or U.</sentence>
+    <sentence>The associated function rootmark:TreeT∗↦{D,U} returns the mark of the root node of TA∗.</sentence>
+    <sentence>Example 2.7 A marking criterion can be defined as follows.</sentence>
+    <sentence>Given a dialectical tree, leaves are marked U.</sentence>
+    <sentence>Then, for every inner node N of the tree such that all its children have been marked, the mark for N is D if there is at least one child of N marked as U, and the mark for N is U if all its children are marked as D. Fig 3(b) shows the dialectical tree TA5 of Example 2.6 after applying this marking criterion.</sentence>
+    <sentence>This is a natural criterion for marking a tree and it corresponds to the grounded semantics defined for abstract argumentation frameworks (Dung, 1995).</sentence>
+    <sentence>The following definition captures the idea of an argument being ultimately undefeated in an argumentation theory.</sentence>
+    <sentence>In the literature, arguments that obtain that status usually are said to be accepted, justified, or warranted.</sentence>
+    <sentence>Definition 2.10 Warrant Let T be an argumentation theory and marking(·) a marking criterion for T. An argument A is a warrant for its claim with respect to the marking criterion iff the marked dialectical tree TA∗=marking(TA) is such that rootmark(TA∗)=U.</sentence>
+    <sentence>If an argument A is a warrant for its claim, then we will also say that its claim is warranted (or that there is a warrant for its claim), and that the marked dialectical tree TA∗ exhibits the warrant status of A’s claim.</sentence>
+    <sentence>In the following section, marked dialectical trees will be the basis of the notion of dialectical explanation in abstract argumentation theories.</sentence>
+    <sentence>We will use the marking criterion introduced in Example 2.7 in the examples.</sentence>
+  </section>
+  <section name="Explanations in abstract argumentation frameworks">
+    <sentence>In this work, given that an argument has obtained the status of being warranted in an argumentation theory, the purpose of a dialectical explanation will be to transfer the understanding of how an argument obtains that status.</sentence>
+    <sentence>Consequently, a δ-explanation will consist of a structure that reflects the analysis that was carried out in order to obtain such status, and it will contain those arguments and counterarguments that are considered as part of this analysis.</sentence>
+    <sentence>Suppose that there is a known set of arguments, and we receive the information that a particular argument in that set is warranted whereas others are not; we may want to know why that conclusion was drawn.</sentence>
+    <sentence>For instance, consider again the opera example presented in Section 1 where argument Oshow represents “Bob is an opera aficionado and there is an opera show tonight”; Oget represents “today is Bob’s birthday and he usually gets together with friends”; Ofriends represents “Bob usually goes to the opera house with friends”; and Obaby represents “today Bob’s best friend is coming with her baby because it’s his birthday, and is not a good idea to attend the opera with a baby”.</sentence>
+    <sentence>If a system returns the information that Oget is a warranted argument or that Oshow is not warranted, then we may want to know the reasons supporting that these conclusions were drawn.</sentence>
+    <sentence>In this section, we will define δ-explanation that will provide all the information (arguments) considered by the system for warranting a claim and the analysis (dialectical trees) that has performed.</sentence>
+    <sentence>An argumentation theory with the arguments of the opera scenario is introduced in the example below.</sentence>
+    <sentence>Example 3.1 Consider the set of arguments Args3.1={Oshow,Oget,Ofriends,Obaby}, where Obaby defeats (or attacks) both Oshow and Ofriends,Ofriends in turn defeats Oget, and Oget and Oshow defeat each other.</sentence>
+    <sentence>The following defeat relation reflects these observations R3.1={(Oget,Oshow),(Oshow,Oget),(Ofriends,Oget),(Obaby,Ofriends),(Obaby,Oshow)}.</sentence>
+    <sentence>The argumentation theory T3.1 = (〈Args3.1, R3.1〉, DC) can be defined where DC = {Cnc, Cco} are the dialectical constraints defined in Examples 2.2 and 2.3, respectively.</sentence>
+    <sentence>Fig 4 depicts (a) the graph of the argumentation framework 〈Args3.1, R3.1〉 and (b)–(e) the marked dialectical trees for arguments in Args3.1.</sentence>
+    <sentence>Here, the marking criterion of Example 2.7 is used.</sentence>
+    <sentence>(a) Argumentation framework of Example 3 Fig 4.</sentence>
+    <sentence>(a) Argumentation framework of Example 3.1.</sentence>
+    <sentence>(b–e) Marked dialectical trees.</sentence>
+    <sentence>Although Fig 4 (a) shows all the existing arguments and the defeat relation defined over the set of arguments, the graph does not show the analysis performed to state if an argument has to be accepted as warranted.</sentence>
+    <sentence>For example, Oget is defeated by Ofriends but Ofriends is in turn defeated by Obaby, thus, reinstating Oget.</sentence>
+    <sentence>The dialectical process for warranting a claim involves finding the arguments that either support or interfere with that claim.</sentence>
+    <sentence>As we discussed in the previous section, these arguments are connected through the defeat relation and their interrelationships in terms of this defeat relation, together with the dialectical constraints, can be conceptualized through dialectical trees.</sentence>
+    <sentence>Remark 3.1 In the examples of this paper we will use the marking criterion introduced in Example 2.7, akin to grounded semantics in abstract argumentation.</sentence>
+    <sentence>Using this criterion to mark a dialectical tree, an argument mark depends on the position in which such argument appears in an argumentation line.</sentence>
+    <sentence>Since it is possible that an argument appears in more than one argumentation line, if this argument appears in two different lines, the mark for each occurrence could be different.</sentence>
+    <sentence>Conceptually, an argument supports a claim by reasoning from certain premises.</sentence>
+    <sentence>The formalism for abstract argumentation described in the previous section reduces arguments to abstract entities without any reference to the corresponding claim.</sentence>
+    <sentence>However, for concrete applications it is necessary to recover the idea that every argument has an associated claim, accordingly we will assume a function claim(A) that will provide the claim of the argument A.</sentence>
+    <sentence>For instance, in the scenario described above, claim(Oshow) is “go to the opera” and claim(Obaby) is “do not go to the opera”.</sentence>
+    <sentence>If an argument A is shown to be a warrant for a claim Q through the dialectical tree TA∗ (Definition 2.10), then we will also say that Q is warranted (or that there is a warrant for Q), and that TA∗ exhibits A as a warrant for claim Q.</sentence>
+    <sentence>Remark 3.2 The notation Q¯ will represent a claim that contradicts the claim Q.</sentence>
+    <sentence>For instance, Q¯ can contradict Q if Q¯ is the complement of Q with respect to strict negation.</sentence>
+    <sentence>In the opera example, if Q represents “go to the opera”, then Q¯ represents “do not go to the opera”.</sentence>
+    <sentence>That is, claim(Oshow) and claim(Obaby) contradict each other.</sentence>
+    <sentence>We assume that Q¯¯=Q, that is, if Q¯ contradicts Q then it also holds that Q contradicts Q¯.</sentence>
+    <sentence>In the argumentation process, when a claim is being analyzed it is necessary to consider the arguments that support the claim but also is required to ponder the arguments contradicting it.</sentence>
+    <sentence>For instance, in Example 3.1 arguments for going to the opera and arguments for not going to the opera should be considered to decide whether to go or not to go.</sentence>
+    <sentence>It is clear that there could be more than one argument that supports a particular claim and also several arguments against the same claim.</sentence>
+    <sentence>Therefore, to understand why an argument for a claim receives a particular status is not enough to look at the analysis performed over the arguments supporting the claim; it is necessary also to consider the analysis done over the ones that contradict it.</sentence>
+    <sentence>In our approach an explanation will consist of a structure that includes those marked dialectical trees that are considered for establishing such status.</sentence>
+    <sentence>If only one argument A for a claim Q exists, then there will be a unique tree TA∗ (Proposition 2.1) and this tree will be included in the explanation of the warrant status of Q.</sentence>
+    <sentence>Nevertheless, given a claim Q there could be several different arguments A1,…,An supporting Q, and each Ai will generate its corresponding (different) dialectical tree.</sentence>
+    <sentence>Hence, in this case an explanation will include several dialectical trees.</sentence>
+    <sentence>The following proposition establish that there is as many exhaustive dialectical trees related to a claim Q as different arguments with Q as their claim.</sentence>
+    <sentence>Clearly, its proof is straightforward from Proposition 2.1.</sentence>
+    <sentence>Proposition 3.1 Let T be an argumentation theory and Q a claim.</sentence>
+    <sentence>If there are n argumentsA1,…,Anfor claim Q then there exist n different exhaustive dialectical treesTA1∗,…,TAn∗(up to equivalences with respect to ≡τas introduced inDefinition 2.8).</sentence>
+    <sentence>Proof If there are n arguments for Q then each argument has a unique dialectical tree (Proposition 2.1).</sentence>
+    <sentence>It is clear that for each pair of arguments Ai and Aj (1⩽i,j⩽n) the dialectical trees TAi∗ and TAj∗ are different because their roots are different.</sentence>
+    <sentence>Therefore, there are n different dialectical trees.</sentence>
+    <sentence>□ The following example illustrates the general case where there are several arguments for the same claim Q and several arguments supporting Q¯.</sentence>
+    <sentence>Each one of these arguments will generate a different dialectical tree and some of these dialectical trees may have the root marked U.</sentence>
+    <sentence>Example 3.2 Consider the argumentation theory T3.2 = (〈Args3.2, R3.2〉, DC), where the set of arguments is Args3.2={A1,A2,A3,A4,X1,B2,F1,C1,D1,D2,E1,E2}, the defeat relation is R3.2={(X1,A1),(X1,A2),(A4,X1),(B2,A2),(F1,A3),(C1,F1),(D1,D2),(D2,D1),(E2,E1)}, and the dialectical constraints DC = {Cnc, Cco} are the ones defined in Examples 2.2 and 2.3, respectively.</sentence>
+    <sentence>Assume that claim(A1)=claim(A2)=claim(A3)=claim(A4)=a, claim(X1)=a¯, claim(B2)=b, claim(F1)=f¯, claim(C1)=c¯, claim(D1)=d, claim(D2)=d¯, claim(E1)=e, and claim(E2)=e¯.</sentence>
+    <sentence>In this theory, there are four arguments for claim a, one argument for claims a¯,f¯,d,d¯,e, and e¯, and no argument for claim f. Fig 5 shows the marked dialectical trees TA1∗,TA2∗,TA3∗,TA4∗ and TX1∗.</sentence>
+    <sentence>The root of TA2∗ is marked D, whereas the roots of TA1∗,TA3∗ and TA4∗ are marked U and each one provides a warrant for claim a.</sentence>
+    <sentence>Observe that the only argument with claim a¯ isX1 and the root of TX1∗ is marked D. Hence, there is no warrant for a¯.</sentence>
+    <sentence>Fig 6 shows the marked dialectical trees for the arguments D1,D2,E1,E2,F1 and C1.</sentence>
+    <sentence>Marked dialectical trees for arguments of Example 3 Fig 5.</sentence>
+    <sentence>Marked dialectical trees for arguments of Example 3.2.</sentence>
+    <sentence>Marked dialectical trees for arguments of Example 3 Fig 6.</sentence>
+    <sentence>Marked dialectical trees for arguments of Example 3.2.</sentence>
+    <sentence>A dialectical explanation for a claim Q will contain dialectical trees for arguments that support Q and also dialectical trees for arguments that support Q¯ (i.e., arguments for a claim that is in direct contradiction with Q).</sentence>
+    <sentence>Observe that there can be either several arguments for Q, only one argument for Q, or no arguments for Q; and the same is true for Q¯.</sentence>
+    <sentence>Hence, nine combinations arise.</sentence>
+    <sentence>For instance, it may happen that there is no argument for a claim Q but there are several arguments for Q¯.</sentence>
+    <sentence>In this case, although there is no warrant for Q, there exists an explanation that will include the dialectical trees for those arguments that support Q¯.</sentence>
+    <sentence>Example 3.2 introduces an argumentation theory that shows some of the combinations mentioned above.</sentence>
+    <sentence>The following definition characterizes two distinguished sets of marked dialectical trees that will be used in an explanation.</sentence>
+    <sentence>Definition 3.1 Dialectical tree sets Let T = (〈Args, R〉, DC) be an argumentation theory and Q a claim.</sentence>
+    <sentence>Let T∗(Q)={TA∗|A∈Argsandclaim(A)=Q}, the sets TU∗(Q)⊆T∗(Q), and TD∗(Q)⊆T∗(Q)∪T∗(Q¯) are defined as follows: TU∗(Q)={T∗∈T∗(Q)|rootmark(T∗)=U},TD∗(Q)={T∗∈(T∗(Q)∪T∗(Q¯))|rootmark(T∗)=D}.</sentence>
+    <sentence>That is, the set TU∗(Q) includes all the dialectical trees for arguments that support Q where the root is marked as undefeated.</sentence>
+    <sentence>Therefore, TU∗(Q) contains all the dialectical trees that provide a warrant for Q.</sentence>
+    <sentence>The set TU∗(Q) is empty if no warrant for Q exists.</sentence>
+    <sentence>Observe that the set TU∗(Q¯) will include all the dialectical trees that provide a warrant for Q¯ (if there are any).</sentence>
+    <sentence>The set TD∗(Q) includes all the dialectical trees for Q and Q¯ whose roots are marked as defeated.</sentence>
+    <sentence>That is, TD∗(Q) contains those dialectical trees that show which arguments for Q and Q¯ do not provide a warrant.</sentence>
+    <sentence>For instance, in Example 3.2 there are four arguments that support claim a, and the dialectical tree of three of them are marked U (see Fig 5).</sentence>
+    <sentence>Hence, TU∗(a)={TA1∗,TA3∗,TA4∗}.</sentence>
+    <sentence>Since there is only one argument (X1) that supports claim a¯ and its dialectical tree is marked D, then TD∗(a)={TA2∗,TX1∗}.</sentence>
+    <sentence>As stated above, the purpose of an explanation is to transfer the understanding of how the warrant status of a particular argument can be obtained from a given argumentation theory.</sentence>
+    <sentence>Therefore, an explanation will consist of a structure that reflects the analysis carried out in order to obtain such status, and it will contain those arguments and counterarguments that are considered by this analysis.</sentence>
+    <sentence>Definition 3.2 δ-explanation Let T be an argumentation theory and Q a claim.</sentence>
+    <sentence>A δ-explanation for Q in T is the tuple ET(Q)=(TU∗(Q),TU∗(Q¯),TD∗(Q)).</sentence>
+    <sentence>That is, a δ-explanation ET(Q) for a claim Q from a theory T is a triplet (TU∗(Q),TU∗(Q¯),TD∗(Q)), where the first component is a (possible empty) set of those marked dialectical trees from T that provide a warrant for Q.</sentence>
+    <sentence>The second component of ET(Q) is a (possibly empty) set of marked dialectical trees that provide a warrant for Q¯.</sentence>
+    <sentence>Finally, the third component TD∗(Q) is a (possibly empty) set that contains those marked dialectical trees for Q or for Q¯ that provide no warrant, i.e., their roots are marked D (defeated).</sentence>
+    <sentence>Example 3.3 Consider the argumentation theory T3.2 of Example 3.2 where there are four arguments (A1,A2,A3, and A4) that support claim a and one argument (X1) that supports claim a¯.</sentence>
+    <sentence>The δ-explanation for claim a from T3.2 is ET3.2(a)=({TA1∗,TA3∗,TA4∗},∅,{TA2∗,TX1∗}), whereas the δ-explanation for a¯ is ET3.2(a¯)=(∅,{TA1∗,TA3∗,TA4∗},{TA2∗,TX1∗}).</sentence>
+    <sentence>Fig 5 shows all the dialectical trees of ET3.2(a) and ET3.2(a¯).</sentence>
+    <sentence>Observe that the δ-explanation from T3.2 for the claim e is ET3.2(e)=(∅,{TE2∗},{TE1∗}).</sentence>
+    <sentence>The marked dialectical trees of ET3.2(e) are shown in Fig 6.</sentence>
+    <sentence>If the first element of a δ-explanation ET(Q) is not empty, then there exist at least one argument that provides a warrant for the claim Q.</sentence>
+    <sentence>Below we will show that based on a δ-explanation it is possible to define the notion of answer for a query (a claim posed to an argumentation theory).</sentence>
+    <sentence>But first we will analyze some properties of the proposed formalism and we will introduce the notion of coherent argumentation theory.</sentence>
+    <sentence>Proposition 3.2 Let T = (〈Args, R〉, DC) be an argumentation theory and letET(Q)=TU∗(Q),TU∗(Q¯),TD∗(Q)be a δ-explanation.</sentence>
+    <sentence>The setsTU∗(Q),TU∗(Q¯), andTD∗(Q)are disjoint.</sentence>
+    <sentence>Proof By Proposition 2.1, for each argument in the set Args there is a unique exhaustive dialectical tree.</sentence>
+    <sentence>Therefore, all the dialectical trees for Q and for Q¯ are different, and hence, TU∗(Q) and TU∗(Q¯) are disjoint.</sentence>
+    <sentence>Recall that the mark of the root of a dialectical tree is unique by definition, and thus, the set TD∗(Q) has no trees whose root is marked U.</sentence>
+    <sentence>Therefore, TD∗(Q) and TU∗(Q)∪TU∗(Q¯) are disjoint sets.</sentence>
+    <sentence>□ From Proposition 3.2 it holds that TD∗(Q)=(T∗(Q)∪T∗(Q¯))⧹TU∗(Q)∪TU∗(Q¯).</sentence>
+    <sentence>Note that in Example 3.3, the third component of the δ-explanations ET3.2(a) and ET3.2(a¯) are the same, and the first two are the same but in different order.</sentence>
+    <sentence>The following proposition shows that this situation will hold in general for explanations of contradictory claims.</sentence>
+    <sentence>Its proof is straightforward from Definitions 3.2 and 3.1.</sentence>
+    <sentence>Proposition 3.3 Let T be an argumentation theory and let Q be a claim, thenET(Q)=(X,Y,Z)iffET(Q¯)=(Y,X,Z).</sentence>
+    <sentence>Proof Since ET(Q)=TU∗(Q),TU∗(Q¯),TD∗(Q) and we assume that Q¯¯=Q, then ET(Q¯)=TU∗(Q¯),TU∗(Q),TD∗(Q).</sentence>
+    <sentence>□ The previous examples have shown how it is possible that some of the components of a δ-explanation could be empty.</sentence>
+    <sentence>The first component of the explanation ET(Q) will be empty if: (a) There exist no argument for Q, or (b) All the dialectical trees corresponding to arguments for Q are marked D. In both cases there is no warrant for Q, but in each one the associated δ-explanation is different.</sentence>
+    <sentence>In case (a) TD∗(Q) will contain no dialectical trees corresponding to arguments for Q, whereas in case (b) TD∗(Q) will contain dialectical trees for arguments that support Q (e.g., ET3.2(a¯)=(∅,{TA1∗,TA3∗,TA4∗},{TA2∗,TX1∗})).</sentence>
+    <sentence>The second component of ET(Q) will be empty if there is no warrant for Q¯, and the third component will be empty when there is no dialectical tree for Q nor Q¯ whose root is marked D. Finally, as the next proposition establishes, observe that there are cases where the three components can be empty, e.g., ET3.2(Q)=(∅,∅,∅).</sentence>
+    <sentence>Proposition 3.4 Let T be an argumentation theory.</sentence>
+    <sentence>ThenET(Q)=(∅,∅,∅)iff no arguments for Q norQ¯exist.</sentence>
+    <sentence>Proof Assume that there is at least one argument for Q (respectively Q¯) then this argument will have exactly one dialectical tree and the root of this tree will be marked either U or D. If the mark is U then TU∗(Q) (respectively TU∗(Q¯)) will be non-empty, whereas if the mark is D then TD∗(Q) will be non-empty.</sentence>
+    <sentence>□ Observe that Definition 3.2 impose no condition over the sets TU∗(Q) and TU∗(Q¯), and thus their elements will depend only on the particular defeat relation and the associated dialectical constraints of the given argumentative theory T. For instance, there can be an argumentative theory T′ where for a claim Q, both Q and Q¯ are warranted from T′, e.g., consider the argumentation theory (〈{A,B},∅〉,∅), where claim(A)=Q and claim(B)=Q¯.</sentence>
+    <sentence>In this theory, no argument defeats the other and therefore both arguments are trivially warranted and so are their claims Q and Q¯.</sentence>
+    <sentence>If such a situation occurs, then TU∗(Q)≠∅ and TU∗(Q¯)≠∅.</sentence>
+    <sentence>In light of this situation, we propose the following definitions, where the first one states that an argumentative theory will be coherent when for any claim Q, if Q is warranted then Q¯ is not warranted.</sentence>
+    <sentence>Definition 3.3 Coherent argumentation theory An argumentation theory T = (〈Args, R〉, DC) is coherent iff for any claim Q such that there exists an argument A∈Args with claim(A)=Q that is warranted, then there is no argument B∈Args with claim(B)=Q¯ that is warranted.</sentence>
+    <sentence>Answers from coherent argumentation theories are of special importance.</sentence>
+    <sentence>Definition 3.4 Coherent δ-explanation Given a claim Q, a δ-explanation ET(Q)=TU∗(Q),TU∗(Q¯),TD∗(Q) for Q from an argumentation theory T is said to be coherent iff TU∗(Q)≠∅ implies TU∗(Q¯)=∅.</sentence>
+    <sentence>The relation between coherent theories and coherent δ-explanations is thus established.</sentence>
+    <sentence>Theorem 3.1 Let T = (〈Args, R〉, DC) be an argumentation theory.</sentence>
+    <sentence>If T is coherent, then for any claim Q its δ-explanationET(Q)=(TU∗(Q),TU∗(Q¯),TD∗(Q))is coherent.</sentence>
+    <sentence>Proof Consider a δ-explanation where TU∗(Q)≠∅; then, by definition of TU∗(Q), there exists an argument A for claim Q where the root of TA∗ is marked U, and therefore A is warranted.</sentence>
+    <sentence>Since T is coherent, there will be no warranted argument B in Args such that claim(B)=Q¯.</sentence>
+    <sentence>Then, for every argument B with claim Q¯, the root of TB∗ will be marked D. Therefore, TU∗(Q¯)=∅.</sentence>
+    <sentence>□ Note that a δ-explanation ET(Q)=∅,∅,TD∗(Q) where TD∗(Q)≠∅ is possible and means that although there are arguments for Q or Q¯, there is no warrant for either literal (e.g., ET3.2(f) in Example 3.2).</sentence>
+    <sentence>Many applications of argumentative systems (e.g., expert systems) are query-based.</sentence>
+    <sentence>Therefore, it is useful to define two concepts related to an explanation: query and answer for a query.</sentence>
+    <sentence>For instance, following the scenario of Example 3.1, the query “go to the opera show” can be formulated and the answer for that query should be “no”.</sentence>
+    <sentence>In our proposal, a query Q, called T-query, is a potential claim of an argument to be found in an argumentation theory T. Next, we will define T-answers for T-queries, in terms of coherent δ-explanations.</sentence>
+    <sentence>Definition 3.5 T-answer Let T be a coherent argumentation theory and Q a T-query.</sentence>
+    <sentence>Let ET(Q)=(TU∗(Q),TU∗(Q¯),TD∗(Q)) be a δ-explanation for Q obtained from T. The T-answer for Q is: – yes, if TU∗(Q)≠∅.</sentence>
+    <sentence>– no, if TU∗(Q¯)≠∅.</sentence>
+    <sentence>– undecided, if TD∗(Q)≠∅, TU∗(Q)=∅ and TU∗(Q¯)=∅.</sentence>
+    <sentence>– unknown, if ET(Q)=(∅,∅,∅).</sentence>
+    <sentence>Proposition 3.5 Let T be a coherent argumentation theory and Q a T-query, then the T-answer that is obtained from T is unique.</sentence>
+    <sentence>Proof Let ET(Q)=TU∗(Q),TU∗(Q¯),TD∗(Q) be the T-answer for Q in T. If the answer is unknown, i.e., ET(Q)=(∅,∅,∅), then for Proposition 3.4 there is no argument for either Q or its complement Q¯ and the only possible answer is unknown.</sentence>
+    <sentence>If the T-answer for the T-query Q is yes then there is at least one argument A∈Args with claim(A)=Q that is warranted, since the theory T is coherent there is no warranted argument B∈Args with claim(B)=Q¯, i.e., TU∗(Q¯)=∅ and the answer cannot be no.</sentence>
+    <sentence>Analogously, exchanging the roles of Q and Q¯, for the case that the T-answer is no.</sentence>
+    <sentence>In both cases, the answer cannot be undecided nor unknown because, depending the case, TU∗(Q) or TU∗(Q¯) is non empty.</sentence>
+    <sentence>If the T-answer Q is undecided, then there is no warranted argument for Q or for Q¯, therefore the T-answer cannot be neither yes nor no; and since TD∗(Q)≠∅, the answer cannot be unknown.</sentence>
+    <sentence>□ To understand why a T-query has a particular T-answer, it is essential to examine which arguments have been considered and the existing connections among them.</sentence>
+    <sentence>It is important to note that in argumentation systems where the proof procedure is based on the construction of dialectical trees, δ-explanations play a central role.</sentence>
+    <sentence>The δ-explanations show the reasoning carried out by the system, and they allow to visualize the support for a given answer.</sentence>
+    <sentence>It is clear that without this information it would be very difficult to understand the returned answer.</sentence>
+    <sentence>Returning to Example 3.1 where arguments Oshow and Ofriends support the claim “go to the opera” (go) and Obaby and Oget support the contrary, “do not go to the opera” (go¯).</sentence>
+    <sentence>The δ-explanation for go is E(go)=(∅,{Obaby,Oget},{Oshow,Ofriends}) Therefore, the answer for go is no and the explanation shows why all arguments that support go were considered defeated (dialectical trees were depicted in Fig 4(b)–(e)).</sentence>
+    <sentence>It is important to notice at this point that the examples presented are necessarily small given the space available, but it is easy to see that as the number of arguments grows the size of the trees will tend also to grow.</sentence>
+    <sentence>The visualization of the answers will become more important in these cases, that surely are common in real applications.</sentence>
+    <sentence>Example 3.4 Consider again argumentation theory T3.2 of Example 3.2.</sentence>
+    <sentence>Recall that the dialectical explanation for a is ET3.2(a)=({TA1∗,TA3∗,TA4∗},∅,{TA2∗,TX1∗}); then, the answer for a is yes and the answer for a¯ is no.</sentence>
+    <sentence>Observe that ET3.2(d)=(∅,∅,{TD1∗,TD2∗}), therefore the answer for d (and also for d¯) is undecided.</sentence>
+    <sentence>Finally, since ET3.2(h)=(∅,∅,∅), the answer for h is unknown.</sentence>
+    <sentence>For some particular applications, a δ-explanation may represent too much information and a more concise explanation could be needed.</sentence>
+    <sentence>For instance, in order to show that there is a warrant for a claim Q, a single marked dialectical tree whose root is marked U can be shown.</sentence>
+    <sentence>Its definition is introduced next.</sentence>
+    <sentence>Definition 3.6 Concise explanation Let T be a coherent argumentation theory and Q a T-query.</sentence>
+    <sentence>A concise explanation for Q, denoted by CET(Q), is a single marked dialectical tree T∗ obtained as follows: • if the T-answer for Q is yes, then T∗=γ(TU∗(Q)).</sentence>
+    <sentence>• if the T-answer for Q is no, then T∗=γTU∗(Q¯).</sentence>
+    <sentence>• if the T-answer for Q is undecided, then T∗=γTD∗(Q).</sentence>
+    <sentence>• if the T-answer for Q is unknown, then T∗ is a null tree called τ.</sentence>
+    <sentence>Where γ is a selection function that returns exactly one element from a set of marked dialectical trees.</sentence>
+    <sentence>The definition of γ depends on a particular criterion for selecting the most representative dialectical tree, possibly reflecting some set of attributes characterizing the domain of the problem.</sentence>
+    <sentence>For instance, to return the tree that has less nodes, the tree with more nodes, or the one with the longest argumentation line.</sentence>
+    <sentence>If a preference criterion between arguments can be defined, then this criterion can be used for selecting the most preferred representative tree.</sentence>
+    <sentence>For example, assume that A≻B means A is preferred over B, then the dialectical tree whose root is best with respect to ≻ can be selected Note finally that γ should be defined in such a way that it returns a single dialectical tree, if there are more than one tree that satisfy the adopted criterion, one of them can be randomly selected.</sentence>
+    <sentence>Example 3.5 Consider argumentation theory T3.2 of Example 3.2 where there are four arguments (A1,A2,A3, and A4) that support claim a and one argument (X1) that supports claim a¯.</sentence>
+    <sentence>Recall that TU∗(a)={TA1∗,TA3∗,TA4∗} and TU∗(a¯)=∅, and that the T-answer for a is yes.</sentence>
+    <sentence>Consider that γ selects the tree that has less nodes, then CE3.2(a)=TA4∗.</sentence>
+  </section>
+  <section name="Answers and δ-explanations in DeLP: a reification">
+    <sentence>The formal setup of abstract argumentation frameworks has allowed the study of the different semantics emerging from the interaction of arguments through the attack relation.</sentence>
+    <sentence>For argumentation systems where arguments are provided an internal structure (Besnard &amp; Hunter, 2001; Bondarenko et al., 1997; Chesñevar et al., 2004; García &amp; Simari, 2004; Prakken, 2010; Simari, Chesñevar, &amp; García, 1994; Simari &amp; Loui, 1992), δ-explanations provide the additional capability of aiding in the understanding of how knowledge should be represented and of supporting the debugging process of the underlying knowledge base.</sentence>
+    <sentence>See Bryant and Krause (2008) for an in-depth review of implementation of defeasible reasoning systems.</sentence>
+    <sentence>In this section we will demonstrate the capabilities of the formalism defined above by reifying the abstract concepts introduced so far in our formalism.</sentence>
+    <sentence>Among the possible options above mentioned, we have chosen a well-known and implemented argumentation system called DeLP (Defeasible Logic Programming).</sentence>
+    <sentence>The representation language of DeLP (García &amp; Simari, 2004) is an extension of the language of Logic Programming.</sentence>
+    <sentence>The system defines arguments, the notion of conflict and defeat between arguments (attack in the terminology of abstract argumentation frameworks), and uses a dialectical proof procedure to obtain the warranted arguments.</sentence>
+    <sentence>DeLP is fully implemented and available online (DeLP-home-page, 2007).</sentence>
+    <sentence>Although this decision is based on the possibility of experimenting directly with the implementation to refine our research, it is possible to apply similar constructions to any of the remaining systems mentioned before (Besnard &amp; Hunter, 2001; Bondarenko et al., 1997; Prakken, 2010).</sentence>
+    <sentence>In the last years DeLP has been used for knowledge representation and reasoning in different domains.</sentence>
+    <sentence>For instance, in Black and Hunter (2009)DeLP was adapted and used for a Generative Inquiry Dialogue System; in Chesñevar, Maguitman, and Simari (2006) an argumentation recommender system based on DeLP was introduced; in Ferretti, Errecalde, García, and Simari (2007) an application of Defeasible Logic Programming to Decision Making in a robotic environment was proposed; in Gómez, Chesñevar, and Simari (2008)DeLP was used for the specification of scripts for reasoning about form fields; and in Thimm and Kern-Isberner (2008) a distributed argumentation framework using Defeasible Logic Programming was defined.</sentence>
+    <sentence>DeLP has the declarative capability of representing weak information in the form of defeasible rules, and provides a defeasible argumentation inference mechanism for warranting the entailed conclusions.</sentence>
+    <sentence>A defeasible rule (α ≺ β) is used to represent tentative information that may be used if nothing can be posed against it (the rule can be read as “reasons to believe in β provide reasons to believe in α”).</sentence>
+    <sentence>Below we will provide the essential elements of Defeasible Logic Programming as support for the rest of the presentation; the terminology involved is an extension of the used in Logic Programming.</sentence>
+    <sentence>The reader is directed to García and Simari (2004) where full details can be found.</sentence>
+    <sentence>A DeLP-program P is a set of facts, strict rules, and defeasible rules defined as follows.</sentence>
+    <sentence>Facts are ground literals representing atomic information or the negation of atomic information using strong negation “∼”, e.g., chicken(little) or ∼scared(little).</sentence>
+    <sentence>Strict Rules, denoted L0 ← L1, … , Ln, where L0 is a ground literal and {Li}i&gt;0 is a set of ground literals represent non-defeasible information, e.g., bird ← chicken or ∼innocent ← guilty.</sentence>
+    <sentence>Defeasible Rules, denoted L0 ≺ L1, … , Ln, where L0 is a ground literal and {Li}i&gt;0 is a set of ground literals represent tentative information, e.g., ∼flies ≺ chicken or flies ≺ chicken,scared.</sentence>
+    <sentence>When required, a DeLP-program will be denoted (Π, Δ) distinguishing the subset Π of facts and strict rules, and the subset Δ of defeasible rules (see Example 4.1).</sentence>
+    <sentence>Strong negation is allowed in the head of rules, and hence may be used to represent contradictory knowledge.</sentence>
+    <sentence>Given a program (Π, Δ), contradictory literals could be derived.</sentence>
+    <sentence>Nevertheless, the set Π (which is used to represent non-defeasible information) must possess certain internal coherence, and therefore no pair of contradictory literals can be derived from Π.</sentence>
+    <sentence>Example 4.1 Consider the DeLP-program (Π4.1, Δ4.1) that represents the scenario introduced in Example 3.1.</sentence>
+    <sentence>In this program, go, show_tonight, birthday, baby, and friends stand for ‘go to the opera show’, ‘there is an opera show tonight’, ‘today is Bob’s birthday’, ‘a friend is coming with her baby’, and ‘get together with friends’, respectively.</sentence>
+    <sentence>Π4.1={show_tonight,birthday,baby},Δ4.1=go≺showTonightgo≺showTonight,friendsfriends≺birthday∼go≺showTonight,friends,baby∼go≺friends.</sentence>
+    <sentence>The program (Π4.1, Δ4.1) has five defeasible rules representing tentative information, and three facts representing that there is an opera show tonight, today is Bob’s birthday, and a friend is coming with her baby.</sentence>
+    <sentence>The first defeasible rule states that if there is an opera show tonight then there is a good reason to go to the opera house.</sentence>
+    <sentence>The second defeasible rule represents that on his birthday Bob usually gets together with friends.</sentence>
+    <sentence>The third one states that, if friends are coming, then Bob would probably stay at home.</sentence>
+    <sentence>However, the fourth rule establishes that the fact that there is an opera show tonight and being in the company of friends provide good reasons to go to the opera.</sentence>
+    <sentence>The last rule states that the situation changes if a friend brings a baby.</sentence>
+    <sentence>In the previous section, arguments were considered as abstract entities; however, in DeLP, arguments are obtained from a particular program, they have a concrete structure, and they must satisfy certain formal restrictions.</sentence>
+    <sentence>Next, we introduce the definition of argument and then, in Example 4.2, different arguments that can be obtained from the program (Π4.1, Δ4.1) are shown.</sentence>
+    <sentence>Definition 4.1 Argument structure Let (Π, Δ) be a DeLP-program, 〈A,L〉 is an argument structure, or simply an argument, for a literal L obtained from (Π, Δ) if A is set of defeasible rules (A⊆Δ) such that: (1) there exists a derivation for L from Π∪A; (2) the set Π∪A is non-contradictory (i.e., no pair of contradictory literals can be derived); and (3) There is no A′⊊A that satisfies (1) and (2) (i.e., A is a minimal subset satisfying (1) and (2)).</sentence>
+    <sentence>As shown in Example 4.2, in DeLP it is possible to build arguments for contradictory literals, e.g., from (Π4.1, Δ4.1) there are arguments for go and ∼go.</sentence>
+    <sentence>Example 4.2 From the DeLP-program (Π4.1,Δ4.1) introduced in Example 4.1 the following arguments can be obtained: 〈O1,go〉=〈{go≺showTonight},go〉 〈O2,∼go〉=〈{(∼go≺friends),(friends≺birthday)},∼go〉 〈O3,go〉=〈{(go≺showTonight,friends),(friends≺birthday)},go〉 〈O4,∼go〉=〈{(∼go≺showTonight,friends,baby),(friends≺birthday)},∼go〉 In DeLP an argument 〈D,M〉attacks〈A,L〉 if 〈D,M〉 is a proper or blocking defeater for 〈A,L〉.</sentence>
+    <sentence>A defeater for 〈A,L〉 is an argument 〈D,M〉 such that 〈A,L〉 is not preferred over 〈D,M〉, and L and M are in conconflict, i.e., a pair of contradictory literals can be derived from Π ∪ {L, M}.</sentence>
+    <sentence>A defeater can be proper (〈D,M〉 is preferred over 〈A,L〉) or blocking (neither is preferred over the other).</sentence>
+    <sentence>It is important to note that in DeLP the argument comparison criterion is modular, and it is possible to select the most appropriate criterion for the domain in question.</sentence>
+    <sentence>By default the system provides a syntactic criterion which extends classic specificity and in the examples below we will use it.</sentence>
+    <sentence>The criterion, called generalized specificity (Stolzenburg, García, Chesñevar, &amp; Simari, 2003), favors two aspects in an argument: it prefers (1) a more precise argument (i.e., with greater informational content), and (2) a more concise argument (i.e., with less use of rules).</sentence>
+    <sentence>Using this criterion, in Example 4.2, argument 〈O3,go〉 is preferred over 〈O2,∼go〉 (more precise), 〈O4,∼go〉 is preferred over 〈O3,go〉 and 〈O4,∼go〉 is preferred over 〈O1,go〉.</sentence>
+    <sentence>Note that 〈O2,∼go〉 is not preferred over 〈O1,go〉 and vice versa.</sentence>
+    <sentence>Therefore, 〈O2,∼go〉 is a blocking defeater for 〈O1,go〉 (and vice versa), 〈O3,go〉 is a proper defeater for 〈O2,∼go〉, and 〈O4,go〉 is a proper defeater for 〈O3,∼go〉 and also for 〈O3,∼go〉.</sentence>
+    <sentence>In DeLP an argumentation line will be considered acceptable when the line satisfies Cco (commitment, see Example 2.3), Cnc (non-circularity, see Example 2.2), and a third constraint Cbb that we will introduce next.</sentence>
+    <sentence>Consider the argumentation line λ=[A1,A2,…,An].</sentence>
+    <sentence>We define Cbb(λ) = False if there are three consecutive arguments in the line such that Ak is a blocking defeater for Ak-1, and Ak+1 is a blocking defeater for Ak (2⩽k⩽n-1).</sentence>
+    <sentence>Otherwise, Cbb(λ) = True.</sentence>
+    <sentence>Example 4.3 Consider the arguments described in Example 4.2.</sentence>
+    <sentence>The argumentation lines [〈O1,go〉,〈O4,∼go〉] and [〈O1,go〉,〈O2,∼go〉,〈O3,go〉] are acceptable argumentation lines in DeLP, whereas [〈O1,go〉,〈O2,∼go〉,〈O1,go〉] is not.</sentence>
+    <sentence>DeLP’s marked (or labeled) dialectical trees will be depicted as a tree where the nodes represent the arguments as triangles with their associated labels (“U” or “D”), and the edges connecting them denote the defeat relation (see Fig 7).</sentence>
+    <sentence>A bidirectional arrow edge represents a blocking defeat, whereas a unidirectional arrow represents a proper defeat.</sentence>
+    <sentence>An argument 〈A,L〉 will be pictorially depicted as a triangle, where its upper vertex points to the conclusion L, and the name of the set of defeasible rules A is associated with the triangle itself.</sentence>
+    <sentence>At the right of each node the associated mark representing its status (“U” or “D”) will be shown.</sentence>
+    <sentence>For instance, Fig 7 shows four marked dialectical trees obtained from the DeLP-program (Π4.1, Δ4.1) and associated with the query go.</sentence>
+    <sentence>Two of them (T〈O1,go〉∗ and T〈O3,go〉∗) have their roots marked as “D”, whereas the other two (T〈O2,∼go〉∗ and T〈O4,∼go〉∗) have their roots marked as “U”.</sentence>
+    <sentence>Hence, the literal ‘∼go’ is warranted.</sentence>
+    <sentence>Dialectical trees of Example 4 Fig 7.</sentence>
+    <sentence>Dialectical trees of Example 4.1.</sentence>
+    <sentence>We will turn now to the consideration of explanations and answers for ground queries in DeLP (called DeLP-queries).</sentence>
+    <sentence>Later, in Section 4.2, we will generalize explanations and answers for schematic queries.</sentence>
+    <sentence>Queries, answers, and δ-explanations in DeLP As introduced above, a DeLP-query is a ground literal that DeLP will try to warrant.</sentence>
+    <sentence>The dialectical process for warranting a DeLP-query involves the construction and evaluation of several arguments that either support or interfere with the query under analysis.</sentence>
+    <sentence>These generated arguments are connected through the defeat relation and are organized in dialectical trees.</sentence>
+    <sentence>Observe that, given a DeLP-query Q, there could exist different arguments that support Q, and each argument will generate a different dialectical tree.</sentence>
+    <sentence>As we will show below, the returned answer for Q will only be, metaphorically speaking, ‘the tip of the iceberg’ of a set of several dialectical trees that have been explored to support the resulting answer.</sentence>
+    <sentence>To understand why a DeLP-query receives a particular answer, it is essential to consider the arguments that have been generated and the existing connections among them.</sentence>
+    <sentence>Therefore, an explanation for a DeLP-query Q will consist of a structure that includes those marked dialectical trees that are considered for establishing the warrant status of Q, that is, not only the marked dialectical trees for arguments that support Q but also marked dialectical trees for arguments that support Q¯.</sentence>
+    <sentence>In DeLP, Q¯ means the complement of Q with respect to strong negation “∼” (i.e., a¯=∼a and ∼a¯=a).</sentence>
+    <sentence>Based on the formalism presented in the previous section, below we will introduce DeLP’s corresponding notions of dialectical tree sets and DeLP-δ-explanations as particular cases of Definitions 3.1 and 3.2 respectively.</sentence>
+    <sentence>Definition 4.2 DeLP dialectical tree sets Let P be a DeLP-program and Q a DeLP-query.</sentence>
+    <sentence>Let T∗(Q)={〈A0,Q〉,…,〈An,Q〉} be the set of all arguments for Q from P, and T∗(Q¯)={〈B0,Q¯〉,…,〈Bm,Q¯〉} the set of all arguments for Q¯ from P. The sets TU∗(Q)⊆T∗(Q), and TD∗(Q)⊆T∗(Q)∪T∗(Q¯) are defined as follows: TU∗(Q)={T∗∈T∗(Q)|Mark(T∗)=U}, TD∗(Q)={T∗∈(T∗(Q)∪T∗(Q¯))|Mark(T∗)=D}.</sentence>
+    <sentence>In DeLP, given an argument A there is a unique associated dialectical tree, therefore, a similar result to Proposition 3.2 holds: given a DeLPP and a query Q, the sets TU∗(Q), TU∗(Q¯), and TD∗(Q) are disjoint.</sentence>
+    <sentence>Thus, it also holds that TD∗(Q)=(T∗(Q)∪T∗(Q¯))⧹(TU∗(Q)∪TU∗(Q¯)).</sentence>
+    <sentence>Definition 4.3 DeLP-δ-explanation Let P be a DeLP-program and Q a DeLP-query.</sentence>
+    <sentence>A DeLP-δ-explanation for Q from P is the tuple EP(Q)=(TU∗(Q),TU∗(Q¯),TD∗(Q)).</sentence>
+    <sentence>That is, a DeLP-δ-explanation EP(Q) for a claim Q from a DeLP-program P is a triplet where the first component is a (possibly empty) set of marked dialectical trees from P that provide a warrant for Q.</sentence>
+    <sentence>The second component of EP(Q) is a (possibly empty) set of marked dialectical trees that provide a warrant for Q¯, whereas the third component (TD∗(Q)) is a (possibly empty) set that contains the marked dialectical trees for Q or for Q¯ that provide no warrant, i.e., their roots are marked D (defeated).</sentence>
+    <sentence>Example 4.4 Consider the DeLP-program P4.1 of Example 4.1.</sentence>
+    <sentence>The DeLP-queries ‘go’ and ‘∼go’ have the following DeLP-δ-explanations: EP4.1(go)=(∅,{T〈O4,∼go〉∗},{T〈O1,go〉∗,T〈O2,∼go〉∗,T〈O3,go〉∗}); EP4.1(∼go)=({T〈O4,∼go〉∗},∅,{T〈O1,go〉∗,T〈O2,∼go〉∗,T〈O3,go〉∗}).</sentence>
+    <sentence>Fig 7 shows all the marked trees included in these explanations.</sentence>
+    <sentence>Observe that the δ-explanation EP4.1(sleep)=(∅,∅,∅).</sentence>
+    <sentence>Propositions 3.3 and 3.4 also hold for DeLP-δ-explanations, that is, given a DeLP-program P and a DeLP-query Q: • EP(Q)=(X,Y,Z) iff EP(Q¯)=(Y,X,Z), and • EP(Q)=(∅,∅,∅) iff there are no arguments for Q nor Q¯.</sentence>
+    <sentence>The corresponding proofs for DeLP are straightforward from Definitions 4.2 and 4.3, following analogous steps as the ones used for Propositions 3.3 and 3.4.</sentence>
+    <sentence>Recall that a δ-explanation is coherent if TU∗(Q)≠∅ implies TU∗(Q¯)=∅ (Definition 3.5).</sentence>
+    <sentence>That is, given a query Q that is warranted, there cannot be warranted arguments that support Q¯.</sentence>
+    <sentence>The following proposition shows that DeLP-δ-explanations have the same property.</sentence>
+    <sentence>Proposition 4.1 DeLP-δ-explanations are coherent.</sentence>
+    <sentence>Proof Given a DeLP-program P, there cannot be warrants for a query Q and for Q¯.</sentence>
+    <sentence>Hence, according to Definition 3.3DeLP is coherent.</sentence>
+    <sentence>Therefore, by Theorem 3.1DeLP-δ-explanations are coherent.</sentence>
+    <sentence>□ Since DeLP-δ-explanations are coherent, the answers for DeLP-queries can be defined in a similar way as T-answers.</sentence>
+    <sentence>In DeLP, the answer to a query Q is yes when Q is warranted, no when Q¯ is warranted, undecided if neither Q nor Q¯ is warranted, and unknown when there is no argument for Q.</sentence>
+    <sentence>Next, we will define DeLP-answers for DeLP-queries in terms of a DeLP-δ-explanation.</sentence>
+    <sentence>Definition 4.4 DeLP-answer Let P be a DeLP-program and Q a DeLP-query.</sentence>
+    <sentence>Let EP(Q)=TU∗(Q),TU∗(Q¯),TD∗(Q) be a DeLP-δ-explanation for Q.</sentence>
+    <sentence>The DeLP-answer for Q is: – yes, if TU∗(Q)≠∅.</sentence>
+    <sentence>– no, if TU∗(Q¯)≠∅.</sentence>
+    <sentence>– undecided, if TD∗(Q)≠∅, TU∗(Q)=∅ and TU∗(Q¯)=∅.</sentence>
+    <sentence>– unknown, if EP(Q)=(∅,∅,∅).</sentence>
+    <sentence>In DeLP strict and defeasible rules are ground.</sentence>
+    <sentence>However, following the usual convention introduced in Lifschitz (1996), we will use “schematic rules” with variables.</sentence>
+    <sentence>Each schematic rule represents several ground rules where variables are replaced (instantiated) by ground elements.</sentence>
+    <sentence>To distinguish variables, as usual, an initial uppercase letter is used.</sentence>
+    <sentence>Example 4.5 Consider the DeLP-program (Π4.5, Δ4.5) where ‘flies’ is abbreviated as ‘f’: Π4.5=bird(X)←chicken(X)chicken(little)chicken(tina)scared(tina)bird(rob),Δ4.5=f(X)≺bird(X)f(X)≺chicken(X),scared(X)∼f(X)≺chicken(X).</sentence>
+    <sentence>As mentioned before, a DeLP-query is a ground literal and arguments are built using ground rules.</sentence>
+    <sentence>From the program (Π4.5, Δ4.5) the following three arguments can be obtained (where ground instances of schematic rules were used): 〈A1,f(tina)〉=〈{f((tina))≺bird(tina)},f((tina))〉, 〈A2,∼f(tina)〉=〈{∼f(tina)≺chicken(tina)},∼f(tina)〉, and 〈A3,f(tina)〉=〈{f(tina)≺chicken(tina),scared(tina)},f(tina)〉.</sentence>
+    <sentence>Here, 〈A2,∼f(tina)〉 defeats 〈A1,f(tina)〉 and 〈A3,f(tina)〉 defeats 〈A2,∼f(tina)〉.</sentence>
+    <sentence>Observe that the DeLP-δ-explanation for DeLP-query ‘f(tina)’ is ({T〈A1,f(tina)〉∗,T〈A3,f(tina)〉∗},∅{T〈A2,∼f(tina)〉∗}), and therefore, the answer for this query is yes (Fig 8 shows the marked dialectical trees).</sentence>
+    <sentence>Note that the DeLP-δ-explanation for ‘∼f(tina)’ is (∅,{T〈A1,f(tina)〉∗,T〈A3,f(tina)〉∗},{T〈A2,∼f(tina)〉∗}), whose answer is no.</sentence>
+    <sentence>Finally, observe that the answer for ‘walks(tina)’ is unknown, because no argument could be formed for that query.</sentence>
+    <sentence>Dialectical trees of Example 4 Fig 8.</sentence>
+    <sentence>Dialectical trees of Example 4.5.</sentence>
+    <sentence>Note that from the point of view of a knowledge engineer of knowledge programmer, DeLP-δ-explanations give a global idea of the interactions among arguments within the context of a query.</sentence>
+    <sentence>Thus, DeLP-δ-explanation can also be used as a debugging tool while programming: whenever an unexpected answer is obtained, the programmer can resort to these explanations to detect errors in the program.</sentence>
+    <sentence>It might also happen that the answer appear to be correct but the explanation will reveal a mistake in the knowledge representation.</sentence>
+    <sentence>For instance, if in Example 4.5 the rule “f(X) ≺ chicken(X)” is mistakenly used instead of “∼f(X) ≺ chicken(X)’, there will be no argument either for ∼f(little) or ∼f(tina).</sentence>
+    <sentence>Similar problems may arise in case a literal is misspelled (e.g., “chickem” or “chickn” instead of “chicken”).</sentence>
+    <sentence>In these situations, explanations can help the debugging task by showing that some expected arguments are missing or that some unexpected arguments arise.</sentence>
+    <sentence>In the first part of this section we have considered DeLP-δ-explanations for ground queries (e.g., go, ∼f(tina) or bird(little)); nevertheless, sometimes is useful to have a more general type of query.</sentence>
+    <sentence>With that in mind, we will introduce schematic queries that allow variables and represent a set of individual queries.</sentence>
+    <sentence>For instance, in Example 4.5, instead of submitting several ground queries (f(tina), f(little), f(rob), etc.</sentence>
+    <sentence>), to know “if it is warranted that some individual flies”, a single schematic query can be used.</sentence>
+    <sentence>Below, we will extend the notions of DeLP-δ-explanations and DeLP-answers for this new type of query.</sentence>
+    <sentence>Schematic queries and generalized DeLP-δ-explanations A schematic query is a literal that has at least one variable; it represents the set of DeLP-queries that unify (in the Logic Programming sense (Lloyd, 1987)) with it and only have constants from the program signature.</sentence>
+    <sentence>For instance, in the DeLP-program of Example 4.5, the schematic query f(X) will refer to f(tina), f(rob), and f(little).</sentence>
+    <sentence>To accommodate this possibility, we will extend the definition of DeLP-δ-explanations to include schematic queries.</sentence>
+    <sentence>Observe that the schematic query f(X) actually has infinite terms that unify with the variable X; however, all queries with terms that are not in the program signature (e.g., f(mac) in Example 4.5) will produce an unknown answer and therefore an empty explanation.</sentence>
+    <sentence>Thus, the set of instances of a schematic query that will be considered for generating a generalized DeLP-δ-explanation will refer only to those instances of DeLP-queries that contain constants from the program signature.</sentence>
+    <sentence>Schematic queries give us the possibility of asking more general questions than ground queries do.</sentence>
+    <sentence>Now, we are not asking whether a certain piece of knowledge can be believed, but we are asking if there exists an instance of that piece of knowledge (related to an individual) that can be warranted in the system.</sentence>
+    <sentence>This could lead to a more complex form of reasoning as we may pose a query, gather the warranted instances, and continue the reasoning process with the individuals involved in these warrants.</sentence>
+    <sentence>Thus, an explanation for a schematic query will contain the explanations for the elements of the set of individual DeLP-queries that it represents.</sentence>
+    <sentence>Definition 4.5 Generalized DeLP-δ-explanation Let P be a DeLP-program and Q a schematic query.</sentence>
+    <sentence>Let {Q1, … , Qn} be all the ground instances of Q with respect to the signature of P. Let EP(Qi) be the DeLP-δ-explanation for Qi (1 ⩽ i ⩽ n) from program P. Then, the generalizedDeLP-δ-explanation for Q in P is GEP(Q)={EP(Q1),…,EP(Qn)}.</sentence>
+    <sentence>Observe that a DeLP-δ-explanation (Definition 4.3) is a particular case of a generalized DeLP-δ-explanation, where the set GEP(Q) is a singleton.</sentence>
+    <sentence>Consider for instance the DeLP-program (Π4.5, Δ4.5) and suppose that we want to know whether or not from this program it can be warranted that a certain individual does not fly.</sentence>
+    <sentence>If we make the query for ∼f(X), the answer is yes, because there is a warranted instance: ∼f(little).</sentence>
+    <sentence>The supporting argument is: 〈B1,∼f(little)〉=〈{∼f(little)≺chicken(little)},∼f(little)〉.</sentence>
+    <sentence>Note that the answer for the schematic query f(X) is also yes, but with a different set of warranted instances: f(tina) and f(rob).</sentence>
+    <sentence>The supporting argument for instance ‘X = rob’ is the undefeated argument: 〈C1,f(rob)〉=〈{f(rob)≺bird(rob)},f(rob)〉.</sentence>
+    <sentence>The generalized DeLP-δ-explanation for f(X) from P4.5=(Π4.5,Δ4.5) is: GEP4.5(f(X))={({T〈A1,f(tina)〉∗,T〈A3,f(tina)〉∗},∅,{T〈A2,∼f(tina)〉∗}),(∅,{T〈B2,∼f(little)〉∗},{T〈B1,f(little)〉∗}),({T〈C1,f(rob)〉∗},∅,∅)}.</sentence>
+    <sentence>The dialectical trees of GEP4.5(f(X)) are shown in Fig 9.</sentence>
+    <sentence>Dialectical trees associated with GEP4 Fig 9.</sentence>
+    <sentence>Dialectical trees associated with GEP4.5(f(X)).</sentence>
+    <sentence>Consider a schematic query Q(X) and a DeLP-program P. Suppose that Q(X) represents five (ground) DeLP-queries: Q(a), Q(b), Q(c), Q(d), and Q(e).</sentence>
+    <sentence>As the reader may have noticed from the example above, it may happen that from P the answer for Q(a) is yes, the answer for Q(b) is no, the answer for Q(c) is yes, the answer for Q(b) is undecided, and the answer for Q(a) is no.</sentence>
+    <sentence>Next, we define the answer for a schematic query taking into consideration the individual answers for each ground instance.</sentence>
+    <sentence>Definition 4.6 DeLP-answer for a schematic query Let Q be a schematic query and P be a DeLP-program.</sentence>
+    <sentence>Let {Q1, … , Qn} be all the ground instances of Q w.r.t.</sentence>
+    <sentence>the signature of P. The answer for the schematic query Q is: • yes, if there exists an instance Qi ∈ {Q1, … , Qn} such that the answer for the DeLP-query Qi is yes (i.e., TU∗(Qi)≠∅).</sentence>
+    <sentence>• no, if for every instance Qi ∈ {Q1, … , Qn}, the answer for Qi is no, (i.e., TU∗(Qi¯)≠∅ for all Qi).</sentence>
+    <sentence>• undecided, if there is no instance Qi ∈ {Q1, … , Qn} such that the answer for the DeLP-query Qi is yes, and there exists an instance Qk ∈ {Q1, … , Qn} such that the answer for Qk is undecided.</sentence>
+    <sentence>• unknown, if {Q1, … , Qn} = ∅ Consider, for example, that for a given program P the following answers are obtained for these ground literals: p(a) yes, p(b) no, p(c) undecided, t(a) no, t(b) no, and t(c) undecided.</sentence>
+    <sentence>Therefore, the answer for p(X) is yes, and the answer for t(X) is undecided.</sentence>
+    <sentence>Example 4.6 Consider the DeLP-program P4.6=(Π4.6,Δ4.6) Π4.6=adult(peter)adult(annie)unemployed(peter)student(annie),Δ4.6=car(X)≺adult(X)∼car(X)≺unemployed(X)∼car(X)≺student(X).</sentence>
+    <sentence>From (Π4.6,Δ4.6) the following arguments can be built: 〈N1,car(annie)〉=〈{car(annie)≺adult(annie)},car(annie)〉,〈N2,∼car(annie)〉=〈{∼car(annie)≺student(annie)},∼car(annie)〉,〈P1,car(peter)〉=〈{car(peter)≺adult(peter)},car(peter)〉,and〈P2,∼car(peter)〉=〈{∼car(peter)≺unemployed(peter)},∼car(peter)〉.</sentence>
+    <sentence>Using the adopted comparison criterion, 〈N1,car(annie)〉 and 〈N2,∼car(annie)〉 are blocking defeaters of each other and the same situation occurs for 〈P1,car(peter)〉 and 〈P2,∼car(peter)〉.</sentence>
+    <sentence>The generalized DeLP-δ-explanation for ‘car(X)’ is: GEP4.6(car(X))={(∅,∅,{T〈N1,car(annie)〉∗,T〈N2,∼car(annie)〉∗}),(∅,∅,{T〈P1,car(peter)〉∗,T〈P2,∼car(peter)〉∗})}.</sentence>
+    <sentence>Fig 10 shows the mentioned dialectical trees.</sentence>
+    <sentence>The explanation shows that neither ‘car(annie)’ nor ‘∼car(annie)’ are warranted, and the same holds for ‘car(peter)’ and ‘∼car(peter)’.</sentence>
+    <sentence>Therefore, there are no warranted arguments and the DeLP-answer for the schematic query car(X) is undecided.</sentence>
+    <sentence>Dialectical trees of GEP4 Fig 10.</sentence>
+    <sentence>Dialectical trees of GEP4.6(car(X)).</sentence>
+    <sentence>Implementation details A prototype implementation of generalized DeLP-δ-explanation has been developed, integrated with two different implementations of DeLP.</sentence>
+    <sentence>One of these implementations is available online (DeLP-home-page, 2007).</sentence>
+    <sentence>There, DeLP-δ-explanations are generated and written into an XML file.</sentence>
+    <sentence>It is clear that the translation from δ-explanation to XML is rather trivial and therefore, it is not included here.</sentence>
+    <sentence>DeLP-δ-explanations were also used in the implementation of a DeLP-server (García, Rotstein, Tucat, &amp; Simari, 2007).</sentence>
+    <sentence>A DeLP-server is a reasoning service that can be consulted simultaneously by several agents from different remote hosts.</sentence>
+    <sentence>The server receives queries and, along with the answers it returns a DeLP-δ-explanation in XML format.</sentence>
+    <sentence>Therefore, software agents may parse DeLP-δ-explanations in order to use this information for their own purposes (e.g., show the explanation to a user, inspect which knowledge was used for obtaining the answer, etc.).</sentence>
+    <sentence>Thus, DeLP-δ-explanations are represented in such a way that they are useful to both humans and software agents.</sentence>
+  </section>
+  <section name="Conclusions and related work">
+    <sentence>Recommender systems (Ricci et al., 2011) represent an interesting field where the need for improved explanation facilities has been recognized.</sentence>
+    <sentence>In Friedrich and Zanker (2011) explanations in recommender systems are characterized by two properties.</sentence>
+    <sentence>First, an explanation should give information about the recommendation.</sentence>
+    <sentence>Second, they should be aligned with the design objectives of the system; these objectives are analyzed in Tintarev and Masthoff (2011).</sentence>
+    <sentence>An important goal, already highlighted here, is reassuring the user about the recommendation by providing information about the rationale behind it; this information should be given in such a way that the user can validate the mechanism that produced the recommendation.</sentence>
+    <sentence>In the work presented here, we have addressed the problem of providing explanation capabilities to argumentation systems.</sentence>
+    <sentence>As stated in the introduction, this is an important and yet undeveloped field in the area of argumentation in Computer Science.</sentence>
+    <sentence>Our focus was put on argumentation systems based on a dialectical proof procedure, and we have defined dialectical explanations for both, abstract argumentation frameworks and a Logic Programming based argumentation system that is implemented.</sentence>
+    <sentence>One of the contributions of this paper is to introduce a formalization of δ-explanations for abstract argumentation frameworks with dialectical constraints; for this formalization, different properties were proposed and analyzed.</sentence>
+    <sentence>We have shown that in abstract argumentation, δ-explanations are a useful tool to comprehend and analyze the interactions among arguments that are under consideration.</sentence>
+    <sentence>As another contribution, the proposed explanation formalism was applied for providing explanation capabilities to Defeasible Logic Programming (DeLP).</sentence>
+    <sentence>Hence, the answer for a query can be explained in terms of the interactions of all the arguments that DeLP considered to give that answer.</sentence>
+    <sentence>From the user point of view, the answer for a query is explained presenting the whole set of dialectical trees related to the query, and from a DeLP programmer point of view, explanations give a global idea of the interactions among arguments within the context of a query.</sentence>
+    <sentence>Using these characteristics, DeLP-δ-explanation can be also used as a debugging tool while programming: whenever unexpected behavior arises, the programmer can use this type of explanations to detect errors in the program.</sentence>
+    <sentence>An empirical analysis about the impact of different types of explanations in the context of expert systems is given in Ye and Johnson (1995).</sentence>
+    <sentence>The typology there described includes: (1) trace: a record of the inferential steps that led to the conclusion; (2) justification: an explicit description of the rationale behind each inferential step; (3) strategy: a high-level goal structure determining the problem-solving strategy used.</sentence>
+    <sentence>From this typology, the authors claim that – through their empirical analysis – the most useful type of explanation is “justification”.</sentence>
+    <sentence>We contend that the type of explanations we propose correspond to both the “justification” and the “strategy” types; that is, we are giving not only the strategy used by the system to achieve the conclusion, but also the rationale behind each argument, which is clearly stated by its role in the dialectical tree.</sentence>
+    <sentence>A thorough survey relating explanation and argumentation capabilities can be found in Moulin et al.</sentence>
+    <sentence>(2002).</sentence>
+    <sentence>The authors are mainly concerned about negotiation/persuasion, and interactive/collaborative explanations and they discuss interesting issues about the integration of explanation and argumentation; for instance, whether the same knowledge base can be used to generate both explanatory and argumentative information.</sentence>
+    <sentence>As it was shown, in our proposed approach, we extract all the information from the given knowledge base (e.g., the DeLP-program) to return both kinds of information.</sentence>
+    <sentence>We also agree with (Moulin et al., 2002), in that “argumentation and explanation facilities in knowledge-base systems should be investigated in conjunction”.</sentence>
+    <sentence>Therefore, we propose a type of explanation that attempts to fill the gap in the area of explanations in argument systems.</sentence>
+    <sentence>As it was shown in the examples given in our proposal, our approach provides a higher-level explanation in a way that the whole context of a query can be revealed.</sentence>
+    <sentence>Our approach handles δ-explanations within argumentation systems through a graphical representation of dialectical trees.</sentence>
+    <sentence>Visualization in argumentation has been addressed by Schroeder (2000).</sentence>
+    <sentence>In that paper, the objective is to provide a visual tool that does not require the reader to understand logic to be able to follow the argumentative process shown by the system.</sentence>
+    <sentence>To achieve this, they use an animated argumentation space: arguments are introduced one by one in the process to allow for a more comprehensive visualization.</sentence>
+    <sentence>They also allow to see this space in a static manner.</sentence>
+    <sentence>Both ways give the user the possibility to navigate the space at will, or in auto-pilot mode.</sentence>
+    <sentence>Every element taking part of the argumentation process is represented graphically: conflicts are highlighted and arguments are tagged with the role they are playing in the whole process.</sentence>
+    <sentence>Schroeder (2000) uses argumentation trees in a similar way as we do, although we focus on their applicability to model explanations (that is, we are concerned with providing the whole context corresponding to the query).</sentence>
+    <sentence>As stated in Section 4.3, a δ-explanation can be represented in XML, therefore explanations can be represented in such a way that they can be used by both humans and software agents.</sentence>
+    <sentence>Since the translation from a δ-explanation to XML is rather trivial we have not included it in the paper.</sentence>
+    <sentence>Appendix A.</sentence>
+    <sentence>Proofs This appendix includes proofs and auxiliary definitions that are used in the proofs.</sentence>
+    <sentence>Remark 2.1.</sentence>
+    <sentence>Observe that given a theory T, if an argumentation line λ satisfies Cnc then any subsequence of λ also satisfies Cnc.</sentence>
+    <sentence>The same holds for Cco.</sentence>
+    <sentence>(a) Consider first Cnc.</sentence>
+    <sentence>Let λa=[A1,A2,…,An] be an argumentation line such that Cnc(λa) = True.</sentence>
+    <sentence>Suppose that a subsequence of λa,λu=[Ai,Ai+1,…,Ai+k] (0⩽i⩽n-k) is such that Cnc(λu) = False.</sentence>
+    <sentence>Hence, there must be an argument Ap (i⩽p⩽i+k) such that Ap∈⌊λu⌋p-i.</sentence>
+    <sentence>Then, since λu is a subsequence of λa, it holds that Ap∈⌊λa⌋p-1, and thus, since Ap also belongs to λa then Cnc(λa) = False, which contradicts our initial hypothesis.</sentence>
+    <sentence>(b) Consider now Cco.</sentence>
+    <sentence>Let λb=[A1,A2, …, An] be an argumentation line such Cco(λb) = True.</sentence>
+    <sentence>Suppose that a subsequence of λb, λu=[Ai,Ai+1,…Ai+k] (0 ⩽ i ⩽ n − k) is such that Cco(λu) = False.</sentence>
+    <sentence>Hence, there must be a pair of arguments Ap and Aq(i⩽p,q⩽i+k) such that {Ap,Aq}⊆λuS or {Ap,Aq}⊆λuI, and (Ap,Aq)∈R.</sentence>
+    <sentence>Then, Ap and Aq both belong to λbS or they both belong to λbI, and therefore, Cnc(λb) = False, contradicting our initial hypothesis.</sentence>
+    <sentence>A.1.</sentence>
+    <sentence>Auxiliary terminology and properties used for the proof of Proposition 2.1 Let λ=[A1,A2,…,An] be an argumentation line.</sentence>
+    <sentence>We will write ∣λ∣ = n to denote that λ has n arguments and that the length of λ is n. Then λ′=[A1,A2,…,Ak] will be called an initial argumentation segment in λ of length k, k ⩽ n, denoted ⌊λ⌋k.</sentence>
+    <sentence>When k &lt; n we will say that λ′ is a proper initial argumentation segment in λ.</sentence>
+    <sentence>We will use the term initial segment to refer to initial argumentation segments when no confusion arises.</sentence>
+    <sentence>Given an argumentation line [A1,A2,…,An], every subsequence [Ai,Ai+1,…,Ai+k] (1⩽i⩽n-k) is also an argumentation line.</sentence>
+    <sentence>In particular, every initial argumentation segment is also an argumentation line.</sentence>
+    <sentence>Let λ and λ′ be two argumentation lines in T. We will say that λ′ extends λ in T iff λ = ⌊λ′⌋k, for some k &lt; ∣λ′∣, that is, λ′ extends λ iff λ is a proper initial argumentation segment of λ′.</sentence>
+    <sentence>Definition 5.1 Bundle set Let T be an argumentation theory and A an argument in T. A set SA={λ1,λ2,…,λn} of argumentation lines rooted in A, that are all acceptable with respect to T, is called a bundle set for A in T if and only if there is no pair λi,λj∈SA such that λi extends λj.</sentence>
+    <sentence>If every argumentation line in SA is exhaustive, then SA is called an exhaustive bundle set for A in T. Next, we will define mappings which allow to re-formulate a bundle set SA as a dialectical tree TA and vice versa.</sentence>
+    <sentence>Definition 5.2 Mapping T Let T be an argumentative theory, and let SA be a bundle set of argumentation lines rooted in an argument A of T. We define the mapping T:℘(LinesA)⧹{∅}→TreeA¯ as T(SA)=defTA¯, where LinesA is the set of all argumentation lines rooted in A, TreeA¯ is the quotient set of TreeA by ≡τ, and TA¯ denotes the equivalence class of TA.</sentence>
+    <sentence>Proposition 5.1 For any argumentAin an argumentative theory T, the mappingTis a bijection.</sentence>
+    <sentence>Proof The mapping is well-defined.</sentence>
+    <sentence>If T(SA)=TA≠TA′=T(SA′) then there must differ in at least one branch.</sentence>
+    <sentence>That implies that there is at least one of the acceptable argumentation lines in SA that it is different from one of the acceptable argumentation lines in SA′.</sentence>
+    <sentence>Thus, SA≠SA′.</sentence>
+    <sentence>The mapping is surjective.</sentence>
+    <sentence>Clearly, given a TA the set of all paths from its leaves to the root is a set S of argument lines that satisfies Definiton 2.7.</sentence>
+    <sentence>The mapping is injective.</sentence>
+    <sentence>Let us assume that T(SA)=TSA′ but SA≠SA′.</sentence>
+    <sentence>Then there is at least one argumentation line that belongs to SA that does not belong to SA′ (or the other way around).</sentence>
+    <sentence>That argumentation line will produce a branch in the T(SA) that will not appear in TSA′.</sentence>
+    <sentence>Therefore, the assumption cannot hold and SA=SA′.</sentence>
+    <sentence>□ As the mapping T is a bijection, so that we can define also the inverse mapping S=defT-1 which allow us to determine the acceptable set of argumentation lines corresponding to an arbitrary dialectical tree rooted in an argument A.</sentence>
+    <sentence>In what follows, we will use indistinctly a set notation (an acceptable bundle set of argumentation lines rooted in an argument A) or a tree notation (a dialectical tree rooted in A), as the former mappings S and T allow us to go from any of these notation to the other.</sentence>
+    <sentence>Proposition 2.1 Let T be an argumentation theory; for any argumentAin T there is a unique dialectical treeTAin T (up to an equivalence with respect to ≡τas introduced inDefinition 2.8).</sentence>
+    <sentence>Proof Let us assume that for a given argument A there exist two different exhaustive dialectical trees TA and TA′, i.e., TA≠TA′.</sentence>
+    <sentence>Equivalently, given that S(·) is injective, S(TA)=SA≠STA′=SA′, that is, SA and SA′ are two different sets of exhaustive argumentation lines rooted in A.</sentence>
+    <sentence>Since TA and TA′ are both exhaustive dialectical trees rooted in A, SA and SA′ each must contain all the exhaustive argumentation lines rooted in A (Definition 2.5).</sentence>
+    <sentence>Therefore, SA=SA′ and T(SA)=T(SA′), that is, TA=TA′ contradicting the initial assumption.</sentence>
+    <sentence>Thus, given an argument A in T its exhaustive dialectical tree it is unique.</sentence>
+    <sentence>□ s 1 A similar approach is adopted in Kakas and Toni (1999), where different characterizations of constraints give rise to different Logic Programming semantics.</sentence>
+  </section>
+</article>

@@ -1,0 +1,401 @@
+<article>
+  <title>GMMs similarity measure based on LPP-like projection of the parameter space</title>
+  <abstract>
+    <sentence>The need for a comparison between two Gaussian Mixture Models (GMMs) plays a crucial role in various pattern recognition tasks and is involved as a key components in many expert and artificial intelligence (AI) systems dealing with real-life problems.</sentence>
+    <sentence>As those system often operate on large data-sets and use high dimensional features, it is crucial for their recognition component to be computationally efficient in addition to its good recognition accuracy.</sentence>
+    <sentence>In this work we deliver the novel similarity measure between GMMs, by LPP-like projecting the components of a particular GMM, from the high dimensional original parameter space, to a much lower dimensional space.</sentence>
+    <sentence>Thus, finding the distance between two GMMs in the original space is reduced to finding the distance between sets of lower dimensional Euclidian vectors, pondered by corresponding weights.</sentence>
+    <sentence>By doing so, we manage to obtain much better trade-off between the recognition accuracy and the computational complexity, in comparison to the measures between GMMs utilizing distances between Gaussian components evaluated in the original parameter space.</sentence>
+    <sentence>Thus, the GMM measure that we propose is suitable for applications in AI systems that use GMMs in their recognition tasks and operate on large data sets, as the required number of overall Gaussian components involved in such systems is always large.</sentence>
+    <sentence>We evaluate the proposed GMM measure on artificial, as well as real-world experimental data obtaining a much better trade-off between recognition accuracy and the computational complexity, in comparison to all baseline GMM similarity measures tested.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Gaussian mixture model</keyword>
+    <keyword>Similarity measures</keyword>
+    <keyword>Dimensionality reduction</keyword>
+    <keyword>KL-divergence</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The need for a comparison between two Gaussian Mixture Models (GMMs) plays a crucial role in various pattern recognition tasks such as speaker verification and/or recognition, content based image matching, texture recognition, etc.</sentence>
+    <sentence>Many authors considered the problem of developing the efficient GMM similarity measure to be applied in such a task (Durrieu, Thiran, &amp; Kelly, 2012; Goldberger, Gordon, &amp; Greenspan, 2003; Goldberger &amp; Aronowitz, 2005; Li, Wang, &amp; Zhang, 2013).</sentence>
+    <sentence>The Kullback–Leibler (KL) divergence (Kullback, 1968), as the most natural informational distance between two probability distributions p, q is also the most appropriate to be used as the mentioned similarity measure.</sentence>
+    <sentence>Nevertheless, the fact that the there is no close form solution for the KL divergence between arbitrary GMMs, represent the big problem in applications.</sentence>
+    <sentence>The straight-forward, but unacceptably computationally expensive way to calculate KL-divergence between GMMs is to use Monte-Carlo method (see Durrieu et al., 2012).</sentence>
+    <sentence>The majority of measures reported by the researchers tend to approximate the KL-divergence by various means.</sentence>
+    <sentence>In Goldberger et al.</sentence>
+    <sentence>(2003), approximations of KL-divergence between two GMMs is proposed as an efficient image similarity measure in image retrieval problems.</sentence>
+    <sentence>The same authors in Durrieu et al.</sentence>
+    <sentence>(2012) delivered the lower and upper bounds for approximation of the KL-divergence between GMMs, and experimentally evaluated their results on synthetic data as well as in speaker verification task.</sentence>
+    <sentence>In Goldberger and Aronowitz (2005), the authors delivered accurate and computationally efficient approximation of the KL divergence based on Unscented Transform, with application to the speaker recognition problem.</sentence>
+    <sentence>In Lovric, Min-Oo, and Ruh (2000), considered the space of multivariate Gaussians as a Riemannian manifold and proposed the procedure for embedding it into the Lie group of Symmetric Positive Definite (SPD) matrices.</sentence>
+    <sentence>Recently, in Li et al.</sentence>
+    <sentence>(2013), motivated by the efficient application of vector based Earth-Movers Distance (EMD) metrics (see Rubner, Tomasi, &amp; Guibas, 2000) applied in various recognition tasks (see for example Ling &amp; Okada, 2007) and their extension to GMMs in texture classification task proposed in Wu, Chan, and Wang (2003), Li et al.</sentence>
+    <sentence>proposed the novel sparse EMD methodology for Image Matching which uses GMMs.</sentence>
+    <sentence>They present an unsupervised sparse representation based EMD measure by exploiting the sparse property of the underlying problem, which is more efficient and robust than the conventional EMD measure.</sentence>
+    <sentence>Also, they incorporated into their EMD approach novel ground distances between component Gaussian based on the information geometry introduced in Lovric et al.</sentence>
+    <sentence>(2000).</sentence>
+    <sentence>Moreover, they proposed a supervised sparse EMD counterpart, by developing the procedure to learn the EMD distance metrics (metric learning) between GMMs by using effective supervised pair-wise based method.</sentence>
+    <sentence>They evaluated their methods on synthetic data, as well as real image retrieval and texture recognition tasks, obtaining much higher recognition accuracies in texture recognition task in comparison to some state-of-the-art methods.</sentence>
+    <sentence>On the other hand, one of the central problems in pattern recognition, as well as machine learning as a whole, is to develop appropriate representation for complex data.</sentence>
+    <sentence>Namely, in many applications of machine learning, such as appearance-based object recognition, image retrieval, texture recognition, information retrieval, text categorization, , etc., the data are represented in high-dimensional spaces.</sentence>
+    <sentence>Dimensionality reduction techniques, such as Linear Discriminant Analysis (LDA) (Belhumeur, Hepanha, &amp; Kriegman, 1997), maximum margin criterion (MMC) (Li et al., 2013; Liu, Chen, Tan, &amp; Zhang, 2007), which are supervised, or for example Principal Component Analysis (PCA) (Turk &amp; Pentland, 1991), which is unsupervised, cope with this issue, trying to avoid inherent problems such as “curse of dimensionality”, computational complexity in the recognition phase, and also to increase the discriminativity of transformed features.</sentence>
+    <sentence>Dimensionality reduction is especially involved in problems of representing the data, lying on a low dimensional manifold, embedded in a higher dimensional Euclidian space, so called manifold learning (ML).</sentence>
+    <sentence>Some of the most widely used ML techniques, are Isomap (Tenenbaum, 1998) and Laplacian Eigenmaps (LE) (Belkin &amp; Niyogi, 2001), Local Linear Embedding (LLE) (Roweis &amp; Saul, 2000).</sentence>
+    <sentence>The LE method uses Spectral Graph theory, more exactly the connection between the Laplace Beltrami operator and the graph Laplasian, in order to construct a representation which has locally preserving properties.</sentence>
+    <sentence>Its main drawback is that it is defined only for training data, so it is designed only to be used in various spectral clustering applications.</sentence>
+    <sentence>Nevertheless, approach based on LE, called Locality Preserving Projections (LPP) (see He &amp; Niyogi, 2003) manages to learn linear projective map that best “fits” the manifold, and consequently best preserve the “local property”, i.e., where the local neighborhood information is preserved in the transformed space.</sentence>
+    <sentence>Thus, one obtains that not only the training, but also the unseen data can be transformed into the low dimensional space, making it is applicable in various other pattern recognition and machine learning problems.</sentence>
+    <sentence>In Goh and Vidal (2008), the authors generalized some of the mentioned methods, such as LE and LLE on clustering problems involving arbitrary Riemannian manifold, and gave an example of LE for the Riemannian manifold of Positive definite matrices with the application to image segmentation problem.</sentence>
+    <sentence>In this work, inspired by both groups of papers, we propose a novel similarity measure between arbitrary GMMs.</sentence>
+    <sentence>It is to be applied in AI systems whose pattern recognition component operates on large data-sets and uses high dimensional features.</sentence>
+    <sentence>In such systems, the trade of between recognition accuracy and computational efficiency is crucial for their application in real-life problems.</sentence>
+    <sentence>We actually explore the possibility that the parameters of Gaussian components of GMMs used in the particular recognition problem, lie close to a lower-dimensional surface embedded in the cone of positive definite matrices.</sentence>
+    <sentence>Our approach utilizes the LPP based technique in order to learn the linear projection matrix W. Matrix W actually projects the parameters of GMMs, onto the lower space of parameters, while preserving the local neighborhood information from the original space of GMM parameters, in the transformed parameter space.</sentence>
+    <sentence>Let be the set of all Gaussian components used in the particular task, where M represents the overall number of Gaussians.</sentence>
+    <sentence>Namely, we consider any (vectorized) pair of parameters (μi, Σi) which corresponds to the multivariate Gaussian component to live in a high-dimensional parameter space.</sentence>
+    <sentence>We assign each pair to the node of undirected weighted graph.</sentence>
+    <sentence>We chose the particular graph weights pij to be the heat-kernel of the vectorized parameters, but instead of the Euclidian distance, we use a specified similarity measure between Gaussian components corresponding to nodes i and j.</sentence>
+    <sentence>We use the ground distances between Gaussian components N(μi, Σi) and N(μj, Σj) based on information geometry proposed and reported in Li et al.</sentence>
+    <sentence>(2013) and Lovric et al.</sentence>
+    <sentence>(2000).</sentence>
+    <sentence>We obtain two goals: First, assuming that the parameters of Gaussians belonging to GMMs used in some particular problem, lie close to some lower dimensional manifold embedded into the high-dimensional configuration space of parameters, the proposed method preserves locality induced by the manifold structure present in the original space of parameters.</sentence>
+    <sentence>Thus, greater discriminativity and consequently higher recognition accuracy can be obtained in recognition problems with the parameters of GMMs satisfying the previous assumption.</sentence>
+    <sentence>We explicitly confirm the mentioned claim through experiments on specially constructed artificial data (see Section 4.1).</sentence>
+    <sentence>Second, the similarity the measure between GMMs that we propose has significantly lower computational cost in comparison to measures between GMMs that utilize the distances between Gaussians evaluated in the original space of parameters.</sentence>
+    <sentence>We prove this, by estimating the computational complexity (see Section 3.4) of the proposed, as well as of the baseline algorithms, and also by measuring the average processing CPU times needed for calculating the proposed and the baseline measures used.</sentence>
+    <sentence>We show (see Section 4.2) that the measure that we proposed is much more computationally efficient, i.e., has much lower processing CPU times in comparison to all the baseline measures used.</sentence>
+    <sentence>In the same Section, we present the experiments which show that the unsupervised version of the measure that we proposed obtains recognition accuracies on a level with all KL-based baseline measures used, while at the same time delivers much better trade-off between the recognition accuracy and the computational complexity, in comparison to all baseline measures used, in all experiments.</sentence>
+    <sentence>The supervised version of the measure that we propose has the same computational efficiency as the unsupervised version.</sentence>
+    <sentence>Moreover, it obtains recognition accuracies greater than all KL-based baseline measures, and on a level with all EMD-based baseline measures that we use for comparison.</sentence>
+    <sentence>Thus, it obtains even better previously mentioned trade-off, which qualifies it for application in big-data recognition systems using large number of GMMs and/or high dimensional features.</sentence>
+    <sentence>The paper is organized as follows.</sentence>
+    <sentence>In the Section 2, we review some of the methods from a group of papers, where the problem of developing the efficient GMM similarity measure was treated.</sentence>
+    <sentence>Also, in the same section, we present the well known LPP manifold learning technique, which we modify, apply to the GMM parameter case and incorporate into the GMM similarity measure approach.</sentence>
+    <sentence>In Section 3, we invoke our novel GMM similarity measure, based on LPP-like transformation from higher-dimensional original parameter space to the resulting low dimensional parameter space.</sentence>
+    <sentence>In the same section, computational complexities in the recognition phase are estimated, for the proposed, as well as for the baseline GMM similarity measures.</sentence>
+    <sentence>In Section 4, we present the experiments, conducted on artificial data, as well as on four databases in texture recognition task, on several chosen KL-based as well as EMD-based GMM similarity measures.</sentence>
+    <sentence>We also compare the proposed GMM similarity measure with some state-of-the-art texture recognition methods.</sentence>
+    <sentence>In all cases, the proposed method obtains much better trade-off between recognition accuracy and computational complexity, in comparison to all baseline methods.</sentence>
+    <sentence>Finally, in Section 5, we conclude and give some propositions for further work.</sentence>
+  </section>
+  <section name="Review of some previous work">
+    <sentence>In this section we introduce and review some of the baseline GMM similarity measures reported by researchers, all based on various approximations of KL-divergence.</sentence>
+    <sentence>Also, we review the LPP dimensionality reduction approach that we modify and use in order to develop the proposed GMM similarity measure.</sentence>
+    <sentence>GMM similarity measures The similarity or distance measure between GMMs plays an important part in many Pattern Recognition and Machine Learning applications, such as content based image matching, speaker recognition and verification, texture recognition, etc.</sentence>
+    <sentence>The most natural measure between two probability distributions p and q is the KL divergence, defined as .</sentence>
+    <sentence>However, it cannot be analytically computed in the case of GMMs.</sentence>
+    <sentence>The straight-forward computation by using the standard Monte-Carlo method (see Hershey &amp; Olsen, 2007).</sentence>
+    <sentence>The idea is to samples from the probability distribution f, such that .</sentence>
+    <sentence>By using i.i.d.</sentence>
+    <sentence>samples xi, the Monte-Carlo approximation is given by: (2.1) It is the most accurate, but far too computationally expensive for applications in real world problems.</sentence>
+    <sentence>Thus, in literature, authors proposed various ways to approximate KL-divergence between two GMMs, (Goldberger et al., 2003)-(Hershey &amp; Olsen, 2007).</sentence>
+    <sentence>The most crude approximation between two GMMs is obtained due to the convexity of KL-divergence (Cover &amp; Thomas, 1991).</sentence>
+    <sentence>Actually, for two GMMs given by and where and are Gaussian components belonging to mixtures f and g respectively, αi &gt; 0, βj &gt; 0 satisfying are corresponding weights, it holds (2.2) It is too rough, especially if the Gaussian components belonging to different GMMs are far apart from each other.</sentence>
+    <sentence>Note that KL divergences KL(fi||gj) between corresponding Gaussian components exist in he close form given by (2.3) Upper bound (2.2) yields the weighted average approximation proposed in Goldberger et al.</sentence>
+    <sentence>(2003) as a GMM similarity measure: (2.4) In Durrieu et al.</sentence>
+    <sentence>(2012), Goldberger et al.</sentence>
+    <sentence>(2003), as well as (Goldberger &amp; Aronowitz, 2005) the authors proposed various approximations of KL-divergence between two GMMs and efficiently apply them to various real world problems, such as image retrieval, speaker identification and speech recognition problems.</sentence>
+    <sentence>In Goldberger et al.</sentence>
+    <sentence>(2003), the authors also proposed the Matching-based approximation given by (2.5) which is based on the assumption that the element in the sum ∑jβjgj that is most proximate to fi dominates the integral ∫ filog g. More efficient, approximation, motivated by (2.5) is given by (2.6) The matching based method is a good approximation for the KL-divergence if the Gaussian elements between f and g are mostly far apart, but if it is not the case, i.e., if there is significant overlapping between the components of f and g, then the approximation is inappropriate.</sentence>
+    <sentence>In order to handle overlapping situations, in Goldberger and Aronowitz (2005), the authors proposed the Unscented Transform based approximation.</sentence>
+    <sentence>The Unscented Transformation is a method for calculating the statistics of a random variable which undergoes a nonlinear transformation (see Julier &amp; Uhlmann, 1996).</sentence>
+    <sentence>As it holds one apply unscented transform and approximate the second integral as (2.7) and similarly for the second integral, where we denote .</sentence>
+    <sentence>Thus, the KLUC(f||g) is obtained as previously.</sentence>
+    <sentence>Another interesting and efficient similarity distance between GMMs that goes along the previous ones is the Variational approximation of the KL divergence proposed in Hershey and Olsen (2007) (see also Durrieu et al., 2012), given by (2.8) Rubner et al.</sentence>
+    <sentence>(2000) applied in various recognition tasks (see for example Ling &amp; Okada, 2007) Motivated by the application of EMD methodology in various recognition tasks (see Rubner et al., 2000 and Ling &amp; Okada, 2007), the authors in Wu et al.</sentence>
+    <sentence>(2003) proposed EMD-based GMM similarity measure and applied it in the texture recognition task.</sentence>
+    <sentence>We denote it as EMD-KL measure.</sentence>
+    <sentence>In Li et al.</sentence>
+    <sentence>(2013), the authors proposed the ground distance based on the geometrical properties of Gaussians, delivered in Lovric et al.</sentence>
+    <sentence>(2000), which explores the fact that multivariate Gaussians lie on a Riemannian manifold and can be embedded into the cone of SPD matrices.</sentence>
+    <sentence>They incorporated two different ground distances into the unsupervised sparse EMD-based GMM measure.</sentence>
+    <sentence>First ground distance is based on Lie Groups, while the second is based on the products of Lie groups.</sentence>
+    <sentence>The first ground distance is reported to perform better, when incorporated to sparse EMD-based GMM similarity measure.</sentence>
+    <sentence>We denote it in further text as SR-EMD-M measure.</sentence>
+    <sentence>They also delivered supervised counterpart base on metric learning.</sentence>
+    <sentence>We denote its version that utilizes ground distance based on Lie Groups as SR-EMD-M-L.</sentence>
+    <sentence>In Section 4.2, in addition to KL-based measures KLWE, KLMB and KLVAR introduced previously, we use EMD-KL, SR-EMD-M and SR-EMD-M-L as baseline measures, in comparison to the GMM-LPP measures that we propose.</sentence>
+    <sentence>LPP dimensionality reduction While PCA aims to preserve the global structure of the data, LPP aims to preserve the local (i.e.,neighborhood) structure of the data.</sentence>
+    <sentence>Intuitively, LPP may keep more discriminating information than PCA, assuming that the samples from the same class are likely close to each other in the input space.</sentence>
+    <sentence>The aim of LPP is to consider data points from the original high-dimensional space as the nodes of undirected graph, with graph weights represented by the similarity matrix [pij]N × N, given as (2.9) where kNN(xj) is the neighborhood containing k nearest Euclidian neighbors to xj, and t &gt; 0 is a scaling factor.</sentence>
+    <sentence>In one dimensional case (which we expose for the reasons of simplicity), the goal is to minimize the following objective function (2.10) where are transformed lower-dimensional data, thus encouraging yi and yj to be close in the transformed space, if it is the case between xi and xj, in the original space.</sentence>
+    <sentence>The optimal w is obtained (see He &amp; Niyogi, 2003; Qiao, Chen, &amp; Tan, 2010) by solving the following generalized eigenvalue problem: (2.11) where term D is diagonal matrix with its entries being the row (or column) sum of P, i.e., and the term is Laplacian matrix of the mentioned graph.</sentence>
+    <sentence>In order to transform data into the l space, generalization of the one dimensional case is straight forward, and it consists of taking l eigenvectors wi corresponding to the largest l solutions (eigenvalues) of the previously mentioned problem (2.11), and putting them into the rows of the projection matrix W, now projecting from the high-dimensional to the low-dimensional Euclidian space.</sentence>
+  </section>
+  <section name="GMM similarity measure based on LPP-like projection of the parameter space">
+    <sentence>In this work, we propose a novel similarity measure between arbitrary GMMs.</sentence>
+    <sentence>It utilizes the LPP based technique in order to learn the linear transformation W, which projects the parameters of arbitrary GMMs, i.e., vectorized parameters of its belonging Gaussian components, into the low-dimensional space of parameters, while at the same time, preserving the local neighborhood information existing in the configuration, i.e., the original space of parameters.</sentence>
+    <sentence>We call it the LPP based GMM similarity measure (GMM-LPP).</sentence>
+    <sentence>We derive both: non-symmetric and symmetric version of the GMM measure.</sentence>
+    <sentence>The non-symmetric one utilizes the one-sided KL-divergence between Gaussian components corresponding to particular GMMs as a metric in the configuration parameter space.</sentence>
+    <sentence>The symmetric one utilizes the symmetric KL-divergence between Gaussian components.</sentence>
+    <sentence>Our approach is the following: For all given GMMs to be used in some particular problem, we gather all their belonging Gaussian components and consider them to be the nodes of the weighted graph.</sentence>
+    <sentence>For each ith node, the parameters of the belonging Gaussian, i.e., its mean μi and covariance Σi are vectorized into single vector, belonging to the high-dimensional Euclidian parameter space, which we call the configuration parameter space.</sentence>
+    <sentence>For forming graph weights pij, we use some specific similarity measure between two Multivariate Gaussians and apply it to the Gaussians corresponding to the ith and jth node of the graph, respectively.</sentence>
+    <sentence>Then, by minimizing the same objective function given by (2.10) we manage to preserve “local property”, that is: For those Gaussians “close” to each other in the means of the mentioned similarity measure, it holds that the transformed low-dimensional Euclidian vectors are also “close” in the means of Euclidian norm the transformed space.</sentence>
+    <sentence>The property similar to those of LPP regarding the Euclidian feature vectors, now holds in the case that we propose, but in the means of vectors in the space of parameters of Gaussian components.</sentence>
+    <sentence>Thus, together with weights αi assigned to each ith component of the given GMM, those transformed low-dimensional Euclidian vectors fully represent the given GMM in the transformed parameter space.</sentence>
+    <sentence>Ground distance, forming the graph weights and LPP-like projection matrix For forming the graph weights pij to be plugged in the objective function (2.10), we use the fact that the space of multivariate Gaussians is a Riemannian manifold and can be embedded into the cone of SPD matrices (see Li et al., 2013 and Lovric et al.</sentence>
+    <sentence>(2000)).</sentence>
+    <sentence>Actually, d dimensional multivariate Gaussian can be embedded into which is a cone in Euclidian dimensional space and also Riemannian manifold.</sentence>
+    <sentence>It is done in the following way (Li et al., 2013; Lovric et al., 2000): (3.12) where |Σ| &gt; 0 denotes the determinant of Covariance matrix of Gaussian component .</sentence>
+    <sentence>For the detailed mathematical theory behind the embedding (3.12), one can refer to Lovric et al.</sentence>
+    <sentence>(2000).</sentence>
+    <sentence>Thus, the information regarding the particular Gaussian component of a given GMM is contained in the single positive definite matrix P, an element of .</sentence>
+    <sentence>We now construct the graph weights pij by plugging the intrinsic ground distance, i.e., similarity measure between Pi and Pj acting on cone into the expression (2.9), instead of the Euclidian distance ‖ · ‖ acting on high-dimensional Euclidian vectors.</sentence>
+    <sentence>The particular ground distances that we use between Pi and Pj corresponding to the i-th and j-th node of the graph are the following: First one is the one-sided, i.e., ordinary KL-divergence D between the centered multivariate Gaussians and given in the close form by: (3.13) where Tr( · ) is trace of a matrix.</sentence>
+    <sentence>The second one is the symmetric KL-divergence Dsym between them, which is given in the close form by (3.14) As previously explained, using (3.14) we obtain the desired weights as (3.15) where kNN(Pj) is the neighborhood containing k nearest neighbors to Pj, regarding the ground distance given by (3.13) or (3.14).</sentence>
+    <sentence>As in the case of ordinary Euclidian base LPP (with the application on feature selection), the purpose of parameter t is to scale the distances into the standardized ratio.</sentence>
+    <sentence>Although it makes sense to use different aggregations applied to matrix [D2(fi, gj)]m × n, in order to obtain positive scalar t, we used simple mean, i.e.</sentence>
+    <sentence>(3.16) Now, by minimizing the objective function (2.10), we obtain the projective matrix W, projecting from the original Euclidian high-dimensional space of parameters which contains vectorized pairs to the low-dimensional Euclidian parameter space of dimension l &lt; &lt;n.</sentence>
+    <sentence>We note that, l is to be given a-priory, depending on a particular application.</sentence>
+    <sentence>Actually, it depends on the dimensionality of low-dimensional submanifold embedded in the where we expect the sampled data to lie close to, in the particular application.</sentence>
+    <sentence>We note that W (similarly as in case of classical LPP) is actually obtained as the l × n matrix, containing the eigenvectors corresponding to the highest l eigenvalues obtained by solving the spectral problem given by (2.11), with pij given by (3.15).</sentence>
+    <sentence>Also l can be chosen to be small, even if the previous assumption is not fully satisfied, if the low computational complexity is the priority.</sentence>
+    <sentence>Thus, we can obtain better trade-off between the recognition precision and the computational complexity in the particular recognition task.</sentence>
+    <sentence>We also note that authors in Goh and Vidal (2008) reported that LE and LLE can be extended to deal with submanifolds of a Riemannian manifold.</sentence>
+    <sentence>They applied their modification of LE method to the clustering problem on Riemannian manifold of SPD matrices.</sentence>
+    <sentence>Nevertheless, our case just partially intersect their methodology, but the way we encode the information about particular Gaussian component of some GMM into the SPD matrices of form (3.12), as well as the extension of the methodology to the development of similarity measure between two given GMMs, is to the knowledge of authors completely novel.</sentence>
+    <sentence>Constructing the GMM-LPP similarity measure Further, we construct the similarity measure between two given GMMs based solely on the information obtained from the transformed space: Actually, every Gaussian component of any GMM f of interest is now presented by a single low-dimensional Euclidian vector.</sentence>
+    <sentence>Thus, the particular m-component GMM given by with is now uniquely presented by 2m-ple where .</sentence>
+    <sentence>With the previous representation, we now invoke the similarity measure between two GMMs given by and by simply comparing the corresponding representatives in the transformed space, as weighted low-dimensional Euclidian vectors.</sentence>
+    <sentence>The mean of aggregating the information from F and G determines the form of the similarity measure.</sentence>
+    <sentence>For example, it is natural for a measure to be a function of pondered Euclidian distances between representatives vi and uj, corresponding to fi and gj, respectively.</sentence>
+    <sentence>There are various ways to take those into the account.</sentence>
+    <sentence>It means that there are different ways to aggregate the single positive scalar to represent the “measure” between F and G, and in the most general manner we could use the arbitrary fuzzy union or intersection , given for example by various aggregation operators (many of them are presented in Klir and Yuan (1995)).</sentence>
+    <sentence>In this work, we use two types of aggregation operators, operating on .</sentence>
+    <sentence>First is weighted max-min operator which is applied for the previously mentioned representatives as follows: (3.17) The second is the maximum of the weighted sums (3.18) Note, that although both D1 and D2, given by (3.17) and (3.18) are symmetric functions of F and G, the choice and properties of distances D (non-symmetry of Dord, or symmetry of Dsym) used in forming the weight matrix [pij] given by (3.15), determines weather the resulting measure is symmetric or non-symmetric.</sentence>
+    <sentence>We note that instead of the previously mentioned fuzzy aggregation operators, we could also use Earth Mover’s Distance method presented in Rubner et al.</sentence>
+    <sentence>(2000), but we leave it for some future work.</sentence>
+    <sentence>We also note that the one sided KL-divergence, satisfies the following three properties, for arbitrary probability distributions f and g: Self similarity, meaning that Self identification, meaning that if and only if (almost everywhere), Positivity, meaning that D(f||g) ≥ 0.</sentence>
+    <sentence>Moreover, the symmetric KL-divergence satisfies the additional symmetry property, meaning that .</sentence>
+    <sentence>From the previous considerations, it is clear that one-sided measures D1 and D2 between GMMs that we propose, given by (3.17) and (3.18) respectively, satisfy self similarity and positivity, for arbitrary GMMs f and g, in both, one-sided (when we use one-sided KL-divergence as a ground distance), and symmetric (when we use symmetric KL-divergence) case.</sentence>
+    <sentence>Nevertheless, self identification is not satisfied, in neater cases, as different vectorized pairs can be transformed into the single l vectors by the transformation matrix W. Additionally, in the case when we use symmetric KL-divergence as a ground distance, we obtain that for both D1 and D2, the symmetry property is satisfied.</sentence>
+    <sentence>Supervised GMM-LPP similarity measure The supervised version of the GMM-LPP measure is based on the application of the supervised version of LPP.</sentence>
+    <sentence>Namely, we plugin the label information concerning the belongings of Gaussian components of GMMs used to particular classes into the expression for graph weights pij.</sentence>
+    <sentence>Thus, instead of forming the graph weights as given by (3.15), we use (3.19) All other elements concerning the application of LPP in obtaining the weight matrix W introduced and explained in Section 2.2, as well as constructing the similarity measure between two given GMMs based on the information obtained from the transformed space presented in Section 3.2 are the same as in the case of unsupervised version of GMM-LPP measure presented previously.</sentence>
+    <sentence>By using (3.19), it is possible to obtain greater discriminativity in the recognition phase.</sentence>
+    <sentence>We demonstrate former on the real-world data in the texture recognition task in Section 4.2.</sentence>
+    <sentence>Computational complexity comparison It is straight forward to observe (see Durrieu et al., 2012) that the complexity of KL-based GMM similarity measures KLWE, KLMB and KLVAR given by (2.4)–(2.7), is roughly equivalent and estimated as O(m2d3), for the full covariance case, where we assume that GMMs f and g have the same number, i.e., .</sentence>
+    <sentence>Here, the d is the dimension of the original feature space.</sentence>
+    <sentence>Of course, the Monte-Carlo approximation KLMC, given by (2.1) is the most computationally demanding, with its computational complexity estimated as O(Nmd3), for the full covariance case, where N is the number of samples used in Monte-Carlo sampling and where we assume that GMMs f and g have the same number, i.e., .</sentence>
+    <sentence>The number of samples N must be big, i.e., N &gt; &gt;m, in order to obtain an efficient approximation.</sentence>
+    <sentence>For the state-of-the-art EMD-based GMM similarity measures, for the case the computational complexity can be estimated as O(kiterm4d3) and O(8m5d3), for EMD-KL and SR-EMD-M, respectively, (see Li et al., 2013) where kiter represents the number of iterations in the numerical algorithm used in finding the solution of the optimization problem involved in calculation of EMD-KL.</sentence>
+    <sentence>We note that the LARS/Homotopy algorithms used for finding the numerical solution of optimization problem involved in SR-EMD-M, converge in about no more than 2m iterations (see Hastie, Tibshirani, &amp; Friedman, 2009), and it is usually m &lt; &lt;kiter (see Li et al., 2013).</sentence>
+    <sentence>For the proposed similarity measures (both non-symmetric and symmetric), given by (3.17) and/or (3.18), one can easily observe that the computational complexity is given in O(m2l), for the full covariance case, where is obtained a priory, as explained in the Section 3.1.</sentence>
+    <sentence>It is clear that the similarity measures that we propose are much more computationally efficient than any of the previously mentioned baseline measures, described in Section 2.1.</sentence>
+    <sentence>Of course, we note that the computational efficiency of any measure is given (and defined) for the testing and not for the learning phase.</sentence>
+  </section>
+  <section name="Experimental results">
+    <sentence>In this section, experimental results are presented, in which we compare the GMM-LPP similarity measure (symmetric case) that we propose, with state-of-the-art measures, all presented in Section 2.</sentence>
+    <sentence>We conducted experiments on specially constructed syntectic data, as well as experiments on real data, in the task of texture recognition.</sentence>
+    <sentence>For the baseline measures that we use to compare the proposed GMM-LPP similarity measure, we chose KLWE, KLMB and KLVAR , defined by (2.4), (2.5) and (2.8), respectively.</sentence>
+    <sentence>In the case of specially constructed syntectic data, we obtain that the proposed GMM-LPP measure obtain significantly lower computational complexity in all experiments.</sentence>
+    <sentence>At the same time, greater recognition precision is obtained, in comparison to all used baseline measures, in almost all experiments.</sentence>
+    <sentence>On real data set, we obtained significantly better trade-of between computational complexity and recognition precision, in the case of the proposed GMM-LPP measure, in comparison to all baseline measures, in all experiments conducted on the texture database that we used.</sentence>
+    <sentence>We note that in experiments on synthetic data, we actually tested two different versions of the proposed GMM-LPP measures, both utilizing symmetric distance Dsym between Gaussian components given by (3.14).</sentence>
+    <sentence>One we denote GMM-LPP1 and it corresponds to the measure where we use distance D1, defined by (3.17).</sentence>
+    <sentence>The other we denote GMM-LPP2 and it corresponds to the measure where we use distance D2, defined by (3.18).</sentence>
+    <sentence>In experiments on real data, as we obtain almost similar results using D1 and D2, but significantly improved by using supervised instead of unsupervised version (presented in Section 3.3) of GMM-LPP measure, we denoted unsupervised version of GMM-LPP measure by GMM-LPP1 and supervised version by GMM-LPP2, both utilizing symmetric distance Dsym.</sentence>
+    <sentence>Experiments on synthetic data In the experiments on synthetic data, for simplicity reasons, we conducted the two class experiments, in two different scenarios.</sentence>
+    <sentence>In the first scenario, we forced that the parameters of the Gaussians, included in GMMs used, lie on the low dimensional submanifolds imbedded in the cone (all lying in euclidian space), where d × d is the dimension of the covariance matrix.</sentence>
+    <sentence>We try various dimensions d through out our experiments.</sentence>
+    <sentence>The submanifolds that we formed where of dimension and .</sentence>
+    <sentence>In experiments presented in Tables 1–4 and 8–11, we kept all means of the Gaussians generated from the particular low dimensional submanifolds equal to zero vector.</sentence>
+    <sentence>In Tables 5–7 and 12–14, the case when the means of the Gaussians is different from zero vector is presented.</sentence>
+    <sentence>Actually for those experiments, we formed the means of Gaussians used in GMMs as d dimensional vectors, where the first values are drown from the uniform distribution as with and (for all experiments), while the rest were set to zero.</sentence>
+    <sentence>In those experiments, for previously described and cases, final submanifolds are actually the direct products of the covariance submanifold of dimension l and the mean submanifolds of dimension lμ, and are of final dimensions .</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.68 0.73 0.81 0.74 0.94 0.90 0.94 0.96 0.68 0.73 0.82 0.74 0.95 0.91 0.94 0.95 KLWE 0.62 0.68 0.79 0.73 0.92 0.86 0.90 0.94 KLMB 0.62 0.68 0.79 0.73 0.91 0.87 0.92 0.93 KLVAR 0.62 0.68 0.79 0.73 0.91 0.87 0.92 0.91 Table 2.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.55 0.56 0.70 0.69 0.82 0.77 0.80 0.81 0.56 0.56 0.72 0.70 0.83 0.77 0.80 0.83 KLWE 0.55 0.54 0.64 0.54 0.57 0.74 0.67 0.66 KLMB 0.55 0.54 0.64 0.54 0.80 0.75 0.74 0.77 KLVAR 0.55 0.54 0.64 0.54 0.85 0.74 0.75 0.78 Table 3.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 KLWE 0.97 0.97 0.99 0.98 0.99 1.0 0.98 0.99 KLMB 0.97 0.97 0.99 0.98 1.0 0.98 1.0 0.97 KLVAR 0.97 0.97 0.99 0.98 1.0 1.0 0.98 0.97 Table 4.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.32 0.54 0.46 0.51 0.50 0.46 0.42 0.53 0.31 0.53 0.46 0.49 0.48 0.46 0.40 0.51 KLWE 0.33 0.52 0.45 0.48 0.50 0.43 0.46 0.55 KLMB 0.33 0.52 0.45 0.48 0.51 0.42 0.47 0.57 KLVAR 0.33 0.52 0.45 0.48 0.50 0.42 0.48 0.57 Table 5.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.82 0.78 0.78 0.72 0.72 0.75 0.75 0.74 0.82 0.76 0.75 0.72 0.71 0.74 0.75 0.73 KLWE 0.62 0.63 0.68 0.58 0.52 0.52 0.55 0.54 KLMB 0.62 0.63 0.68 0.58 0.53 0.53 0.55 0.53 KLVAR 0.62 0.63 0.68 0.58 0.53 0.54 0.57 0.54 Table 6.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.80 1.0 1.0 0.99 0.86 0.99 0.99 1.0 0.79 1.0 1.0 0.98 0.86 0.98 0.98 1.0 KLWE 0.72 0.80 0.72 0.82 0.57 0.65 0.61 0.60 KLMB 0.72 0.80 0.72 0.82 0.57 0.66 0.61 0.60 KLVAR 0.72 0.80 0.72 0.82 0.58 0.66 0.60 0.59 Table 7.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.62 0.59 0.67 0.63 0.61 0.69 0.69 0.64 0.61 0.59 0.65 0.62 0.59 0.67 0.68 0.62 KLWE 0.54 0.65 0.66 0.54 0.48 0.53 0.50 0.50 KLMB 0.54 0.65 0.66 0.54 0.49 0.53 0.52 0.51 KLVAR 0.54 0.65 0.66 0.54 0.49 0.54 0.53 0.52 Table 8.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.79 0.84 0.78 0.83 1.0 0.97 0.99 1.0 0.78 0.82 0.78 0.83 0.98 0.97 0.99 0.99 KLWE 0.78 0.76 0.75 0.95 0.97 0.94 0.94 0.93 KLMB 0.78 0.76 0.75 0.83 0.94 0.97 0.95 0.94 KLVAR 0.78 0.76 0.75 0.83 0.95 0.97 0.95 0.96 Table 9.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.61 0.58 0.64 0.66 0.82 0.78 0.71 0.74 0.59 0.56 0.64 0.65 0.80 0.78 0.71 0.73 KLWE 0.54 0.57 0.56 0.64 0.79 0.69 0.74 0.69 KLMB 0.54 0.57 0.56 0.64 0.78 0.70 0.73 0.69 KLVAR 0.54 0.57 0.56 0.64 0.79 0.71 0.74 0.69 Table 10.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: type of measures 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 KLWE 1.0 0.98 0.97 0.99 0.98 1.0 1.0 1.0 KLMB 1.0 0.98 0.97 0.99 0.97 0.99 1.0 1.0 KLVAR 1.0 0.98 0.97 0.99 0.99 0.98 1.0 1.0 Table 11.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: type of measures 0.51 0.47 0.44 0.41 0.50 0.60 0.54 0.55 0.51 0.47 0.44 0.41 0.50 0.60 0.54 0.55 KLWE 0.46 0.48 0.34 0.43 0.61 0.54 0.54 0.55 KLMB 0.46 0.48 0.34 0.43 0.59 0.53 0.54 0.53 KLVAR 0.46 0.48 0.34 0.43 0.58 0.54 0.54 0.53 Table 12.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.65 0.85 0.87 0.82 0.85 0.91 0.98 1.0 0.64 0.85 0.86 0.83 0.84 0.91 0.98 0.98 KLWE 0.68 0.70 0.63 0.73 0.52 0.53 0.52 0.63 KLMB 0.68 0.70 0.63 0.73 0.50 0.51 0.54 0.63 KLVAR 0.68 0.70 0.63 0.73 0.52 0.53 0.54 0.62 Table 13.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 1.0 1.0 0.98 1.0 1.0 1.0 1.0 1.0 1.0 1.0 0.98 1.0 1.0 1.0 1.0 1.0 KLWE 0.77 0.70 0.79 0.84 0.51 0.50 0.55 0.80 KLMB 0.77 0.70 0.79 0.84 0.51 0.52 0.57 0.81 KLVAR 0.77 0.70 0.79 0.84 0.52 0.51 0.58 0.82 Table 14.</sentence>
+    <sentence>Results in the form of recognition accuracy, obtained on the synthetic data: Type of measures 0.58 0.64 0.64 0.63 0.62 0.77 0.79 0.78 0.57 0.63 0.64 0.61 0.61 0.77 0.78 0.76 KLWE 0.58 0.62 0.52 0.62 0.60 0.52 0.53 0.55 KLMB 0.58 0.62 0.52 0.62 0.60 0.54 0.54 0.56 KLVAR 0.58 0.62 0.52 0.62 0.59 0.55 0.54 0.57 For the case, we randomly generate a positive definite matrices A1, A2 both of format d × d, in a following way: Let (the same we do for ).</sentence>
+    <sentence>We randomly generate B1 as a matrix of i.i.d.</sentence>
+    <sentence>uniformly distributed elements, i.e., with pdf.</sentence>
+    <sentence>.</sentence>
+    <sentence>Then, we symmetrize matrix as .</sentence>
+    <sentence>Then we obtain where is the matrix obtained from matrix by only replacing diagonal elements of with the sum of off-diagonal elements of matrix i.e., (note that bij &gt; 0).</sentence>
+    <sentence>Also, it holds ϵ &gt; 0, where for our experiments, we chose .</sentence>
+    <sentence>Thus, as the resulting A1 is a symmetric and diagonally dominant matrix, it is positive definite (see Burden &amp; Faires, 2010).</sentence>
+    <sentence>The same holds for matrix A2.</sentence>
+    <sentence>Then, we form the dimensional manifold in the form of parabolic curve, given by: (4.20) with a ≠ 0.</sentence>
+    <sentence>It is embedded into where, in all our experiments, we chose and for the reasons of simplicity, without loss of generality we set for all experiments.</sentence>
+    <sentence>We then sample uniformly predefined N number of Gaussian components lying on the curve (4.20), with means having lμ nonzero values, obtained as previously explained.</sentence>
+    <sentence>Next, we form the set of number of GMMs with predefined size K, by uniformly pooling from the previous set of Gaussian components, and setting all weights to be 1/K.</sentence>
+    <sentence>From the obtained set of GMMs, for every trial we do cross-validation: We uniformly pool 10 percent in the testing, leaving remaining 90 percent in the training set, averaging the final result with respect to the number of cross-validation steps, which we keep equal to 10 in all experiments.</sentence>
+    <sentence>We use different values for K, r1 and r2 in experiments: Namely, we use and and also the following intervals for [r1, r2] : [0, 5], and .</sentence>
+    <sentence>As can be seen from Tables 1–7, where the case is presented, the proposed GMM-LPP1, 2 similarity measures obtain much better trade-off between the recognition accuracy and the computational complexity, in comparison to all baseline measures.</sentence>
+    <sentence>Moreover, we obtain higher recognition precision in the case of the proposed GMM-LPP1, 2 measures, than in the case of baseline measures, in almost all experiments.</sentence>
+    <sentence>At the same time, the computational complexity is many times lower in the case of the proposed GMM-LPP1, 2 measures, than in the case of all the baseline measures.</sentence>
+    <sentence>Actually, in all experiments presented in Tables 1–4, the estimated number of nonzero eigenvalues, in the sense that they are greater than the threshold was equal to .</sentence>
+    <sentence>It was also belonging to the interval [1, 2], showing that our procedure estimates the dimension of the embedded manifold (4.20) with the exact precision (i.e., ).</sentence>
+    <sentence>Then, in the case of the expression for computational complexity of GMM-LPP method (see Section 3.4) is given roughly as .</sentence>
+    <sentence>Note that the computational complexity that we express is actually the computational complexity per one single mach between GMMs.</sentence>
+    <sentence>Also note, that is the number of overall GMMs in the training set, as it is explained previously.</sentence>
+    <sentence>At the same time, the expression for the computational complexity (defined in the same manner) of all the baseline methods is given roughly as (see Section 3.4).</sentence>
+    <sentence>Thus, the ratio between the computational complexity of the proposed and the baseline methods, is roughly given as .</sentence>
+    <sentence>With d chosen in Tables 1–4 to be d ∈ {10, 20, 30, 50}, it is clear that the computational complexity of the proposed GMM-LPP1, 2 is significantly lower (at least several times), than the computational complexity of the baseline measures.</sentence>
+    <sentence>For the Tables 5–7 where the case are presented, the proposed algorithm presented in Section 3.1 estimates with the exact precision the dimension of the embedded submanifold as the actual number of nonzero eigenvectors i.e., we obtain .</sentence>
+    <sentence>It can be seen that both GMM-LPP1 and GMM-LPP2 obtain higher recognition accuracy.</sentence>
+    <sentence>At the same time, both GMM-LPP1 and GMM-LPP2 obtain much lower computational complexity, given roughly as , in comparison to all baseline measures, whose complexity is given roughly as .</sentence>
+    <sentence>Actually, the ratio between the computational complexity of the proposed and the baseline methods, is roughly given as .</sentence>
+    <sentence>For the case we form the dimensional manifold given by (4.21) with a ≠ 0.</sentence>
+    <sentence>It is embedded into where (as in the case of ), we chose and for the reasons of simplicity, without loss of generality we set for all experiments.</sentence>
+    <sentence>Also, positive definite matrices A1 and A2 are generated in the same way as in the case .</sentence>
+    <sentence>Next, GMMs are formed in the same way as explained for the case and also we use the same values for K, r1 and r2.</sentence>
+    <sentence>The similar conclusions can be drown for case as for the case .</sentence>
+    <sentence>Namely, as can be seen from Tables 8–14, where the case is presented, the proposed GMM-LPP1, 2 similarity measures obtain the much better trade-off between recognition accuracy and computational complexity, in comparison to baseline measures, at the same time obtaining higher recognition precision in comparison to baseline measures, in almost all experiments.</sentence>
+    <sentence>In all experiments presented in Tables 8–14, the estimated number of nonzero eigenvalues, in the sense that they are greater than the threshold were with significant values belonging to the interval [0.5, 1], showing that, as in the case of the proposed procedure estimates the dimension of the embedded manifold (4.20) with the exact precision (i.e., ).</sentence>
+    <sentence>Thus, in the case of the expression for computational complexity of the GMM-LPP (see Section 3.4) is given roughly as while the expression for the computational complexity of all the baseline methods is given roughly as (see Section 3.4).</sentence>
+    <sentence>Thus, the ratio between the computational complexity of the proposed and the baseline methods, is roughly given as .</sentence>
+    <sentence>With d chosen in Tables 8–14 to be d ∈ {10, 20, 30, 50}, it is clear that the computational complexity of the proposed GMM-LPP1, 2 is significantly lower (at least several times) than the computational complexity of all baseline measures.</sentence>
+    <sentence>For the Table 12–14, where the case is presented, the similar conclusions hold as in the case .</sentence>
+    <sentence>Namely, GMM-LPP1, 2 obtain much higher recognition accuracy in comparison to all baseline measures.</sentence>
+    <sentence>At the same time the computational complexity of GMM-LPP1, 2 given roughly as is also much lower in comparison to all baseline measures, whose complexity is given roughly as .</sentence>
+    <sentence>Actually, the ratio between the computational complexity of the proposed and the baseline methods, is roughly given as .</sentence>
+    <sentence>As it can be seen, from the previously presented tables, the only cases where the proposed GMM-LPP1, 2 measures do not obtain higher recognition accuracy in comparison to baseline measures, are those that correspond to the interval .</sentence>
+    <sentence>In those cases, the transformation W estimated as it is explained in Sections 2.2 and 3.1 could not fit the data belonging to the target manifolds, in a satisfactory way .</sentence>
+    <sentence>Actually, in those cases, data were placed symmetrically on, and around the “elbow” of the curve given by (4.20), or surface given by (4.21).</sentence>
+    <sentence>Nevertheless in those cases, all tested measures obtained bad results.</sentence>
+    <sentence>In all other cases in the previously presented tables, the proposed GMM-LPP obtained higher recognition precision.</sentence>
+    <sentence>In those cases, locality preserving property of the GMM-LPP method comes to play, rendering the higher distance (D1 and D2 given by (3.17) and (3.18) respectively) between GMMs belonging to different classes and at the same time lower distance between GMMs belonging to the same class, in comparison to baseline methods.</sentence>
+    <sentence>In the second scenario, we sample N positive definite matrices Ai, where each Ai is formed in a similar manner as it described for A1 in the previous text.</sentence>
+    <sentence>Thus, we obtained positive definite matrices “uniformly” distributed in the cone i.e., not lying on any lower dimensional sumbanifold embedded in the mentioned cone.</sentence>
+    <sentence>We then form the set of Gaussians, from the previous set of positive definite matrices, where, without loss of generality, we set all means to be zero vectors.</sentence>
+    <sentence>Then, we formed different GMMs of size K with components sampled uniformly from the previously mentioned set of Gaussian components (we used and in the experiment).</sentence>
+    <sentence>We obtained that the proposed GMM-LPP performed equally, from the point of view of the recognition precision as well as computational efficiency, as all the baseline methods.</sentence>
+    <sentence>Also the estimated number of significant characteristic values were equal to the dimension of the full space, i.e., .</sentence>
+    <sentence>Thus we confirm that, if the data used do not satisfy the condition that they lie on the lower dimensional manifold embedded in the cone there are no benefits of the proposed method in comparison to the baseline methods used.</sentence>
+    <sentence>Experiments on real data In this section we evaluate the performance of the proposed method in comparison to mentioned baseline methods on real datasets in the Texture Recognition task.</sentence>
+    <sentence>Beside KL-based baseline methods KLWE, KLMB and KLVAR described in Section 2, we compare the proposed GMM-LPP measures with three different state of the art EMD type of measures, all mentioned in Section 2.</sentence>
+    <sentence>One is the measure proposed in Wu et al.</sentence>
+    <sentence>(2003), and also presented and used as a benchmark method in Li et al.</sentence>
+    <sentence>(2013).</sentence>
+    <sentence>We call it EMD-KL measure.</sentence>
+    <sentence>The second one is unsupervised sparse EMD-based measure, i.e., EMD measure based on sparsity assumption proposed in Li et al.</sentence>
+    <sentence>(2013), which we call SR-EMD-M measure.</sentence>
+    <sentence>The third one is supervised sparse EMD-based measure also proposed in Li et al.</sentence>
+    <sentence>(2013), which we call SR-EMD-M-L measure.</sentence>
+    <sentence>For a Texture Recognition task, experiments are conducted on three different texture databases.</sentence>
+    <sentence>Namely: UMD (see Xu, Ji, &amp; Fermuller, 2006), which both contain 25 classes, with overall 1000 images; CUReT (see Dana, van Ginneken, Nayar, &amp; Koenderink, 1999), containing 61 classes, with overall 5612 images; KTH-TIPS (see Hayman, Caputo, Fritz, &amp; Eklundh, 2004), containing 10 classes, with overall 8010 images.</sentence>
+    <sentence>For all experiments, as the actual features, i.e., texture descriptors in the experiments, we used covariance descriptors which are reported to be one of the most efficient in the task of texture recognition (see Jayasumana, Hartley, Salzmann, Li, &amp; Harandi, 2013; Sivalingam, Boley, Morellas, &amp; Papanikolopoulos, 2010; Zhang, Jiang, &amp; Davis, 2013).</sentence>
+    <sentence>They are formed as follows: For the particular textured image, the row features are taken in the form of dimensional vector [I, |Ix|, |Iy|, |Ixx|, |Iyy|](x, y).</sentence>
+    <sentence>Then, we form the covariance descriptors by calculating the covariance matrix in the R × R patch centered in (x, y) and vectorizing its upper triangular into one dimensional feature vector.</sentence>
+    <sentence>We evaluate those for each pixel with coordinates (x, y).</sentence>
+    <sentence>In all experiments we used .</sentence>
+    <sentence>Then, for that particular textured image, the covariance descriptor feature vectors obtained as previously explained, are placed in the one single pool, and the parameters of GMMs is estimated using EM learning procedure (see for example Webb (2002)).</sentence>
+    <sentence>In Table 15, the experiments with the processing CPU times (in seconds) are presented for the proposed GMM-LPP measures as well as for baseline GMM similarity measures listed previously.</sentence>
+    <sentence>For a particular measure, those are obtained as a processing CPU times needed for evaluating the distance between given two GMMs, averaged over 100 number of trials.</sentence>
+    <sentence>Actual GMMs are learned from texture image examples, randomly chosen from KTH-TIPS database.</sentence>
+    <sentence>We vary the number of Gaussian components K in GMMs from to with step 5.</sentence>
+    <sentence>It can be seen that all the proposed GMM-LPP measures, in all cases, obtained much lower (from several to up to ten times lower) processing CPU times in comparison to all baseline measures presented.</sentence>
+    <sentence>Those results are fully compatible with the computational bounds obtained for the proposed and baseline measures given in Section 3.4.</sentence>
+    <sentence>We note that the programs were running on a workstation equipped with one 2.3 GHz CPU and 6G RAM.</sentence>
+    <sentence>Table 15.</sentence>
+    <sentence>Average processing CPU times for the proposed GMM-LPPs, in comparison to the baseline measures, as a function of number of GMM components K used, as well as dimension of the reduced space lmax (unit: [ms]).</sentence>
+    <sentence>K 5 10 15 20 KLWE 17.6 70.5 159.2 282.3 KLMB 14.7 80.1 187.3 323.4 KLVAR 32.9 128.0 297.5 528.3 EMD-KL 49.3 1987 15102 61123 lmax 30 60 100 30 60 100 30 60 100 30 60 100 GMM-LPP 1.9 4.1 6.5 7.7 15.4 25.6 17.6 35.2 58.6 31.2 62.4 103.8 On Figs.</sentence>
+    <sentence>1–3, recognition accuracies of the proposed GMM-LPP measures in comparison to all the baseline measures listed previously are presented.</sentence>
+    <sentence>Those are evaluated on UMD, CUReT and KTH-TIPS databases respectively, where accuracies for SR-EMD-M and SR-EMD-M-L are taken from Li et al.</sentence>
+    <sentence>(2013) and we used the same parameters of the experiment listed in Li et al.</sentence>
+    <sentence>(2013).</sentence>
+    <sentence>Namely, for all experiments, we kept the number of Gaussian components in both training and/or testing set, fixed and equal to .</sentence>
+    <sentence>For each class, we select randomly (by uniform distribution) fixed number N of texture images to be in the training set.</sentence>
+    <sentence>The rest of images we use for testing.</sentence>
+    <sentence>For each database whose results are presented, we vary the mentioned number of training texture images N. For the proposed GMM-LPP measures, we train the projection matrix W on the whole set of GMMs obtained from the set of training texture image examples (by using the EM procedure).</sentence>
+    <sentence>It is done as it is described in Sections 3.1 and 2.2 for unsupervised GMM-LPP1 measure, and as it described in 3.3 and 2.2 for supervised GMM-LPP2 measure.</sentence>
+    <sentence>We note that as we obtained almost similar results on all databases in cases of weighted min-max measure given by (3.17) and weighted sum measure given by (3.18), we presented only the min-max case.</sentence>
+    <sentence>In the testing stage, for a particular texture image, we uniformly divide it into four sub-images.</sentence>
+    <sentence>For each which we estimate a GMM with component Gaussians.</sentence>
+    <sentence>Hence, each image is represented by four GMMs.</sentence>
+    <sentence>Each one of the four GMMs is compared to all GMMs of the training set and its label is determined by the kNN algorithm.</sentence>
+    <sentence>The final class label is determined by voting.</sentence>
+    <sentence>We kept in the kNN procedure in all experiments.</sentence>
+    <sentence>The final results are then averaged over 20 trials.</sentence>
+    <sentence>In all experiments, the number of all significant eigenvalues, i.e., those with values greater than is limited to the fixed maximal number lmax, and that particular maximal number is actually reached in all trials.</sentence>
+    <sentence>Thus, for all databases used, we vary from to in order to analyze the trade-off between the recognition accuracy and the computational efficiency.</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Classification rate vs. the number of training examples for the UMD texture database.</sentence>
+    <sentence>Fig 2.</sentence>
+    <sentence>Classification rate vs. the number of training examples for the CUReT texture database.</sentence>
+    <sentence>Fig 3.</sentence>
+    <sentence>Classification rate vs. the number of training examples for the KTH-TIPS texture database.</sentence>
+    <sentence>For all the databases used (see Figs 1–3), it can be seen that although for the case the recognition accuracy of unsupervised GMM-LPP1 is slightly lower in comparison to all KL-based measures and EMD-KL measure, in the case of and the recognition accuracy is on a level with KL-based and EMD-KL measures.</sentence>
+    <sentence>Moreover, SR-EMD-M and SR-EMD-M-L obtain the best recognition accuracy.</sentence>
+    <sentence>For supervised GMM-LPP2, recognition accuracy, for the case and is higher in comparison to KL-based, as well as EMD-KL measure.</sentence>
+    <sentence>It is on a level with SR-EMD-M measure, but lower than SR-EMD-M-L measure, for all databases.</sentence>
+    <sentence>On the other hand, computational efficiency is largely in favor of all the proposed GMM-LPPs, in comparison to all the baseline measures.</sentence>
+    <sentence>Namely, as it is presented in Section (3.4), we estimate the computational complexity (per one GMMs comparison, i.e., distance evaluation) of all the proposed GMM-LPP measures roughly as O(K2lmax), where K is the number of GMM components (size of GMM) in the particular GMM1.</sentence>
+    <sentence>As it is presented in Section (3.4), for all the KL-based baseline algorithms, i.e., KLWE, KLMB and KLVAR, the computational complexity is estimated roughly as O(K2d3).</sentence>
+    <sentence>Also (see Section 3.4), for the EMD-based baseline algorithms, i.e., EMD-KL and SR-EMD-M, the computational complexity is estimated roughly as O(8K5d3) and O(kiterK4d3), respectively, with kiter &gt; &gt;K (see Li et al., 2013).</sentence>
+    <sentence>Thus, the ratio between the computational complexity of all the proposed GMM-LPPs and all the baseline KL-based methods is estimated roughly as lmax/d3.</sentence>
+    <sentence>The ratios between the computational complexity of all the proposed GMM-LPP and the baseline EMD-based measures are estimated as and respectively.</sentence>
+    <sentence>From the previous estimates, it is clear that the computational complexity is largely in favor of the proposed GMM-LPPs in comparison to all the KL-based, as well as EMD-based baseline algorithms.</sentence>
+    <sentence>That is also confirmed in Table 15, case where the processing CPU times are evaluated on the KTH-TIPS database.</sentence>
+    <sentence>We held and or for all experiments.</sentence>
+    <sentence>As it can be seen from the results presented in Fig 3 and Table 15, in the case of KTH-TIPS texture database, the best trade-off between the recognition accuracy and the processing CPU times for all GMM-LPPs is obtained for the case.</sentence>
+    <sentence>It is also the best trade-off between the recognition accuracy and the processing CPU times in comparison to all the baseline measures presented.</sentence>
+    <sentence>Of course, the average processing CPU times of tested measures do not depend on databases (the differences are small) but only on the size of the feature space (which we held fixed), the size of GMM used K, and in the case of GMM-LPPs on the size of the transformed space of parameters lmax.</sentence>
+    <sentence>Thus, on the base of Table 15 and also Figs.</sentence>
+    <sentence>1 and 2, the previous conclusion on trade-off between the recognition accuracy and the processing CPU times holds for all databases.</sentence>
+    <sentence>We note that the processing CPU times for SR-EMD-M measure (SR-EMD-M-L has the same complexity), are not given in Table 15, as those were not implemented.</sentence>
+    <sentence>Nevertheless, we note that its computational complexity given in Section 3.4, suggests that it at most several times lower than the computational complexity of EMD-KL whose CPU times are given in Table 15 and much higher than the CPU times of baseline KL-based measures.</sentence>
+    <sentence>Thus, we conclude that the proposed GMM-LPP measures obtain the best trade-off of all baseline measures that we take into comparison.</sentence>
+    <sentence>In order to summarize the experimental results obtained and to underline the strengths but also the constraints of the proposed GMM-LPPs, we once again note the following: KL-based baseline GMM similarity measures KLWE, KLMB and KLVAR given by (2.4), (2.5) and (2.8), which are used in experiments in Section 4 as well as those given by (2.1), (2.7) are based on approximating the KL divergence between GMMs.</sentence>
+    <sentence>All such approximations include the evaluations of ground distances in the form of KLs between belonging Gaussian components, which is conducted in the exploitation phase.</sentence>
+    <sentence>They are given in the close form by (2.3), whose computational complexity (see Section 3.4) is of order O(K2d3) where K denotes the size of GMMs (all the same size) and where Covariances corresponding to Gaussian components are of d × d format.</sentence>
+    <sentence>The EMD-based measures EMD-KL, proposed in Wu et al.</sentence>
+    <sentence>(2003) and SR-EMD-M, SR-EMD-M-L proposed in Li et al.</sentence>
+    <sentence>(2013) are not directly based on approximation of KL divergence between particular GMMs.</sentence>
+    <sentence>Nevertheless, they also utilize KL or Lie group based ground distances between the positive definite matrices of format given by (3.12), based on informational geometrical properties of Gaussians, delivered in Lovric et al.</sentence>
+    <sentence>(2000).</sentence>
+    <sentence>Thus, they are even more complex i.e., at least of order O(K5d3) (see Section 3.4).</sentence>
+    <sentence>The GMM-LPPs that we propose are also not directly based on approximating the KL divergence between GMMs.</sentence>
+    <sentence>Moreover, as they utilize LPP-like projection of the original parameter space onto the lower dimensional space of parameters, they use ground distances between belonging Gaussian components in original parameter space only in the training phase, which is conducted off-line.</sentence>
+    <sentence>Thus, as it is presented in Section 3.2, they basically transform problem of finding the distance between two GMMs into the approximate problem of finding the distance between two pondered “clouds” of low dimensional Euclidian vectors in with l &lt; &lt;d2, each corresponding to particular GMM.</sentence>
+    <sentence>Consequently, they utilize Euclidian distance in the exploitation phase implying that the computational complexity (see Section 3.4) of GMM-LPPs is given by O(K2l) and consequently significantly lower in comparison to all previously mentioned measures.</sentence>
+    <sentence>Contrary to KL-based measures previously listed and at the same time similar to SR-EMD-M, the proposed GMM-LPP can be given in its supervised version (learning where every Gaussian component in the training set has its class label), which we present in Section 3.3.</sentence>
+    <sentence>As it can be seen from the experiments conducted on real data in texture recognition task, the contribution of supervised approach is significant.</sentence>
+    <sentence>We underline that the assumption that the parameters of Gaussians belonging to GMMs used in some particular problem, lie close to some lower dimensional manifold embedded into the high-dimensional configuration space of parameters constrains to some extent the efficient application of the proposed GMM-LPP.</sentence>
+    <sentence>It is crucial in order to obtain higher accuracy together with higher computational efficiency.</sentence>
+    <sentence>Of course if this is not the case, GMM-LPP can at most obtain better trade-off between recognition accuracy and computational load, which is often acceptable in AI and Expert systems dealing with big-data.</sentence>
+    <sentence>We demonstrate, on various texture databases, that this is the case in texture recognition task.</sentence>
+    <sentence>Actually, by using the supervised version of the proposed GMM-LPP, we obtain higher recognition accuracy in comparison to all KL-based baseline measures listed, for all tested databases, keeping at the same time the computational complexity much lower (see Section 4.2).</sentence>
+    <sentence>The recognition accuracies obtained by supervised GMM-LPP are close to those obtained by sparse representation based SR-EMD-M and SR-EMD-M-L, but with much lower computational cost.</sentence>
+    <sentence>We note that the sparse representation based SR-EMD-M and SR-EMD-M-L which overall obtained better recognition results, also utilize some kind of lower-dimensional imbedding, as sparse representations could be viewed representing data on the union of low dimensional subspaces.</sentence>
+    <sentence>Finally, we compare the proposed GMM-LPP measures ( case) with six state-of-the-art texture classification methods.</sentence>
+    <sentence>Those results in the means of recognition accuracy are presented in Table 16.</sentence>
+    <sentence>The results are taken from the related papers, whose references are placed in the first column of the table, where symbol “-” means that the result is unavailable.</sentence>
+    <sentence>We conclude that for KTH-TIPS database, in and case, the proposed GMM-LPPs obtain higher recognition accuracies than all the state-of-the-art methods listed, except Liu, Fieguth, Kuang, and Zha (2011), which obtained the best result for .</sentence>
+    <sentence>For UMD and CUReT database, supervised GMM-LPP2 obtained recognition accuracies comparable with the best methods presented, while GMM-LPP1 obtained lower accuracies (although not significantly) except for the CUReT case, where the methods proposed in Hayman et al.</sentence>
+    <sentence>(2004) and Liu et al.</sentence>
+    <sentence>(2011) performed significantly better.</sentence>
+    <sentence>Table 16.</sentence>
+    <sentence>Recognition accuracies of the proposed unsupervised GMM-LPP1 and supervised GMM-LPP2 in comparison to some state-of-the-art texture recognition methods.</sentence>
+    <sentence>In the application of GMM-LPPs, we set and .</sentence>
+    <sentence>KTH-TIPS UMD CUReT method 5 10 40 5 10 20 10 26 Zhang, Marszalek, Lazebnik, and Schmid (2007) 80.1 90.0 96.1 – – – 80.0 91.1 Hayman et al.</sentence>
+    <sentence>(2004) 78.3 85.3 94.8 – – – 91.0 97.6 VZ-joint (Varma &amp; Zisserman, 2003) 72.9 80.5 92.1 – – – 83.4 93.1 WMFS (Ji, Yang, Ling, &amp; Xu, 2013) – – 96.5 – – 98.7 – – Liu et al.</sentence>
+    <sentence>(2011) 80.5 87.8 99.3 95.0 97.5 99.3 91.5 98.3 CLBP (Guo, Zhang, &amp; Zhang, 2010) 76.1 85.5 96.8 92.4 96.0 98.0 93.6 92.9 GMM-LPP1 76.1 93.2 97.8 93.3 93.7 94.9 91.4 94.1 GMM-LPP2 77.2 94.1 97.9 95.0 96.8 97.1 92.1 94.8</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>In this work we propose a novel similarity measure between GMMs.</sentence>
+    <sentence>It incorporates the LPP based technique, in order to learn the linear projection matrix, projecting the parameters of GMMs onto the lower dimensional space of parameters.</sentence>
+    <sentence>At the same time, the local neighborhood information from the original space of GMM parameters is preserved in the transformed parameter space.</sentence>
+    <sentence>This significantly lowers the computational complexity of the resulting method, in comparison to baseline methods.</sentence>
+    <sentence>At the same time, greater discriminativity between classes is obtained, if the parameters of GMMs lie approximately on a lower-dimensional surface embedded in the cone of positive definite matrices.</sentence>
+    <sentence>In the experiments conducted on specially conducted artificial data, as well as real texture databases, we obtained much higher trade-off between the recognition accuracy and computational complexity, in comparison to some state of the art baseline GMM similarity measures.</sentence>
+    <sentence>Higher recognition rate in comparison to baseline measures, is also obtained in experiments on artificial data.</sentence>
+    <sentence>As the proposed method is fully unsupervised, in our future work, we intent to develop a similar semi-supervised method, capable of additionally increasing discriminativity between classes.</sentence>
+    <sentence>Also, we intend to explore the effectiveness of similarity measures rendered by various forms of aggregation operators.</sentence>
+    <sentence>1 where the assumption is that two GMMs have the same size.</sentence>
+  </section>
+</article>

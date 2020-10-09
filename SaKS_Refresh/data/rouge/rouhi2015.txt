@@ -1,0 +1,382 @@
+CNN templates are generated using a genetic algorithm to segment mammograms. An adaptive threshold is computed in region growing process by using ANN and intensity features. In tumor classification, CNN produces better results than region growing. MLP produces the highest classification accuracy among other classifiers. Results on DDSM images are more appropriate than those of MIAS.
+
+0.042328 - Breast cancer is regarded as one of the most frequent mortality causes among women.
+0.060241 - As early detection of breast cancer increases the survival chance, creation of a system to diagnose suspicious masses in mammograms is important.
+0.073059 - In this paper, two automated methods are presented to diagnose mass types of benign and malignant in mammograms.
+0.114321 - In the first proposed method, segmentation is done using an automated region growing whose threshold is obtained by a trained artificial neural network (ANN).
+0.101849 - In the second proposed method, segmentation is performed by a cellular neural network (CNN) whose parameters are determined by a genetic algorithm (GA).
+0.081761 - Intensity, textural, and shape features are extracted from segmented tumors.
+0.088154 - GA is used to select appropriate features from the set of extracted features.
+0.106870 - In the next stage, ANNs are used to classify the mammograms as benign or malignant.
+0.060241 - To evaluate the performance of the proposed methods different classifiers (such as random forest, naïve Bayes, SVM, and KNN) are used.
+0.099174 - Results of the proposed techniques performed on MIAS and DDSM databases are promising.
+0.049020 - The obtained sensitivity, specificity, and accuracy rates are 96.87%, 95.94%, and 96.47%, respectively.
+0.041667 - According to American cancer society (ACS), about 40,030 breast cancer deaths are predicted in USA in 2013 (39,620 women and 410 men).
+0.068783 - Breast cancer is referred to an abnormal multiplication of cells in the breast tissue.
+0.052910 - It is the second most common cause of deaths in women after lung cancer.
+0.036530 - Since 1989, the breast cancer mortality rates have declined sharply in young women under 50 years of age.
+0.018265 - Such reduced mortality rates can be associated with the early detection and effective treatments (American Cancer Society, 2013).
+0.070922 - Generally, there are several types of abnormalities in mammograms such as masses and micro-calcifications (Kopans, 1998).
+0.049383 - Masses are attributed to any lesion, lump, or protuberance in the breast and micro-calcifications are calcium deposits due to secretion of milk glands in the breast appearing in clusters or individuals.
+0.047281 - The size of individual micro-calcifications can be ranged from twenty to hundreds of microns in diameter.
+0.057348 - Since micro-calcifications have higher contrast than masses in mammograms, detection and diagnosis of masses is a more challenging problem (Bator & Nieniewski, 2012; Vyborny & Giger, 1994).
+0.050553 - Recent developments in digital mammography imaging systems have aimed to better diagnosis of abnormalities in the breast (Winsberg, Elkin, Macy, Bordaz, & Weymouth, 1967) and have increased the survival chance (Akay, 2009).
+0.066335 - Computer aided diagnosis (CAD) systems are sets of automatic or semi-automatic tools using computer technology to help radiologists with detection and classification of breast abnormalities (Freer & Ulissey, 2001).
+0.062893 - As a result, CAD systems seem appealing to the radiologists.
+0.073529 - Generally, a CAD system consists of segmentation, feature extraction and classification stages (Tahmasbi, Saki, & Shokouhi, 2011).
+0.066253 - Efficient segmentation of mammograms in which the main characteristics of tumors, especially boundaries, are preserved can successfully influence the consequent stages.
+0.091719 - The main contribution of this paper is proposing two segmentation approaches based on the improvement of region growing and CNN with respect to preserve tumor boundary information to diagnose benign and malignancy in mammograms.
+0.102102 - In mammograms there are two regions of breast and non-breast.
+0.058201 - To diagnose masses, the region of interest (ROI) is cropped from the breast area.
+0.066661 - Pixels inside masses usually have the highest intensity in an ROI.
+0.000000 - They usually present visually continuous variation.
+0.090917 - So, these characteristics imply a region growing procedure to segment masses in ROIs (Wei, Chen, & Liu, 2012).
+0.099927 - Region growing method is a region-based segmentation in which masses are segmented by grouping similar neighboring pixels of seed points.
+0.055846 - For example, if a similarity measure of the two adjacent pixels is greater than a threshold, these pixels are considered as similar and thus are grouped together.
+0.024024 - The grouping of neighboring pixels continues until no similar pixels remain.
+0.049910 - Compared to the detection of seed points for an image, selection of an appropriate value for the threshold is a more considerable problem; because the threshold can affect preserving the boundary information of the masses and benign and malignancy diagnosis (Cao, Hao, Zhu, & Xia, 2010).
+0.072736 - In spite of these problems, during the region growing process (as a region-based method in boundary extraction) the intensity and the spatial and connectivity information are considered; contrary to what happened in pixel- and edge-based methods (Rabottino, Mencattini, Salmeri, Caselli, & Lojacono, 2011).
+0.089013 - There are different approaches to improve traditional region growing segmentation, some recent studies are as follows.
+0.000000 - Wei et al.
+0.088926 - proposed a boundary segmentation technique based on region growing as a part of their content-based mammogram retrieval system.
+0.042042 - The brightest pixels in an ROI were considered as seed points.
+0.056385 - Determination of the threshold was done experimentally in which 100 images were tested using different thresholds and then the threshold was set as 1.07 (Wei et al., 2012).
+0.064516 - Choosing a constant threshold for all images caused smaller or larger mass segments than the reference mass segment which is called under-and over-segmentation, respectively.
+0.080277 - As such, a method is needed to determine an adaptive threshold for each image.
+0.000000 - Berber et al.
+0.126092 - adjusted region growing to set threshold adaptively by using a produced mass size estimation of intensity histogram in OTSU segmentation (Berber, Alpkocak, Balci, & Dicle, 2013).
+0.063348 - In Lixin, Yanan, Bin, and Yuhong (2013) to reach the best growth criteria, the trend of the gradient of different mass images was considered in order to segment masses in mammograms.
+0.021164 - Furthermore, the high frequency pixels with intensity above 200 were determined as seed points.
+0.000000 - Görgel et al.
+0.053782 - proposed a local seed region growing (LSRG) method in which the selection of seed points and similarity criterion were determined according to the local and global information (i.e., mean and standard deviation of neighboring pixels 3 × 3, as local and the entire image as global).
+0.039216 - Also, to set the threshold, different definitions were introduced and tested (Görgel, Sertbas, & Ucan, 2013).
+0.123363 - In Melouah (2013), a training dataset contains the extracted features from images and their corresponding threshold in order to produce an adaptive threshold in region growing was built.
+0.086055 - Then, by using a K-nearest neighbor (KNN) and the training dataset the threshold of an image was estimated, adaptively.
+0.127555 - In the first proposed method of this study, the region growing-based segmentation method is improved by using the extracted intensity features from ROIs and applying the ANN to generate an adaptive threshold.
+0.081462 - Because of the high computational cost of region growing method, it is unsuitable for segmenting high resolution images such as mammograms (Rabottino et al., 2011).
+0.075269 - Therefore, to overcome this shortcoming, a segmentation method using CNN with hardware accessibility and parallel computing is applied in the second proposed method of this study.
+0.083722 - A CNN is a model introduced by Chua and Yang based on ANN and cellular automata.
+0.033126 - Due to its architecture computational power, it is suited for real-time and high-speed parallel signal processing (Chua & Yang, 1988).
+0.060498 - Cells in the network map input signal into output with dynamic behavior which is determined by using 19 parameters named cloning template.
+0.090036 - Setting the CNN template is the most important issue in the image processing application of CNN (Matsumoto, Chua, & Suzuki, 1990).
+0.082816 - In different studies, the segmentation of a variety of images (such as mammograms, MR, infrared images) have been done using CNN.
+0.033058 - In Sampaio, Diniz, Silva, and de Paiva (2009) and Borges Sampaio et al.
+0.080579 - (2011), mammograms segmentation was done using the stated CNN templates of Textudil and Blur that were introduced in Zarándy et al.
+0.000000 - (1994).
+0.058932 - With respect to the obtained results by Borges et al., it was pointed out that to reach better segmentation results CNN parameters should be optimized.
+0.083141 - Template learning techniques have been used widely in studies to design CNN template.
+0.044150 - During this, the correlation between the input and the desired output images is found and the template is obtained.
+0.057471 - Some recent relevant studies on designing CNN parameters are stated as follows.
+0.066509 - A method to detect edges in noisy images using CNN was introduced in Li, Liao, Li, Huang, and Li (2011) in which the CNN template was designed with a linear matrix inequality (LMI)-based method.
+0.000000 - Cerasa et al.
+0.113480 - introduced a method to train CNN by using a genetic algorithm in automatic segmentation of brain MR images (Cerasa et al., 2012).
+0.000000 - Wang et al.
+0.073918 - proposed CNN learning algorithms based on genetic algorithm and particle swarm optimization (PSO) for infrared images.
+0.066527 - Based on their results, genetic algorithm showed fast convergence compared to PSO, especially for large images (Wang, Yang, Xie, & An, 2014).
+0.115832 - In fact, in the second proposed technique, the CNN parameters are set using a genetic algorithm with an attempt to preserve tumor boundary in mammograms segmentation, specially for the images in DDSM and MIAS databases.
+0.060606 - In order to evaluate the two proposed methods, the following stages are performed.
+0.095979 - After segmentation of the tumors based on improved region growing and CNN, as it was pointed out above, different features such as intensity, shape, and texture are extracted from the segmented tumors.
+0.094603 - Then, to select appropriate features and reduce the computational cost the feature selection process is performed by a genetic algorithm.
+0.088235 - The performance of the proposed segmentation methods is practically revealed in benign and malignant classification stage.
+0.057395 - The proposed methods are evaluated by different classifiers such as MLP, random forest, naïve Bayes, SVM, and KNN.
+0.059337 - It should be noted that both of the proposed methods are new approaches compared to the existing methods to diagnose benign and malignant breast tumors in mammograms.
+0.091445 - The obtained results demonstrate that the segmentation using the improved CNN with capability of parallel computing and MLP classification are promising compared with the existing methods, in terms of sensitivity, specificity, accuracy, and AUC.
+0.073059 - To provide a better understanding of the proposed algorithms, the presented article is organized in the following order.
+0.075269 - In Section 2, the proposed method is described consisting of six subsections of image acquisition, pre-processing, segmentation, post-processing, feature extraction, feature selection, and classification.
+0.089744 - In Section 3 experimental results of segmentation and classification are explained, and finally in Section 4 the conclusion is drawn.
+0.080341 - The applied stages in the breast cancer detection and diagnosis systems are similar to those of artificial intelligence-based systems and generally consist of pre-processing, segmentation, feature extraction, feature selection, and classification (Ganesan et al., 2013).
+0.068966 - The general trend of our proposed automatic techniques is introduced in Figs.
+0.018779 - 1 and 2.
+0.055980 - The difference between the two proposed techniques lies in the way segmentation techniques are applied.
+0.075923 - As shown in Fig 1, the first method uses region growing algorithm whose required threshold is obtained by a trained neural network as shown in Fig 2 the segmentation of the second method is performed by a cellular neural network whose parameters are determined by genetic algorithm for partitioning the image into meaningful regions.
+0.052980 - In order to elaborate more on the proposed methods, this section is divided into several subsections as the following.
+0.093038 - The first proposed automated technique based on region growing segmentation Fig 1.
+0.101939 - The first proposed automated technique based on region growing segmentation.
+0.022989 - The second proposed automated technique based on cellular neural network… Fig 2.
+0.036036 - The second proposed automated technique based on cellular neural network segmentation.
+0.058252 - Image acquisition The proposed techniques are applied on a portion of images taken from two common databases of mammography imaging analysis society (MIAS) and digital database for screening mammography (DDSM).
+0.053763 - To examine the performance of the proposed techniques, we used 93 and 170 images containing malignant and benign masses, respectively, from both MIAS and DDSM databases.
+0.063218 - In the following the characteristics of the two applied databases are described.
+0.033149 - Mammography imaging analysis society The database is available online on the website http://peipa.essex.ac.uk/info/mias.html for the academic research purposes.
+0.025445 - The database contains 161 pairs of mediolateral oblique (MLO) view images with 1024 × 1024 resolution.
+0.059696 - The images are taken from a film-screen mammographic imaging of the United Kingdom national breast screening program.
+0.030075 - After digitizing the images, they have been annotated based on background tissue (fatty, fatty-glandular and dense glandular), class of abnormality (calcification, well defined, spiculated, architectural distortion, asymmetry, ill-defined, and normal) and severity of abnormality (benign or malignant) by expert radiologists.
+0.051724 - Also, the center coordinates of abnormality and its approximate radius are determined.
+0.036530 - Digital database for screening mammography It is another collection of mammograms consisting of 2620 cases and 43 volumes.
+0.022039 - It is freely available on http://marathon.csee.usf.edu/Mammography/Database.html.
+0.052009 - A “case” is a collection of mammograms and information corresponding to one mammography exam of one patient.
+0.033058 - A “volume” is a collection of cases collected together for ease of distribution.
+0.045977 - Images in this database were taken in MLO and craniocaudal (CC) views.
+0.052209 - Each image has been annotated by at least two expert radiologists and the location of abnormalities is assigned as a chain code.
+0.048565 - Also, this database contains metadata of each abnormality using the breast imaging reporting and data system (BI-RADS) lexicon.
+0.033167 - Severity of abnormalities are divided into benign and malignant and classes of abnormalities are categorized into well-defined, ill-defined and spiculated masses, architectural distortion, asymmetry, calcification and normal.
+0.034314 - Also, characteristics of background tissue of abnormalities are divided into fatty, fatty-glandular, and dense-glandular.
+0.078215 - Pre-processing In the pre-processing stage first of all, the images are cropped to obtain the ROIs containing abnormality tissues and masses.
+0.073316 - This is done by using the existing coordinates corresponding to the center and the approximate radius of each abnormality for MIAS images and the chain code for DDSM images.
+0.045802 - Since mammograms are taken under different conditions, they are affected by noise and some artifacts.
+0.027397 - Moreover, they usually do not have the desired contrast to perform accurate analyses of the two proposed techniques.
+0.043011 - As such, the local area histogram equalization is used (Bick & Diekmann, 2010) and then the median filtering (Mohanty, Senapati, & Lenka, 2013) is applied to suppress noise.
+0.068627 - In the histogram equalization stage, the intensity of image pixels is stretched to extend the contrast.
+0.072289 - Median filtering is a nonlinear operation (Forsyth & Ponce, 2003) often used in image processing to reduce “salt and pepper” and speckle noise.
+0.040712 - Fig 3 shows subsequent pre-processing steps applied on an image taken from DDSM database.
+0.058608 - Result of pre-processing step Fig 3.
+0.065844 - Result of pre-processing step.
+0.024024 - (a) Original image, (b) Contrast enhanced image, (c) Median filtered image.
+0.061069 - Segmentation Here, the segmentation process separates the tumor areas from the background tissue in mammograms.
+0.073260 - There are two major approaches in segmentation.
+0.057115 - (i) Region-based methods (such as region growing, split/merge using quad-tree decomposition) in which similarities are detected, and (ii) boundary-based methods (such as thresholding, gradient edge detection) in which discontinuities are detected and linked to form region boundaries (Oliver et al., 2010).
+0.081425 - The segmentation of nontrivial images is one of the most difficult tasks in image processing.
+0.107423 - In the proposed diagnosis techniques two region-based methods, region growing and cellular neural network, are proposed for segmenting tumors.
+0.046512 - These are explained as the following.
+0.094603 - Region growing method The applied segmentation method in the first proposed technique is an improvement of region growing segmentation method.
+0.101441 - Region growing is a region-based method starting with seed points in the image.
+0.024024 - Seeds propagate until the specified stop criteria is satisfied (Zucker, 1976).
+0.071141 - Different steps of region growing are presented as the following: (i) Input image = ROI; (x, y) = maximum intensity in ROI; t = produced seed point using trained ANN; mean of region = I(x, y); (ii) Start region growing until the distance between the region intensity mean and new pixels intensity mean become higher than the threshold t. (iii) Add new 4-neighbors pixels.
+0.044077 - (iv) Add neighbor if inside and not already part of the segmented area.
+0.055980 - (v) Add pixel with intensity nearest to the mean of the region, to the region.
+0.055556 - (vi) Calculate the new mean of the region.
+0.035623 - (vii) Save the x and y coordinates of the pixel (for the neighbor add process).
+0.000000 - (viii) Return 2.
+0.094346 - Considering the fact that the mammograms do not have the same intensity contrast, allocation of a constant threshold to segment the image by region growing leads to inaccurate segmentation results.
+0.054054 - Consequently, an automatic method is needed to determine an appropriate threshold.
+0.036036 - To this end, a trained artificial neural network (ANN) is proposed.
+0.050314 - Artificial neural networks are major parts of machine learning algorithms.
+0.057395 - Basically, a neural network is constructed based on some processing elements, namely neurons, which are connected together by synapses.
+0.041885 - Each neuron calculates the sum of weighted input signals and then an activation function is applied to limit the output of neurons to a pre-specified interval.
+0.045662 - In order to map input vectors to output vectors, the weights of the neural network should be tuned.
+0.018868 - This process is known as training or learning (Haykin, 1994).
+0.033058 - Multi-layer neural network (MLP) is composed of one or several hidden layers.
+0.086534 - MLP is trained using a back propagation (BP) algorithm.
+0.052009 - In this algorithm, the aim is minimizing the error E between the network output and target vectors.
+0.040161 - The applied steps in BP are as the following (Chauhan, Goel, & Dhingra, 2012): (i) Initialize the weights in the neural network randomly.
+0.000000 - (ii) Repeat.
+0.011019 - (iii) For each training sample x: (iv) Forward propagate x through the network.
+0.043956 - (v) Backward error E in the network.
+0.000000 - (vi) End.
+0.000000 - (vii) Until terminating condition (minimum error E).
+0.000000 - (viii) End.
+0.039735 - Forward propagation: Calculate the output corresponding to each training sample x, by passing x through neurons in the network.
+0.056194 - Backward propagation: Produced errors of each neuron in the output and hidden layers are calculated according to (1) (2) value of weights related to the synapse is evaluated by (3) where Δwji is defined as (4) and η is the learning rate.
+0.066578 - By applying a 2-layer neural network, an appropriate threshold is obtained for each image.
+0.068120 - The input and target matrices for training ANN consist of the extracted values related to the intensity histogram features from ROIs (see Table 1) and the obtained threshold of each image for region growing.
+0.066158 - After training, the obtained neural network is capable of generating a relevant threshold for segmentation.
+0.055096 - As such, each image is more accurately segmented applying its own generated threshold.
+0.000000 - Table 1.
+0.090090 - Intensity histogram features for training ANN to produce an appropriate threshold.
+0.020202 - Feature No.
+0.009132 - Feature 1 Mean 2 Variance 3 Skewness 4 Kurtosis 5 Entropy 6 Energy 7 Contrast 2.3.2.
+0.126092 - Cellular neural network method The segmentation in the second proposed technique is based on a CNN whose parameters are determined by using a genetic algorithm.
+0.054054 - CNN is an array of nonlinear programmable analog processors named cells.
+0.039216 - Each cell interacts with its neighboring cells similar to what happens in the cellular automata method.
+0.090195 - CNNs are capable of parallel processing by mapping inputs to outputs; similar to what happens in AAN.
+0.047009 - Fig 4 shows a 2-dimensional CNN in which each cell interacts with other cells in a 4 × 4 neighborhood.
+0.026403 - Two-dimensional CNN with 4×4 cells Fig 4.
+0.029304 - Two-dimensional CNN with 4 × 4 cells.
+0.058824 - Corresponding to an image with M × N pixels, a CNN with M × N cells is considered.
+0.057823 - Each cell in CNN is a dynamic system whose state changes over time based on a mathematical model and its output is a nonlinear function of cell states.
+0.052356 - For a cell Cij a neighborhood Sij(r) with radius is defined according to (5) In this work, the CNN model in Chua & Yang (1988) is applied.
+0.039216 - Each cell in this model is a simple nonlinear analog circuit as shown in Fig 5.
+0.022599 - It consists of a linear capacitor, an independent current source, an independent voltage source, two linear resistors, at most 2m linear voltage-controlled current sources (m being the number of neighbor cells of the considered unit).
+0.038585 - The voltage vxij(t) across the capacitor is the state of the cell, Cij, while vyij and vuij(t) represent the input and the output, respectively, and Ixy(i, j; k, l; t) and Ixu(i, j; k, l) are defined as (6) (7) Structure of cell in CNN Fig 5.
+0.082305 - Structure of cell in CNN.
+0.033097 - Parameters A(i, j; k, l) and B(i, j; k, l) specify interaction between CNN cells.
+0.032922 - The output vyij(t) is determined using nonlinear voltage controlled current source Iyx that is the only nonlinear element of the cell (8) where f is the characteristic function of the nonlinear controlled current source, defined as (9) By applying Kirchhoff laws, the state of a cell in CNN is defined according to the nonlinear differential equation as (10) The most important problem in using CNN is parameters setting A(i, j; k, l), B(i, j; k, l), and scalar Z; i.e., training CNN.
+0.049193 - The template [A(i, j; k, l), B(i, j; k, l), Z] can be determined by an evolutionary process such as genetic algorithm which is a stochastic optimization algorithm originated from a reproduction procedure.
+0.070393 - Each chromosome in GA is characterized as In order to decrease the computational cost, matrices A and B are considered asymmetric.
+0.078574 - Thus, the structure of each chromosome (template) is modeled as The training phase of CNN using genetic algorithm is done using two typical images and their corresponding manually segmented images by expert radiologists.
+0.040404 - In Figs.
+0.052910 - 6 and 7 two typical images taken from DDSM and MIAS databases are shown.
+0.053030 - The steps in training CNN is defined as the following: (i) Generate initial population with selecting the numbers in the range [−6, 6] randomly.
+0.000000 - (ii) Repeat.
+0.036036 - (iii) Calculate fitness function corresponding to each element in Population (chromosome).
+0.037736 - (iv) Select pairs of the best ranking chromosomes as parents.
+0.000000 - (v) Apply cross over operator.
+0.000000 - (vi) Apply mutation operator.
+0.028736 - (vii) Select one of training images (manually segmented images) randomly, see Figs.
+0.018779 - 6 and 7.
+0.063218 - (viii) Set the parameters in produced chromosome from step (vi) in template.
+0.118812 - (ix) Segment image using produced template and CNN algorithm.
+0.017544 - (x) Compute fitness function.
+0.000000 - (xi) Until terminating condition.
+0.000000 - (xii) End.
+0.055980 - Two selected images taken from DDSM database to train CNN: (a) original images,… Fig 6.
+0.061466 - Two selected images taken from DDSM database to train CNN: (a) original images, (b) manually segmented images.
+0.055980 - Two selected images taken from MIAS database to train CNN: (a) original images,… Fig 7.
+0.061466 - Two selected images taken from MIAS database to train CNN: (a) original images, (b) manually segmented images.
+0.022117 - The parameters related to perform GA are selected as the following: Population size: 30 Crossover percentage: 0.8 Mutation percentage: 0.3 Mutation rate: 0.02 Chromosome selection: Roulette Wheel method.
+0.000000 - Terminating condition: maximum iteration 100.
+0.033003 - Fitness function in GA is defined as Eq (11).
+0.056047 - (11) where symbol ⊕ denotes the xor operator and is operated between two pixels in location (i, j) of two binary images; i.e., manually segmented image (target image) and the segmented image by CNN.
+0.097113 - Generally, Eq (11) produces the number of unequal pixels in the target and segmented images.
+0.064394 - By subtracting the produced value of Eq (11) from the size of image, the number of equal pixels in both binary images is generated.
+0.046595 - Hence, fitness function is evaluated by (12) and the aim in GA is maximizing the related value (the number of equal pixels) (Cerasa et al., 2012).
+0.079892 - After applying all the mentioned procedures in this section, the CNN template is generated as Due to the fact that images are taken under varying conditions in different databases, segmentation cannot be done precisely and accurately for MIAS images using the above obtained template.
+0.079365 - As a result, the following template is produced for MIAS database as 2.4.
+0.084656 - Post processing Undesirable objects might appear in the resulted images and it is unavoidable.
+0.044077 - To remove such imperfections, the area of the objects is taken into consideration.
+0.069652 - Besides, because of the importance of tumor margin in clinical recognition process, a sequence of morphological techniques (dilation and erosion) is used to preserve the marginal information of tumor.
+0.066007 - Fig 8 shows the results of post-processing stage.
+0.055096 - Post-processing step: (a) original image, (b) segmented image, and (c)… Fig 8.
+0.049020 - Post-processing step: (a) original image, (b) segmented image, and (c) segmented image after pot-processing.
+0.074434 - Feature extraction In this work, 51 features related to the intensity histogram, shape, and texture features are extracted from segmented images to present the characteristics of the segmented masses, appropriately.
+0.097701 - Compared to other regions in mammograms, tumors appear with a higher intensity.
+0.070640 - Shape features affect benign and malignant classification strength; because tumors belonging to the same class are of similar shape.
+0.039841 - As malignant tumors often have erratic texture compared to benign tumors, textural features are extracted from gray-level co-occurrence matrix (GLCM) (Jalaja, Bhagvati, Deekshatulu, & Pujari, 2005) containing the second-order statistical information of neighboring pixels of an image.
+0.072072 - Most of the extracted features are listed in Tables 2–4.
+0.000000 - Table 2.
+0.037559 - Intensity histogram features.
+0.020202 - Feature No.
+0.011019 - Feature 1 Mean 2 Variance 3 Skewness 4 Kurtosis 5 Entropy Table 3.
+0.020202 - GLCM features.
+0.020202 - Feature No.
+0.012012 - Feature 1 Energy 2 Homogeneity 3 Correlation 4 Contrast Table 4.
+0.052632 - Region features/shape measurements.
+0.020202 - Feature No.
+0.020434 - Feature 1 Area 2 Major Axis length 3 Minor Axis length 4 Convex Area 5 Eccentricity 6 Diameter 7 Orientation 8 Solidity 9 Perimeter 10 Extent 11 Skeleton 12 Spiculated Among extracted features, Zernike moments are good descriptors for object shape.
+0.033058 - To extract features, they do not require precise border information of each object.
+0.053830 - As such, even if the objects are not segmented very well, they can achieve good results (Wei, Li, Chau, & Li, 2009).
+0.051724 - Zernike moments map an image to a set of Zernike complex polynomials.
+0.049689 - Since Zernike polynomials are orthogonal to each other, they present image features without overlapping and extra information (Liu, Babbs, & Delp, 2001).
+0.056482 - The process of calculating Zernike moments related to an image are explained as follows (Tahmasbi et al., 2011): (i) Calculate radius polynomials.
+0.000000 - (ii) Calculate Zernike basic functions.
+0.028736 - (iii) Map image matrix on Zernike basic functions to obtain Zernike moments.
+0.047009 - Discrete form of Zernike moments for an image with N × N pixels is (13) where and is a normalization factor.
+0.034529 - Also, n is a non-negative integer representing the order of radius polynomial and the angle repetition m is an integer satisfying (14) where Rn,m and Vn,m are radius polynomials and Zernike two-dimensional basic function, respectively.
+0.031746 - Although Zernike moments with higher orders hold more information, they increase the computational costs.
+0.058480 - Therefore, Zernike moments and the angle of each moment are computed up to the 4th order (30 features out of 51 extracted features).
+0.058824 - Produced Zernike moments and their physical meaning are shown in Table 5, (Amroabadi, Ahmadzadeh, & Hekmatnia, 2011).
+0.000000 - Table 5.
+0.015504 - Zernike moments and their physical meaning.
+0.014065 - Index m n Zernike polynomial Physical meaning 0 0 0 1 Piston: constant term 1 1 −1 Distortion: title in x direction 2 1 1 Distortion: title in y direction 3 2 −2 Astigmatism with axis at ±45° 4 2 0 Spherical defocus: field curvature 5 2 2 Astigmatism with axis at 0 or 90 6 3 −3 Triangular astigmatism, based on x-axis (Trefoil) 7 3 −1 Primary coma along x-axis 8 3 1 Primary coma along y-axis 9 3 3 Triangular astigmatism, based on y-axis (Trefoil) 10 4 −4 Quatrefoil 11 4 −2 5th order astigmatism 12 4 0 Spherical 13 4 2 5th order astigmatism 14 4 4 Quatrefoil In addition to the extracted features, spiculated feature is also of the same importance in classification.
+0.049242 - It is obtained according to Minavathi, Murali, and Dinesh (2011) by calculating the curvature angle for each pixel from the edge of the tumors.
+0.064257 - As shown in Fig 9, to calculate the curvature angle, two appropriate pixels on both sides of the point A are considered.
+0.027397 - After plotting the lines passing from point A though pixels, the angle between the two lines is evaluated.
+0.068493 - For each pixel on the edge of tumor a similar process is applied to obtain the curvature angle.
+0.054795 - The curvature angles less than 70° for each pixel on the edge of tumor indicate the spiculated feature.
+0.014652 - Procedure of calculating curvature angle Fig 9.
+0.016461 - Procedure of calculating curvature angle.
+0.048048 - Finally, for each tumor, the number of curvature angles is counted.
+0.081491 - The spiculated feature can effect tumor classification.
+0.054054 - Malignant tumors have more number of spiculated pixels than benign tumors.
+0.061069 - Feature selection Feature selection is done in order to select appropriate features from extracted features.
+0.037037 - It improves the prediction accuracy and decreases the computational cost (Lai, Li, & Biscof, 1989).
+0.058824 - Feature selection is a search problem in a large space of solutions (different mixtures of features).
+0.082528 - For selecting features, the genetic algorithms are used with two different forms of chromosomes creation and fitness functions.
+0.053763 - In the first form, each chromosome is a binary string in which each gene shows the presence or absence of each feature, as 0 and 1.
+0.049751 - In the second form, each chromosome has 20 genes and each gene is assigned with values ranged from [1, 51] in order to select one out of 51 features.
+0.069016 - The general steps of genetic algorithm are as follows: (i) Create the initial population of chromosomes.
+0.000000 - (ii) Repeat.
+0.036036 - (iii) Calculate fitness function corresponding to each element in population (individual).
+0.037736 - (iv) Select pairs of the best ranking chromosomes as parents.
+0.000000 - (v) Apply cross over operator.
+0.000000 - (vi) Apply mutation operator.
+0.000000 - (vii) Until terminating condition.
+0.000000 - (viii) End.
+0.039548 - The parameters related to GA in the first form of chromosomes creation and fitness function are: Population size: 80 Crossover percentage: 0.8 Mutation percentage: 0.5 Mutation rate: 0.02 Chromosome selection: Roulette Wheel method.
+0.030905 - Terminating condition: maximum iteration 100 and differential between values of fitness functions in 2 iteration of GA > 0.002.
+0.034440 - Fitness function (Peng, Long, & Ding, 2005): (15) where x and y are two feature vectors, p(x, y) is the joint probability density function of x and y vectors, and p(x) and p(y) are marginal probability density functions of feature vectors.
+0.039548 - The parameters related to GA in the second form of chromosomes creation and fitness function are: Population size: 50 Crossover percentage: 0.8 Mutation percentage: 0.5 Mutation rate: 0.02 Chromosome selection: Roulette Wheel method.
+0.000000 - Terminating condition: maximum iteration 100.
+0.027100 - Fitness function (Hall, 1999): (16) where k is the number of selected features, is the mean of coefficient correlation between the selected features and target vector, and is the mean of coefficient correlation between the two selected features.
+0.057398 - After performing GA algorithms with different chromosome structures and fitness functions, some features that are in bold in Table 6 are selected frequently among the extracted features in implementation of the two automatic proposed methods on DDSM and MIAS databases.
+0.000000 - Table 6.
+0.072072 - Features which are frequently selected using GA in two proposed techniques.
+0.006173 - Feature names Mean Minor Axis Length Variance Convex Area Skewness Eccentricity Kurtosis Diameter Entropy Orientation Contrast Spiculated Homogeneity Solidity Correlation Perimeter Area Extent Major Axis Length Zernike Skeleton Zernike angle 2.7.
+0.051948 - Classification Since MLPs are appropriate tools in pattern recognition (Chauhan et al., 2012; Cheng et al., 2006; Kuo, Hsiao, Huang, & Chen, 2008; Pawar & Patil, 2013; Tahmasbi et al., 2011) they are used in this work.
+0.064257 - The values related to the selected features using GA in feature selection step are given to the neural networks as input vectors.
+0.066007 - Therefore 20 neurons are placed in the input layers.
+0.052632 - To perform a 2-class categorization to distinguish the benign tumors from the malignant ones, we put one neuron in the output layer of the neural network to produce two outputs 0 or 1 to detect the benign and malignant tumors, respectively.
+0.036723 - To evaluate the performance of the methods, 93 mammography ROIs containing 54 benign and 39 malignant tumors from MIAS database, and 170 mammography ROIs containing 74 benign and 96 malignant tumors from DDSM database were taken.
+0.043290 - The proposed algorithms were run in MATLAB® (software MATLAB version R2012a) and on a PC with the following characteristics: Intel Pentium 4 (2.93 GHz) and 4 GB of RAM with windows-7 operating system.
+0.101545 - The obtained results are presented in two sub-sections of segmentation and classification performance for the two proposed methods.
+0.038567 - Segmentation performance Segmentation accuracy determines the eventual success or failure of segmentation procedures.
+0.059829 - To measure the segmentation performance of the proposed methods two criteria DICE and Jaccard which are frequently used are applied.
+0.038986 - DICE indicates the degree of overlapping between two binary images (Dice, 1945) and Jaccard generates the degree of similarity metric (Cheetham & Hazel, 1969).
+0.066277 - These are defined by (17) (18) where A and B are the manually segmented image and output image of the segmentation method, respectively.
+0.066194 - As illustrated bellow the segmentation methods in the proposed systems are applied on the images in Figs.
+0.018779 - 10 and 11.
+0.081761 - Their corresponding results are listed in Tables 7 and 8.
+0.064263 - As shown, the obtained values of DICE and Jaccard related to the second proposed technique achieve better results.
+0.110280 - Results of segmentation based on region growing (first proposed method)… Fig 10.
+0.097950 - Results of segmentation based on region growing (first proposed method) corresponding two images: (a) original images, (b) segmented images, and (c) target images.
+0.060606 - Results of segmentation based on CNN (second proposed method) corresponding two… Fig 11.
+0.072289 - Results of segmentation based on CNN (second proposed method) corresponding two images: (a) original images, (b) segmented images, and (c) target images.
+0.000000 - Table 7.
+0.062500 - Segmentation results related to the first proposed technique.
+0.027397 - Image in Fig 10 DICE (%) Jaccard (%) 1 0.92 0.87 2 0.91 0.89 Table 8.
+0.062500 - Segmentation results related to the second proposed technique.
+0.027397 - Image in Fig 11 DICE (%) Jaccard (%) 1 0.93 0.88 2 0.95 0.90 3.2.
+0.064725 - Classification performance Errors of the used MLP neural networks are calculated by mean squared error (MSE) according to (19) where O and F are the target and output matrices, respectively.
+0.086957 - Other related metrics are also calculated as (Metz, 1978): TP: true positive, the classification result is positive in presence of malignancy.
+0.090090 - TN: true negative, the classification result is negative in being benign.
+0.090090 - FP: false positive, the classification result is positive in being benign.
+0.097701 - FN: false negative, the classification result is negative in presence of malignancy.
+0.035865 - According to above definitions the equations related to specificity (accuracy of negative class), sensitivity (accuracy of positive class) and accuracy of recognize both negative and positive classes are defined as (20) (21) (22) The receiver operating characteristic (ROC) is one of the standard criteria for evaluating classification performance of the proposed methods.
+0.033167 - ROC curve is plotted in a two-dimensional space where x-axis and y-axis represent 1-specificity (or true positive rate) and sensitivity (or false positive rate), respectively.
+0.044077 - It shows the tradeoff between hit rates and false alarm rates of classifiers.
+0.034483 - For better explanation of ROC, area under the ROC curve was measured.
+0.062112 - Sensitivity is a significant factor in diagnosing tumors since an increase in the value of FN might lead into patients’ death.
+0.050228 - To determine a good ANN structure, various ANN structures with different number of layers and nodes are applied.
+0.049419 - Often two-layer neural networks obtained better results.
+0.072398 - The structure of the applied ANNs in the proposed techniques is listed in Tables 9 and 10 based on the stage with which ANNs are applied with the specific purposes (segmentation or classification).
+0.045549 - Activation function of the output layer and learning rule for applied ANNs are the linear function and back propagation (BP), respectively.
+0.053763 - The second column in Table 9 illustrates the structure of the applied neural network in segmentation for determining an appropriate threshold in the first proposed method.
+0.080378 - To classify tumor types in MIAS database another ANN is used as shown in the third column.
+0.081871 - Similarly, for the images taken from DDSM database other ANNs based on what is provided in the fourth and fifth columns are applied.
+0.111111 - In the second proposed technique, other ANNs to classify mammograms in MIAS and DDSM databases are used (see Table 10).
+0.000000 - Table 9.
+0.048611 - Architecture of applied ANNs in first proposed technique.
+0.024440 - Purposed Segmentation Classification Segmentation Classification Database MIAS MIAS DDSM DDSM Type of ANN MLP MLP MLP MLP Number of layers 3 2 2 2 Neurons in input layer 7 20 7 20 Neurons in hidden layer(s) 6, 3 20 10 3 Neurons in output layer 1 1 1 1 Learning rule BP BP BP BP Training function trainlm trainlm trainlm trainbr Activation function of hidden layer(s) logsig, tansig logsig tansig logsig Error MSE MSE MSE MSE Type of problem Regression Classification Regression Classification Table 10.
+0.048611 - Architecture of applies ANNs in second proposed technique.
+0.040616 - Purposed Classification Classification Database MIAS DDSM Type of ANN MLP MLP Number of layers 2 2 Neurons in input layer 20 20 Neurons in hidden layer 20 3 Neurons in output layer 1 1 Learning rule BP BP Training function trainlm trainbr Activation function of hidden layer logsig logsig Error MSE MSE Type of problem Classification Classification The results of AUC, specificity, sensitivity, and accuracy in 10 times of running the proposed algorithms in the best and average cases are presented in Table 11.
+0.000000 - Table 11.
+0.066007 - Classification specificity, sensitivity, and accuracy rate in proposed techniques.
+0.015204 - Proposed methods Database Sensitivity (%) Specificity (%) Accuracy (%) AUC (%) First proposed method in best case MIAS 85.41 91.89 88.65 92.45 First proposed method in average case MIAS 80.76 82.40 81.58 88.18 Second proposed method in best case MIAS 92.70 90.54 90.16 95.58 Second proposed method in average case MIAS 87.91 85.40 86.66 88.15 First proposed method in best case DDSM 95.83 95.94 95.57 95.86 First proposed method in average case DDSM 94.68 95.94 94.67 95.31 Second proposed method in best case DDSM 96.87 95.94 96.47 95.1 Second proposed method in average case DDSM 96.25 93.78 95.01 94.99 According to Table 11, the second method applied on DDSM database, in the best and average cases, has better sensitivity respect to the other methods.
+0.028369 - It is desirable to have both high sensitivity and high specificity, but this is frequently not possible.
+0.033058 - Higher sensitivity leads to lower specificity, and the vice versa (Lalkhen & McCluskey, 2008).
+0.061489 - In tumor diagnosis, higher sensitivity is more important as it causes early detection of malignancy.
+0.028986 - In the first proposed method, the higher specificity shows benign diagnosis strength, whereas, in the second proposed method sensitivity is higher.
+0.066277 - For better illustration, in Fig 12 the ROC curves are plotted for proposed methods on the two used databases in the best case.
+0.040230 - ROC curves for proposed techniques on MIAS and DDSM databases Fig 12.
+0.044025 - ROC curves for proposed techniques on MIAS and DDSM databases.
+0.090784 - Furthermore to assess a certainty level of the two proposed methods in tumor classification on images taken from MIAS and DDSM databases 10-fold cross validation method is used (Refaeilzadeh, Tang, & Liu, 2009).
+0.040230 - In 10-fold cross validation the database is divided into 10 folds.
+0.042553 - ANN is trained with 9 folds and the remaining fold is applied to test the neural network.
+0.071625 - The obtained accuracy mean is considered for evaluating the neural network in classification.
+0.079776 - In Fig 13, to compare the results of 10-fold cross validation for MLP with other classifiers such as random forest, naïve Bayes, KNN, and SVM are provided.
+0.099653 - As shown, MLP is the best classifier in both proposed methods among the other classifiers to recognize benign and malignant tumors.
+0.072072 - Results of different classifiers using 10-fold cross validation Fig 13.
+0.079208 - Results of different classifiers using 10-fold cross validation.
+0.068376 - Several existing methods with different approaches in diagnosing benign or malignant tumors and their results are listed in Table 12.
+0.093597 - In Verma, McLeod, and Klevansky (2010), a new SCBDL classifier showed better results compared to the standard MLP and improved the overall accuracy in tumor diagnosis.
+0.084715 - Therefore, in the fifth row of Table 12 the results of soft clustered-based direct learning (SCBDL) on segmented images based on CNN are given.
+0.057551 - After clustering the benign and malignant tumors into 6 subclasses, the weight matrix in the cluster layer is determined by using the Modified Gram–Schmidt orthogonalization.
+0.036036 - After determining the weights, the test data is given to SCBDL.
+0.000000 - Table 12.
+0.017544 - Comparison of existing methods.
+0.010796 - Methods (%) Database Classifier Sensitivity (%) Specificity (%) Accuracy (%) AUC (%) Second technique (best) DDSM MLP 96.87 95.94 96.47 95.10 Second technique (average) DDSM MLP 96.25 93.78 95.01 94.99 Second technique (best) MIAS MLP 92.70 90.54 90.16 95.58 Second technique (average) MIAS MLP 87.91 85.40 86.66 88.15 Second technique (best) DDSM SCBDL 80.70 79.00 80.00 – Wang and Yang et al., 2014; Wang, Li, & Gao, 2014 DDSM SVM – – 92.74 96.50 Liu and Tang, 2013 DDSM SVM 92.00 93.00 93.00 94.39 Saki et al., 2013 MIAS OWBPE 90.10 88.06 89.28 92.80 Zhang, Tomuro, Furst, & Raicu, 2012 DDSM SVM – – 72.00 – Tahmasbi et al., 2011 MIAS MLP 100 94.50 96.43 97.60 Buciu and Gacsadi, 2011 MIAS PSVM 84.61 80 82.30 78.00 Tahmasbi et al., 2010 MIAS MLP 90.10 94.44 92.80 98.00 Verma et al., 2010 DDSM MLP 85.00 92.50 88.75 – Verma et al., 2010 DDSM SCBDL 97.50 97.50 97.50 – Verma et al., 2009 DDSM SCNN 97.83 90.74 94.28 – Rojas-Domínguez and Nandi, 2009 DDSM, MIAS Bayesian, FLD – – 81.00 – Mu et al., 2008 MIAS S2SP – – – 95.00 Masotti, 2006 DDSM SVM 90.00 95.50 92.75 97.80 For performance comparison purposes, some typical results of the two proposed methods on DDSM and MIAS databases are shown.
+0.023599 - It should be noted that unlike the methods in Mu, Nandi, & Rangayyan (2008), Rojas-Domínguez and Nandi (2009), Saki, Tahmasbi, Soltanian-Zadeh, and Shokouhi (2013), Tahmasbi, Saki, and Shokouhi (2010), Tahmasbi et al.
+0.013201 - (2011), Verma, McLeod, and Klevansky (2009), Verma et al.
+0.060691 - (2010) that the images are manually segmented and in Buciu and Gacsadi (2011), Masotti (2006) that have no segmentation stage, in our proposed methods all of the stages in image analysis including pre-processing, segmentation, post-processing, feature extraction, feature selection, and classification are done automatically.
+0.079470 - Breast tumor segmentation is one of the most important and crucial stages in medical image processing and pattern recognition.
+0.107687 - In this work, two automated methods were presented based on the improvement of region growing and CNN segmentations to produce an adaptive threshold and appropriate templates, respectively, in order to preserve tumor boundary information to diagnose benign and malignancy in mammograms.
+0.149359 - In the first method, intensity features and ANN were applied to generate an adaptive threshold in the region growing stage of segmentation process.
+0.125876 - In the second method, a learning algorithm was proposed using genetic algorithm to determine CNN templates in segmentation of images (in DDSM and MIAS databases).
+0.112800 - The proposed methods have improved the CNN and region growing methods in breast tumor segmentation.
+0.076969 - To evaluate the performance of the proposed segmentation methods, after extracting the intensity, shape, and texture features in order to characterize the segmented tumors, a genetic algorithm was applied to select the appropriate features.
+0.077216 - Finally, the tumor classification was performed using different classifiers such as MLP, random forest, naïve Bayes, SVM, and KNN.
+0.111186 - As a result, MLP produced the best diagnosis performance in both proposed methods.
+0.089727 - The obtained results indicated that the improvement of the region growing and CNN segmentations and utilization of intensity, textural, and shape features of the segmented tumors provides satisfactory systems to diagnose benign and malignant tumors.
+0.080012 - Considering parallel computations and hardware accessibility of CNN (and also its demonstrated high ability compared with region growing in diagnosing of tumors), this paper sheds more light on breast tumor classification and helps the radiologists in their diagnosis task.
+0.029466 - Moreover, the higher sensitivity versus the lower specificity of the second proposed method shows the higher diagnosis strength of malignancy compared to benign of tumors.
+0.029915 - This advantage increases the survival chance of the patient with early detection of cancer and offers more effective treatment options.
+0.067901 - Also, the classification performance of the second proposed method (in terms of sensitivity, specificity, accuracy, and AUC) is comparable with that of other existing methods to recognize benign and malignant breast tumors.
+0.091365 - In spite of the stated strengths of the proposed techniques, variability of the results on DDSM and MIAS databases is considered as a weakness.
+0.045802 - As a result, further study can be conducted with more emphasis on different preprocessing methods.
+0.061047 - Also, other neural networks (such as self-organizing map (SOM), SVM, and radial basis function (RBF)) and different evolutionary algorithms (such as particle swarm, harmony, ant colony, and tabu search) can be applied in determination of an adaptive threshold and CNN templates in the first and second methods.
+0.000000 - These can be considered as future work.
+
+[Frase 361] In the first method, intensity features and ANN were applied to generate an adaptive threshold in the region growing stage of segmentation process.
+[Frase 362] In the second method, a learning algorithm was proposed using genetic algorithm to determine CNN templates in segmentation of images (in DDSM and MIAS databases).
+[Frase 360] In this work, two automated methods were presented based on the improvement of region growing and CNN segmentations to produce an adaptive threshold and appropriate templates, respectively, in order to preserve tumor boundary information to diagnose benign and malignancy in mammograms.
+

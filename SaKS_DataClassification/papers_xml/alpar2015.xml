@@ -1,0 +1,259 @@
+<article>
+  <title>Intelligent biometric pattern password authentication systems for touchscreens</title>
+  <abstract>
+    <sentence>Given the recent developments in alternative authentication interfaces for smartphones, tablets and touchscreen laptops, one of the mostly selected method is the pattern passwords.</sentence>
+    <sentence>Basically, the users that prefer this method, draw a pattern between the nodes to open the lock in lieu of entering an alphanumeric password.</sentence>
+    <sentence>Although drawing a pattern seems easier than typing a password, it has a major security drawback since it can be very easy to be stolen.</sentence>
+    <sentence>Therefore, this paper proposes some novel theoretical ideas with artificial intelligence methods, to improve security of pattern password authentication, using touching durations as biometric traits.</sentence>
+    <sentence>What we put forward is the utilization of three different neural network based algorithms to verify logins with one novel histogram-based technique in a hidden interface for enrollment, training and verification.</sentence>
+    <sentence>Inspired by the keystroke recognition models, the touch time and durations are extracted to create a ghost password.</sentence>
+    <sentence>Moreover, the nodes are colored depending on the touch duration in the hidden interface and subsequently the colored images are exported.</sentence>
+    <sentence>As a result of training session, the system discriminates real attempts from frauds using artificial neural networks (ANN), adaptive neuro-fuzzy inference systems (ANFIS) and Red–Green–Blue (RGB) Histogram methods in verification phase.</sentence>
+    <sentence>The results are greatly encouraging that we reached 0% of false accept rate (FAR) for 80 fraud attacks with 16.5% false reject rate (FRR) of unsuccessful authentication for the 80 real attempts when started with interval checking algorithm.</sentence>
+    <sentence>Moreover, to reduce this FRR, we utilized neural network based systems and consequently with ANN, we achieved 8.75% equal error rate (EER), with ANFIS, 2.5% EER for 85% proximity and finally with RGB Histogram method, we attained 7.5% EER.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Biometric authentication</keyword>
+    <keyword>Touch pattern</keyword>
+    <keyword>Neural networks</keyword>
+    <keyword>Adaptive neurofuzzy</keyword>
+    <keyword>RGB Histograms</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>In recent years, the pattern password authentication interfaces have introduced subsequent to emergence of touchscreen devices such as phones, tablets and touchscreen computers.</sentence>
+    <sentence>Since some keyboard interfaces are certainly very small to enter a password, nowadays pattern password is one of the commonly used authentication method.</sentence>
+    <sentence>Due to its imitability, pattern passwords however have some security issues, regardless how complicated the passwords may be.</sentence>
+    <sentence>Even without paying special attention, pattern passwords could easily be recognized since the authentication programs generally have a kind of weakness that the password patterns are shining brightly or at least changing colors.</sentence>
+    <sentence>Considering this salient effect, the password with cyan color as an example of colorization and illumination could be seen in Fig 1.</sentence>
+    <sentence>Password patterns (left: idle pattern, right: recorded pattern) Fig 1.</sentence>
+    <sentence>Password patterns (left: idle pattern, right: recorded pattern).</sentence>
+    <sentence>Additionally, the pattern password authentication is supposed to have medium security according to the security options of Samsung Duos 8262, the basic model for this research, where the alternatives vary from swiping (no security) to alphanumeric password authentication (maximum security).</sentence>
+    <sentence>Therefore, enhancing the pattern password authentication system seems to be a crucial requirement without altering the dynamics.</sentence>
+    <sentence>Considering the dynamics of pattern password authentication, what we put forward is a novel idea that utilizes the touching durations on the nodes of the pattern password as the main biometric trait, with several classification methods based on artificial intelligence tools.</sentence>
+    <sentence>Biometrics is the term introduced in 1890s (El-Abed &amp; Charrier, 2012) that is originated from fingerprint classification systems (Cole, 2004) and dealing with the unique physical, biological, behavioral and habitual characteristics of human-beings.</sentence>
+    <sentence>Biometric authentication systems refer to intelligent recognition and identification of individuals, to discriminate real and fake attempts based on unique characteristics of users.</sentence>
+    <sentence>In the past decade, it is possible to find numerous researches in various subtopics consisting of biometrics, intelligent recognition and authentication such as Clarke and Furnell (2007a, 2007b), Fan and Lin (2009), Jain and Nandakumar (2012), Shen, Cai, Guan, Du, and Maxion (2103), Feher, Elovici, Moskovitch, Rokach, and Schclar (2012) and Simoens, Bringer, Chabanne, and Seys (2012).</sentence>
+    <sentence>One of the common biometric recognition system is keystroke recognition that extracts inter-key durations as a feature with an assumption of no other can enter a password like the owner.</sentence>
+    <sentence>From it has been introduced by Spillane (1975) the keystroke authentication algorithms are researched and a great number papers are published such as Karnan, Akila, and Krishnaraj (2011), Karatzouni and Clarke (2007), Clarke and Furnell (2007a, 2007b), Kang, Hwang, and Cho (2007), Cho, Han, Han, and Kim (2000), Haidar, Abbas, and Zaidi (2000), Umphress and Williams (1985), Joyce and Gupta (1990), Bleha, Silvinsky, and Hussien (1990), Leggett, Williams, Usnick, and Longnecker (1991), Obaidat and Sadoun (1997), Monrose and Rubin (1997), Monrose and Rubin (2000), Araujo, Sucupira, Lizarraga, Ling, and Yabu-Uti (2005), Gunetti and Picardi (2005) and Ahmed, Traore, and Almulhem (2008).</sentence>
+    <sentence>As the recent studies of keystroke authentication (Alpar, 2014; Campisi, Maiorana, Bosco, &amp; Neri, 2009; Crawford, 2010; Dholi &amp; Chaudhari, 2013; Garg &amp; Meena, 2012; Hwang, Lee, &amp; Cho, 2009; Jamil &amp; Khan, 2011; Li et al., 2011; Messerman, Mustafic, Camtepe, &amp; Albayrak, 2011; Rudrapal &amp; Das, 2013; Saevanee &amp; Bhattarakosol, 2009; Syed, Banerjee, Cheng, &amp; Cukic, 2011; Teh, Teoh, Tee, &amp; Ong, 2010; Zhong, Deng, &amp; Jain, 2012) are the most remarkable articles in the literature.</sentence>
+    <sentence>Even though the subject of this paper is inspired by keystroke authenticating algorithms, the core of this research is slightly different that we investigated touching durations instead of inter-key durations.</sentence>
+    <sentence>However, it is not plausible to state that everyone’s touching times are as unique as keystrokes, therefore we concentrated on invisible ghost passwords which can be created intentionally.</sentence>
+    <sentence>Briefly, we wrote an interface that collects touching durations from first touch to release, and saves the intervals as biometric data.</sentence>
+    <sentence>Afterwards, we checked the future logins by comparing with the saved data, as the first simple interval checking method.</sentence>
+    <sentence>However this process resulted in a very strict authentication, with 0% false accept rate (FAR) which is flawless, while with an unexpected false reject rate (FRR) as 16.5%, since the intervals were extremely narrow.</sentence>
+    <sentence>Therefore, to lower the FRR, we proposed several artificial intelligence based algorithms such as ANN, ANFIS and RGB Histogram technique.</sentence>
+    <sentence>In the literature, there are several papers which are close to our research regarding touchscreen authentication such as Zheng, Bai, and Huang (2012), Kwapisz, Weiss, and Moore (2010), Chang, Tsai, and Lin (2012), Sae-Bae, Ahmed, Isbister, and Memon (2012), De Luca, Hang, Brudy, Lindner, and Hussmann (2012), Angulo and Wästlund (2012), Shahzad, Liu, and Samuel (2013), Schaub, Deyhle, and Weber (2012), Shahzad, Zahid, and Farooq (2009), Maiorana, Campisi, González-Carballo, and Neri (2011) and Rao, Aparna, Akash, and Mounica (2014).</sentence>
+    <sentence>Since it is a very fresh field, there are a few papers published in recent years, similar to principal of ours, regarding touchscreen authentication.</sentence>
+    <sentence>Briefly, Sae-Bae et al.</sentence>
+    <sentence>(2012) proposed a novel multi-touch and gesture-based authentication method that combines biometric techniques with gestural input.</sentence>
+    <sentence>Using five-finger touch gestures, based upon classifying movement characteristics of the center of the palm and fingertips, they collected biometric data with the pattern recognition techniques.</sentence>
+    <sentence>They also established a classifier to recognize unique biometric gesture characteristics and check the future logins.</sentence>
+    <sentence>Chang et al.</sentence>
+    <sentence>(2012) introduced a new graphical-based password keystroke authentication system for touch screen handheld mobile devices.</sentence>
+    <sentence>In their paper, they enlarged the password space size and utilized keystroke system for touch screen handheld mobile devices with a pressure feature.</sentence>
+    <sentence>The paper of De Luca et al.</sentence>
+    <sentence>(2012) seems the most close paper to ours since they researched the pattern passcodes, as well.</sentence>
+    <sentence>They introduced an authentication approach that enhances password patterns with an additional security layer, transparent to the user.</sentence>
+    <sentence>Therefore users authenticated by the pattern and by the way they press the pattern nodes.</sentence>
+    <sentence>Moreover they introduced a novel method of dynamic time warping borrowed from speech recognition for the analysis of biometric data.</sentence>
+    <sentence>Shahzad et al.’s (2013) paper, which is also relevant to our research, presented a biometric authentication for touchscreen smartphones, however without patterns.</sentence>
+    <sentence>In their paper they introduced a user authentication scheme for the secure unlocking of touch screen devices.</sentence>
+    <sentence>They focused on finger velocity, device acceleration as novel features as well as stoke durations.</sentence>
+    <sentence>Angulo and Wästlund (2012) proposed the usage of lock pattern dynamics as a secure and user-friendly authentication method with developing an application for the Android mobile platform to collect data, with the way that individuals draw lock patterns on a touchscreen.</sentence>
+    <sentence>The achieved 10.39% EER with a Random Forest machine learning classier method using finger-in-dot and finger-in-between nodes features.</sentence>
+    <sentence>Maiorana et al.</sentence>
+    <sentence>(2011) also proposed a method of keystroke recognition for keypads of mobile devices.</sentence>
+    <sentence>The novelty in their research is the new statistical classifier with Manhattan and Euclidean distances.</sentence>
+    <sentence>Moreover, regarding the very recent studies of biometric keystroke authentication for touchscreens, the most noticeable papers currently published are as follows; Tasia, Chang, Cheng, and Lin (2014) proposed a twelve key virtual keypad as an interface for users to enter their pins.</sentence>
+    <sentence>They extracted 6 features including pressure and size as rarely used traits in the literature, and utilized statistical classifiers.</sentence>
+    <sentence>Kang and Cho (2014) designed three different interfaces for touchscreens and one for pc keyboards to collect biometric data.</sentence>
+    <sentence>They used several statistical methods to classify the authentication data and reached 5.64% EER for 1000 reference and test set sizes.</sentence>
+    <sentence>Furthermore, Kambourakis, Damopoulos, Papamartzivanos, and Pavlidakis (2014) implemented a keystroke system for Android touchscreens and presented two novel traits: speed and distance besides two known features: hold-time and inter-time.</sentence>
+    <sentence>Using KNN and Random Forest algorithms, they classified the attempts according to two different methodologies and scenarios.</sentence>
+    <sentence>When compared with these papers, what we introduce a novel pattern password authentication systems with neural network based ANFIS and RGB Histogram methods as the new classifiers.</sentence>
+    <sentence>Furthermore, we manipulated the standard learning process in ANN to fit our requirements by introducing a separation rate.</sentence>
+    <sentence>Additionally, we used Levenberg–Marquardt algorithm consisting of Jacobian matrix to train the network in RGB Histogram method since there was not 1–1 correspondence between inputs and outputs.</sentence>
+    <sentence>Given these facts, the paper starts with the introduction of the authentication system we proposed.</sentence>
+    <sentence>The mathematical foundations of the experiments are individually stated in Section 3, prior to experimental results section.</sentence>
+    <sentence>The comparison of the results within the articles published and conclusion sections are in the end.</sentence>
+  </section>
+  <section name="Authentication system">
+    <sentence>Since the authentication system has many subsystems, the workflow could seem a little complicated, however it is easier to comprehend the whole system by dividing into subsystems.</sentence>
+    <sentence>Although one is visible, there are actually two interfaces, one is the password pattern authentication screen while other is for ghost password.</sentence>
+    <sentence>The ghost password term here is the duration vectors for ANN and ANFIS and colorized images for RGB Histogram method.</sentence>
+    <sentence>Moreover, entering a password in the registration step activates two subsystems: pattern recording and training.</sentence>
+    <sentence>Briefly, in pattern recording phase; the maximum 9-bit password is recorded with the ghost password data which consists of touch durations and subsequently saved as the password vector and the duration matrix.</sentence>
+    <sentence>Once the user touches a node, the chronometer starts to count from zero until the touch is over as seen in Fig 2.</sentence>
+    <sentence>At the same time, the relevant node is numerated with the touch order and subsequently the color of the node is changed.</sentence>
+    <sentence>Node touching durations Fig 2.</sentence>
+    <sentence>Node touching durations.</sentence>
+    <sentence>As the recording is over, training phase begins with the durations and the moments saved, by ANN, ANFIS and RGB Histogram algorithms separately.</sentence>
+    <sentence>Although each method has totally different algorithms, the main objective is single and simple; to define a trusted region or a control value for future logins.</sentence>
+    <sentence>Therefore, trials that mismatch the regions or values will be rejected in testing phase even if the password itself is correctly entered.</sentence>
+    <sentence>The users will have a second chance if their first attempt is rejected, however in our research both attempts are considered disparately.</sentence>
+    <sentence>In addition to the description of the system mentioned above, the workflow could be seen in Fig 3.</sentence>
+    <sentence>Workflow of proposed authentication system Fig 3.</sentence>
+    <sentence>Workflow of proposed authentication system.</sentence>
+    <sentence>The proposed system initially starts with the enrollment step, prior to pattern password analysis, by registering the pattern code.</sentence>
+    <sentence>In enrollment step, it is generally mandatory to register twice with the same code before logging in.</sentence>
+    <sentence>However, it is enlarged to an R value since for ANN based techniques, two value vector as an input for training section is extremely low.</sentence>
+    <sentence>Therefore, it is possible to consider the system as it starts after th attempt which is 10 for this paper.</sentence>
+    <sentence>Above all, we emulated the Samsung Duos 8262 screen with 480 × 800 px2 pattern password area (A) and 9 nodes which are simulated in Matlab.</sentence>
+    <sentence>We did not change either the circle node system or the positions however we added the smallest squares that touch internal tangent circles for changing colors in RGB Histogram system.</sentence>
+    <sentence>The process starts with defining the area with 480 × 800 px2 to simulate the user interface of pattern password with locating the sub-areas to .</sentence>
+    <sentence>The areas could be seen in Fig 4.</sentence>
+    <sentence>Total area vs Fig 4.</sentence>
+    <sentence>Total area vs. sub-areas where; circles as visible pattern, squares as ghost pattern used in RGB Histograms.</sentence>
+    <sentence>Furthermore, the areas are masked with a pattern image with changing the color of circles to magenta, when touched or slipped on.</sentence>
+    <sentence>In addition, a small gray triangle is added on the nodes to follow the path after the first touch.</sentence>
+    <sentence>The examples of proposed pattern password user interface is seen in Fig 5 with several passwords.</sentence>
+    <sentence>Visible user interface and examples of pattern passwords (a=[0 5 6 4 2 1 0 3… Fig 5.</sentence>
+    <sentence>Visible user interface and examples of pattern passwords (a = [0 5 6 4 2 1 0 3 0], b = [0 3 0 2 0 4 0 1 0], c = [0 0 1 5 2 0 0 4 3]).</sentence>
+    <sentence>As a brief explanation of this figure; the password starts from the magenta node which does not include a triangle that should be considered as the first digit of the password.</sentence>
+    <sentence>For instance, on left, passwords starts from sixth and slips through fifth, since there is a little triangle on the node 5, showing west.</sentence>
+    <sentence>Therefore, in the password, the sixth digit is 1st and fifth is 2nd character, while in the password form, sixth element of the vector has the value of 1 and the fifth element has 2.</sentence>
+    <sentence>Additionally, three sub-functions are written as touch, leave and slip functions which are necessary to collect data for x and y touch coordinates.</sentence>
+    <sentence>When touched or slipped to any subarea, the value of password array turns to 1, as well as the duration values start to count from zero until the user moved outside of the circle or the touch ends.</sentence>
+    <sentence>These durations are saved to be used in training phases.</sentence>
+  </section>
+  <section name="Experiments on classifying methods">
+    <sentence>The experiments begin with the emulation of Samsung Duos 8262 phone screen having a resolution of 480 × 800 px2 on touchscreen Dell Inspiron 15R laptop.</sentence>
+    <sentence>Since the major objective of the paper is authentication, the main output of the system is granting the legitimate trials where rejecting the others, thus identification of the users is not a concern.</sentence>
+    <sentence>All training and real attempts are made by one user, (35-male-frequent touchscreen user), while there were 10 users imitating fraud attempts.</sentence>
+    <sentence>From the age of 18–65, 4 females and 6 males were in the fraud group, who are also frequent touchscreen users.</sentence>
+    <sentence>We initiated the experiments with determining the password same as Fig 1 on the right, thus briefly in the vector form of p = [1 2 0 0 3 0 0 0 4].</sentence>
+    <sentence>Above all, each single authentication method we proposed is restricted to the number of touched nodes.</sentence>
+    <sentence>Additionally, by entering the pattern code ten times from the user interface, touch durations of the nodes are saved, which could be seen in Table 1, in order to train the neural networks.</sentence>
+    <sentence>As an important notice, since the maximum time allowed for a node touch is 2 s, the exceeding durations are rounded down to 2.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Saved touch durations ( represents the time touched to corresponding node ).</sentence>
+    <sentence>Trial 1 2 3 4 5 6 7 8 9 10 2.00 2.00 2.00 2.00 1.83 2.00 2.00 2.00 2.00 2.00 0.69 0.45 0.60 0.67 0.97 0.89 1.03 0.48 0.87 0.72 0.20 0.20 0.24 0.26 0.29 0.23 0.30 0.21 0.22 0.23 1.22 1.00 0.99 0.98 1.09 1.32 1.23 1.12 1.19 1.30 The intervals in the table can be summarized as; for every node A, which correspond the maximum and minimum values of input matrix [X].</sentence>
+    <sentence>When we register this pattern code, we tried to hold more than 2 s, as short as it can be and finally longer than but shorter than .</sentence>
+    <sentence>Therefore it becomes very hard to mimic this ghost password unless the durations are captured.</sentence>
+    <sentence>It also is so hard to log in as the owner of this password due to narrowness of the some intervals such as .</sentence>
+    <sentence>Even though the proposed system primarily checks the password, the pattern code is declared to subjects in fraud team prior to their attempts with the recommendation of entering the password at their own will.</sentence>
+    <sentence>However, after collecting 40 fraud attempts resulted in rejection with simple interval checking, the clients are informed to pay attention on touch durations.</sentence>
+    <sentence>Eventually, 80 fraud attempts are saved as well as 80 real attempts.</sentence>
+    <sentence>Simple interval checking As mentioned before, regardless of any further testing algorithms, it is the easiest way to control authentication with interval checking which can be summarized as comparing the login durations with the stored ones.</sentence>
+    <sentence>In other words, the system which is designated by upper and lower limits of the touched nodes, grants authentication if all of the attempt durations are strictly inside of the limits and rejects if one of them is not.</sentence>
+    <sentence>ANN based classifier An artificial neural network is a structure consisting of elements and weights, which is introduced to simulate human neurons.</sentence>
+    <sentence>We created a neural network and wrote the algorithms with correspondence to Takagi and Hayashi (1991) using 2 hidden layers to generalize a relationship between inputs and outputs which could be seen in Fig 6.</sentence>
+    <sentence>User interface and examples of pattern password Fig 6.</sentence>
+    <sentence>User interface and examples of pattern password.</sentence>
+    <sentence>The network is fully connected with weights starting from element j and ended in element k where L is as layer number.</sentence>
+    <sentence>In activation function, the standard sigmoid equation is used in (1) (1) Replacing with threshold and additive function, outputs of the nodes are calculated by (Ross, 2004); (2) where represents output of the elements in layer for th element, , where inputs to the element k in layer weights attached to the inputs in the layer L from j to k and threshold of the element k. All of the initial values that have been assigned to the weights are selected as with a constant threshold value for all .</sentence>
+    <sentence>Subsequent to error calculation where is the expected value for output element, the errors are distributed to the elements in the network using following Eq (3): (3) At this point, all of the errors associated with each element are calculated, therefore the weights are updated by (4): (4) where α is the learning constant, which we determined as for this experiment, is error associated with th element for the layer .</sentence>
+    <sentence>Eventually these algorithms are repeated 3000 times in order to update weights for the matrix [X] in Table 1, however after training with the input values [X] reach outputs for all k, it is seen that the necessary separation could not been established with least squares fitting methods.</sentence>
+    <sentence>Therefore the experiment is repeated with concatenating [2 − X] after [X] with , so an input matrix with 20 elements is reprocessed as inputs until the expected separation rate is reached.</sentence>
+    <sentence>As the epochs are processed, weights are updated until epochs are stopped at the point of for [X] and for [2 − X].</sentence>
+    <sentence>The final weights are used in training phase of ANN based validation system as the testing networks weights.</sentence>
+    <sentence>ANFIS based classifier Adaptive neuro-fuzzy inference system is basically a neural network that is used to create membership functions, rules and output functions, instead of weight updating, in a Takagi–Sugeno inference system (Takagi &amp; Sugeno, 1985).</sentence>
+    <sentence>In addition, ANFIS is generally used for approximating functions as well as prediction, by constructing a set of fuzzy rules with appropriate membership functions (MF) (Jang, 1993).</sentence>
+    <sentence>In this paper we used ANFIS as a decision support system.</sentence>
+    <sentence>As in ANN, an ANFIS system starts with training and for this experiments the network is trained with 4 inputs with 3 triangular membership functions with 1 output using 3000 epochs governed by 81 rules.</sentence>
+    <sentence>For the inputs of the matrix [X] in Table 1, membership functions for nodes are constructed which could be seen in Fig 7.</sentence>
+    <sentence>After training, the constructed fuzzy inference system is used in testing phase for future logins.</sentence>
+    <sentence>Membership functions of ANFIS Fig 7.</sentence>
+    <sentence>Membership functions of ANFIS.</sentence>
+    <sentence>The ranges of each input is designated as with degree of membership , however subsequent to training the intervals are automatically changed when necessary.</sentence>
+    <sentence>The most important remarks could be summarized as; maximum x-value of medium MF is 1.83 for node 1, which is also the lowest touch duration.</sentence>
+    <sentence>Likewise, minimum x-value of medium MF is 0.30 for node 5, which is also the highest touch duration.</sentence>
+    <sentence>The MFs trained with the values in Table 1, also reveal that for these nodes, expected touch durations are high and low respectively determined by .</sentence>
+    <sentence>On the contrary, for nodes 2 and 9, expected durations are absolutely outside of low and high MFs and thus in medium MF region, however with various values.</sentence>
+    <sentence>RGB Histogram based classifier Considering an RGB color image, there are actually 3 layers consisting of red, green and blue channels therefore a pixel on an image could be represented by where k is channel number, I and j is the position of the corresponding pixel, W is width, H is height of the image and for all .</sentence>
+    <sentence>RGB Histogram technique is briefly evaluation of the pixels’ values for each layer and accumulation of them in a desired number of bins.</sentence>
+    <sentence>Given these facts; in last phase, using the saved matrix [X] in Table 1, we changed the colors of the squares in Fig 4.</sentence>
+    <sentence>The method we established is firstly introduced by Wittman (2001) and we used in one of our paper (Alpar, 2014) for keystroke recognition as well.</sentence>
+    <sentence>Colorization starts from blue (shortest touch) to red (longest touch) to identify touching duration and to discriminate very little changes in touching times.</sentence>
+    <sentence>Nonetheless, the experiment is made with color codes introduced in Table 2, however as mentioned before, the squares are not visible that the client cannot see the trait collecting algorithm only the pattern password authentication system.</sentence>
+    <sentence>As an important remark, the spectrum we used does not correspond to JET colors of MATLAB since there is no yellow [1 1 0] or magenta [1 0 1] or cyan [0 1 1] colors in our palette.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Time vs. color codes.</sentence>
+    <sentence>The main idea in colorization is equalizing the vertical sums to zero for each t value.</sentence>
+    <sentence>From t = 0 to t ⩾ 2 s, for each pixel in any area touched, the RGB value is calculated with (5)–(7): (5) (6) (7) For this experiment, the square region boundaries of and with areas of 15,625 px2 are specified as follows; (8) (9) (10) (11) Using the coordinates of hidden squares (8)–(11) and based on Eqs.</sentence>
+    <sentence>(5)–(7), squares of the nodes touched are colorized, the RGB ghost passwords are created and saved for training, using the duration values in Table 1.</sentence>
+    <sentence>For each trial, the RGB images, which could be seen in Table 3, are stored for training with the format of 480 × 800 TIF without compression.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Training set for RGB ghost password.</sentence>
+    <sentence>Prior to training, one more essential algorithm is utilized to turn images into RGB Histograms.</sentence>
+    <sentence>The algorithm changes images into 3 separate red, green and blue histograms with bins each.</sentence>
+    <sentence>Afterwards all values are normalized by scaling between 0 and 1 and finally the RGB vectors are appended for feeding the neural networks.</sentence>
+    <sentence>Using normalized vectors as inputs, an ANN algorithm is written to train the network, for discriminating the authentication attempts.</sentence>
+    <sentence>In this section, as an initial training network, 10-nodes input layer and one hidden layer having 4-nodes are established with initial values of weights attached to the inputs in the layer L from j to k as .</sentence>
+    <sentence>The standardized sigmoid function (1) is used as element operator and the Levenberg–Marquardt algorithm as training algorithm which minimizes the error in least squares fitting.</sentence>
+    <sentence>This algorithm is introduced firstly by Levenberg (1944) and updated later by Marquardt (1963) to solve nonlinear least squares problems while it is also conventionally used for neural network training as follows (Wilamowski &amp; Irwin, 2011): (12) where J is the Jacobian matrix, μ is the positive combination coefficient and e is the vector form of errors for nth iteration.</sentence>
+    <sentence>Errors are calculated by sum of squares which is defined as; (13) where p is the index of patterns for P patterns, m is the index of outputs for M outputs and where is expected output and is the actual.</sentence>
+    <sentence>In addition Jacobian matrix is introduced as; (14) where N is the total number of weights.</sentence>
+    <sentence>For this experiment, we predefined and as a vectorization of ’s.</sentence>
+    <sentence>Subsequent to training section all weights are updated and saved as weight matrix to be used in oncoming phases.</sentence>
+    <sentence>Besides, the weight matrix is also essential for feed forward network to calculate network outputs for training set.</sentence>
+    <sentence>Therefore the upper and lower limit for authentication are defined as follows; and after running the feed forward algorithm.</sentence>
+    <sentence>Fig 8 could also be interpreted as the closeness of each image histogram in training set to the average as a result of feed forward algorithm using sigmoid function.</sentence>
+    <sentence>Additionally, while most of the outputs agree on basis, images 2 and 5 cause diversity and if inspected closer from Table 3, it could be realized that image 2 has more blue and image 5 has less red pixels than others.</sentence>
+    <sentence>Achieved network outputs after training Fig 8.</sentence>
+    <sentence>Achieved network outputs after training.</sentence>
+  </section>
+  <section name="Results of the experiments">
+    <sentence>Since our major concern is the differences between touching durations on each node of the password pattern, initially a very simple password with 4-nodes is determined and 10 trials with predefined durations are saved in registration step as the training set.</sentence>
+    <sentence>Furthermore, 80 real attempts are collected as well as 80 frauds.</sentence>
+    <sentence>The durations of saved real and fraud attempts are compared with the training set and we reached 0% of FAR and 16.5% FRR since the intervals for each node are so narrow.</sentence>
+    <sentence>After controlling the attempts with simple interval checking, we utilized ANN and ANFIS algorithms to test logins.</sentence>
+    <sentence>In ANN method we maximized the discrimination rate between training set and the inverse of the set regardless of generalized mean square error formulation.</sentence>
+    <sentence>On the other hand, we used standardized ANFIS to train the network for fuzzified inputs of durations.</sentence>
+    <sentence>In testing stage, we achieved 11.25% FAR and 0% FRR for ANN, 0% FAR and 5% FRR for ANFIS validation.</sentence>
+    <sentence>In Fig 9, real and fraud attempts could be seen with the control value of 0.85.</sentence>
+    <sentence>Results of ANN (on the left) and ANFIS (on the right) classifiers Fig 9.</sentence>
+    <sentence>Results of ANN (on the left) and ANFIS (on the right) classifiers.</sentence>
+    <sentence>As seen in Fig 9, the control value is optional and could be increased or decreased however altering will result in change of FRR and FAR.</sentence>
+    <sentence>In other words, increasing the control value and thus narrowing the valid interval would cause more possibility for rejecting frauds as well as rejecting real attempts.</sentence>
+    <sentence>Therefore choosing the optimal value is crucial since in every case fraud and real attempts have intersection points.</sentence>
+    <sentence>Finally we calculated the equal error rate (ERR) which represents the rate at which both acceptance and rejection errors are equal.</sentence>
+    <sentence>We calculated the ERRs as 8.75% for ANN, 2.5% for ANFIS when we searched the equality point of the proportion of FRR and FARs.</sentence>
+    <sentence>Moreover, by colorizing the imaginary squares surrounding the nodes from blue to red, we saved the colorized ghost screens as images.</sentence>
+    <sentence>Using concatenated red, green and blue histogram values as inputs, an ANN was constructed with 10-nodes input layer and one 4-nodes hidden layer.</sentence>
+    <sentence>Weights of the network are trained by Levenberg–Marquardt algorithm in RGB Histogram method and the values 0.99955 and 1.00015 are calculated and therefore these values are defined as upper and lower control values.</sentence>
+    <sentence>In Fig 10, the results of the experiment could be seen where real attempts are in ascending and fraud attempts are in descending order.</sentence>
+    <sentence>Results RGB Histogram authentication method Fig 10.</sentence>
+    <sentence>Results RGB Histogram authentication method.</sentence>
+    <sentence>As the result of the experiment, 6.25% FAR, 2.5% FRR and 7.5% EER are achieved which are promising since there the system validates only the touch durations not the touching sequence.</sentence>
+    <sentence>On the other hand it is not so meaningful to calculate ERR for this method just like interval checking, since classification in these methods depends on two control values.</sentence>
+    <sentence>Although the upper and lower control values are stated by the algorithm itself, it still is possible to tune the limits for better discriminating attempts.</sentence>
+  </section>
+  <section name="Evaluation of the results">
+    <sentence>The results are greatly satisfactory since we reached ERRs of 8.75% with ANN, 2.5% with ANFIS and 7.5% with RGB Histogram method for 80 real and 80 fraud attempts.</sentence>
+    <sentence>The results of this research and relevant studies are summarized in Table 4.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Comparison of EER results.</sentence>
+    <sentence>Author/s [ref no] Method EER [%] This paper ANN 8.75 ANFIS 2.5 RGB Histogram + ANN 7.5 Maiorana et al.</sentence>
+    <sentence>(2011) Statistical 13.59–24.15 Saevanee and Bhattarakosol (2009) K-nearest neighbors 1–45 Clarke and Furnell (2007a, 2007b) ANN 12.8 Clarke and Furnell (2007a, 2007b) ANN 0–48.62 Karatzouni and Clarke (2007) Statistical 12.2 Campisi et al.</sentence>
+    <sentence>(2009) Statistical 14.46 Sae-Bae et al.</sentence>
+    <sentence>(2012) Statistical 5–10 Chang et al.</sentence>
+    <sentence>(2012) Statistical 6.9–14.6 Shahzad et al.</sentence>
+    <sentence>(2013) Statistical 0.5–6.8 Angulo and Wästlund (2012) Statistical 10.39 Zheng et al.</sentence>
+    <sentence>(2012) Statistical 3.65–7.34 Tasia et al.</sentence>
+    <sentence>(2014) Statistical 8.4 Kang and Cho (2014) Statistical 5.64–16.62 Kambourakis (2014) KNN/Random Forest 13.6–26 Alpar (2014) RGB Histogram + ANN 10 Given the results, ANFIS seems the most encouraging method with lowest EER in our research.</sentence>
+    <sentence>On the other hand the results of ANN algorithm could be enhanced by modifying the network structure.</sentence>
+    <sentence>The major difference between ANN/ANFIS and RGB Histogram technique is control of the touching sequence, since the basis of RGB Histogram is colorizing the touched nodes according to touch durations regardless of touching order.</sentence>
+  </section>
+  <section name="Conclusions and discussions">
+    <sentence>Briefly, we proposed three classifying inference systems consisting of ANN, ANFIS and RGB Histograms for pattern passwords.</sentence>
+    <sentence>The classifiers each have intelligent kernels and work as different expert systems that differentiates real and fraud attempts.</sentence>
+    <sentence>It is also seen from the papers published that most of the classifiers are statistical-based, therefore we present the utilization of artificial intelligent based classifiers that seem significant and trustworthy in biometrics.</sentence>
+    <sentence>The intelligent classifiers have some practical advantages over statistical models.</sentence>
+    <sentence>In statistical classifiers, the algorithms are rigid that the outputs are computed by the inputs without changing the model, however in ANN based systems the weight and thus the algorithms are flexible and adjusted according to the inputs and outputs.</sentence>
+    <sentence>In addition, as the little manipulation we proposed, variation on network or learning structures are possible.</sentence>
+    <sentence>Furthermore the whole ANFIS model is configured based of input output data like a tailor made model for every single pattern password.</sentence>
+    <sentence>Finally the control values, separation values, membership functions, trusted regions are all flexible that could be altered to achieve better or more fitting models.</sentence>
+    <sentence>The RGB Histogram classifier has also an advantage to analyze the heat raise data and the size characteristics of the finger that taps on, if extracted.</sentence>
+    <sentence>However, one of the weakness of the RGB Histogram technique is non-sequentiality; for instance, RGB Histogram of [w x y z] input would be totally identical with [y w z x].</sentence>
+    <sentence>Therefore the results will not change if the nodes interchange with their duration data.</sentence>
+    <sentence>Even if the training session could be considered as the second weakness, since it needs at least 10 inputs to proceed, this is actually the weakness of all neural network based classifiers.</sentence>
+    <sentence>Regarding limitations of the systems, the interfaces are designed to operate 9-nodes at most therefore first limitation is pattern password size.</sentence>
+    <sentence>Second but more important limitation is lack of classifying capability before 10th login.</sentence>
+    <sentence>As future research ideas; although the password size seems short and simple that we defined as 4 nodes, it however could be extended until 9 nodes.</sentence>
+    <sentence>The neural networks and the membership functions in ANFIS are constituted subsequent to 10th log in and remain same afterwards, therefore it is possible to convert these algorithms that will be retrained by the successful attempts.</sentence>
+    <sentence>For extra security, the fusion of two or three methods could be utilized by creating a new inference system that will collect the outputs of these systems and give the final decision.</sentence>
+    <sentence>Considering the RGB Histogram method we proposed, the changing of the node color could also be utilized to simulate heat raise.</sentence>
+    <sentence>Since the new generation touch screens are sensing heat and being activated by heat of the fingers instead of pressure, it is reasonable to improve the authentication protocols of the devices with RGB techniques as a future research as well.</sentence>
+  </section>
+</article>

@@ -1,0 +1,262 @@
+Artificial intelligence solution to transmission loss allocation problem
+
+Abstract
+
+The problem of transmission loss allocation of deregulated power system has been solved through the application of artificial neural network (ANN). Two network structures namely Levenberg–Marquardt back propagation (LMBP) and Bayesian regularization back propagation (BRBP) have been trained and their performance compared. It has been found that LMBP network gives faster solution for same accuracy level. As the working range of power flow transaction is quite vast, a huge volume of data need to be stored and processed for the training of neural network. The time needed for training of neural network against such huge data is prohibitive for real time application of the ANN based solution tool where raw data are used for training. A simple filtering technique has been found to be very effective to improve the solution time and training data volume requirement and make the proposed technique suitable for real time applications. With the use of filtered data for training both the training network have shown comparable performance.
+
+Keywords
+Transmission loss allocation
+Artificial neural network
+Levenberg–Marquardt back propagation
+Bayesian regularization back propagation
+Shapley value
+Game theory
+
+1. Introduction
+
+The deregulation of the power industry has originated ample discussions about the best way to manage, economically and technically, the different markets and operational problems developed with the introduction of restructuring. Bilateral contract and pool system of operation are two commonly used market forms. Bilateral contracts allow the consumers and generating companies great freedom to work according to their own choice/policy and do not make them dependent on everyday bid like a power pool system. The price fixation and other services and particulars of the contract would be determined by the two parties involved in the contract. Transmission system in the new restructured regime can be considered as an independent transmission company that provides open access to all participants. The new system configuration has generated newer opportunities as well as problems. Transmission losses were used to be treated as an extra load or burden by the vertically integrated utility companies. Since generation, transmission and distribution now belong to different companies, the question of ‘who and how much should pay for losses’ arises. Hence, the objective of this work is to find out an acceptable strategy of sharing of transmission losses among all market participants.
+
+Transmission loss has become an issue of great concern in the new operating environment. Transmission losses accounts for 4–8% of the total power generated (Salgado, Moyano, & Medeiros, 2004). These losses annually cost large sum and should be allocated among the network users. Transmission loss in a power network is influenced by a number of factors including location of generating plants and load points, types of connected loads, network configurations, length of line and currents and design of line and transformers and some dynamic factors like power factors, harmonics and control of active and reactive powers. A closed form solution for transmission loss allocation does not exist due to the fact that transmission loss is a highly nonlinear function of these factors and it is a non-separable entity. In absence of a closed form solution, different utilities use different methods for transmission loss allocation. Loss allocation depends on the underlying allocation principle that the stakeholders would agree. Also, loss allocation should be fair and acceptable by all market players (or participants), transparent and easy to compute and also would recover all the losses incurred.
+
+In recent years artificial intelligence techniques have been extensively used for solving many power system problems. ANN particularly has been used for problems lacking good mathematical solutions. ANN is used for deregulated power system environment to forecast electricity market price (Pao, 2007), electricity spot pricing (Wang & Ramsay, 1998) and peak load forecasting (Saini, 2008). In this paper a straight forward method of allocating transmission losses to the participating consumers is presented using different artificial neural network (ANN) structures and their performance are examined under the bilateral contracts in a deregulated power system. To train the intended ANNs, a set of solved transmission loss values are generated for a standard network representing a restructured system and the transmission losses are allocated to the network participants using Game theoretic approach. The data such generated are used and maintained as separate database using some data mining concepts. The performance of the neural networks is tested using a different set of data generated for the purpose of testing. It has been found that the developed neural network can determine the loss allocation very close to the Shapley value based allocations.
+
+The contributions of this paper are three folds:
+
+1.
+
+    To provide an unbiased and transparent solution to the loss allocation problem in a bilateral transaction market.
+2.
+
+    To allocate transmission losses on a real time basis for different market participants which gives the correct economic signals in terms of losses to the participants.
+3.
+
+    To offer a comparison of different ANN training algorithms for better performance of the proposed scheme.
+
+The remainder of this paper is organized as follows. In Section 2, previous related studies for transmission loss allocation and their different proposed methods are reviewed. A detailed procedure of modeling approach of the loss allocation problem including game theoretic approach is then introduced in Section 3. The following section presents the ANN framework including the setting of different parameters for intended outcomes. Simulation and results for different cases are presented in Section 5 and the discussion and conclusions are given in the last section.
+2. Literature review
+
+Several methods have been proposed in literature to allocate the system losses to generators and/or loads in a pool based market or to individual transactions in a bilateral contract market. Some of the well known loss allocation methods are pro-rata, incremental, proportional sharing, sensitivity, comparison and Z-bus allocation method. With pro rata methods, losses are first divided equally between generators and demands, and then an allocation within each category is made based on the level of power or current injection (Ilic, Galiana, & Fink, 1988). The class of proportional sharing methods requires the application of a linear proportional sharing principle (Kirschen & Strbac, 1999; Wu & Wei, 2000) and the results of a power flow solution. Sensitivity methods allocate losses according to some kind of sensitivities, or partial derivatives (Menezes & da Silva, 2006) and the similar type of sensitivity co-efficient with power flow methods reported in Salgado et al. (2004), Belati and de Costa (2008) and Abou El Ela and El-Sehiemy (2009). Another similar type of approach using sensitivity methods is also presented using differential slake-invariant methods (Usaola, 2006) of flow and losses allocation to transactions. Comparison methods allocate losses by comparing losses under different operation conditions. In order to compare losses under different conditions, numerous power flow calculations are to be carried out. Allocation procedures based on incremental principles allocate losses to network participant through assigning a coefficient known as incremental transmission losses (ITL) to each one that represent the total network losses sensitivity to that particular user injection (Galiana, Conejo, & Kockar, 2002; Leite da Silva & Guilherme de Carvalho Costa, 2003; Salgado et al., 2004). A physical power flow based approach (Abdelkader, 2006; Ding & Abur, 2007; Gross & Tao, 2000) is also proposed for loss allocation. A nice comparison of the most common practical loss allocation algorithms are presented in Conejo, Arroyo, Alguacil, and Guijarro (2002) and Lima and Padilha-Feltrin (2004). Expression analysis methods express losses as a function of some system variables, such as complex valued node currents, complex valued generator currents and transaction MW powers, and allocate losses to the market participants by analyzing the characteristics of the expression. The allocation results of expression analysis methods can reflect the effect of transmission users on losses and are usually revenue adequate. Transmission losses are expressed as function of transaction MW powers and allocate interaction terms by geometric means (Exposito, Santos, Garcia, & Velasco, 2000). Z-bus allocation methods use the network parameters and system loss formula and compute losses using complex current injections (Conejo & Galiana, 2001). Summarizing, network based methods use network solution techniques along with rational reasoning and/or heuristics to allocate system losses.
+
+In recent years, different allocation schemes have been formulated based on the natural economic use of the transmission system (Lima, Contreras, & Padilha-Feltrin, 2008; Songhuai, Zhou, Mo, & Xue, 2006; Zolezzi & Rudnick, 2002). Game theory provides interesting concepts, methods and models and well-behaved solution mechanisms with economic features for assessing the interaction of different participants in competitive markets and resolving the conflicts among players (Bierman & Fernandes, 1998). In particular, cooperative game theory is a most convenient tool to solve cost allocation problem (Zolezzi & Rudnick, 2002). The solution mechanisms of cooperative game theory applied well in terms of fairness, efficiency and stability, qualities required for the correct allocation of transmission losses. An approach to allocate transmission losses using artificial neural network is also attempted (Haque & Chowdhury, 2005) and in that paper simple ANN is used and results were compared with Incremental load flow approach methods. In Arunachalam, Ramesh Babu, Mohanadasse, and Ramamoorthy (2006), feed forward ANN is used to allocate losses based on Z-bus loss allocation methods. The motivation of the present work is to offer an alternative scheme of loss allocation techniques using solved load flow methods with game theoretic approach and artificial neural network (ANN). The initial endeavour in this direction by the present authors has been reported in Dev Choudhury and Goswami (2009). This paper presents further development and additional findings in this approach. The modeling approach for the simulation is explained in the following section.
+3. Modeling approach
+
+The proposed method has two faces. Calculations and allocation of transmission losses to the participating players is presented only on the front face using ANN. The back end calculations involves the data generation, data handling and data preparation for the training of the intended ANN and which involves power flow analysis with the game theoretic loss allocation approach. In this section the loss allocation problem and the back end approaches with Game theoretic solution methodology is briefly discussed.
+3.1. The loss allocation problem
+
+Loss allocation was not a problem of pre-deregulation era, as any power system consisting of generation, transmission and distribution had a vertically integrated structure and supplying power to a consumer connected to the system was the responsibility of the system and it was the concern of the utility system how it will adjust the cost involved in the transmission loss taking place in the cause of supplying power. In the new restructured environment, generation, transmission and distribution are independent entities. Transmission network operates as an open access system and the various generation and distribution companies connect themselves to the transmission system and perform sell/purchase of power between themselves and thus form a power market. So, it becomes very important to identify the responsibility of the power loss taking place in the transmission part.
+
+In a power market having g number of generation companies, d number of distribution companies, making T transactions, the problem of loss allocation is to allocate
+to the ‘k’ participants, such that
+
+; and Sap > Saq, if STp > STq.
+
+Where
+
+    Sgi – Generation of ith generating company.
+
+    STk – Power scheduled in kth transaction.
+
+    Sai – Loss allocated to ith transaction.
+
+    Sap – Loss allocated to pth transaction.
+
+    Saq – Loss allocated to qth transaction.
+
+    STp, STq – pth and qth transaction quantities.
+
+And Sa, Sg, ST refers to the Loss allocation (in MW/MVAr), Generated power (in MW) and Transactional power (in MW/MVAr), respectively.
+
+The problem as formulated above is rather incomplete because of the characteristic non-linearity involved. Loss involves square of the current actually flowing. Thus if through a circuit ‘p’ 10A current produces 100 unit loss, and 5A current produces 25 unit loss, both the currents flowing in additive fashion makes a loss of 225 units and when flowing in subtractive fashion results in a loss of only 25 units. It is thus very difficult to allocate the responsibility of additional loss of (225 − 100 − 25) = 100 units in additive fashion and (25 − 100 − 25) = −100 units (i.e., reduction of power loss) in the subtractive fashion. The only solution here perhaps is to count the sense of satisfaction of individual participants, or dictate and enforce a law as mandatory. The first option, however fits better with the concept of deregulation and thus is generally preferred.
+
+Game theory applied in conflicting situation generates solutions that may bring maximum satisfaction to the participants. The problem of transmission loss allocation also has the characteristic of a cooperative game and thus, additional constraints may be written to complete the formulation of the loss allocation problem.
+3.2. Game theoretic approach
+
+Game theory is an established and précised mathematical tool to solve the conflicts of interest quantitatively and can be used to solve the individual benefits with respect to others in a society and can be broadly classified as non-cooperative and cooperative games. Loss allocation problem for a power market is cooperative in nature as all the loads (the market participants) are drawing power from a common network and any variation of load drawn by any participant will affect the total loss and has to be shared by others.
+
+A cooperative game is given by specifying a value for every coalition. Formally, the game involves a finite set of players N (of n players), called the grand coalition, and a characteristic function
+
+from the set of coalitions to a set of payments that satisfies v(∅) = 0. The players are assumed to choose which coalition to form, according to their estimate of the way the allocation will be divided among coalition members. The main assumption in cooperative game theory is that the grand coalition N will form. The challenge is then to allocate the payoff v(N) among the players in some fair way. But this assumption is not restrictive, because even if players split off and form smaller coalitions, we can apply solution concept to the sub games defined by whatever coalitions actually form. This is advantageous for application in power network as in many a times some players may not be connected to the grids all the time to form the grand coalition. The Shapley value method derives unique payoff vector that is efficient, symmetric, and additive and assigns zero payoff to dummy players (Shapley, 1953).
+
+If coalition S and T are disjoint subset of N, i.e., S ∩ T = ∅
+(1)
+The quantity gained by the agent (or transaction) i is the average of the gain obtained in the coalition in which it participates and is expressed as
+(2)
+
+where ϕi(v) represents the losses apportioned to transaction i and S represents the coalition containing transaction i; ∣S∣ is the number of transactions in coalition S and n is the number of transactions taking part in loss allocation. n! is the coalition permutations that can be created from the participants in the grand coalition; v(S) denotes the loss function of coalition S and S − {i} denotes removing the player i from coalition S. The factor v(S) − v(S − {i}) represents the incremental losses that transaction (or player) i accedes to coalition S, and can be termed as marginal losses of coalition.
+
+After calculating all the coalition losses for a transaction, v(N) is calculated and the payoff vector for all participants are recorded. This process is repeated for all the M numbers of load patterns generated and the corresponding allocated losses are registered.
+4. ANN framework
+
+Artificial neural network (ANN) are powerful techniques for solving variety of problems and are widely used as mathematical tool for solving problems which are either unsolvable or very difficult to solve using conventional mathematical formulations. The loss allocation problem depends on network parameters and load drawn by the respective participants. In case of Loss allocation problem, there is no simple relationship among the parameters involved in determination of transmission losses. ANNs due to their highly nonlinear capabilities and universal approximation properties, are proposed in this article for allocating losses to the transactions.
+
+There are wide variety of neural networks and their architectures. For the purpose of illustration and simulation, two different types of adaptive learning techniques are used for training the dataset (viz. Levenberg–Marquardt Backpropagation and Bayesian Regularization Backproagation) with the multi-layer perceptron (MLP) networks. The structure and formulation of ANN is briefly discussed below in this section.
+4.1. Levenberg–Marquardt back-propagation (LMBP)
+
+Levenberg–Marquardt is an advanced nonlinear optimization algorithm (Hagan & Menhaj, 1994). It can be used to update the weights in the network just as backpropagation algorithm. The Levenberg–Marquardt algorithm is designed specially to minimize the sum-of-squares error function, using a formula that (partly) assumes that the underlying function modeled by the network is linear. A move is accepted if it improves the error, and if necessary the gradient-descent model is used with a sufficiently small step to guarantee downhill movement. The weight update vector Δxk is calculated as
+(3)
+where ν(xk) is the vector of errors, μk is the learning rate parameters, and J(x) is the Jacobian matrix that is the matrix of partial derivatives of the errors with respect to the weights. Jacobian matrix can be calculated with the following formula:
+(4)
+
+When μk decreased to zero, the algorithm becomes Gauss–Newton. Levenberg–Marquardt outperforms the basic backpropagation and its variations with variable learning rate in terms of training time and accuracy. However, the computation and memory requirement of the algorithm are high. The back propagation process actually computes the sensitivities through a recurrence relationship from the last layer backward to the first layer. The total Marquardt sensitivity matrices for each layer are then created by augmenting the matrices computed for each input.
+4.2. Bayesian regularization back-propagation (BRBP)
+
+This method is first suggested by MacKay (1992) and gives the neural network learning process a different dimension using the probabilistic approach. In this method of training, the performance function first decreases and, after over fitting the data, increases again but this causes the network response to be smoother but generalizes poorly due to over fitting. This particular problem is addressed by the Bayesian framework. The typical performance function used for training feed forward neural networks is the mean sum of squares of the network errors. It is possible to improve generalization by modifying the performance function by adding the terms mean of sum of squares of the network weights and biases. Now using regularization, the output function f may be defined as
+(5)
+where emse is mean of squared errors and emsw is mean squared weights and , where n is no. of weights and wj is weights (or parameters) and γ is the performance ratio. Let D = {xm, tm}, set of data to be interpolated where m = 1, 2, … , n is a label running over the pairs. Using Bayesian framework the posterior probability distribution of parameter w can be written as
+(6)
+
+where P(D∣w, Hi) is likelihood function, P(w∣Hi) is the prior distribution and P(D∣Hi) is normalizing constant and Hi is the model and which is considered to be true.
+
+The performance ratio parameter γ is optimized by applying the Baye’s rule as P(γ∣D) = P(D∣γ)P(γ)/P(D). If an uniform prior density P(γ) is assumed for regularization parameter γ, then maximizing the posterior probability is achieved by maximizing the likelihood function. The maximum of posterior probability defines the most probable value for the parameter (w). In loss allocation problem, this parameter, w is calculated for a given pair of dataset D as explained above. The discussion on this Bayes’ rules are quite extensive and so we refer to the cited literature (Foresee & Hagan, 1930-1935; Hirschen & Schafer, 2006; MacKay, 1992) for a detailed analysis.
+4.3. Neural network structure
+
+As there is no certain mathematical approach for obtaining the optimum number of hidden layers, 3-layer MLP networks was employed in experiments and shown in Fig. 1. Generally neural networks with two hidden layers are capable of prediction (Haykin, 2005) and adding extra layers commonly yields similar results with two hidden layer networks, but their training periods are longer due to the more complex structure. Hyperbolic tangent sigmoid activation function is used in all MLPs. The common practice in the literature is to determine the number of neurons in the hidden layers by some rule of thumb (Altun & Yalcinoz, 2008). For each of the cases, separate neural network sets were generated, one of which is trained with the Levenberg–Marquardt back-propagation algorithm while the other set was trained with the Bayesian regularization back-propagation algorithm. Eventually, we generate two sets of 3-layer MLP networks in order to compare performance of the both.
+ANN structure for the loss allocation problem
+
+
+
+Fig. 1. ANN structure for the loss allocation problem.
+
+To assess the prediction capacity of the ANN model and the persistence model, the mean absolute percentage error, MAPE can be used
+(7)
+
+where N is the number of transactions, Actual_value(i) is the individual loss allocation values for transaction i and ANN_value(i) is the ANN output of loss transaction for transaction i. After the training process, all MLPs were tested against a test dataset, which is not part of the training data set and MLP networks which gave the minimum MAPE was kept for investigation and reporting.
+5. Simulation and results
+5.1. Data generation and data preprocessing
+
+The IEEE 14 bus system is used to demonstrate the testing and implementation of the proposed method and is shown in Fig. 2. There are five generators (three synchronous compensators are also considered as generators for this test case) and eleven loads in the system. Out of these five generators, four generators are considered to have contracted bilateral transaction bargains separately with load (users) 4, 5, 9 and 12 as shown in the Table 1. Branch parameters and the transformer parameters are appended in Appendix A. It is also assumed that all the other loads of the system are not drawing any power from the system except the designated busses for the test case. These four transactions are carrying through simultaneously in that power market. The objective of this assumption is to allocate the transmission loss portions to each player impartially for any range of loads.
+IEEE 14 bus system with the four transactions
+
+
+
+Fig. 2. IEEE 14 bus system with the four transactions.
+
+Table 1. Bilateral transaction pairs for test case.
+Transaction	Generator bus	Load bus
+1	8	4
+2	2	5
+3	3	9
+4	6	12
+
+For an actual power system operation, bilateral transaction pairs are fixed for a period of time or till the contract period expires. During the contractual period, the loads on the busses vary time to time and this variation is allowable within the maximum line capacity. The data in practical situation are the historical data gathered for a span of time representing the recorded transactions and the allocated losses. In practice, however, all the data needed to run the Shapley value loss allocation will not be available. The simulated load transactional data may then be used for training purpose of the ANN. To picture an actual load regime for the whole range of loads, various combinations of active and reactive load patterns for these bilateral transactions simulated randomly within the permissible range of variations of all the transaction pairs and a database is created. This is done to obtain a wide variety of the input data for the ANN. This randomly generated load patterns are checked for redundancy, repetition and duplicity.
+
+The generated load patterns for the transactions are now used to calculate the transmission losses using Newton–Raphson (N–R) load flow methods. The loss allocation problem, which is created when the market is running, can be regarded as a complete cooperative game. The set of all players and every non-empty subsets form a combination and each combination is one coalition and using these coalition values, Shapley value method allocate losses to each transactions impartially. For example, in a market with three (3) transactions, there will be one grand coalition {1, 2, 3} and other six non-empty sub sets: {1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}. In general, for n-players, for complete cooperative game, the number of coalitions will be 2n − 1. In this framework, N–R power flow solutions are obtained and the losses are registered for each case and for M numbers of load patterns, M × (2n − 1) times the load flow is to be run. The scope of this paper is limited to the details of the coalitions formed for Shapley loss allocation; reader may see Shapley (1953), Roth and Verrecchia (1979) and Kim and Jeon (2009) for details. For each run of power flow, the transmission loss parameter is stored separately. These whole procedures are performed as back end processes.
+5.2. Network training and performance analysis
+
+In the training phase, both simulated transactional values and their corresponding loss allocations are used as input vectors. Aim of the training in MLP network is minimizing output error goal produced by the neural network and the desired output for that input vectors. In order to achieve this goal, weights are updated by carrying out both the training algorithm as illustrated above.
+
+When using a supervised learning algorithm like Levenberg–Marquardt and/or Bayesian algorithm, training process is usually terminated when the root mean squared error (RMSE) is reduced to an acceptable level. The smaller the RMSE, the closer our model follows the data; if a model goes through each data point exactly, then the RMSE is zero. However, there is no standard for the RMSE, but usually the lower it is, the better the classification rate is. But a too low RMSE may result in over training the neural network. This means the neural network loose generalization ability, hence it will just gives the output of identical training data. Other criteria for training termination are the number of iterations and the measure of sum squared error (SSE) and sum squared weights (SSW). When a certain number of iterations were reached, the training was stopped, even if the desired RMSE was not reached and again the iterations were stopped when both algorithms has converged if the SSE and SSW are relatively constant over several iterations. The network was trained with both the algorithm with a minimum performance gradient (goal) 10−10, maximum number of epochs 2000, Marquardt adjustment parameter (μ) 0.005 and RMSE 10−7.
+
+The data base consisting the transactional values and their respective allocated losses are required for the functioning of the proposed method. For initial training of the proposed algorithms, a pilot set of test data used from a range of few numbers of transactions to a huge numbers with an objective to find out an optimum data set for training. However, there is no straight forward method to identify the optimum number of training data for better performance and therefore, a hit-and-trial method is used to measure the MAPE and the training time for the pilot dataset. A training curve observed for the two networks is shown in Fig. 3 where the performance of LMBP algorithm can be seen to be better than the BRBP algorithm. This curve is obtained from a trial run of both the algorithm separately to compare their performance output for the pilot dataset using 2000 epochs.
+Comparison of two training algorithm with sum square error (SSE) vs
+
+
+
+Fig. 3. Comparison of two training algorithm with sum square error (SSE) vs. number of epochs.
+
+Again the performance of both the training algorithm is measured in terms of training time and the MAPE observed. The performance curve of MAPE versus number of input data for testing is depicted in Fig. 4 for both the algorithms. It is observed that with smaller number of input data as training set, the neural network gives inferior results and after increasing the number of input data as training set, the neural network yields better performance. It is also observed that with the more numbers of input variables, results obtained are more satisfactory. A neural network can handle correlated variables as input data; however, the increased number of input variables requires a large network and, consequently, increased training time. The relationship between the size of the network and the training time is non-linear. With many correlated variables, most of the training time is spent on learning redundant relations. The training time with the number of test set is shown in Fig. 5. It is also noted here that BRBP takes much longer time for large dataset compared to LMBP because, the LMBP algorithm uses the ability of memory reduction for use when the training data set is large and again the BRBP algorithm the weights are considered as random variable and updates with the mean of sum squares of weights in each iterations. From this analysis of MAPE and the training time needed for both the training algorithm, it is observed that for a set of 600–800 dataset the results obtained from LMBP is much better than the BRBP. For example, using 700 dataset at training input, LMBP takes 960 s and BRBP takes 1140 s to train the neural network and their MAPE are 1.24 and 1.61, respectively. Though, the LMBP algorithm gives better performance than the BRBP algorithm for a large number of dataset, but the training time is much larger and the intended ANN cannot be used on real time basis for a solution. This question is answered in the following section. For initial illustration, only the MW allocated loses are considered and during validation of the method both the active and reactive losses are allocated for respective transactions by different players in the following section.
+Number of test dataset with percentage errors obtained
+
+
+
+Fig. 4. Number of test dataset with percentage errors obtained.
+Training time vs
+
+
+
+Fig. 5. Training time vs. number of data set.
+5.3. Data filtering
+
+The ANN performance presented above raises a few questions. Firstly, what will be the optimal size of the neural network to get an acceptable and impartial loss allocation and secondly, what will be the loss computation time by ANN and lastly, is there any way to reduce the computational time for a better performance. The simulated dataset with high numbers prepared for training the MLPs produces results with a longer training time due to the highly nonlinear nature of the losses with the transactional values. Loss allocation surface for transaction-1 with loads in transaction-1 and transaction-2 is depicted in Fig. 6.
+Loss allocation surface of transaction-1 for the total dataset
+
+
+
+Fig. 6. Loss allocation surface of transaction-1 for the total dataset.
+
+The deviation of expected output of loss allocation results by ANN and the increased training time of the neural network encourages introducing some methods of data filtering for faster and efficient training. To answer the previous questions, some data mining tools has to be employed to reduce the size of the neural network as well as the network must perform better with smaller set of input vectors quickly. Ordinary least square (OLS) method is used for mining the required data set as the input vectors for the ANN from the already created huge database. This process will help the neural network to respond faster. OLS is used here to compute estimations of transaction and to fit with the target data. The best fit in the least square sense is that instance of the model for which the sum of squared residuals has its least value and here the residual being the difference of a particular transaction and their corresponding target. After calculating the difference square of the whole data set, the new set of data is then arranged in ascending order for the least squares with corresponding transaction values and their corresponding allocated losses. The ordered transactional values now represents the most nearer values to the target vector as the linearization is done along the target vector. The input to the ANN is fed from the ordered transactional values and their corresponding allocated losses of respective target vectors. After using the OLS the allocated losses for transaction-1 with the variation of load in transaction-1 and transaction-2 is depicted in Fig. 7.
+Loss allocation surface using the filtered dataset
+
+
+
+Fig. 7. Loss allocation surface using the filtered dataset.
+5.4. Results
+
+OLS is applied to the pilot dataset pick the neighborhood data for training the ANNs. Initially from the ascending ordered dataset, first five sets of transactional values and their corresponding allocated losses are trained. The same procedure is repeated increasing the training dataset from the arranged data to find out an optimal set for the training algorithm which yields acceptable performance at lesser time. The performance of the two training algorithm is depicted in Table 2.
+
+Table 2. Performance of ANN over different input dataset.
+No. of input dataset of training	SSE of allocated losses	Training time (s)	Max. of trans error	Min of max error
+LMBP	BRBP	LMBP	BRBP	LMBP	BRBP	LMBP	BRBP
+5	1.00E−06	9.21E−04	8.268	10.268	1.00E−03	3.03E−02		
+10	9.90E−09	1.10E−07	11.531	17.531	9.95E−05	3.31E−04	9.95E−05	3.31E−04
+15	9.98E−07	5.00E−05	17.629	28.629	9.99E−04	7.00E−03		
+20	9.99E−07	4.26E−06	33.234	35.234	9.99E−04	1.80E−03		
+30	9.98E−07	8.20E−05	43.231	67.231	9.99E−04	9.00E−03		
+40	9.99E−07	6.51E−05	56.724	82.724	9.99E−04	8.00E−03		
+50	1.00E−06	1.60E−03	81.923	102.923	1.00E−03	4.00E−02		
+100	9.99E−07	5.00E−05	215.032	317.032	9.99E−04	7.00E−03		
+
+It is observed from the output from the performance of the two algorithms (refer Table 2) that the results are acceptable as the error is sufficiently small. The training time is also measured in different steps and it is observed that the initial set of data after filtering is quite sufficient to train the network for a better performance. The minimum of the maximum allocation error also occurred using 10 set of input data and it is sufficient to use 10 set of filtered data for the training of the ANN. Higher number of input data set also yields same performance with the previous ones but the execution time is more. Therefore, training with more data is meaningless and the network looses its generalization ability and takes longer time.
+
+Few samples of loss allocation results are displayed in Table 3. It is observed from the result dataset that the loss allocated by the ANN is at par with the Shapley value loss allocation and the total of the network losses are equal for both the active and reactive losses and the ANN loss allocation is revenue adequate. It is also mentioned here that active and reactive loss allocations are performed separately by using separate networks.
+
+Table 3. Sample results of IEEE 14 bus for a single set of four transactions.
+Transactions	Loss allocation (Shapley)	Loss allocation (ANN)
+Transaction 1	0.0394493–i4.893843	0.0394489–i4.893851
+Transaction 2	0.0524171–i5.458742	0.0524169–i5.458741
+Transaction 3	0.2018090–i4.928617	0.2018103–i4.928614
+Transaction 4	0.0898309–i5.398036	0.0898303–i5.398035
+
+Total loss	0.3835070–i20.679238	0.3835064–i22.67941
+5.5. Application example
+
+In a real system environment, loads are not constant and thus, the power exchanges in bilateral trading vary. The proposed method is applied simulating such variable load pattern and results are produced below.
+
+We consider a working scenario where a particular transaction value (transaction-2 in the present example) varies, with other transactions remaining constant. The change in losses is shared by all the participants though the change is caused by a particular participant as the participants of the power market form a cooperative game and in such an interactive environment it is impossible to identify exactly the contribution of an individual to the system loss. In Fig. 8, the variation of transaction-2 values and the corresponding loss allocation are shown along with the total quantity of power being transacts across the network.
+Loss allocation of transaction-2 with variation of transaction-2 keeping all…
+
+
+
+Fig. 8. Loss allocation of transaction-2 with variation of transaction-2 keeping all other transactions constant over a time period. (Trans-2: Transaction-2 in MW; Total: Sum of all the transactions; Alloc-2: Loss allocation of transaction-2.)
+
+The variation in the allocated losses to a transaction whose transaction value was kept constant throughout is also shown in Fig. 9.
+Loss allocation of transaction-3 where transaction-2 constant over a time…
+
+
+
+Fig. 9. Loss allocation of transaction-3 where transaction-2 constant over a time period when all other transactions varies. (Trans-3: Transaction-3 in MW; Total: Sum of all the transactions; Alloc-3: Loss allocation of transaction-3.)
+6. Conclusions
+
+In this paper, the problem of transmission loss allocation to the participating players in a deregulated power market is solved using artificial neural network. For the neural network structure, we used 3-layer MLP and for the loss allocation problem, sometimes 4-layer or increased layer of MLPs may increase performance. The back-end calculations only need the practical power system parameters and after forming the required dataset for ANN training, the proposed method is ready for use. It is a great advantage of this method where the loss allocation practically does not need any circuit parameters to estimate. This method also gives results in a very short time and can be used as real time application for loss allocation problems. Finally, filtering of input dataset for training obtains a better prediction accuracy within very short time over the whole data set and offers robustness to the proposed method. The proposed data filtering technique also enhances consistent performance for the trained network. Presented results show that the proposed neural networks can allocate the transmission losses very closely to the Shapley value allocation results. When raw data are used for training LMBP algorithm shows superiority over the BRBP algorithm, but the performance becomes almost identical when the simple data filtering technique is incorporated.
+Appendix A. IEEE 14 bus parameters
+
+See Tables A1 and A2.
+
+Table A1. Branch parameters.
+Start node	End node	R (pu)	X (pu)	B (pu)
+1	2	0.01938	0.05917	0.0528
+1	5	0.05403	0.22304	0.0492
+2	3	0.04699	0.19797	0.0438
+2	4	0.05811	0.17632	0.0340
+2	5	0.05695	0.17388	0.0346
+3	4	0.06701	0.17103	0.0128
+4	5	0.01335	0.04211	0.0
+4	7	0.0	0.20912	0.0
+4	9	0.0	0.55618	0.0
+5	6	0.0	0.25202	0.0
+6	11	0.09498	0.19890	0.0
+6	12	0.12291	0.25581	0.0
+6	13	0.06615	0.13027	0.0
+7	8	0.0	0.17615	0.0
+7	9	0.0	0.11001	0.0
+9	10	0.03181	0.08450	0.0
+9	14	0.12711	0.27038	0.0
+10	11	0.08205	0.19207	0.0
+12	13	0.22092	0.19988	0.0
+13	14	0.17093	0.34802	0.0
+
+Table A2. Transformer data.
+Start node	End node	R (pu)	X (pu)	Trans. ratio
+4	7	0.0	0.20912	0.978
+4	9	0.0	0.55618	0.969
+5	6	0.0	0.25202	0.932

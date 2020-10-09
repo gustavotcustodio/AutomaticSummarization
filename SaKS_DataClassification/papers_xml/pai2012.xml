@@ -1,0 +1,254 @@
+<article>
+  <title>Analyzing the balancing of error rates for multi-group classification</title>
+  <abstract>
+    <sentence>This paper reports the relative performance of an experimental comparison of some well-known classification techniques such as classical statistical, artificial intelligence, mathematical programming (MP), and hybrid approaches.</sentence>
+    <sentence>In particular, we examine the four-group, three-variable problem and the associated error rates for the four groups when each of the models is applied to various sets of simulated data.</sentence>
+    <sentence>The data had varying characteristics such as multicollinearity, nonlinearity, sample proportions, etc.</sentence>
+    <sentence>We concentrate on individual error rates for the four groups, i.e., we count the number of group 1 values classified into group 2, group 3, and group 4 and vice versa.</sentence>
+    <sentence>The results indicate that in general not only are MP, k-NN, and hybrid approaches relatively better at overall classification but they also provide a much better balance between error rates for the top customer groups.</sentence>
+    <sentence>The results also indicate that the MP and hybrid approaches provide relatively higher and stable classification accuracy under all the data characteristics.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Multi-group classification</keyword>
+    <keyword>Individual error rates</keyword>
+    <keyword>Discriminant analysis</keyword>
+    <keyword>Neural networks</keyword>
+    <keyword>k-NN</keyword>
+    <keyword>Hybrid</keyword>
+    <keyword>Linear programming</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Many a time practitioners are interested in not only the misclassification rates of classification methods but also the individual error rates exhibited by each of the classification methods.</sentence>
+    <sentence>For instance, consider an automobile manufacturer selling luxury cars.</sentence>
+    <sentence>The manufacturer, based several demographic characteristics of an individual such as approximate annual income, age, education, zip code, etc., has profiled the market into three segments – very likely to buy (VBuy), likely to buy (LBuy), and unlikely to buy (NBuy).</sentence>
+    <sentence>Obviously, being a luxury car seller, the manufacturer would be interested in targeting the VBuy and LBuy segments to extract the most from its advertising dollar spend.</sentence>
+    <sentence>The manufacturer would, therefore, be particularly interested in a lower misclassification rates for VBuy and LBuy.</sentence>
+    <sentence>There have been very few studies that specifically measure the performance of various classification methods based on individual error rates.</sentence>
+    <sentence>Markowski (1990) reported the balancing of error rates for an experimental comparison between a linear programming (LP) approach and Fisher’s linear discriminant function (FLDF).</sentence>
+    <sentence>The study concludes that FDLF is much more effective, when balance between two types of misclassifications is important.</sentence>
+    <sentence>In this study we work on a four-group classification problem.</sentence>
+    <sentence>We use a financial services example for evaluating the relative performance of some well-known classification techniques as well as a hybrid approach (Pai, Lawrence, Klimberg, &amp; Lawrence, 2012) for four group classification.</sentence>
+    <sentence>The primary objective is to examine the individual error rates for the four groups, under varying data characteristics such as multicollinearity, nonlinearity, etc.</sentence>
+    <sentence>In particular, we are interested in a lower misclassification rates for the top customer segments.</sentence>
+    <sentence>We compare the performances, based on individual error rates, of multivariate discriminant analysis (Mahalanobis), logistic regression, neural network, k-nearest neighborhood (k-NN), a MP method, and a hybrid approach which combines a non-parametric classification technique and MP.</sentence>
+    <sentence>This study aims to answer an important question concerning these classification approaches – Are there significant differences in the individual error rates for different classification approaches?</sentence>
+    <sentence>We believe this answer will make the practitioner aware of the inherent strengths and weaknesses of classification techniques.</sentence>
+    <sentence>The remainder of this paper is structured as follows: Section 2 presents the literature review and describes the classifications methods used in this study including the hybrid method.</sentence>
+    <sentence>Section 3 discusses model assumptions, hypotheses, and performance measures.</sentence>
+    <sentence>Section 4 describes the computational experiments.</sentence>
+    <sentence>Section 5 presents the results of our study; whereas, Section 6 discusses conclusions.</sentence>
+  </section>
+  <section name="Literature review and classification methods">
+    <sentence>Since Fisher’s seminal work (Fisher, 1936) on linear discriminant analysis, numerous methods have been developed for classification purposes.</sentence>
+    <sentence>Discriminant analysis has been successfully applied in many business applications (Myers &amp; Forgy, 1963).</sentence>
+    <sentence>Westin (1973) was one of the first to apply logistic regression to a binary choice situation.</sentence>
+    <sentence>Mangasarian (1965) was the first to use LP methods in classification problems for distinguishing between the elements of two disjoint sets of patterns.</sentence>
+    <sentence>Freed and Glover (1981) extended this work for predicting the performance of job applicants, based on a set of explanatory variables.</sentence>
+    <sentence>Tam and Kiang (1992) were one of the first to use a neural network in business research for predicting bank failures.</sentence>
+    <sentence>Srinivasan and Kim (1987), Lam, Choo, and Moy (1996), Kwak, Kim, Lee, and Choi (2002), Lam and Moy (2003) conclude that the LP approach for two-group classification problems perform as well as the statistical classification approaches, and, in many cases, even better.</sentence>
+    <sentence>However, previous research suggests that there is no single method that clearly out performs all methods in all problem situations (Kiang, 2003).</sentence>
+    <sentence>In general, research on two-group classification problems suggests that under varying data characteristics, such as the presence of outliers, varying sample sizes, non-linearity, non-normality, homoscedasticity, etc., of different methods perform differently and emphasize a need for hybrid classifiers to overcome biases in data (Kiang, 2003).</sentence>
+    <sentence>There has been very few research studies aimed at more than the two-group classification in the past decade or so (Bal &amp; Örkcü, 2011; Lam &amp; Moy, 1996; Loucopoulos &amp; Pavur, 1997; Örkcü &amp; Bal, 2011; Pai et al., 2012; Pavur &amp; Loucopoulos, 1995).</sentence>
+    <sentence>Lam et al.</sentence>
+    <sentence>(1996) propose a LP model for three-group classification problem, which minimizes the sum of individual deviations of the classification scores from their group mean classification scores.</sentence>
+    <sentence>The authors compare their models with Fisher’s linear discriminant function (FLDF) and the LP approach by Freed and Glover (1981) by using three examples of small- to moderate-sized datasets to show that the proposed method has an advantage over other methods.</sentence>
+    <sentence>However, the study does not address the impact of large datasets, outliers, and other data and group characteristics on the performance of their model.</sentence>
+    <sentence>In their studies, Pavur and Loucopoulos (1995), and Loucopoulos and Pavur (1997) propose three-group classification MIP models, which ‘minimize the sum of deviations’.</sentence>
+    <sentence>They use moderate size datasets, and they state that the computational times for large group sizes and high group overlap could be intensive and prohibitive, which is a drawback of MIP models.</sentence>
+    <sentence>Moreover, the performance of their models vis-à-vis other commonly used classification techniques, such as logistic regression, or an AI technique such as a neural network to test the robustness of their proposed models is yet to be determined.</sentence>
+    <sentence>Since the models use small datasets, further research is needed to assess the classification performance of these models with moderate to large datasets, with different group configurations, data characteristics, and computation efficiency.</sentence>
+    <sentence>In this study, we use moderate to large datasets with varying data characteristics.</sentence>
+    <sentence>Further, we use linear programming method for classification.</sentence>
+    <sentence>Here, we briefly discuss the mathematical programming and hybrid approach.</sentence>
+    <sentence>For a review of classical statistical, artificial intelligence, and nearest neighbor classification methods used in this study, we refer the readers to: multivariate discriminant analysis (MDA) (Hosmer &amp; Lemeshow, 2001; Kiang, 2003; Pai et al., 2012), logistic regression (LR) (Hosmer &amp; Lemeshow, 2001; Kiang, 2003), artificial neural networks (ANN) (Pai et al., 2012; Zahavi &amp; Levin, 1997a), k-nearest neighbor (Kiang, 2003; Pai et al., 2012).</sentence>
+    <sentence>Mathematical programming formulation (MP) We utilize the multi-group linear programming (LP) formulation by Lam and Moy (1996) to solve four group classification problems.</sentence>
+    <sentence>Consider the four-group classification problem with attributes.</sentence>
+    <sentence>Let the mean of the jth variable for k = 1, 2, … , m be where Gk = groups, nk = number of observations in Gk, and m = number of designated groups.</sentence>
+    <sentence>Let n be the total number of observations, n = n1 + n2 + ⋯ + nm, where n1 is the number of observations in group G1, n2 is the number of observations in group G2, etc.</sentence>
+    <sentence>We consider a classification problem with q variables and n, the total number of observations in the sample.</sentence>
+    <sentence>For each pair of (u, v), where u = 1, … , m − 1, v = u + 1, … , m, the Minimize the Sum of Deviations (MSD) model formulation is: (1) (2) (3) (4) where wj = weights, for j = 1, … , q are unrestricted in sign; xij = value of jth variable for the ith observation in the sample; di ⩾ 0 for i ∈ Gu and i ∈ Gv, is the deviation of an individual observation from the cut-off score.</sentence>
+    <sentence>The objective function (1) minimizes the sum of all the deviations.</sentence>
+    <sentence>The constraints (2) and (3) force the classification scores of the objects in Gk to be as close to the mean classification score of group k (k = 1, 2, … , m) as possible by minimizing di where i ∈ Gk.</sentence>
+    <sentence>The constraint (4) is a normalization constraint to avoid trivial values for discriminant weights.</sentence>
+    <sentence>For each pair (u, v), we use the wj values obtained from the LP solution of pair (u, v) to compute the values of the classification scores, Si of the observations in Gu and Gv.</sentence>
+    <sentence>Then all the cut-off values, Cuv, where u = 1, … , m − 1, v = u + 1, … , m, are determined by solving the following LP problem, (5) (6) (7) where all cuv are unrestricted in sign and all diuv ⩾ 0, and , for i ∈ Gk.</sentence>
+    <sentence>Hybrid method This study uses a hybrid classifier – a combination of two methods in common use: k-nearest-neighbor (k-NN) and MP approach (Pai et al., 2012).</sentence>
+    <sentence>The MP approach part of the hybrid method utilizes multi-group classification LP method developed by Lam and Moy (1996).</sentence>
+    <sentence>In this hybrid scheme, the initial feature space is divided by k-NN.</sentence>
+    <sentence>Thereafter, MP approach is used to classify the training set.</sentence>
+    <sentence>The k-NN method acts as a data preprocessing stage, where it is used to discard the unwanted data, i.e., the group Y = 0 (no buyers customer segment, in this study) for final classification using MP approach.</sentence>
+    <sentence>This preprocessing step helps in two ways: first, a major problem of using the k-NN is the computational complexity caused by large number of distance computations (Devijver &amp; Kittler, 1982).</sentence>
+    <sentence>The preprocessing stage helps in reducing this complexity of the initial problem for k-NN by having to classify only two groups i.e., Y = 0 and Y = 1; second, to reduce considerably, the number of constraints required in MP approach.</sentence>
+    <sentence>This alleviates the disadvantages of both these methods, and, at the same time, utilizes their strengths for improving classification accuracy.</sentence>
+  </section>
+  <section name="Model assumptions and performance measure">
+    <sentence>One of the focuses of this research is to examine the group and data characteristics that may affect the performance of different classification methods.</sentence>
+    <sentence>Since real-world data are usually contaminated (Glorfeld &amp; Kattan, 1989; Hample, Ronchetti, Rousseeuw, &amp; Stahel, 1986; Stam &amp; Ragsdale, 1992), this simulation experiment generated data with various characteristics.</sentence>
+    <sentence>The characteristics were selected based on previous research in this area and on the identified strengths and weaknesses of each method.</sentence>
+    <sentence>The following provides a detailed description for each data characteristic.</sentence>
+    <sentence>Data characteristics 3.1.1.</sentence>
+    <sentence>Multivariate normal (symmetric) One of the drawbacks of parametric methods is the normality assumption of the independent variables.</sentence>
+    <sentence>However, real-life datasets seldom follow normal distribution (Eisenbeis, 1977).</sentence>
+    <sentence>Violations of normality assumptions in parametric methods may lead to a biased and overly optimistic classification rates in the population, and thus limit the usefulness of the model (Kiang, 2003).</sentence>
+    <sentence>The Kolmogorov–Smirnov test statistics are applied to each of the independent variables in the data set to test for normality (Dyer, 1974; Lilliefors, 1967).</sentence>
+    <sentence>Non-normal data (asymmetric) Since, in practice, data are rarely multivariate normally distributed, we, also, wish to test the performance of the selected classification procedures when allowing departures from normality.</sentence>
+    <sentence>For the non-normal data used in our study, we generate lognormal variables (Ostermark &amp; Hoglund, 1998).</sentence>
+    <sentence>The choice of lognormal distribution is based on the knowledge that this type of distribution is different from the normal curve in overall shape as well as skewness and kurtosis.</sentence>
+    <sentence>Other scenarios for departure from non-normality are possible (Hosseini &amp; Armacost, 1994).</sentence>
+    <sentence>Dynamic versus static nature of the problem Real world data often change with time; however, most of the methods examined assume that the population distribution is static or does not change with time.</sentence>
+    <sentence>Thus, the models based on historical data at times violate the dynamic nature of data.</sentence>
+    <sentence>To solve this problem, (Kiang, 2003) suggests time series analysis, which tries to account for as much as possible of the regular movement (wavelike functions, trend, etc.)</sentence>
+    <sentence>in the time series, leaving out only the random error.</sentence>
+    <sentence>Outliers (with/without) Real world datasets often contain outliers.</sentence>
+    <sentence>We inject outliers into our datasets, which contains five per cent observations as outliers generated using the Cauchy distribution (Ostermark &amp; Hoglund, 1998).</sentence>
+    <sentence>The use of the Cauchy distribution to generate outliers has been supported in the literature (Hoaglin, Mosteller, &amp; Tukey, 1985).</sentence>
+    <sentence>Other simpler approaches, such as the generation of observations that are several standard deviations from the mean values of the variables are also possible (Bajgier &amp; Hill, 1982).</sentence>
+    <sentence>Multicollinearity Past research suggests that a high degree of correlation among independent variables (multicollinearity) will have adverse effects on the parameter estimates of parametric methods (Meyers, Gamst, &amp; Guarino, 2006).</sentence>
+    <sentence>Two methods commonly used to test collinearity are correlation matrix and variance inflation factor (VIF) (Neter, Wasserman, &amp; Kutner, 1990).</sentence>
+    <sentence>This study tests the models for two levels of correlation – strong, and weak.</sentence>
+    <sentence>Correlation matrices are: 3.1.6.</sentence>
+    <sentence>Homoscedasticity The linear discriminant analysis (LDA) requires the covariance equality of multi-groups.</sentence>
+    <sentence>We test for the equality of variances by conducting Cochran’s test (Neter et al., 1990).</sentence>
+    <sentence>This study tests the models by introducing unequal covariance matrices between four groups to test the impact on performance of various methods.</sentence>
+    <sentence>We alter the covariance matrices to reflect different degrees of correlation between discriminating variables (Ostermark &amp; Hoglund, 1998).</sentence>
+    <sentence>Sample proportion Previous research indicates that the sample proportion does affect the prediction accuracy of a discriminant model.</sentence>
+    <sentence>For instance, MDA models show that when sample proportion differs from the true population, the prediction accuracy becomes very poor (Kiang, 2003).</sentence>
+    <sentence>However, the predictive accuracy of a logit model is not affected by biased sample proportion due to its non-parametric nature.</sentence>
+    <sentence>This study uses the same sample proportion for each group as per the reference data sets.</sentence>
+    <sentence>The proportion of the sample in per cent terms is: n1 = 40%, n2 = 10%, n3 = 20%, n4 = 30%, where n = n1 + n2 + n3 + n4, the sample size for each replication of training and validation set.</sentence>
+    <sentence>Sample size Previous research in classification studies suggests that size of training samples not only affects speed of training, but also has an impact on the performance of different classifiers.</sentence>
+    <sentence>Sordo and Zeng (2005), in their empirical study, show that as sample size increases, both support vector machines and decision trees show a substantial improvement in performance, suggesting a more consistent learning process.</sentence>
+    <sentence>For some methods, large sample size is required in order to achieve its maximum prediction accuracy whereas others may need a relatively small data set.</sentence>
+    <sentence>In this study, sample sizes of 100, 200, 400, and 500 are randomly selected from the data set each time for both training and validation purposes.</sentence>
+    <sentence>Individual error rates Previous literature on the classification and prediction analysis suggests there are few studies that delve on the individual error rates.</sentence>
+    <sentence>Balancing of error rates is the individual error rates for each group or class of the categorical variable, i.e., we count the number of group 0, 1, 2, and 3 values that are misclassified.</sentence>
+    <sentence>Markowski (1990) reported the balancing of error rates for an experimental comparison between a linear programming (LP) approach and Fisher’s linear discriminant function (FLDF).</sentence>
+    <sentence>The study concludes that FDLF is much more effective, when balance between two types of misclassifications is important.</sentence>
+    <sentence>In this study we wish to examine the error rates for the four groups individually under varying data circumstances.</sentence>
+    <sentence>We are particularly interested in a lower misclassification rates for top customer segments, hence, we judge the effectiveness of a method by its ability to classify groups Y = 1, and Y = 2 accurately.</sentence>
+    <sentence>For instance, in our example, groups 1 (prime) and 2 (high value) are our top customer segments.</sentence>
+    <sentence>We would be interested in identifying the methods that have lower misclassification rates for these two groups.</sentence>
+    <sentence>This analysis will make the practitioner aware of the inherent strengths and weaknesses of classification techniques.</sentence>
+  </section>
+  <section name="Computational experiments">
+    <sentence>Our study is restricted to four-group classification with three discrimination variables.</sentence>
+    <sentence>We test the robustness of various methods using a financial services segmentation problem with three independent variables and a categorical dependent variable with four customer class.</sentence>
+    <sentence>All the independent variables in our example are continuous.</sentence>
+    <sentence>The study uses the characteristics of real data sets to simulate (via Monte Carlo simulation) sample runs for experiments.</sentence>
+    <sentence>Example – financial services segmentation This example focuses on segmenting the financial services market for effectively targeting customers who offer higher expected growth in the value of future business.</sentence>
+    <sentence>More specifically, this study attempts to develop a discriminant model to classify the customers based on their demographics, i.e., age (X1), income (X2), and loan activity (X3) as independent variables.</sentence>
+    <sentence>We segment the customers into four ordinal classes: Y = 0, Y = 1, Y = 2, Y = 3, i.e., non-buyers (n1), prime customers (n2), highly valued customers (n3), and price shoppers (n4), respectively.</sentence>
+    <sentence>The prime customers are the ones who have higher income levels and a loan activity commensurate with their income.</sentence>
+    <sentence>They form the most desirable targets for the companies offering financial services.</sentence>
+    <sentence>The highly valued customer class has income levels and loan activity relatively lower than the prime customers but profitable enough in the long run though with associated risks.</sentence>
+    <sentence>The price shoppers are short term customers with lower long term attractiveness but provide enough volume-base.</sentence>
+    <sentence>They are also the ones which cost higher to service due to their tendency to base their decisions on short term benefits and price sensitivity.</sentence>
+    <sentence>Lastly, the non-buyers are the ones who are not likely to buy the financial services in a short to medium term.</sentence>
+    <sentence>For the financial services example we use an individual’s income, loan activity, and age as explanatory variables.</sentence>
+    <sentence>The response variable in our model is a multi-group variable which, indicates whether customers are: prime customers, highly valued customers, price shoppers, or non-buyers.</sentence>
+    <sentence>To evaluate the performances of all the methods, a Monte Carlo simulation experiment is conducted to generate sample runs, based on the characteristics of a real consumer dataset.</sentence>
+    <sentence>We compare the performances of the discriminant analysis-Mahalanobis (DA), multinomial logistic regression (LR), artificial neural networks, and MP method based on “minimize the sum of deviations” model (MSD) (Lam et al., 1996), k-NN, and the hybrid method for the problem of four-group classification.</sentence>
+    <sentence>Data generation To test the effect of each data characteristics, a population of 100,000 cases is generated each time.</sentence>
+    <sentence>An equal number of cases (25,000) are generated for each category or class, i.e., Y = 0, Y = 1, Y = 2, and Y = 3 groups.</sentence>
+    <sentence>The data sets are generated for nine different data characteristics using Monte Carlo simulation method.</sentence>
+    <sentence>To form the training and validation data sets, 125 cases are randomly drawn from each group for a total of 500 cases in each data set.</sentence>
+    <sentence>The process is repeated 150 times to form 150 training and validation data sets, respectively, in order to average out the possible bias in any single sample run.</sentence>
+    <sentence>The results presented below are the average performances of the 150 runs, both for training and validation.</sentence>
+    <sentence>The following data characteristics describe the biases inserted at each step during the test.</sentence>
+    <sentence>Dynamic environment: Again, the same functional form as the base cases is used.</sentence>
+    <sentence>Instead of using a constant A1 as the coefficient of X1, it is assumed that the coefficient of X1 changes over time.</sentence>
+    <sentence>A sine function is used as part of the coefficient value from 0 to 1 to 0 to −1, then back to 0.</sentence>
+    <sentence>Each time, a complete cycle is used to generate 300 examples and then chronologically divided into two sets.</sentence>
+    <sentence>The first 150 examples are used for training and the rest are used as validation sample (Kiang, 2003).</sentence>
+    <sentence>Nonlinearity: A quadratic function is used in this test: where X1 ∼ N(μ1, V1), X2 ∼ N(μ2, V2), X3 ∼ N(μ3, V3), and ɛ ∼ N(0, 1).</sentence>
+    <sentence>Again, A1, A2, A3, V1, V2, V3, μ1, μ2, and μ3 are constants and were chosen to make four distinct groups.</sentence>
+    <sentence>Non-normal distribution: A data set with lognormal distribution is generated to compare with normally distributed sample (Ostermark &amp; Hoglund, 1998).</sentence>
+    <sentence>Only positive values are possible for the variable, and the distribution is skewed to the left.</sentence>
+    <sentence>Two parameters are needed to specify a log-normal distribution.</sentence>
+    <sentence>Traditionally, the mean μ and the standard deviation σ (or the variance σ2) of log(X) are used.</sentence>
+    <sentence>A random variable X is said to have the lognormal distribution with parameters μ and σ &gt; 0 if ln(X) has the normal distribution.</sentence>
+    <sentence>Equivalently, X = eY where Y is normally distributed with mean μ and standard deviation σ.</sentence>
+    <sentence>The lognormal distribution is used to model continuous random quantities when the distribution is believed to be skewed, such as certain income and lifetime variables.</sentence>
+    <sentence>Outliers: The Cauchy distribution is used to generate outliers in the base cases.</sentence>
+    <sentence>We insert 5% of the observations as outliers.</sentence>
+    <sentence>Strong correlation: To generate data sets with strong correlation between variables X1, X2, and X3, we use strong and weak correlation matrices available in the previous research literature (Lam &amp; Moy, 2003).</sentence>
+    <sentence>Unequal covariance: Data sets with different covariance matrix for the four groups, i.e., Y = 0, Y = 1, Y = 2, and Y = 3 were generated.</sentence>
+    <sentence>Unequal sample proportion: The sample cases are randomly drawn from the same population used in the base case.</sentence>
+    <sentence>A sample proportion of 40-30-20-10 percentages are used for groups Y = 0, Y = 1, Y = 2, and Y = 3, respectively, for both training and validation data sets.</sentence>
+    <sentence>Sample size: Sample sizes of 100, 200, 400, and 500 are randomly selected from the base case data set each time for both training and validation.</sentence>
+    <sentence>For each data set generated, necessary tests were performed (i.e., plotting scatter plots, normality tests, etc.)</sentence>
+    <sentence>to verify the existence of bias in the data.</sentence>
+    <sentence>Performance is assessed with respect to the ability of the methods to accurately predict the appropriate class for the validation sample.</sentence>
+    <sentence>Each experiment includes 300 sample runs (150 training runs and 150 validation runs), and the results presented are the average of the 150 runs for training and validation data sets, each.</sentence>
+    <sentence>Therefore, there are a total of 300 (sample runs/cell) × 6 (models) × 9 (data characteristics) = 16,200 runs.</sentence>
+    <sentence>To test the effect of sample size on model performance, 150 trainings and 150 validation runs were performed for each sample size.</sentence>
+    <sentence>Therefore, there are a total of 300 (sample runs/cell) × 6 (models) × 4 (sample sizes) = 7200 runs, for the sample size effects.</sentence>
+    <sentence>We used Minitab 15.0 to generate all the data sets required for this study.</sentence>
+    <sentence>For DA (Mahalanobis), and logistics regression methods, again we use Minitab 15.0.</sentence>
+    <sentence>For neural network analysis, and k-NN, we used XLMiner software.</sentence>
+    <sentence>For solving MP problem, we used Premium Solver software by Frontline Systems.</sentence>
+    <sentence>All these software packages are commercially available.</sentence>
+  </section>
+  <section name="Analysis of results and discussions">
+    <sentence>The results of training and validation data for individual error rates are shown in Tables 1 and 2, respectively.</sentence>
+    <sentence>We judge the effectiveness of a method on individual error rates by its ability to accurately classify top customer groups, i.e., Y = 1, and Y = 2.</sentence>
+    <sentence>The results show that individual error rates in case of almost all methods are affected by the data characteristics.</sentence>
+    <sentence>However, LR is the most affected, whereas the mathematical programming approach (MP) including hybrid method are the least affected for both training and validation data.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Individual error rates for training data.</sentence>
+    <sentence>Methods Groups Base case (%)⁎ Dynamic (%) Nonlinearity (%) Nonnormality (%) Outliers (%) Strong correlation (%) Unequal covariance (%) Sample proportion (%) Weak correlation (%) DA⁎ 0 31.13⁎ 46 58 38 29 8 5 26 5 1 1 42 0 2 3 3 8 8 6 2 11 34 74 23 8 6 4 12 4 3 37 2 4 73 24 4 0 64 0 Logistic 0 54 55 92 99 57 30 22 6 5 1 43 60 94 99 94 71 76 100 88 2 96 10 29 29 87 97 93 100 100 3 86 1 10 18 50 66 75 95 92 Neural nets 0 77 86 100 100 99 7 3 100 6 1 48 85 0 8 100 7 3 9 100 2 8 4 24 19 31 9 4 99 62 3 0 0 4 0 0 11 0 0 0 KNN 0 16 14 25 15 8 4 2 11 2 1 0 13 1 1 1 1 3 2 2 2 20 32 42 23 15 6 4 28 9 3 12 3 15 20 12 12 6 15 5 MP 0 18 19 20 24 16 2 1 14 0 1 2 18 2 1 2 1 1 3 0 2 7 8 18 12 8 3 1 9 1 3 13 2 12 15 12 3 3 17 3 Integrated 0 26 22 38 22 13 7 4 16 4 1 3 10 6 3 3 1 2 6 2 2 3 10 10 3 3 2 2 6 2 3 3 3 9 3 3 2 2 5 1 ⁎ Reading the table: Under base case, for DA, 31% of Group 0 observations have been misclassified into Groups 1, 2, and 3.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Individual error rates for validation data.</sentence>
+    <sentence>Methods Groups Base case (%) Dynamic (%) Nonlinearity (%) Nonnormality (%) Outliers (%) Strong correlation (%) Unequal covariance (%) Sample proportion (%) Weak correlation (%) DA 0 37 48 60 42 29 11 7 28 5 1 3 43 0 3 3 4 5 11 7 2 9 36 76 24 10 9 6 14 5 3 37 3 3 75 23 6 1 67 0 Logistic 0 49 54 94 99 61 28 22 6 4 1 43 60 93 99 93 70 75 100 85 2 95 11 27 31 85 99 95 100 100 3 85 2 12 23 53 68 75 97 92 Neural nets 0 79 88 100 100 99 8 4 100 6 1 50 82 0 9 100 8 2 12 100 2 8 4 20 20 34 10 3 98 63 3 0 1 3 0 0 10 2 0 0 KNN 0 33 26 42 30 16 9 5 19 6 1 1 26 3 1 5 3 5 7 6 2 31 49 55 33 21 10 11 39 18 3 21 7 19 30 15 18 12 19 10 MP 0 38 47 49 30 41 34 31 30 28 1 2 19 2 0 2 0 1 3 1 2 8 6 24 14 7 3 2 11 3 3 6 7 5 15 3 3 2 27 5 Integrated 0 36 32 60 45 23 11 8 27 7 1 6 33 11 5 5 3 3 14 2 2 6 18 7 11 5 10 2 10 2 3 6 8 9 5 5 13 2 9 1 In general, MP, and hybrid methods have relatively higher and stable classification accuracy under all the data characteristics for the top customer groups.</sentence>
+    <sentence>On the other hand, DA and k-NN have higher classification accuracy for group Y = 1, i.e.</sentence>
+    <sentence>prime customers but their performance is erratic for group Y = 2, i.e.</sentence>
+    <sentence>high value customers.</sentence>
+    <sentence>Another concern, which is exhibited by the results, is that all the methods perform relatively poorly in classifying Group 0 (i.e., ‘No Buyer’ customer class).</sentence>
+    <sentence>The performances of all method except LR are superior under the data characteristics such as the degree of correlation (strong and weak), and unequal covariance compared with the base case.</sentence>
+    <sentence>The data characteristics such as the dynamic environment, nonlinearity, non-normality, and unequal sample proportion adversely affects individual error rate for almost all methods.</sentence>
+    <sentence>However, NN is relatively less affected by the nonlinearity of data.</sentence>
+    <sentence>Furthermore, though NN allows adaptive model adjustments and responds swiftly to changes in the real world, its performance on the dynamic environment is mixed, in that, its classification accuracy for group Y = 2 is high, however, its classification accuracy for Y = 1 is low.</sentence>
+    <sentence>Table 3 shows the effect of sample sizes on the individual error rates.</sentence>
+    <sentence>The results show that the hybrid method gives relatively stable and superior performance for both the groups of interest, i.e., Group 1 (i.e., prime customers) and Group 2 (i.e., high value customers).</sentence>
+    <sentence>There is an incremental improvement in its performance with the increase in sample size.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Individual error rates for sample size for training and validation data.</sentence>
+    <sentence>Methods Groups Sample 100 (%) Sample 200 (%) Sample 400 (%) Sample 500 (%) Methods Groups Sample 100 (%) Sample 200 (%) Sample 400 (%) Sample 500 (%) DA 0 38 52 41 32 DA 0 48 63 50 39 1 2 2 2 1 1 5 3 3 3 2 6 13 9 10 2 9 13 11 9 3 11 33 26 34 3 26 42 35 35 Logistic 0 67 75 66 56 Logistic 0 76 77 67 49 1 85 90 71 37 1 86 92 74 45 2 63 65 76 99 2 65 63 73 90 3 37 37 54 86 3 38 37 53 83 Neural nets 0 65 83 74 73 Neural nets 0 72 87 75 68 1 21 19 28 45 1 29 19 32 47 2 6 37 17 8 2 11 36 19 9 3 1 9 3 0 3 1 13 5 0 KNN 0 19 18 18 17 KNN 0 37 41 38 36 1 2 0 1 0 1 6 1 3 2 2 15 29 22 22 2 25 37 30 29 3 14 9 11 12 3 25 19 22 22 MP 0 18 14 16 16 MP 0 23 32 30 37 1 1 1 1 2 1 1 2 2 2 2 12 5 8 8 2 21 17 15 7 3 8 10 10 14 3 7 14 9 6 Integrated 0 23 27 25 24 Integrated 0 50 45 44 37 1 2 2 2 3 1 4 8 6 6 2 5 4 4 3 2 13 7 8 5 3 7 5 5 3 3 6 10 7 6 The DA, k-NN algorithm, and MP have relatively lower individual error rates for Group 1; however, their performance deteriorates while classifying Group 2.</sentence>
+    <sentence>Overall, the results indicate that the data characteristic does affect the individual group error rates for all the methods.</sentence>
+    <sentence>Companies with large amounts of customer data pay considerable attention to the analysis of data to target appropriate customer segments for their products and services.</sentence>
+    <sentence>Database marketing uses the power of data and information technology in the pursuit of personal marketing of products and services to consumers, based on their preferences and needs (Zahavi &amp; Levin, 1997b).</sentence>
+    <sentence>The importance of individual group error rates analysis can be judged from this fact.</sentence>
+    <sentence>This analysis should help the practitioners to understand the relative importance of various methods vis-à-vis different data characteristics and choose a method that best helps in identifying their target segments.</sentence>
+  </section>
+  <section name="Conclusions and limitations">
+    <sentence>In this computational experimental study, based on their individual error rates, we have compared six different methods of classification: discriminant analysis – Mahalanobis (DA), multinomial logistic regression(LR), neural network (NN), k-nearest neighbor algorithm (k-NN), mathematical programming (MP), and an hybrid method under varying data characteristics with respect to the distributions of the discriminating variables, the correlation structures between the variables and the absence or presence of outliers in the data set, unequal covariance among various groups, and a dynamic environment.</sentence>
+    <sentence>The study shows that the hybrid, k-NN, and the MP methods provide relatively stable and lower error rates in general and, specifically for the top two customer groups of interest, i.e., Group 1 and Group 2.</sentence>
+    <sentence>Logistic regression and neural network methods provide worst relative performance under most data scenarios.</sentence>
+    <sentence>This result contradicts some of the previous research studies and reviews (Dreiseitl et al., 2001; Kiang, 2003; Paliwal &amp; Kumar, 2009).</sentence>
+    <sentence>Multinomial logistic regression is a parametric method for prediction and classification but its performance depends on the distribution of variables, size and quality of data (Sadat-Hashemi, Kazemnejad, Lucas, &amp; Badie, 2004).</sentence>
+    <sentence>This study clearly establishes that the data complexities such as: multicollinearity, heterogeneity and nonlinear relations among response and predictors have adverse impact on the multinomial logistic regression model.</sentence>
+    <sentence>The fluctuation in the neural network model’s performance can be attributed to the large number of possible parameter settings and the absence of a methodical approach to choosing the best settings.</sentence>
+    <sentence>For example, experiments must be conducted to determine the best data representation, model specification, number of hidden layers, number of neurons on each hidden layer, learning rate, and number of training cycles.</sentence>
+    <sentence>All of these interrelate to give the best ANN model.</sentence>
+    <sentence>Failure to conduct such experiments may result in a poorly specified ANN model (Nguyen &amp; Cripps, 2001).</sentence>
+    <sentence>In general, the MP provides superior performance compared with k-NN and the hybrid method under data characteristics such as dynamic environment, nonlinearity, non-normality, unequal sample proportion and in the presence of outliers.</sentence>
+    <sentence>The only problem with this nonparametric method is the computational time required for the execution.</sentence>
+    <sentence>However, with the advent of faster and powerful computing machines this glitch should not pose much problem in its utility as a robust and relative accurate classifier.</sentence>
+    <sentence>An important concern brought forth by our results is the impact of dynamic variations in data and unequal sample proportion on classification performance.</sentence>
+    <sentence>The results indicate that all classification methods are adversely affected by the non-static nature of the data.</sentence>
+    <sentence>Since most business phenomenon exhibit dynamic behavior, care should be exercised in calibrating classification systems to such scenarios.</sentence>
+    <sentence>In this study, we study a financial problem with three predictor variables.</sentence>
+    <sentence>Further research involving more attributes could help gain more insights into the relative strengths of the methods.</sentence>
+    <sentence>Another area for further investigation could be including more observations in the problem as well as varying the training and validation data sets, to test the robustness of the methods.</sentence>
+    <sentence>More sophisticated experiments are required to examine the possible interactions among the predictors on various methods.</sentence>
+    <sentence>However, this may pose a serious challenge to mathematical programming approaches, k-NN and neural network, in terms of the problem complexities.</sentence>
+    <sentence>The study compared only six different methods.</sentence>
+    <sentence>Future work could include more methods such as decision tree (C4.5), different variations of neural network, support vector machines (SVMs), and others including few hybrid methods.</sentence>
+    <sentence>1 Tel.</sentence>
+    <sentence>: +1 973 596 6425.</sentence>
+    <sentence>2 Tel.</sentence>
+    <sentence>: +1 610 660 1625.</sentence>
+    <sentence>3 Tel.</sentence>
+    <sentence>: +1 732 297 3819.</sentence>
+  </section>
+</article>

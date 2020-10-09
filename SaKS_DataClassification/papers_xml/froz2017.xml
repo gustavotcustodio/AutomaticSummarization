@@ -1,0 +1,580 @@
+<article>
+  <title>Lung nodule classification using artificial crawlers, directional texture and support vector machine</title>
+  <abstract>
+    <sentence>Lung cancer is the major cause of death among patients with cancer throughout the world.</sentence>
+    <sentence>The main symptom that indicate the lung cancer is the presence of lung nodules.</sentence>
+    <sentence>This work proposes a methodology to classify lung nodule and non-nodule using texture features.</sentence>
+    <sentence>The state-of-art of the presented work are the adaption of the Artificial Crawlers and Rose Diagram techniques for representing patterns over 3D images.</sentence>
+    <sentence>Several information are extracted based on the texture behavior of these methods, allowing the correct classification of lung nodules candidates using Support Vector.</sentence>
+    <sentence>Objective: This work proposes a methodology to classify lung nodule candidates and non-nodule candidates based on computed tomography (CT) images.</sentence>
+    <sentence>Methodology: The Lung Image Database Consortium (LIDC-IDRI) image database is employed for our tests.</sentence>
+    <sentence>Three techniques are employed to extract texture measurements.</sentence>
+    <sentence>The first technique is artificial crawlers (ACs), an artificial life algorithm.</sentence>
+    <sentence>The second technique uses the rose diagram (RD) to extract directional measurements.</sentence>
+    <sentence>The third technique is a hybrid model that combines texture measurements from artificial crawlers and the rose diagram.</sentence>
+    <sentence>The support vector machine (SVM) classifier with a radial basis kernel is employed.</sentence>
+    <sentence>Results: In the testing stage, we used 833 scans from the LIDC-IDRI database.</sentence>
+    <sentence>For the application of the methodology, we decided to divide the whole database into two groups, training and testing.</sentence>
+    <sentence>We used partitions of training and testing of 20/80%, 40/60%, 60/40% and 80/20%.</sentence>
+    <sentence>The division was repeated 5 times at random.</sentence>
+    <sentence>We reached a mean accuracy (mACC) of 94.30%, a mean sensitivity (mSEN) of 91.86%, a mean specificity (mSPC) of 94.78%, a coefficient of accuracy variance (CAv) of 1.61% and a mean area under the receiver operating characteristic (mROC) curves of 0.922.</sentence>
+    <sentence>Conclusion: Lung cancer has the highest mortality rate and one of the smallest survival rates after diagnosis.</sentence>
+    <sentence>An early diagnosis increases the survival chance of patients.</sentence>
+    <sentence>The proposed methodology is a useful tool for specialists in the detection of nodules.</sentence>
+    <sentence>We believe we contribute for the expert system field because 1) the adaption of the Artificial Crawlers and Rose Diagram methods as 3D texture descriptors is innovative and contains great potential; 2) we adapted and developed measurements from the 3D texture descriptors; and 3) the simplicity and discriminative power of the methodology can be extended to applications based on images with other contexts.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Artificial life</keyword>
+    <keyword>Artificial crawlers</keyword>
+    <keyword>Rose diagram</keyword>
+    <keyword>Lung nodule classification</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Cancer is an uncontrolled growth of cells in a specific region of the body.</sentence>
+    <sentence>Lung cancer has the highest mortality rate after diagnosis because of its late detection and treatment (Wood et al., 2012).</sentence>
+    <sentence>The high mortality rate is associated with its late diagnosis, which normally occurs at advanced stages of the disease.</sentence>
+    <sentence>The presence of lung nodules suggests cancer and indicates the stage of the disease.</sentence>
+    <sentence>The detection of nodules is essential to patient prognosis and an early diagnosis increases the chance of survival.</sentence>
+    <sentence>Additionally, increased information increases the precision of diagnosis.</sentence>
+    <sentence>Interest in the development and use of digital image processing techniques applied to CT, with the goal of enhancing diagnosis precision, has increased recently.</sentence>
+    <sentence>The combination of these techniques has led to the development of computer-aided detection (CAD)/computer-aided diagnostic systems (Polakowski et al., 1997).</sentence>
+    <sentence>A CAD system typically consists of four stages: 1) image acquisition; 2) segmentation of nodule candidates; 3) extraction of features from the candidates; and 4) reduction of false positives (classification into nodules and non-nodules).</sentence>
+    <sentence>All stages are fundamental to the success of a CAD system.</sentence>
+    <sentence>In this work, we examine the feature extraction and classification stages.</sentence>
+    <sentence>In these stages, we obtain the necessary information to reduce the number of false results.</sentence>
+    <sentence>In CAD methodologies, the feature extraction stage depends on: 1) geometry (for example, how round the candidate is); and 2) texture (grey level distribution).</sentence>
+    <sentence>In this work, we only use texture features.</sentence>
+    <sentence>The goal of this work is to analyze lung nodules, classifying the candidates into nodules or non-nodules.</sentence>
+    <sentence>The features used for classification are extracted in three ways.</sentence>
+    <sentence>The first technique uses an artificial life model, called artificial crawlers.</sentence>
+    <sentence>The curves extracted from it use the candidate CT scans as environments.</sentence>
+    <sentence>The second technique uses gradient vectors to extract texture features from the candidates based on a circular histogram called the rose diagram.</sentence>
+    <sentence>The third technique is a hybrid model that combines the texture features extracted from the other two methods.</sentence>
+    <sentence>The support vector machine classifier is used in this methodology.</sentence>
+    <sentence>In Section 2, we describe related work.</sentence>
+    <sentence>In Section 3, the three proposed methods (ACs, RD and hybrid) are described.</sentence>
+    <sentence>In Section 4, we outline the proposed methodology for classification of nodule candidates using the three methods and the support vector machine (SVM) classifier.</sentence>
+    <sentence>In Section 5, we present and discuss the results.</sentence>
+    <sentence>In Section 6, we report the conclusions of this work.</sentence>
+  </section>
+  <section name="Related works">
+    <sentence>As previously explained, a lung nodule detection system is commonly divided into several steps.</sentence>
+    <sentence>Each of these steps has its own challenges to overcome.</sentence>
+    <sentence>In nodule segmentation, one of the biggest difficulties is in isolating the nodule when connected with a vessel (juxtavascular) or with pleura (juxtapleural), without loss of texture.</sentence>
+    <sentence>With such losses, the whole system can be prejudiced, leading to wrong conclusions about the nodules.</sentence>
+    <sentence>After segmentation, wrong candidates to be nodules may be generated, known as false positives.</sentence>
+    <sentence>One big challenge is to reduce the false positives without losing actual nodules.</sentence>
+    <sentence>Determining which measurements of texture and/or form should be used in combination with a computational intelligence system is the main difficulty of any system.</sentence>
+    <sentence>Over the years, several researchers have been making efforts to develop methodologies to overcome these challenges.</sentence>
+    <sentence>We briefly present some works that aim to contribute solutions to these problems.</sentence>
+    <sentence>Mousa and Khan (2002) used SVM to classify lung nodules and non-nodules in CT exams using circular features and the mean variance of the detected edges.</sentence>
+    <sentence>They used 50 nodule and non-nodule candidates for training and 16 images for testing.</sentence>
+    <sentence>An 87.5% increase in sensitivity was achieved by the SVM classifier.</sentence>
+    <sentence>The cases of training and test was manually chosen for both nodule and non-nodule candidates.</sentence>
+    <sentence>Jing, Bin, and Lianfang (2010) presented a methodology that classifies lung nodules in CT scans based on shape, geometry, grey level and texture features using SVM.</sentence>
+    <sentence>They used a rule-based approach to exclude blood vessels from the images before acquiring the region of interest (ROI).</sentence>
+    <sentence>The extracted shape feature is the invariant moment (ellipticity and major and minor axis of the ROI).</sentence>
+    <sentence>The geometric features are: area, circularity, slenderness and degree of rectangularity.</sentence>
+    <sentence>The grey-level features are the mean and variance of the grey levels.</sentence>
+    <sentence>The texture features are: energy, entropy, contrast and adverse moment.</sentence>
+    <sentence>The highest accuracy obtained was 85.44%.</sentence>
+    <sentence>This work used 50 slice CT images, including 50 lung nodules candidates and 204 non-nodules candidates.</sentence>
+    <sentence>The authors explain that the small sized candidates and the irregular shapes of the nodules caused a few omissions and misclassification.</sentence>
+    <sentence>Lee, Kouzani, and Hu (2010b) used a Random Forest based classification aided by clustering for detection of lung nodule.</sentence>
+    <sentence>This method used a hybrid random forest algorithm to classify the lung nodules and non-nodules.</sentence>
+    <sentence>The images were obtained from 32 patient scans in the LIDC-IRDI.</sentence>
+    <sentence>The authors achieved 98.33% sensitivity and 97.11% specificity.</sentence>
+    <sentence>The clustering techniques chosen was k-means and expectation maximization algorithms, which requires parameterization.</sentence>
+    <sentence>The number of clusters used was 2 in the classification aided by clustering method.</sentence>
+    <sentence>Namin, Moghaddam, Jafari, Esmaeil-Zadeh, and Gity (2010) present a methodology with two steps, segmentation and classification of lung nodules in malign and benign using fuzzy k-nearest neighbour (FKNN).</sentence>
+    <sentence>FKNN is used in both steps.</sentence>
+    <sentence>The extracted features are textures based on the intensities of the voxels (Hounsfield units) and the geometry.</sentence>
+    <sentence>An 88% accuracy and a mean of 10.3 false positives per exam were reported.</sentence>
+    <sentence>The author also presented that the nodules with small size and/or irregular shapes were the main shortcomings of the segmentation method.</sentence>
+    <sentence>Tartar, Kilic, and Akan (2013) suggest an approach that classifies lung nodules in CT scans using hybrid features.</sentence>
+    <sentence>Four techniques are explored: principal component analysis (PCA) and minimum redundancy maximum relevance (mrMR), statistical features extraction, geometrical features extraction and an hybrid method.</sentence>
+    <sentence>They evaluated statistical values from PCA in two dimensions and mrMR with geometrical features.</sentence>
+    <sentence>The results were 90.7% accuracy, 89.6% sensitivity and 87.5% specificity.</sentence>
+    <sentence>The methodology adopts a dataset of 2D CT slices evaluated by radiologists, divided in 95 nodules and 75 non-nodules from 63 patients.</sentence>
+    <sentence>The use of two dimensional images for shape-based features extraction may raises the sensitivity, but prejudice the specificity of the third and fourth method because of the limited analysis of the whole nodule property on the original 3D CT. Zhang et al.</sentence>
+    <sentence>(2013) proposed an approach to classify lung nodules in four categories: well-circumscribed, vascularized, juxtapleural and pleural tail.</sentence>
+    <sentence>The method describes both the lung nodule and the surrounding context information to perform the characterization in two distinct ways: 1) superpixel labelling, which labels the pixels as foreground or background, and 2) context curve calculation.</sentence>
+    <sentence>The image database resource was the early lung cancer action program (ELCAP), which contains 50 low-dose scans.</sentence>
+    <sentence>This method resulted in 82.5% accuracy.</sentence>
+    <sentence>Their database contained 379 unduplicated lung nodules with locations indicated by annotations.</sentence>
+    <sentence>The nodules images was cropped with a 31 x 31 pixels window for extracting the context curves.</sentence>
+    <sentence>As superpixel labelling results in texture characteristics, there is no guarantee that the nodule image sliced comprises all fundamental features of the nodule texture.</sentence>
+    <sentence>The methodology developed by Choi and Choi (2014) uses Hessian matrices to calculate two angular histograms.</sentence>
+    <sentence>The angular histograms of the normal surface are used as features to eliminate structures linked to lung parenchyma and to classify the remainder as nodules or non-nodules.</sentence>
+    <sentence>Using 84 exams from the LIDC, they achieved 97.4% accuracy, 97.2% sensitivity and 97.7% specificity.</sentence>
+    <sentence>The method multi-scale dot enhancement filtering is applied into 3D shape of the object, but lacks of pre-processing techniques.</sentence>
+    <sentence>It was used 84 exams with a total of 148 isolated, juxtapleural and juxtavascular nodules.</sentence>
+    <sentence>Carvalho Filho et al.</sentence>
+    <sentence>(2014), proposed the classification of lung nodules and non-nodules using taxonomic diversity indices.</sentence>
+    <sentence>The computation of the indices was based on phylogenetic trees, which were applied to the characterization of the nodule candidate.</sentence>
+    <sentence>The SVM classifier and the radial-basis funcion (RBF) kernel were used.</sentence>
+    <sentence>The LIDC (833 scans) resulted in 97.55% mean accuracy, 85.91% mean sensitivity and 97.7% mean specificity.</sentence>
+    <sentence>In the work developed by Pu et al.</sentence>
+    <sentence>(2008a) the authors use adaptive borders algorithms to delimit the area of the juxtapleural nodules without selecting lung external tissue together with the region of interest.</sentence>
+    <sentence>The methodology is divided into two steps.</sentence>
+    <sentence>The first one is the image pre-processing.</sentence>
+    <sentence>The second one corrects the defects caused by the exclusion of juxtapleural nodules.</sentence>
+    <sentence>The experiments used 20 datasets and obtained an accuracy of 90%.</sentence>
+    <sentence>This work uses an Adaptive Border Marching method to segments the lung region, reducing the over-segmentation problem.</sentence>
+    <sentence>However, this algorithm, although adaptive, requires some parameters, assigned arbitrarily in this work.</sentence>
+    <sentence>The methodology proposed by Shen, Bui, Cong, and Hsu (2015) presents a lung nodule segmentation method, focused on juxtapleural nodules.</sentence>
+    <sentence>The authors separated the methodology into three steps.</sentence>
+    <sentence>First, the image pre-processing generates one initial mask with an adaptive threshold.</sentence>
+    <sentence>Secondly, the inflexion point detection (horizontally and vertically) is realized using chain-code algorithm, to find inflexion points.</sentence>
+    <sentence>Lastly, correction of the lung edge is done using SVM.</sentence>
+    <sentence>The methodology achieved an accuracy of 92.6%.</sentence>
+    <sentence>The chain-code technique to detect inflexion points is highly sensitive to noises, which is the main challenge of this work.</sentence>
+    <sentence>Depending on the scans quality, this technique strongly depends on the adaptive threshold method and SVM performance to not raise the over-segmentation and under-segmentation ratios.</sentence>
+    <sentence>Tan, Deklerck, Jansen, Bister, and Cornelis (2011) presents a CAD system to detect lung nodules in CT images using nodule and vessel enhancement filters and a computed divergence feature for cluster the nodules.</sentence>
+    <sentence>To classify, invariant features were extracted, defined on a gauge coordinates system, that separates nodules from non-nodules structures, using SVM and Artificial Neural Network.</sentence>
+    <sentence>This methodology reached an sensitivity of 87.5%.</sentence>
+    <sentence>235 cases of LIDC database were selected for evaluation.</sentence>
+    <sentence>The work of Pu, Zheng, Leader, Wang, and Gur (2008b) proposes a method to achieve lung nodule detection based on geometric analysis of the signed distance field in CT images.</sentence>
+    <sentence>The methodology achieved an maximum sensitivity of 95.1%.</sentence>
+    <sentence>The methodology was evaluated with 52 low-dose screening CT exams.</sentence>
+    <sentence>The related works have been described with their highlights and shortcomings.</sentence>
+    <sentence>In this work, we proposed a methodology that overcomes those inconveniences.</sentence>
+    <sentence>The majority of those works, with the exception of Carvalho Filho et al.</sentence>
+    <sentence>(2014), Shen et al.</sentence>
+    <sentence>(2015) and Tan et al.</sentence>
+    <sentence>(2011), utilized few exams for their study cases.</sentence>
+    <sentence>This work takes the advantage of use a relevant number of exams, inspired by Carvalho Filho et al.</sentence>
+    <sentence>(2014) work.</sentence>
+    <sentence>Shen et al.</sentence>
+    <sentence>(2015) chain-code approach is very sensitive to noises, differently from the proposed method of Artificial Crawlers, which is low sensitive to them, due to its evolutionary properties.</sentence>
+    <sentence>The work of Mousa and Khan (2002) uses manually segmented nodules and non-nodules candidates, in contrast of the proposed methodology.</sentence>
+    <sentence>The nodules candidates are segmented using markers by the radiologists and the non-nodules are obtained from Carvalho Filho et al.</sentence>
+    <sentence>(2014) methodology, since the non-nodule separation in this work is automatically generated.</sentence>
+    <sentence>Jing et al.</sentence>
+    <sentence>(2010) and Namin et al.</sentence>
+    <sentence>(2010) presented a sensitivity reduction due to the irregular shapes of the nodules candidates.</sentence>
+    <sentence>Our work uses extraction methods fully based on texture to overcome this situation.</sentence>
+    <sentence>Lee et al.</sentence>
+    <sentence>(2010b) and Pu et al.</sentence>
+    <sentence>(2008a) their approaches utilize techniques that require parameterization, empirically obtained.</sentence>
+    <sentence>The original AC method was adapted in this work to not need any parameterization, as well as RD method.</sentence>
+    <sentence>Finally, Tartar et al.</sentence>
+    <sentence>(2013) and Zhang et al.</sentence>
+    <sentence>(2013) methods are adapted to extract features from two-dimensional slices from the CT exams.</sentence>
+    <sentence>This may reduce the natural characteristics of the lung nodules, if the chosen slices do not comprise all information necessary to recognize the object.</sentence>
+    <sentence>This work uses all the three-dimensional properties of the CT scans in both proposed techniques.</sentence>
+    <sentence>Table 1 summarizes the approaches.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Summary of the related works.</sentence>
+    <sentence>Works Objective Database Cases Key differences Mousa and Khan (2002) Nodule classification Proprietary 50 Circular features and mean variance to classify lung nodules and non-nodules using SVM Jing et al.</sentence>
+    <sentence>(2010) Nodule classification LIDC 50 Lung nodule classification using SVM and shape, geometry, grey level and texture features Lee et al.</sentence>
+    <sentence>(2010b) Nodule classification LIDC 32 Classification aided by clustering using random forest Namin et al.</sentence>
+    <sentence>(2010) Nodule segmentation and classification LIDC 63 FKNN classification using texture and geometry features Tartar et al.</sentence>
+    <sentence>(2013) Nodule classification Proprietary 63 Lung nodules classification using PCA and mrMR features Zhang et al.</sentence>
+    <sentence>(2013) Nodule classification ELCAP 50 Lung nodule classification using superpixel labelling and context curve Choi and Choi (2014) Nodule classification LIDC 84 Nodule and non-nodule classification using angular histograms of the normal surface Carvalho Filho et al.</sentence>
+    <sentence>(2014) Nodule classification LIDC-IRDI 833 Nodule Classification and non-nodule structures using taxonomic diversity indices Pu et al.</sentence>
+    <sentence>(2008a) Lung segmentation Proprietary 20 Adaptive borders algorithms to delimit lung Shen et al.</sentence>
+    <sentence>(2015) Nodule segmentation LIDC 233 Bidirectional chain-code and SVM for classification Tan et al.</sentence>
+    <sentence>(2011) Nodule segmentation LIDC 235 Invariant features extraction and SVM and Artificial Neural Network for classification Pu et al.</sentence>
+    <sentence>(2008b) Nodule detection Proprietary 52 Progressive clustering and Shape similarity analysis for lung nodule detection These studies contributed to the construction of the proposed methodology.</sentence>
+    <sentence>A number of techniques are explored and the testing methods we use are identical to those of Carvalho Filho et al.</sentence>
+    <sentence>(2014).</sentence>
+    <sentence>These methods were chosen because they are rigorous and yielded reliable results.</sentence>
+  </section>
+  <section name="Background">
+    <sentence>This section describes the techniques used in the feature extraction step of both the artificial crawlers and the rose diagram.</sentence>
+    <sentence>Artificial crawlers Artificial Life are models that imitate life in nature Langton (1989).</sentence>
+    <sentence>The individuals that compose these models attempt to behave in similar ways to real organisms, and their behaviours, actions and lifespan are abstracted in a logical form.</sentence>
+    <sentence>Based on the Artificial Life concept, evolutionary algorithms and ACs were originally designed as models that use two-dimensional images as the environment.</sentence>
+    <sentence>The individual, called the artificial crawler (AC), lives in the pixels of grey-level images (Zhang &amp; Chen, 2004).</sentence>
+    <sentence>Throughout evolution, some actions (movement, improvement, competition, stability, survival and death) are observed in the AC individuals.</sentence>
+    <sentence>Spatially close individuals are labelled as participants of the identical colony.</sentence>
+    <sentence>The colonies, as well as the numbers of participants, change as evolution occurs.</sentence>
+    <sentence>Each AC has certain characteristics: t is the time or iterator of the ACs algorithm, e(t) is the energy of the individual in time t; δ(t) is the colony the individual belongs to in time t; and β(t) is the location - the pixel - the AC is set in time t. The objective of each AC is survival.</sentence>
+    <sentence>They move to the nearest pixel with the highest intensity (local maximum) as they absorb energy from the environment to achieve this goal.</sentence>
+    <sentence>The higher the intensity of the pixel, the greater the amount of energy absorbed.</sentence>
+    <sentence>There are seven rules that the ACs must follow.</sentence>
+    <sentence>The rules are applied to every time t until the end of the cycle for every AC i.</sentence>
+    <sentence>∀i, .</sentence>
+    <sentence>The initial value of every AC is e0.</sentence>
+    <sentence>∀i, t, if ei(t) &lt; emin, then ACi dies.</sentence>
+    <sentence>At each cycle, if the energy of any AC is less than a minimum value emin, it dies.</sentence>
+    <sentence>The AC is removed from the image.</sentence>
+    <sentence>∀i: ei(t) ≥ emin, .</sentence>
+    <sentence>At each time t, the ACs will move according to three possible conditions, presented in Eq (1).</sentence>
+    <sentence>(1) (a) If the maximum pixel intensity of the 8-pixel neigbourhood of βi(t) of the AC i is lower than the pixel intensity of βi(t), the AC does not move.</sentence>
+    <sentence>(b) If the maximum pixel intensity of the 8-pixel neigbourhood of βi(t) of the AC i is higher than the pixel intensity of βi(t) and it is unique - i.e., there is only one pixel in the neighbourhood with higher intensity -, the AC i moves to that location.</sentence>
+    <sentence>(c) If the maximum pixel intensity of the 8-pixel neigbourhood of βi(t) of the AC i is higher than the pixel intensity of βi(t) and it is not unique - i.e., there is more than one pixel in the neighbourhood with higher intensity -, the AC i moves to a pixel that has already been occupied by another AC.</sentence>
+    <sentence>∀i: ei(t) ≥ emin, .</sentence>
+    <sentence>When an AC i moves, it will lose one unit of energy defined by emin.</sentence>
+    <sentence>∀i, j: and dies.</sentence>
+    <sentence>When ACs i and j occupy the same location at the same time, the one with the higher energy survives and the other one dies.</sentence>
+    <sentence>∀i, .</sentence>
+    <sentence>The AC i absorbs λ percent of the pixel intensity it lies in at time t, if it moved.</sentence>
+    <sentence>This amount is converted into energy.</sentence>
+    <sentence>∀i, j: ei(t) ≥ emax, .</sentence>
+    <sentence>The maximum energy the ACs can retain is defined as emax.</sentence>
+    <sentence>The rules are applied to all ACs at all times.</sentence>
+    <sentence>We can observe the state of emergency and balance of the population.</sentence>
+    <sentence>With evolution, no individual will die or regroup in a colony (emergency) at a certain time.</sentence>
+    <sentence>Certain ACs will move to areas of high intensity to absorb energy, losing a unit simultaneously (balance).</sentence>
+    <sentence>The result is a state of balance.</sentence>
+    <sentence>By recording the steps taken in the evolution of the ACs, we can later extract useful information.</sentence>
+    <sentence>The numbers of iterations and colonies in the ACs algorithm reach equilibrium.</sentence>
+    <sentence>These properties characterize the texture features of the environment through a series of evolution curves.</sentence>
+    <sentence>The curves are: agent evolution, inhabitant settlement, colony formation and scale distribution (Zhang et al., 2013).</sentence>
+    <sentence>The agent evolution curve represents the number of ACs per epoch.</sentence>
+    <sentence>The number of ACs drops at each iteration because of the depletion of energy, and depends on the placement of valleys and peaks of intensity in the environment.</sentence>
+    <sentence>The second curve, inhabitant settlement, is similar to the agent evolution curve.</sentence>
+    <sentence>It represents the number of extant ACs per iteration.</sentence>
+    <sentence>The curve of colony formation depicts the number of colonies formed by elements within a radius of distance.</sentence>
+    <sentence>The increment of the radius size results in fewer colonies with more individuals per colony.</sentence>
+    <sentence>The scale distribution depicts the statistical representation of the colonies at different scales.</sentence>
+    <sentence>Different textures lead to varied scale distributions.</sentence>
+    <sentence>This curve is an important technique for discerning texture.</sentence>
+    <sentence>Rose diagram The RD is a circular histogram with bars that represent sectors (Mardia &amp; Jupp, 2009).</sentence>
+    <sentence>The RD resembles a flower, and the sectors resemble petals.</sentence>
+    <sentence>The number of sectors in the RD is determined by the user and the group angle intervals.</sentence>
+    <sentence>The RD extracts information based on angular features of objects.</sentence>
+    <sentence>Many directional measurements, such as local gradients, can be used.</sentence>
+    <sentence>The Sobel filter is commonly used to calculate the gradients (Lee, Seo, Ryoo, &amp; Yoon, 2010a).</sentence>
+    <sentence>Some features may be extracted using the Sobel gradients (Mardia, 1972).</sentence>
+    <sentence>One of these features is the mean direction of the gradient angles (X), which can be calculated using Eq (2).</sentence>
+    <sentence>(2) in which θ is the representative angle of the sector,1n is the total number of angles and λ is represented by Eq (3).</sentence>
+    <sentence>(3) The complement of the mean direction, which is called the circular variance (S0 ), is computed using Eq (4).</sentence>
+    <sentence>(4) The circular standard variation (s0) is calculated by Eq (5): (5) in which S0 is the circular variance.</sentence>
+    <sentence>The mean resulting length (F) is computed using Eq (6): (6) in which n is the total number of angles.</sentence>
+    <sentence>The kurtosis (K) is computed by Eq (7): (7) in which X is the mean direction of the gradient angles and n is the total number of angles.</sentence>
+    <sentence>The skewness (A) can be extracted from the RD and is computed using Eq (8).</sentence>
+    <sentence>(8) in which X is the mean direction of the gradient angles and n is the total number of angles.</sentence>
+  </section>
+  <section name="Proposed methodology">
+    <sentence>In this section, we describe the proposed methodology.</sentence>
+    <sentence>The main goal of this work is to construct a consistent methodology for the classification of candidates into nodules or non-nodules.</sentence>
+    <sentence>There are four phases: image acquisition, feature extraction, classification and validation.</sentence>
+    <sentence>In the first phase, nodule candidates are extracted from LIDC-IRDI and the non-nodule candidates are extracted from Carvalho Filho et al.</sentence>
+    <sentence>(2014).</sentence>
+    <sentence>The second phase is feature extraction, which is performed using three methods: artificial crawlers, the rose diagram and a hybrid model from both models.</sentence>
+    <sentence>The third phase is the classification using the SVM classifier.</sentence>
+    <sentence>The last phase is the validation of the classification, intended to measure the efficacy of the methodology.</sentence>
+    <sentence>Fig 1 illustrates the proposed methodology.</sentence>
+    <sentence>Fig 1.</sentence>
+    <sentence>Proposed methodology flowchart.</sentence>
+    <sentence>Image acquisition The lung images used in this work are available in the public database LIDC-IRDI (Armato et al., 2011).</sentence>
+    <sentence>Some principles, such as identity protection, patient consent and lung cancer diagnosis, are defined by the publisher.</sentence>
+    <sentence>The database contains 1012 CT scan series and 290 radiography scan series.</sentence>
+    <sentence>Each image contains information regarding the nodules, such as location, size, quantity and malignancy.</sentence>
+    <sentence>The scans are diagnosed by four specialists and all diagnostics are indicated in the auxiliary files.</sentence>
+    <sentence>Some scans contain conflicting information between the image header and the auxiliary files.</sentence>
+    <sentence>Therefore, only 833 CT scans were chosen to be part of the candidate database.</sentence>
+    <sentence>The images are divided into two databases: nodule and non-nodule candidates.</sentence>
+    <sentence>A CT scan, provided by the LIDC-IRDI database, contains lung nodules markers from the four specialists.</sentence>
+    <sentence>The scan may have one or more nodules marked individually.</sentence>
+    <sentence>Sometimes the specialists disagree on the diagnosis.</sentence>
+    <sentence>These markers contain the coordinates and the slices of the 3D CT exam in which the nodules are found.</sentence>
+    <sentence>The size of the nodule varies from 3 mm to 30 mm.</sentence>
+    <sentence>The database does contain nodule markers that are less than 3 mm, but they are represented by a single coordinate, not by a bounding box.</sentence>
+    <sentence>These smaller nodules are not included in this work.</sentence>
+    <sentence>Fig 2 depicts some examples of nodule candidates used in the proposed methodology.</sentence>
+    <sentence>Fig 2.</sentence>
+    <sentence>2D view of nodule candidates.</sentence>
+    <sentence>We utilize all regions marked by specialists as nodules.</sentence>
+    <sentence>For example, if the image has four markings, we use them in the training and test as four distinct nodules.</sentence>
+    <sentence>The idea is to use all the specialist expertise.</sentence>
+    <sentence>The non-nodule candidates were extracted from the methodology described by Carvalho Filho et al.</sentence>
+    <sentence>(2014).</sentence>
+    <sentence>Their work uses the quality threshold algorithm followed by a growing region to segment lung nodule and non-nodule candidates from the LIDC-IRDI database.</sentence>
+    <sentence>We used non-nodule candidates from Carvalho Filho et al.</sentence>
+    <sentence>(2014) because their work is consistent.</sentence>
+    <sentence>Non-nodules are excluded from the detection step and can be reused in the proposed methodology.</sentence>
+    <sentence>Their nodule candidate database is not employed in the present work because the database is small (and may thus result in misclassification) compared to the specialist markers from LIDC-IRDI.</sentence>
+    <sentence>Fig 3 demonstrates examples of non-nodule candidates.</sentence>
+    <sentence>Fig 3.</sentence>
+    <sentence>2D view of non-nodule candidates.</sentence>
+    <sentence>Feature extraction The extraction of features occurs in this phase.</sentence>
+    <sentence>This is a necessary step for posterior classification.</sentence>
+    <sentence>The proposed methodology uses three techniques for feature extraction.</sentence>
+    <sentence>The first one is the ACs model, the second is the RD model, and the third combines features from the ACs and the RD.</sentence>
+    <sentence>Directional texture (the rose diagram model) exploits the advantages of both the directional and the intensity information in the images (Rivera, Castillo, &amp; Chae, 2015).</sentence>
+    <sentence>Analyzing that information in a local neighbourhood diminishes the influence of noise in the feature extraction because the gradient works with the edges, regardless of single pixel intensity variation.</sentence>
+    <sentence>The use of artificial life concept in image classification resulted in promising results by Zhang and Chen (2004).</sentence>
+    <sentence>The ACs method provided high level statistical features that represent consistencies in the textures of the images.</sentence>
+    <sentence>Both techniques utilize different types of analyses inside the texture.</sentence>
+    <sentence>If used together, they may reduce weaknesses and the classifier has the advantages of both methods.</sentence>
+    <sentence>Artificial crawlers The ACs model and the steps necessary to extract the feature vectors are presented in Fig 4.</sentence>
+    <sentence>Fig 4.</sentence>
+    <sentence>ACs model diagram.</sentence>
+    <sentence>Step 1 uses both nodule and non-nodule candidates and retrieves the corresponding evolutionary curves from the ACs algorithm for all images.</sentence>
+    <sentence>In step 2, the templates are chosen to aid in posterior feature extraction, which is based on the differences between the curves.</sentence>
+    <sentence>The templates of nodule candidates are the CT scans that best represent the entire database.</sentence>
+    <sentence>The more similar the curves of the nodule templates are to the candidate analyzed, the higher the probability of the candidate belonging to the nodule class.</sentence>
+    <sentence>Step 3 uses the differences between the candidates and the template curves and the area under the candidate curves as features.</sentence>
+    <sentence>Step 1: The extraction of the evolutionary curves (the ACs algorithm is applied to every candidate from the two separate databases) generates four evolutionary curves.</sentence>
+    <sentence>We added some modifications to the ACs method developed by Zhang and Chen (2004).</sentence>
+    <sentence>We adapted the ACs to CT scans because they are 3-dimensional images.</sentence>
+    <sentence>ACs individuals may move in the x, y and z axes.</sentence>
+    <sentence>The ACs perceive the 26-neighbourhood space instead of the previous 8-neighbourhood plane.</sentence>
+    <sentence>Fig 5 demonstrates the AC adaptation for this work.</sentence>
+    <sentence>Fig 5.</sentence>
+    <sentence>An AC’s perceived neighbourhood.</sentence>
+    <sentence>The black cube is the AC’s voxel.</sentence>
+    <sentence>The transparent cubes are the neighbourhood voxels.</sentence>
+    <sentence>(a) 2D 8-pixel neighbourhood from Zhang and Chen (2004).</sentence>
+    <sentence>(b) The proposed 3D 26-pixel neighbourhood.</sentence>
+    <sentence>The new ACs assign the number of initial ACs using the voxels not in the background as the location for the new-born individuals.</sentence>
+    <sentence>The old ACs approach assigns random positions to individuals.</sentence>
+    <sentence>This approach is not effective for lung nodule and non-nodule candidate images because elements born in background voxels will not interact with texture variations.</sentence>
+    <sentence>Individuals will be isolated and the curve extraction will contain irrelevant information regarding the environment.</sentence>
+    <sentence>We can observe the behaviour of each candidate curve at the end of the extraction.</sentence>
+    <sentence>Fig 6 depicts the curves extracted from one nodule candidate.</sentence>
+    <sentence>Fig 6.</sentence>
+    <sentence>Curves extracted from one nodule candidate.</sentence>
+    <sentence>Step 2: In this step, one or more nodule candidates are chosen as templates.</sentence>
+    <sentence>Templates represent the entire nodule candidate database for further comparison between the templates and other candidates.</sentence>
+    <sentence>We choose templates only from the nodule candidates because of the inferior number of candidates in this database.</sentence>
+    <sentence>It is easier to find elements that best represent the entire set using a smaller base.</sentence>
+    <sentence>The nodule candidate database contains extra information regarding the size of the nodules, which is used to facilitate the choice of the template.</sentence>
+    <sentence>We chose three templates (3 mm to 10 mm, 11 mm to 20 mm and 21 mm to 30 mm) because of the variation in the size of the nodules.</sentence>
+    <sentence>After choosing the template, the evolutionary curves are extracted.</sentence>
+    <sentence>Step 3: The final step creates the feature vector.</sentence>
+    <sentence>With the evolutionary curves of the candidates and the templates obtained, the features are calculated in two ways: curve differences and area under the curve.</sentence>
+    <sentence>The curve distance will calculate the similarity between all candidates and all templates individually.</sentence>
+    <sentence>The sizes of the images in the database are different because of the diversity of the candidates in the samples.</sentence>
+    <sentence>This diversity may lead the ACs algorithm to create a variable number of initial ACs.</sentence>
+    <sentence>The distance between curves may vary too much, even when curves acquired from similar textures have identical behaviour.</sentence>
+    <sentence>The candidate curves are normalized between 0 and 1 in the y-axis (maintaining the shape of the curves) to reduce this inconvenience.</sentence>
+    <sentence>The distances used are the Euclidean (Danielsson, 1980), Jaccard (Shameem &amp; Ferdous, 2009), simple matching (Paragios, Rousson, &amp; Ramesh, 2002), Chebyshev (Klove, Lin, Tsai, &amp; Tzeng, 2010) and Manhattan (Chang, Desoky, Ouyang, &amp; Rouchka, 2009).</sentence>
+    <sentence>For each template, the five distances are calculated and put into the features vector.</sentence>
+    <sentence>The area under the evolutionary curve of each candidate is included in the feature vector.</sentence>
+    <sentence>Features from rose diagram model The RD model is presented in Fig 7.</sentence>
+    <sentence>The model contains the method diagram and the steps necessary to extract the feature vector.</sentence>
+    <sentence>Fig 7.</sentence>
+    <sentence>RD model diagram.</sentence>
+    <sentence>In step 1, the Sobel filter is applied to every candidate, generating the derivatives Gx and Gy, a pair (Gx, Gy) for each candidate image.</sentence>
+    <sentence>These pairs of derivatives are used in step 2 for the computation of the gradients.</sentence>
+    <sentence>The Sobel gradients are analyzed through the RD perspective in order to extract the features and to create the feature vector.</sentence>
+    <sentence>Step 1: The Sobel filter is applied to the candidates.</sentence>
+    <sentence>One pair of derivatives (Gx,Gy) is obtained for each candidate (Fig 8).</sentence>
+    <sentence>The model contains the method diagram and the steps necessary to extract the feature vector.</sentence>
+    <sentence>Fig 8.</sentence>
+    <sentence>Sobel filter applied to one nodule candidate slice.</sentence>
+    <sentence>(a) The original image (b) Gx derivative (c) Gy derivative.</sentence>
+    <sentence>This operation is executed in every slice of a candidate because it is a two-dimensional method.</sentence>
+    <sentence>The gradients are grouped together into a single RD per candidate.</sentence>
+    <sentence>Step 2: The Sobel gradients are computed for every pair of derivatives (Gx,Gy) in all non-background image pixels.</sentence>
+    <sentence>There is no texture variation in background pixels, so it is irrelevant to use the gradient information at these locations.</sentence>
+    <sentence>Step 3: The last step uses all gradients and creates one RD perspective per candidate.</sentence>
+    <sentence>Fig 9 depicts one RD from the gradients computed from the identical nodule candidate to Fig 8a.</sentence>
+    <sentence>The following features are calculated from the populated RD: mean direction, circular variance, circular standard variation, mean resulting length, kurtosis and skewness.</sentence>
+    <sentence>These calculations are entered into the feature vector.</sentence>
+    <sentence>Fig 9.</sentence>
+    <sentence>RD of a nodule candidate (Fig 8a).</sentence>
+    <sentence>Features from hybrid model The hybrid model is composed of the ACs and RD models.</sentence>
+    <sentence>It results in one feature vector which is a combination of the feature vectors produced by the other two models.</sentence>
+    <sentence>Fig 10 depicts the hybrid model scheme.</sentence>
+    <sentence>Fig 10.</sentence>
+    <sentence>Hybrid model diagram.</sentence>
+    <sentence>Table 2 summarizes all features present in the ACs and RD models.</sentence>
+    <sentence>These features will be combined into a single feature vector in the hybrid model.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Features list.</sentence>
+    <sentence>Artificial crawlers Rose diagram Features agent evolution mean direction inhabitant settlement circular variance colony formation circular standard variation scale distribution mean resulting length curves areas kurtosis skewness 4.3.</sentence>
+    <sentence>Classification The nodule and non-nodule candidates are treated as two separate classes.</sentence>
+    <sentence>We used the support vector machine (SVM) classifier with the features extracted in Section 4.2.</sentence>
+    <sentence>SVM is a group of supervised learning algorithms used for classification or regression Joachims (1998).</sentence>
+    <sentence>It is straightforward to change kernels with SVM.</sentence>
+    <sentence>This property allows the description of complex data relationships.</sentence>
+    <sentence>An implemented version of SVM, the open source library LIBSVM (Chang &amp; Lin, 2011), is used in this work through the tool Weka 3.6.</sentence>
+    <sentence>The chosen kernel is the RBF, and the parameters c and γ are estimated using the grid search algorithm (Bergstra &amp; Bengio, 2012).</sentence>
+    <sentence>Validation The last phase demonstrates the consistency of the methodology, measuring its predictive value.</sentence>
+    <sentence>It computes the accuracy, specificity, sensitivity (Fielding &amp; Bell, 1997), variation coefficient of accuracy (Soliman, Abd Ellah, Abou-Elheggag, &amp; Abd-Elmougod, 2011) and receiver operating characteristic (ROC) curve (Bradley, 1997).</sentence>
+  </section>
+  <section name="Results and discussion">
+    <sentence>The entire database of candidate images is partitioned into two groups: training and test.</sentence>
+    <sentence>The features are extracted using the three proposed methods.</sentence>
+    <sentence>The results are evaluated and compared to other related works.</sentence>
+    <sentence>Database separation We used the LIDC-IDRI (Armato et al., 2011) image database which is available on the Internet as a result of the association between the Lung Image Database Consortium and the Image Database Resource Initiative.</sentence>
+    <sentence>All images are in DICOM format and have up to 16 bits per voxel.</sentence>
+    <sentence>The computed tomographies (CT) were acquired using various protocols, which complicates the detection of lung nodules.</sentence>
+    <sentence>In this database, each exam is assigned to a file containing information regarding the contour and features of each nodule, supplied by four specialist physicians.</sentence>
+    <sentence>The contour indicates the points (x,y,z) of the nodule.</sentence>
+    <sentence>The entire region inside the contour is taken into consideration during the evaluation by our methodology.</sentence>
+    <sentence>The features indicate the properties of the nodule, including: degree of difficulty at detection, calcification level, sphericity level, degree of spiculation and degree of malignancy.</sentence>
+    <sentence>However, this information is only valid for nodules with diameters larger than 3 mm and smaller than 30 mm.</sentence>
+    <sentence>For nodules smaller than 3 mm, the specialists indicate only the centre of the mass.</sentence>
+    <sentence>Regions larger than 30 mm are considered to be masses.</sentence>
+    <sentence>The LIDC-IDRI contains 1012 CT scans.</sentence>
+    <sentence>Some (179) scans contain two factors that make our methodology impossible.</sentence>
+    <sentence>The first factor is related to scans that have no nodules larger than or equal to 3 mm.</sentence>
+    <sentence>These files do not contain the properties cited above.</sentence>
+    <sentence>The second factor is related to divergences in the marking file, when it does not match the information contained in the DICOM header.</sentence>
+    <sentence>Therefore, we only applied the methodology to the remaining 833 scans.</sentence>
+    <sentence>We used the 833 scans as training and testing samples for classification.</sentence>
+    <sentence>We extracted 6415 nodule candidates from these scans based on the specialists’ markings.</sentence>
+    <sentence>From Carvalho Filho et al.</sentence>
+    <sentence>(2014), we retrieved 17,742 non-nodule candidates.</sentence>
+    <sentence>Even with nearly three times as many non-nodules as nodules, the SVM classifier is able to optimize the separation of these two datasets due to the distinct characteristics vectors between the two samples.</sentence>
+    <sentence>The candidate database was proportionally divided into training and testing subgroups.</sentence>
+    <sentence>Four types of proportions were used: 20% for training and 80% for testing, 40% for training and 60% for testing, 60% for training and 40% for testing and 80% for training and 20% for testing.</sentence>
+    <sentence>Each proportion is permuted five times.</sentence>
+    <sentence>There are five distinct distributions for the candidate training/testing proportions.</sentence>
+    <sentence>The goal of this approach is to demonstrate that the results are consistent.</sentence>
+    <sentence>All training/testing groups provide the mACC, the mSEN, the mSPC, the CAv and the mROC of the five distributions evaluated for each proportion.</sentence>
+    <sentence>Curves analysis The slope of the evolution curves extracted from the ACs method can be interpreted in several ways.</sentence>
+    <sentence>Fig 11 depicts two samples of slices, a nodule and a non-nodule.</sentence>
+    <sentence>We compare the curves extracted from these two sample slices.</sentence>
+    <sentence>Fig 11.</sentence>
+    <sentence>Sample slices.</sentence>
+    <sentence>(a) Nodule and (b) Non-nodule example.</sentence>
+    <sentence>The agent evolution curve illustrates the number of living ACs per iteration.</sentence>
+    <sentence>Curves with a steep initial downward trend represent the fast ascending of ACs to high intensity locations.</sentence>
+    <sentence>The non-nodules do not have a specific behaviour because there is no texture pattern related to high and low intensity.</sentence>
+    <sentence>However, the nodules normally display high densities in a few locations because of calcification.</sentence>
+    <sentence>Fig 12 shows a visual representation of this curve with the two sample slices from Fig 11.</sentence>
+    <sentence>Fig 12.</sentence>
+    <sentence>Comparison of non-nodule and nodule agent evolution curves.</sentence>
+    <sentence>The inhabitant settlement curve has a smooth behaviour, similar to the nodule agent evolution curve.</sentence>
+    <sentence>Images with locations of diffuse high intensity may have more deceased ACs for the initial cycles.</sentence>
+    <sentence>However, the number decreases in subsequent iterations.</sentence>
+    <sentence>This phenomenon is common for non-nodules.</sentence>
+    <sentence>Fig 13 demonstrates the behaviour of the curves in both cases.</sentence>
+    <sentence>Fig 13.</sentence>
+    <sentence>Comparison of non-nodule and nodule inhabitant settlement curves.</sentence>
+    <sentence>We can interpret the colonies with smaller radius as diffuse peaks with high intensities isolated and spatially distant through the texture of the image.</sentence>
+    <sentence>Curves with a high number of colonies with a small radius are found at the final process of ACs in non-nodule samples.</sentence>
+    <sentence>Fig 14 demonstrates this behaviour in comparison to the slope of the colony formation curve for nodules.</sentence>
+    <sentence>Fig 14.</sentence>
+    <sentence>Comparison of non-nodule and nodule colony formation curves.</sentence>
+    <sentence>The scale distribution of non-nodules is irregular.</sentence>
+    <sentence>There are large groups of ACs at the end of the ACs process.</sentence>
+    <sentence>This behaviour is uncommon in the scale distribution of nodules because few ACs remain close to one another.</sentence>
+    <sentence>This phenomenon is because of the low number of peaks with high intensity.</sentence>
+    <sentence>Fig 15 depicts the slope of both cases of scale distribution.</sentence>
+    <sentence>Fig 15.</sentence>
+    <sentence>Comparison of non-nodule and nodule scale distribution curves.</sentence>
+    <sentence>Tests The features are extracted using the three previously described methods.</sentence>
+    <sentence>The first extraction is provided by the ACs method.</sentence>
+    <sentence>The second extraction uses the RD method and the third extraction is performed using the hybrid model.</sentence>
+    <sentence>The classification was performed using the SVM classifier.</sentence>
+    <sentence>Each method was tested separately and the best results are compared to the literature and discussed.</sentence>
+    <sentence>The parameters estimated through the grid search technique to the RBF kernel of SVM were c equal to 512 and γ equal to 2.</sentence>
+    <sentence>The results of the ACs method for feature extraction are presented in Table 3.</sentence>
+    <sentence>The best result achieved by this method was with the proportion of 40% for training/60% for testing, with mACC of 93.4%, mSEN of 91.82%, mSPC of 93.9%, CAv of 1.67% and mROC of 0.909.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Results obtained by the ACs method.</sentence>
+    <sentence>Training/testing mACC mSEN mSPC CAv mROC % % % % % 20/80 93.28 91.48 93.82 1.39 0.901 40/60 93.4 91.82 93.9 1.67 0.909 60/40 92.46 91.74 93.62 2.18 0.905 80/20 93.27 91.34 93.38 2.5 0.908 The results achieved with RD are reported in Table 4.</sentence>
+    <sentence>The best results were observed with the proportion of 60% for training/40% for testing.</sentence>
+    <sentence>The values obtained are lower than the ACs method, with mACC of 66.9%, mSEN of 61.82%, mSPC of 70.46%, CAv of 4.33% and mROC of 0.661.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Results obtained through the RD method.</sentence>
+    <sentence>Training/testing mACC mSEN mSPC CAv mROC % % % % % 20/80 64.18 65.24 65.04 7.71 0.651 40/60 65.82 56.38 71.02 5.31 0.637 60/40 66.9 61.82 70.46 4.33 0.661 80/20 66.72 68.26 66.96 2.14 0.676 The results achieved with the hybrid method are listed in Table 5.</sentence>
+    <sentence>The best results were achieved in this approach with a proportion of 60% for training/40% for testing.</sentence>
+    <sentence>We report mACC of 94.3%, mSEN of 91.86%, mSPC of 94.78%, CAv of 1.61% and mROC of 0.922.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Results obtained through the hybrid method.</sentence>
+    <sentence>Training/testing mACC mSEN mSPC CAv mROC % % % % % 20/80 93.54 90.58 94.46 1.5 0.908 40/60 94.2 91.7 94.84 1.14 0.918 60/40 94.3 91.86 94.78 1.61 0.922 80/20 94.22 92 94.52 1.94 0.921 The methodology proposed in this work demonstrated consistent results for the nodule classification problem.</sentence>
+    <sentence>There was a notable discrepancy between the results obtained in tests between the AC and RD models.</sentence>
+    <sentence>However, the results were improved by the combination of these models.</sentence>
+    <sentence>The performances of the methods imply some very useful information.</sentence>
+    <sentence>The test cases separated by different proportions showed very similar results in each model.</sentence>
+    <sentence>That means the randomly chosen partitions are well balanced even with more non-nodules candidates than nodules candidates.</sentence>
+    <sentence>The RD method performs better on true negative rate (mSPC).</sentence>
+    <sentence>Its power to correctly designate true negatives candidates is clearly observed on Hybrid method, because in comparison to AC model, the mSPC was improved.</sentence>
+    <sentence>This is the main contribution of the RD features on Hybrid method.</sentence>
+    <sentence>The best results were achieved with the hybrid model with a training/testing proportion of 60%/40%.</sentence>
+    <sentence>The worst results were from the RD model tests.</sentence>
+    <sentence>The RD model approach is not able to classify lung nodules consistently.</sentence>
+    <sentence>However, the combination of the ACs and RD models is more reliable than the two models alone.</sentence>
+    <sentence>The best result for the mROC curve can be observed in Fig 16.</sentence>
+    <sentence>The mROC curve demonstrates the good performance of the hybrid method in comparison with the ACs and RD approaches.</sentence>
+    <sentence>Any increase in sensitivity will be accompanied by a decrease in specificity.</sentence>
+    <sentence>We observe that the optimal true positive rate is achieved near the lowest value of the false positive rate.</sentence>
+    <sentence>Fig 16. mROC curve visualization from 60%/40% training/testing results.</sentence>
+    <sentence>As can be observed from the hybrid mROC curve, the hybrid method performance benefits mainly from the ACs method.</sentence>
+    <sentence>However, the RD method also benefits the hybrid performance, although with less influence.</sentence>
+    <sentence>The reason for this is the adaptation of the SVM classifier with a radial basis in scenarios with characteristics of undetermined relevance.</sentence>
+    <sentence>The most beneficial features are also the most relevant ones.</sentence>
+    <sentence>So the classifier is responsible for using the relevant features of both methods to optimize the hybrid performance.</sentence>
+    <sentence>Tests of the methodology were implemented on an Intel i5-3230M CPU @2.60 GHz on-board personal computer.</sentence>
+    <sentence>The total average execution times of the extraction of features, training and testing steps were recorded and are presented in Tables 6 and 7.</sentence>
+    <sentence>Table 6.</sentence>
+    <sentence>Computational costs for training step.</sentence>
+    <sentence>Method Mean elapsed time (seconds) Feature extraction Model evaluation Total ACs 13,764 47.64 13811.64 RD 358.46 129.14 487.6 Hybrid 14122.5 215.98 14338.48 Table 7.</sentence>
+    <sentence>Computational costs for testing stage.</sentence>
+    <sentence>Method Mean elapsed time (seconds) Feature extraction Model testing Total ACs 8.2 0.5 8.7 RD 0.3 0.25 0.55 Hybrid 8.5 0.7 9.2 Table 6 reports the mean average time consumed during the training stage for each method.</sentence>
+    <sentence>The feature extraction is the most time-consuming stage.</sentence>
+    <sentence>The hybrid method is the most time-consuming because it combines the ACs and RD methods.</sentence>
+    <sentence>This stage uses the entire database to retrieve the necessary information for feature extraction and the classification for model evaluation.</sentence>
+    <sentence>This evaluation is performed using the SVM classifier and the extracted features.</sentence>
+    <sentence>The training stage can be performed only one time and is recorded in a file for later testing.</sentence>
+    <sentence>Table 7 reports the mean elapsed time, in seconds, for the testing stage.</sentence>
+    <sentence>This is the least time-consuming stage because it is performed on only one sample.</sentence>
+    <sentence>With the trained database, the feature extraction and the model testing (classification) are fast enough to fit in a CAD system with acceptable performance.</sentence>
+    <sentence>Comparison with related works Table 8 lists the results achieved in the literature.</sentence>
+    <sentence>These results can be compared to the results obtained using the proposed methodology.</sentence>
+    <sentence>The comparison is approximate because some works used different databases and test scenarios.</sentence>
+    <sentence>Table 8.</sentence>
+    <sentence>Comparison between our results and results of related works.</sentence>
+    <sentence>Works Database Cases Sensitivity Specificity Accuracy ROC % % % Mousa and Khan (2002) Proprietary 50 87.5 – – – Jing et al.</sentence>
+    <sentence>(2010) LIDC 50 – – 85.44 – Lee et al.</sentence>
+    <sentence>(2010b) LIDC 32 98.33 97.11 – 0.9786 Namin et al.</sentence>
+    <sentence>(2010) LIDC 63 – – 88 – Tartar et al.</sentence>
+    <sentence>(2013) Proprietary 63 89.6 87.5 90.7 – Zhang et al.</sentence>
+    <sentence>(2013) ELCAP 50 – – 82.5 – Choi and Choi (2014) LIDC 84 97.2 97.7 97.4 – Carvalho Filho et al.</sentence>
+    <sentence>(2014) LIDC-IRDI 833 85.91 97.7 97.55 0.8062 Pu et al.</sentence>
+    <sentence>(2008a) Proprietary 20 – – 90 – Shen et al.</sentence>
+    <sentence>(2015) LIDC 233 – – 92.6 – Tan et al.</sentence>
+    <sentence>(2011) LIDC 235 87.5 – – – Pu et al.</sentence>
+    <sentence>(2008b) Proprietary 52 95.1 – – – proposed work LIDC-IRDI 833 91.86 94.78 94.30 0.922 Our results are obtained from the hybrid model in the proportion of 60% for training and 40% for testing.</sentence>
+    <sentence>The only accurate comparison is with Carvalho Filho et al.</sentence>
+    <sentence>(2014).</sentence>
+    <sentence>Their methodology was evaluated with the identical conditions.</sentence>
+    <sentence>Compared to the work by Carvalho Filho et al.</sentence>
+    <sentence>(2014), our methodology achieved a smaller specificity.</sentence>
+    <sentence>It is less capable of correctly classifying the non-nodule cases.</sentence>
+    <sentence>Sensitivity measures the capability of correct classification in nodule cases (patients with the illness) and our methodology is more efficient.</sentence>
+    <sentence>Achieving a good balance between the sensitivity, specificity and accuracy is important.</sentence>
+    <sentence>This balance was not found in Carvalho Filho et al.</sentence>
+    <sentence>(2014).</sentence>
+    <sentence>It is preferable for the methodology to have the smallest number of errors in the cases with cancer.</sentence>
+    <sentence>Other works use smaller or proprietary databases, which reduces the reliability of the results in comparison to the results in the present study.</sentence>
+    <sentence>Inasmuch some works use different study cases, we implemented three classical techniques for texture analysis using our tests scenarios for a righteous comparison of the proposed method.</sentence>
+    <sentence>The first one is the Histogram, the second one is the Gray-Level Co-Occurrence Matrix and the last one is the Gray Level Run Lengths.</sentence>
+    <sentence>The results are presented on Table 9.</sentence>
+    <sentence>Table 9.</sentence>
+    <sentence>Comparison between classical techniques and proposed method.</sentence>
+    <sentence>Method Accuracy % Sensitivity % Specificity % Histogram 81.91 72.4 84.44 Gray-Level Co-Occurrence Matrix 84.26 75.54 86.18 Gray Level Run Lengths 85.34 81.55 86.56 Proposed method (Hybrid) 94.30 91.86 94.78 Through Table 9, it can be observed that the proposed methodology is superior to the classical methods, with the same database, classification method and evaluation conditions.</sentence>
+    <sentence>The proposed work demonstrates great potential with this comparison.</sentence>
+  </section>
+  <section name="Conclusions">
+    <sentence>This work presented a method that uses ACs, RD and SVM for classifying lung nodules and non-nodules.</sentence>
+    <sentence>The tests performed with the hybrid model yielded 94.3% mean accuracy, 91.86% mean sensitivity, 94.78% mean specificity, 1.61% coefficient of variation of the accuracy and 0.922 mean area under the ROC curve.</sentence>
+    <sentence>These results were obtained using the proportion of 60% training and 40% testing.</sentence>
+    <sentence>Some adaptations were made to the ACs model.</sentence>
+    <sentence>The first adaptation enables the use of CT scans as the environment.</sentence>
+    <sentence>The original ACs methodology used only 2D images.</sentence>
+    <sentence>The other change is the elimination of the random factor in image location for newborn ACs.</sentence>
+    <sentence>In the RD model, the use of a Sobel gradient as directional data extracted from the texture of the candidates was designed.</sentence>
+    <sentence>The directional statistical measurements were extracted using this method.</sentence>
+    <sentence>The changes to the ACs model are the main contribution of this work.</sentence>
+    <sentence>These changes adapted the model for the classification of medical images.</sentence>
+    <sentence>Although the good results presented in this article, we believe this methodology can be improved.</sentence>
+    <sentence>For this purpose, we propose the following as future work: 1.</sentence>
+    <sentence>The methodology uses the original intensity values of the voxels.</sentence>
+    <sentence>However, related works use some techniques to accentuate the images qualities.</sentence>
+    <sentence>That means the classification results should improve if any pre-processing method fits well in the methodology.</sentence>
+    <sentence>The Rose Diagram method use fixed size for the sectors to extract the gradient features.</sentence>
+    <sentence>An adaptive way to choose the size of the sector may optimize the method result.</sentence>
+    <sentence>The templates used by AC method used the nodule size for defining the templates.</sentence>
+    <sentence>Several characteristics can be used to determining templates, i.e.</sentence>
+    <sentence>the nodules malignancy features.</sentence>
+    <sentence>This can embrace new opportunities for others classification goals, like the distinctions between benign and malign nodules.</sentence>
+    <sentence>There can be used related methods in the artificial life context.</sentence>
+    <sentence>Other evolutionary algorithms and genetic algorithms may be used to confront or support the AC method for better performance.</sentence>
+    <sentence>This approach may also be adapted for temporal series images of Cancer CT exams for recognize nodules and its behavior over time, a four-dimension analysis.</sentence>
+    <sentence>Both the ACs and RD methods were not widely used in the nodule classification problem.</sentence>
+    <sentence>The evaluation of both techniques, and the creation of a hybrid method represent an important contribution to the scientific community.</sentence>
+    <sentence>1 Each rose diagram sector groups a range of angles.</sentence>
+    <sentence>The larger the range, the larger the size of each section, and the total number of sections is decreased.</sentence>
+  </section>
+</article>

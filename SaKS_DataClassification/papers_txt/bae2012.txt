@@ -1,0 +1,208 @@
+Predicting financial distress of the South Korean manufacturing industries
+
+Abstract
+
+The financial distress forecasting has long been of great interest both to scholars and practitioners. The financial distress forecasting is basically a dichotomous decision, either being financial distress or not. Most statistical and artificial intelligence methods estimate the probability of financial distress, and if this probability is greater than the cutoff value, then the prediction is to be financial distress. To improve the accuracy of the financial distress prediction, this paper first analyzed the yearly financial data of 1888 manufacturing corporations collected by the Korea Credit Guarantee Fund (KODIT). Then we developed a financial distress prediction model based on radial basis function support vector machines (RSVM). We compare the classification accuracy performance between our RSVM and artificial intelligence techniques, and suggest a better financial distress predicting model to help a chief finance officer or a board of directors make better decision in a corporate financial distress. The experiments demonstrate that RSVM always outperforms other models in the performance of corporate financial distress predicting, and hence we can predict future financial distress more correctly than any other models. This enhancement in predictability of future financial distress can significantly contribute to the correct valuation of a company, and hence those people from investors to financial managers to any decision makers of a company can make use of RSVM for the better financing and investing decision making which can lead to higher profits and firm values eventually.
+
+Keywords
+Financial distress forecasting
+Artificial intelligence methods
+Radial basis function support vector machines
+Financial distress predicting models
+
+1. Introduction
+
+Financial distress is a term in corporate finance used to indicate a condition when promises to creditors of a company are broken or honored with difficulty. Sometimes financial distress can lead to bankruptcy. Financial distress is usually associated with some costs to the company; these are known as costs of financial distress. It has been many years since the financial and manufacturing industries have faced the type of financial distress suffered over the past few decades. When a firm is under financial distress, the situation frequently sharply reduces its market value, suppliers of goods and services usually insist on cash on delivery terms, and large customer may cancel their orders in anticipation of not getting deliveries on time. Financial distress in companies can lead to problems that can reduce the efficiency of management. As maximizing firm value and maximizing shareholder value cease to be equivalent managers who are responsible to shareholders might try to transfer value from creditors to shareholders. Moreover, financial distress can incur costs related to the situation, such as more expensive financing, opportunity costs of projects and less productive employees. The firm’s cost of borrowing additional capital will usually increase, making it more difficult and expensive to raise the much needed funds. In an effort to satisfy short-term obligations, management might pass on profitable longer-term projects. Employees of a distressed firm usually have lower morale and higher stress caused by the increased chance of bankruptcy, which would force them out of their jobs. Such workers can be less productive when under such a burden.
+
+The financial distress forecasting has long been of great interest both to scholars and practitioners. The financial distress forecasting is basically a dichotomous decision, either being financial distress or not. Most statistical and artificial intelligence methods estimate the probability of financial distress, and if this probability is greater than the cutoff value, then the prediction is to be financial distress. Several approaches were proposed for solving dichotomous problems. The approaches can be categorized as linear and non-linear discriminant analysis approaches. The linear approaches use a line or a plane to separate two groups in a binary classification problem. Among the popular linear approaches is a statistical discriminant analysis model and non-parametric linear discriminant analysis model.
+
+It is well-known fact that financial distress is one of most important managerial decisions affecting the firm value. In this study, we created models using statistical methods (multiple discriminant analysis, logistic regression), multi-layer perceptron (MLP), classification tree algorithms (C5.0), Bayesian networks, and RSVM to predict financial distress.
+
+The outline of the remaining paper is as follows. Section 2 reviews some research background about corporate financial distress prediction and machine learning approaches. Section 3 explains experimental design and analysis procedure. Some experimental results are presented and analyzed in Section 4, and finally our concluding remarks are provided in Section 5.
+2. Corporate financial distress prediction models
+2.1. Corporate financial distress prediction
+
+Academic research on financial distress began to rise in the western countries in 1960s due to the huge demand coming from the practical sector. Beaver (1966) first used univariate analysis to predict corporate financial distress and find out that different financial ratios have different discriminant ability. His research is essentially to develop a cutoff threshold value for each financial ratio in order to classify into two groups. After these traditional ratio analyses, statistical linear models began to be applied to the problem of corporate financial distress prediction. Altman (1968) employed the multiple discriminant analysis, in that he computed an individual firm’s discriminant score using a set of financial and economic ratios. The model performance was superior for two years before financial distress, and then deteriorated substantially thereafter. Ohlson (1980) introduced the logistic regression with a sigmoid function to the financial distress prediction. Compared to the multiple discriminant analysis, the logistic regression model was easier to understand since the logistic score, taking a value between 0 and 1, was interpretable in a probabilistic way.
+
+In parallel with the rapid advancement of computer technology, data mining techniques have been developed and popularly applied to the management problems since 1990s. Data mining techniques are very useful for searching an unknown meaning or non-linear pattern in a massive data set. Among these techniques, artificial neural networks have been used frequently. The main interest of a considerable amount of research was to explore the possibility of making more accurate prediction than the traditional statistical methods. Desai, Crook, and Overstreet (1996) and Fletcher and Goss (1993) showed that the neural networks model predicts financial distress more accurately than linear discriminant analysis and logistic regression.
+
+In the 2000s, much work has focused on new evolutionary algorithms in the context of neural networks for the binary classification problems like the financial distress prediction (Atiya, 2001; Baek & Cho, 2003). Anandarajan, Lee, and Anandarajan (2001) developed a genetic algorithm-based neural network model for financially stressed firms and examined its misclassification cost compared to those of backpropagation-based neural networks and multiple discriminant analysis. Since numerous studies have already examined various models for the efficient prognosis of financial distress, it seems very difficult to marginally improve the forecasting accuracy beyond the existing approaches. To develop a more accurate and generally applicable prediction approach, advanced artificial intelligence methods including fuzzy logic, genetic algorithm, support vector machine, etc., have been successfully applied in corporate financial distress forecasting. Pendharkar (2005) proposed a threshold-varying neural network approach with a genetic algorithm and compared the performance to the traditional backpropagation-based neural networks and discriminant analysis. Cho, Kim, and Bae (2009) proposed an integration strategy regarding how to efficiently combine the currently-in-use statistical and artificial intelligence techniques. In particular, by combining multiple discriminant analysis, logistic regression, neural networks, and decision trees, they developed an integrative model with subject weight based on neural network learning for financial distress prediction.
+2.2. Support vector machine
+
+The support vector machine (SVM) is a promising classification technique proposed by Vapnik and his group at AT&T Bell Laboratories (Cortes & Vapnik, 1995). SVM is a good tool for the two classifications. SVM uses a linear model to separate sample data through some nonlinear mapping from the input vectors into the high-dimensional feature space. The linear model constructed in the new space can represent a nonlinear decision boundary in the original space. SVM aims at finding a special kind of linear model, the so-called optimal separating hyperplanes. The training points that are closer to the optimal separating hyperplane are called support vectors, which determine the decision boundaries. In general cases where the data is not linearly separated, SVM uses nonlinear machines to find a hyperplane that minimizes the number of errors on the training set (Ding, Song, & Zen, 2008). There are four common kernel function types of SVM such as linear kernel, polynomial kernel, radial basis kernel, and sigmoid kernel.
+
+Model selection and parameter search play a crucial role in the performance of SVMs. However, there is no general guidance for selection of SVM kernel function and parameters so far. In general, the radial basis function (RBF) is suggested for SVM. The RBF kernel nonlinearly maps the samples into the high-dimensional space, so it can handle nonlinear problem. Furthermore, the linear kernel is a special case of the RBF. The sigmoid kernel behaves like the RBF for certain parameter; however, it is not valid under some parameters. The second reason is the number of hyperparameters which influences the complexity of model selection. The polynomial has more parameters than the RBF kernel. Finally, the RBF function has less numerical difficulties. While RBF kernel values are 0 < Kij ⩽ 1, polynomial kernel value may go to infinity or zero when the degree is large. In addition, polynomial kernel takes a longer time in the training stage and is reported to produce worse results than the RBF kernel in the previous studies (Ding et al., 2008; Huang, Chen, & Hsu, 2004; Tay & Cao, 2001).
+
+The linear kernel SVM has no parameters to tune except for C. For the nonlinear SVM, there are additional parameters, the kernel parameters γ to tune. Improper selection of the penalty parameter C and kernel parameters can cause overfitting or underfitting problems. Currently, some kinds of parameter search approach are employed such as cross-validation via parallel grid-search, heuristics search, and inference of model parameters within the Bayesian evidence framework (Gestel, Baesens, Ohan, & Suykens, 2005; Min, Lee, & Han, 2006).
+2.3. Decision trees
+
+Decision tree learning is one of the most widely used and practical methods for inductive learning. Rule induction refers to the rules derived from the decision tree techniques in data mining. The data set is separated into many partitions in a way to increase the purity, which is the degree to which the dependent variable belongs to a certain class. The rules that are applied for splitting the data are called the inducted rules. Decision tree is a non-parametric method and suitable for figuring out interaction effect or non-linearity. In many cases, decision tree is used for the sake of interpretation of the analysis results. Decisions trees have four types of method such as CHAID (Kass, 1980), CART (Breiman, Friedman, Olshen, & Stone, 1984), QUEST (Loh & Shih, 1997), and C5.0 (Quinlan, 1993). CHAID (Chi-squared automatic interaction detection) method is based on the chi-square test of association. A CHAID tree is a decision tree that is constructed by repeatedly splitting subsets of the space into two or more child nodes, beginning with the entire data set (Michael & Gordon, 1997). To determine the best split at any node, any allowable pair of categories of the predictor variables is merged until there is no statistically significant difference within the pair with respect to the target variable. This CHAID method naturally deals with interactions between the independent variables that are directly available from an examination of the tree. The final nodes identify subgroups defined by different sets of independent variables (Magidson & SPSS Inc., 1993). CART (Classification and regression tree) is a recursive partitioning method to be used both for regression and classification. CART is constructed by splitting subsets of the data set using all predictor variables to create two child nodes repeatedly, beginning with the entire data set. The best predictor is chosen using a variety of impurity or diversity measures (Gini, twoing, ordered towing, and least-squared deviation). The goal is to produce subsets of the data which are as homogeneous as possible with respect to the target variable (Breiman et al., 1984). QUEST (Quick, unbiased, efficient statistical tree) is a binary-split decision tree algorithm for classification and data mining. QUEST can be used with univariate or linear combination splits. A unique feature is that its attribute selection method has negligible bias. If all the attributes are uninformative with respect to the class attribute, then each has approximately the same change of being selected to split a node (Loh & Shih, 1997). C5.0 (Commercial version 5.0) is a supervised learning classification algorithm used to construct decision trees from the data (Quinlan, 1993). Most empirical learning systems are given a set of pre-classified cases; each described by a vector of attribute values, and constructs from them a mapping from attribute values to classes. C5.0 is one such system that learns decision tree classifiers. It uses a divide-and-conquer approach to growing decision trees. The main difference between C5.0 and other similar decision tree building algorithms is in the test selection and evaluation process. In this study, we used measure of entropy index that used for categorical target variables.
+2.4. Neural networks
+
+Multi-layer perceptron (MLP) are feed-forward neural networks trained with the standard backpropagation algorithm. They are supervised networks so they require a desired response to be trained. They learn how to transform input data into a desired response, so they are widely used for pattern classification. With one or two hidden layers, they can approximate virtually any input-output map. They have been shown to approximate the performance of optimal statistical classifiers in difficult problems. The most popular static network is the MLP (Haykin, 1999; Ture, Kurt, Kurum, & Ozdamar, 2005).
+
+RBF networks have a static Gaussian function as the non-linearity for the hidden layer processing elements. The Gaussian function responds only to a small region of the input space where the Gaussian is centered. The key to a successful implementation of these networks is to find suitable centers for the Gaussian functions. This can be done with supervised learning, but an unsupervised approach usually produces better results. The advantage of the RBF network is that it finds the input to output map using local approximators. Usually the supervised segment is simply a linear combination of the approximators. Since linear combiners have few weights, these networks train extremely fast and require fewer training samples (Haykin, 1999; Ture et al., 2005).
+3. Experimental design
+3.1. Data description and experiments
+
+For the experiment, we used the yearly financial data collected by the Korea Credit Guarantee Fund (KODIT). The corporations used in the analysis belong to a manufacturing industry with an asset size from $1 million to $7 million. As usual, the number of bankrupted corporations is much smaller than the number of healthy (non-bankrupted) corporations. To compensate for this asymmetric distribution, we draw two samples of equal size, one each from the two subgroups (bankrupted and non-bankrupted corporations). The data consist of 944 bankrupted corporations and 944 non-bankrupted corporations from the fiscal year 1999−2005. The variables are adjusted to follow standard normal distribution, as this helps to reduce measurement errors. Out of 83 variables in total, 54 variables are selected by a t-test as a preliminary screening, and then 11 variables are finally selected by a stepwise logistic regression. The variables finally selected include interest expenses to sales, profit to sales, operating profit to sales, ordinary profit to total capital, current liabilities to total capital, growth rate of tangible assets, turnover of managerial assets, net financing cost, net working capital to total capital, growth rate of current assets, and ordinary income to net worth. Table 1 summarizes the variables and the definitions of the variables used in this study.
+
+Table 1. List of financial variables selected.
+Variables	Definitions
+Interest expenses to sales (X1)	(Interest expenses/sales) × 100
+Profit to sales (X2)	(Profit/sales) × 100
+Operating profit to sales (X3)	(Operating profit/sales) × 100
+Ordinary profit to total capital (X4)	(Ordinary profit/total capital) × 100
+Current liabilities to total capital (X5)	(Current liabilities/total capital) × 100
+Growth rate of tangible assets (X6)	(Tangible assets at the end of the year/tangible assets at the beginning of the year × 100) − 100
+Turnover of managerial assets (X7)	Sales/{total assets − (construction in progress + investment assets)}
+Net financing cost (X8)	(Interest expenses − interest incomes)
+Net working capital to total capital (X9)	{(Current assets − current liabilities)/total capital} × 100
+Growth rate of current assets (X10)	(Current assets at the end of the year/current assets at the beginning of the year × 100) − 100
+Ordinary income to net worth (X11)	(Ordinary income/net worth) × 100
+
+Each data set is split into two subsets: a training set and a validation (holdout) set. The training subset is used to train the prediction models. The validation subset is used to test the model’s prediction performance for data that have not been used to develop the classification models. For each set of data set, a training subset and validation subset, consisting of 60% and 40% of the data, respectively, are randomly selected. We replicate five times (Set 1–5) of data set selection, estimation and testing process to reduce the impact of random variation in data set composition (Weiss & Kulikowski, 1991). A well known method, cross-validation is applied to enhance the generalizability of the test results. For the sake of cross-validation, five independent data sets are created wherein 1132 corporations (approximately 60%) are randomly selected out of 1888 corporations in total as the training data set and the rest used for the validation data set.
+
+As the first step of the experiment, a standard three-layered back-propagation network was established. In MLP, this study varies the number of nodes in the hidden layer and stopping criteria for training. In particular, 2, 5, 8, 11, 22, 33 hidden nodes are used for each stopping criterion because MLP does not have a general rule for determining the optimal number of hidden nodes (Hornik, 1991). For the stopping criteria of MLP, this study allows 100, 200, 300 learning epochs per one training example since there is little general knowledge for selecting the number of epochs. The learning rate is set to 0.1 and the momentum term is to 0.7. The hidden nodes use the hyperbolic tangent transfer function and the output node uses the same transfer function. We use NeuroSolutions 4.32 to perform the MLP experiments.
+
+While classification tree algorithms and MLP are based on non-parametric approach, SVM is based on parametric approach, and deeply rooted in mathematical and statistical theory. To implement the principles of SVM, we used the latest version (Version 3.1, April 2011) of LIBSVM after slightly modifying it for our study. The two most important steps in implementation of SVM is scaling and kernel selection: for scaling, we linearly scaled the values of all features to the range [−1, +1] to prevent the cases that features with great numeric ranges dominate those in smaller numeric ranges. Among many available kernel functions (linear, polynomial, radial basis function, and sigmoid), we used RBF kernel because it is easy to implement and can handle the nonlinear relationship between class labels and features. The parameters that should be optimized for the RBF kernel are the penalty parameter C and the kernel function parameter γ. For median-sized problems, the grid search technique is an efficient way to find the best C and γ. In grid search technique, pairs of (C, γ) are tried and the one with the best cross-validation accuracy is chosen. To improve the generalization ability, grid search uses v-fold cross-validation process. Therefore, in this study, the parameter of RBF kernel γ was set at 0.1 to 1.0, and the parameter of RBF kernel C was set at 10, 20, 40, 60, 80 and 100, to find the optimal parameter values of the kernel function of RSVM that has the best prediction performance.
+3.2. Analysis procedure
+
+Fig. 1 displays the analysis procedure used in this study. Step 1 shows ‘Sampling’ stage. The quality of model depends largely on the quality of data collected in many cases. This study uses a simple random sampling method. ‘Exploration’ in step 2 collects useful data through data exploration. ‘Modification’ in step 3 transforms the collected data to enhance the performance of the model through processes such as transformation, quantification, and grouping. ‘Modeling’ in step 4 builds models using statistical methods (MDA, LOGIT), machine learning (MLP, C5.0), Bayesian networks, and RSVM to predict financial distress. ‘Assessment’ in step 5 tests the reliability, validity, and usability of the suggested financial distress prediction model. This step also compares the performance of the suggested model with that of other models.
+Analysis procedure
+
+    
+
+Fig. 1. Analysis procedure.
+4. Experimental results
+
+As shown in Tables 2 and 3, the optimal values of C and γ were derived using the grid search technique based on fivefold cross-validation. In this study, the parameter of RBF kernel γ was set at 0.1 to 1.0, and the parameter of RBF kernel C was set at 10, 20, 40, 60, 80 and 100, to find the optimal parameter values of the kernel function of RSVM that has the best prediction performance. The results of the study showed that the prediction performance of the cross-validation was best when the parameters of RBF kernel, C and γ, were 60 and 0.6, respectively. The average prediction performance was 82.35%.
+
+Table 2. Classification results using the RSVM – Part I.
+γ	C	Set 1	Set 2	Set 3	Set 4	Set 5	Avg. (%)
+0.1	10	76.19	79.10	81.75	75.53	76.06	77.73
+20	76.32	78.97	82.01	75.53	76.19	77.80
+40	77.12	78.17	80.82	75.93	76.19	77.65
+60	77.12	77.12	80.42	76.32	76.59	77.51
+80	77.38	76.98	78.70	76.32	76.85	77.25
+100	78.44	76.98	78.70	76.32	76.19	77.33
+
+0.2	10	75.93	78.84	80.95	75.53	76.72	77.59
+20	75.93	79.23	80.16	75.53	76.85	77.54
+40	76.46	79.50	82.54	76.06	77.12	78.34
+60	78.17	79.10	82.54	76.06	77.38	78.65
+80	77.25	78.70	81.35	76.06	77.38	78.15
+100	77.12	78.31	80.82	76.06	77.38	77.94
+
+0.3	10	77.38	79.23	81.75	77.51	78.31	78.84
+20	77.51	78.97	83.47	77.65	78.44	79.21
+40	78.04	76.72	81.22	77.78	78.04	78.36
+60	78.31	76.46	80.95	77.12	77.25	78.02
+80	78.31	76.59	80.03	77.12	77.25	77.86
+100	77.25	76.72	80.03	77.12	77.51	77.73
+
+0.4	10	77.25	78.84	82.80	78.70	77.91	79.10
+20	77.38	77.51	81.35	79.10	78.31	78.73
+40	77.51	77.12	82.41	79.23	78.84	79.02
+60	77.65	76.59	81.22	79.10	79.37	78.79
+80	78.57	75.66	81.22	79.10	79.63	78.84
+100	78.17	75.13	81.22	78.84	79.63	78.60
+
+0.5	10	78.97	79.23	81.61	79.84	80.29	79.99
+20	79.23	77.65	81.08	80.56	80.56	79.82
+40	79.76	76.32	79.89	80.95	80.95	79.57
+60	80.03	76.32	79.76	80.69	81.22	79.60
+80	79.23	75.79	77.51	79.76	81.22	78.70
+100	78.44	74.47	76.98	79.76	80.56	78.04
+
+Table 3. Classification results using the RSVM – Part II.
+γ	C	Set 1	Set 2	Set 3	Set 4	Set 5	Avg. (%)
+0.6	10	80.95	81.35	83.73	80.69	81.88	81.72
+20	81.48	81.48	84.92	81.08	81.35	82.06
+40	81.75	82.01	83.99	81.48	81.35	82.12
+60	82.80	82.28	83.99	80.82	81.88	82.35
+80	82.01	80.95	84.52	80.82	81.61	81.98
+100	81.88	78.84	82.01	80.82	81.08	80.93
+
+0.7	10	81.48	79.37	81.88	81.22	81.08	81.01
+20	81.61	78.57	81.75	81.08	80.56	80.71
+40	81.75	79.23	79.76	80.82	80.95	80.50
+60	81.75	80.29	77.25	81.08	81.22	80.32
+80	81.08	78.97	76.59	81.08	81.22	79.79
+100	80.16	76.59	76.59	80.82	81.22	79.08
+
+0.8	10	80.56	80.03	79.37	79.63	81.61	80.24
+20	79.37	78.44	79.10	79.89	81.08	79.58
+40	78.97	77.51	77.91	80.29	79.89	78.91
+60	77.91	77.38	76.59	80.42	79.76	78.41
+80	77.12	76.59	75.00	80.29	77.51	77.30
+100	76.06	76.98	74.60	80.29	77.51	77.09
+
+0.9	10	76.59	78.31	80.29	78.84	80.29	78.86
+20	76.06	78.44	79.63	77.51	80.95	78.52
+40	75.13	78.57	77.25	77.12	80.95	77.80
+60	74.07	78.70	76.19	76.59	81.22	77.35
+80	73.94	79.10	75.79	75.66	81.22	77.14
+100	73.81	79.10	74.21	75.66	80.56	76.67
+
+1.0	10	75.26	77.25	80.03	78.70	78.84	78.02
+20	75.40	77.38	78.57	78.70	79.23	77.86
+40	76.06	76.59	76.72	78.97	79.50	77.57
+60	74.74	76.06	75.13	79.50	79.10	76.91
+80	74.34	75.00	74.07	79.50	78.70	76.32
+100	73.81	73.41	73.02	79.50	78.31	75.61
+
+Table 4 and Fig. 2 compare the prediction performance of MDA, LOGIT, MLP, C5.0, Bayesian networks, and RSVM using fivefold cross-validation. We can measure the prediction performance using accuracy rate (also referred to as hit ratio) that is calculated by dividing the total number of correct predictions by the total number of predictions. The main purpose of this cross-validation procedure is to obtain the average accuracy rates for all iteration in the five sets (five iterations per set). A fivefold cross-validation is employed to enhance the generalizability of the test results (Zhang, Hu, Patuwo, & Indro, 1999).
+
+Table 4. Experimental result on validation data sets.
+	Set 1 (%)	Set 2 (%)	Set 3 (%)	Set 4 (%)	Set 5 (%)	Avg. (%)	Std
+MDA	77.92	77.24	80.93	76.65	75.51	77.65	2.04
+LOGIT	78.82	78.10	81.45	77.67	76.22	78.45	1.93
+MLP	78.63	77.88	81.59	77.44	76.01	78.31	2.07
+C5.0	74.81	74.58	77.23	73.69	72.03	74.47	1.89
+Bayesian	70.22	69.86	73.82	70.09	68.51	70.50	1.98
+RSVM⁎	82.80	82.28	83.99	80.82	81.88	82.35	1.17
+
+⁎
+
+    The optimal parameter values of the kernel function: (C = 60, γ = 0.6)-See the bold values of Table 3.
+
+Average accuracy of prediction models
+
+    
+
+Fig. 2. Average accuracy of prediction models.
+
+Table 4 and Fig. 2 show the average accuracy rate for each model. Among these models, RSVM shows the highest level of average accuracy of 82.35% with given validation data sets, followed by LOGIT with 78.45%, and MLP with 78.31% next in their performance. Bayesian networks had the lowest performance. The RSVM always outperforms other models in the performance of financial distress prediction; we can predict future financial distress more correctly than any other models. This enhancement in predictability of future financial distress can significantly contribute to the correct valuation of a company, and hence those people from investors to financial managers to any decision makers of a company can make use of RSVM for the better financing and investing decision makings which can lead to higher profits and firm values eventually.
+
+We use the Wilcoxon signed-rank test to examine whether or not the predictive performance of RSVM is significantly better than those of other models. The Wilcoxon signed-rank test is a non-parametric alternative to the paired Student’s t-test for the case of two related samples or repeated measurements on a single sample. The test was named after Frank Wilcoxon who, in a single paper, proposed both the signed-rank test and the rank-sum test for two independent samples (Wilcoxon, 1945).
+
+Like the t-test, the Wilcoxon test involves comparisons of differences between measurements, so it requires that the data should be measured at an interval level of measurement. However it does not require assumptions about the form of the distribution of the measurements. Therefore, it can be used when the distributional assumptions that underlie the t-test cannot be satisfied.
+
+Table 5 shows the results of Wilcoxon signed-rank test to evaluate the classification performance of the suggested model. As we can see from Table 5, the performance of RSVM is significantly different from other models at 1% or 5% significance level for the most of data sets.
+
+Table 5. Wilcoxon signed-rank test (validation data sets).
+	RSVM−MDA	RSVM−LOGIT	RSVM−MLP	RSVM−C5.0	RSVM−Bayesian
+Set 1	−2.568a	−2.003	−2.074	−3.693	−5.688
+	(0.010)b	(0.043)	(0.038)	(0.000)	(0.000)
+Set 2	−2.414	−2.016	−2.150	−3.611	−5.578
+	(0.016)	(0.044)	(0.032)	(0.000)	(0.000)
+Set 3	−2.490	−2.080	−2.009	−3.315	−4.841
+	(0.019)	(0.041)	(0.046)	(0.001)	(0.000)
+Set 4	−2.254	−1.969	−1.991	−3.353	−4.849
+	(0.037)	(0.048)	(0.045)	(0.001)	(0.000)
+Set 5	−2.999	−2.682	−2.807	−4.523	−6.004
+	(0.003)	(0.007)	(0.005)	(0.000)	(0.000)
+
+a
+
+    z-statistics.
+b
+
+    p-value.
+
+5. Conclusions
+
+Financial distress predicting is an important and widely studied topic since it has significant impact on lending decisions and profitability of financial institutions. Therefore, accurate financial distress prediction models are of critical importance to various stakeholders as it provides them with timely warnings. To develop a more accurate and generally applicable prediction approach, data mining and machine learning techniques have been successfully applied in corporate financial distress forecasting. In this study, we developed a new financial distress prediction model based on SVM. We compare the classification accuracy performance between our RSVM and artificial intelligence techniques, and suggest a better financial distress predicting model to help a chief executive officer or a board of directors make better decision in a corporate financial distress. In order to verify the feasibility and effectiveness of RSVM, the yearly financial data set provided by the KODIT in Seoul, Republic of Korea is used in this study. Our experimentation results demonstrate that RSVM is significantly better than the traditional statistical methods and machine learning techniques when they are applied to the prediction of corporate financial distress. This enhancement in predictability of future financial distress can significantly contribute to the correct valuation of a company, and hence those people from investors to financial managers to any decision makers of a company can make use of RSVM for the better financing and investing decision making which can lead to higher profits and firm values eventually. RSVM allows taking timely strategic actions such that financial distress can be avoided. For stakeholders, efficient and automated credit rating tools allow to detect clients that are to default their obligations at an early stage. RSVM is gaining popularity due to many attractive features and excellent generalization performance on a wide range of problems.
+
+Our study has the following limitations that need further research. The first issue for future research relates to a structured method of selecting an optimal value of parameters in RSVM for the best prediction performance. Secondly, the results from the study should be generalized. Our study only uses one chosen data set for system validation. However, only one chosen data set may not be reliable to make a conclusion. It is necessary to consider a certain number of different data sets for system validation. It would be better to investigate other problem domains (credit rating prediction, stock market prediction, dividend policy forecasting, and fraud detection) in order to generalize the results of this study. Lastly, binary dependent variables (bankrupted or non-bankrupted corporations) were used to address binary classification problems. For lending decision or investment decision making, however, the construction of the financial distress prediction model for addressing the multiclass classification problems, or that for forecasting continuous (numeric) dependent variables, will be more helpful in actual practice. Therefore, a financial distress prediction model that enables the forecast of multiclass or continuous dependent variables will be established in a future study.

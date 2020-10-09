@@ -1,0 +1,260 @@
+End stage renal disease condition increases the risk of cardiovascular disease.
+The mortality rates among hemodialysis patients are 20% higher than the general population, thus in recent years the preservation of the cardiovascular system has become a major point of focus for nephrology care in patients.
+Cardiovascular events jeopardize the life of a dialysis patient and must therefore be prevented.
+The aim of this study is to develop forecast models that can predict the cardiovascular outcome of incident hemodialysis (HD) patients.
+Data relating to the treatment methods and the physiological condition of patients was collected during the first 18 months of renal replacement therapy and then used to predict the insurgence of cardiovascular events within a 6-month time window.
+Information regarding 4246 incident hemodialysis patients was collected.
+A Lasso logistic regression model and a random forest model were developed and used for predictive comparison.
+Every forecast model was tested on 20% of the data and a 5-fold cross validation approach was used to validate the random forest model.
+Random forest showed higher performance with AUC of the ROC curve and sensitivity higher than 70% in both the temporal windows models, proving that random forests are able to exploit non-linear patterns retrieved in the feature space.
+Out of bag estimates of variable importance and regression coefficients were used to gain insight into the models implemented.
+We found out that malnutrition and an inflammatory condition strongly influence cardiovascular outcome in incident HD patients.
+Indeed the most important variables in the model were blood test variables such as the total protein content, percentage value of albumin, total protein content, creatinine and C reactive protein.
+Age of patients and weight loss in the first six months of renal replacement therapy were also highly involved in the prediction.
+A greater understanding of the mechanisms involved in the insurgence of cardiovascular events in dialysis patients can ensure physicians to intervene in the appropriate manner when a high-risk cardiovascular condition is identified.
+Abbreviations CVcardiovascular CKDchronic kidney disease ESRDend stage renal disease HDhemodialysis CRFchronic renal failure RFrandom forest RRTrenal replacement therapy TWtime window CVEcardiovascular event PTHparathyroid hormone OOBout of bag VIvariable importance
+Cardiovascular (CV) morbidity and mortality are very high incidence conditions in patients affected by chronic kidney disease (CKD).
+In fact, cardiovascular events are the leading cause of death among end stage renal disease (ESRD) patients, i.e.
+at the last stage of CKD when glomerular filtration is life-threatening (Wagner et al., 2011).
+A high number of ESRD patients die prematurely during the initial phase of renal replacement therapy (Herzog Asinger, & Berger, 2011).
+As a matter of fact, the mortality rate among hemodialysis (HD) patients exceeds that of the general population by 20% per year and an even higher mortality rate has been reported within the first year of initiation of HD treatment (Bradbury et al., 2007).
+Since cardiovascular disease and kidney disease are closely related (Luke, 1998), cardiovascular risk factors among ESRD patients include those identified in the general population and the additional risk factors related with chronic renal failure (CRF).
+The risk factors include: progressive ageing of dialysis patients plus a high incidence of co-morbidities, such as diabetes, hypertension, congestive heart failure, multiple organ failure and metabolic derangement due to renal injury.
+Moreover the risk of cardiovascular disease appearance is further increased by hemodynamic and metabolic risk factors, including hemodynamic overload due to plasma volume expansion, blood pressure overload, the presence of arterial-venous fistulae, anemia, hyperparathyroidism, electrolyte imbalance and increased oxidant factors (Locatelli et al., 2000).
+Consequently, in recent years, preservation of the cardiovascular system has become a major focal point in nephrology care as sudden cardiovascular events jeopardize the life of ESRD patients and must be prevented.
+Over the past few decades special attention has been paid to the diagnosis and management of CV complications in CKD patients: with this aim personalized, optimized strategies for prevention have been proposed.
+However, the basic guidelines are limited and clinical intervention is often administered too late, thus proving ineffective in preventing life-threatening events in HD patients.
+Both the early signs of a CV event and the prognostic factors need further investigation in order to better understand the mechanisms underlying cardiovascular system impairment in CKD patients and prevent or reduce its occurrence.
+Understanding which treatment- and physiological- related variables are most involved in such phenomenon is also essential.
+That way more effective and focused treatment strategies can be devised to decrease the risk of cardiovascular disease in CKD patients.
+Large quantities of data can be collected during renal replacement therapy administration: hemodialysis patients are treated three times per week in clinics and the data relating to their physiological condition, in addition to the treatment parameters, can be recorded.
+In fact, clinicians can easily access data from the dialysis machines and the monitoring devices (such as blood volume monitors, on-line clearance monitors and flow measurement equipment) and said data can be automatically stored in a clinical database.
+Data mining methods have shown their helpfulness in discovering hidden information and patterns among recorded clinical data (Rosset, Perlich, Swirszcz, Melville, & Liu, 2010; Savage, 2012).
+By managing huge quantity of clinical data, the cardiovascular risk could be estimated more reliably in order to stratify patients and foster early intervention, which could prevent the occurrence of sudden life-threatening events (Chang, Wang, & Jiang, 2011; Eom, Kim, & Zhang, 2011).
+The complexity of the underlying phenomena and the presence of strong non-linear relationships among the variables involved and the cardiovascular outcome suggest the use of a non-linear machine learning method, such as a random forest model (Sut & Simsek, 2011).
+Random forests were selected because they are able to identify non-linear patterns in the data and they are supposed to improve the predictive capability of commonly used linear methods.
+The aim of this study is therefore to develop a random forest (RF) model for the short-term prediction of cardiovascular events in incident HD patients and verify its improvement with respect to a standard linear model.
+For this reason the RF model is compared with a standard linear model, the logistic regression.
+Study design This is a retrospective study of incident hemodialysis patients, i.e.
+patients who started HD treatment for the first time.
+The HD treatments were performed in Fresenius Medical Care clinics.
+Data used in this study has been extracted from EuCliD database (Marcelli et al., 2001; Steil et al., 2004), an electronic database designed by Fresenius Medical Care to monitor the key parameters of dialysis treatment.
+In our study the data comes from patients in clinics located in Portugal and Spain.
+In particular, the data collected in Spain came from patients starting HD treatment between 2006 and 2009; the data collected in Portugal came from patients starting the treatment between 2006 and 2010.
+The analysis of incident HD patients is of interest due to the high prevalence of cardiovascular disease occurrence and cardiovascular events reported during the beginning period of renal replacement therapy (RRT).
+Much literature suggests that the key processes leading to the impairment of the cardiovascular system need to be investigated during the first period of HD administration (Bradbury et al., 2007; Herzog et al., 2011).
+Incident HD patients were followed for 18 months after the beginning of RRT in order to predict the occurrence of life-threatening events.
+The analyzed period of 18 months was split into 6-month intervals, i.e.
+into three successive time windows (TW): TW1 = months 1–6, TW2 = months 7–12, TW3 = months 13–18.
+Two different models were constructed: (1) the prediction model of events in TW2 given the data of TW1; (2) the prediction model of events in TW3 given the data of TW2.
+Exclusion criteria were: age below 18 years, death during the observational period of unknown or non-cardiovascular origin, occurrence of renal transplantation, missing of data from HD treatment.
+Patients were subdivided into two groups for binary classification: patients who experienced a cardiovascular events (CVEs) in the successive 6 months after the current observational time window (CVE group) and patients who did not experience any significant event in the successive 6 months (control group).
+The following conditions determined an event classification as cardiovascular: cardiovascular mortality, insurgence of new cardiovascular co-morbidity, or cardiovascular hospitalization.
+The ICD-10 international coding system, adopted by the EuCliD system, enables identification of a CVE.
+All the diseases of the circulatory system – besides cerebrovascular, vein and lymphatic vessel diseases – were considered as preventable CV diseases.
+Fig 1 summarizes the details about patients used to construct the models as well as the details of the patients who dropped out of the project.
+Flow chart of the study Fig 1.
+Flow chart of the study.
+Drop out reasons and number of patients in the two time windows are outlined.
+Variables and feature extraction Hemodialysis patients are commonly treated three times per week on HD treatment.
+In Fresenius Medical Care clinics, at each HD session, physiological variables and treatment settings are stored in the EuCliD database.
+Moreover blood tests and medical examinations are generally performed once per month, to monitor the health status of patients: said records are also stored in the EuCliD database.
+Our analysis selected, for each patient, the following set of variables extracted from the EuCliD database: the time series of the physiological variables measured at each HD session (blood pressure, heart rate, body weight
+In each time window, the mean values of the temporal series were computed and used as predictors.
+Furthermore the percentage of weight loss during the six months was computed using the post treatment weight measurements.
+In summary, 39 features were obtained.
+Table 1 reports the complete list of features used as predictors in each time window.
+Table 1.
+Percentage values of missing data, logistic regression coefficient values and random forest variable importance scores.
+Variable description Varcode Model TW1/TW2 Model TW1/TW2 Missing data (%) GLMa coef p-valb RF VIc% RF VIc score Missing data% GLMa coef p-valb RF VIc(%) RF VIc score Mean systolic pressure (pre HD) (mmHg) 1 0 – 3 30 0 – 3 20 Mean systolic pressure (post HD) (mmHg) 2 0 0.041 n.s.d 4 13 0 – 3 21 Mean delta Systolic (mmHg) 3 0 0.119 <0.01 5 9 0 – 3 22 Mean diastolic pressure (pre HD) (mmHg) 4 0 – 3 24 0 – 4 11 Mean diastolic pressure (post HD) (mmHg) 5 0 0.156 <0.01 3 28 0 −0.165 <0.01 6 5 Mean delta Diastolic (mmHg) 6 0 – 4 14 0 −0.069 0.050 3 28 Mean pulse pressure (pre HD) (mmHg) 7 0 – 4 16 0 – 4 18 Mean pulse pressure (post HD) (mmHg) 8 0 – 5 8 0 0.077 <0.05 4 17 Mean delta pulse pressure (mmHg) 9 0 – 05 10 0 – 3 24 Mean heart rate (pre HD (bpm) 10 0 – 3 26 0 – 3 31 Mean heart rate (post HD (bpm) 11 0 – 3 27 0 – 3 26 Mean delta heart rate (bmp) 12 0 0.043 n.s.
+3 32 0 −0.109 <0.01 4 10 Mean delta weight (HD post – HD pre) (Kg) 13 0 0.072 <0.05 4 17 0 0.217 <0.01 3 25 Weight percentage loss in six months (%) 14 0 0.056 n.s.
+6 6 0 0.191 <0.01 4 9 Modality (0 = HDF, 1 = HD) 15 0 – 0 38 0 – 1 39 Mean sodium – dialysate (mEq/l) 16 1 – 1 36 0 – 2 36 Mean bicarbonate – dialysate (mEq/l) 17 0 0.024 n.s.
+2 35 0 0.074 <0.05 2 34 Mean total fluid lost per HD session (ml) 18 0 – 4 21 0 – 3 32 Dialysate temperature (°C) 19 0 – 1 37 0 – 2 35 Mean dializer blood flow (ml/min) 20 1 0.050 0.051 3 23 0 – 4 12 Mean urea reduction rate (%) 21 7 −0.111 <0.01 4 20 3 −0.119 <0.01 4 19 Mean potassium (mEq/l) 22 6 – 4 15 4 − 3 29 Mean sodium (mEq/l) 23 7 −0.060 n.s.
+4 18 4 0.030 n.s.
+3 27 Mean calcium phosphate (mg/dl) 24 5 −0.317 0.051 4 12 2 0.015 n.s.
+3 23 Mean phosphate (mg/dl) 25 4 – 4 19 2 4 16 Mean PTH value (ng/l) 26 12 0.078 <0.05 3 29 4 −0.123 <0.01 5 8 Mean calcium (mg/dl) 27 4 0.164 <0.01 3 22 2 0.190 <0.01 4 13 Mean haematocrit (%) 28 6 −0.027 n.s.
+3 31 4 0.064 n.s.
+3 30 Mean haemoglobin (g/dl) 29 4 – 3 33 2 – 4 14 Mean total protein content (g/dl) 30 25 −0.468 <0.01 11 1 21 −0.411 <0.01 8 3 Mean albumin content (g/dl) 31 16 −0.109 <0.05 7 5 7 −0.129 <0.01 5 7 Mean albumin percentage (%) 32 33 − 8 2 25 – 13 1 Mean Creatinine (Pre HD) (mg/dl) 33 12 − 5 7 9 −0.084 <0.05 6 4 Mean C Reactive Protein (mg/dl) 34 26 0.149 <0.01 7 4 18 0.213 <0.01 10 2 Age (years) 35 0 0.273 <0.01 7 3 0 0.228 <0.01 6 6 Diabetes 36 0 0.569 <0.01 3 34 0 0.383 <0.01 4 15 Heart disease 37 0 – 0 39 0 – 1 37 Angina 38 0 0.471 <0.01 5 11 0 0.429 <0.01 3 33 Peripheral Vascular Disease 39 0 0.594 <0.01 3 25 0 0.139 n.s.
+1 38 a GLM: general linear model.
+b pval refers to the significance of GLM coefficients.
+c RF VI: random forest variable importance (mean values obtained by the 5 cross validation models).
+d n.s.
+: not statistically significant.
+Data pre-processing Data mining techniques can be used to automatically extract useful models from electronic databases in which large amount of data have been stored.
+Moreover these methods can be used to develop an automatic decision support system for clinicians.
+However, in the biomedical field, the main target of electronic clinical databases is to store and report clinical data collected during the care process so to be easily accessible from clinicians.
+Thus the quality of data may not always meet data mining requirements and other data processing needs (Cios & Moore, 2002).
+The first challenge in applying data mining to clinical data is to process the data.
+In the current study, data was properly pre-processed to improve the effectiveness of data mining techniques.
+Missing data is a common problem.
+For each feature missing data was substituted with the averaged value of the feature over the entire population in the considered time window.
+By the feature extraction procedure, we created two datasets.
+Percentages of missing data in the two datasets are reported in Table 1.
+Next, the data was standardized to avoid the influence of the absolute values and of intrinsic variability on the prediction models.
+80% of the data was included in the training set and the remaining data was used to validate the implemented predictive models (testing set).
+A 5-fold cross validation approach was used to reinforce the performance evaluation.
+The classification problem under analysis is highly unbalanced: only 10% of patients have a CVE in the next 6-month observation period.
+As in many unbalanced problems, the main goal is to reach the correct classification of the rare class i.e.
+to obtain the identification of patients at higher risk of life-threatening events.
+To handle the unbalanced class issue, an approach based on re-sampling techniques was chosen: in the training set the minority class was randomly over-sampled until both the classes have the same probability.
+Over-sampling does not increase information but raises the weight of the minority class (HD patients with CV events).
+Predictive methods Two different machine learning methods were adopted to construct CVE predictive models: Lasso logistic regression and random forest.
+These methods were applied for the two different time windows under investigation.
+Logistic regression model In the prediction problem under analysis the outcome variable is binary, i.e.
+each patient can have or not a cardiovascular event in the next time window, thus the usual set up for a linear logistic regression model was considered at first.
+We have N observation pairs (xi, Yi) where the response variable Y ∈ {0, 1} and the predictor vector .
+We approximated the regression function by a linear logistic model using the Lasso algorithm.
+The logistic regression function: (1) is used to fit the data and the Lasso approach imposed that the following condition must hold: (2) The Lasso algorithm is a statistical method for regression that uses a penalty term λ to achieve a sparse solution: only variables significantly involved in the regression model obtain a non-null coefficient value (Friedman, Hastie, & Tibshirani, 2010).
+The Lasso penalty coefficient corresponds to a Laplace prior, which expects coefficients to be close to zero.
+Just a small subset will be larger than zero, the other coefficients will be so close to zero that they are set to zero to point out that their role in the prediction process is marginal.
+Lasso is somewhat indifferent to highly correlated predictors, and will tend to pick one and ignore the others (Friedman et al., 2010).
+8-fold cross validation was used in the training set to select the best Lasso penalization term λ for the regression model.
+Standard errors of the individual misclassification error rates for each of the eight parts were obtained and the value of λ that minimizes the misclassification error rate was identified.
+One-standard error rule was used to select the most parsimonious model whose mean misclassification error was not larger than one standard error of the best model, i.e.
+the model with the lowest mean misclassification error.
+The corresponding λ value brings to the identification of a model with a reduced number of non-zero regression coefficients Fig 2.
+(a) Misclassification error curve obtained using cross validation during the… Fig 2.
+(a) Misclassification error curve obtained using cross validation during the optimization process of Lasso penalization term λ in TW1/TW2 model.
+(b) Misclassification error curve obtained using cross validation during the optimization process of Lasso penalization term in TW 2/TW3 model.
+In each graph the gray vertical line corresponds to the minimum mean misclassification error (corresponding to 28 and 27 features in the two models respectively) and the black vertical line to the largest value of λ so that the error is within one standard-error of the minimum.
+This is the so called “one standard error rule”.
+The horizontal axes on the top refers to the size of the model; i.e.
+the number of non-zero elements obtained using the corresponding λ value.
+The Lasso shrinkage generates non-zero coefficients, which are biased towards zero, and in general are not consistent, i.e.
+the estimates do not converge to the true values as the sample size grows (Hastie, Tibshirani, & Friedman 2001).
+For this reason, after the identification of the subset of non-zero coefficients by applying the Lasso algorithm, an unrestricted general linear model was performed to the selected features to obtain the consistent values of the coefficients.
+Random forest model A random forest has been defined by Breiman as “a classifier consisting of a collection of tree-structured classifiers” (Breiman, 2001).
+Each tree of the forest casts a unit vote, assigning each input to the most likely label class.
+In this study the random forest predictor was constructed by taking the average of the tree votes for each input, i.e.
+for each element in the data set, obtaining a “pseudo-probability” value of having a CVE for each patient as output.
+Trees number needs to be at least one order of magnitude higher than the number of features in order to exhaustively explore all the feature space during the forest building.
+Given that the feature number is 39, forests composed by 800 trees were considered in this study.
+Indeed a sufficiently high number of trees guarantees that all the training data are used, and thus there is no information loss.
+Gini impurity index (Raileanu & Stoffel, 2004) was used to split the nodes; it is a measure of the impurity of a feature with respect to output classes (in our problem CVE and control group).
+The feature with the highest Gini index was chosen as split in that node.
+Random forests are one of the most successful ensemble methods exhibiting high performance in several applications mainly because they are able to identify non-linear patterns in the data and to exploit the retrieved patterns, thus improving classification performances.
+Moreover the method is fast and robust to noise and it is able to easily handle both numerical and categorical data (Robnik-Sikonja, 2004).
+Scores of importance of each variable in the random forest can be estimated in order to understand which variables have higher weight in the classification.
+For each variable a percentage value of importance was computed using the out of bag (OOB) set of data of each tree of the forest (Breiman, 2001).
+For each tree, OOB set of data is the part of the dataset that is set apart building the tree and so can be used to test the performance of the tree.
+In the procedure proposed by Breiman, values of each variable in the OOB are randomly permuted one at the time.
+For each variable, performances of the forest, with and without permuted values, are compared in terms of misclassification rate.
+The increase in misclassification rate due to the permutation of values is proportional to the importance of the variable in the predictive model.
+For each variable a percentage value of importance is obtained: it is the worsening percentage in misclassification rate obtained on the out of bag sample by randomly permuting the values of the considered variable.
+Higher the obtained percentage value, more important is the role of that variable in the classifier performance.
+Results are shown in terms of classifier performance on the testing set for each model and for each predictive method.
+An analysis of the weight of the variables in the prediction procedure is also reported.
+Logistic regression Lasso algorithm identified in both the implemented models (TW1/TW2 and TW2/TW3) a subset of variables significantly involved in the cardiovascular events prediction.
+In particular in both the models, using the one-standard error rule approach, subsets composed by 21 predictors out of the complete set of 39 were identified.
+Fig 2 shows the mean cross-validated error curve as well as the one-standard deviation range for both the models: Fig 2(a) refers to the first time window model (TW1/TW2) and Fig 2(b) refers to the second time window model (TW2/TW3).
+Table 1 shows the values of consistent coefficients obtained fitting an unrestricted logistic model to the set of features selected through the Lasso regression approach.
+15 and 18 coefficients in the first and second time window models respectively, are statistically significant in the unrestricted general linear model.
+TW1/TW2 logistic regression model, i.e.
+the analysis of the first time window, showed the following performance: area under the curve (AUC) of the ROC curve equal to 68.1%, a standard error (s.e.)
+of 3.5%, with a 95% confidence interval (c.i.)
+equals to 61.2–75.1%.
+ROC cut-off point for best sensitivity and specificity corresponds to a sensitivity of 72.0% (95% c.i.
+: 61.8–82.2%) and a specificity of 60.8% (95% c.i.
+: 57.1–64.6%), accuracy of 62.0% and mis-classification rate of 38.0%.
+TW2/TW3 logistic regression model, i.e.
+the analysis of the second time window, showed the following performance: an AUC of the ROC curve equal to 66.0% (s.e.
+: 4.0%; 95% c.i.
+: 58.2–73.8%).
+ROC cut-off point for best sensitivity and specificity provides sensitivity of 60.0% (95% c.i.
+: 47.6–72.4%) and specificity of 68.1% (95% c.i.
+: 64.2–71.9%), accuracy of 67.3% and mis-classification rate of 32.7%.
+ROC curves of the logistic regression models in the two different time windows are shown in Fig 3 with the solid and dotted gray curves.
+In both the cases the AUC is significantly higher than 50%, i.e.
+higher than the AUC of a random classifier.
+ROC curves of the two proposed models in the two different time windows Fig 3.
+ROC curves of the two proposed models in the two different time windows.
+Dotted gray curves refer to the logistic regression models.
+Solid black curve to the random forest models: 95% confidence bounds obtained by cross validation are drawn.
+Dotted black curve refers to the random classifier.
+Left: ROC curves referring to TW1/TW2 logistic regression model (AUC = 68.1%) and to TW1/TW2 random forest model (AUC = 73.7 ± 1.2%).
+Right: ROC curves referring to TW2/TW3 logistic regression model (AUC = 66.0%) and to TW2/TW3 random forest model (AUC = 73.8 ± 3.9%).
+Random forest TW1/TW2 random forest model fitted on the complete set of 39 predictors using the 5-fold cross validation approach showed an AUC of the ROC curve equal to 73.7 ± 1.2% (95% c.i.
+: 72.6–74.7%).
+ROC cut-off point for best sensitivity and specificity was identified obtaining a sensitivity equal to 69.2 ± 3.3% and a specificity equal to 67.1 ± 3.3%.
+The accuracy of the models was 67.3 ± 2.8% with a mis-classification rate equal to 32.7 ± 2.8%.
+TW2/TW3 random forest model built on the entire set of 39 predictors using the 5-fold cross validation approach showed an AUC of the ROC curve equal to 73.7 ± 5.0% (95% c.i.
+: 69.3–78.1%).
+ROC cut-off point corresponded to a sensitivity of 69.6 ± 6.1% and a specificity equal to 65.9 ± 5.3%.
+The accuracy of the models was 66.2 ± 4.8% with a mis-classification rate of 33.8 ± 4.8%.
+Fig 3 shows the ROC curves of random forest models: on the left ROC curves referred to TW1/TW2 models and on the right ROC curves referred to TW2/TW3 models are drawn.
+Black solid curves refer to random forest models as gray dotted curves refer to logistic regression models.
+In both the models and in both time windows the AUC is significantly higher than the AUC of a random classifier (dotted black line).
+Confidence bounds obtained with cross validation are shown just for random forest model since this validation method was not used with the logistic regression approach.
+Table 1 shows the values of the importance of each feature in the random forest models and the corresponding order of importance (values were obtained as the mean of the 5 estimates obtained in the 5 folds of cross validation).
+For example, in the first model, the first rank was attributed to the feature “mean total protein content” (score 1 in the column RF VI in Table 1), which reported a variable importance of 11% (see column RF VI% in Table 1).
+It means that randomizing the values of this variable the misclassification error increases of 11%.
+Despite recent advances in nephrology care and despite the increasing personalization in dialysis treatment administration, the insurgence of cardiovascular complications in HD patients is still high with respect to the general population.
+The impairment in the cardiovascular system due to the CKD condition and to all the associated co-morbidities lead HD patients to be at high risk of death and life-threatening events.
+Half of the deaths are caused by cardiovascular events.
+Complex phenomena are involved in the cardiovascular impairment and most of the time it can be tough to identify prognostic factors of cardiovascular events.
+Moreover, it is often a pattern of several variables, which taken together, can lead to the prognosis of a higher risk for a patient.
+Therefore the stratification of cardiovascular risk in HD patients is a complex multi dimensional problem.
+In preventive medicine the employment of risk stratification models could help physicians to identify those patients at higher risk, who need personalized care pathways aimed at preserving the cardiovascular system.
+In this study two different machine learning models were applied to predict cardiovascular events in HD incident patients using routinely measured variables as predictors.
+Indeed we used as predictors information about co-morbidities, treatment and blood test variables that are routinely collected by nurses or physicians and these variables showed to have predictive capability.
+Finally, the proposed models could be easily applied in clinics as the used variables are commonly or automatically collected.
+Random forest models showed a better performance in terms of predictive capability compared to the logistic regression.
+To our knowledge this is the first time that a non linear model such as random forest is proposed to predict cardiovascular events in HD incident patients.
+A non-linear model such as RF is able to find predictive patterns among the data.
+Indeed patterns and relationships between variables related to the insurgence of cardiovascular events in such population are highly complex and non linear so to be difficult to be exploited by predictive linear models.
+Fig 3 shows the ROC curves of all the implemented models.
+In both the time windows TW1/TW2 and TW2/TW3 random forest models have a higher AUC than the logistic regression ones.
+The performance of the two random forest models is similar in the two time windows with AUC higher than 73% and sensitivity higher than specificity.
+It means that the models are more capable in identifying positive cases than negative cases.
+Our interest was precisely in identifying patients at a higher cardiovascular risk in order to assure to those patients a more personalized treatment and a close monitoring.
+Comparing logistic regression and random forest ROC curves, the curves of random forest model have a higher initial slope than ROC curves of logistic regression models: RF models are able to better discriminate a cohort of high risk CV patients.
+To the best of our knowledge the only work regarding the prediction of mortality in incident hemodialysis patients is the work by Thijssen, Usvyat, and Kotanko (2012).
+In that work just a logistic regression model is implemented: it shows a predictive capability comparable to the performance of the logistic regression model implemented on our data, in particular on the subset of predictors identified by Lasso algorithm.
+The set of variables used in the predictive model proposed by Thijssen et al.
+was similar to the one considered in this study, although they included Kt/V and the race of the patients, which were not available in our study.
+OOB estimate of variable importance was used to get insights in the classifier.
+On one side it is interesting to understand the mechanisms underlying the classification performance in order to implement more sophisticated classifiers; on the other such analysis can highlight which variables need to be monitored or adjusted in order to prevent the insurgence of catastrophic cardiovascular events.
+Looking at variable importance scores and at the order of importance of the variables reported in Table 1, it is possible to identify the variables having higher weight in the prediction in the two considered time windows.
+In Fig 4 the values of variable importance in both the models TW1/TW2 and TW2/TW3 are illustrated and compared.
+Two arbitrary horizontal lines are plotted in order to easily identify the most important variables in the two models.
+An intermediate region was indicated between 2 and 4.5% values.
+Variables with higher VI are considered of great role for the prediction.
+Variable importance of the 39 predictors in the two random forest predictive… Fig 4.
+Variable importance of the 39 predictors in the two random forest predictive models.
+Variable codes are reported in Table 1 together with the corresponding variable description and measure of importance in the random forest models (mean values obtained using the five cross validation models).
+Crosses refer to the first time window, empty circles to the second time window.
+Mean values and standard deviation of each variable importance value are drawn.
+The horizontal lines mark 2% and 4.5% values of misclassification rate.
+Considering the first time window, i.e.
+the TW1/TW2 random forest model, the most important variables in the model are blood test variables such as the total protein content, percentage value of albumin with respect to the total protein content, creatinine, albumin absolute value and C reactive protein.
+Age of patients and weight loss in the first six months of RRT are also highly involved in the prediction.
+Nutritional and inflammatory condition strongly influence cardiovascular outcomes in incident HD patients.
+The same consideration can be drawn from the analysis of regression coefficient values of these variables (Table 1).
+Low values of albumin and total protein content together with a severe decrease in body weight denote malnutrition and are associated to an increased probability of insurgence of a cardiovascular event in our models.
+This result confirms previous results in literature going in the same directions (Lopez-Gomez, Villaverde, Jofre, Rodriguez-Benitez, & Perez-Garcia, 2005).
+It must be recalled that in the Lasso selection of variables if two variables are strongly correlated just one of the two is selected and a regression coefficient is computed: albumin content is selected in the subset and has a negative coefficient, but albumin percentage variable is not selected by Lasso thus it doesn’t have an associated coefficient value, mainly because these variables resulted correlated each other.
+C-reactive protein has high importance in the random forest model and got a positive coefficient in logistic regression model, meaning that high values of this variables are associated to an increased risk of cardiovascular events.
+C-reactive protein results to be increased and albumin results to have low values during inflammation status thus inflammation state has to be carefully evaluated during cardiovascular risk stratification and this is in agreement with previous results in the literature (Ritz, 2011).
+Also elderly patient resulted to be at higher risk.
+In the first time window the presence of angina as co-morbidity is a strong predictor of cardiovascular events too.
+Considering the second time window, i.e.
+the TW2/TW3 random forest model, the most important variables are total protein content, albumin and C-reactive protein suggesting again that inflammation status and malnutrition have an important role in the insurgence of cardiovascular complications.
+Creatinine maintains a strong importance in the second time window model too.
+In the second time window weight loss in the preceding six months looses importance as well as angina and some of the physiological variables measured at each treatment such as blood pressure.
+Looking specifically at physiological variables measured at each treatment (variable code from 1 to 12) it can be noted that in the first time window there are some variables having an important role in the prediction performance.
+In particular an increase of systolic blood pressure during the treatment is associated to an increased risk of cardiovascular events.
+Also pulse pressure values seem to be related to the insurgence of cardiovascular complications: delta values and values of pulse pressure measured after the treatment have an important role in the prediction (RF variable importance in the first ten ranking positions).
+In the second time window diastolic pressure measured after the treatment and the difference between heart rate measured after and before treatment administration are significant predictors of events in the logistic regression model and have high importance (higher than 4%) in the RF model.
+Looking at the values of regression coefficients, high values of post HD pulse pressure, low values of post HD diastolic blood pressure and a decrease in heart rate during the treatment are associated to the insurgence of cardiovascular complications.
+All these factors indicate the presence of a heart failure condition and an altered response to fluid removal during HD treatment (Inrig et al., 2009 ;Ion Titapiccolo et al., 2012).
+Therefore in both time windows the physiological response to HD treatment is a significant prognostic factor of the insurgence of cardiovascular life-threatening events in addition to malnutrition and inflammatory status.
+Calcium blood test parameter was found to have an important role in the random forest model in particular in the second time windows.
+This ion product is associated with extraskeletal calcifications, as well as to an increased risk of death (Jono, Shioi, Ikari, & Nishizawa, 2006).
+This factor has higher importance in predicting cardiovascular events in the second time window compared to the first one.
+Parathyroid hormone (PTH) has an important role in the random forest model in the second time window: PTH level influences cardiovascular condition of hemodialysis patients (Naves-Díaz et al., 2011).
+The obtained results confirm the initial hypothesis that non-linear patterns in the data can be better identified and exploited by a nonlinear model such as the random forest model which showed a better predictive performance compared to the logistic regression in the analyzed application.
+Random forest showed a good ability to predict cardiovascular events by reporting important score, i.e AUC > 70% and good values of sensitivity.
+The combined analysis of regression coefficients and variable importance in random forest models permitted to investigate physiological and clinical insights in the mechanisms underlying cardiovascular impairment in incident hemodialysis patients.
+Limits of the study are represented by the presence of missing data in the dataset and the limited size of the dataset used to build the predictive models.
+In the next future data from more countries will be used to build predictive models and to validate the obtained results on larger datasets.
+Further studies will be conducted to improve classifier performances and to shrink the number of predictors needed to have a reliable estimate of cardiovascular events insurgence in dialysis patients.

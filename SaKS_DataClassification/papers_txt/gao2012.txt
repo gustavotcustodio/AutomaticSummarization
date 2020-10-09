@@ -1,0 +1,432 @@
+A novel non-Lyapunov approach through artificial bee colony algorithm for detecting unstable periodic orbits with high orders☆
+
+Abstract
+
+In this paper, a novel non-Lyapunov way is proposed to detect the unstable periodic orbits (UPOs) with high orders by a new artificial bee colony algorithm (ABC). And UPOs with high orders of nonlinear systems, are one of the most challenging problems of nonlinear science in both numerical computations and experimental measures. The proposed method maintains an effective searching mechanism with fine equilibrium between exploitation and exploration. To improve the performance for the optimums of the multi-model functions and to avoid the coincidences among the UPOs with different orders, we add the techniques as function stretching, deflecting and repulsion to ABC. The problems of detecting the UPOs are converted into a non-negative functions’ minimization through a proper translation, which finds a UPO such that the objective function is minimized. Experiments to different high orders UPOs of 5 wellknown and widely used nonlinear maps indicate that the proposed algorithm is robust, by comparison of results through the ABC and quantum-behaved particle swarm optimization (QPSO), respectively. And it is effective even in cases where the Newton-family algorithms may not be applicable. Density of the orbits are discussed. Simulation results show that ABC is superior to QPSO, and it is a successful method in detecting the UPOs, with the advantages of fast convergence, high precision and robustness.
+
+Keywords
+Unstable periodic orbits
+Artificial bee colony algorithm
+Non-Lyapunov
+Non-negative functions’ minimization
+
+1. Introduction
+
+In recent years, great interest emerged in swarm intelligence. For example, particle swarm optimization, ant colony optimization, bacterial foraging optimization algorithm, artificial bee colony (ABC) algorithm, and bee colony algorithms are typical methods of swarm intelligence (Akay & Karaboga, 2009a; Alatas, 2011; Gao, Li, & Tong, 2008; Gao, Qi, Yin, & Xiao, 2010c, 2010d; Gao & Tong, 2006; Guney & Onay, 2010; Mocholi, Jaen, Catala, & Navarro, 2010; Mullen, Monekosso, Barman, & Remagnino, 2009; Karaboga & Basturk, 2007; Thammano & Poolsamran, 2012; Yusup, Zain, & Hashim, 2012). ABC algorithm is one of the most recently introduced swarm-based algorithms, which models the intelligent foraging behavior of a honeybee swarm. Since Karaboga (2005) studied on ABC algorithm and its applications to real world-problems in 2005, ABC has been proven to be a better heuristic for global numerical optimization (Akay & Karaboga, 2009a; Akay & Karaboga, 2009b; Baig & Rashid, 2007; Gao, Qi, Yin, & Xiao, 2010a, Gao, Qi, Yin, & Xiao, 2010b, 2010c, 2010d; Karaboga & Basturk, 2008, 2009a; Karaboga & Akay, 2009b; Karaboga & Basturk, 2007).
+
+The set of unstable periodic orbits (UPOs) can be thought of as the skeleton for the dynamics. Actually, one of the common characterizations of chaos is the positivity of topological entropy, which is related to the exponential growth rate of the number of UPOs embedded within the attractor as one enumerates the orbits by their lengths (Figueiredo & Chen, 1993; Katok & Hasselblatt, 2003; Ott, 1993; Ott, Grebogi, & Yorke, 1990; Zelinka, Celikovsky, Richter, & Chen, 2010, 2009). And Biham and Wenzel proposed a good method to find many UPOs especially for Hénon system (Biham & Wenzel, 1989). UPOs are also important tools in affecting the behaviors of dynamical systems. Furthermore, many dynamical averages, such as the natural measure, the Lyapunov exponents, the fractal dimensions, can be efficiently expressed in terms of a sum over the unstable periodic orbits (Dhamala & Lai, 1999; Gao, Gao, Li, Tong, & Lee, 2009; Ott, 1993; Pierson & Moss, 1995).
+
+However, finding UPOs of nonlinear mapping is one of the most challenging problems of nonlinear science in both numerical computations and experimental measures, as the following reasons: UPOs’ inner unstable nature and the analytic expressions for evaluating periodic orbits can be obtained only if the chaos system is the nonlinear polynomial of low degree and the period is low.
+
+In most experimental simulations, a time series data is usually the only available information from a dynamical system to determine the positions of UPOs (Awrejcewicz, Dzyubak, & Grebogi, 2004; Davidchack & Lai, 1999; Schmelcher & Diakonos, 1997). Schmelcher and Diakonos have put an excellent algorithm (SD) (Schmelcher & Diakonos, 1997), which can be applied to detect higher periodic orbit and moreover it is globally converged. In addition, one modified version of SD has also been given to improve its converging rate (Bu, Wang, & Jiang, 2004; Davidchack & Lai, 1999) and etc. And even some theoretical analysis have been done to achieve the high orders UPOs, however their simulations are only given in the cases of UPOs with low orders (Albers & Sprott, 2006; Gluckman et al., 1997).
+
+A basic scheme in detecting UPOs from dynamically reconstructed phase space (So et al., 1996; Takens, 1981) is to find recurrences of the iterated reconstructed map (Pierson & Moss, 1995). However, this method depended on the natural measure of the UPOs. An enhancement of the standard recurrence method was proposed later (So, Francis, Netoff, Gluckman, & Schiff, 1998). And these methods are not effective when the chaos systems are not differentiable. Then there are a couple of notable ones more recently: One is an adaptive control-based detection method proposed by Christini and Kaplan (2000).
+
+Unlike the above Lyapunov methods, the other method is a totally new one, by a swarm intelligence (Gao, Lee, Li, Tong, & Lü, 2009; Gao et al., 2009; Gao et al., 2008; Gao, Qi, Balasingham, Yin, & Gao, 2012; Gao, Qi, Yin, & Xiao, 2012; Parsopoulos & Vrahatis, 2003) in non-Lyapunov way. It can succeed even when the nonexistence of derivatives or poorly behaved partial derivatives in the neighborhood of the fixed points. But the results are not so satisfied and need to be progressed.
+
+The objective of this work is to present a novel simple but effective method to detect UPOs. In which, the UPOs are resolved by ABC. To improve the performance for the optimums of the multi-model functions and to avoid the coincidences among the UPOs with different orders, we add the techniques as stretching deflecting and repulsion to ABC. And the illustrative examples in different high order periods of 5 classical chaos systems system are discussed, respectively. These experiment results are much more better than quantum-behaved particle swarm optimization (QPSO) in Ref. (Gao et al., 2009; Gao et al., 2008).
+
+The rest is organized as follows. Section 2 provides brief review for ABC. In Section 4, a proper mathematics model is introduced to transfer UPOs into a numerical optimization problems. In Section 5, firstly 5 famous nonlinear mappings are introduced, then simulations’ comparisons are done to detect the different orders UPOs at different high orders by ABC and QPSO in Ref. (Gao et al., 2009) respectively, lastly the results are analyzed. Conclusions are summarized briefly in Section 6.
+2. A novel artificial bee colony algorithm
+2.1. Artificial bee colony algorithm
+
+ABC algorithm has been inspired by the intelligent behavior of real honey bees (Akay & Karaboga, 2009a, 2009b; Baig & Rashid, 2007; Gao et al., 2010a, 2010b, 2010c, Gao, Qi, Yin, & Xiao, 2010d; Karaboga, 2005; Karaboga & Akay, 2009a, 2009b; Karaboga & Basturk, 2007, 2008). A bee swarm can provide different kinds of mechanisms used by the bees to adjust their flying trajectories. Compared with other population based methods, the significant difference is that the bee swarm contains miscellaneous groups, such as scouts, onlookers, foragers, etc. These lead to the emergence of collective intelligence of bee swarms consists of three essential components: food sources, employed foragers, and unemployed foragers, by a significant model for bee colony foraging behavior based on reaction–diffusion equations (Tereshko, 2000; Tereshko & Loengarov, 2005; Valery & Troy, 2002). Therefore, in typical ABC algorithm, the colony consists of three groups of bees: employed bees, onlookers and scouts, and two colony behaviors: recruitment to a food source and abandonment of a source (Akay & Karaboga, 2009a; Akbari, Mohammadia, & Ziarati, 2010; Alatas, 2010; Baig & Rashid, 2007; Karaboga, 2005; Karaboga & Akay, 2009a; Karaboga & Basturk, 2007; Gao et al., 2010a, 2010b, 2010c, 2010d). The position of a food source indicates a feasible solution; The nectar amount of a food source represents the fitness of the solution; The number of the employed bees or the onlooker bees is equal to the number of solutions in the population. And the onlookers and employed bees carry out the exploitation process in the search space, the scouts control the exploration process.
+
+At the first step, ABC utilizes Sn (the size of employed bees or onlooker bees) D-dimensional individuals (food source positions),
+
+as initial population P(C), (C = 0).
+
+In each cycle, the bee colony P(C), (C = 1, … , K) perform the searching process: The employed bee retains the better position who has higher nectar amount in her memories according to the local information (current position) and the nectar amount (fitness value) of the new source (new solution). After all employed bees complete this process, they share the nectar information of the food sources and their position information (fitness) with the onlooker bees. Then the onlooker bee evaluates the nectar information taken from all employed bees and chooses a food source with a selection probability pi related to its nectar amount.
+(1)
+
+As in the case of the employed bee, she retains the better position who has higher nectar amount in her memories.
+
+The ABC generates a candidate food position for each employed bee from the old one by:
+(2)
+
+where k ∈ 1, … , Sn (k ≠ i), j ∈ 1, … , D are randomly chosen indexes. ϕij is a random number in [−1, 1], which controls the production of neighbor food sources around xij and represents the comparison of two food positions visually by a bee. As in Eq. (2), the perturbation on xij gets decreased, when the difference between the parameters of the xij and xkj decreases (Karaboga & Akay, 2009b). Thus, the step length is adaptively reduced as the search approaches the optimum solution. Actually, this operation results in two aspects: vij might exceed the predetermined limit, then it is set to its limit value; When the optimum is a local not a global optimum, the bee colony might not converge and flip–flop back and forth in local optimum area.
+
+The food source of which the nectar is abandoned by the bees is replaced with a new food source by the scouts. In ABC, if a position cannot be improved further in a predetermined number (“limit” for abandonment) of cycles, then it is assumed to be abandoned by its employed bee and the employed bee of this food becomes a scout. Assume that the abandoned source is xi and j ∈ 1, … , D, then the scout discovers a new food source to be replaced with xi as following:
+(3)
+
+where lb, ub are lower and upper boundary of xi, respectively, rand[0, 1] is a random number in [0, 1],
+
+After each candidate source position vi is generated, it is evaluated by the artificial bee. Then a greedy selection mechanism is employed to retain the better one as the selection operation between the old and the candidate one.
+
+The pseudo-code of the ABC algorithm (Baig & Rashid, 2007; Karaboga, 2005; Karaboga & Akay, 2009a, 2009b) is given below.
+Algorithm 1: ABC
+1:InitializeP(C), (C = 0)
+2: repeat
+3:  while Termination condition is not satisfied do
+4:  Employed bee Generates vi for employed bees by (2)
+5:  Evaluate and apply the greedy selection process.
+6:  Onlookers Calculate pi for xi by (1)
+7:  Generates vi for the onlookers from xi based on pi.
+8:  Evaluate and apply the greedy selection process.
+9:  Scout Determine the abandoned xi, if exists, update it by (3).
+10:    Update the best solution acquired so far
+11:  end while
+12:  Output Global optimum Qg
+13: until all the optimum gained
+2.2. Stretching and deflecting
+
+To improve the performance for the optimums of the multi-model functions and to avoid the coincidences among the UPOs with different orders, we add the techniques as stretching and deflecting to ABC.
+
+Let
+be the k optimums achieved of objective function f(x). Then a deflection function F(x) (Magoulas, Vrahatis, & Androulakis, 1997) can be defined as following.
+(4)
+And the stretching function G(x), H(x) (Magoulas et al., 1997) can also be defined.
+(5)
+(6)
+
+where λ ∈ (0, 1), β1, β2, δ > 0.
+2.3. Repulsion
+
+Let x∗ be the optimum achieved of objective function, pj, rj ∈ [0.1, 4], and dj = ∥Xj − x∗∥ ⩽ rj, j = 1, 2, …, M. For the current swarm Xj, the temporary swarm can be defined as following to avoid to much exploitation local area near the achieved x∗ (Parsopoulos & Vrahatis, 2003).
+(7)≔
+
+With these techniques, ABC can find all the optimums for the multi-model functions.
+3. Quantum-behaved particle swarm optimization
+
+Particle swarm optimization (PSO) belongs to the category of swarm intelligence methods closely related to the methods of Evolutionary Computation. The PSO system is initialized with a population of random solutions and searches for optima by updating generations.
+
+Though PSO converges fast, sometimes it relapses into local optimum easily. Inspired by the classical PSO method and quantum mechanics, an improved edition (Sun, Xu, & Feng, 2004) of PSO, that is QPSO, with the ideas from quantum computing (Bennett & DiVincenzo, 2000; Hogg & Portnov, 2000) is also proposed to ameliorate convergence through maintaining more attractors.
+
+For each particle Xi(k), let
+(8)
+Using the idea from the center-of-mass position, a new particle S(k) for all Xi(k) as mbest is defined
+(9)
+and the jth dimension xij(k + 1) of the particle Xi(k + 1) is updated as following
+(10)
+
+where β is the extended coefficient which decreases linearly in interval [1.3, 0.6], u, t are random in (0, 1), round(t) rounds the elements of t to the nearest integers.
+4. Detecting the chaotic system’s unstable periodic orbits
+
+Consider the nonlinear map as below:
+(11)
+where
+
+.
+
+Let
+, then the point
+
+is defined as a periodic point of period p of Φ.
+
+Thus the detection of periodic orbits requires solving the system x = Φ(p)(x), in Ref. (Parsopoulos & Vrahatis, 2003; Petalas, Parsopoulos, & Vrahatis, 2007) an optimization problem are defined by considering the objective function
+(12)
+where
+
+can be l1, l2, l∞− norms arbitrarily.
+
+Through the minimization of the nonnegative objective function (12), the detecting the global minimizers of the objective function is equivalent to computing the periodic orbits of period p (Parsopoulos & Vrahatis, 2003; Petalas et al., 2007). And we can judge the X∗’s stability by the Algorithm 2 as following:
+Algorithm 2: Algorithm for judging a periodic orbit’s stability (Parsopoulos and Vrahatis, 2002)
+1: Initialize The mapping Φ, the initial X1 and the period p;
+2: Let J be the Jacobian matrix of the mapping. Set J = JacobianΦ(X1);
+3: fori ← 2: pdo
+4:  Xi = Φ(Xi−1), J = J · JacobianΦ(Xi);
+5: end for
+6: Let λ1 is an eigenvalues of the final matrix J;
+7: ifλ1 ≠ 0, Im(λ1) ≠ 0 & ∥λ1∥2 ≈ 1 then
+8:  the orbits are stable
+9: else
+10:  the orbits are Unstable
+11: end if
+5. Simulations
+
+Experiments are done to different high orders UPOs of 5 wellknown and widely used nonlinear maps indicate that the algorithm is robust, by both the ABC and quantum-behaved particle swarm optimization (QPSO) respectively.
+5.1. Systems to be discussed
+
+The mappings considered in our simulations are:
+
+Hénon map is a famous two-dimensional quadratic map given by the coupled equations with chaotic solutions proposed by the French astronomer Hénon (1976), as a simplified model of the Poincaré map for the Lorenz model. Usually it has two forms as below, one is.
+
+Example. 1 Hénon 2-dimensional map-1
+(13)
+
+where α = arccos−1(0.24), x1, x2 ∈ [−1, 1].
+
+Example. 2 Hénon 2-dimensional map-2
+(14)
+
+where x1, x2 ∈ [−1, 1] and a and b of system are the system parameters of system (14) when they are a∗ = 1.4, b∗ = 0.3, (14) is chaotic and it has strange attractor with an unstable fixed point in it (Hénon, 1976).
+
+Example. 3 Hénon 4-dimensional simplestic map. An extension of the Hénon 2-dimensional map − 1 to the complex case (Parsopoulos & Vrahatis, 2003; Petalas et al., 2007; Vrahatis, 1995)
+(15)
+
+where x =  (x1, x2, x3, x4) ∈ [−3, 3]4, Θ2×2 is 2 × 2 zero matrix and α = arccos−1(0.24).
+
+Example. 4 predator–prey map (Parsopoulos & Vrahatis, 2003)
+(16)
+
+where x =  (x1, x2) ∈ [−2, 2]2.
+
+Example. 5 Gingerbreadman map (Devaney, 1984)
+(17)
+
+where x =  (x1, x2) ∈ [−4, 8]2. The map is chaotic in the filled region above and stable in the six hexagonal regions.
+5.2. Simulations
+
+With a new defined function (18) below as fitness function we can use ABC and QPSO to get the different unstable period orbits.
+(18)
+
+As the objection is to minimize function (12), we use a simple square of the norm as in function (18) to decrease the time of ∥ · ∥2 and enlarge the distance of the different local optimums of the system. And Figs. 1 and 2 show the figure of function lg (F) of the 5-period point objective function of system Hénon-1 and 5-period point objective function of system predator–prey.
+F(x)(p=5) of Hénon-1
+
+    
+
+Fig. 1. F(x)(p = 5) of Hénon-1.
+F(x)(p=5) of predator–prey
+
+    
+
+Fig. 2. F(x)(p = 5) of predator–prey.
+
+We can see the difficulties to optimize the function (18) from Figs. 1 and 2, it has so many local minimums and local maximums in its definition area, that is reason why the normal optimization methods based on gradients could not solve.
+
+For the parameters of ABC, let the iteration number is 500 for all the functions below for ABC while the single QPSO’s iterations are 1000. Let ABC and QPSO run 100 times independently with 50 employed bees and 50 particles, respectively.
+
+Simulation results are reported below. Figs. 3–6 give the optimization process for the objective function of 359-period point of Hénon system and 9-period point of 4-D Hénon system, 11-period point of Predator system and 29-period point of Gingerbreadman system system by ABC and QPSO method, respectively.
+Results of F(x) (p=359) for Hénon-1
+
+    
+
+Fig. 3. Results of F(x) (p = 359) for Hénon-1.
+Results of F(x) (p=9) for 4-D Hénon
+
+    
+
+Fig. 4. Results of F(x) (p = 9) for 4-D Hénon.
+Results of F(x)(p=11) for predator–prey
+
+    
+
+Fig. 5. Results of F(x)(p = 11) for predator–prey.
+Results of F(x)(p=29) for Gingerbreadman
+
+    
+
+Fig. 6. Results of F(x)(p = 29) for Gingerbreadman.
+
+From the 4 figures above we can include that in the same iterations, ABC has much more fine precision than QPSO for these four functions. We can find that ABC is much more efficient than QPSO especially in this kind of objective functions, because it can avoid local minimums more easier and it can gain much more small value again and again in the whole 1000 iterations. While QPSO only manage in several time and the come into premature for a long time at the local points.
+
+To compare globally we list the simulation of F(x) for different order UPOs of the chaos systems above in following tables.
+
+Note: “U” denotes the period orbits are unstable by method Algorithm 2 from Ref. (Parsopoulos & Vrahatis, 2002) to judge the orbits’ stabilities. And the results of method QPSO in Tables 1–5 are quoted from Gao et al. (2009).
+
+Table 1. Comparisons for results of F(x) for different order UPOs of 2-D Hénon-1.
+P	Method	Stability	Mean	StD	Min	Max
+5	ABC		2.7768e−14	8.4673e−14	1.8278e−18	2.6869e−13
+QPSO		2.4885e−6	2.6906e−06	1.2335e−08	1.2111e−05
+
+						
+11	ABC	U	1.6687e−09	5.2674e−09	5.3172e−18	1.666e−08
+QPSO		9.4391e−07	1.0637e−06	1.7814e−08	4.6772e−06
+
+						
+16	ABC	U	3.416e−12	8.9285e−12	4.9071e−18	2.8708e−11
+QPSO		9.5126e−07	9.7555e−07	1.0735e−09	3.5773e−06
+
+						
+29	ABC		4.1696e−13	5.3827e−13	3.6223e−15	1.5278e−12
+QPSO		9.9215e−07	2.3599e−06	2.5431e−12	1.1653e−05
+
+						
+43	ABC		3.486e−13	5.2906e−13	5.8881e−15	1.6193e−12
+QPSO		1.6554e−06	1.6821e−06	6.4419e−10	7.8360e−06
+
+						
+61	ABC	U	1.0937e−13	3.2149e−13	1.3322e−17	1.024e−12
+QPSO		1.5075e−06	2.7513e−06	3.2201e−09	1.0969e−05
+
+						
+83	ABC	U	5.4211e−11	7.3768e−11	8.6507e−13	1.9114e−10
+QPSO		3.1691e−07	6.0974e−07	5.1898e−10	3.1903e−06
+
+						
+103	ABC	U	9.443e−10	2.1214e−09	4.0499e−12	6.8241e−09
+QPSO		7.0141e−07	1.0017e−06	8.1293e−10	3.6791e−06
+
+						
+197	ABC	U	1.9034e−10	3.3273e−10	4.0682e−13	9.3747e−10
+QPSO		6.2712e−07	1.1763e−06	3.2874e−09	5.2388e−06
+
+						
+257	ABC	U	5.4737e−11	6.7023e−11	4.7478e−16	1.7475e−10
+QPSO		2.0355e−06	2.8338e−06	1.2954e−10	1.1396e−05
+
+						
+359	ABC	U	8.6832e−09	1.9706e−08	2.9574e−13	8.911e−08
+QPSO		1.0476e−06	1.2335e−06	4.7144e−09	3.0978e−06
+
+Table 2. Comparisons for results of F(x) for different order UPOs of 2-D Hénon-2.
+P	Method	Stability	Mean	StD	Min	Max
+1	ABC	U	2.4568e−18	1.9674e−18	3.1616e−19	5.9807e−18
+QPSO		3.3793e−06	3.8761e−06	7.8769e−08	1.7987e−05
+
+						
+11	ABC	U	1.1187e−05	1.1335e−05	1.1499e−06	3.3068e−05
+QPSO		1.7600e−05	1.5685e−05	4.3786e−08	5.9812e−05
+
+						
+13	ABC	U	1.856e−06	1.8129e−06	3.7517e−07	5.8427e−06
+QPSO		1.4267e−05	1.4646e−05	7.7260e−08	7.2038e−05
+
+						
+15	ABC	U	1.0045e−05	1.056e−05	4.5981e−07	2.8004e−05
+QPSO		2.0462e−05	1.7747e−05	7.4814e−07	8.0362e−05
+
+						
+17	ABC	U	2.0304e−05	2.1514e−05	1.2954e−06	5.9707e−05
+QPSO		1.6105e−05	1.5301e−05	2.1485e−07	5.2903e−05
+
+						
+19	ABC	U	1.6595e−05	1.0102e−05	6.2508e−06	3.2424e−05
+QPSO		2.6308e−05	2.8351e−05	9.1229e−07	1.4859e−04
+
+						
+23	ABC	U	1.8107e−05	1.4966e−05	4.0299e−06	4.4812e−05
+QPSO		2.0041e−05	2.1222e−05	6.5950e−07	1.1685e−04
+
+						
+29	ABC	U	1.6697e−05	1.7177e−05	1.3364e−06	5.78e−05
+QPSO		2.2196e−05	2.4625e−05	4.6713e−07	1.0611e−04
+
+						
+31	ABC	U	3.2413e−05	2.7483e−05	4.7377e−06	8.5241e−05
+QPSO		8.6276e−04	6.4267e−04	3.0380e−04	0.0024
+
+						
+37	ABC	U	2.4924e−05	2.1752e−05	3.5259e−07	5.5112e−05
+QPSO		1.5944e−05	1.6134e−05	1.2991e−07	5.9229e−05
+
+Table 3. Comparisons for results of F(x) for different order UPOs of 4-D Hénon.
+P	Method	Stability	Mean	StD	Min	Max
+1	ABC	U	1.2926e−10	2.372e−10	4.3336e−17	7.6276e−10
+QPSO		0.0746	0.0351	0.0258	0.1728
+
+						
+2	ABC	U	2.3639e−04	1.8626e−04	1.5805e−05	6.1455e−04
+QPSO		0.0227	0.0137	0.0037	0.0668
+
+						
+3	ABC	U	3.4922e−04	3.1571e−04	6.3452e−05	1.0267e−03
+QPSO		0.0394	0.0174	0.0143	0.0771
+
+						
+4	ABC	U	1.0819e−04	7.3761e−05	3.6447e−05	2.9202e−04
+QPSO		0.0494	0.0197	0.0087	0.0873
+
+						
+5	ABC	U	1.6263e−06	2.4811e−06	6.8364e−09	8.2395e−06
+QPSO		0.0711	0.0352	0.0013	0.1384
+
+						
+9	ABC	U	9.2059e−07	6.3096e−07	1.7714e−07	1.8002e−06
+QPSO		0.1054	0.0409	0.0211	0.2115
+
+						
+11	ABC		7.6765e−05	6.8263e−05	1.1015e−06	2.0296e−04
+QPSO		0.3107	0.5765	0.0029	3.5210
+
+Table 4. Comparisons for results of F(x) for different order UPOs of predator–prey.
+P	Method	Stability	Mean	StD	Min	Max
+1	ABC	U	1.6674e−18	1.1577e−18	1.3487e−19	3.6693e−18
+QPSO		9.2930e−5	9.5415e−5	1.5528e−8	4.0223e−4
+
+						
+2	ABC	U	6.0842e−07	1.9211e−06	7.8543e−19	6.076e−06
+QPSO		0.0025	4.5483e−4	8.4895e−4	0.0029
+
+						
+3	ABC	U	6.5482e−06	1.3448e−05	4.1898e−08	4.08e−05
+QPSO		5.4474e−6	5.0824e−6	4.8906e−7	2.2332e−5
+
+						
+11	ABC	U	2.7055e−12	5.8463e−12	7.1032e−18	1.8144e−11
+QPSO		2.1827e−5	4.4301e−5	2.3795e−10	2.4509e−4
+
+						
+43	ABC	U	8.8886e−09	1.3307e−08	2.3274e−10	3.7559e−08
+QPSO		7.0988e−5	1.9749e−4	2.3432e−7	0.0012
+
+						
+59	ABC	U	4.6706e−08	6.7019e−08	2.7075e−13	2.1633e−07
+QPSO		7.2946e−5	9.9663e−5	1.2321e−6	4.1800e−4
+
+						
+97	ABC	U	3.6721e−08	4.8606e−08	1.9697e−09	1.3836e−07
+QPSO		6.9743e−5	1.4950e−4	3.9233e−9	7.7521e−4
+
+						
+131	ABC	U	3.8918e−05	1.5142e−05	9.2415e−06	6.0717e−05
+QPSO		0.0019	0.0033	1.0033e−4	0.0111
+
+Table 5. Comparisons for results of F(x) for different order UPOs of Gingerbreadman.
+P	Method	Stability	Mean	StD	Min	Max
+1	ABC		4.3327e−18	4.3753e−18	3.593e−19	1.1382e−17
+QPSO		0.1084	0.0952	0.0048	0.3123
+
+						
+5	ABC	U	8.5445e−08	2.0196e−07	5.5034e−17	6.4869e−07
+QPSO		2.4525e−4	1.9935e−4	7.0313e−6	7.6499e−4
+
+						
+11	ABC	U	9.5831e−10	1.2134e−09	8.3102e−15	2.9176e−09
+QPSO		0.0069	0.0070	9.0528e−5	0.0346
+
+						
+19	ABC		8.0625e−15	2.5085e−14	2.6056e−18	7.9453e−14
+QPSO		6.4926e−6	6.6681e−6	1.3866e−8	3.1605e−5
+
+						
+23	ABC	U	1.5646e−05	1.9052e−05	4.6195e−07	5.329e−05
+QPSO		0.1098	0.0988	6.2656e−5	0.2682
+
+						
+29	ABC	U	2.5639e−08	4.4093e−08	4.9297e−10	1.4879e−07
+QPSO		6.7558e−5	6.0052e−5	2.9128e−6	2.4323e−4
+
+From Tables 1–5, we can see that, ABC is much more efficient than QPSO for for results of F(x) for different order UPOs of all above chaotic mapping. It can get a much smaller value of F(x) in most cases in 4 aspects: mean, max and min value and StD of all the results of correspondent simulations.
+
+But for the Hénon system-2, ABC have a little better value for high order F(x) of UPOs than QPSO, not like the cases in low order. We think the reason might lie in the function construction of Hénon system-2, for the same case occurs in the optimization of functions Rosenbrock and Parabola. Now we can say that our new ABC are much more better than QPSO, but might have no advantage for some special functions that can be minimized easily by traditional optimization methods such as by or based on Newton methods.
+
+Figs. 7–10 give the UPOs of Hénon map-1, Hénon map-2, predator–prey and Gingerbreadman map, respectively with the results from Tables 1–5.
+UPOs of Hénon map-1
+
+    
+
+Fig. 7. UPOs of Hénon map-1.
+UPOs of Hénon map-2
+
+    
+
+Fig. 8. UPOs of Hénon map-2.
+UPOs of predator map
+
+    
+
+Fig. 9. UPOs of predator map.
+UPOs of Gingerbreadman map
+
+    
+
+Fig. 10. UPOs of Gingerbreadman map.
+5.3. Density of the orbits
+
+Now we discuss the density of the orbits, for i.e. the number of orbits of a given periodicity.
+
+We can see that the points on the same order UPO are not always arranged in one by one, but in a strange sequence, and many orders of them are not unique, for instance, like Figs. 7–10.
+
+To get the number of the orbits of a given periodicity p, we just compare with the two seriesx1, x2, … , xp and
+
+. And if they are same, then they belong to the same given periodicity p. Repeatedly, we can get the number of the orbits of the given periodicity p.
+6. Conclusions
+
+From the viewpoint of optimization, the put method consists of a series of multi-dimensional numerical optimization problems to detect UPOs of chaotic systems.
+
+Simulation results demonstrate the effectiveness and efficiency of ABC, especially in some higher order cases of UPOs. And it is effective even in cases where the Newton-family algorithms may not be applicable. This is a new non-Lyaponov way in detecting the UPOs. Moreover, it also illustrated the simplicity and easy implementation of the other kind of swarm intelligent algorithms to replace ABC for applications.
+
+It should be pointed out that the technique in Section 5.3 is only a numerical way to get the orbits density. In the future research, the theoretical work will be done.
+
+We still have to improve the performance of ABC in the proposed method, for the reason that the more efficient the ABC is, the better the new method is in some degree. Only in this way, it can have a large application areas.

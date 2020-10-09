@@ -1,0 +1,296 @@
+<article>
+  <title>Inverse kinematics of a 6 DoF human upper limb using ANFIS and ANN for anticipatory actuation in ADL-based physical Neurorehabilitation</title>
+  <abstract>
+    <sentence>Objective This research is focused in the creation and validation of a solution to the inverse kinematics problem for a 6 degrees of freedom human upper limb.</sentence>
+    <sentence>This system is intended to work within a real-time dysfunctional motion prediction system that allows anticipatory actuation in physical Neurorehabilitation under the assisted-as-needed paradigm.</sentence>
+    <sentence>For this purpose, a multilayer perceptron-based and an ANFIS-based solution to the inverse kinematics problem are evaluated.</sentence>
+    <sentence>Materials and methods Both the multilayer perceptron-based and the ANFIS-based inverse kinematics methods have been trained with three-dimensional Cartesian positions corresponding to the end-effector of healthy human upper limbs that execute two different activities of the daily life: ‘serving water from a jar’ and ‘picking up a bottle’.</sentence>
+    <sentence>Validation of the proposed methodologies has been performed by a 10 fold cross-validation procedure.</sentence>
+    <sentence>Results Once trained, the systems are able to map 3D positions of the end-effector to the corresponding healthy biomechanical configurations.</sentence>
+    <sentence>A high mean correlation coefficient and a low root mean squared error have been found for both the multilayer perceptron and ANFIS-based methods.</sentence>
+    <sentence>Conclusions The obtained results indicate that both systems effectively solve the inverse kinematics problem, but, due to its low computational load, crucial in real-time applications, along with its high performance, a multilayer perceptron-based solution, consisting in 3 input neurons, 1 hidden layer with 3 neurons and 6 output neurons has been considered the most appropriated for the target application.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Inverse kinematics</keyword>
+    <keyword>Upper limb</keyword>
+    <keyword>Neurorehabilitation</keyword>
+    <keyword>Activities of the daily living</keyword>
+    <keyword>Biomechanical model</keyword>
+    <keyword>Motion prediction</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Research context By the year 2020, acquired brain injury (ABI), as the World Health Organization (WHO) predicts, will be among the ten most common causes of disability in the developed world.</sentence>
+    <sentence>These injuries, due to their physical, sensory, cognitive, emotional and socio-economic consequences, considerably change the life of both the patients and their families.</sentence>
+    <sentence>The cause of ABI can be either traumatic (car accidents, falls, etc.)</sentence>
+    <sentence>or non-traumatic (strokes, brain tumors, infections, etc.).</sentence>
+    <sentence>The most common ABIs are stroke and traumatic brain injury (TBI) (Güler, Tunca, &amp; Gülbandilar, 2008; Murray &amp; Lopez, 1997).</sentence>
+    <sentence>Nine million people suffer from stroke every year in the world (World Health Organization, 2011).</sentence>
+    <sentence>Globally, cerebrovascular disease (stroke) is the second leading cause of death and the eighth cause of severe disability in the elderly.</sentence>
+    <sentence>The WHO estimated that in 2005, stroke accounted for 5.7 million deaths worldwide, equivalent to 9.9% of all deaths, and it was the main cause of disability, afflicting 30.7 million people (World Health Organization, 2011).</sentence>
+    <sentence>Statistical data show that after a stroke, one third of patients die within the first month, and 40% of people who recover from the acute phase exhibit a high degree of impairment that decreases their independence.</sentence>
+    <sentence>Only one third of patients recover their basic functions so they can resume a normal life (Alvaro, Lopez-Arbeloa, &amp; Cozar, 2009).</sentence>
+    <sentence>There are no accurate data on the prevalence of TBI in Europe; however, data from the United States show a high prevalence of this pathology with 5.3 million people living with a disability from TBI (Brain Injury Association of America, 2011).</sentence>
+    <sentence>New techniques of early intervention and the development of intensive ABI care have noticeably improved the survival rate (The Internet Stroke Center, 2011).</sentence>
+    <sentence>However, in spite of these advances, brain injuries still have no surgical or pharmacological treatment to re-establish lost function.</sentence>
+    <sentence>Neurorehabilitation therapies address this problem by restoring, minimizing or compensating the functional alterations in people with disabilities of neurological origin.</sentence>
+    <sentence>Medical evidence in Neurorehabilitation is scarce and the assessment methods, especially those dealing with upper limb function, depend on clinician experience and subjectivity.</sentence>
+    <sentence>Moreover, motion analysis assessments, which are more sensitive and provide objective data, are mainly centered on gait analysis, whereas upper limb tests are still not widely performed.</sentence>
+    <sentence>Current upper limb motion assessments in neurologic population are focused on single-joint kinematics.</sentence>
+    <sentence>Besides, clinical tests are highly dependent on the examiner criteria.</sentence>
+    <sentence>Further development of reliable and valid multi-joint biomechanical evaluations is required, particularly for goal oriented reaching movements (McCrea, Eng, &amp; Hodgson, 2002).</sentence>
+    <sentence>The lack of standardized protocols due to the large variety of movements, complexity of the upper extremity and lack of international consensus to validate the protocols hampered the advance on this area (van Andel, Wolterbeek, Doorenbosch, Veeger, &amp; Harlaar, 2008).</sentence>
+    <sentence>Many attempts have been done to evaluate upper limb kinematics in neurologic population.</sentence>
+    <sentence>Typically, these motion analyses are focused on the study of analytical tasks (Hingtgen, McGuire, Wang, &amp; Harris, 2004).</sentence>
+    <sentence>Moreover, current 3D kinematic models include sacrum or pelvic markers (Rab, Petuskey, &amp; Bagley, 2002).</sentence>
+    <sentence>This might jeopardize the application of these models in neurologic population due to pelvic instability and lack of trunk control.</sentence>
+    <sentence>Some advances occurred in the last five years with the publication of normal values during functional tasks in adults (Murphy, Sunnerhagen, Johnels, &amp; Willen, 2006; Perry &amp; Rosen, 2006; van Andel et al., 2008).</sentence>
+    <sentence>Nevertheless, protocols used in these studies include pelvic markers, hampering the application in neurologic population.</sentence>
+    <sentence>One of the main objectives of Neurorehabilitation is to provide patients with the capacity to perform specific activities of the daily life (ADL) required for an independent life.</sentence>
+    <sentence>Recently, scientific researches have commonly addressed measurements of upper limb movements because these limbs are frequently used to contact and manipulate objects (Hillman et al., 2001).</sentence>
+    <sentence>Functional assessments based on motion tracking of ADL are needed to create new knowledge and increase the efficiency of Neurorehabilitation of ABI.</sentence>
+    <sentence>To provide patients with ADL-based functional rehabilitation under the assisted-as-needed paradigm (which means to assist the subject only as much as is needed to accomplish the task) and without the presence of a therapist but under his or her supervision, is one of the main challenges of the current Neurorehabilitation technologies.</sentence>
+    <sentence>For this purpose, it is of major importance to have real time inverse kinematics (IK) procedures that allow the assisted-as-needed rehabilitation systems both to obtain a healthy configuration of the upper limb at a given time and the corresponding end-effector 3D coordinates.</sentence>
+    <sentence>In this way, given a dysfunctional profile, non-healthy motion predictions can be carried out to provide patients with anticipated force-feedback commands.</sentence>
+    <sentence>The forward kinematics (FK) of a manipulator describes the motion of the manipulator’s end-effector according to the world coordinate system.</sentence>
+    <sentence>IK comprises the computations needed to find the joint angles for a given Cartesian position of the end-effector.</sentence>
+    <sentence>This problem is, in general, a non-linear algebraic computation which has been shown for the general case of a 6 degrees of freedom (DoF) manipulator to require the solution of a 16th order polynomial equation (Karlik &amp; Aydin, 2000).</sentence>
+    <sentence>In other words, IK is a transformation from the world coordinate frame to a link coordinate frame that may have multiple solutions, a unique solution or no solution in the case that the coordinates are out of the manipulator workspace.</sentence>
+    <sentence>Unlike the linear transformation, there are not general algorithms to solve the IK problem.</sentence>
+    <sentence>The solution can be tackled with several methods: closed form, numeric and iterative approaches.</sentence>
+    <sentence>Closed form methods are, in most cases, algebraically unwieldy and imply a high computational load; besides, these approaches do no exist for all classes of manipulators since IK sometimes has a not unique solution Kurfess (2005).</sentence>
+    <sentence>For robots whose kinematics structures are not solvable in a closed form, some numerical approaches have been proposed; nonetheless, these techniques have the problem of convergence and a very high computational load, so that they are also not suitable for real-time applications (Kuroe, Nakai, &amp; Mori, 1994).</sentence>
+    <sentence>Iterative approaches, adequate for real-time applications due to their low computational load, are commonly based on Artificial Neural Networks (ANN) (Bashee &amp; Hajmeer, 2000; Andina and Pham, 2007) and Adaptive-Network-Based Fuzzy Inference Systems (ANFIS) (Jang, 1993).</sentence>
+    <sentence>Related work Many ANN-based approaches for solving the IK problem can be found in the scientific literature, none of them focused on human models.</sentence>
+    <sentence>Kuroe et al.</sentence>
+    <sentence>(1994) proposed a learning method of a multilayer ANN in such a way that the network represents the relations of both the position and velocities from the task space coordinate system to the joint coordinate frame of a 2 DoF manipulator simultaneously.</sentence>
+    <sentence>Daunicht (1991) introduced the DEFAnet concept, a 4-layered feed forward network that was tested in a reduced and constrained workspace.</sentence>
+    <sentence>Tejomurtula and Kak (1999) proposed an ANN network to solve the IK problem in a uniformly partitioned workspace for a 3 DoF two-link manipulator and a learning method that does not require training; (Karlik &amp; Aydin, 2000) proffered a multi-layer, feed forward ANN trained with a very large dataset that, taking both the Cartesian coordinates and orientation (given as Euler angles) of the end-effector as inputs, obtains the configuration of a 6 DoF manipulator in the joint space.</sentence>
+    <sentence>Martín, Lope, and Santos (2007) proposed a method to learn the IK of multi-link manipulators by evolving neuro-controllers, validated both over a 3 DoF planar manipulator and over a SCARA robot; for each experiment, the authors used two different adaptation methods: the covariance matrix adaptation evolution strategy (CMA-ES) and neuro-evolution of augmenting topologies (NEAT).</sentence>
+    <sentence>Finally, (Hasan et al., 2010) presented a solution of the kinematics Jacobian of a 6 DoF manipulator using a fully connected feed forward ANN with one hidden layer that departing from the Cartesian position, orientation (given as Euler angles) and linear velocity of the end-effector calculates both the angular position of every joint and their corresponding angular velocities.</sentence>
+    <sentence>Fuzzy logic control of robotic manipulators has been studied in several works to solve the IK problem.</sentence>
+    <sentence>Howard and Zilouchian (1998) and Wei, Wang, and Li (2003) provide an ANFIS solution of a 3 and 2 DoF robotic manipulators respectively.</sentence>
+    <sentence>Shen, Gu, and Milios (2006) proposed a self-configuration fuzzy system to find the IK of a 2 DoF planar manipulator.</sentence>
+    <sentence>Finally, more recent work carried out by Alavandar and Nigam (2008a, 2008b) proffered an ANFIS-based solution for both a 2 DoF and a 3 DoF manipulator obtaining acceptable errors.</sentence>
+    <sentence>Aim and scope The main goal of the present research is to create and validate a solution to the IK problem for a 6 DoF human upper limb executing ADLs.</sentence>
+    <sentence>In other words, the target is to obtain the healthy biomechanical parameters associated to each time instant given a 3D trajectory or a single Cartesian point of the upper limb end-effector in order to extract relevant information for the assisted-as-needed Neurorehabilitation paradigm.</sentence>
+    <sentence>For this purpose, two solutions based in two frequently used methodologies, are proposed and compared: Multilayer perceptron (MLP) and ANFIS.</sentence>
+    <sentence>In this way, the proposed IK solver is intended to work within a real-time dysfunctional motion prediction system to allow anticipatory actuation in assisted-as-needed physical Neurorehabilitation.</sentence>
+    <sentence>This dysfunctional motion prediction system adapts a previously calculated healthy biomechanical configuration (solution to the IK problem) of a synthetically-created healthy end-effector trajectory in a specified ADL (i.e.</sentence>
+    <sentence>pick up a glass) to a specific dysfunctional profile.</sentence>
+    <sentence>Once this dysfunctional-adapted prediction is done, a decision about the adaptability of the patient’s motion can be taken.</sentence>
+    <sentence>This decision will feed the assisted-as-need algorithm inference engine so that another decision about the necessity of providing feedback to the user can be made (Fig 1).</sentence>
+    <sentence>This feedback can be transformed into a force-feedback and be commanded to a robotic orthosis or can be visual (or audiovisual) feedback integrated within a Virtual Reality (VR)-based upper limb Neurorehabilitation system like the one introduced by the authors in Pérez et al.</sentence>
+    <sentence>(2010).</sentence>
+    <sentence>In such system, given the current biomechanical configuration of the upper limb and a biomechanical prediction for the rest of the ADL, the patients can be informed about their performance relative to a certain established ADL pattern in such a way that they can autocorrect their movements in real-time.</sentence>
+    <sentence>System overview Fig 1.</sentence>
+    <sentence>System overview.</sentence>
+    <sentence>The red solid arrow indicates this research focus.</sentence>
+    <sentence>(For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)</sentence>
+    <sentence>Using the previously described prediction system the actuation can be provided to each DoF independently.</sentence>
+    <sentence>For example, given the prediction for all the DoF, only those which the inference system considers that need a feedback command (given certain clinical criteria) would receive it.</sentence>
+    <sentence>Thus, the major novelty and contribution of this research work resides in the use of artificial intelligence-based techniques to calculate the IK of a human upper limb in real time.</sentence>
+    <sentence>Besides, the application in which the system is intended to work, will try to improve current assisted-as-needed physical Neurorehabilitation systems (Marchal-Crespo and Reinkensmeyer, 2009) since by anticipating to the patients’ not-adaptable movements, the assistance will only be provided when it is really necessary, making the patients not to slack, and then, the physical therapy more effective (Israel, Campbell, Kahn, &amp; Honrby, 2006; Wolbrecht et al., 2007).</sentence>
+    <sentence>The remainder of the paper is organized as follows: Section 2 describes both the MLP and the ANFIS proposed solutions to the IK problem, from the biomechanical model used to the methodology applied in every case and the experimental work carried out for the validation.</sentence>
+    <sentence>Section 3 shows the obtained results, and finally, Section 4 states the conclusions extracted from this work.</sentence>
+  </section>
+  <section name="Materials and methods">
+    <sentence>System description In this research, two different solutions to the IK problem, one based on MLP and the other based on ANFIS, are proposed.</sentence>
+    <sentence>Both systems take the Cartesian coordinates of the human upper limb end-effector and produce the corresponding healthy biomechanical parameters given a kinematic model.</sentence>
+    <sentence>Since stroke patients usually suffer from spasticity (rigidity of the limbs due to muscle hypertonia) in the upper limb (Logan, 2011), the orientation information of their end-effectors for a given 3D position is frequently not consistent with the training data set, which corresponds to healthy individuals.</sentence>
+    <sentence>For this reason, no orientation information is provided to the system to solve the IK problem.</sentence>
+    <sentence>The used kinematic model is the same that the authors have previously used in Pérez et al.</sentence>
+    <sentence>(2010).</sentence>
+    <sentence>Human upper limb motion is approximated as the articulated motion of rigid body parts (Biryukova, Roby-Brami, Frolov, &amp; Mokhtari, 2000): upper arm (between the shoulder and elbow joints), forearm (between the elbow and wrist joints) and hand (from the wrist joint on).</sentence>
+    <sentence>For this field of application, the precise modeling of the involved biological components, such as bones or muscles is secondary, that is why a simplified approach of the human arm can be sufficient (Schiele and van der Helm (2006)).</sentence>
+    <sentence>The proposed kinematic model includes the following simplifications of the actual physiological upper limb: • Each joint is defined from a joint center.</sentence>
+    <sentence>In particular, the shoulder joint is considered as a simple spherical joint that maintains functional shoulder movements but does not preserve the real physiological configuration.</sentence>
+    <sentence>• The forearm is considered as a rigid body, meaning that pronation and supination movements must be considered around the elbow.</sentence>
+    <sentence>• The hand is modeled as a rigid body.</sentence>
+    <sentence>Every joint has its own local axis.</sentence>
+    <sentence>Shoulder is modeled as a ball and socket joint with three DoF, located in the center of the humeral head.</sentence>
+    <sentence>Movements are calculated between the vector representing the humerus and the trunk.</sentence>
+    <sentence>Elbow is modeled as a rotating hinge joint with two DoF with a single joint in the distal humerus.</sentence>
+    <sentence>Finally, wrist is modeled as a single joint with only one DoF, that is calculated between the vector representing the hand and a fixed point representing the center of the wrist (between radial and cubital stiloid espinas).</sentence>
+    <sentence>Thus, the kinematic chain that this model produces consists of six variables or DoF: three in the shoulder joint (flexion/extension -fexS-, abduction/adduction –abdS- and rotation -rotS-), two in the elbow joint (flexion/extension -fexE- and pronation/supination -pronoE-) and one in the wrist joint (flexion/extension -fexW-).</sentence>
+    <sentence>It is important to consider at this point that when a manipulator has less than 6 DoF, it cannot attain general goal positions and orientation in a tridimensional space (Craig, 2005).</sentence>
+    <sentence>Given this model, upper limb movement can be represented as the temporal evolution of the 6 defined DoF (how the different DoF change over time).</sentence>
+    <sentence>It is important to note that, in the present work, relative angular values are provided following the methodology proposed in Kapandji (2006).</sentence>
+    <sentence>Multilayer perceptron-based solution An ANN is a computational tool that has found extensive utilization in solving many complex real-world problems.</sentence>
+    <sentence>Its attractiveness comes from its remarkable information processing characteristics pertinent mainly to nonlinearity, high parallelism, fault and noise tolerance, and learning and generalization capabilities.</sentence>
+    <sentence>ANNs may be defined as structures comprised of densely interconnected simple processing elements (neurons) that, all together, act as a massively parallel-distributed processor that due to its similarities with the human brain, presents natural propensity for storing experimental knowledge and for making it available for use.</sentence>
+    <sentence>An artificial processing neuron receives inputs as stimuli from the environment, combines them in a special way to form a ‘net’ input, passes that over through a threshold gate and transmits the signal forward to another neuron of the environment throughout a specific transfer function.</sentence>
+    <sentence>Only when the ‘net’ input exceeds the threshold, the neuron is activated.</sentence>
+    <sentence>Feedforward neural networks are a basic type of ANN capable of approximating generic classes of functions, including continuous and integrable functions.</sentence>
+    <sentence>An important class of feedforward neural network is the MLP which has features such as the ability to learn and perform generalizations, smaller training set requirements, fast operation, and ease of implementation.</sentence>
+    <sentence>Therefore, they are the most commonly used neural network architectures (Haykin, 1994; Chaudhuri and Bhattacharya, 2000).</sentence>
+    <sentence>Backpropagation (BP) learning is one of the most popular training algorithms for MLPs (Güler, Gökçi, &amp; Gülbandilar, 2009; Marcano-Cedeño, Quintanilla-Domínguez, &amp; Andina, 2011).</sentence>
+    <sentence>The term backpropagation refers to the way the error computed at the output side is propagated backwards to the hidden layer(s) and finally to the input layer.</sentence>
+    <sentence>The feedforward error-backpropagation learning algorithm (Funahashi, 1989) is the most famous procedure to train ANNs.</sentence>
+    <sentence>This algorithm is based on searching an error surface (as function of ANN weights) using gradient descent for the points with minimum error.</sentence>
+    <sentence>Each iteration constitutes two steps: forward activation to produce a solution and backward propagation of the computed error to modify the weights.</sentence>
+    <sentence>A backpropagation network is a MLP consisting of an input layer with nodes representing input variables to the problem, an output layer with nodes representing the dependent variables and one or more hidden layers containing nodes to help capture the nonlinearity in the data.</sentence>
+    <sentence>Using supervised learning, these networks can learn the mapping from one data space to another.</sentence>
+    <sentence>A deeper description of ANNs and MLPs can be found in Bashee and Hajmeer (2000) and Andina and Pham (2007).</sentence>
+    <sentence>Tackling the IK problem from a MLP point of view has two main problems: the selection of the most appropriate MLP architecture (number of nodes and hidden layers) and the generation of a suitable training data set (Funahashi, 1989).</sentence>
+    <sentence>The proposed MLP architecture is shown in Fig 2.</sentence>
+    <sentence>The network is composed of 3 neurons in the input layer (one for each Cartesian coordinate) and 6 neurons in the output layer (one for each DoF of the kinematic model).</sentence>
+    <sentence>Both the number of hidden layers and the neurons within them have been set experimentally.</sentence>
+    <sentence>Backpropagation learning has been chosen since it gives the multilayered feed forward networks a better ability to learn the correspondence between the input patterns and the teaching values (Karlik &amp; Aydin, 2000).</sentence>
+    <sentence>The activation function has been set to a hyperbolic tangent sigmoid for the neurons in the hidden layer and to a linear transfer function for the neurons of the output layer.</sentence>
+    <sentence>Proposed MLP architecture Fig 2.</sentence>
+    <sentence>Proposed MLP architecture.</sentence>
+    <sentence>ANFIS-based solution An ANFIS is an adaptive network that, as its name implies, consists of nodes and directional links through which they connect.</sentence>
+    <sentence>Moreover, part or all of the nodes are adaptive, meaning that their outputs depend on their own parameters.</sentence>
+    <sentence>The learning rule specifies how these parameters should be changed to minimize a prescribed error measure.</sentence>
+    <sentence>The formulas for the node functions may vary from node to node; their choice depends on the overall input-output function which the adaptive network is required to carry out.</sentence>
+    <sentence>It is important to remark that the links in an adaptive network only indicate the flow direction of signals between nodes so no weights are associated with them.</sentence>
+    <sentence>This technology is a Fuzzy Inference System (FIS) that is used to realize a Sugeno model (Ross, 2004) based on an adaptive neural network.</sentence>
+    <sentence>The FIS adopts the rule if x1is Ai1and x2is Ai2, then y = fi(x1, x2) (Boyacioglu &amp; Avci, 2010).</sentence>
+    <sentence>The condition part of the rule is fuzzy, but the conclusion part is often a quantificational linear function (i.e.</sentence>
+    <sentence>fi(x1, x2) = aix1 + bix2 + ci).</sentence>
+    <sentence>In this way, by using the weighted average method, the output of the FIS is calculated.</sentence>
+    <sentence>An ANFIS structure example with two inputs and one output is shown in Fig 3.</sentence>
+    <sentence>The square nodes are adaptive while the circular ones are fixed.</sentence>
+    <sentence>The meaning of the nodes of each layer is the following: • Layer 1: every node here is a square node with a node membership function.</sentence>
+    <sentence>• Layer 2: each circular node multiplies the incoming signals and sends the product out.</sentence>
+    <sentence>• Layer 3: each circular node calculates the ratio of the ith rule’s firing strength to the sum of all rule’s firing strengths.</sentence>
+    <sentence>• Layer 4: each square node denotes a weighted function.</sentence>
+    <sentence>• Layer 5: the single node in this layer is a circular node that computes the overall output as the summation of all the incoming signals.</sentence>
+    <sentence>ANFIS structure example Fig 3.</sentence>
+    <sentence>ANFIS structure example.</sentence>
+    <sentence>The basic learning rule of the adaptive networks is based on the gradient descent and the chain rule.</sentence>
+    <sentence>This algorithm is generally slow and likely to become trapped in local minima.</sentence>
+    <sentence>For this reason, the learning algorithm most widespread for this technology is a hybrid neuro-fuzzy technique which combines the gradient method and the least squares estimate (LSE) to identify parameters.</sentence>
+    <sentence>This hybrid technique brings learning capabilities of neural networks to FIS by tuning the membership functions of a Sugeno-type FIS using the training data.</sentence>
+    <sentence>A detailed coverage of ANFIS and its hybrid learning rule can be found in Jang (1993).</sentence>
+    <sentence>Due to the ANFIS constraints, to solve the IK problem presented in this work a parallel ANFIS system is proposed.</sentence>
+    <sentence>This system, depicted in Fig 4, consists in 6 parallel layers, one per DoF, where all of them receive the Cartesian coordinates as input.</sentence>
+    <sentence>Each layer provides the corresponding biomechanical datum in such a way that at the output of the overall system the 6 DoF corresponding to the used kinematic model are obtained.</sentence>
+    <sentence>The number of membership functions of each ANFIS has been set experimentally.</sentence>
+    <sentence>Proposed ANFIS architecture Fig 4.</sentence>
+    <sentence>Proposed ANFIS architecture.</sentence>
+    <sentence>Experimental work First, to obtain all the training and testing data, the BTS SMART-D (BTS Bioengineering, 2011) system has been used.</sentence>
+    <sentence>The system consisted of 6 infrared cameras with a recording rate of 140 Hz and two video cameras to register the entire subject’s movement.</sentence>
+    <sentence>Smart Capture and Smart Analyzer Software were used.</sentence>
+    <sentence>A sixteen-marker model derived from (van Andel et al., 2008) was created for this purpose (Fig 5).</sentence>
+    <sentence>Second, for training and testing the provided solutions a MATLAB® r2009a running on a 64-bit computer with a 2.4 GHz Intel® Core™ Duo processor with 4 GB RAM has been used.</sentence>
+    <sentence>Used markers model Fig 5.</sentence>
+    <sentence>Used markers model.</sentence>
+    <sentence>Due to their high associated acquisition cost, two different ADLs (Soda, Mazzoleni, Cavallo, Guglielmelli, &amp; Iannello, 2010; van Dijck, van Vaerenbergh, &amp; van Hulle, 2009) designed by therapists from the Institut Guttmann Neurorehabilitation Hospital have been used to train and test both systems: ‘serving water from a jar’ and ‘picking up a bottle’.</sentence>
+    <sentence>‘Serving water from a jar’ setup is shown in Fig 6; in this ADL a glass jar (with a capacity of 1.5 L) with 150 mL of water was placed to the right (and a bit behind) of the glass (with a capacity of 170 mL); two solid dots indicate the correct position for the glass and the jar.</sentence>
+    <sentence>The subject was asked to fill the glass with the water and leave the jar in the initial position.</sentence>
+    <sentence>Fig 7depicts the ‘picking up a bottle’ setup; an empty plastic bottle with a capacity of 330 mL is located in a shelf that is placed on a table.</sentence>
+    <sentence>The subject is asked to put the bottle in the closest right corner of the table (a solid dot indicates the exact place).</sentence>
+    <sentence>Zenital View of the ‘serving water from a jar’ ADL setup Fig 6.</sentence>
+    <sentence>Zenital View of the ‘serving water from a jar’ ADL setup.</sentence>
+    <sentence>Frontal view of the ‘picking up a bottle’ ADL setup Fig 7.</sentence>
+    <sentence>Frontal view of the ‘picking up a bottle’ ADL setup.</sentence>
+    <sentence>Data from 73 healthy subjects, 34 men and 39 women with a mean age of 37.97 ± 12.44 years old were captured for the ‘serving water from a jar’ ADL and from 40 healthy subjects, 17 men and 23 women with a mean age of 30.45 ± 5.25 years old were captured for the ‘picking up a bottle’ ADL.</sentence>
+    <sentence>The kinematic data obtained with the monitoring system are independent of the anthropometric measurements of the users since no Cartesian coordinates of the upper limb end-effector are measured.</sentence>
+    <sentence>The origin of the task reference frame has been located in the center of rotation of the shoulder joint in such a way that the Cartesian coordinates associated to the captures have been calculated applying the Eqs.</sentence>
+    <sentence>()()()()(1)–(4).</sentence>
+    <sentence>(1) (2) (3) (4) where ψs,, θs and s are the shoulder Euler angles (yaw, pitch and roll), ψe,, θe and e the elbow Euler angles and ψw,, θw and w the wrist Euler angles used to create the rotation matrices associated to each upper limb joint Rs, Re and Rw.</sentence>
+    <sentence>Parameters da, df and dh are the anthropometric measurements of each segment of the kinematic chain (arm, forearm and hand respectively).</sentence>
+    <sentence>These coordinates depend on the upper limb segment lengths so in this experiment, an upper limb with the following anthropometric measurements (which correspond to a randomly chosen average subject) has been used: • Acromion to epicondyle (da): 35.5 cm.</sentence>
+    <sentence>• Epicondyle to radio-cubital joint (df): 25 cm.</sentence>
+    <sentence>• Radio-cubital joint to 3rd metatarsal head (dh): 8 cm.</sentence>
+    <sentence>The models created in this work depend on the database size, which is usually small in this field of application because of the high associated acquisition costs.</sentence>
+    <sentence>These systems, like other empirical models, may be obtained from databases of any size; however generalization to data outside the model development domain is adversely affected.</sentence>
+    <sentence>Since both systems are required to generalize for unseen cases, they must be used as interpolators.</sentence>
+    <sentence>Data to be used for training should be sufficiently large to cover the possible known variation within the problem domain.</sentence>
+    <sentence>For test results to be more valuable, a 10-fold cross-validation procedure has been applied since it minimizes the bias associated with the random sampling of the training (Polat, Şahan, &amp; Güneş, 2007).</sentence>
+    <sentence>In this method, the data are randomly divided into 10 mutually exclusive and equal sized subsets.</sentence>
+    <sentence>Each subset is partitioned into training and testing subsets in such a way that the algorithm is trained and tested 10 times.</sentence>
+    <sentence>The overall error rate equals the average of the error rates for each subset.</sentence>
+    <sentence>The average of these results provides the test accuracy of the proposed algorithm (Dogantekin, Dogantekin, &amp; Avci, 2010; Polat et al., 2007).</sentence>
+    <sentence>The training subset should include all the data belonging to the problem domain and is used in the training phase.</sentence>
+    <sentence>The test subset, that must be different to the training subset, is used during the learning process to check the system response for untrained data.</sentence>
+    <sentence>Currently, there are no mathematical rules for the determination of the required sizes of the data subsets.</sentence>
+    <sentence>These datasets have been low-pass filtered with a cut-off frequency of 4 Hz in order to remove measurement artifacts (Casellato et al., 2010; Levanon, Gefen, Lerman, Givon, &amp; Ratzon, 2010).</sentence>
+    <sentence>Training and testing datasets have been normalized to accelerate the training process in such a way that each capture is composed of 1000 samples for each DoF.</sentence>
+    <sentence>The number of epochs used to train both systems has been kept the same with a value of 100 iterations.</sentence>
+    <sentence>Different MLP architectures have been experimentally tested in order to select the most effective one.</sentence>
+    <sentence>Both the number of hidden layers and the number of neurons in each layer have been modified in each training procedure.</sentence>
+    <sentence>A number of 3, 6, 8, 10 and 15 neurons have been set in MLP architectures with 1, 2, 3 and 4 hidden layers.</sentence>
+    <sentence>In the case of the ANFIS-based solution a number of 2, 3, and 4 membership functions have been tested and validated.</sentence>
+    <sentence>For testing the IK problem solvers, the networks have been fed with complete ADL sequences (end-effector trajectories to complete the task) in such a way that both the accuracy on the solution and the similarity to the real movements are measured.</sentence>
+    <sentence>Then, two parameters have been calculated to objectively measure its accuracy for all the DoF of the kinematic model: • Mean correlation coefficient (C).</sentence>
+    <sentence>• Mean root mean square error (RMSE) given the expression (5), where θ and are the real and the calculated joint angles respectively.</sentence>
+    <sentence>(5) The combination of a high mean correlation coefficient and a low mean RMSE would indicate that the proposed method is suitable for the application it has been designed for: motion prediction in ADL-based Neurorehabilitation.</sentence>
+  </section>
+  <section name="Results and discussion">
+    <sentence>In this section we present the experimental results obtained in this study.</sentence>
+    <sentence>First we comment the results in terms of the validation parameters (RMSE and correlation coefficient) and then we analyze the proposed systems from a computational cost point of view.</sentence>
+    <sentence>Tables 1 and 2 show the obtained results for the MLP-based IK solver in the test phase for both ADLs under study.</sentence>
+    <sentence>From these data it can be extracted that in all the cases both the correlation coefficient and the root mean square error have promising values that indicate that this solution, still under investigation, may be useful in a close future for its integration within a motion prediction system for ADL-based Neurorehabilitation.</sentence>
+    <sentence>On one hand, the low RMSE indicates that the solution is accurate for individual time samples, and on the other hand, the high obtained correlation coefficient states that the solution is adequate for predicting complex ADL motions given a healthy trajectory.</sentence>
+    <sentence>It is important to remark that, for the ADL ‘picking up a bottle’, although the number of training samples is significantly lower than those used to train the ‘serving water from a jar’ MLP, the obtained results are comparable in terms of accuracy.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>MLP test results for the ADL ‘serving water from a jar’.</sentence>
+    <sentence>Hidden layers Neurons fexS abdS rotS fexE pronoE fexW CPU time (sec.)</sentence>
+    <sentence>C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMS std 1 3 0.99 0.01 4.88 1.95 0.93 0.06 6.84 2.94 0.97 0.02 8.27 4.36 0.90 0.11 5.95 2.15 0.89 0.07 11.56 4.23 0.65 0.16 12.19 3.53 0.013 6 0.99 0.00 3.61 2.12 0.95 0.04 4.54 1.81 0.98 0.01 7.89 4.44 0.99 0.02 2.54 0.87 0.90 0.07 10.59 3.94 0.69 0.18 10.98 3.02 0.024 8 0.99 0.01 3.51 2.23 0.94 0.06 4.56 1.81 0.98 0.01 7.73 4.37 0.99 0.01 2.23 0.63 0.90 0.07 10.43 3.80 0.70 0.16 10.83 3.20 0.027 10 0.99 0.00 3.47 2.25 0.94 0.07 4.57 1.89 0.98 0.01 7.79 4.47 0.99 0.01 2.22 0.71 0.90 0.07 10.48 3.79 0.70 0.16 10.82 3.22 0.026 15 0.99 0.01 3.62 2.46 0.94 0.06 4.56 1.94 0.97 0.02 7.89 4.55 0.99 0.01 2.14 0.63 0.90 0.06 10.49 3.77 0.72 0.17 10.68 3.35 0.027 2 3 0.99 0.01 4.30 1.97 0.92 0.06 7.07 3.14 0.97 0.02 8.22 4.21 0.98 0.03 3.80 1.32 0.90 0.06 11.02 4.04 0.66 0.15 11.99 3.33 0.014 6 0.89 0.00 5.37 2.45 0.86 0.04 5.49 1.93 0.88 0.01 9.41 4.32 0.89 0.01 3.87 0.95 0.81 0.06 11.58 3.81 0.63 0.14 11.34 3.14 0.031 8 0.99 0.01 3.56 2.17 0.95 0.06 4.63 1.84 0.98 0.01 7.71 4.30 0.99 0.01 2.34 0.77 0.90 0.05 10.40 3.46 0.70 0.18 10.72 3.20 0.029 10 0.99 0.00 3.43 2.03 0.94 0.06 4.50 1.78 0.98 0.01 7.62 4.10 0.99 0.01 2.31 0.76 0.90 0.06 10.35 3.58 0.72 0.17 10.49 3.40 0.030 15 0.99 0.01 3.49 1.98 0.94 0.06 4.35 1.57 0.97 0.02 7.41 3.57 0.99 0.01 2.33 0.74 0.90 0.06 10.28 3.60 0.71 0.18 10.28 3.08 0.033 3 3 0.99 0.01 5.55 2.46 0.92 0.06 7.08 2.86 0.96 0.02 8.66 4.37 0.82 0.17 7.88 2.95 0.89 0.07 10.75 3.89 0.68 0.15 11.90 3.44 0.016 6 0.99 0.01 3.64 2.10 0.94 0.05 4.96 2.13 0.98 0.01 7.93 4.41 0.99 0.02 2.57 0.91 0.90 0.06 10.35 3.68 0.70 0.18 10.83 3.09 0.031 8 0.99 0.01 3.59 2.20 0.95 0.05 4.74 1.89 0.98 0.02 7.71 4.30 0.99 0.01 2.68 0.86 0.90 0.06 10.46 3.66 0.70 0.18 10.84 3.29 0.033 10 0.99 0.01 3.50 2.00 0.94 0.06 4.42 1.70 0.97 0.02 7.36 3.74 0.99 0.01 2.41 0.86 0.90 0.05 10.28 3.66 0.72 0.16 10.44 3.22 0.034 15 0.99 0.02 3.51 2.28 0.93 0.09 4.36 1.66 0.97 0.05 7.42 3.99 0.99 0.02 2.45 0.93 0.89 0.09 10.57 5.22 0.72 0.16 10.27 3.20 0.039 4 3 0.98 0.01 5.94 2.95 0.92 0.06 7.22 3.12 0.96 0.03 8.87 4.15 0.84 0.17 8.48 2.73 0.89 0.06 11.00 3.76 0.67 0.14 11.85 3.12 0.019 6 0.99 0.00 3.61 2.04 0.95 0.05 4.80 2.04 0.98 0.01 7.79 4.39 0.98 0.02 2.70 1.02 0.90 0.06 10.47 3.78 0.72 0.16 10.64 3.28 0.036 8 0.99 0.01 3.46 1.96 0.95 0.06 4.67 1.97 0.97 0.02 7.52 3.82 0.98 0.02 2.58 0.82 0.90 0.06 10.30 3.46 0.72 0.17 10.47 3.33 0.039 10 0.99 0.01 3.40 1.81 0.94 0.06 4.62 1.80 0.97 0.02 7.39 3.55 0.98 0.01 2.55 0.85 0.90 0.07 10.37 3.85 0.72 0.17 10.29 3.19 0.039 15 0.99 0.01 3.35 1.85 0.94 0.07 4.29 1.60 0.97 0.03 6.99 3.21 0.98 0.02 2.61 1.07 0.90 0.08 10.07 4.46 0.74 0.14 10.01 3.27 0.045 Table 2.</sentence>
+    <sentence>MLP test results for the ADL ‘picking up a bottle’.</sentence>
+    <sentence>Hidden layers Neurons fexS abdS rotS fexE pronoE fexW CPU time (sec.)</sentence>
+    <sentence>C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMS std 1 3 1.00 0.00 2.57 0.81 0.84 0.10 4.57 1.25 0.95 0.05 5.15 1.67 0.96 0.03 3.74 1.04 0.92 0.06 9.58 3.99 0.78 0.20 8.14 3.97 0.018 6 1.00 0.00 1.73 0.61 0.91 0.09 3.97 1.71 0.96 0.04 4.89 2.03 0.99 0.01 2.45 0.98 0.93 0.06 9.15 4.05 0.79 0.19 7.72 3.97 0.024 8 1.00 0.00 1.37 0.49 0.92 0.07 3.73 1.48 0.96 0.04 4.85 1.79 0.99 0.00 2.31 0.78 0.93 0.06 9.17 3.98 0.79 0.19 7.75 3.71 0.026 10 1.00 0.00 1.24 0.49 0.92 0.07 3.70 1.53 0.96 0.04 4.88 1.74 0.99 0.00 2.30 0.87 0.93 0.07 9.17 4.27 0.80 0.17 7.61 3.89 0.026 15 1.00 0.00 1.11 0.35 0.91 0.07 3.79 1.53 0.95 0.04 4.91 1.87 0.99 0.00 2.08 0.82 0.93 0.07 9.00 4.09 0.77 0.21 7.74 3.71 0.027 2 3 1.00 0.00 2.35 0.84 0.85 0.10 4.62 1.24 0.94 0.05 5.24 1.59 0.95 0.04 3.97 1.26 0.92 0.07 9.36 3.80 0.77 0.20 8.11 3.85 0.022 6 1.00 0.00 1.46 0.59 0.91 0.07 4.12 1.54 0.96 0.04 4.93 1.88 0.99 0.00 2.20 0.80 0.93 0.06 8.94 3.98 0.81 0.17 7.53 3.91 0.028 8 1.00 0.00 1.28 0.51 0.91 0.07 3.98 1.61 0.95 0.04 4.93 1.83 0.99 0.01 2.23 0.95 0.93 0.06 9.09 4.09 0.78 0.20 7.89 3.83 0.031 10 1.00 0.01 1.27 0.86 0.91 0.07 3.98 1.43 0.95 0.04 4.86 1.81 0.99 0.02 2.23 1.25 0.92 0.08 9.41 4.44 0.77 0.21 7.93 4.71 0.030 15 1.00 0.00 1.07 0.47 0.88 0.11 4.13 1.70 0.95 0.06 5.10 2.26 0.99 0.01 2.22 1.03 0.91 0.09 9.56 5.30 0.73 0.23 8.58 5.21 0.032 3 3 0.94 0.04 6.12 1.46 0.74 0.12 5.43 1.31 0.81 0.06 6.83 1.89 0.84 0.08 6.53 1.47 0.86 0.07 10.56 3.82 0.70 0.19 8.51 3.86 0.021 6 0.80 0.00 6.19 1.02 0.72 0.08 4.85 1.81 0.77 0.02 6.10 1.73 0.79 0.00 4.96 1.32 0.74 0.05 10.81 4.37 0.62 0.17 8.51 4.13 0.030 8 1.00 0.00 1.34 0.53 0.89 0.10 4.21 1.64 0.95 0.06 5.06 2.01 0.99 0.01 2.18 1.01 0.92 0.07 9.22 4.41 0.78 0.21 7.95 4.71 0.035 10 1.00 0.00 1.29 0.60 0.89 0.07 4.31 1.60 0.94 0.05 5.29 2.25 0.99 0.01 2.32 1.11 0.91 0.09 9.48 5.00 0.75 0.22 8.75 6.15 0.035 15 1.00 0.00 1.29 0.52 0.89 0.09 4.03 1.61 0.93 0.06 5.17 2.49 0.99 0.01 2.44 1.27 0.88 0.11 9.46 4.92 0.72 0.22 8.85 5.31 0.041 4 3 0.99 0.01 3.38 1.12 0.72 0.12 5.22 1.36 0.77 0.05 6.88 2.04 0.88 0.05 6.40 1.76 0.88 0.09 9.98 3.59 0.71 0.22 8.66 3.98 0.018 6 1.00 0.00 1.50 0.59 0.90 0.09 4.10 1.58 0.95 0.05 4.88 1.83 0.99 0.01 2.40 0.86 0.93 0.07 9.36 4.50 0.78 0.22 7.42 3.71 0.038 8 1.00 0.00 1.35 0.55 0.88 0.13 4.25 1.84 0.96 0.04 4.92 1.78 0.99 0.01 2.46 1.00 0.91 0.09 9.34 4.71 0.77 0.21 7.90 4.23 0.037 10 1.00 0.00 1.66 0.65 0.89 0.09 4.24 1.70 0.95 0.04 5.03 2.10 0.99 0.02 2.50 1.18 0.91 0.09 9.29 4.75 0.76 0.22 8.25 5.14 0.041 15 1.00 0.00 1.70 0.82 0.87 0.11 4.08 1.50 0.94 0.06 5.06 2.17 0.98 0.02 3.00 1.66 0.87 0.14 9.60 5.21 0.68 0.24 9.76 6.23 0.046 Tables 3 and 4 show the obtained results for the IK solver based on ANFIS networks.</sentence>
+    <sentence>These networks also provide similar results to the MLP-based solution which indicate that the ANFIS-based solution is able to map Cartesian coordinates to healthy biomechanical configurations.</sentence>
+    <sentence>Again, for both ADLs, although the number of training samples is quite different, the results are comparable in terms of accuracy.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>ANFIS test results for the ADL ‘serving water from a jar’.</sentence>
+    <sentence>Membership functions fexS abdS rotS fexE pronoE fexW CPU time (sec.)</sentence>
+    <sentence>C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMSE std 2 0.99 0.01 3.51 2.43 0.94 0.06 4.66 2.07 0.98 0.02 7.95 4.48 0.99 0.01 2.05 0.74 0.89 0.07 10.54 3.60 0.70 0.20 10.74 3.61 0.28 3 0.99 0.01 3.27 2.51 0.93 0.10 4.51 2.21 0.97 0.05 7.49 4.42 0.98 0.03 2.20 1.10 0.89 0.07 11.25 5.98 0.70 0.18 10.67 3.42 0.47 4 0.99 0.02 4.72 7.47 0.92 0.11 5.20 4.26 0.96 0.06 9.45 10.09 0.98 0.05 2.60 2.58 0.88 0.11 13.17 12.94 0.70 0.19 14.13 14.84 0.77 Table 4.</sentence>
+    <sentence>ANFIS test results for the ADL ‘picking up a bottle’.</sentence>
+    <sentence>Membership functions fexS abdS rotS fexE pronoE fexW CPU time (sec.)</sentence>
+    <sentence>C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMSE std C std RMSE std 2 1.00 0.00 0.66 0.28 0.93 0.04 3.63 1.50 0.94 0.07 4.76 2.02 0.99 0.00 1.71 0.64 0.91 0.08 9.07 5.22 0.72 0.25 7.88 3.66 0.246 3 1.00 0.00 0.97 1.07 0.81 0.24 5.40 5.51 0.88 0.17 7.87 8.70 0.96 0.08 2.67 2.75 0.85 0.16 11.93 12.88 0.65 0.34 11.03 9.43 0.420 4 0.99 0.02 1.88 2.83 0.75 0.35 10.29 14.72 0.83 0.25 13.00 18.22 0.94 0.12 5.49 8.80 0.79 0.27 33.40 55.05 0.66 0.30 32.73 52.13 0.679 Wrist flexion/extension presents a lower correlation coefficient than the other DoFs in all cases.</sentence>
+    <sentence>This could be due to a lack of homogeneity in the training data, meaning that for the selected ADL this low correlation DoFs do not follow a strongly marked pattern.</sentence>
+    <sentence>Since the correlation is calculated by averaging all the individual correlations, the obtained standard deviation values indicate that for some samples the correlation was very high and for the rest very low, so, although the output provided by the network does not match the test or validation data, it still could be correct.</sentence>
+    <sentence>Fig 8, that shows two clear wrist flexion/extension strategies in the reaching phase (beginning the movement with a wrist extension or with a wrist flexion) of the ‘picking a bottle’ ADL, graphically proves this effect.</sentence>
+    <sentence>Wrist flexion-extension in the reaching phase of the whole ‘picking up a… Fig 8.</sentence>
+    <sentence>Wrist flexion-extension in the reaching phase of the whole ‘picking up a bottle’ dataset.</sentence>
+    <sentence>The MLP-based solution CPU time consumption (last column in Tables 1 and 2) is calculated as the average of the time taken by the MLPs to provide the IK solution to trajectories of 1000 samples using the test subset.</sentence>
+    <sentence>These results would allow the system to work at a maximum rate of around 65 full motion predictions per second (to be evaluated in terms of motion adaptability), which can be considered as real-time for this field of application.</sentence>
+    <sentence>Taking into account that the pathological subjects move at a lower speed than the healthy subjects (Cirstea &amp; Levin, 2000) and that a mean end-effector velocity of 0.11 and 0.27 m/s has been found for the ‘serving water from a jar’ and the ‘picking up a bottle’ ADLs respectively, the system could generate a motion command approximately every 0.4 cm of end-effector movement in the in the worst case.</sentence>
+    <sentence>Besides, the number of decisions per second will presumably increase (if it is needed) once the system is implemented on a platform different to the MATLAB®-based one used in this research.</sentence>
+    <sentence>The CPU time taken to solve the IK problem using ANFIS (last column in Tables 3 and 4), calculated as the average of the time taken by the solver to provide the IK solution to trajectories of 1000 samples using the test subset, would allow a maximum operation frequency of around 4 predictions per second, much lower than the decision rate that the MLP-based solution can handle.</sentence>
+    <sentence>Then, it is not clear yet if the ANFIS-based solution would allow the system to work in real-time since it requires a quite powerful computation device to accelerate the process.</sentence>
+    <sentence>A global healthy pattern composed of the average (and the standard deviation) of the whole dataset has been created to compare the obtained result with healthy motion models.</sentence>
+    <sentence>These models are composed of a pattern biomechanical evolution (per DoF) and the corresponding upper and lower limits that provide information about individual variability.</sentence>
+    <sentence>Table 5 contains the average RMSE between the upper and lower limits in each of the studied ADL.</sentence>
+    <sentence>As it can be observed, all the obtained errors (using both MLP and ANFIS) are compliant with the created global motion models.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Average difference between the upper and lower limits in the healthy motion model.</sentence>
+    <sentence>ADL RMSE fexS RMSE abdS RMSE rotS RMSE fexE RMSE pronoE RMSE fexW Jar 19.30 13.03 17.89 18.61 21.67 19.37 Bottle 18.44 11.99 16.58 22.22 22.65 22.49 Both systems provide quite accurate solutions to the IK problem; however, the simpler architecture that the MLP-based system provides allows a faster processing, making it idoneous for a real-time application as the one that the IK solver is intended to work with.</sentence>
+    <sentence>After testing different numbers of hidden layers and output neurons for the MLP, we have found that the MLP with 3 input neurons, 1 hidden layer with 3 neurons and 6 output neurons is the network structure most appropriated to solve the IK problem not only because of the results that it provides in terms of the validation parameters but also because, even though other configurations can provide a slightly better performance in some DoF, its simpler structure allows a faster processing than the rest of the configurations (Cybenko, 1983).</sentence>
+    <sentence>Furthermore, having the same number of neurons in the hidden layer than in the input layer would be in consonance with the work of Karlik and Aydin (2000) who stated that when the number of neurons in the hidden layer(s) is equal to the number of neurons in the input layer, the ANN generates better results.</sentence>
+    <sentence>The previously mentioned global healthy pattern has been also used to feed the chosen MLP architecture in order to have input data representing a motion model.</sentence>
+    <sentence>Table 6 shows the results to the IK problem using these data as input and, as it can be observed, they present a very high correlation coefficient and a very low RMSE in all the DoFs.</sentence>
+    <sentence>These data indicate the great potential of the proposed method.</sentence>
+    <sentence>Besides, Figs.</sentence>
+    <sentence>9 and 10 graphically show how differences between the real solution and the obtained solution are minimal for both ADLs.</sentence>
+    <sentence>Table 6.</sentence>
+    <sentence>Results for a global healthy pattern using an MLP structure with 1 layer of 3 neurons.</sentence>
+    <sentence>ADL fexS abdS rotS fexE pronoE fexW C RMSE C RMSE C RMSE C RMSE C RMSE C RMSE Jar 0.97 4.48 0.96 2.80 0.99 4.43 0.96 3.15 0.96 4.97 0.92 3.70 Bottle 1 1.53 0.89 2.49 0.99 1.93 0.99 2.28 0.93 4.59 0.88 3.44 ‘Serving water from a jar’ results for a healthy pattern using an MLP structure… Fig 9.</sentence>
+    <sentence>‘Serving water from a jar’ results for a healthy pattern using an MLP structure with 1 layer of 3 neurons.</sentence>
+    <sentence>‘Picking up a bottle’ results for a healthy pattern using an MLP structure with… Fig 10.</sentence>
+    <sentence>‘Picking up a bottle’ results for a healthy pattern using an MLP structure with 1 layer of 3 neurons.</sentence>
+    <sentence>It is important to consider that it is impossible to get exact matching between train and test subsets because of the inter-subject variability, so even though the test data do not perfectly match the real healthy biomechanical configurations, the obtained results are accurate enough for the current needs of the proposed applications.</sentence>
+    <sentence>Furthermore, the prediction system does not require perfect accuracy since the objective is to determine if the predicted trajectory is adaptive or not, in other words, to decide if the subject is going to perform the motion in an efficient way from a rehabilitation point of view.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>In this research work, a solution to the IK problem for a human 6 DoF upper limb is proposed.</sentence>
+    <sentence>For this purpose, both MLP and ANFIS-based solvers are studied using a 6 DoF kinematic model.</sentence>
+    <sentence>These systems, once trained, show their ability in mapping the Cartesian coordinates of the end-effector with the corresponding healthy biomechanical configuration (given by a set of clinical values), providing a unique solution to a redundant manipulator model.</sentence>
+    <sentence>The major novelty and contribution of this research work resides not only in the target application in Neurorehabilitation (a dysfunctional motion prediction system for anticipatory actuation) but also in the use of artificial intelligence-based techniques to calculate, accurately and in real time, the IK of a human upper limb that executes a specific ADL.</sentence>
+    <sentence>Obtained results demonstrate the potential ability of the evaluated methodologies to behave as healthy ADL motion models for their use in a dysfunctional motion prediction system in physical Neurorehabilitation under the assisted-as-needed paradigm.</sentence>
+    <sentence>Experimental work shows that, among the studied solutions, the MLP-based IK solver is the most suitable for its application in Neurorehabilitation.</sentence>
+    <sentence>A high correlation coefficient and a low root mean square error have been found for a solution consisting in an MLP with 3 input neurons, 1 hidden layer with 3 neurons and 6 output neurons.</sentence>
+    <sentence>The simplicity of the proposed architecture, that implies a low computational cost, makes it idoneous for working in a real-time application.</sentence>
+    <sentence>Besides, it has been also proved that the MLP-based IK solvers are able to effectively map Cartesian coordinates into healthy biomechanical configurations with a relatively small training dataset.</sentence>
+    <sentence>This fact is of crucial importance since in the field of ADL-based Neurorehabilitation the existence of larger training databases is not probable.</sentence>
+    <sentence>Results also indicate that the ANFIS-based solution could be adequate for this field of application.</sentence>
+    <sentence>But, although this solution can provide accurate results in solving the IK problem for the given kinematic model, the more complex architecture that is required to provide a solution to the IK problem could become a bottleneck for real-time applications.</sentence>
+    <sentence>Future work mainly addresses the validation of the proposed system with a wider range of therapeutically-defined ADLs.</sentence>
+    <sentence>Moreover, an expansion of the current kinematic model will be carried out in order to consider the scapula movements, which are of major importance in the field of Neurorehabilitation.</sentence>
+    <sentence>Also, the lower correlation obtained for the wrist flexion/extension will be tackled.</sentence>
+    <sentence>In addition, next steps will also focus on the creation of the rest of the modules of the dysfunctional motion prediction system that, departing from a synthetically generated healthy trajectory (given an ADL) calculates the biomechanical evolution of the pathological subject under therapy, in such a way that either force-feedback or visual (or audiovisual) feedback can be given to the patients in order to provide them with a Neurorehabilitation under the assisted-as-needed paradigm.</sentence>
+  </section>
+</article>

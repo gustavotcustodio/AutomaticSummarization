@@ -1,0 +1,206 @@
+<article>
+  <title>A hybrid modeling approach for forecasting the volatility of S&amp;P 500 index return</title>
+  <abstract>
+    <sentence>Forecasting volatility is an essential step in many financial decision makings.</sentence>
+    <sentence>GARCH family of models has been extensively used in finance and economics, particularly for estimating volatility.</sentence>
+    <sentence>The motivation of this study is to enhance the ability of GARCH models in forecasting the return volatility.</sentence>
+    <sentence>We propose two hybrid models based on EGARCH and Artificial Neural Networks to forecast the volatility of S&amp;P 500 index.</sentence>
+    <sentence>The estimates of volatility obtained by an EGARCH model are fed forward to a Neural Network.</sentence>
+    <sentence>The input to the first hybrid model is complemented by historical values of other explanatory variables.</sentence>
+    <sentence>The second hybrid model takes as inputs both series of the simulated data and explanatory variables.</sentence>
+    <sentence>The forecasts obtained by each of those hybrid models have been compared with those of EGARCH model in terms of closeness to the realized volatility.</sentence>
+    <sentence>The computational results demonstrate that the second hybrid model provides better volatility forecasts.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Volatility</keyword>
+    <keyword>GARCH models</keyword>
+    <keyword>Simulated series</keyword>
+    <keyword>Artificial Neural Networks</keyword>
+    <keyword>Realized volatility</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Forecasting and modeling stock market volatility has been the subject of recent empirical studies and theoretical investigation in academia as well as in financial markets.</sentence>
+    <sentence>It is one of the primary inputs to a wide range of financial applications from risk measurement to asset and option pricing.</sentence>
+    <sentence>Volatility, with respect to financial products, can be thought of as a measure of fluctuation in a financial security price around its expected value.</sentence>
+    <sentence>Investment decisions in financial markets strongly depend on the forecast of expected returns and volatilities of the assets.</sentence>
+    <sentence>There has been growing interests in time series modeling of financial data with changing variance over time.</sentence>
+    <sentence>These parametric models for financial asset volatilities have gone through major developments since the original Autoregressive Conditional Heteroscedasticity (ARCH) and Generalized ARCH (GARCH) models introduced by Engle (1982) and Bollerslev (1986).</sentence>
+    <sentence>The readers are referred to Bollerslev, Chou, and Kroner (1992), Bauwens, Laurent, and Rombouts (2006) and Bollerslev (2008) for comprehensive surveys on ARCH-type models.</sentence>
+    <sentence>These models have been extensively used in finance and economics (see for example, Ding &amp; Granger, 1996; Granger, 1998; Han &amp; Park, 2008).</sentence>
+    <sentence>Such times series models with heteroscedastic errors are specifically applicable to modeling financial market data which are highly volatile.</sentence>
+    <sentence>Although, many financial time series observations have non-linear dependence structure, a linear correlation structure is usually assumed among the time series data.</sentence>
+    <sentence>Therefore, GARCH type models may not capture such nonlinear patterns and linear approximation models of those complex problems may not be satisfactory.</sentence>
+    <sentence>Nonparametric models estimated by various methods such as artificial intelligence (AI), can be fit on a data set much better than linear models which result in poor forecast (Fazel Zarandi, Rezaee, Turksen, &amp; Neshat, 2009; Rachine, 2011).</sentence>
+    <sentence>For many years, researchers have made extensive efforts to take advantage of artificial intelligence to optimize a decision making process, to process an extensive amount of information, and to forecast financial markets leading to an increase in investment return.</sentence>
+    <sentence>Artificial Neural Network (ANN) provides a flexible way of examining the dynamics of various economic and financial problems.</sentence>
+    <sentence>The application of ANN to modeling economic conditions is expanding rapidly (Hamid &amp; Iqbal, 2004; Kim, 2006; Wang, 2009; Yu, Wang, &amp; Keung, 2009).</sentence>
+    <sentence>Bildirici and Ersin (2009) enhanced ARCH/GARCH family of models with ANN and used them in order to forecast the volatility of daily return in Istanbul Stock Exchange.</sentence>
+    <sentence>Roh (2007) proposed three hybrid time series and ANN models for forecasting the volatility of Korea Composite Stock Price Index (KOSPI 200).</sentence>
+    <sentence>Two of the most important applications of GARCH models in finance are forecasting and simulation.</sentence>
+    <sentence>The power of a model in forecasting volatility is highly important since volatility is an essential input to many financial decision making models.</sentence>
+    <sentence>The motivation of this study is to enhance the ability of GARCH models in forecasting return volatility.</sentence>
+    <sentence>In the first step, the fitness of GARCH, EGARCH and GJR-GARCH models are evaluated and compared.</sentence>
+    <sentence>The calibrated EGARCH model has provided the best forecast when compared to the realized volatility.</sentence>
+    <sentence>We propose two hybrid models based on EGARCH and ANN to forecast the volatility of S&amp;P 500 index.</sentence>
+    <sentence>The resulting forecasts from each of two hybrid models have been compared with the forecasts of the EGARCH model in terms of closeness to the realized volatility.</sentence>
+    <sentence>The remainder of this paper is organized into the following sections: GARCH-type models, Artificial Neural Network model, the proposed hybrid models, data characteristics, computational results and conclusions.</sentence>
+  </section>
+  <section name="GARCH-type models">
+    <sentence>The volatile behavior in financial markets is referred to as the “volatility”.</sentence>
+    <sentence>Volatility has become a very important concept in different areas of financial engineering, such as multi-period portfolio selection, risk management, and derivative pricing.</sentence>
+    <sentence>Also, many asset pricing models use volatility estimates as a simple risk measure.</sentence>
+    <sentence>Volatility is a key input to the well-known Black–Sholes model for option pricing and its various extensions.</sentence>
+    <sentence>In statistics, volatility is usually measured by standard deviation or variance (Daly, 2008).</sentence>
+    <sentence>Recently, numerous models based on the stochastic volatility process and time series modeling have been found as alternatives to the implied and historical volatility approach.</sentence>
+    <sentence>The most widely used model for estimating volatility is ARCH (Auto Regressive Conditional Heteroscedasticity) model developed by Engle in 1982.</sentence>
+    <sentence>Since the development of the original ARCH model, a lot of research has been carried out on extensions of this model among which GARCH (Bollerslev, 1986), EGARCH (Nelson, 1991) and GJR-GARCH (Glosten, Jagannathan, &amp; Runkle, 1993) are the most frequently used models.</sentence>
+    <sentence>Generalized Autoregressive Conditional Heteroscedasticity, GARCH(p, q), is a generalization of ARCH model by making the current conditional variance dependent on the p past conditional variances as well as the q past squared innovations.</sentence>
+    <sentence>The GARCH(p, q) model can be written as: (1) (2) where ω, αi, βi, p and q are nonnegative coefficients.</sentence>
+    <sentence>Zt represents a sequence of independent and identically distributed (i.i.d.)</sentence>
+    <sentence>random variables with zero mean and unit variance.</sentence>
+    <sentence>By definition, is a serially uncorrelated sequence with zero mean and the conditional variance of which may be nonstationary.</sentence>
+    <sentence>By accounting for the information in the lag(s) of the conditional variance in addition to the lagged terms, the GARCH model reduces the number of parameters required.</sentence>
+    <sentence>However, ARCH or GARCH models fail to capture asymmetric behavior of the returns.</sentence>
+    <sentence>Exponential Generalized Autoregressive Conditional Heteroscedasticity (EGARCH) model was introduced by Nelson (1991) and Nelson and Cao (1992) to account for leverage effects of price change on conditional variance.</sentence>
+    <sentence>This means that a large price decline can have a bigger impact on volatility than a large price increase.</sentence>
+    <sentence>The EGARCH model can be represented as follows: (3) This model places no restrictions on the parameters αi and βi to ensure nonneagativity of the conditional variances.</sentence>
+    <sentence>In addition the EGARCH model, another model for capturing the asymmetric features of returns behavior is GJR-GARCH model.</sentence>
+    <sentence>The GJR model is closely related to the Threshold GARCH (TGARCH) model proposed by Zakoian (1994) and the Asymmetric GARCH (AGARCH) model of Engle (1990).</sentence>
+    <sentence>The GJR model of Glosten et al.</sentence>
+    <sentence>(1993) allows the conditional variance to respond differently to past negative and positive innovations.</sentence>
+    <sentence>The GJR(p, q) model may be expressed as: (4) where, if , and if .</sentence>
+    <sentence>The model is well defined if the following conditions are satisfied: (5) The parameters of GARCH models are estimated using the maximum likelihood method.</sentence>
+    <sentence>The log-likelihood function is computed from the product of all conditional densities of the prediction residuals.</sentence>
+    <sentence>In this study, we use two penalized model selection criteria, the Bayesian information criterion (BIC) and Akaike’s information criterion (AIC), to select best lag parameters for GARCH models (Akaike, 1974; Schwarz, 1978).</sentence>
+    <sentence>One could use GARCH models as a technique for simulating time series.</sentence>
+    <sentence>Let Z1, Z2, … , Zn be independent identically distributed standard Gaussian variables, generated by any random variate generator.</sentence>
+    <sentence>These sequences are used to models and simulate series.</sentence>
+  </section>
+  <section name="Applications of Artificial Neural Network (ANN) model">
+    <sentence>Many financial time series models assume a linear correlation structure among the time series data while there exist non-linear patterns in such data that cannot be captured by GARCH models.</sentence>
+    <sentence>Thus, an approximation of such complex real-world problems by linear models may not always be satisfactory.</sentence>
+    <sentence>An ANN is a computational model that tries to imitate the structure or functional aspects of biological Neural Networks.</sentence>
+    <sentence>It is used to mimic the ability of human brain to process data and information and extract existing patterns.</sentence>
+    <sentence>Based on the architecture of human brain, a set of processing elements or neurons (nodes) are interconnected and organized in layers.</sentence>
+    <sentence>These layers can be organized hierarchically, consisting of input layers, middle (hidden) layers, and output layers.</sentence>
+    <sentence>One of the major advantages of Neural Networks is that, theoretically, they are capable of approximating any continuous function, and thus the researcher does not need to have any hypothesis about the underlying model, or even to some extent, which variables matter.</sentence>
+    <sentence>Rather, the model has a capacity for adaption based on the features extracted from the data (Haoffi, Guoping, Fagting, &amp; Han, 2007).</sentence>
+    <sentence>Neural Networks can be divided into feed forward and feedback networks.</sentence>
+    <sentence>Feedback networks contain neurons that are connected to themselves, allowing a neuron to influence other neurons.</sentence>
+    <sentence>Hopfield network and Kohonen self-organizing network are the feedforward networks (Kohonen, 1987; Li, Anthony, &amp; Porod, 1989).</sentence>
+    <sentence>Back propagation Neural Networks take inputs only from the previous layer, and send outputs only to the next layer.</sentence>
+    <sentence>In this study, we apply a back propagation Neural Network, which is the most widely used network in financial applications (Ko, 2009; Tseng, Cheng, Wang, &amp; Peng, 2008; Wang, 2009).</sentence>
+    <sentence>Fig 1 shows a generic three layer back propagation Neural Network.</sentence>
+    <sentence>A three layer Neural Network with feed-forward back-propagation Fig 1.</sentence>
+    <sentence>A three layer Neural Network with feed-forward back-propagation.</sentence>
+    <sentence>One of the problems that happen during ANN training is overfitting.</sentence>
+    <sentence>“Early stopping” is a technique based on dividing datasets into three subsets: training set, validation set, and test set.</sentence>
+    <sentence>The training set is used for computing the gradient and updating the network weight and biases.</sentence>
+    <sentence>The error on the validation set is screened during the training process.</sentence>
+    <sentence>When the validation error increases over a specified number of iterations, the training is stopped, and the weights and biases are returned.</sentence>
+    <sentence>In this study, the dataset is divided as: 70% for training, 20% for validation and 10% for testing.</sentence>
+  </section>
+  <section name="The proposed models">
+    <sentence>In this study, we propose two hybrid models for forecasting volatility of the S&amp;P 500 index prices.</sentence>
+    <sentence>Initially, in each of the proposed models, a preferred GARCH model is indentified upon which the hybrid model is built.</sentence>
+    <sentence>For this purpose, optimum lags for each GARCH model is estimated using AIC and BIC indices.</sentence>
+    <sentence>Then, each model is used for predicting 10 and 15 days ahead and the preferred model is selected according to pre-defined measures.</sentence>
+    <sentence>Next, we explain how the selected GARCH model is hybridized with ANN models.</sentence>
+    <sentence>Hybrid model I The underlying concept for the first hybrid model is that there are some explanatory factors other than historical prices that affect the future asset prices in the market.</sentence>
+    <sentence>We forecast volatility of S&amp;P 500 index with a number of market variables which affect the index returns.</sentence>
+    <sentence>Selection of the input variables depends on the knowledge of which ones affect the volatility significantly.</sentence>
+    <sentence>We have chosen 7 endogenous variables related to the historical performance of the index and 7 exogenous variables based on research cited in Cheng and Wei (2009), Hamid and Iqbal (2004) and Roh (2007).</sentence>
+    <sentence>The endogenous explanatory variables are S&amp;P 500 price, S&amp;P 500 squared price, S&amp;P 500 return, S&amp;P 500 squared return, volatility (based on the preferred model), 1-day lagged volatility and S&amp;P 500 traded volume.</sentence>
+    <sentence>The exogenous variables include NASDAQ price, Dow Jones price, 3-months daily treasury yield, 6-months daily treasury yield, dollar/euro exchange rate, dollar/yen exchange rate.</sentence>
+    <sentence>The final set of selected variables contains 9 explanatory variables which have significant correlations with the estimated volatility based on the preferred GARCH model.</sentence>
+    <sentence>The selected variables are shown in Table 1.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Selected explanatory variables.</sentence>
+    <sentence>1 S&amp;P 500 price 2 NASDAQ price 3 Dow Jones price 4 1-Day lagged volatility 5 3-Months daily treasury yield 6 6-Months daily treasury yield 7 S&amp;P 500 squared return 8 Volatility (based on the preferred model) 9 S&amp;P 500 traded volume To this stage, the input variables to the ANN have been specified.</sentence>
+    <sentence>Next, the realized volatility is considered to be target outputs for training the network.</sentence>
+    <sentence>Fig 2 shows the flowchart of this modeling process.</sentence>
+    <sentence>Flowchart of modeling process for hybrid model I Fig 2.</sentence>
+    <sentence>Flowchart of modeling process for hybrid model I.</sentence>
+    <sentence>Hybrid model II In order to keep the properties of the best fitted EGARCH model while enhancing it with an ANN model, we have to somehow introduce the autocorrelation structure of data (captured by EGARCH model) to the network.</sentence>
+    <sentence>Otherwise, the hybrid model could not recognize the underlying autocorrelation from a single set of estimated time series.</sentence>
+    <sentence>Therefore, one has to generate synthetic series with the same statistical properties as the estimated volatility.</sentence>
+    <sentence>Simulation is a widely used technique to generate synthetic series.</sentence>
+    <sentence>Hybrid model II is constructed using several simulated EGRACH series instead of a single estimated series.</sentence>
+    <sentence>The number of simulated series for training the Neural Network depends on nature of the problem and type of data.</sentence>
+    <sentence>It also takes exactly the same market variables as in hybrid model I as input.</sentence>
+    <sentence>The realized volatility is again the output target of the network.</sentence>
+    <sentence>It is expected that this model better captures the characteristics of EGARCH model as well as the impacts of the market variables.</sentence>
+    <sentence>Fig 3 shows inputs, output and target of hybrid model II.</sentence>
+    <sentence>The flowchart of constructing hybrid model II is depicted in Fig 4.</sentence>
+    <sentence>Schematic representation of hybrid model II Fig 3.</sentence>
+    <sentence>Schematic representation of hybrid model II.</sentence>
+    <sentence>Flowchart of modeling process for hybrid model II Fig 4.</sentence>
+    <sentence>Flowchart of modeling process for hybrid model II.</sentence>
+  </section>
+  <section name="Data characteristics">
+    <sentence>This study focused on daily prices of S&amp;P 500 over the period of January 2, 1998 to August 31, 2009.</sentence>
+    <sentence>All data were gathered from Wall Street Journal website.</sentence>
+    <sentence>The continuously compounded daily returns were calculated as the logarithms of relative daily stock prices.</sentence>
+    <sentence>Table 2 shows the basic statistical characteristics of the return series.</sentence>
+    <sentence>The kurtosis in these data suggests that their daily return series have a fat-tailed distribution as compared with Gaussian distribution.</sentence>
+    <sentence>Also, the Ljung-Box Q2(10) statistics and Engle’s ARCH test for the squared returns indicate that the return series exhibit linear dependence and strong ARCH effects.</sentence>
+    <sentence>Thus, the preliminary analysis of the data suggests the use of GARCH models to capture the fat-tails and time-varying volatility in such series.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Data description and preliminary statistics of daily returns of S&amp;P 500.</sentence>
+    <sentence>Obs.</sentence>
+    <sentence>2950 Mean 0.00058 Median 0.04585 Max 10.1394 Min −9.1149 S.D.</sentence>
+    <sentence>b Engle’s ARCH test also examines for autocorrelation of the squared returns.</sentence>
+    <sentence>⁎ Significantly at the 5%.</sentence>
+    <sentence>Figs.</sentence>
+    <sentence>5 and 6 show the daily S&amp;P 500 index prices and logarithmic returns for the experimental dataset, respectively.</sentence>
+    <sentence>S&amp;P 500 index price Fig 5.</sentence>
+    <sentence>S&amp;P 500 index price.</sentence>
+    <sentence>S&amp;P 500 index logarithmic return Fig 6.</sentence>
+    <sentence>S&amp;P 500 index logarithmic return.</sentence>
+    <sentence>To evaluate forecast accuracy, this study compares the volatility forecasts of the proposed hybrid models with the realized volatility.</sentence>
+    <sentence>The realized volatility (RV) on day t is calculated by (6) where Ri is logarithmic return, , and n is the number of days before the nearest expiry option.</sentence>
+    <sentence>In addition, four measures are used to evaluate the performance of models in forecasting volatility as follows: mean forecast error (MFE), root mean square error (RMSE), mean absolute error (MAE), and mean absolute percentage error (MAPE).</sentence>
+    <sentence>These measures are defined as: (7) (8) (9) (10)</sentence>
+  </section>
+  <section name="Computational results">
+    <sentence>In this section, we report on the results of applying GARCH-type models as well as the proposed hybrid models for forecasting volatility of S&amp;P 500 returns.</sentence>
+    <sentence>As the first step, GARCH, EGARCH and GJR-GARCH models with various combinations of (p, q) parameters ranging from (1, 1) to (12, 12) were calibrated on historical return data.</sentence>
+    <sentence>The best model turned out to be EGARCH(3, 3) according to AIC and BIC criteria.</sentence>
+    <sentence>Table 3 shows AIC and BIC values for three GARCH-type models with best combinations of (p, q) against those for 1-day lag models which were used in Roh (2007) and Bildirici and Ersin (2009).</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>AIC and BIC criteria for preferred models.</sentence>
+    <sentence>GARCH-type models (p, q) AIC BIC EGARCH (3, 3)⁎ −18150.6 −18072.9 EGARCH (1, 1) −18067.1 −18025.3 GARCH (2, 2)⁎ −17961.5 −17913.7 GARCH (1, 1) −17943.1 −17907.3 GJR-GARCH (3, 3)⁎ −18072.1 −17994.4 GJR-GARCH (1, 1) −18061.3 −18019.4 ⁎ Optimum amount of (p, q).</sentence>
+    <sentence>To examine the fitness of these models, each of them has been used to forecast the volatilities for 10 and 15 days ahead and the results are reported in Tables 4 and 5, respectively.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>GARCH models performance to volatility forecasting for 10-days ahead.</sentence>
+    <sentence>Measure GARCH(1, 1) EGARCH(1, 1) GJR-GARCH(1, 1) GARCH(2, 2) EGARCH(3, 3) GJR-GARCH(3, 3) RMSE 0.007200 0.006544 0.007427 0.007064 0.005426 0.005426 MAE 0.007170 0.006517 0.007402 0.007022 0.005305 0.005305 MAPE 1.125262 1.022655 1.160522 1.102216 0.841136 0.841136 MFE 0.007170 0.006571 0.074019 0.007022 0.005305 0.007303 Table 5.</sentence>
+    <sentence>GARCH models performance to volatility forecasting for 15-days ahead.</sentence>
+    <sentence>Measure GARCH(1, 1) EGARCH(1, 1) GJR-GARCH(1, 1) GARCH(2, 2) EGARCH(3, 3) GJR-GARCH(3, 3) RMSE 0.006078 0.005405 0.006270 0.000036 0.004374 0.006160 MAE 0.005928 0.005208 0.006106 0.005808 0.004176 0.005991 MAPE 0.817570 0.724001 0.842974 0.800915 0.581920 0.827227 MFE 0.005928 0.005208 0.006106 0.005808 0.004176 0.005991 According to the values of fitness measures, EGARCH(3, 3) has shown the best performance and thus selected for construction of hybrid models.</sentence>
+    <sentence>The realized volatilities in each forecasting performance measures have been calculated based on the test data which were not used in the calibration phase.</sentence>
+    <sentence>Tables 6 and 7 present the result of the applications of the proposed hybrid models for forecasting volatilities in 10 and 15 days ahead.</sentence>
+    <sentence>The computational results show that both hybrid models outperform EGARCH model.</sentence>
+    <sentence>Hybrid model II exhibits better ability to forecasting volatility of the real market return with respect to all four fitness measures.</sentence>
+    <sentence>That is due to the inclusion of simulated series as extra inputs to hybrid model II.</sentence>
+    <sentence>Table 6.</sentence>
+    <sentence>Hybrid models performance to volatility forecasting for 10-days ahead.</sentence>
+    <sentence>Measure EGARCH(3, 3) Hybrid model I Hybrid model II RMSE 0.005426 0.003156 0.002558 MAE 0.005305 0.00268 0.002069 MAPE 0.841136 0.433799 0.338739 MFE 0.005305 0.001906 0.001614 Table 7.</sentence>
+    <sentence>Hybrid models performance to volatility forecasting for 15-days ahead.</sentence>
+    <sentence>Measure EGARCH(3, 3) Hybrid model I Hybrid model II RMSE 0.004374 0.0026593 0.002049 MAE 0.004176 0.0021505 0.001522 MAPE 0.58192 0.304631 0.227798 MFE 0.004176 0.001471 0.001207</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>This research is based on the application of GARCH models.</sentence>
+    <sentence>One of the limitations is that these models produce better results in relatively stable markets and could not capture violent volatilities and fluctuations.</sentence>
+    <sentence>Therefore, it is recommended that these models be combined with other models when applied to violent markets as also suggested by Gourieroux (1997).</sentence>
+    <sentence>In this study, the problem of modeling and forecasting volatility of S&amp;P 500 index has been investigated.</sentence>
+    <sentence>Three types of models from GARCH family have been calibrated and used for forecasting the volatility.</sentence>
+    <sentence>Then, their performances have been compared according to pre-defined measures.</sentence>
+    <sentence>The best model turns out to be EGARCH(3, 3).</sentence>
+    <sentence>To enhance the forecasting power of the selected model, two hybrid models have been constructed using Neural Networks.</sentence>
+    <sentence>The inputs to the proposed hybrid models include the volatility estimates obtained by the fitted EGARCH model as well as other explanatory variables.</sentence>
+    <sentence>Furthermore, the second hybrid model takes simulated volatility series as extra inputs.</sentence>
+    <sentence>Such inputs have been intended to characterize the statistical properties of the volatility series when fed into Neural Networks.</sentence>
+    <sentence>The computational results on S&amp;P 500 demonstrate that the second hybrid model, using simulated volatility series, provides better volatility forecasts.</sentence>
+    <sentence>This model significantly improves the forecasts over the ones obtained by the best EGARCH model.</sentence>
+    <sentence>Future research includes the applications of such high quality forecasts of volatilities in various financial decision making problems such as option pricing, multi-period portfolio selection and investing strategies.</sentence>
+  </section>
+</article>

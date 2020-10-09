@@ -1,0 +1,333 @@
+<article>
+  <title>A cluster-DEE-based strategy to empower protein design</title>
+  <abstract>
+    <sentence>The Medical and Pharmaceutical industries have shown high interest in the precise engineering of protein hormones and enzymes that perform existing functions under a wide range of conditions.</sentence>
+    <sentence>Proteins are responsible for the execution of different functions in the cell: catalysis in chemical reactions, transport and storage, regulation and recognition control.</sentence>
+    <sentence>Computational Protein Design (CPD) investigates the relationship between 3-D structures of proteins and amino acid sequences and looks for all sequences that will fold into such 3-D structure.</sentence>
+    <sentence>Many computational methods and algorithms have been proposed over the last years, but the problem still remains a challenge for Mathematicians, Computer Scientists, Bioinformaticians and Structural Biologists.</sentence>
+    <sentence>In this article we present a new method for the protein design problem.</sentence>
+    <sentence>Clustering techniques and a Dead-End-Elimination algorithm are combined with a SAT problem representation of the CPD problem in order to design the amino acid sequences.</sentence>
+    <sentence>The obtained results illustrate the accuracy of the proposed method, suggesting that integrated Artificial Intelligence techniques are useful tools to solve such an intricate problem.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Integrated intelligent methods</keyword>
+    <keyword>Protein design</keyword>
+    <keyword>Structural bioinformatics</keyword>
+    <keyword>Clustering algorithms</keyword>
+    <keyword>Boolean Satisfiability problem</keyword>
+    <keyword>Dead-End-Elimination</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Computational Protein Design (CPD) is one of the most important research problems in Computational Molecular Biology (Lippow and Tidor, 1997; Tian, 2010).</sentence>
+    <sentence>The Medical and Pharmaceutical industries are widely interested in precisely understanding how to engineer protein hormones and enzymes that perform existing functions under a wide range of conditions.</sentence>
+    <sentence>Proteins are long sequences of 20 different amino acid residues that in physiological conditions adopt a unique 3-D structure (Lehninger et al., 2005).</sentence>
+    <sentence>This structure is important because it determines the function of the protein in the cell, for example, catalysis in chemical reactions, transport and storage, regulation, recognition and control (Lesk, 2002).</sentence>
+    <sentence>Protein design has become a powerful approach for understanding the relationship between amino acid sequence and 3-D structure and consequently to study the functional aspects of the protein (Sander et al., 1992).</sentence>
+    <sentence>The ability to design sequences compatible with a fold may also be useful in structural and functional Genomics, with the identification of functionally important domains in sequences of proteins.</sentence>
+    <sentence>The general goal of CPD is to identify an amino acid sequence that folds into a particular protein 3-D structure with a desired function (Fig 2).</sentence>
+    <sentence>Protein design can be considered as the inverse of the protein folding (PF) problem (Osguthorpe, 2000) because it starts with the structure rather than the sequence and looks for all sequences that will fold into such 3-D structure.</sentence>
+    <sentence>Considering that there are 20 naturally occurring amino acids for each position, the combinatorial complexity of the problem amounts to 20110 or 10130 (Floudas et al., 2006).</sentence>
+    <sentence>Over the last decade, a tremendous advance in protein design was witnessed.</sentence>
+    <sentence>The maturation of a number of component technologies, including optimization algorithms and combinatorial discrete search, contributed for advances in CPD research.</sentence>
+    <sentence>Techniques such as Dead-End-Elimination (Georgiev et al., 2008; Desmet et al., 1992), Integer Programing (Xie and Sahinidis, 2006) and Monte Carlo (Yang and Saven, 2005; Hom and Mayo, 2006; Allen and Mayo, 2006) have been applied to protein design, but the problem still remains very challenging.</sentence>
+    <sentence>In this article, we present a new method based on clustering strategy, Dead-End-Elimination techniques and SAT-based methods to determine the amino acid sequence of protein 3-D structures.</sentence>
+    <sentence>The remainder of the paper is structured as follows.</sentence>
+    <sentence>Section 2 contextualizes the protein design problem and basic concepts used in this article.</sentence>
+    <sentence>Section 3 introduces the computational and AI techniques used in the proposed method.</sentence>
+    <sentence>Section 4 introduces the new hybrid method for protein design.</sentence>
+    <sentence>Section 5 reports several results illustrating the effectiveness of our method.</sentence>
+    <sentence>Section 6 concludes and points out directions for further research.</sentence>
+  </section>
+  <section name="Preliminaries">
+    <sentence>Protein structure and protein design A peptide is a molecule composed of two or more amino acid residues chained by a bond called the peptide bond.</sentence>
+    <sentence>There are 20 different amino acid residues in nature (Lodish et al., 1990) and each amino acid residue is a molecule containing both amine and carboxyl functional groups.</sentence>
+    <sentence>The various amino acids differ in which side chain (R group) is attached to their alpha carbon (Lodish et al., 1990; Lehninger et al., 2005).</sentence>
+    <sentence>Larger peptides are generally referred to as polypeptides or proteins (Creighton, 1990).</sentence>
+    <sentence>A peptide has three main chain torsion angles, namely phi (ϕ), psi (ψ) and omega (ω).</sentence>
+    <sentence>In the model peptide (Fig 1) the bonds between N and Cα, and between Cα and C are free to rotate.</sentence>
+    <sentence>These rotations are described by the ϕ and ψ torsion angles, respectively.</sentence>
+    <sentence>The rotational freedom about the ϕ (Cα-N) and ψ (Cα-C) angles is limited by steric hindrance between the side chain of the residue and the peptide backbone.</sentence>
+    <sentence>Consequently, the possible conformation of a given polypeptide chain is quite limited (Ramachandran and Sasisekharan, 1968; Branden and Tooze, 1998).</sentence>
+    <sentence>Side-chains also present dihedral angles and the number of χ angles depends on the residue type (Table 1).</sentence>
+    <sentence>Chemical representation of two amino acid residues after the condensation… Fig 1.</sentence>
+    <sentence>Chemical representation of two amino acid residues after the condensation reaction.</sentence>
+    <sentence>The carboxyl group of one amino acid (amino acid 1) reacts with the amino group of the amino acid 2.</sentence>
+    <sentence>A molecule of water is removed from two amino acids to form a peptide bond and the ω angle is formed (peptide bond).</sentence>
+    <sentence>N is nitrogen, C and Cα are carbons.</sentence>
+    <sentence>Schematic representation of the Protein Desgin Problem Fig 2.</sentence>
+    <sentence>Schematic representation of the Protein Desgin Problem.</sentence>
+    <sentence>The CPD problem starts with the 3-D structure of a protein and looks for all sequences that will fold into such 3-D structure.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Number of χ angles in each of the 20 amino acids.</sentence>
+    <sentence>The χ angles are used to fix the position of side-chain atoms in each residue type.</sentence>
+    <sentence>Amino acid Number of χ angles GLY, ALA, PRO – SER, CYS, THR, VAL χ1 ILE, LEU, ASP, ASN, χ1,χ2 HIS, PHE, TYR, TRP MET, GLU, GLN χ1,χ2,χ3 LYS, ARG χ1,χ2,χ3,χ4 Protein design starts with the structure (set of torsion angles, for example) and looks for all sequences that will fold into such 3-D structure.</sentence>
+    <sentence>In rational protein design, the scientist uses detailed knowledge of the structure and function of the protein to make desired changes.</sentence>
+    <sentence>The design of proteins that fold to a specified target backbone structure is of great interest of the Medical and the Pharmaceutical Industries.</sentence>
+    <sentence>Additional material related to PD can be found in Dahiyat and Mayo (1997), Park et al.</sentence>
+    <sentence>(2011), Guerois and de La Paz (2006), Samish et al.</sentence>
+    <sentence>(2011), Hom and Mayo (2006), Yang and Saven (2005), Lippow and Tidor (1997), Tian (2010), Sander et al.</sentence>
+    <sentence>(1992), Voigt et al.</sentence>
+    <sentence>(2000), Pokala and Handel (2000) and Floudas et al.</sentence>
+    <sentence>(2006).</sentence>
+    <sentence>A good review about protein structure can be found in Tramontano (2006), Lesk (2002), Branden and Tooze (1998) and Altman and Dugan (2005).</sentence>
+    <sentence>Energy functions An energy function describes the internal energy of the protein and its interactions with the environment in which it is inserted.</sentence>
+    <sentence>In Protein design the goal is to find a sequence which generates a 3-D protein structure with the global minimum of free energy that corresponds to the native or functional state of the protein (Osguthorpe, 2000; Tramontano, 2006).</sentence>
+    <sentence>The energy function used for protein design still contain elements accounting for van der Waals force, electrostatics, solvation, and hydrogen bonding.</sentence>
+    <sentence>A potential energy function incorporates two main types of terms: bonded and non-bonded.</sentence>
+    <sentence>The bonded terms (bonds, angles and torsions) are covalently linked.</sentence>
+    <sentence>The bonded terms constrain bond lengths and angles near their equilibrium values.</sentence>
+    <sentence>The bonded terms also include a torsional potential (torsion) that models the periodic energy barriers encountered during bond rotation.</sentence>
+    <sentence>The non-bonded potential includes: ionic bonds, hydrophobic interactions, hydrogen bonds, van der Waals forces, and dipole–dipole bonds.</sentence>
+    <sentence>van der Waals force is usually described by the equation for Lennard--Jones 6–12 potential (Boas and Harbury (2007)).</sentence>
+    <sentence>There is a variety of potential energy functions used in protein design.</sentence>
+    <sentence>In this article we use the CHARMM potential energy function (Brooks et al., 1983; Field et al., 1998) (Eq (1)).</sentence>
+    <sentence>(1)∊∊ where Kb, KUB, Kθ, Kχ and Kimp are the bond, Urey Bradley angle (Hagler et al., 1979; Lifson and Warshel, 1968), dihedral angle and improper dihedral angle force constants, respectively; b, S, θ, χ and φ are the bond length, Urey-Bradley 1.3 distance, bond angle, dihedral angle and improper torsion angle, respectively.</sentence>
+    <sentence>The subscript zero represents the equilibrium value for the individual terms.</sentence>
+    <sentence>Coulomb and Lennard--Jones 6–12 terms contribute to the external or non-bonded interactions; ∊ is the Lennard--Jones (the depth of the potential well) and Rmin is the distance at the Lennard--Jones minimum, qi is the partial atomic charge, ∊1 is the effective dielectric constant, and rij is the distance between atoms i and j.</sentence>
+    <sentence>Reviews of protein energy functions and their application can be found in Lazaridis and Karplus (2000), Jorgensen and Tirado-Rives (2005), Gordon et al.</sentence>
+    <sentence>(1999) and Hao and Scheraga (1999).</sentence>
+  </section>
+  <section name="Computational techniques applied to protein design">
+    <sentence>The Boolean Satisfiability problem Boolean Satisfiability (SAT) is the problem of determining if a given propositional logic formula can be satisfied given suitable value assignments (Selman et al., 1992).</sentence>
+    <sentence>SAT is also a well-known NP-complete decision problem (Cook, 1971) and require worst-case exponential time.</sentence>
+    <sentence>However, state-of-the-art SAT algorithms are effective at coping with large search spaces by exploiting the problem structure when it exists (Marques-Silva, 2008).</sentence>
+    <sentence>Recently, SAT solvers have been applied in combinatorial problems such as protein folding and protein design (Gomes and Selman, 2005).</sentence>
+    <sentence>The notation for SAT instances usually follow the Conjunctive Nominal Form (CNF).</sentence>
+    <sentence>The CNF of a Boolean function is a function formula with the following structure: (2) where ci are referred as clauses and literal lj represents the variable xj or its negation ¬xj (Ollikainen et al., 2009).</sentence>
+    <sentence>Thus, adding clauses is equivalent to adding constraints to variables xj, reducing the search space.</sentence>
+    <sentence>Moreover, to describe a problem as a SAT instance, one add constraints encoded as clauses to ϕ until the SAT instance corresponds to the problem structure that is being solved.</sentence>
+    <sentence>For instance, in protein design we state a rule R that rotamers ru and rv cannot exist simultaneously in a protein.</sentence>
+    <sentence>If ri denotes the existence of rotamer i in a protein, then we can encode rule R as ¬(ru ∧ rv).</sentence>
+    <sentence>Since literals in SAT problems can be either a boolean variable or a boolean variable complement, constraint problems using SAT can only encode discrete search spaces.</sentence>
+    <sentence>Although there are SAT extensions to allow for continuous search spaces, we want to keep the original definition so we can rely on modern, faster SAT solving algorithms.</sentence>
+    <sentence>In this article we propose and describe a SAT-based model for protein design that allows to search in the protein design space in order to determine the amino acid sequence of knwon 3-D protein structures.</sentence>
+    <sentence>Supplementary material related with Boolean Satisfiability and its application can be found on Marques-Silva (2008), Wille et al.</sentence>
+    <sentence>(2008), Dixon et al.</sentence>
+    <sentence>(2004), Schaefer (1978) and Gomes et al.</sentence>
+    <sentence>(2008).</sentence>
+    <sentence>Dead-End-Elimination algorithms The Dead-End-Elimination algorithm (DEE) is a computational strategy that minimizes a function over a discrete set of independent variables (Gordon and Mayo, 1998).</sentence>
+    <sentence>The basic idea is to identify not allowed combinations of variables that cannot possibly yield the global minimum and to refrain from searching such combinations further.</sentence>
+    <sentence>These not allowed combinations, so-called dead-ends, can be excluded from further consideration, thereby significantly reducing the size of the combinatorial search space.</sentence>
+    <sentence>The original description and proof of the Dead-End-Elimination theorem can be found in Desmet et al.</sentence>
+    <sentence>(1992).</sentence>
+    <sentence>DEE is commonly used in Computational Protein Design for the combinatorial optimization problem of assigning amino acids at protein positions, where the energy of a desired protein structure should be minimized (Goldstein, 1994; Pierce et al., 2000).</sentence>
+    <sentence>Each position assignment of a DEE algorithm is a tuple Π → Λ × χ1 × χ2 × χ3 × χ4 where Λ is an aminoacid and χa,a ∈ [1, 4] is a torsion angle describing the aminoacid geometry.</sentence>
+    <sentence>Therefore, the combinatorial search is generated by applying all Π configurations in E. However, exploring all the generated search space is computationally intractable due to the large number of conformations.</sentence>
+    <sentence>The DEE comes in hand to reduce the search space generated by E excluding from the search the combination of Π assignments that possibly always evaluate to a higher energy state.</sentence>
+    <sentence>Each excluded Π assignments is a “dead-end” and is an input for the DEE algorithm to avoid exploring all search spaces.</sentence>
+    <sentence>If a lower energy state is found, the Π assignments that results in such energy state are combined as a “dead-end” with the previous “dead-ends” as input to a new iteration of the DEE algorithm, this time with a more complete description of “dead-ends”.</sentence>
+    <sentence>If the algorithm stops without finding a new Π assignment, we conclude that no lower energy state is possible and pick the last “dead-end” added as the best solution for the minimization problem.</sentence>
+    <sentence>Moreover, we may add as a condition that the algorithm halts whenever a lower bound of energy level is found, or a time constraint, as there is no guarantee that there is another lower energy state.</sentence>
+    <sentence>In the proposed method the search for a lower energy level and “dead-ends” used as input at each DEE algorithm iteration are modelled as SAT clauses (Ollikainen et al., 2009).</sentence>
+    <sentence>Additional material related with Dead-End-Elimination and its application to PD can be found in Schrauber et al.</sentence>
+    <sentence>(1993), Pierce et al.</sentence>
+    <sentence>(2000), Spriet (2003), Desmet et al.</sentence>
+    <sentence>(1992), Xie and Sahinidis (2006), Voigt et al.</sentence>
+    <sentence>(2000), Georgiev et al.</sentence>
+    <sentence>(2008), Georgiev and Donald (2007), Bhargavi et al.</sentence>
+    <sentence>(2003) and Ollikainen et al.</sentence>
+    <sentence>(2009).</sentence>
+    <sentence>Clustering algorithms Clustering techniques are applied when there is no class to be predicted but rather when the instances are to be divided into natural groups.</sentence>
+    <sentence>Cluster analysis or clustering can be defined as the process of organizing objects into groups whose instances are similar in some way (Everitt et al., 2011; Witten et al., 2011).</sentence>
+    <sentence>In the classical k-means clustering algorithm (MacQueen, 1967) a set of n data points (a1, a2, … , an) is partitioned into p groups S = {s1,s2, … ,sp} in order to minimize a function of quadratic error (Eq (3)).</sentence>
+    <sentence>(3) where ∥aj − μi∥2 is a chosen distance measure between a data point ai and the cluster center μi.</sentence>
+    <sentence>In the proposed method for protein design Expectation Maximization (EM) (Dempster et al., 1977) is used to data clustering.</sentence>
+    <sentence>This method estimates missing parameters of probabilistic models and is composed by two main steps: (1) The Expectation step related with the calculation of the cluster probabilities and (2) the Maximization step that computes the distribution parameters and their likelihood given the data.</sentence>
+    <sentence>The EM algorithm iterates until the parameters being optimized reach a fixpoint or until the log-likelihood function reaches its maximum.</sentence>
+    <sentence>A set of parameters are recomputed until a desired convergence value is achieved.</sentence>
+    <sentence>For each individual instance is assigned a probability a certain set of attribute values would assume given they were members of a specific cluster.</sentence>
+    <sentence>When compared with the K-means algorithm, EM has a strong statistical basis and is more robust to deal with noisy data.</sentence>
+    <sentence>A complete description of the EM algorithm can be found in Dempster et al.</sentence>
+    <sentence>(1977) and Witten et al.</sentence>
+    <sentence>(2011).</sentence>
+  </section>
+  <section name="The proposed method for CPD">
+    <sentence>The proposed method for the protein design problem is composed of 6 steps: (1) obtaining structural data from experimentally determined proteins; (2) selecting side-chain rotamers from amino acid residues; (3) clustering long side-chain χ angles; (4) representing the protein conformational space in a Conjuntive Normal Form; (5) applying DEE to eliminate not allowed rotamers; (6) solving the formula and determining the amino acid sequence.</sentence>
+    <sentence>Below, each of these steps are detailed.</sentence>
+    <sentence>Obtaining structural data from experimentally determined proteins A set K = [a1.ϕ,a1.ψ,a1.χ1,a1.χ2, a1.χ3,a1.χ4; … ;an.ϕ,an.ψ, an.χ1,an.χ2,an.χ3,an.χ4] of torsion angles and the number of χ angles (Table 1) of each amino acid residue are used as input to the proposed method.</sentence>
+    <sentence>ai represent an unknown target amino acid residue.</sentence>
+    <sentence>Phi (ϕ), Psi (ψ), Chi1(χ1), Chi2 (χ2), Chi3 (χ3) and Chi4 (χ4) point out the backbone and side-chain torsion angles of each ai residue.</sentence>
+    <sentence>The backbone torsion angles (ϕ and ψ) of the protein are kept rigid and are used to search the Dunbrack Backbone-Dependent Library1 (Dunbrack and Karplus, 2003; Shapovalov and Dunbrack, 2011) for template conformations.</sentence>
+    <sentence>For each position i of an amino acid residue (ai) from the target sequence, rotamers are selected from the Dunbrack Backbone-Dependent Library.</sentence>
+    <sentence>A new library for the target amino acid sequence composed by n arrays of rotamers, one for each amino acid residue, is built.</sentence>
+    <sentence>The rotamers of different amino acid residues will be used to alter the target amino acid sequence in order to find sequence with the lowest potential energy (Fig 1).</sentence>
+    <sentence>Selecting side-chain rotamers from amino acid residues The previous step builds a set of possible rotamers (χ angles) for each amino acid residue i.</sentence>
+    <sentence>When this number of rotamers is large the problem becomes computationally intractable (Pierce and Winfree, 2002; Floudas et al., 2006).</sentence>
+    <sentence>For a small protein composed by 8 amino acid residues and assuming an average of 30 possible rotamers per amino acid residue, the number of possible sequences generated will be 6.561 × 1011(830) combinations.</sentence>
+    <sentence>This number grows rapidly when the number of amino acids residues is increased.</sentence>
+    <sentence>In this step the rotamer library is processed in order to decrease the number of χ conformations in the base protein library.</sentence>
+    <sentence>The rotamer probability is used to eliminate and reduce the number of rotamers.</sentence>
+    <sentence>The rotamer probability is provided by the Dunbrack backbone-dependent library (Eq (4)) (Shapovalov and Dunbrack, 2011) (4) where, for each rotamer r of a given residue type, the probability density estimate ρ(ϕ,ψ∣r) is calculated and the Bayes’ rule is used to invert this density to produce an estimate of the rotamer probability P(r∣ϕ,ψ) (Shapovalov and Dunbrack, 2011).</sentence>
+    <sentence>All rotamers with a probability less than 1% are discarded.</sentence>
+    <sentence>This procedure reduces the total number of rotamers in approximately 25%.</sentence>
+    <sentence>At the end of this step a reduced set of rotamers conformations containing only rotamers with a high probability is obtained (Fig 3-A).</sentence>
+    <sentence>Here, the reduced library is called ROTLIB.</sentence>
+    <sentence>Schematic representation of the clustering process Fig 3.</sentence>
+    <sentence>Schematic representation of the clustering process.</sentence>
+    <sentence>(A) represent the reduce library ROTLIB obtained after the probabilistic analysis.</sentence>
+    <sentence>(B) represents the clustering of side-chain χ angles.</sentence>
+    <sentence>(C) represent the reduced CLULIB library of rotamers.</sentence>
+    <sentence>Clustering long side-chain χ angles Despite the reduction of the number of rotamers obtained in the last step, the resulting rotamer library (ROTLIB) contains several conformations with small differences.</sentence>
+    <sentence>In turn this represents a redundancy in the rotamers associated to each amino acid residue of the backbone-dependent library.</sentence>
+    <sentence>In order to eliminate this redundancy and reduce the total number of rotamers of each amino acid residue a clustering strategy is applied (Section 3.3).</sentence>
+    <sentence>The Expectation Maximization (EM) algorithm (Dempster et al., 1977) is used to cluster the rotamers from the ROTLIB.</sentence>
+    <sentence>EM clustering algorithm considers the different probabilities of distribution of each individual cluster in order to identify which set of clusters are more favorable for a given set of rotamers.</sentence>
+    <sentence>It begins clustering the ri rotamers of ROTLIB based in the K-means algorithm (MacQueen, 1967) to obtain an initial solution.</sentence>
+    <sentence>K-means minimizes a function of quadratic error (Eq (3)), where p clusters are present.</sentence>
+    <sentence>After determining the initial solution, the probability of a ri rotamer belonging to one of the p clusters is calculated (Expectation step of the EM algorithm).</sentence>
+    <sentence>From this probability, distribution parameters are calculated and the probabilities of distribution for each cluster p are “Maximized” (Witten et al., 2011).</sentence>
+    <sentence>One of the input parameters of the clustering algorithm is the number of clusters to be identified.</sentence>
+    <sentence>Determining the optimal number of clusters is a difficult task and many strategies can be found in the literature (Dudoit and Fridlyand, 2002; Krzanowski and Lai, 1988).</sentence>
+    <sentence>A strategy to determine the optimal number of cluster was developed considering conformational proprieties of the biological data.</sentence>
+    <sentence>In nature the χ1 (N, CA, CB, ∗G∗) angle is subject to restrictions between the g side chain atom (s) and the main chain (Fig 4).</sentence>
+    <sentence>The different conformations of the side chain χ1 are refereed as gauche (+), trans and gauche (−).</sentence>
+    <sentence>The most abundant conformation is gauche (+) in which the g side-chain atom (s) is opposite to the residues of the carbonyl group of the main chain when viewed along the CB-CA bond.</sentence>
+    <sentence>The second most abundant conformation is trans in which the side-chain g atom (s) is opposite the main chain nitrogen (N).</sentence>
+    <sentence>The least abundant conformation is gauche (−) which occurs when the side chain is opposite the hydrogen substituent on the CA atom.</sentence>
+    <sentence>This conformation is unstable because the g atom is in close contact with the main chain CO and NH groups.</sentence>
+    <sentence>In general, for χ1 angle the gauche (+), trans and gauche (−) present its values close to −65.0°, 180.0°, 63.0°, respectively (Morris et al., 1992).</sentence>
+    <sentence>Bhargavi et al.</sentence>
+    <sentence>report the values of gauche (+), trans and gauche (−) to χ2 and χ3 (Bhargavi et al., 2003): χ2 (∼ −67.0°, ∼179.0°, ∼70.0°); χ3 (∼68.0°, ∼ −179.0°,∼ −67.0°).</sentence>
+    <sentence>In experimental observations the gauche (+), trans and gauche (−), there is a standard deviation of 30° around these values.</sentence>
+    <sentence>The patterns gauche (+), trans and gauche (−) and the standard deviation are used to determine the optimal number of the p clusters.</sentence>
+    <sentence>Side chain torsion angles of the amino acid Lysine Fig 4.</sentence>
+    <sentence>Side chain torsion angles of the amino acid Lysine.</sentence>
+    <sentence>The torsion angles are named χ1 (N,CA,CB,∗G∗), χ2 (CA,CB,∗G,∗D∗), χ3 (CB,∗G,∗D,∗E∗), χ4 (∗G,∗D,∗E,∗Z∗).</sentence>
+    <sentence>The rotamers with the same number of χ angles are selected from the ROTLIB.</sentence>
+    <sentence>For the χ1 and χ2 torsion angles the strategy begins the clustering process using p = 1.</sentence>
+    <sentence>If after the clustering process there is a cluster with a standard deviation above 30°, the number of clusters are increased (p = p + 1) and the clustering process is repeated.</sentence>
+    <sentence>The processs stop when all predicted clusters have a standard deviation less than 30°.</sentence>
+    <sentence>The central goal of this strategy is ensure that rotamers associated to a conformation pattern (gauche (+), trans and gauche (-)) do not occur in another.</sentence>
+    <sentence>Rotamers χ3 and χ4 are not clustered because the most external side-chain angles vary with great freedom whereas they can have less contact with neighbour side-chains.</sentence>
+    <sentence>In the clustering step only the χ1 and χ2 of the amino acid residues that present χ3 and χ4.</sentence>
+    <sentence>χ3 and χ4 are selected statically.</sentence>
+    <sentence>This property is enhanced if the neighbour side-chain has a smaller length, thus avoiding close contact with the long side-chain.</sentence>
+    <sentence>Therefore, the external angles of a rotamer side-chain (χ3 and χ4) suffer less energy restrictions thus obtaining a large degree of freedom.</sentence>
+    <sentence>The rotamer angles χ3 and χ4 of a cluster group are defined by the predominance of rotamer angles of gauche (+), trans and gauche (−).</sentence>
+    <sentence>For example, in a group with 10 rotamers where 7 residues have χ3 into gauche (−) and 6 residues with χ4 into trans, the resulting clustered rotamer of this group will have χ3 into gauche (−) and χ4 into trans.</sentence>
+    <sentence>After the clustering step the mean value of each cluster is used to built a new reduce library of rotamers.</sentence>
+    <sentence>Here, this new library is called CLULIB (Fig 3 - C).</sentence>
+    <sentence>The clustering step reduces the number of rotamers of the ROTLIB in approximately 50%.</sentence>
+    <sentence>Representing the protein conformational space in a CNF After the clustering step, the protein sequence space is represented as a SAT problem.</sentence>
+    <sentence>Let S = {rj=1, … ,rj=m} the set of m available rotamers obtained from the CLULIB for a position i of the unknown amino acid sequence K, than the target unknown amino acid sequence can be now represented as a set K = {Si=1, … ,Si=n}, where S is a set of available rotamers for the target amino acid residue in position i.</sentence>
+    <sentence>The SAT representation of the search space represents all possible solutions using all available rotamers rj.</sentence>
+    <sentence>Each rotamer residue related to an amino acid position i obtained from the library CLULIB is indexed as an unique boolean variable.</sentence>
+    <sentence>For each possible assignments of rotamers rj for a given position i in the unknown amino acid sequence a boolean clause is created (Fig 5).</sentence>
+    <sentence>SAT encoding Fig 5.</sentence>
+    <sentence>SAT encoding.</sentence>
+    <sentence>(A) represent the protein conformational space in CNF.</sentence>
+    <sentence>(B) Apply DEE to eliminate not allowed rotamers.</sentence>
+    <sentence>(C) Solve the CNF formula to determine the amino acid sequence.</sentence>
+    <sentence>Just one variable into each clause can be assigned as TRUE in a solution.</sentence>
+    <sentence>This encoding model ensure that rotamers of a given position will never be assigned to another position of the backbone.</sentence>
+    <sentence>In other words, constraint clauses are needed to ensures that no more than an unique rotamer will be assigned to a position of the main chain.</sentence>
+    <sentence>We added clauses to the CNF formula to restrict the assignment and to ensure this condition.</sentence>
+    <sentence>These constraints were defined for each clause combining the negation of each variable belonging to Si.</sentence>
+    <sentence>This SAT scheme generates a robust structured SAT-CNF that encodes all possible conformations of the solution space using all available rotamers present in S. 4.5.</sentence>
+    <sentence>Dead-End-Elimination to eliminate not allowed rotamers In a practical application of Protein design the search space must be even more constrained because of the long execution time.</sentence>
+    <sentence>Dead-End-Elimination is a powerful pruning method used to remove rotamers with little contribution to the stabilization of the tertiary structure of a polypeptide.</sentence>
+    <sentence>DEE reduces each Si set removing rotamers that increase the conformational energy of the structure.</sentence>
+    <sentence>The goal of the DEE algorithm is reduce the conformational search space allowing just the use of rotamers that correspond to the minimal global energy of the conformation.</sentence>
+    <sentence>Let rx and ry two possible rotamers for the position i of the unknown amino acid sequence, if rx always represents a more energy favorable reduction than ry in position i, the rotamer rx always makes the protein structure more stable and ry can be eliminated.</sentence>
+    <sentence>The CHARMM potential energy described in Section 2.2 was used to evaluate the energy of each rotamer E(ri).</sentence>
+    <sentence>A Goldstein DEE algorithm to constraint the generated CNF formula was developed based on the work of Goldstein (1994).</sentence>
+    <sentence>Therefore, the DEE method adds to the CNF formula an unitary negated clause for each pruned rotamer (Fig 5-B).</sentence>
+    <sentence>This eliminates the set of non-unusable rotamers of the solution sequences.</sentence>
+    <sentence>Solving the CNF formula to determine the amino acid sequence A SAT Solver must be applied in this boolean CNF clauses to generate the amino acid residues.</sentence>
+    <sentence>The SatZoo (Eén and Sorensson, 2004) SAT solver was used in this step to determine the amino acid sequences.</sentence>
+  </section>
+  <section name="Experiments and results">
+    <sentence>The proposed method was applied to design the amino acid sequence of eight fragments of seven 3-D protein structures obtained from the Protein Data Bank (PDB) (Berman et al., 2000): 1ARE (Hoffman et al., 1993) (Fig 6-A); 1ZDD (Starovasnik et al., 1997) (Fig 6-B); 1WG72.</sentence>
+    <sentence>(Fig 6-C); 2OMM (Sawaya et al., 2007) (Fig 6-D); 1J9I (de Beer et al., 2002) (Fig 6-E); 3DI0 (Girish et al., 2008) (Fig 6-F); 1OEH (Zahn, 2003) (Fig 6-G).</sentence>
+    <sentence>Fig 6 illustrates the 3-D structure of the proteins used in our experiments, those highlighted in magenta represent the target fragments used as input in our method.</sentence>
+    <sentence>Disparate segments of secondary structure were selected in order to evaluate the efficacy of the proposed method in different classes of 3-D protein structures.</sentence>
+    <sentence>Ribbon representation of 3-D protein structures of the seven study cases Fig 6.</sentence>
+    <sentence>Ribbon representation of 3-D protein structures of the seven study cases.</sentence>
+    <sentence>Magenta represents the target region used as input in our protein design method.</sentence>
+    <sentence>(A) Experimental 3-D structure of the protein with PDB ID = 1ARE; (B) Experimental 3-D structure of the protein with PDB ID = 1ZDD; (C) Experimental 3-D structure of the protein with PDB ID = 1WG7; (D) Experimental 3-D structure of the protein with PDB ID = 2OMM; (E) Experimental 3-D structure of the protein with PDB ID = 1J9I; (F) Experimental 3-D protein structure of the protein with PDB ID = 3DI0 and (G) Experimental 3-D structure of the protein with PDB ID = 1OEH.</sentence>
+    <sentence>Amino acid side chains are not shown for clarity.</sentence>
+    <sentence>Graphics were generated by PYMOL (Pymol Website, 2012).</sentence>
+    <sentence>(For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)</sentence>
+    <sentence>Table 2 column 1–4 present, respectively, the PDB identification number of the protein, the amino acid sequence of the selected segment of the 3-D structure, the number of amino acid residues of the segment and the location of this segment in the whole sequence of the native 3-D protein structure.</sentence>
+    <sentence>As input in our method we analyse the 3-D structure of each target segment and identify the number of side-chain torsion angles (χ angles) of each amino acid residue position of the target segment.</sentence>
+    <sentence>For each amino acid position on the target fragment we calculate the phi (ϕ), (ψ) and chi (χ) angles (Step 1 of the proposed CPD method).</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Target 3-D protein structures.</sentence>
+    <sentence>Different segments/fragments of 3-D protein structures were selected from the PDB in order to evaluate the efficacy of the proposed method in different classes of proteins.</sentence>
+    <sentence>PDB ID Amino acid region N°.</sentence>
+    <sentence>of residues Amino acid window 1ARE -CTRAFARQEA- 10 8--17 1ZDD-1 -NMQCQRRF- 8 2--9 1ZDD-2 -EEQRNAKIKS- 10 20--29 1WG7 -EAAMQEKRNG- 10 128--136 2OMM -GNNQQNY- 7 1--7 1J9I -RGGGKGNEVL- 10 31--40 3DI0 -QRGGQGVISV- 10 296--305 1OEH -HGGGWGQP- 8 1--8 For each position of the target segment, rotamers are selected from the Dunbrack Backbone-Dependent Library (Step 2 of the proposed method).</sentence>
+    <sentence>All rotamers with a probability less than 1% are discarded resulting a reduction of 25% of the number of rotamers (Step 3).</sentence>
+    <sentence>The EM clustering algorithm is applied to the resulting data from Step 3 and a new library of rotamers is built containing a reduced number of rotamers.</sentence>
+    <sentence>The clustering procedure eliminates the redundancy of backbone-dependent library.</sentence>
+    <sentence>Table 3 shows for each target 3-D protein structure segment the number of rotamers obtained before and after the clustering stage, column 2 and 4 respectively.</sentence>
+    <sentence>As one can observe, the clustering step provides a reduction of approximately 30% in the number of rotamers (Table 4).</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Number of rotamers and clauses after and before the clustering step.</sentence>
+    <sentence>The number of rotamers and clauses is considerably reduced after the clustering step.</sentence>
+    <sentence>This reduction considerably contributes to reduce the computational time to solve the SAT clauses.</sentence>
+    <sentence>SAT before the clustering step SAT after the clustering step PDB ID N°.</sentence>
+    <sentence>of rotamers/variables N°.</sentence>
+    <sentence>of clauses N°.</sentence>
+    <sentence>of rotamers/variables N°.</sentence>
+    <sentence>clauses 1ARE 261 5467 171 2665 1ZDD-1 313 6503 204 3314 1ZDD-2 352 7144 221 3370 1WG7 285 5571 155 1536 2OMM 266 5711 224 4490 1J9I 194 3010 145 1971 3DI0 199 3260 138 1522 1OEH 142 2701 121 2092 Table 4.</sentence>
+    <sentence>Rotamers and clauses reduction.</sentence>
+    <sentence>The clustering procedure eliminates the redundancy of backbone-dependent library.</sentence>
+    <sentence>After the clustering step the number of rotamers are reduced in approximately 30%.</sentence>
+    <sentence>The clustering step also contributes to a reduction of approximately 45% in the number of clauses.</sentence>
+    <sentence>PDB ID N°.</sentence>
+    <sentence>Rotamers (%) N°.</sentence>
+    <sentence>Clauses (%) 1ARE 34.48 51.25 1ZDD-1 34.82 49.04 1ZDD-2 37.22 52.83 1WG7 45.61 72.43 2OMM 15.79 21.38 1J9I 25.26 34.52 3DI0 30.65 53.31 1OEH 14.79 22.55 Average: 29.82 44.62 After the clustering step, the protein sequence space of each unknown amino acid residue from the target segment of the 3-D structure is represented as a SAT problem.</sentence>
+    <sentence>In this step, the search space shows all possible solutions using all available rotamers to an unknown amino acid residue of the segment.</sentence>
+    <sentence>Table 4 (Column 3 and 5) shows the number o clauses obtained after and before the clustering step.</sentence>
+    <sentence>As observed for each case study the number of clauses were considerably reduced.</sentence>
+    <sentence>This would in turn drastically reduce the processing time necessary to solve the SAT clauses and design the amino acid residue.</sentence>
+    <sentence>The clustering step contributes to reduce the number of clauses in approximately 45% (Table 4).</sentence>
+    <sentence>In the sequel, the Dead-End-Elimination strategy was applied to remove all rotamers that increase the conformational energy of the 3-D structure.</sentence>
+    <sentence>As described before a SAT solver is used to determine the amino acid sequences.</sentence>
+    <sentence>Table 5 shows the designed amino acid sequences for each target segment of the 3-D protein structure.</sentence>
+    <sentence>The obtained results present a precision of approximately 70%.</sentence>
+    <sentence>The obtained results elucidate the efficacy of the proposed method.</sentence>
+    <sentence>The results achieved by the method also showed superior or compatible performance when compared to other methods typically used and described in the literature.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>Designed amino acid sequences.</sentence>
+    <sentence>Column 2 and 3 show the native and the designed amino acid sequence, respectively.</sentence>
+    <sentence>The designed sequences present an approximately precision of 70.0%.</sentence>
+    <sentence>Highlighted magenta residues represent the correctly designed residues.</sentence>
+    <sentence>Black residues indicate inaccurate designed residues.</sentence>
+    <sentence>PDB ID Native sequence Designed sequence Precision (%) 1ARE CTRAFARQEA CTRGNGQEG 60.0 1ZDD-1 NMQCQRRF NEQCQRRN 75.0 1ZDD-2 EEQRNAKIKS EEQRNGRDRC 50.0 1WG7 EAAMQEKRNG EGGEQERRNG 70.0 2OMM GNNQQNY GNNQQND 85.7 1J91 RGGGKGNEVL RGGGRGNETN 70.0 3DI0 QRGGQGVISV ERGGQGTNTT 40.0 1OEH HGGGWGQP DGGGNGQG 62.5 Average: 64.15 Table 6 shows a comparative analysis of amino acid compatibility between the amino acid residues of the native and designed sequence.</sentence>
+    <sentence>The properties of the side-chain of the designed and native sequence were analysed according their hydrophobicity.</sentence>
+    <sentence>The number of amino acid in an apolar or polar state were presented.</sentence>
+    <sentence>One can observe that in the largest number of cases the designed sequences maintain compatible results in terms of hydrophobicity.</sentence>
+    <sentence>Table 6.</sentence>
+    <sentence>Amino acid sequence compatibility.</sentence>
+    <sentence>Polar amino acid residues: ASP, GLU, LYS, ARG, HIS, SER, THR, GLN, ASN, TYR.</sentence>
+    <sentence>Apolar amino acid residues: ALA, VAL, LEU, ILE, MET, PHE, TRP.</sentence>
+    <sentence>Amino acid residues with special proprieties: GLY, CYS, PRO.</sentence>
+    <sentence>PDB ID N°.</sentence>
+    <sentence>Polar res.</sentence>
+    <sentence>Native N°.</sentence>
+    <sentence>Apolar res.</sentence>
+    <sentence>Native N°.</sentence>
+    <sentence>Polar res.</sentence>
+    <sentence>Designed N°.</sentence>
+    <sentence>Apolar res.</sentence>
+    <sentence>Designed N°.</sentence>
+    <sentence>Special res.</sentence>
+    <sentence>Native N°.</sentence>
+    <sentence>Special res.</sentence>
+    <sentence>Designed 1ARE 5 4 5 0 1 5 1ZDD-1 5 2 7 0 1 1 1ZDD-2 8 2 8 0 0 2 1WG7 6 2 7 0 1 3 2OMM 6 0 6 0 1 1 1J91 4 2 6 0 4 4 3DIO 4 3 7 0 3 3 1OEH 2 1 3 0 5 5</sentence>
+  </section>
+  <section name="Conclusions and further work">
+    <sentence>The general goal of a Computational Strategy to Protein design is to identify an amino acid sequence that folds into a particular protein 3-D structure.</sentence>
+    <sentence>In this article we presented a new strategy to design protein sequences from 3-D protein structures determined experimentally.</sentence>
+    <sentence>The obtained results illustrate the efficacy of the proposed strategy.</sentence>
+    <sentence>The main goal of the developed strategy was to design in an efficient way approximate sequences of target protein structures.</sentence>
+    <sentence>The overall contribution of this work is threefold: First, the use of AI and computational techniques and concepts to develop a new, effective algorithm for the protein design problem.</sentence>
+    <sentence>Second, the use of clustering strategy to reduce the number of rotamers which in turn reduce the number of SAT clauses to be solved.</sentence>
+    <sentence>Third, the use of a Dead-End-Elimination strategy to pruning bad solutions in the set of clauses.</sentence>
+    <sentence>This opens several interesting research avenues, with a range of applications in computational biology and bioinformatics.</sentence>
+    <sentence>For instance, one could apply the developed method to other classes of proteins; second, one could test other different clustering algorithms; third, one could test the use of different pruning techniques to reduce the number of SAT clauses eliminating the rotamers that increase the potential energy of the 3-D structure of the polypeptide.</sentence>
+    <sentence>1 The backbone-dependent rotamer library consists of rotamer frequencies, mean dihedral angles and variances of the backbone dihedral angle.</sentence>
+    <sentence>2 http://www.rcsb.org/pdb/explore/explore.do?structureId=1WG7</sentence>
+  </section>
+</article>

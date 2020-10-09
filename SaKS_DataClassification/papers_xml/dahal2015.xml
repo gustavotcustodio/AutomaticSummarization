@@ -1,0 +1,371 @@
+<article>
+  <title>Event stream processing for improved situational awareness in the smart grid</title>
+  <abstract>
+    <sentence>Deployment of Phasor Measurement Units (PMU) in the United States transmission grid has brought a new data stream to be processed and an opportunity to improve situational awareness on the grid.</sentence>
+    <sentence>This new data stream offers opportunity for a faster detection and response algorithm to minimize wide spread outages.</sentence>
+    <sentence>High rate of data collection of PMU systems has also brought a challenge on how to extract information from fast moving PMU data stream in real time to improve situational awareness inside a control room.</sentence>
+    <sentence>Despite the fact that mathematical and probabilistic methods are the most accurate methods of stability analysis, online decision making algorithms cannot afford the latency brought by those methods.</sentence>
+    <sentence>Traditional batch processing Artificial Intelligence (AI) techniques have been extensively studied as potential replacements for these approaches, however conventional AI techniques do not deal with continuous streams of fast moving phasor data.</sentence>
+    <sentence>This paper presented a novel application of the stream mining algorithms for synchrophasor data to meet quick decision making requirement of future situational awareness applications in power systems.</sentence>
+    <sentence>To prove that the proposed methods are efficient and capable of handling huge amounts of data with reasonable accuracy and within limited resources of memory and computational power, four different experiments with different conditions (changing/unchanging the load conditions of Real Power and Reactive Power, fixing the size of memory, and comparing the performance of non-adaptive Hoeffding tree with traditional decision tree algorithms) were conducted.</sentence>
+    <sentence>The algorithms discussed in this paper support decisions inside the control rooms helping stakeholders make informed decisions to improve reliability of the future smart grid.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Data mining</keyword>
+    <keyword>Situational awareness</keyword>
+    <keyword>Stream processing</keyword>
+    <keyword>Synchrophasor</keyword>
+    <keyword>Wide area monitoring</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The operations of electrical power system largely depend upon the ability of utilities and reliability coordinators to correctly forecast demand, generation and possible contingencies.</sentence>
+    <sentence>The forecasting mechanism is currently accurate enough to ensure 99.97% reliability of current electrical system.</sentence>
+    <sentence>But, the stakes in power system are so high that 150 billion dollars in losses are blamed on outages and interruptions, which accounts for just 0.03% of time in grid operations (S. Litos Strategic Communication under contract No.</sentence>
+    <sentence>DE-AC26-04NT41817).</sentence>
+    <sentence>The current electrical system, which depends upon the accuracy in forecasting of load, generation and contingency may not be able to keep operation highly reliable under uncertainties to be introduced in future electric grid in the form of renewable sources integration, de-regularized market driven industry, distributed generation etc.</sentence>
+    <sentence>The electrical power system has to adapt to handle the unpredictability of components in the future grid while improving the reliability of grid operation.</sentence>
+    <sentence>The reliability of future grid hinges on the ability of operators to detect and intervene against anomalous behavior of the power systems to prevent cascading failures.</sentence>
+    <sentence>A constant surveillance of grid health parameters such as frequency, voltage and phase angles, and quick alerts to operators based on trends in the monitored parameters will be instrumental in grid operation, in addition to the forecasting mechanism.</sentence>
+    <sentence>Generally, power systems are designed to withstand a host of pre-determined contingencies with automatic protection and control algorithms.</sentence>
+    <sentence>In case of a rare combination of contingencies automatic protection systems can fail resulting in a wide spread outage affecting millions of customers (T.N.S.</sentence>
+    <sentence>Group, 2003).</sentence>
+    <sentence>In transient events, reaction time is at most 100 milliseconds and therefore, automatic control equipment takes over the decision making process with no human intervention in the loop.</sentence>
+    <sentence>For long term stability, operators usually have enough time to run simulations and refer to a knowledge base, to make informed decisions (King, 2008).</sentence>
+    <sentence>However, there are times in between those two extremes in which human intervention is required but this often happens when there is insufficient information available to support their decision.</sentence>
+    <sentence>The wide area situational awareness applications (where a predominant concern in application operation, based on a descriptive view of decision making and “the perception of the applications’ elements in the environment within a volume of time and space, the comprehension of their meaning and the projection of their status in the near future” can be defined (Endsley, 1995)) aim to fill the information void in that problem domain, where human intervention is required within short response time to prevent cascading failures (King, 2008).</sentence>
+    <sentence>Synchrophasor technology, supported by high speed communication links, has been widely regarded as one of most important tools for real time wide area monitoring and situational awareness in power system.</sentence>
+    <sentence>The high sample rate synchrophasor of technology has enabled the industry to capture details of the dynamic behavior of the electrical system.</sentence>
+    <sentence>As an analogy, synchrophasor technology is to SCADA based monitoring what an MRI scan is to X-ray (Giri, Sun, &amp; Avila-Rosales, 2009).</sentence>
+    <sentence>The investigation of August 14, 2003 blackout pointed out that if phasor data had been monitored, the blackout could have been prevented.</sentence>
+    <sentence>A number of clues surrounding the blackout are missed due to the lack of situational awareness infrastructure (NERC, 2010).</sentence>
+    <sentence>With the deployment of PMUs, the industry now has the capability of monitoring grid health parameters in real time.</sentence>
+    <sentence>However, if underlying information in the high speed data stream cannot be extracted, then it is not possible for operators to make informed decisions.</sentence>
+    <sentence>Typically, mathematical calculations such as power flow analysis, contingency analysis, state estimation, etc.</sentence>
+    <sentence>are used in power systems.</sentence>
+    <sentence>The latency suffered by mathematical calculations makes them unfit for real time situational awareness applications.</sentence>
+    <sentence>Machine-learning algorithms, such as, Artificial Neural Networks (ANN) (Chih-Wen, Mu-chun, Shuenn-Shing, &amp; Yi-Jen, 1999) and decision trees (DT) (Kai, Likhate, Vittal, Kolluri, &amp; Mandal, 2007; Kamwa, Samantaray, &amp; Joos, 2010; Nuqui, Phadke, Schulz, &amp; Bhatt, 2001; Rovnyak, Kretsinger, Thorp, &amp; Brown, 1994; Ruisheng, Vittal, &amp; Logic, 2010), are being extensively studied for online prediction of power system stability based on phasor data in an actionable period of time.</sentence>
+    <sentence>Conventional machine learning techniques such as ANN and DT are designed to work with a limited amount of available “stored” data samples.</sentence>
+    <sentence>They make multiple scans of data to build a model before making predictions.</sentence>
+    <sentence>Decision trees look promising in modeling of power systems based on phasor data (Kai et al., 2007; Kamwa et al., 2010; Nuqui et al., 2001; Rovnyak et al., 1994; Ruisheng et al., 2010).</sentence>
+    <sentence>Decision trees can work with continuous data equally well as with discrete data and the results of decision trees can be interpreted by humans, which makes them an ideal choice for power systems.</sentence>
+    <sentence>However, the number of samples from a PMU doubles after the deployment of every PMU in the application.</sentence>
+    <sentence>For example, in a 24 hour period a single PMU produces 2,592,000 samples for a single parameter at 30 samples per second but there will be 5,184,000 samples in a 24-hour period if the system contains two PMUs.</sentence>
+    <sentence>With the limited computational time and memory available in computer resources, this can limit the size of the decision trees built using traditional machine learning algorithms.</sentence>
+    <sentence>Therefore, it may be hard to accommodate a huge decision tree in a limited computer memory without losing information.</sentence>
+    <sentence>One of the easiest methods to handle huge amount of data is to downsample to an appropriate level.</sentence>
+    <sentence>This approach is not appropriate for synchrophasor data because the dynamic behavior of the power system is not properly represented in downsampled data, which may even undermine the advantage of using high speed synchrophasor data.</sentence>
+    <sentence>Fig 1 illustrates the disadvantage of downsampling phasor data.</sentence>
+    <sentence>Left half of the figure is PMU data at 30 samples per second (typical PMU data rate), while the right half is downsampled version of the same data at 0.2 samples per second (typical SCADA data rate).</sentence>
+    <sentence>The details captured by PMU are lost when it is downsampled.</sentence>
+    <sentence>The lost details of the synchrophasor data may be pivotal in making time critical decisions.</sentence>
+    <sentence>Therefore, an algorithm which can use all data points from the PMUs is important to portray the dynamic behavior of the power systems and to detect events.</sentence>
+    <sentence>Illustration of dynamic behavior representation by a PMU at 30 samples per… Fig 1.</sentence>
+    <sentence>Illustration of dynamic behavior representation by a PMU at 30 samples per second vs. 0.2 samples per second.</sentence>
+    <sentence>A new method known as data stream mining can extract information from high speed data streams facilitating decision-making within constraints of limited resources and time (Domingos &amp; Hulten, 2000).</sentence>
+    <sentence>A decision tree is built from data stream in limited memory using Hoeffding bound to guarantee that the result obtained is as good as that of conventional batch processing algorithms (Domingos &amp; Hulten, 2000).</sentence>
+    <sentence>In this paper, we present an application of the stream mining algorithm for synchrophasor data to meet quick decision making requirement of future situational awareness applications in power systems in a limited memory and with limited computational power.</sentence>
+  </section>
+  <section name="Related work">
+    <sentence>Data stream mining has recently been employed as a technique to analyze and study the data streams of different power systems for knowledge discovery and for addressing some of the related challenges.</sentence>
+    <sentence>For ensuring the security of the household electricity appliances, Ma, Fang, Yuan, &amp; Wang, 2014 designed a power security system based on stream data mining, which is mainly composed of the intelligent electric outlet, the coordinator and the server.</sentence>
+    <sentence>In the system, the ZigBee module as a connector between the traditional power grid and the coordinator was used and the intelligent electric outlet to shut or open the power was implemented as well.</sentence>
+    <sentence>In addition, considering a power grid application in which thousands of sensors are deployed on the power grid network to continuously collect streams of digital data for real-time situational awareness and system management, Omitaomu, 2014 proposed a new data processing and transformation approach, based on the concept of control charts, for representing sequence of data streams from sensors.</sentence>
+    <sentence>In addition, an application of the proposed approach for enhancing data mining tasks such as clustering using real-world power grid data streams is presented.</sentence>
+    <sentence>Chen, Yang, Xu, and Yuan (2014) designed a composite classifier as a combination of a cache-based classifier (CBC) and a main tree classifier (MTC).</sentence>
+    <sentence>This classifier can handle high-speed data streams collected from power grid units and is used as a decision support system that converts the data streams to operational intelligence.</sentence>
+    <sentence>Reinhardt and Koessler (2014) presented a concept for the efficient local storage and processing of power consumption data called PowerSAX.</sentence>
+    <sentence>Instead of operating on raw sensor data streams readings, PowerSAX converts consumption data into their symbolic representations and thus mitigates their storage requirement.</sentence>
+    <sentence>Yang, Chen, Yuan, and Lianhang (2014) established a decision management system in a form of rules and patterns to forecast the power load around the smart grid system.</sentence>
+    <sentence>The findings are presented in an easily understood way that can be accepted by both human beings and machines.</sentence>
+    <sentence>Bank, Omitaomu, Fernandez, and Liu (2009), presented a method for visualizing high-speed data streams for global pattern discovery.</sentence>
+    <sentence>The method uses the Google Earth platform and renders a global pattern of the electric grid system in the United States.</sentence>
+    <sentence>This study also presented a k-Medians based clustering approach used for detecting disruptive (anomaly) events in the data streams.</sentence>
+    <sentence>Chandola, Omitaoumu, and Fernandez (2012), addressed two challenges in the realization of the smart grid technology which are the ability to visualize the deluge of expected data streams for global situational awareness; as well as the ability to detect disruptive and classify such events from spatially-distributed high-speed power system frequency measurements.</sentence>
+    <sentence>This study described recent advancements in the area of intelligent data analysis for real time detection of disruptive events from power system frequency data collected using an existing internet-based frequency monitoring network (FNET), which is a precursor for future smart-grid systems.</sentence>
+    <sentence>Rodrigues and Gama (2009) introduced a twofold online system: an adaptive clustering defining groups of correlated sensors, which are distributed all around electrical-power distribution networks to produce streams of data at high-speed, and a predictive model for predicting sensors values within specific horizons.</sentence>
+    <sentence>The system is fully online: data quality is monitored online, as a preprocessing to the learning tasks; incrementally constructs the hierarchy of clusters; and uses online learning of a predictive model for each sensor.</sentence>
+    <sentence>Another study proposed an intrusion detection system (IDS) architecture for advanced metering infrastructure (AMI) which will act as a complimentary with other security measures.</sentence>
+    <sentence>This IDS architecture consists of three local IDSs placed in smart meters, data concentrators, and central system (AMI headend).</sentence>
+    <sentence>For detecting anomaly, data stream mining approach was used on the public KDD CUP 1999 data set in order to analyze the requirement of the three components in AMI (Faisal, Aung, Williams, &amp; Sanchez, 2012).</sentence>
+    <sentence>In this study, data stream mining approach for events detection in power systems was studied.</sentence>
+    <sentence>The application of this approach on synchrophasor data has never been studied before and thus the main contribution of this study is to present an application of the stream mining algorithms for synchrophasor data to meet quick decision making requirement of future situational awareness applications in power systems.</sentence>
+    <sentence>Several experiments are performed to substantiate that our proposed methods are efficient and capable of handling huge amounts of data within limited resources of memory.</sentence>
+    <sentence>The algorithms can predict events within reasonable time so that it can be used in real time situational awareness application in power systems.</sentence>
+  </section>
+  <section name="Online predictive models for situational awareness">
+    <sentence>In this section, an overview of on-going research on predictive algorithms that are being used in the power system is discussed.</sentence>
+    <sentence>Focus is on real time prediction algorithms, their usability and their application in high speed PMU data streams.</sentence>
+    <sentence>Generally, robust mathematical techniques such as power flow analysis, sensitivity analysis, bifurcation analysis etc (NERC, 2010) provide a reliable way to predict the stability of a power system.</sentence>
+    <sentence>However, in a real time grid surveillance scenario, it may not be possible to afford the time lag of solutions provided by these models.</sentence>
+    <sentence>Traditional batch processing of phasor data Machine learning techniques learn from examples.</sentence>
+    <sentence>They generalize the relationship between measured data and the state of system to predict future states of the system based on new inputs.</sentence>
+    <sentence>They formulate a generalization from new data that will be applicable to most of the problem space.</sentence>
+    <sentence>For example, in a handwriting detection application, a set of handwritten alphabets can be used as training data to train a system to digitize handwritten documents.</sentence>
+    <sentence>Decision trees have been used for situational awareness using phasor data.</sentence>
+    <sentence>The predictor of the decision trees are created offline using historical phasor data, identifying critical attributes (CA) and their thresholds among several measurements from PMUs.</sentence>
+    <sentence>In Fig 2, attributes A, B and C are identified as critical.</sentence>
+    <sentence>The more important they are for classification, the more closely they are to the root of the tree.</sentence>
+    <sentence>The path from the root of a decision tree to the leaves determines the classification of the event where leaves store the classification.</sentence>
+    <sentence>The study conducted by Kamwa et al.</sentence>
+    <sentence>(2010) goes one step further and uses a committee of 210 decision trees (Random Forest) to predict the dynamic system stability.</sentence>
+    <sentence>Example of a decision tree Fig 2.</sentence>
+    <sentence>Example of a decision tree.</sentence>
+    <sentence>When input to conventional machine learning algorithms is a data stream, it has to be stored (e.g., in a database) before an algorithm is applied.</sentence>
+    <sentence>This is done to ensure simultaneous availability of training samples, as shown in Fig 3.</sentence>
+    <sentence>In case of phasor data stream, it may be possible to store data, but it may not be practical to go through massive stored data in order to predict a result in the time available for making a decision.</sentence>
+    <sentence>The model created for continuous synchrophasor data continuously grow in size making it impossible to store in available memory without losing information.</sentence>
+    <sentence>Batch processing algorithms for data streams Fig 3.</sentence>
+    <sentence>Batch processing algorithms for data streams.</sentence>
+    <sentence>Event stream mining of phasor data Since PMUs generate continuous streams of data, decisions have to be made before a new set of data arrives (see Fig 4).</sentence>
+    <sentence>Parameters such as, phasor angle, reactive power, voltage magnitude etc, must be monitored from multiple PMUs to facilitate situational awareness.</sentence>
+    <sentence>Therefore, a new approach is needed to handle such a massive amount of data.</sentence>
+    <sentence>Event stream processing Fig 4.</sentence>
+    <sentence>Event stream processing.</sentence>
+    <sentence>Stationary data stream mining Stationary data stream mining algorithms deal with data from stochastic processes whose joint probability distribution does not change when shifted in time.</sentence>
+    <sentence>This will not be useful in data streams with concept drift where the data generating process evolves over time (e.g., the probability distribution of the data shifts over time or a new structure in the data appears).</sentence>
+    <sentence>Data Stream mining is a relatively new field of study.</sentence>
+    <sentence>It is useful in systems such as, Cyber Security (Chu, Williams, Alhajj, &amp; Barker, 2004), financial monitoring (Liu, 2007), homeland security (Seifert, 2007) etc., which generate huge amounts of data in short period of time, similar to PMUs.</sentence>
+    <sentence>Hoeffding trees Domigos and Hulten introduced Hoeffding trees in Domingos and Hulten (2000), which is one of the pioneer works in the area of massive data stream mining.</sentence>
+    <sentence>The Hoeffding tree induction algorithm builds a decision tree by scanning the incoming data stream only once.</sentence>
+    <sentence>There is no need of storing the data as in traditional decision trees.</sentence>
+    <sentence>The tree itself holds sufficient statistics in its leaves to grow the tree and to make classification decisions of incoming data.</sentence>
+    <sentence>Each node in a decision tree contains a test for an attribute, and the branch to follow after the node depends upon the outcome of the test.</sentence>
+    <sentence>Each leaf contains a class prediction.</sentence>
+    <sentence>A classification problem is solved as a series of such tests at each node from root to leaf.</sentence>
+    <sentence>A decision tree learns by continuous replacement of leaves and selection of thresholds and test attributes at each node.</sentence>
+    <sentence>A heuristic is needed to select the attribute to be tested at each node.</sentence>
+    <sentence>The most common heuristic is the information gain (G), which is a measure of discriminative power of each attribute (Domingos &amp; Hulten, 2000).</sentence>
+    <sentence>The number of samples (λ) to be used at each node to be scanned before calculating the information gain is determined using the Hoeffding bound (see next section).</sentence>
+    <sentence>Let Xa and Xb be the two PMU measurements with two highest G calculated after seeing λ examples at a node.</sentence>
+    <sentence>Let ΔG = G(Xa) − G(Xb) ⩾ 0 be the difference between information gains, then given a desired δ the Hoeffding bound guarantees that Xa is the correct choice for the split with probability 1 − δ if λ samples have been seen at this node and ΔG &gt; ε2.</sentence>
+    <sentence>An algorithm for splitting a node l is as follows.</sentence>
+    <sentence>Create synchrophasor vector (X: C) from measurements from each time-stamped data.</sentence>
+    <sentence>For all training examples a. Update sufficient statistics in leaf node (l) b.</sentence>
+    <sentence>Increase n, the counter that tracks the number of examples seen.</sentence>
+    <sentence>c. If n ==λ, then i. Compute G for each parameter and let Xa and Xb be two attributes with highest Gs.</sentence>
+    <sentence>ii.</sentence>
+    <sentence>If G(Xa) − G(Xb) &gt; ε, then replace l with an internal node that splits on Xa iii.</sentence>
+    <sentence>Initialize all branches of the split with sufficient statistics.</sentence>
+    <sentence>There are several strategies that are used to prevent the size of tree from getting out of bounds as explained in Domingos and Hulten (2000).</sentence>
+    <sentence>• Hoeffding Bound The single most important feature of decision trees is to split a node.</sentence>
+    <sentence>The effectiveness of selecting an attribute to split a node determines the accuracy of the decision tree.</sentence>
+    <sentence>Criteria such as Gini index and information gain are used for selecting attributes (Domingos &amp; Hulten, 2000).</sentence>
+    <sentence>The calculation of such attribute selection measure is slightly more complicated in data stream mining than in traditional data stream mining because of the unavailability of simultaneous training data to the algorithms.</sentence>
+    <sentence>Domigos and Hulten proposed a criteria known as Hoeffding bound which guarantees statistically the same decision for stream mining as that with traditional batch processing algorithms (Domingos &amp; Hulten, 2000).</sentence>
+    <sentence>The Hoeffding bound states that with probability 1 − δ, the true mean of a random variable of range R will not differ from the estimated mean after n independent observations by more than: This bound is useful because it holds true regardless of the distribution generating the values, and depends only on the range of values, number of observations and desired confidence.</sentence>
+    <sentence>A disadvantage of this approach being so general is that it is more conservative than distribution-dependent bounds (Bifet &amp; Kirkby, 2009).</sentence>
+    <sentence>Evolving data stream mining Generally, data streams change over time, which diminishes the relevancy of the built model to make future decisions.</sentence>
+    <sentence>Most of real time applications are dynamic, i.e.</sentence>
+    <sentence>unlike stationary data stream mining algorithms in Section 3.2.1, evolving data stream mining algorithms have to deal with data from stochastic processes whose joint probability distribution does change when shifted in time to be able to make relevant classification and prediction decisions as shown in Fig 5.</sentence>
+    <sentence>Thousands of customers switching their electrical appliances on and off, opening and closing of relays, and breaker operations in response to contingencies make power system a very dynamic system.</sentence>
+    <sentence>Adaptability of data mining algorithms ensures that the information extracted from data is accurate for the current situation.</sentence>
+    <sentence>In this section, we will discuss data mining techniques that are being researched for the evolving data stream.</sentence>
+    <sentence>Adaptive algorithm for evolving stream Fig 5.</sentence>
+    <sentence>Adaptive algorithm for evolving stream.</sentence>
+    <sentence>PMUs provide a continuous stream of time synchronized data about grid operating parameters.</sentence>
+    <sentence>The synchronization of data enables operators to see a snapshot of the status of the power system in real time.</sentence>
+    <sentence>Therefore, PMU data has a joint probability distribution that changes when shifted in time.</sentence>
+    <sentence>However, due to its continuous and dynamic generation process if PMU data is tuned into a stationary distribution by standard methods employed in time series analysis such as removing trend and seasonality, it would no longer reflect the exact status of the power systems in real time.</sentence>
+    <sentence>In other words, to extract meaningful information from PMU data, evolving data stream mining algorithms should be applied.</sentence>
+    <sentence>That is different from other statistical distributions that deal with static and limited samples of power systems’ data (Kashyap &amp; Callaway, 2010; Pang, Kesidis, &amp; Konstantopoulos, 2012; Schellenberg, Rosehart, &amp; Aguado, 2005) 3.2.2.1.</sentence>
+    <sentence>Hoeffding window trees using ADWIN Hoeffding window tree is any decision tree that uses Hoeffding bounds and maintains a sliding window of instances.</sentence>
+    <sentence>The algorithm maintains detectors at every node that will flag changes.</sentence>
+    <sentence>It creates, manages, switches and deletes alternate trees.</sentence>
+    <sentence>A change detection algorithm ADaptive sliding WINdow (ADWIN) has been proposed in Bifet and Gavalda (2007) which has been used in automatic detection of change and adapts the Hoeffding tree to the current rate of change.</sentence>
+    <sentence>ADWIN is a parameter free and assumption free algorithm which makes it easier for users to implement without needing a priori knowledge of characteristics of data stream.</sentence>
+    <sentence>Hoeffding Adaptive Trees Hoeffding Adaptive Tree (HAT) is an algorithm that adapts to changes in the data stream without requiring users to estimate the size of a sliding window to deal with the concept drift in the data stream (Bifet &amp; Kirkby, 2009).</sentence>
+    <sentence>It automatically detects the rate of change of data streams to adapt to the change of data.</sentence>
+    <sentence>It places instances of estimators of frequency statistics at every node.</sentence>
+    <sentence>There are several variants of HAT depending upon the estimator used.</sentence>
+    <sentence>• HAT-INC: It uses a linear incremental estimator • HAT-EWMA: It uses an Exponential Weight Moving Average (EWMA) • HAT-ADWIN: It uses an ADWIN estimator.</sentence>
+    <sentence>As the ADWIN instances are also change detectors, they will give an alarm when a change in the attribute class statistics at that node are detected, which indicates also a possible concept drift.</sentence>
+  </section>
+  <section name="Experimental approach">
+    <sentence>Experimental evidences will be presented to show that adaptive variant of Hoeffding tree can incrementally learn the changing conditions of the power system and to make predictions relevant to these conditions.</sentence>
+    <sentence>We utilize a load change to simulate changing operating condition.</sentence>
+    <sentence>We believe that experimental evidences support our proposal that data stream mining algorithm possess enough prospect to solve problem of mining high speed synchrophasor data to support decisions in real time.</sentence>
+  </section>
+  <section name="Experimental settings">
+    <sentence>In order to demonstrate the usefulness of event stream mining algorithms for situational awareness in power systems, we used simulations of a power system from a Real Time Digital Simulator (RTDS).</sentence>
+    <sentence>RTDS is a real-time power system simulator that performs digital electromagnetic transient simulation of electric power circuits using a time step as small as 2 μs (Srivastava, Ravikumar, &amp; Zweigle, 2010).</sentence>
+    <sentence>The real-time operation of the RTDS makes it suitable for development and testing of protection and control techniques for power systems.</sentence>
+    <sentence>RSCAD is used to design the power system circuits which can be loaded into RTDS.</sentence>
+    <sentence>The RTDS at Mississippi State University consists of a cubicle with two processor racks, containing eight Triple Processor Cards and two Giga Processor Cards (GPCs) (Srivastava et al., 2010).</sentence>
+    <sentence>We used a hardware-in-the-loop approach in order to make the experiment close to a real world scenario.</sentence>
+    <sentence>We used two Phasor Measurement Units (PMUs): SEL421 from Schweitzer Engineering Laboratory (SEL) and N60 from General Electric.</sentence>
+    <sentence>Both PMUs are synchronized with a GPS clock as shown in Fig 6 and configured at a data rate of 30 samples per second.</sentence>
+    <sentence>Table 1 shows the parameters obtained from each PMU.</sentence>
+    <sentence>Data flow in experimental setup Fig 6.</sentence>
+    <sentence>Data flow in experimental setup.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Parameters measured by two PMUs.</sentence>
+    <sentence>N60 Phase A voltage Positive sequence current Negative sequence current Zero sequence current Ground current Phase B voltage Phase C voltage Phase A current Phase B current Phase C current Positive sequence voltage Negative sequence voltage Zero sequence voltage Rate of change of frequency (dF/dt) Frequency SEL421 Phase A voltage Positive sequence current Phase B voltage Phase C voltage Phase A current Phase B current Phase C current Positive sequence voltage Rate of change of frequency (dF/dt) Frequency Time synchronization enables measurements from multiple PMUs to be temporally aligned as a vector {x1, x2, x3 …, xn}, where ‘n’ is number of total parameters measured by all deployed PMUs.</sentence>
+    <sentence>We define a synchrophasor vector (X, C), where X is a vector of n PMU measurements and C is discrete class indicating status of power system.</sentence>
+    <sentence>The synchrophasor vector can be loaded into the stream mining algorithm to identify events in the power system based on signatures and trends of the measurements.</sentence>
+    <sentence>However, recent studies have shown that PMUs sometimes experience communications delays, so that not all data can be loaded into the stream mining algorithm at real time (Zhu, Chenine, Nordström, Holmström, &amp; Ericsson, 2013).</sentence>
+    <sentence>This study suggests that the delay of the unprocessed PMU data could be approximated by a bi-modal distribution containing two normal distributions, while the delayed sorted PMU data follows a normal distribution (Zhu et al., 2013).</sentence>
+  </section>
+  <section name="Result evaluation methods">
+    <sentence>The results of a learning process have to be evaluated on some basis to compare the effectiveness of the algorithms.</sentence>
+    <sentence>Batch learning algorithms use the following evaluation processes.</sentence>
+    <sentence>Holdout method In this method of evaluation, a set of random samples are held out from training process as an independent evaluation set.</sentence>
+    <sentence>An independent set is used to test the effectiveness of the algorithm on unseen samples.</sentence>
+    <sentence>It is generally used when there are abundant samples in training examples (Bifet &amp; Kirkby, 2009).</sentence>
+    <sentence>Cross-fold method In this method of evaluation, training set is divided into K folds.</sentence>
+    <sentence>The training is repeated K times using each set as an evaluative “independent” set.</sentence>
+    <sentence>The final result is average performance of the algorithm for each train/test set.</sentence>
+    <sentence>It is useful when training samples are limited (Bifet &amp; Kirkby, 2009).</sentence>
+    <sentence>Interleaved test-then-train In this method of evaluation, a sample is used for testing before it is used for training the model.</sentence>
+    <sentence>The accuracy is incrementally updated.</sentence>
+    <sentence>Also, the algorithm is tested on samples it has never seen before.</sentence>
+    <sentence>It makes very effective use of training samples for testing.</sentence>
+    <sentence>The downside of this approach is that there is no distinction between training and testing time (Bifet &amp; Kirkby, 2009).</sentence>
+  </section>
+  <section name="Evaluation measures">
+    <sentence>Several parameters can be defined to measure the performance of an algorithm.</sentence>
+    <sentence>Basically there are three areas of performance that we are interested in processing synchrophasor data: how accurate is the classification, how fast the algorithm runs (latency) and how efficiently memory resources are utilized by the algorithm.</sentence>
+    <sentence>The following points give an some insightful details about the performance measures that have been considered for synchrophasor data processing.</sentence>
+    <sentence>Accuracy measure In power systems, normal data are more common than events.</sentence>
+    <sentence>Events (such as single line to ground faults) get cleared in a very short time (milliseconds).</sentence>
+    <sentence>One of the most common measures of performance of a learning algorithm is accuracy.</sentence>
+    <sentence>But, the accuracy measure only draws an effective measure when the classes to be detected are in the same ratio, which is not the case in our domain of study.</sentence>
+    <sentence>If 98% of instances are normal and 2% percent are faults, then any “dumb” classifier can achieve 98% accuracy by just labeling each incoming instance as normal.</sentence>
+    <sentence>A different evaluation measure has to be used that can evaluate the algorithm regardless of the imbalance in classes.</sentence>
+    <sentence>Kappa Statistics, introduced by Cohen in 1960, is a more appropriate measure to represent the performance of stream classifiers (Bifet &amp; Frank, 2010).</sentence>
+    <sentence>It normalizes the accuracy by that of the chance predictors which is more credible in our domain of application.</sentence>
+    <sentence>The kappa statistic is defined in Eq (1) (Bifet &amp; Frank, 2010).</sentence>
+    <sentence>(1) where, and are prequential accuracy and chance accuracy (Bifet, Holmes, Pfahringer, &amp; Frank, 2010) respectively.</sentence>
+    <sentence>If a classifier is always correct, then .</sentence>
+    <sentence>If the accuracy coincided with chance classifier, then .</sentence>
+    <sentence>The use of Kappa statistics will be made clearer by an example.</sentence>
+    <sentence>A confusion matrix for a hypothetical classifier, which classifies a highly unbalanced classification problem, is shown in Table 2.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Confusion matrix for kappa calculation.</sentence>
+    <sentence>Predicted class A B Total Real class A 438 12 450 B 20 30 50 Total 458 42 500 Prequential accuracy is , which is not a good representation of the performance of the classifier because 40% of class B is not correctly classified.</sentence>
+    <sentence>Kappa statistics gives a better representation as shown below.</sentence>
+    <sentence>Chance accuracy is calculated using Eq (2), where, C is confusion matrix, N is number of classes and m is total number of instances.</sentence>
+    <sentence>(2) In our example, Therefore, Kappa statistics punishes algorithms that fail to accurately classify minority class instead of treating both the majority and minority class equally.</sentence>
+    <sentence>Evaluation time Evaluation time is the time (seconds) required for the algorithm to run.</sentence>
+    <sentence>The interleaved test then train method of model evaluation does not have a clear separation between the training and testing phases of an algorithm.</sentence>
+    <sentence>A new sample is tested first, then the model is trained, so evaluation time consists of both testing time and training time as illustrated in Fig 7.</sentence>
+    <sentence>Evaluation time (testing time and training time) for interleaved-test-then-train Fig 7.</sentence>
+    <sentence>Evaluation time (testing time and training time) for interleaved-test-then-train.</sentence>
+    <sentence>Model cost (Ram hours) Ram hours will used as an evaluation measure of the algorithms used for synchrophasor data mining.</sentence>
+    <sentence>Every GB of RAM deployed for 1 hour equals one RAM-Hour.</sentence>
+    <sentence>Commercial cloud services such as GoGrid which handle huge amount of data charge their customers based on RAM hours for memory usage (Bifet et al., 2010).</sentence>
+  </section>
+  <section name="Simulation and results">
+    <sentence>Experiment I In this experiment, we focus on testing the ability of stream mining to adapt to changing conditions of power systems.</sentence>
+    <sentence>A machine learning algorithm has to constantly update its learned knowledge to stay relevant in predicting the behavior of a dynamic system.</sentence>
+    <sentence>This is a very important feature for the algorithm in order to incorporate the dynamic behavior of power systems.</sentence>
+    <sentence>In this experiment, we have emulated dynamic behavior by changing load condition.</sentence>
+    <sentence>We generated synchrophasor data with solid three phase faults in various load conditions.</sentence>
+    <sentence>In order to simulate concept drift in the system, Real Power (P) and Reactive Power (Q) are changed at regular intervals.</sentence>
+    <sentence>Three phase faults are introduced at regular interval.</sentence>
+    <sentence>The simulation is run for about 41 minutes with 74,245 data samples generated.</sentence>
+    <sentence>The magnitudes of parameters shown in Table 1 are organized in a row.</sentence>
+    <sentence>All magnitudes, frequency, rate of change of frequency and angle difference between phase A voltages of both PMUs for a timestamp are organized as shown in Table 3.</sentence>
+    <sentence>Each of the rows is manually labeled to be normal or fault.</sentence>
+    <sentence>A new column named “class” is added after manual classification of each row.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Organization of samples as training data.</sentence>
+    <sentence>Time PhaseA Mag … Seq1 Mag … AngDiff The data stream mining framework Massive Online Analysis (MOA) (Bifet &amp; Kirkby, 2009) is utilized for performing experiments described here.</sentence>
+    <sentence>Hoeffding Adaptive Tree (with Naïve Bayes classifier as leaf predictor) and non-adaptive Hoeffding tree (with Gauss10 numeric estimator) are used to demonstrate the ability of adaptive Hoeffding tree to adapt to changing environment.</sentence>
+    <sentence>Fig 8 illustrates the performance of both Hoeffding trees (adaptive and non-adaptive) on the same set of data based on kappa statistics.</sentence>
+    <sentence>The kappa statistics of adaptive tree is on increasing trends as the model scans more data even though the load conditions are constantly changing.</sentence>
+    <sentence>This indicates that the tree is learning the model by adapting to new conditions, which is not possible with traditional batch processing algorithms.</sentence>
+    <sentence>Even the stream mining algorithm without the ability to adapt failed miserably in classifying the events.</sentence>
+    <sentence>This incremental learning property of stream mining algorithm makes it very desirable in application of power system, where operating conditions changes very often.</sentence>
+    <sentence>Kappa statistics plot Fig 8.</sentence>
+    <sentence>Kappa statistics plot.</sentence>
+    <sentence>Fig 9 shows a comparison in terms of RAM hours of adaptive and non adaptive Hoeffding tree algorithm.</sentence>
+    <sentence>Fig 10 shows evaluation time (in seconds) of both algorithms.</sentence>
+    <sentence>Non adaptive algorithms always outperformed adaptive algorithm in terms of computation time and memory requirement.</sentence>
+    <sentence>This experiment shows that adaptive Hoeffding tree achieved better accuracy at expense of runtime and memory.</sentence>
+    <sentence>We have used the interleaved-test-then-train approach for model evaluation, so runtime consists of both training and testing, which makes testing time less than what was reported in these experiments.</sentence>
+    <sentence>Model cost in Ram hours Fig 9.</sentence>
+    <sentence>Model cost in Ram hours.</sentence>
+    <sentence>Evaluation time in CPU seconds Fig 10.</sentence>
+    <sentence>Evaluation time in CPU seconds.</sentence>
+    <sentence>Experiment II In this experiment, 26 Single Line to Ground (SLG) faults are introduced at regular intervals.</sentence>
+    <sentence>Phase A to Ground, Phase B to Ground and Phase C to Ground faults each with 100 Ω fault impedance are introduced.</sentence>
+    <sentence>All other factors such as load (P) and (Q) remained constant throughout the experiment.</sentence>
+    <sentence>The simulation is run for about an hour to generate 107,117 data samples.</sentence>
+    <sentence>The training data is generated using similar measures as in Experiment I.</sentence>
+    <sentence>All kinds of SLG faults are categorized as single class called “FAULT” for binary classification.</sentence>
+    <sentence>In this experiment, loading condition remains constant throughout the experiment.</sentence>
+    <sentence>As with Experiment I, we tested results of both adaptive and non-adaptive Hoeffding tree.</sentence>
+    <sentence>A kappa statistics plot for this experiment is illustrated in Fig 11, where accuracy level is fairly constant in mid 90s for adaptive algorithm.</sentence>
+    <sentence>As the stream is not evolving in this experiment, non-adaptive Hoeffding tree performed fairly well compared to evolving data stream in Experiment I. Kappa statistics plot of adaptive and non adaptive Hoeffding trees Fig 11.</sentence>
+    <sentence>Kappa statistics plot of adaptive and non adaptive Hoeffding trees.</sentence>
+    <sentence>Although load conditions in this experiment are kept constant, three different types of faults (A-G, B-G and C-G) are categorized in a single class.</sentence>
+    <sentence>Unlike batch processing algorithms, a data stream mining algorithm does not have access to training data at once, so the adaptive algorithm seems to be adapting well to different types of faults presented to it as a single class in a stream.</sentence>
+    <sentence>The non-adaptive algorithm also seems to be performing better than that in Experiment I because variation in data distribution is not as radical as that in Experiment I, where load conditions are changing.</sentence>
+    <sentence>Also, the performance of the non-adaptive algorithm is not as good as in Experiment I because different fault types are presented in a stream instead of in a batch, so the algorithm could not adapt well to identify the different kinds of faults categorized as a single class.</sentence>
+    <sentence>Similar to Experiment I, the adaptive algorithm is more accurate than the non-adaptive algorithm at the expense of runtime and memory requirements as shown in Figs.</sentence>
+    <sentence>12 and 13.</sentence>
+    <sentence>Model cost in Ram hours Fig 12.</sentence>
+    <sentence>Model cost in Ram hours.</sentence>
+    <sentence>Evaluation time in seconds Fig 13.</sentence>
+    <sentence>Evaluation time in seconds.</sentence>
+    <sentence>Experiment III In this experiment, we fixed the size of Hoeffding tree (in bytes) to see its effect on the accuracy of classification.</sentence>
+    <sentence>For the purpose of illustration, we chose non-adaptive Hoeffding tree for this experiment.</sentence>
+    <sentence>We studied four cases of fixing memory to unbounded memory (memory of host computer), 25 K bytes, 50 K bytes and 75 K bytes.</sentence>
+    <sentence>The performance profiles of the algorithm for each memory limitation are exactly the same, while the unbounded memory performance is better after 140 K samples as shown in Fig 14.</sentence>
+    <sentence>Kappa statistics plot for algorithm with fixed memory Fig 14.</sentence>
+    <sentence>Kappa statistics plot for algorithm with fixed memory.</sentence>
+    <sentence>The performance deteriorated for 25, 50, and 75 K when the size of tree hits their maximum allocated memory as shown in Fig 15 Number of instances vs Fig 15.</sentence>
+    <sentence>Number of instances vs. tree size vs. kappa statistics for tree size of 50 k bytes when the non-adaptive Hoeffding tree algorithm was tested for Experiment III.</sentence>
+    <sentence>This experiment supported our argument that data stream mining algorithms can adapt to lower memory bounds without losing much accuracy.</sentence>
+    <sentence>With the number of data samples for a typical power system reaches more than 2 million within 24 h period, the algorithms that process synchrophasor data have to be able to process the data in limited memory without much degrading the predictive accuracy.</sentence>
+    <sentence>The ability of an algorithm to limit memory use also helps in meeting the latency requirement of real time applications.</sentence>
+    <sentence>In this experiment, we have used a small data set to prove that the stream mining algorithm can optimize the tradeoff between memory requirement and accuracy.</sentence>
+    <sentence>The impact of this property of stream mining algorithm will be profound when the number of data samples is in the order of millions of samples (Bifet &amp; Kirkby, 2009).</sentence>
+    <sentence>Experiment IV In this experiment, we compared the performance of non-adaptive Hoeffding tree with traditional decision tree algorithms such as J48 and REPTree available in WEKA (Hall et al., 2009).</sentence>
+    <sentence>We chose non-adaptive Hoeffding tree (unbounded memory) because from Experiments I and II we know that adaptive algorithms are less efficient in terms of memory and runtime, so we did not want to put Hoeffding tree at a disadvantage for adapting to changes that traditional data mining are not capable of.</sentence>
+    <sentence>Fig 16 illustrates performance comparison based on runtime, size of tree and accuracy.</sentence>
+    <sentence>The Hoeffding tree algorithm significantly outperformed others even when the runtime of Hoeffding tree contains both testing phase and training phase while run time of J48 and REPTree algorithms is the time required to just build the model.</sentence>
+    <sentence>Performance comparison of three algorithms based on runtime, accuracy and… Fig 16.</sentence>
+    <sentence>Performance comparison of three algorithms based on runtime, accuracy and memory requirements.</sentence>
+    <sentence>Hoeffding tree algorithm is also found better in terms of efficiency in memory as shown in Fig 16.</sentence>
+    <sentence>We used Tree size as a measure of memory resource used by the algorithm because it is the only parameter available for all algorithms under study.</sentence>
+    <sentence>The accuracy measure of Hoeffding tree is found to be slightly lower than that of J48 and REPTree.</sentence>
+    <sentence>It may be because of the fact that Hoeffding tree is an over pruned version of the tree (Domingos &amp; Hulten, 2000).</sentence>
+    <sentence>If the number of samples is increased then Hoeffding tree may even catch up with the accuracy of the other decision tree algorithms (Domingos &amp; Hulten, 2000).</sentence>
+    <sentence>Nevertheless the performance of Hoeffding tree is found to support our proposed method of handing huge amount of synchrophasor data within limited memory resource and latency required by situational awareness applications.</sentence>
+  </section>
+  <section name="Discussion and conclusions">
+    <sentence>The wallboards of control centers are already overloaded with information for operators to process.</sentence>
+    <sentence>Contextual information is the key to be successful in building a great decision support system.</sentence>
+    <sentence>The selection of information to be presented in the control room is taken with utmost deliberation and care.</sentence>
+    <sentence>The next phase of research on synchrophasor area will be focused on applications where information is extracted from data collected, so that concise and contextual information could be presented to help operators make the right decision at the right time.</sentence>
+    <sentence>With high frequency data streams coming from all over the system, extracting meaningful information in limited time is a big challenge in building the situational awareness application.</sentence>
+    <sentence>However, due to its continuous and dynamic generation process, PMU data will not be useful if it is tuned into a stationary distribution by standard methods employed in time series analysis as it would no longer reflect the exact status of the power systems in real time.</sentence>
+    <sentence>That is different from other statistical distributions that deal with limited samples of power systems’ stored data.</sentence>
+    <sentence>In this paper, we presented a novel method of extracting information from the continuous streams of PMU data with reasonable accuracy and staying within computational boundaries of memory and processing time.</sentence>
+    <sentence>Electrical grid poses several challenges to traditional data mining algorithms, there exists a large number of combinations of inputs parameters which makes the training of a supervised algorithm a very difficult task.</sentence>
+    <sentence>The changing state of grid makes things even worse.</sentence>
+    <sentence>Another big challenge to a wide scale adoption of the traditional machine learning algorithms is that it is very hard to explain the algorithms’ decision making process.</sentence>
+    <sentence>However, the algorithms presented in this paper utilize incremental learning methods, which adapt to changing condition in input parameters, making it desirable in dynamic systems like electrical grids.</sentence>
+    <sentence>In addition, they employ decision trees whose decision process can be explained in a physical scenario.</sentence>
+    <sentence>This would help to build confidence in the algorithms’ decision over time and encourage a wider adoption of machine learning algorithms.</sentence>
+    <sentence>In this paper, we focused on the measurement-based decision making process with no model information.</sentence>
+    <sentence>This might limit the application of this algorithm in its current format.</sentence>
+    <sentence>For example, this algorithm is limited to monitor major tie-lines or few critical points of grid.</sentence>
+    <sentence>If the model information is available, the search space of the algorithm can be significantly reduced thus speeding up the algorithm.</sentence>
+    <sentence>The future research should focus on ways to bring model information, so that the algorithm can be scaled for a wider use and faster decisions.</sentence>
+    <sentence>In addition, this paper depends on Hoeffding bound in the data stream mining algorithms implemented in all of the four experiments.</sentence>
+    <sentence>However, despite that this bound holds true regardless of the distribution generating the values, it only considers the bound between the two heuristic function values at a leaf.</sentence>
+    <sentence>However, it does not reflect the overall accuracy of the main tree.</sentence>
+    <sentence>The accuracy will continue to degrade if either concept drift or noisy data persists.</sentence>
+    <sentence>Therefore, other enhanced criteria (bounds, loss functions, … etc) can be implemented in future studies to balance between the tree size and the overall accuracy of the data stream mining algorithm under concept drift and/or erroneous data samples.</sentence>
+    <sentence>Research on distributed stream processing can be a potential extension of the method presented in this paper.</sentence>
+    <sentence>This can be a powerful application of large scale systems like electrical grids using open-source stream processing frameworks like STORM maturing.</sentence>
+    <sentence>Another very practical and useful extension could be studying some ways to interpolate or discard bad data (data with missing data fields, repeated fields, or irrelevant fields) in PMU stream.</sentence>
+    <sentence>Bad data is inevitable and any algorithm should be robust to handle this data for any practical use in real world applications.</sentence>
+    <sentence>Finally, this study dealt with real-time monitoring of the grid using PMUs.</sentence>
+    <sentence>However, this study neglected the communication delays before the data is loaded from the PMUs into the stream mining algorithm.</sentence>
+    <sentence>Therefore, another possible future work is to test the proposed stream mining algorithms in the presence of communications delays.</sentence>
+    <sentence>1 Present address: ALSTOM Grid, 10865 Willows Rd NE, Redmond, WA 98052, USA.</sentence>
+  </section>
+</article>

@@ -1,0 +1,347 @@
+<article>
+  <title>Recognition of two-dimensional representation of urban environment for autonomous flying agents☆</title>
+  <abstract>
+    <sentence>In this paper the problem of a vision system implementation for autonomous flying agents is considered in the context of industrial inspection tasks performed by unmanned aerial vehicles.</sentence>
+    <sentence>A syntactic algorithm of a two-dimensional object vectorization and recognition is proposed.</sentence>
+    <sentence>An algorithm of two-dimensional map recognition has been introduced as well.</sentence>
+    <sentence>The algorithms have been tested by using both artificial data and real data – the satellite image.</sentence>
+    <sentence>They have turned out to be effective.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Autonomous flying agents</keyword>
+    <keyword>Vectorization</keyword>
+    <keyword>Object recognition</keyword>
+    <keyword>Syntactic languages</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>Robot vision systems have been studied for over twenty years (Bonin-Font, Ortiz, &amp; Oliver, 2008; Tadeusiewicz, 1992).</sentence>
+    <sentence>Such systems have special meaning for autonomous robots, including autonomous flying robots (also referred to as autonomous flying agents or unmanned aerial vehicles-UAV for abbreviation) which are the class of unmanned mobile robots that operate in the air.</sentence>
+    <sentence>They are equipped with sensors that are used to collect information about the surrounding environment (Muratet, Doncieux, Briere, &amp; Meyer, 2005; Sinopoli, Micheli, Donato, &amp; Koo, 2001).</sentence>
+    <sentence>Beside the need to collect mission-specific data such information enables the robot to find a collision-free path between obstacles (Hrabar, Sukhatme, Corke, Usher, &amp; Roberts, 2005).</sentence>
+    <sentence>Identifying their location in space is another typical challenge for the mobile agents (Filliat &amp; Mayer, 2003).</sentence>
+    <sentence>Though Global Positioning System (GPS), coupled with other sensors or by itself, has also been extensively used for this purpose, it may not be applicable in environments where there is no satellite visibility, such as under water, in caves, indoors, or on Moon and Mars (Siagan, 2009).</sentence>
+    <sentence>In those places vision system should be a viable alternative.</sentence>
+    <sentence>Furthermore, complex tasks performed by a robot such as inspection (Metni &amp; Hamel, 2007) or an unknown environment exploring require not only the agent positioning but also the object recognition (Flasiński, 1993; Tadeusiewicz &amp; Flasiński, 1991) and both the scene analysis (Bielecka, Skomorowski, &amp; Bielecki, 2007; Flasiński, 1988; Skomorowski, 1998; Skomorowski, 1999; Skomorowski, 2007) and understanding (see Bielecka et al., 2010; Bielecka et al., 2011; Tadeusiewicz, 2004; Tadeusiewicz, 2006 in the context of medical image understanding).</sentence>
+    <sentence>Therefore, systems of pattern recognition and scene analysis based on vision systems have been studied intensively in robotics in the context of the scene understanding and the agent positioning (Filliat &amp; Mayer, 2003; Katsev, Yershova, Tovar, Ghrist, &amp; LaValle, 2011; Muratet et al., 2005; Siagan, 2009; Sinopoli et al., 2001).</sentence>
+    <sentence>The mentioned tasks are difficult as they have to be solved on-line.</sentence>
+    <sentence>During the robot flight it has to process information quickly to operate confidently in complex and sometimes changing environment.</sentence>
+    <sentence>The computational power limitation of the board computer causes additional problems especially in the case of flying agents, where the mentioned limitations frequently are crucial (Tadeusiewicz, 2008).</sentence>
+    <sentence>These problems could be solved efficiently if the possibility of application of GPU (Graphical Processing Unit), which enables us to process many tasks in parallel (Dally, 2010; Owens et al., 2007), is considered.</sentence>
+  </section>
+  <section name="UAVs-the state of the art">
+    <sentence>UAVs, as devices with no pilot on board, can be remote controlled aircraft, e.g.</sentence>
+    <sentence>flown by a pilot at a ground control station, or can fly autonomously, based on pre-programmed flight plans or more complex dynamic automation systems.</sentence>
+    <sentence>UAVs are currently used for a number of missions, including reconnaissance and attack roles.</sentence>
+    <sentence>As the capabilities grow for all types of UAVs, nations continue to subsidize their research and the development which leads to further advances and enables them to perform a multitude of missions.</sentence>
+    <sentence>UAV not only perform intelligence, surveillance, and reconnaissance (ISR) missions any longer, but also this still remains their predominant type.</sentence>
+    <sentence>Their roles have expanded to other areas.</sentence>
+    <sentence>UAVs range in cost is from a few thousand dollars to tens of millions of dollars, and the aircraft used in these systems range in size from a Micro Air Vehicle (MAV) weighing less than one pound to large aircraft weighing over 18,000 lb.</sentence>
+    <sentence>In order to be able to complete their task, UAVs are equipped with sensors that gather data from the environment which is then used in the control system.</sentence>
+    <sentence>The objectives of these control systems are very different, like locating the drone in the space, or avoiding collisions.</sentence>
+    <sentence>Different solutions with different characteristics are used depending on the mission.</sentence>
+    <sentence>For example the Predator (Wilson, 2002), performing ISR missions is its objective.</sentence>
+    <sentence>This can be achieved thanks to his long endurance (35 h) even when having a considerable size: 17 m wing span, 8 m in length, max takeoff weight 1157 kg, 147 kg of it is payload capacity.</sentence>
+    <sentence>The ceiling of the studied model is over 7500 m and it can work autonomously for simple tasks and semi autonomously.</sentence>
+    <sentence>The second one is a combat aircraft, the Arcturus T-20 (Yakimenko et al., 2009).</sentence>
+    <sentence>The original idea was to design it for ISR missions too, but it was transformed into a combat aircraft.</sentence>
+    <sentence>This model is much smaller than Predator, with 5.2 m wingspan, 2.8 m long body and a maximum payload of 80 kg.</sentence>
+    <sentence>It also has a lower working range, around 90 km and 16 h endurance.</sentence>
+    <sentence>Its ceiling is over 4500 m and it can work both autonomously and semi autonomously.</sentence>
+    <sentence>The third example is also a combat model, but in this case, it is a helicopter, the MQ-8B Fire Scout (Downs et al., 2007).</sentence>
+    <sentence>This is an example of autonomous solution, with a good lifting capacity, around 270 kg.</sentence>
+    <sentence>On the other hand, the endurance of this model is lower than the ones in the previous examples, 8 h and it has a ceiling of 6000 m. The fourth design has a completely different application, transporting materials is its main task.</sentence>
+    <sentence>It is the CQ-10 SnowGoose (Dalamagkidis, 2009).</sentence>
+    <sentence>This small UAV is able to carry a payload of 75 lb with a maximum ceiling of almost 5500 m and a maximum endurance of 16 h, depending on the load the UAV is carrying.</sentence>
+    <sentence>Our next example is one of the most controversial UAVs, the Nano hummingbird (Watts, Ambrosia, &amp; Hinkley, 2012).</sentence>
+    <sentence>This semi-autonomous UAV was created for surveillance and reconnaissance.</sentence>
+    <sentence>The difference with the Predator example is clear, its size.</sentence>
+    <sentence>This UAV has the size and form of a real hummingbird and can move at a maximum speed of 11 mph, being able to go forwards, backwards, sideways and rotate around its axis.</sentence>
+    <sentence>The last example is the newest and more advanced solution for UAV, the HALEs (High altitude, long endurance), and one example is the Phantom Eye (Harrington, 2010).</sentence>
+    <sentence>This model has been designed for gathering advanced intelligence and reconnaissance work, driven in combat conditions.</sentence>
+    <sentence>It has a very large size, with a 46 m wingspan and it can carry up to 200 kg.</sentence>
+    <sentence>The main advantages of this model are the almost 20,000 m service ceiling and its 4 days endurance, what makes this design suitable for new types of missions.</sentence>
+    <sentence>As we have seen, there are diversified specifications for every kind of UAV depending on the mission and technology, but there are many problems to solve e.g.</sentence>
+    <sentence>complexity of the cooperation: depending on how strong the cooperation is, faster or slower responses are necessary.</sentence>
+    <sentence>There are also some barriers that prevent a higher investment, mainly in civil applications.</sentence>
+    <sentence>The main one is that UAVs do not have an airspace authorization.</sentence>
+    <sentence>But there are also technological problems like the lack of methodology to test the capacity of avoiding collisions (Shima &amp; Rasmussen, 2009).</sentence>
+    <sentence>The mobile robot, used at AGH University of Science and Technology, is able to carry up to 10 kg of electronic systems and is used for tests.</sentence>
+    <sentence>The robot is equipped with full airside and groundside UAV system components, the MP2128 MicroPilot’s autopilot package with HORIZON software.</sentence>
+    <sentence>This software enables the operator to monitor the autopilot, change waypoints, upload new flight plans, initiate holding patterns and adjust feedback loop, which is accessible during all the UAV flight.</sentence>
+    <sentence>HORIZON Company, the producer of the MicroPilot, allows both the UAV developer and the end-user to access critical information in real-time.</sentence>
+    <sentence>Up to eight user-defined sensors can be configured and displayed in three formats: • Current Sensor values are displayed in an easy to read gauge format.</sentence>
+    <sentence>Warning and danger levels can be set for each gauge.</sentence>
+    <sentence>• The Strip Chart graphs sensor specific variations over time.</sentence>
+    <sentence>• The Trace Route displays sensor data variations along the UAV’s flight path.</sentence>
+    <sentence>Data from the autopilot are also recorded for post-flight analysis.</sentence>
+    <sentence>The MicroPilot system can support four external analog data to digital converters (ADC).</sentence>
+    <sentence>By using ADCs, you can display data from external sensors.</sentence>
+    <sentence>Additionally it has analog input channels enhanced data collection capabilities for up to 32 channels.</sentence>
+    <sentence>The sensors, for example, a three dimensional compass is useful when flying in high winds as it gives an accurate direction of the nose of the plane unlike the GPS heading which is the direction the plane is heading.</sentence>
+    <sentence>For such operations it is necessary to describe a dynamic model of the system presented in Fig 1.</sentence>
+    <sentence>Computational model of the UAV with assumed system of coordinates Fig 1.</sentence>
+    <sentence>Computational model of the UAV with assumed system of coordinates.</sentence>
+  </section>
+  <section name="Motivations">
+    <sentence>Research on the construction of on-board flight control systems, designed for unmanned aerial vehicle applications have been executed since the early 70s.</sentence>
+    <sentence>The contemporary state of technology did not allow us for the development of autopilot to control the UAV based on a model helicopter.</sentence>
+    <sentence>The development of MEMS (Micro Electro-Mechanical Systems) in later years helped to build gyroscopes, accelerometers and other sensors that were used in Inertial Navigation System-INS (Hong, Chun, Kwon, &amp; Lee, 2008) with parameters suitable for UAV applications.</sentence>
+    <sentence>The modern flight control system is a combination of several sensors, GNSS (Global Navigation Satellite System), software whose primary task is the estimation of the position, velocity and orientation.</sentence>
+    <sentence>To make estimation of these parameters possible, several smaller systems providing information on these parameters of the flight should be integrated in one system.</sentence>
+    <sentence>The first system, called Inertial Measurement Unit (IMU), is a combination of gyro sensors and accelerometers to measure angular velocity and acceleration, respectively around the axes X, Y, Z.</sentence>
+    <sentence>The second one, named Attitude and Heading Reference System, is a combination of IMU with the Earth’s magnetic field sensor that provides information about the direction of flight.</sentence>
+    <sentence>The third system, called GNSS, provides information about the position, speed and altitude (Kaniewski, 2006; Kaniewski, 2007).</sentence>
+    <sentence>The use of GNSS in the INS system can be implemented in two configurations as loosely coupled INS/GPS or tightly coupled INS/GPS.</sentence>
+    <sentence>The difference between the configurations is that in the loosely coupled system configuration INS with GPS, for the visibility of less than four satellites, the most widely used Kalman filter is not able to estimate sufficiently good estimate of the position and speed of the system, while in tightly coupled INS/GPS configuration, even data from a single satellite is taken into account in the Kalman filter work process.</sentence>
+    <sentence>Flight control systems can be categorized in two groups, the first group includes systems operating in open loop and the second one in a closed loop.</sentence>
+    <sentence>The first group includes all the civilian uses, where the pilot always makes the final decision.</sentence>
+    <sentence>The second group is a military application and use of UAVs, where the final decision always belongs the flight control system.</sentence>
+    <sentence>On the basis of the presented data, concerning units used in UAV to set position and orientation, it can be noticed that it is significant to turn on the visual system for correcting the UAV position.</sentence>
+    <sentence>Such attempts of using visual systems are made in SLAM (Simultaneous Localization and Mapping) technique, however, due to the complexity of calculations, they are difficult to interpret.</sentence>
+    <sentence>On the other hand, the lack of using vision systems significantly influences lowering of technical abilities concerning UAV control as this forces the usage of the tightly coupled INS-GPS system, which is less exact and prone to external interruptions.</sentence>
+    <sentence>The usage of the visual system supporting positioning and orientation.</sentence>
+    <sentence>i.e., connected with INS-GPS via involving interpretation data in the process of Kalmans filter correction (Hide, Moore, &amp; Smith, 2003; Sasiadek, Wang, &amp; Zaremba, 2000), shall improve the estimation of the robots position in space.</sentence>
+    <sentence>Additionally, the usage of the scene analysis shall enable it to interpret objects in a more exact way, which is a significant argument in favor of integrating the visual system with the control unit.</sentence>
+    <sentence>Another important argument for applying the extended functionality of the visual system in UAV is the fact that it improves the autonomy of this type of units, which is very important from the point of view of UAVs application.</sentence>
+    <sentence>In this paper the problem of a vision system implementation for autonomous flying agents is considered in the context of industrial inspection tasks performed by UAVs.</sentence>
+    <sentence>The construction industry is one of the most appropriate for robotization due to its current low level of automation (Balaguer, Giménez, Pastor, Padrón, &amp; Abderrahim, 2000).</sentence>
+    <sentence>Inspection operations of civil infrastructures such as buildings, bridges, building skeletons, complex roofs, factory chimneys, offshore platforms, wind turbines towers etc., are very important tasks (Balaguer et al., 2000; Balaguer, Giménez, &amp; Jardon, 2005; Ciang, Lee, &amp; Bang, 2008; Liu, Tang, &amp; Jiang, 2010; Sattar, Rodriguez, &amp; Bridge, 2009).</sentence>
+    <sentence>On the one hand such constructions as elevated panels or long-span suspension bridges (Briassoulis, Mistriotis, &amp; Giannoulis, 2010; Øiseth, Rönnquist, &amp; Sigbjörnsson, 2010) are exposed to damages made by wind-caused vibrations, which are destructive according to the chaotic wind speed variability (Barszcz, Bielecka, Bielecki, &amp; Wójcik, 2012).</sentence>
+    <sentence>On the other hand they are inaccessible so flying agents are proper tools to inspect them.</sentence>
+    <sentence>The high complexity of construction sites and environments must be taken into consideration in the operational aspects of the tasks performed by autonomous agents.</sentence>
+    <sentence>The development of autonomous robots is very important from different points of view-safety of the infrastructure, safety of the human operators, quality of the inspections and increment of the periodicity of inspection (Balaguer et al., 2005).</sentence>
+    <sentence>Aerial autonomous vehicles can be used effectively for such inspections (Metni &amp; Hamel, 2007).</sentence>
+    <sentence>The first part of the UAV’s mission is the navigation from an initial position to a final position in an unknown three-dimensional environment.</sentence>
+    <sentence>Then the robot has to recognize the object, that will be inspected, and understand the environment and the object spatial structure in the context of the mission, particularly in aspects of trajectory planning.</sentence>
+  </section>
+  <section name="Problem formulation">
+    <sentence>Let us consider an UAV which is aimed at performing an inspection of an urban object-building, chimney, bridge, tower etc.</sentence>
+    <sentence>The robot is autonomous one.</sentence>
+    <sentence>It has to plan out the trajectory from the starting point to the mission area, then to analyze the mission scene-to locate the recognized object and to plan out the performing of the inspection task in the context of the structure of the investigated object and the scene properties.</sentence>
+    <sentence>The agent’s memory contains the map which is given a priori, for instance as a preprocessed satellite image of an urban environment.</sentence>
+    <sentence>The robot is equipped with the mobile camera which is able to point to the ground in order to take the pictures of the surface that it flies above.</sentence>
+    <sentence>The map that the robot carries presents the buildings extracted from the base satellite image (see Fig 2).</sentence>
+    <sentence>The problem of preprocessing which, beside other problems, consists of object extraction from the image, is out of the scope of this paper.</sentence>
+    <sentence>By referring to the given two-dimensional map and the two-dimensional image from its senses-camera, radar-the agent orients itself in the environment, also by using other pieces of information, for instance GPS.</sentence>
+    <sentence>More precisely, in order to find its location on the map the robot takes successive pictures of the ground below.</sentence>
+    <sentence>Then it compares the extracted shape of the building from the picture and locate it in the bigger map.</sentence>
+    <sentence>The example of the picture is shown in Fig 2.</sentence>
+    <sentence>The method of the objects recognition has to be rotation and scale invariant as the pictures of the ground are taken from different altitudes and various directions of the robot’s flight.</sentence>
+    <sentence>This problem belongs to the group of tasks that consist in recognition and representing polygonal-type objects by a robot sensory systems (Katsev et al., 2011).</sentence>
+    <sentence>The method is extended with the recognition of the group of buildings.</sentence>
+    <sentence>Then, the robot descends in order to explore the environment directly by using camera and sensors.</sentence>
+    <sentence>This allows the agent to create the three-dimensional representation of the environment.</sentence>
+    <sentence>Then, the environment should be understood and the desired object should be found.</sentence>
+    <sentence>Thus, the studies can be divided in the following stages: 1.</sentence>
+    <sentence>Creation a single, two-dimensional object representation, based on the camera image taken from high height.</sentence>
+    <sentence>Creation of two-dimensional scene representation based on the high height camera image.</sentence>
+    <sentence>Then, the videoed scene should be recognized as a fragment of the previously given map.</sentence>
+    <sentence>The single desired object should be recognized.</sentence>
+    <sentence>Creation of a representation of the three-dimensional scene, based on the worked out two-dimensional scene representation.</sentence>
+    <sentence>The two-dimensional representation allows us to locate the buildings.</sentence>
+    <sentence>When their localization is known, the robot can investigate individual objects in order to create their three-dimensional representation.</sentence>
+    <sentence>Understanding the three-dimensional scene.</sentence>
+    <sentence>(a) Preprocessed satellite map with extracted buildings Fig 2.</sentence>
+    <sentence>(a) Preprocessed satellite map with extracted buildings.</sentence>
+    <sentence>(b) The recognized object.</sentence>
+    <sentence>The points 1 and 2 are the topics of this paper.</sentence>
+  </section>
+  <section name="Syntactic algorithm of an two-dimensional object vectorization and recognition">
+    <sentence>In this section the algorithm based on syntactic methods for raster picture vectorization and object recognition is presented.</sentence>
+    <sentence>The tests were carried out with the use of similar maps to these shown above in Fig 2.</sentence>
+    <sentence>In the big map one building that is supposed to be similar to the one from the small map is outlined.</sentence>
+    <sentence>In a real test data the building was not outlined.</sentence>
+    <sentence>To perform the action of objects recognition the new representation of the picture has to be introduced.</sentence>
+    <sentence>Every extracted building is turned into a vector representation of its shape.</sentence>
+    <sentence>Vectorization algorithm The vectorization algorithm works on prepared data based on the raster picture.</sentence>
+    <sentence>It is a tabular, two dimension data in which 0 represents the background pixels and 1 represents the pixels of the building.</sentence>
+    <sentence>This algorithm searches through matrix until it finds first unmarked building.</sentence>
+    <sentence>It processes the shape of the building, turning it into vector representation and marking its space by changing values 1 into other number to avoid running into it while searching again for the next building to be vectorized.</sentence>
+    <sentence>It is worth mentioning that each unmarked point that is found while searching through the matrix is a corner of a building or a point very close to the corner.</sentence>
+    <sentence>Complex contour creating is the first step of vectorization of a single object.</sentence>
+    <sentence>The contour of a building is found and its representation in the form of short vectors is created.</sentence>
+    <sentence>Beginning from the first point of the contour (corner of a building) the next point is found using the window-a square used to define a sub-matrix.</sentence>
+    <sentence>It is required for the window to have the size expressed with an odd value as it needs to have a central point.</sentence>
+    <sentence>If starting point of the window lies outside the contour of a building the search of the border point is conducted clockwise; in the other case counter-clockwise-see (Bielecki, Buratowski, &amp; Śmigielski, 2012) for details.</sentence>
+    <sentence>The search conducted in such manner leads to circling around the building contour clockwise.</sentence>
+    <sentence>It is important for the object recognition algorithm to build the list of points in the same direction in all cases.</sentence>
+    <sentence>Each encountered point in the border of processed building is turned from value 1 to 2.</sentence>
+    <sentence>As a result, after collecting all the points around the building its border in the matrix representation consists of the sequence of groups of values 1 separated by 2.</sentence>
+    <sentence>The length of groups depends on the size of the window.</sentence>
+    <sentence>A presence of values 2 along the border is detected while searching for another building to determine if one has already been processed.</sentence>
+    <sentence>It is accomplished in the following manner: 1.</sentence>
+    <sentence>The algorithm iterates through matrix while the current value is 0 (the background).</sentence>
+    <sentence>If the value encountered is 2 (building already processed) iteration continues in the row of the matrix until 0 is reached again.</sentence>
+    <sentence>Search for another building is continued then.</sentence>
+    <sentence>If the value encountered is equal to 1 the close surrounding of that point is checked for the presence of value 2.</sentence>
+    <sentence>The surrounding is represented by the window with central point located in the point that is found on the border.</sentence>
+    <sentence>The values in the window are checked.</sentence>
+    <sentence>If value of 2 is found it indicates that the building was already processed.</sentence>
+    <sentence>Then iteration in the row of the matrix is continued until 0 is reached and the algorithm searches for another building.</sentence>
+    <sentence>If 2 is not present in the window it means that the building was not processed yet.</sentence>
+    <sentence>The output of building processing described in this step is the sequence of points which can be interpreted as a sequence of vectors located around the building contour (a point that is not the first or last in the sequence is the end of the one vector and the beginning of the next one).</sentence>
+    <sentence>After obtaining the long sequence of points in the contour it is vital to simplify that representation before running the object recognition algorithm.</sentence>
+    <sentence>The algorithm of the final list obtaining is described in Bielecki et al.</sentence>
+    <sentence>(2012).</sentence>
+    <sentence>The results of the vectorisation algorithm for the data sets from Fig 2 are presented in Fig 3.</sentence>
+    <sentence>(a) Vectorized map Fig 3.</sentence>
+    <sentence>(a) Vectorized map.</sentence>
+    <sentence>(b) Vectorized picture of one building.</sentence>
+    <sentence>Object recognition algorithm The input for the object recognition algorithm consists of two vectorized maps.</sentence>
+    <sentence>One is the map presenting large area filled with buildings and the other has only one building, similar to one placed in the big map, but scaled and rotated.</sentence>
+    <sentence>The algorithm takes each vector representation of the building and compare it to the vector representation of the building from the small map.</sentence>
+    <sentence>The comparison is conducted in the following way: 1.</sentence>
+    <sentence>The number of corners of both buildings is compared.</sentence>
+    <sentence>If it is different the buildings are not the same.</sentence>
+    <sentence>Process is stopped.</sentence>
+    <sentence>If it is the same the algorithm moves to another step.</sentence>
+    <sentence>The representation of the building which is the list of corners is turned into representation which uses angle and length of the walls.</sentence>
+    <sentence>This can be considered as a nominal feature representation.</sentence>
+    <sentence>To change the corner representation into nominal features each wall (pair of points representing the vector) of the building is taken and its length and angle is calculated.</sentence>
+    <sentence>The nominal feature is described directly by the angle and the number of features is obtained by dividing the length of the wall by length of the feature.</sentence>
+    <sentence>Finally each wall of the building is described by the pair (F, N), where F is the nominal feature sign (angle of the wall) and N is the number of features.</sentence>
+    <sentence>Finally, as a result we obtain the list of form ((F1, N1), (F2, N2), … , (Fm, Nm)).</sentence>
+    <sentence>This is the first form which needs to be transformed for further computations.</sentence>
+    <sentence>For both representations of the buildings that are compared a new list containing pairs of values is created.</sentence>
+    <sentence>The first value expresses the angle between successive walls.</sentence>
+    <sentence>The second value is the length of the wall preceding the corner (the number of nominal features that creates the wall).</sentence>
+    <sentence>Actually the angle has the symbolic value as it is calculated as αi = (Fi+1 − Fi) mod 360; i ∈ 1, … , m − 1.</sentence>
+    <sentence>The last angle (with apex in the first corner) is calculated as αm = (F1 − Fm) mod 360.</sentence>
+    <sentence>That representation makes the difference in buildings rotation on the map irrelevant.</sentence>
+    <sentence>The resulting list has the form: ((α1, N1), (α2, N2), … , (αm, Nm)).</sentence>
+    <sentence>Having such representation one list (representing one of the compared buildings) is doubled.</sentence>
+    <sentence>Then the substring similar to the sequence of nominal features of the second building is searched in the doubled list (see Fig 4).</sentence>
+    <sentence>If the match is found the quotients of matching wall lengths is calculated.</sentence>
+    <sentence>If all the quotients are similar (the standard deviation is below the given threshold) the buildings are treated as similar and the algorithm quits.</sentence>
+    <sentence>If the quotients differ significantly (the lengths of the paired walls are different with respect to the scale) the search for the matching substring is continued.</sentence>
+    <sentence>The maximum number of checks is equal to m. Representaions used in object recognition Fig 4.</sentence>
+    <sentence>Representaions used in object recognition.</sentence>
+  </section>
+  <section name="Map recognition algorithm">
+    <sentence>The single object recognition algorithm constitutes the basics of the map recognition method.</sentence>
+    <sentence>The aim of this method is to localize the submap in the overall picture.</sentence>
+    <sentence>The submap consists of a group of buildings that is part of a big map.</sentence>
+    <sentence>The method of a map recognition allows the picture to be scaled and rotated with relation to the big map.</sentence>
+    <sentence>In further discussion, a center of an object (building) is treated as the center of mass of the vertex defined by the vector representation of a building.</sentence>
+    <sentence>The algorithm can be divided into following parts: 6.1.</sentence>
+    <sentence>Preparing the data structure This step requires parsing both pictures and identifying all the buildings from the big map (B) that are similar to those from the submap (b).</sentence>
+    <sentence>For each object b a list of matching objects from big map is created.</sentence>
+    <sentence>There are also two values that describe relation between objects b and B which are obtained during single object recognition process.</sentence>
+    <sentence>Those values are the scale and rotation.</sentence>
+    <sentence>Scale is calculated as a quotient of matching wall lengths (which is similar for each walls pair when the match is found).</sentence>
+    <sentence>Rotation is obtained as an angle between matching walls when the match is found.</sentence>
+    <sentence>The final data structure is presented in Fig 5.</sentence>
+    <sentence>Data structure used in map recognition Fig 5.</sentence>
+    <sentence>Data structure used in map recognition.</sentence>
+    <sentence>Searching through data structure to find the matching objects After parsing both maps and obtaining the proper data structure, algorithm iterates through the data structure in order to find the complete set of buildings located in the big map, that represent the relations between buildings from the submap.</sentence>
+    <sentence>The first row in the data structure plays the role of the list of a steering objects.</sentence>
+    <sentence>The attributes of a steering object (scale and rotation) will be searched in further steps among the rest of the lists.</sentence>
+    <sentence>Once the steering object i is picked the next matching element is searched in the second list (the list with elements similar to the object b in Fig 5).</sentence>
+    <sentence>The element is matching when all conditions below are fulfilled (k-index of steering object in the first list, i-index of the list of similar objects that is actually processed, j-index of element in the list of similar objects): 1.</sentence>
+    <sentence>- where Δr is the threshold of calculated rotations; 2.</sentence>
+    <sentence>- where Δs is the threshold of calculated scales; 3.</sentence>
+    <sentence>-where ΔD is the threshold of the distance between buildings, D (x, y) is a metric that, for a pair of buildings representations, returns an euclidean distance between their centers; Of course the calculation of the third condition may be omitted when the scales in compared objects are different (the second condition).</sentence>
+    <sentence>If the submap consists only of two buildings the above calculations are sufficient.</sentence>
+    <sentence>Otherwise, starting from the third list of matching objects, another calculation is required.</sentence>
+    <sentence>Its aim is to check if relations on the plane between objects in the submap are similar (correct to scale and rotation) to those selected from the big map.</sentence>
+    <sentence>To accomplish this, two angles are calculated.</sentence>
+    <sentence>First (α1) is the one with the vertex in the center of building b1 and sides determined by centers of buildings bi−1 and bi.</sentence>
+    <sentence>Second (α2) has vertex in the center of building and sides determined by centers of buildings and (where l is an index of a building in the previous list for which match was found).</sentence>
+    <sentence>If condition − Δα ⩽ α1 − α2 ⩽ Δα (where Δα is the given threshold) is fulfilled it means that relations between three buildings on the submap and the big map are preserved and the match in step i is found.</sentence>
+    <sentence>Fig 6 shows which elements are chosen for the relation check.</sentence>
+    <sentence>Elements of the data structure which take part in calculation of angles Fig 6.</sentence>
+    <sentence>Elements of the data structure which take part in calculation of angles.</sentence>
+    <sentence>The match between submap and the big map is found when on each list of matching elements at least one matching building is found.</sentence>
+    <sentence>The search is stopped and the match between submap and the overall picture is not found when: 1.</sentence>
+    <sentence>Any of the list with matching objects is empty (in this case the algorithm is finished without creating the data structure) 2.</sentence>
+    <sentence>Or the algorithm encounters the first list where the match (with relation to the previously found objects) is not found.</sentence>
+  </section>
+  <section name="Tests">
+    <sentence>This section is divided into two parts.</sentence>
+    <sentence>First will show the capabilities of single object recognition method.</sentence>
+    <sentence>The aim of the second section is to present the performance of the map recognition (multiple object recognition) algorithm.</sentence>
+    <sentence>Each section is divided into two parts presenting results for two data sets.</sentence>
+    <sentence>First is based on the set of artificial buildings which was mentioned above while discussing the algorithm (see Fig 2).</sentence>
+    <sentence>The second one is based on the satellite picture which was taken from GoogleMaps service (see Fig 7a).</sentence>
+    <sentence>The picture shows the area of Harvard College in Cambridge, Massachusetts.</sentence>
+    <sentence>A group of buildings that were extracted for tests are highlighted.</sentence>
+    <sentence>The actual map with extracted shapes is presented in Fig 7b.</sentence>
+    <sentence>(a) Satellite picture with marked buildings that were extracted Fig 7.</sentence>
+    <sentence>(a) Satellite picture with marked buildings that were extracted.</sentence>
+    <sentence>(b) Extracted buildings.</sentence>
+    <sentence>Single object recognition In this section tests of the vectorisation and object recognition algorithm are presented.</sentence>
+    <sentence>For the tests the algorithm parameters were taken as follows: 1.</sentence>
+    <sentence>Window size - 9 2.</sentence>
+    <sentence>Angle threshold T (for vectorisation) - 35° 3.</sentence>
+    <sentence>Nominal feature length - 5 The artificial data set consists of two images (small maps) of buildings taken from the large picture (see Fig 2).</sentence>
+    <sentence>Their shapes were scaled and rotated.</sentence>
+    <sentence>In Figs.</sentence>
+    <sentence>8 and 9 the extracted buildings are shown along with their vector representation obtained in the first step of the algorithm.</sentence>
+    <sentence>Test case I, (a)-extracted image, (b)-vectorized image Fig 8.</sentence>
+    <sentence>Test case I, (a)-extracted image, (b)-vectorized image.</sentence>
+    <sentence>Test case II, (a)-extracted image, (b)-vectorized image Fig 9.</sentence>
+    <sentence>Test case II, (a)-extracted image, (b)-vectorized image.</sentence>
+    <sentence>The Fig 10 shows the extracted overall map with marked buildings for which the match was found.</sentence>
+    <sentence>The matching buildings are marked with numbers I and II which correspond with test cases I and II presented above-see Figs.</sentence>
+    <sentence>8 and 9 respectively.</sentence>
+    <sentence>Map with matching buildings Fig 10.</sentence>
+    <sentence>Map with matching buildings.</sentence>
+    <sentence>Let us turn to the test results based on real data.</sentence>
+    <sentence>The testing data consists of four extracted images of buildings that can be found in Fig 7.</sentence>
+    <sentence>The Figs.</sentence>
+    <sentence>11–14 present both extracted images of buildings and their vector representation obtained after the first step of the algorithm.</sentence>
+    <sentence>Test case I, (a)-extracted image, (b)-vectorized image Fig 11.</sentence>
+    <sentence>Test case I, (a)-extracted image, (b)-vectorized image.</sentence>
+    <sentence>Test case II, (a)-extracted image, (b)-vectorized image Fig 12.</sentence>
+    <sentence>Test case II, (a)-extracted image, (b)-vectorized image.</sentence>
+    <sentence>Test case III, (a)-extracted image, (b)-vectorized image Fig 13.</sentence>
+    <sentence>Test case III, (a)-extracted image, (b)-vectorized image.</sentence>
+    <sentence>Test case IV, (a)-extracted image, (b)-vectorized image Fig 14.</sentence>
+    <sentence>Test case IV, (a)-extracted image, (b)-vectorized image.</sentence>
+    <sentence>The Fig Fig 15 shows the vectorized map of the extracted buildings obtained after vectorisation algorithm run and the map with extracted buildings.</sentence>
+    <sentence>The buildings for which the match with test examples was found are marked with equivalent number.</sentence>
+    <sentence>(a) Vectorized map Fig 15.</sentence>
+    <sentence>(a) Vectorized map.</sentence>
+    <sentence>(b) Map with extracted buildings.</sentence>
+    <sentence>Map recognition In this part the test results of the map recognition algorithms are presented.</sentence>
+    <sentence>For the tests the algorithm parameters were taken as follows: 1.</sentence>
+    <sentence>Scale threshold Δs – 0.2 2.</sentence>
+    <sentence>Distance threshold ΔD – 30 (value expressed in pixels) 3.</sentence>
+    <sentence>Rotation threshold Δr – 6° 4.</sentence>
+    <sentence>Threshold of angle between buildings Δα – 10° The artificial data set consists of the image (see Fig 16a) being the part of the large map-see Fig 2.</sentence>
+    <sentence>This small map shows the group of three extracted buildings.</sentence>
+    <sentence>The group is scaled and rotated with relation to the large map.</sentence>
+    <sentence>(a) Small map presenting the group of buildings Fig 16.</sentence>
+    <sentence>(a) Small map presenting the group of buildings.</sentence>
+    <sentence>(b) Full map presenting the group of buildings.</sentence>
+    <sentence>In Fig 16b the map with extracted buildings is presented again.</sentence>
+    <sentence>The group of buildings for which the match with test example was found is marked with grey dots.</sentence>
+    <sentence>The grey lines expresses the sides of the angles that took part in calculations of the relations between buildings.</sentence>
+    <sentence>The real data set consists of the image (see Fig 17a) which is the part of the large map of Harvard College (see Fig 7b).</sentence>
+    <sentence>There is a group of four adjacent buildings in the small map.</sentence>
+    <sentence>The group is scaled and rotated with relation to the large map.</sentence>
+    <sentence>(a) Small map presenting the group of buildings Fig 17.</sentence>
+    <sentence>(a) Small map presenting the group of buildings.</sentence>
+    <sentence>(b) Full map presenting the group of buildings.</sentence>
+    <sentence>In Fig 17 the map with extracted buildings is presented again.</sentence>
+    <sentence>The group of buildings for which the match with test example was found is marked with grey dots.</sentence>
+    <sentence>The grey lines expresses the sides of the angles that took part in calculations of the relations between buildings.</sentence>
+  </section>
+  <section name="Concluding remarks">
+    <sentence>In this paper the algorithm, based on syntactic methods for raster picture vectorization and single object recognition, has been presented.</sentence>
+    <sentence>The algorithm of recognition of a two-dimensional scene consisting of such object has been introduced as well.</sentence>
+    <sentence>Both the algorithms turned out to be effective, which has been pointed out by using both the created artificial objects and maps and the maps, based on satellite images.</sentence>
+    <sentence>In particular the algorithm are insensitive to scale changing and the map rotations.</sentence>
+    <sentence>It should be stressed that the obtained results, including the performed experiments, have only computer scientific aspect-the software has not been implemented on an embodied agent.</sentence>
+    <sentence>The three-dimensional scene representation is necessary to test an UAV equipped with the module of vision analysis.</sentence>
+    <sentence>So far only polygonal shapes have been taken into account in the part of studies concerning two-dimensional scene-stages 1 and 2 in the schedule presented in Section 4.</sentence>
+    <sentence>In the closer perspective, apart from the realization of the points 3 and 4 (see Section 4), the class of objects consisting of both line segments and arcs should be taken into consideration.</sentence>
+    <sentence>In such a case the shape languages should be a good starting point for creating the system for the scene analysis and understanding- (Jakubowski, 1982; Jakubowski, 1985; Jakubowski, 1986; Jakubowski, 1990).</sentence>
+    <sentence>This formalism seems to be useful also for creation the three-dimensional scene representation-see (Jakubowski &amp; Flasiński, 1992).</sentence>
+    <sentence>In the further perspective fully autonomous robots are planned to be used for the unknown environment exploration.</sentence>
+    <sentence>The inspection of industrial and urban objects is a relatively simple task in the context of the scene analysis.</sentence>
+    <sentence>If the robot is used for exploring un unknown natural environment, for instance, the Moon or planets (Pederson, Kortencamp, Wettergreen, &amp; Nourbakhsh, 2003), the agent’s scene understanding capabilities have to go far beyond syntactic scene analysis.</sentence>
+    <sentence>In a such case the agent should be equipped with cognitive abilities.</sentence>
+    <sentence>Cybernetic models of human cognitive structures (Bielecki, Kokoszka, &amp; Holas, 2000; Kokoszka, Bielecki, &amp; Holas, 2001) and models of the nervous system, that are their support (Barlow, 1999;Bielecki, 2001; Bielecki, Jabłoński, &amp; Ke¸dzierski, 2004;Bielecki &amp; Kalita, 2008; Bielecki &amp; Kalita, 2012;Bielecki, Kalita, Lewandowski, &amp; Siwek, 2010; Bielecki, Kalita, Lewandowski, &amp; Skomorowski, 2008;Bielecki &amp; Ombach, 2004; Bielecki &amp; Ombach, 2011;Fiori, 2006), seem to be a good starting point for studies of agent’s cognitive module based on its vision system.</sentence>
+  </section>
+</article>

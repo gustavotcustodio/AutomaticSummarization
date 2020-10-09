@@ -1,0 +1,559 @@
+<article>
+  <title>aWESoME: A web service middleware for ambient intelligence</title>
+  <abstract>
+    <sentence>This work presents a Web Service Middleware infrastructure for Ambient Intelligence environments, named aWESoME.</sentence>
+    <sentence>aWESoME is a vital part of the Smart IHU project, a large-scale Smart University deployment.</sentence>
+    <sentence>The purpose of the proposed middleware within the project is twofold: for one, to ensure universal, homogeneous access to the system’s functions and secondly, to fulfill functional and non-functional requirements of the system.</sentence>
+    <sentence>Namely, the infrastructure itself should consume significantly low power (as it is meant for energy savings in addition to automations), without compromising reliability and fast response time.</sentence>
+    <sentence>The infrastructure should enable fast and direct discovery, invocation and execution of services.</sentence>
+    <sentence>Finally, on hardware level, the wireless sensor and actuator network should be optimally configured for speed and reliability as well.</sentence>
+    <sentence>The proposed solution employs widely used web open standards for description and discovery to expose hardware and software functions and ensure interoperability, even outside the borders of this university deployment.</sentence>
+    <sentence>It proposes a straightforward method to integrate low-cost and resource-constrained heterogeneous devices found in the market and a large-scale placement of servers and wireless sensor networks.</sentence>
+    <sentence>Different server hardware installations have been evaluated to find the optimum trade-off between response time and power consumption.</sentence>
+    <sentence>Finally, a range of client applications that exploit the middleware on different platforms are demonstrated, to prove its usability and effectiveness in enabling, in this scenario, energy monitoring and savings.</sentence>
+  </abstract>
+  <keywords>
+    <keyword>Web services</keyword>
+    <keyword>Real-time and embedded systems</keyword>
+    <keyword>Ubiquitous computing</keyword>
+    <keyword>Wireless sensor networks</keyword>
+  </keywords>
+  <section name="Introduction">
+    <sentence>The future of computing may rely on an emerging new paradigm known as Ubiquitous or Pervasive Computing (UbiComp, PerComp).</sentence>
+    <sentence>Also referred to as the third wave of computing, the term ubiquitous computing was originally coined by Weiser (1999).</sentence>
+    <sentence>Ubiquitous systems are able to perceive user needs and interface with them in an intuitive way.</sentence>
+    <sentence>Physical objects of everyday life become mediums for users to interface with ubiquitous systems.</sentence>
+    <sentence>The use of wearable computing devices takes the place of desktop computers.</sentence>
+    <sentence>As a result, the computer fades in the background and relieves the user from constantly requiring his full attention.</sentence>
+    <sentence>The vision of Ambient Intelligence (AmI) slightly extends these ideas by incorporating intrinsic intelligence in pervasive systems.</sentence>
+    <sentence>Ideas and methodologies of Artificial Intelligence are adapted to pervasive systems to provide intelligent automations enabling an even more hassle-free and non-intrusive user experience.</sentence>
+    <sentence>Meanwhile, another emerging paradigm, which happens to be tightly linked with AmI systems, is Service Oriented Computing (SOC).</sentence>
+    <sentence>Service orientation is in essence the practice of exposing a system’s methods for users or applications to consume in a universal way.</sentence>
+    <sentence>A SOC-compliant infrastructure of certain roles is the Service Oriented Architecture (SOA).</sentence>
+    <sentence>SOA is enabled by well-defined web standards and technologies, as the web also moves towards service-orientation.</sentence>
+    <sentence>These technologies promote the reuse of existing implementations and remote collaboration between different individuals or enterprises.</sentence>
+    <sentence>In AmI, SOA has proved to be of great value, as it offers both the necessary abstractions for high-level sophisticated AmI applications and remote calls.</sentence>
+    <sentence>SOA has become so interconnected with AmI that it is almost considered as a requirement.</sentence>
+    <sentence>Meanwhile, devices found in AmI systems become more compact and woven into everyday-life objects.</sentence>
+    <sentence>Services are used to expose their data and functions and form the so-called Internet of Things.</sentence>
+    <sentence>Focusing on the interoperability layer, the primal obstacle met in Ambient Intelligence is manipulating the heterogeneous devices that provide basic functionality.</sentence>
+    <sentence>Due to advancements in the industry, a wide variety of devices suitable for enabling the vision of AmI are now available at an affordable cost.</sentence>
+    <sentence>Even optimal communication protocols have been designed to enable efficient and energy-saving dynamic networks of smart devices in smart homes, e.g.</sentence>
+    <sentence>the wireless ZigBee1 and Z-Wave2 and the Power-Line-Communication-based INSTEON3 and X10.4 On the other hand, the industry has not and does not intend to converge on common standards concerning device manipulation.</sentence>
+    <sentence>The alliances of ZigBee and Z-Wave have standardized device classes and operation protocols for devices compliant with them, breaching the biggest part of the interoperability boundaries.</sentence>
+    <sentence>UPnP5 has also become widely spread in both home entertainment and AmI applications, as it defines classes and communication standards for interoperability between different major manufacturers of multimedia systems.</sentence>
+    <sentence>Nevertheless, a middleware is still needed to provide interoperability between the different clusters of devices.</sentence>
+    <sentence>Even if Z-Wave, ZigBee and UPnP networks of devices can each be handled in a uniform way, they need to be unified under a common API that applications can exploit.</sentence>
+    <sentence>This common API also needs to include individual devices (i.e.</sentence>
+    <sentence>those that do not belong to a standard family) that naturally still exist in the market, and function in unique ways.</sentence>
+    <sentence>Furthermore, a manufacturer or alliance sometimes provides specific tools that may enforce constraints, e.g.</sentence>
+    <sentence>platform-dependent APIs.</sentence>
+    <sentence>Even worse, they may provide no API at all, which is almost always the case with individual devices in the market.</sentence>
+    <sentence>However, even the alliance-compliant devices often are not platform independent out-of-the-box.</sentence>
+    <sentence>E.g.</sentence>
+    <sentence>there is a number of different Z-Wave APIs in different programming languages that need wrappers to be utilized.</sentence>
+    <sentence>All in all, a middleware can be seen as a set of drivers for different protocols that plays the role of a uniform abstraction layer between the application layer and the heterogeneous, platform-specific hardware layer.</sentence>
+    <sentence>The middleware layer, thus, has to ensure, in principle, universal access and data homogeneity for the application layer.</sentence>
+    <sentence>One of the leading approaches for the first is employing a Service-Oriented Architecture, which spawns many more side benefits.</sentence>
+    <sentence>Well-defined and standardized by the W3C6 technologies promise to deliver flexible uniform access and interoperability on syntactic level, while benefiting from remote access over the Web.</sentence>
+    <sentence>The leading description language and W3C standard, WSDL (the Web Service Description Language),7 already is widely adopted in both industry and research.</sentence>
+    <sentence>These XML-based descriptions distinguish and define the components of a Web Service in service operations, which can have incoming and outgoing messages which in turn can contain various data types.</sentence>
+    <sentence>Ultimately the service can have a number of bindings which help locate and invoke the service by declaring its endpoints and communication protocol (usually HTTP or SOAP).</sentence>
+    <sentence>WSDL sufficiently type-defines services on syntactic level which means services can be selected (i.e.</sentence>
+    <sentence>matched) and composed based on syntactic criteria.</sentence>
+    <sentence>Except syntactic interoperability, uniform and remote access, the Service Oriented Architecture also introduces ways to enhance the discovery process.</sentence>
+    <sentence>A Service Broker is responsible for the registering and provisioning of services to clients.</sentence>
+    <sentence>The Service providers (i.e.</sentence>
+    <sentence>Servers) first have to register the services that they provide on the Service Broker.</sentence>
+    <sentence>The clients can browse and select the service they need from the broker’s list.</sentence>
+    <sentence>After they select a service, the clients directly interface with the selected service provider to invoke the service and the broker’s intermediation ends.</sentence>
+    <sentence>The need for a Service Broker is eminent due to the fact that services are essentially distributed (i.e.</sentence>
+    <sentence>provided by different servers).</sentence>
+    <sentence>It would otherwise be impractical for Clients to maintain an up-to-date list of all Provider locations.</sentence>
+    <sentence>After all, in AmI environments, that list is dynamically ever-changing.</sentence>
+    <sentence>Providers can be portable (even wearable) devices that dynamically enter and leave the system (willingly or simply collapsing).</sentence>
+    <sentence>In this paper, we present a Web Service Middleware named aWESoME which is based on a Service-Oriented infrastructure to better enable AmI applications in general and energy savings in particular.</sentence>
+    <sentence>aWESoME is part of the Smart IHU (International Hellenic University) project (Stavropoulos, Tsioliaridou, Koutitas, Vrakas, &amp; Vlahavas, 2010), whose goal is to develop and deploy of an AmI-oriented system that enables automation, user-comfort and last but not least energy efficiency and savings.</sentence>
+    <sentence>Smart IHU entails a large-scale deployment of various devices, such as sensors of environmental conditions and actuators for switching devices or manipulating the ICT infrastructure.</sentence>
+    <sentence>The devices naturally come from various manufacturers, are low-cost, platform dependent and resource-constrained (i.e.</sentence>
+    <sentence>have little or no processing power and/or memory).</sentence>
+    <sentence>aWESoME integrates heterogeneous devices, and provides the required abstraction layer for universal access and data homogeneity.</sentence>
+    <sentence>It follows the SOA guidelines for descriptions and enhances service provisioning and discovery based on the WS-Discovery standard, to support dynamicity in a large-scale distributed AmI environment.</sentence>
+    <sentence>Its internal structure allows for scalability and extensibility to more software and hardware services.</sentence>
+    <sentence>Different server installations are tested to find the optimum trade-off between their own power consumption and speed (service response time).</sentence>
+    <sentence>The optimum server and device deployment, given the coverage of the devices is also showcased.</sentence>
+    <sentence>Except for the energy savings of the platform itself, some client applications are shown to demonstrate the middleware’s efficiency and usability on desktop, web and mobile platforms.</sentence>
+    <sentence>This article is structured as follows: the next section surveys related work, i.e.</sentence>
+    <sentence>other middleware designed for Ambient Intelligence.</sentence>
+    <sentence>In the third section the aspects of the proposed middleware are given in detail.</sentence>
+    <sentence>In the fourth section, the exact deployment of devices and aWESoME components at the Smart IHU environment is presented.</sentence>
+    <sentence>Experiments and results, concerning the platform’s performance and energy efficiency, are presented on the corresponding section.</sentence>
+    <sentence>The final two sections present future work and conclusions from this work respectively.</sentence>
+  </section>
+  <section name="Related work">
+    <sentence>The most relevant of works is the Hydra middleware,8 later renamed to LinkSmart middleware.</sentence>
+    <sentence>The Hydra middleware is a European project for the development of service-oriented software to expose heterogeneous device functions in a universal way and target various Ambient Intelligence domains including home automation, healthcare and agriculture.</sentence>
+    <sentence>Hydra supports a wide variety of devices that can be controlled by an external communication interface such as Bluetooth, ZigBee, RF, RFID, and USB called Hydra-enabled devices.</sentence>
+    <sentence>To integrate supported device instances, Hydra generates the required Hydra software components and web services in each case.</sentence>
+    <sentence>It follows a model-driven architecture based on semantic models (ontologies) so that the middleware components for each device are automatically generated based on that meta-data (Eisenhauer, Rosengren, &amp; Antolin, 2009).</sentence>
+    <sentence>The Hydra project ideally targets devices that can embed Hydra web service components and hence do not require an external server to manage them.</sentence>
+    <sentence>Another approach to unify home automation protocols, over OSGi, is Home SOA (Bottaro &amp; Gérodolle, 2008).</sentence>
+    <sentence>Hydra, Home SOA and aWESoME share a same goal: to expose various smart devices universally via Web Services and enable Ambient Intelligence environments.</sentence>
+    <sentence>However, only a few of the proposed system’s devices are Hydra-enabled (and even fewer by Home SOA), as it is not of course possible to support every device family in the market.</sentence>
+    <sentence>Additionally, devices that can embed the services themselves are very hard to find in the market.</sentence>
+    <sentence>We rather target affordable devices and employ a board microcomputer to embed the corresponding services for them (to preserve compactness, affordability and support each device equally) and present performance tests.</sentence>
+    <sentence>Finally, we target a Smart University domain specifically and focus on providing additional software-services and energy-saving applications.</sentence>
+    <sentence>Semantic Spaces (Hansen, Zhang, &amp; Soares, 2004) is a similar, much older, approach to middleware.</sentence>
+    <sentence>In this system so-called wrappers are in fact UPnP discoverable services that expose various environmental sensors and software services (CPU utilization, weather, etc.).</sentence>
+    <sentence>Like Hydra, this system also utilizes ontologies as a knowledge representation format.</sentence>
+    <sentence>Context information or in other words the world’s representation is stored in an ontology designed for the purpose.</sentence>
+    <sentence>The ontology naturally enables reasoning and querying that data.</sentence>
+    <sentence>In our proposed solution, WSDL services and WS-Discovery are used instead, as the leading, widely used, open standards.</sentence>
+    <sentence>Similar, although more, hardware and software services are provided (i.e.</sentence>
+    <sentence>smart plug actuators, embedded services and Z-Wave support).</sentence>
+    <sentence>Many more systems use ontologies either as a knowledge base or as complex service descriptions.</sentence>
+    <sentence>There are even methods to generate ontologies suitable for services by the service descriptions themselves.</sentence>
+    <sentence>We do use an ontology designed for this system as a knowledge base and indirect service descriptions.</sentence>
+    <sentence>However, this is performed on application level to preserve low complexity and usability of the middleware for plain-WSDL industry and research clients, and is outside the scope of this work.</sentence>
+    <sentence>Emi2 (López-de-Ipiña et al., 2006) proposes an infrastructure quite similar to UPnP/DLNA, where each component has a distinct role: there are Emi2 Servers, Objects, Players, etc.</sentence>
+    <sentence>Each user and each Object (in other words Service) are represented by interacting agents.</sentence>
+    <sentence>The objects can be discovered but have to be downloaded to be executed, unlike in aWESoME and most approaches.</sentence>
+    <sentence>The Emi2 platform is kind of restricted within its own boundaries due to its implementation (no interoperability with industry services).</sentence>
+    <sentence>MEDUSA (Davidyuk, Georgantas, Issarny, &amp; Riekki, 2011) is another web service middleware that enables transparent use of functions within the Smart Environment.</sentence>
+    <sentence>It employs mobile phones which are equipped with RFID-tag reading capabilities.</sentence>
+    <sentence>The phones are used to scan cards that represent services and form service compositions.</sentence>
+    <sentence>As a result, the system provides a practical physical interface for users.</sentence>
+    <sentence>MEDUSA is based on the AmIi middleware (Georgantas et al., 2010), which defines a model and an XML-language for semantic interoperability of services.</sentence>
+    <sentence>AmIi focuses on semantic specifications.</sentence>
+    <sentence>It re-models information common on known models (i.e.</sentence>
+    <sentence>OWL-S) and maps to BPEL, SAWSDL and more, by extending WSDL as a specification language.</sentence>
+    <sentence>However, this model may be too specific, and functional only within the boundaries of AmIi compliant clients.</sentence>
+    <sentence>Hence, it needs to be adopted by a wider range of the community.</sentence>
+    <sentence>On the other hand, WSDL (and even SAWSDL) is simpler and widely adopted in research and industry.</sentence>
+    <sentence>MEDUSA and AmIi target almost exclusively multimedia devices.</sentence>
+    <sentence>The aWESoME middleware supports a range of embedded software, sensor and actuator services, while multimedia devices are not a priority for the energy-efficiency task.</sentence>
+    <sentence>Polisave (Chiaraviglio &amp; Mellia, 2010) is a software system developed by the Technical University of Torino to manage the IT infrastructure.</sentence>
+    <sentence>Existing technologies such as Wake On Lan and OS-based shutdown scripts are employed to enable users assign power on and power off schedules for their computers at the university in order to save energy and reduce energy bills.</sentence>
+    <sentence>The process is carried out via a web-application graphical interface.</sentence>
+    <sentence>We employ the same existing techniques, such as Wake On Lan and OS-based shutdown, hibernate, sleep and restart but also integrate them as part of a Web Service middleware that provides more flexibility and availability to clients.</sentence>
+    <sentence>Energy saving schedules are then implemented in independent client applications.</sentence>
+    <sentence>Some approaches focus on much different aspects of middleware.</sentence>
+    <sentence>KASO (Corredor, Martı´nez, Familiar, &amp; López, 2012) is a middleware also for Sensor and Actuator networks, but more oriented towards future internet and usage of services through the Cloud.</sentence>
+    <sentence>B3G – SOM (Autili, Caporuscio, &amp; Issarny, 2009) adapts mobile 3G device service to service-oriented middleware.</sentence>
+    <sentence>UbiSOAP (Caporuscio, Raverdy, Moungla, &amp; Issarny, 2008) is a different approach to middleware that addresses communications and optimizations on the physical layer.</sentence>
+    <sentence>As mobile devices may host and/or consume services but lack computing power, delays are introduced.</sentence>
+    <sentence>UbiSoap proposes that these devices function in multi-radio, and proxy servers function as bridges for the seamless integration of these devices.</sentence>
+    <sentence>A final category of middleware includes the ones that focus on performing automatic, intelligent composition of services.</sentence>
+    <sentence>A complete survey of such work can be found on Stavropoulos, Vrakas, and Vlahavas (2011a).</sentence>
+    <sentence>Some of these approaches are not oriented towards devices at all.</sentence>
+    <sentence>They may even not include their own services but rather use existing ones.</sentence>
+    <sentence>Scooby (Robinson, Wakeman, &amp; Owen, 2004) is a script-like middleware abstraction language for defining service compositions.</sentence>
+    <sentence>MySIM (Ibrahim, Le Mouël, &amp; Frénot, 2009) is a middleware that primarily translates existing OSGi and WSDL services into an internal representation form, and spontaneously (i.e.</sentence>
+    <sentence>without user request) composes the services in pairs of two.</sentence>
+    <sentence>The new services are exposed on MySIM’s mathematic description model, which is a set of inputs, outputs and semantic annotations for them.</sentence>
+    <sentence>However, MySIM goes from usable descriptions (OSGi, WSDL) to completely non-interoperable ones: only MySIM users can invoke those services.</sentence>
+    <sentence>Many more similar approaches to service oriented-middleware target autonomous service composition (Ben Mabrouk, Beauche, Kuznetsova, Georgantas, &amp; Issarny, 2009; Lagesse, Kumar, &amp; Wright, 2010; Park &amp; Kang, 2011).</sentence>
+    <sentence>All in all, compared to existing approaches, aWESoME focuses on providing a wide range of hardware and software-based services, syntactic interoperability, simplicity, ease-of-use, fast response time and ultimately energy-savings.</sentence>
+    <sentence>Numerous devices of the ZigBee, Z-Wave and RF protocols, not currently supported by the state-of-the-art, are integrated into aWESoME.</sentence>
+    <sentence>In addition, different hardware has been tested.</sentence>
+    <sentence>Among it, a board microcomputer has been tested and employed as a compact server to preserve low power consumption and cost, in a distributed multiple-server deployment.</sentence>
+    <sentence>Finally, the WSDL and WS-Discovery open standards are used versus other approaches disregarding constraining internal representations.</sentence>
+    <sentence>Knowledge representation databases of any form (ontology or other) and composition of services are disregarded on middleware level and left out for the application level.</sentence>
+    <sentence>Finally, the aWESoME middleware platform introduces significant power consumption reduction at the Smart Building, as it is utilized by energy monitoring and saving applications.</sentence>
+  </section>
+  <section name="The aWESoME middleware">
+    <sentence>The middleware introduced in this work,9 serves as the essential middle layer between the diverse hardware on the bottom layer and various applications on the top layer.</sentence>
+    <sentence>Following guidelines in the field, the middleware provides the required level of abstraction to manipulate platform-specific, heterogeneous smart devices found in the market.</sentence>
+    <sentence>In addition, implemented Web Services expose their functions universally and over the Web.</sentence>
+    <sentence>A Service Oriented Architecture is set up to guarantee even more flexibility, currency and dynamicity in a large scale distributed server environment.</sentence>
+    <sentence>To ensure the middleware’s extensibility to more hardware bundles, drivers are developed for each supported bundle separately.</sentence>
+    <sentence>All the driver modules are engineered completely from scratch, have no dependencies and interface directly with the devices.</sentence>
+    <sentence>They all presently happen to be implemented in Java, which makes them suitable for all platforms.</sentence>
+    <sentence>Indeed, PCs, netbooks and Linux-powered board computers are installed in our deployment.</sentence>
+    <sentence>The drivers form a first sub-layer of the middleware that can be thought of as the integration layer, presented in detail in the next subsection.</sentence>
+    <sentence>On top of the integration layer, a service layer that contains WSDL Web Services wraps each driver to expose its function over Web.</sentence>
+    <sentence>The services are also presently implemented in Java.</sentence>
+    <sentence>Each service is responsible for a certain device group most of the time, and its operations expose each of its supported functions.</sentence>
+    <sentence>That way there are few services and many operations (instead of many services and few or one operation per service).</sentence>
+    <sentence>Additionally, there are self-contained services that do not correspond to devices and do not need a driver to function.</sentence>
+    <sentence>A comprehensive list of services and operations is presented on the corresponding subsection.</sentence>
+    <sentence>Following the service oriented paradigm, a Service Broker is employed to register and provision services scattered across distributed servers.</sentence>
+    <sentence>Servers are set up by installing the essential aWESoME components for the case, i.e.</sentence>
+    <sentence>the drivers and services needed.</sentence>
+    <sentence>Subsequently the newly provided services are registered at the service registry.</sentence>
+    <sentence>The potential service clients, then, can browse and locate providers from a list of services.</sentence>
+    <sentence>The registry infrastructure is presented at the corresponding subsection.</sentence>
+    <sentence>A distributable version of aWESoME can be found online, containing some of the driver modules.</sentence>
+    <sentence>Integration layer The integration layer contains all the driver modules responsible for directly interfacing with the infrastructure’s devices, i.e.</sentence>
+    <sentence>sensors and actuators.</sentence>
+    <sentence>Each bundle of devices or device individuals has its own interface, communication and operation protocols.</sentence>
+    <sentence>The driver modules are libraries for primitively manipulating the devices.</sentence>
+    <sentence>They require no other out-of-the-box company software so they guarantee flexible deployment and swift operation.</sentence>
+    <sentence>That way the middleware can first of all be decomposed and repackaged to contain the necessary drivers only.</sentence>
+    <sentence>This compactness is needed for memory-restricted servers.</sentence>
+    <sentence>Additionally, future support for more bundles can be added if necessary by adding suitable driver modules and services.</sentence>
+    <sentence>ZigBee Smart Plugs Smart Plugs are devices for home-automation that can be attached to any electric appliance and allow both power state and power consumption readings and switching the appliance on or off.</sentence>
+    <sentence>This functionality can be useful in home automation, energy-saving and generally any Ambient Intelligence scenario.</sentence>
+    <sentence>We chose a commercial bundle of Smart Plugs10 that form dynamic ZigBee mesh networks.</sentence>
+    <sentence>This bundle also includes variants of the Smart Plugs that actually intersect cabling so that they can monitor and control appliances that cannot be plugged in (e.g.</sentence>
+    <sentence>lighting, air conditioning).</sentence>
+    <sentence>Fortunately, these variants have the exact same properties and can be manipulated in the same way as the original Smart Plugs, so they will not be considered separately from now on.</sentence>
+    <sentence>Each Plug network can handle up to around 30 nodes, managed by a gateway which is a Smart Plug itself.</sentence>
+    <sentence>The gateway plug interfaces with a PC client using a USB stick, again over ZigBee.</sentence>
+    <sentence>Our exact topology of Smart Plugs is presented on a dedicated section.</sentence>
+    <sentence>However, the ZigBee data packets are encrypted and the devices have their own operation protocol.</sentence>
+    <sentence>Thus, the ZigBee-based protocol of the Smart Plugs had to be re-engineered, as a general-purpose open ZigBee library could not resolve the matter.</sentence>
+    <sentence>The driver module developed can both form the suitable packets that perform each operation and parse back responses.</sentence>
+    <sentence>Except from power consumption and power state information (i.e.</sentence>
+    <sentence>on or off), the devices return additional data such as memory buffer information, and firmware.</sentence>
+    <sentence>Power consumption can also be used to calculate the energy consumption over a target period of time.</sentence>
+    <sentence>The driver module is implemented in Java.</sentence>
+    <sentence>ZigBee Sensor Boards The adopted Sensor Board bundle11 serves to provide data about environmental conditions in various points on the university premises.</sentence>
+    <sentence>It is comprised of four battery-powered sensor boards that each embeds a temperature sensor, a humidity sensor and a luminance sensor.</sentence>
+    <sentence>The boards form a dynamic ZigBee network over a dedicated gateway that comes with the bundle.</sentence>
+    <sentence>Unlike Smart Plugs, this gateway is equipped with WiFi and Ethernet so it can easily be connected to the local area network to transmit the collected data.</sentence>
+    <sentence>For simple clients, the bundle’s own gateway would suffice to gather the data.</sentence>
+    <sentence>However this is not the case in our system.</sentence>
+    <sentence>Even though remote function is supported by the gateway (at least within the local area network), universal access and data homogeneity still needs to be ensured.</sentence>
+    <sentence>WSDL Services do provide the desired syntactic interoperability.</sentence>
+    <sentence>As the gateway software cannot be modified, any computer in the local area network can access it and get the data using the bundle’s software.</sentence>
+    <sentence>However, this software happens to require complex and time-consuming setup every time.</sentence>
+    <sentence>For the same reasons of speed and flexibility, the software was re-engineered to directly poll the gateway for data.</sentence>
+    <sentence>Sensor data is ultimately transmitted over TCP/IP and no ZigBee library is required although this bundle uses no encryption on ZigBee packets.</sentence>
+    <sentence>Finally, the Java Sensor Board driver can run on any Server on the local network and periodically or upon request return sensor data.</sentence>
+    <sentence>Smart Clampers Smart Plugs fulfill the need for power consumption monitoring in small-scale i.e.</sentence>
+    <sentence>per device.</sentence>
+    <sentence>On the other hand, in the large-scale environment of Smart IHU, no conclusion is drawn for the total energy consumption of the university.</sentence>
+    <sentence>Adding the consumption of Smart Plugs does not suffice and can be very misleading as many devices of massive consumption will always be left out (it is impractical to attach every single appliance to a Smart Plug).</sentence>
+    <sentence>Smart Clampers are used in home automation environments to measure the total energy consumption directly at the source, which is the main power supply.</sentence>
+    <sentence>Smart Clampers usually do not plug in or intersect cables, but rather clip around cables and detect the current.</sentence>
+    <sentence>However, the Smart Clampers do not suffice for a smart environment.</sentence>
+    <sentence>The total energy consumption of the university is so massive that significant changes in power consumption cannot be detected in large-scale.</sentence>
+    <sentence>In other words, numerous powered-on air conditioning units or lighting can go undetected.</sentence>
+    <sentence>As mentioned above, Smart Plugs can also manage the power supply of individual devices, in small-scale.</sentence>
+    <sentence>Thus, Smart Clampers and Smart Plugs are complementary and both need to be used.</sentence>
+    <sentence>In our deployment we chose to integrate two different commercial brands of Smart Clampers for tests and completeness.</sentence>
+    <sentence>Both clampers function similarly.</sentence>
+    <sentence>A transmitter is attached to the clips to wirelessly transmit data to a receiver attached to a USB port of a computer client.</sentence>
+    <sentence>The first bundle’s12 receiver is also an LED monitor that shows readings.</sentence>
+    <sentence>The other bundle13 also includes an independent monitor.</sentence>
+    <sentence>The first bundle is the one used in practice (as two are redundant).</sentence>
+    <sentence>It submits real-time data, and less often even historical data, in text (specifically XML) format, so that they can be directly parsed.</sentence>
+    <sentence>However, the other bundle was found not to be reliable as it is prone to failure.</sentence>
+    <sentence>The company’s API was used but contrary to the official software, too many bugs showed up.</sentence>
+    <sentence>That goes to show that only direct protocol re-engineering and interfacing with device ports can utterly be considered always reliable and fast (and not poorly supported APIs that naturally do not interest the industry).</sentence>
+    <sentence>Z-Wave devices Z-Wave is another alliance protocol in home networking that sets standards and is supported by many manufacturers.</sentence>
+    <sentence>It is also similar to ZigBee in terms of networking as it is also wireless and supports adequate range and many nodes per network.</sentence>
+    <sentence>Z-Wave defines various device classes that are agreed upon across Z-Wave manufacturers.</sentence>
+    <sentence>That ensures interoperability between devices and software client controllers within the Z-Wave network.</sentence>
+    <sentence>A great advantage of the Z-Wave family is the vast variety of smart devices provided.</sentence>
+    <sentence>Z-Wave devices can control every aspect of a smart home ranging from multimedia controllers for home entertainment (TV, home theater, etc.</sentence>
+    <sentence>), to motors for garage doors and window blinds, home security systems (motion detection, alarms, smoke detection, etc.</sentence>
+    <sentence>), facilities (such as thermostats), and environmental sensors.</sentence>
+    <sentence>There are also LED-screen controllers so that users can control the devices without a gateway, and USB PC interfaces for implementing PC client applications.</sentence>
+    <sentence>For our implementation we chose some of those devices to enrich the variety of information and functions in our system.</sentence>
+    <sentence>Namely, a motion and environmental sensor, an infrared sensor, a smoke detector and a USB PC interface for control.</sentence>
+    <sentence>A Z-Wave library was incorporated in a Z-Wave driver module for aWESoME.</sentence>
+    <sentence>Due to the extensible nature of the Z-Wave family, any other type of Z-Wave device can be added by making minor modifications to the driver.</sentence>
+    <sentence>Web Service Layer The Web Service Layer contains all the services needed for the upper layer, i.e.</sentence>
+    <sentence>applications, to interface with the middleware, and, in turn, with the system hardware.</sentence>
+    <sentence>To provide functionality of the various devices, Web Services are implemented to wrap each device driver of the Integration Layer.</sentence>
+    <sentence>The Service Layer also contains additional Services which do not wrap device drivers but are self-contained and software-based instead.</sentence>
+    <sentence>All Services also return suitable faults when exceptions occur, so they can be handled according to client logic.</sentence>
+    <sentence>In reference to Fig 1, there are currently four services that wrap device functions and one service that does not.</sentence>
+    <sentence>This categorization was preferred having in mind to preserve a small number of services and many operations for each service, instead of many services and few or even one operation per service.</sentence>
+    <sentence>Services are in fact groups of inter-related operations.</sentence>
+    <sentence>The aWESoME layers and components Fig 1.</sentence>
+    <sentence>The aWESoME layers and components.</sentence>
+    <sentence>Smart Plug service The Smart Plug service operations are listed on Table 1.</sentence>
+    <sentence>Most service operations are based on the Smart Plug driver functions, and require the target Plug ID (referred to as the Plug’s MAC Address) as input.</sentence>
+    <sentence>Each instance of a Smart Plug Service manages a network of Plugs.</sentence>
+    <sentence>Hence, a client has to know which Service instance to invoke for the desired target Smart Plug.</sentence>
+    <sentence>Table 1.</sentence>
+    <sentence>Smart Plug service operations.</sentence>
+    <sentence>Operation Description Description SwitchOff Plug MAC – SwitchOn Plug MAC – SwitchOnOff Plug MAC, power state – getStatus Plug MAC Power state getPulses Plug MAC Power (Pulses) convertPulsesToPower Power (Pulses) Power (Watt) getPower Plug MAC Power (Watt) getCalibration Plug MAC Calibration getCorrectPower Plug MAC Power (Watt) correctPulses Power (Pulses) Calibration Power (Pulses) getInfo Plug MAC Info To enable various application scenarios, switching on and off is supported in two forms, e.g.</sentence>
+    <sentence>Switch On, Switch Off and SwitchOnOff.</sentence>
+    <sentence>Various information provided by the hardware, e.g.</sentence>
+    <sentence>firmware version, internal memory addresses, internal clock, etc.</sentence>
+    <sentence>can be obtained through the getInfo operation.</sentence>
+    <sentence>For returning Power Consumption information, a basic operation, getPulses, returns Pulse information directly from devices.</sentence>
+    <sentence>This raw information in most cases has to be converted into Watts, which is supported by the convertPulsesToPower operation.</sentence>
+    <sentence>To provide a straightforward solution, the getPower operation does both.</sentence>
+    <sentence>Likewise, sometimes pulses can be fine-tuned to specific device properties.</sentence>
+    <sentence>These properties are constant and can be obtained through the getCalibration operation.</sentence>
+    <sentence>Then these parameters can be simply inserted into a formula and fine-tune pulse information.</sentence>
+    <sentence>The contents of the formula and the meaning of these properties are outside the scope of this work.</sentence>
+    <sentence>The correctPulses operation gets a power measurement in pulses and an array of the calibration information and returns the corrected value.</sentence>
+    <sentence>Again, to provide an alternative straightforward solution, the getCorrectPower operation is a composite service that does all four: it gets Pulses, gets Calibration info, corrects Pulses based on Calibration and finally converts Pulses to Watts.</sentence>
+    <sentence>Client applications can invoke once and store Calibration data, and use it every time for corrections.</sentence>
+    <sentence>Otherwise, the complete but more time-consuming solution of getCorrectPower can be used e.g.</sentence>
+    <sentence>by human clients.</sentence>
+    <sentence>Sensor Board Service All the Sensor Board Service operations are actually wrappers of the Sensor Board driver’s functions.</sentence>
+    <sentence>The Sensor Boards also have designated MAC Addresses which are used as operation input, to distinguish the boards.</sentence>
+    <sentence>The operations shown on Table 2 are self-explanatory as each one gets the corresponding environmental parameter from the desired target Sensor Board.</sentence>
+    <sentence>Table 2.</sentence>
+    <sentence>Sensor Board service operations.</sentence>
+    <sentence>Operation Description Description getNodeCount Board MAC Number of nodes getMACs Board MAC MAC Array getLuminance Board MAC Light Level (cd/m2) getHumidity Board MAC Humidity % getTemperature Board MAC Temperature (Celsius) 3.2.3.</sentence>
+    <sentence>Smart Clamper Service Likewise, the network of Smart Clampers is accessed via the Smart Clamper Service Operations, shown on Table 3.</sentence>
+    <sentence>Each Transmitter in the Smart Clamper network can have up to three Clampers attached, that measure three-phase current (one phase each).</sentence>
+    <sentence>To get the Power Consumption information, the get3PhasePower operation has to be provided with a Transmitter ID.</sentence>
+    <sentence>For better enabling clients, another version of this operation additionally adds up the three readings and returns the total consumption for a Transmitter.</sentence>
+    <sentence>Table 3.</sentence>
+    <sentence>Smart Clamper service operations.</sentence>
+    <sentence>Operation Description Description get3PhasePower Transmitter ID Timestamp, Three phase power (Watt) get3PhasePowerSum Transmitter ID Timestamp, Three phase sum (Watt) 3.2.4.</sentence>
+    <sentence>Z-Wave Service operations The Z-Wave Service supports an initial set of devices but can later be expanded by adding more.</sentence>
+    <sentence>The operations currently support the existing device classes of the platform: a PIR (Passive Infrared) Motion Detector, Smoke Detector and a Multi-sensor for Temperature, Luminance and Motion Detection.</sentence>
+    <sentence>The supported Web Service operations are shown on Table 4.</sentence>
+    <sentence>In addition to the operations that get sensor readings, there are methods to get an array of the nodes in the Z-Wave network, whether a node is awake or not and battery level for each node.</sentence>
+    <sentence>Table 4.</sentence>
+    <sentence>Z-Wave service operations.</sentence>
+    <sentence>Operation Description Description getNodeIDs – Node ID array getBattery Node ID Battery % getAwake Node ID Node awake state getVersion Node ID Version getSpecifications Node ID Specifications getMotion Node ID Motion Detection value getPIRMotion Node ID Infrared Motion Detection getTemperature Node ID Temperature (Fahrenheit) getLuminance Node ID Light level (1–40) getSmoke Node ID Smoke Detection value 3.2.5.</sentence>
+    <sentence>IT service operations This service is currently the only one that does not relate to a driver module, i.e.</sentence>
+    <sentence>has a hardware-counterpart.</sentence>
+    <sentence>Its purpose is to inform about and manipulate the IT equipment in the setting by using existing technologies.</sentence>
+    <sentence>The Smart Plug operations, SwitchOn and SwitchOff are completely inappropriate for IT equipment.</sentence>
+    <sentence>Computers should not be abruptly shut down, and (usually) do not power on as power supply is provided (Switch On operation).</sentence>
+    <sentence>This Service employs WakeOnLAN and OS-based techniques to carry out these tasks, as well as give additional information on IT equipment.</sentence>
+    <sentence>First of all, the wakeComputer operation implements a WakeOnLAN technology method to wake any PC in the LAN from Sleep, Hibernation or Off state.</sentence>
+    <sentence>This is carried out by sending the standard so-called Magic Packet for WakeOnLAN that contains the target terminal’s IP Address and MAC Address (for Ethernet interface only).</sentence>
+    <sentence>Hence, the Addresses have to be given as the operation’s input.</sentence>
+    <sentence>To facilitate that process, an IP and MAC table is constructed at server-side.</sentence>
+    <sentence>The operations findIP and findMAC return the IP Address and the MAC Address of a terminal based on that table.</sentence>
+    <sentence>There are also operations that include that process to further facilitate clients.</sentence>
+    <sentence>Possible compositions can automatically be generated on application level.</sentence>
+    <sentence>Unfortunately, while Wake On LAN is supported at hardware level, there is no equivalent for the shutdown process.</sentence>
+    <sentence>On the contrary, the shutdown process is OS-dependent.</sentence>
+    <sentence>The operations provided, contain OS-supported scripts to shutdown, restart, put to sleep and hibernate a computer within the LAN, given its IP Address.</sentence>
+    <sentence>That enables better energy management of the IT infrastructure.</sentence>
+    <sentence>Finally, the getServerCPU returns the percentage of Server CPU load for informative purposes.</sentence>
+    <sentence>All operations are listed on Table 5.</sentence>
+    <sentence>Table 5.</sentence>
+    <sentence>IT service operations.</sentence>
+    <sentence>Operation Description Description wakeComputer MAC, IP Address – pingIP IP Address IP online findIP MAC Address IP Address findMAC IP Address MAC Address wakeComputerIP IP Address – wakeComputerMAC MAC Address – shutdownComputer IP Address – restartComputer IP Address – putComputerToSleep IP Address – hibernateComputer IP Address – getServerCPU – % CPU Usage getServerCPUAvg Interval (s) % CPU Usage 3.3.</sentence>
+    <sentence>Service Broker The service oriented infrastructure of aWESoME also includes the Service Broker subsystem which is responsible for registering and provisioning the available Services.</sentence>
+    <sentence>The aWESoME SOA is comprised of the various distributed aWESoME Servers that provide different instances of the aWESoME Services, Service Clients which can be human or software agents, and a Service Broker.</sentence>
+    <sentence>Clients primarily browse the Service Broker’s list of Services, which the Service Providers have previously registered.</sentence>
+    <sentence>Overall, aWESoME’s Service Broker module intermediates between Servers and Clients.</sentence>
+    <sentence>The purpose of Service Broker is twofold: to maintain a unique list of the distributed services in the environment and to refresh that list, removing Services that go offline i.e.</sentence>
+    <sentence>leave the environment or collapse.</sentence>
+    <sentence>The Service Broker module is based on the WS-Discovery standard of the WS-* stack.</sentence>
+    <sentence>It provides the essential wrapper interface to the WS-Discovery Java implementation.</sentence>
+    <sentence>When a Server deploys a new Service, it registers with the Service Broker module.</sentence>
+    <sentence>That way, Clients do not have to maintain the list of various distributed (different IPs, different bindings) Services or ping them themselves.</sentence>
+    <sentence>Otherwise, the Services would have to either explicitly have the same IP base (e.g.</sentence>
+    <sentence>with the use of proxies) or new Services would have to register with a list of Clients (which should dynamically change).</sentence>
+    <sentence>Finally, the Service Broker implements a Web Service interface as well so that it can be easily used by external Clients.</sentence>
+    <sentence>The Broker Service is also listed within the list, and returns a list of the currently registered and available WSDL Services.</sentence>
+    <sentence>All the operations of Service Broker can be carried out via a Web UI, to facilitate the process of quickly deploying aWESoME.</sentence>
+    <sentence>For compactness, all functions are presented at the home page, which is depicted on Fig 2.</sentence>
+    <sentence>When the Server administrator uploads an aWESoME Web Service, he can enter the Service Broker portal and enter the WSDL URL of the Service.</sentence>
+    <sentence>Human Clients or testers can directly view the Service list in HTML (which is constantly updated) by using the second function “Get List”.</sentence>
+    <sentence>Finally, the WSDL URL of the Broker Service itself is provided, so that software agents that exploit the Broker can be developed.</sentence>
+    <sentence>For demonstration purposes a WSDL Broker Service Client is built into that page and can be invoked by using the last option “Get Service Response”, which returns a SOAP message containing the Service list.</sentence>
+    <sentence>Service Broker Web interface Fig 2.</sentence>
+    <sentence>Service Broker Web interface.</sentence>
+  </section>
+  <section name="Smart IHU deployment">
+    <sentence>aWESoME is in fact a set of drivers and services as described in the previous sections, so that it can support numerous smart devices and provide useful services in an Ambient Intelligence environment.</sentence>
+    <sentence>A system supported by aWESoME can be deployed in numerous ways, using all sorts of different PC-Servers and deploying in each, the driver and/or service components needed.</sentence>
+    <sentence>This section presents the actual deployment of aWESoME at the Smart IHU environment which was, after all, the motivation for building the middleware.</sentence>
+    <sentence>The instantiation takes place at the School of Science and Technology of the International Hellenic University.</sentence>
+    <sentence>At this stage, devices cover one floor, the ground floor of Building A, until the deployment is extended with more devices of the same (already supported) or different manufacturer/protocol.</sentence>
+    <sentence>To cover the whole floor, one Server was not sufficient.</sentence>
+    <sentence>In order to preserve low energy consumption, cost and compactness, a board computer was chosen and set up as an aWESoME server.</sentence>
+    <sentence>The final deployment verifies the fact that the topology can be extended in space with more servers of different kinds to cover more floors and buildings.</sentence>
+    <sentence>An overview of the ground floor, devices and servers is shown in Fig 3.</sentence>
+    <sentence>The most interesting locations to place devices are fortunately located on this floor: the reception desk equipped with a TV and security camera, the SciTech Secretarial and Academic Assistant Office, the Data Center (Server room), Lecture Room 1, two PC-Labs and the Auditorium.</sentence>
+    <sentence>Current Smart IHU deployment Fig 3.</sentence>
+    <sentence>Current Smart IHU deployment.</sentence>
+    <sentence>The first constraint for server placement arises from the location of the main power supply which is located at the basement, under the reception.</sentence>
+    <sentence>Three sets of three Smart Clampers (one for each Phase) are placed at the main power supply.</sentence>
+    <sentence>The first two sets measure the buildings total power supply and the third measures the Data Center’s Power supply.</sentence>
+    <sentence>A Transmitter for each set has to communicate with the Smart Clamper receiver via RF, so the receiver has to be placed relatively near.</sentence>
+    <sentence>The first server is hence placed at the SciTech Office (which is also a secure place) and attached to the Smart Clamper receiver.</sentence>
+    <sentence>Evidently, this Server is assigned to cover the south part of the floor.</sentence>
+    <sentence>Smart Plugs are attached to the screen and security equipment at the reception, lights, computers, fax machines, printers and heating of the SciTech Office and Secretary, to each of the nine servers in the Data Center as shown on Fig 4, to lighting and projectors in Lecture Room 1 and to the lighting of the Reading Room.</sentence>
+    <sentence>Sensor Boards are placed to measure environmental settings at the Reading Room, Lecture Room 1, the Data Center and outside (at the yard).</sentence>
+    <sentence>The gateway-Plug is placed near the laptop server and the rest of the Plugs are distributed as evenly as possible around that point.</sentence>
+    <sentence>The gateway is placed at the SciTech Office for security but can be moved anywhere in the building (as long as there is WiFi coverage).</sentence>
+    <sentence>Although computers can be managed from any server in the LAN, the laptop Server, being the most powerful in the setup, is assigned to host IT Services and manage the IT infrastructure.</sentence>
+    <sentence>Smart Plugs attached to the data center Fig 4.</sentence>
+    <sentence>Smart Plugs attached to the data center.</sentence>
+    <sentence>The Z-Wave nodes (a Smoke Detector, Motion Detector and a Multi-sensor) are placed arbitrarily on the south part of the floor.</sentence>
+    <sentence>As these devices are currently few, they can be placed to serve various scenarios and then change position.</sentence>
+    <sentence>E.g.</sentence>
+    <sentence>the motion detector is mostly useful for detecting people at the lecture room, or a person entering the building at the reception.</sentence>
+    <sentence>Various scenarios are implemented in applications and are outside the scope of this work.</sentence>
+    <sentence>The north part of the floor is covered by a second server.</sentence>
+    <sentence>Unfortunately the devices themselves or their gateways cannot host their own Web Services, so aWESoME servers are required in their vicinity, usually at the center of each mesh network.</sentence>
+    <sentence>In that case, a laptop is not necessary for testing or monitoring purposes, so a board computer was chosen to minimize size and power consumption.</sentence>
+    <sentence>From a range of board servers, the one with the lowest memory, processing power and consumption was chosen.14 Apparently, this is the most-lightweight computer that can host aWESoME services: it features an Atmel ARM9 at 400 MHz CPU module, and 64 MB of RAM, which is just enough for hosting the services.</sentence>
+    <sentence>After testing this extreme choice, any other more capable board server could offer improvements in performance if the power requirements are met.</sentence>
+    <sentence>That set up also proves the extensibility of the aWESoME deployment, as any number of servers can be set up, inflicting no further delay to the system.</sentence>
+    <sentence>Finally, Fig 5 shows the interaction of the two servers, the Service Broker and potential Clients, for instance desktop or Smartphone.</sentence>
+    <sentence>Broker, provider and client communication in current deployment Fig 5.</sentence>
+    <sentence>Broker, provider and client communication in current deployment.</sentence>
+    <sentence>The north part is covered with Smart Plugs in different rooms as well, but can just as well contain any other kind of the supported devices.</sentence>
+    <sentence>As long as device networks are moved as a whole, the board server contains the necessary components to provide services for the other bundles.</sentence>
+    <sentence>In fact, as Sensor Boards interface through WiFi, it can also provide Sensor Board Services, but hopefully the laptop server can relieve the board server from that task as well.</sentence>
+    <sentence>The same goes for the IT Services, as Computers can be managed from anywhere in the LAN.</sentence>
+    <sentence>Finally, Smart Plugs are again attached to the lighting in projectors in the Auditorium, and lighting of PC Labs and the Hallway.</sentence>
+  </section>
+  <section name="Application layer">
+    <sentence>This section presents external clients of the aWESoME middleware to prove its purpose, usability and effectiveness.</sentence>
+    <sentence>aWESoME interfaces with the upper layer (application layer) through universal well-defined Web Services described in WSDL.</sentence>
+    <sentence>Complementary to the WSDL files, a provisioning subsystem is used to publish and locate the distributed Service Providers.</sentence>
+    <sentence>It also guarantees the currency of the available services, as new services are dynamically added and obsolete services are removed.</sentence>
+    <sentence>Two clients are showcased here: iDEALISM which is a desktop application that provides a GUI for aWESoME services and added-value functionality, and PlugDroid which is a Smartphone application for the Android platform that offers similar functionality.</sentence>
+    <sentence>Finally a web portal collects all sensor data for viewing purposes only.</sentence>
+    <sentence>The differences between these client applications are summarized on Table 6.</sentence>
+    <sentence>Table 6.</sentence>
+    <sentence>Application functionality.</sentence>
+    <sentence>Functionality iDEALISM PlugDroid Web Portal Platform Java Java Android SDK PHP Store Service List Locally Locally Globally List of Services Selective Selective Complete View per Type View per Room Form Service Groups × Manually Invoke Services × Smart Plug Services (Read Only) Sensor Board Services Smart Clamper Services Historical Data Charts × Local function × × QRCode scanning × × 5.1.</sentence>
+    <sentence>Desktop application – iDEALISM The simplest and most straightforward client for the aWESoME middleware is the desktop application named iDEALISM (Stavropoulos, Vrakas, Arvanitidis, &amp; Vlahavas, 2011b).</sentence>
+    <sentence>iDEALISM is directly compatible with the newer versions of the aWESoME functions, as they are WSDL-based.</sentence>
+    <sentence>That goes to show the extensible character of both aWESoME and iDEALISM.</sentence>
+    <sentence>iDEALISM was designed from an energy-saving perspective.</sentence>
+    <sentence>It serves two purposes: to present a usable GUI for aWESoME services and promote energy savings at the IHU premises.</sentence>
+    <sentence>As all WSDL Web Services, aWESoME services lack a user-friendly interface for invoking the services.</sentence>
+    <sentence>Not only do they exchange SOAP messages, which are difficult and impractical for non-expert users to form and to parse back, but the exchanged data itself often have no practical meaning to the user.</sentence>
+    <sentence>The latter does not know what to enter to get the desired output or how to interpret the results.</sentence>
+    <sentence>iDEALISM presents a user-friendly interface (Fig 7) that helps maintain a list of services, organize and invoke them periodically or per request.</sentence>
+    <sentence>As desktop users do not need to be burdened with a complete list of services, they can manually enter and store the ones they are interested in.</sentence>
+    <sentence>To better handle the service list, the users can form service groups and view the list per device type, room or group.</sentence>
+    <sentence>All device-related services can be invoked by the iDEALISM’s Web Service Client.</sentence>
+    <sentence>Sensor-related Services are periodically invoked and response data is stored to form historical data charts.</sentence>
+    <sentence>The actuator services can be invoked per user request.</sentence>
+    <sentence>Especially operations of devices in Rooms and Groups can also be invoked collectively and carry out batch tasks.</sentence>
+    <sentence>PlugDroid screenshots Fig 6.</sentence>
+    <sentence>PlugDroid screenshots.</sentence>
+    <sentence>List of all devices (left).</sentence>
+    <sentence>Device Service view and invocation options (right).</sentence>
+    <sentence>iDEALISM view of a Smart Clamper service Fig 7. iDEALISM view of a Smart Clamper service.</sentence>
+    <sentence>Moreover, this extended functionality and the overall design of the application is set to promote energy savings.</sentence>
+    <sentence>The ability to organize and view historical and real time service response data enables the user to comprehensively grasp an accurate view of the environmental conditions in the building in correlation with energy consumption for both past and present.</sentence>
+    <sentence>Subsequently, the user is able to manage energy consumption based on this knowledge.</sentence>
+    <sentence>Despite the universal nature of Web Services, WSDL grants syntactic interoperability only.</sentence>
+    <sentence>That sets a boundary for all Service clients, including iDEALISM as well.</sentence>
+    <sentence>The application could reach its full potential and incorporate a form of intelligence when services get semantic annotations.</sentence>
+    <sentence>This next stage is listed as future work.</sentence>
+    <sentence>After that, iDEALISM could offer automatic parsing and organizing of services based on semantic descriptions and require no user action.</sentence>
+    <sentence>Going deeper, that would also eliminate the need for hardcoded service behavior, as services will reference classes or groups of classes from a common model (i.e.</sentence>
+    <sentence>the ontology).</sentence>
+    <sentence>Smartphone application – PlugDroid Smartphones are becoming increasingly used in every application and especially in Ambient Intelligence, because of their compact and portable nature.</sentence>
+    <sentence>Smartphones are interesting because of their dual role: they can be used for manual user input and output but also as sensors in the Ambient Intelligence system.</sentence>
+    <sentence>Smartphones incorporate numerous devices in compact size and reasonable price.</sentence>
+    <sentence>The Android platform15 has also contributed to easy adaptation and exploitation of Smartphone hardware through the open source android SDK.16 The PlugDroid application (Fig 6) was developed for the purposes of Smart IHU, on top of the aWESoME middleware.</sentence>
+    <sentence>It can be seen as a variant of its desktop counterpart, iDEALISM, as it offers similar functionality, altered to suit its compact and portable nature.</sentence>
+    <sentence>To put it simply, the functionality provided by PlugDroid is the same as iDEALISM, minus historical data (i.e.</sentence>
+    <sentence>charts) and plus the aiding functions provided by the smartphone hardware.</sentence>
+    <sentence>A list of services is again maintained locally, as mobile users would be overwhelmed with a complete list of services.</sentence>
+    <sentence>Instead, they can selectively add the Services they need and store them for later use.</sentence>
+    <sentence>Again, the list can be organized in custom groups for batch operations and viewed categorized per Type, Room or Group.</sentence>
+    <sentence>All device-related services are naturally supported by the Web Service client incorporated in PlugDroid, including the Smart Plug Services.</sentence>
+    <sentence>Unlike iDEALISM, this application is rid of the historical data charts, which would need numerous services calls to fill in and burden the portable applications usage.</sentence>
+    <sentence>Besides, smartphone users (not only Android users) can visit the Web Portal on the phone’s browser and view all historical data carts.</sentence>
+    <sentence>The MAC Addresses can be manually entered during Service registration but in PlugDroid they can also be obtained by scanning QRCodes.</sentence>
+    <sentence>QRCodes are printed on paper and placed on the appliances or near the entrances of corresponding rooms.</sentence>
+    <sentence>As a result, the users can physically interface with the real-world appliances on-the-go and do not have to take notes or seek out complex MAC Addresses.</sentence>
+    <sentence>As future extension, the PlugDroid application can equally benefit from semantic service discovery and interpretation.</sentence>
+    <sentence>It would then require even less user input and choice making and enable a hassle-free mobile experience.</sentence>
+  </section>
+  <section name="Results">
+    <sentence>To measure and evaluate the robustness, responsiveness and energy efficiency of the proposed platform itself (apart from energy savings that can be achieved by applications) a series of experiments has been carried out.</sentence>
+    <sentence>The services and even the servers used were evaluated in three different setups: using a PC, a netbook and a board microcomputer.</sentence>
+    <sentence>The PC has a P4 1.8 GHz processor and 512 MB RAM, the netbook wears an Atom 2 × 1.66 Ghz processor and 1G DDR3 RAM, while the microcomputer wears an ARM9 400 MHz processor and 64 MB RAM.</sentence>
+    <sentence>To begin with, during experiment 1, all machines were tested on different combinations, i.e.</sentence>
+    <sentence>Scenarios, of mild CPU load and attached I/O devices (as they also consume energy) to measure their average idle consumptions.</sentence>
+    <sentence>Scenario 1 is the most demanding one, running the aWESoME server and having a lot of devices attached.</sentence>
+    <sentence>As seen on Table 7, the board’s consumption is always constant and about 4% of the PC’s power demand while the netbook is about 28% as demanding as the PC.</sentence>
+    <sentence>Table 7.</sentence>
+    <sentence>Idle consumption of different servers during experiment 1.</sentence>
+    <sentence>Scenario Board PC (W) Netbook (W) PC (W) 1 2.1324 13.5703 48.3361 2 2.1325 13.3764 48.4783 3 2.1325 13.3764 48.3361 4 2.1325 13.3764 47.9096 The second experiment involves invoking a given set of service operations (Switch On and Switch Off) for 120 consecutive times in each run.</sentence>
+    <sentence>The average of response time for each call, over each run and per server is shown on Table 8.</sentence>
+    <sentence>The performance of the netbook and the PC can be regarded as equal and was very fast (as the sensors themselves need some time to respond).</sentence>
+    <sentence>However the Board PC is almost three times slower.</sentence>
+    <sentence>Table 8.</sentence>
+    <sentence>Response time overall distribution during experiment 2.</sentence>
+    <sentence>Response time (s) Board PC% Netbook% PC% 1 0 82.1 82.5 2 5.417 17.9 17.5 3 90.833 0 0 4 3.333 0 0 5 0.417 0 0 Total 100 100 100 During the same experiment, the power consumption of each server has been logged (using the smart plug sensors and another aWESoME server).</sentence>
+    <sentence>Table 9 shows the average values of these measurements.</sentence>
+    <sentence>The consumption values while idle, confirm experiment 1.</sentence>
+    <sentence>What is interesting is that the difference of an active PC is far bigger than the rest of the machines.</sentence>
+    <sentence>Now the Board PC is consuming 2% (98% saved) and the netbook 18% (82% saved) of the PC’s power demand.</sentence>
+    <sentence>Table 9.</sentence>
+    <sentence>Power consumption during experiment 2.</sentence>
+    <sentence>Server Power consumption (W) Board PC Idle 2.133 Active 2.337 Difference 0.204 Netbook Idle 13.376 Active 15.220 Difference 1.844 PC Idle 48.265 Active 81.998 Difference 33.742 Fig 8 shows the power dissipation in time during the course of experiment 2.</sentence>
+    <sentence>Except from the large differences in energy savings already mentioned above, the large response time of the Board PC is also evident.</sentence>
+    <sentence>As expected, the three times bigger response time of the Board PC results in a three times longer total runtime of the experiment.</sentence>
+    <sentence>Note that turning the netbook’s monitor off can save up to 4 Watts in average, which is shown on this figure.</sentence>
+    <sentence>Server power consumption in time during experiment Fig 8.</sentence>
+    <sentence>Server power consumption in time during experiment.</sentence>
+    <sentence>Since the netbook and the PC have the exact same response time but the netbook’s consumption is smaller, the PC is left out of the next comparison.</sentence>
+    <sentence>Table 10 summarizes the power consumption-performance tradeoff between the Board PC and the netbook.</sentence>
+    <sentence>All in all, both of them can be considered as significant improvements over the PC server.</sentence>
+    <sentence>Table 10.</sentence>
+    <sentence>Netbook and Board PC comparison.</sentence>
+    <sentence>Parameter Netbook Board PC Difference Processor 2 × 1.6 GHz 400 MHz 2 × 41% Faster RAM Average 1 GB 64 MB 16% Bigger Consumption when active 15.220 W 2.337 W 65% Higher Total response time 142 s 358 s 40% Faster Average repsonse time per call 1.18 s 2.98 s 40% Faster</sentence>
+  </section>
+  <section name="Future work">
+    <sentence>The development of the Smart IHU platform follows two directions: extending and enriching the aWESoME middleware and developing intelligent applications that exploit the middleware.</sentence>
+    <sentence>aWESoME serves as the essential middleware layer that offers the required interoperability but it is not supposed to (and does not) present certain behavior.</sentence>
+    <sentence>On the contrary, it serves as a library of methods (web methods) to be exploited in order to realize applications of different logic.</sentence>
+    <sentence>To provide applications with more variety and flexibility, aWESoME can be extended in two ways: more components and semantic annotations.</sentence>
+    <sentence>Due to its component-based structure, newly developed drivers and/or services can be added.</sentence>
+    <sentence>To integrate more devices or device families, new drivers and their corresponding services can be built.</sentence>
+    <sentence>Software-based services for utility functions or internet services (e.g.</sentence>
+    <sentence>weather forecast) can be added to the service layer to support more scenarios.</sentence>
+    <sentence>In the future we plan to integrate more devices (e.g.</sentence>
+    <sentence>a weather station) but also various Z-Wave devices to profit from existing work in the Z-Wave library.</sentence>
+    <sentence>Apart from extending the functionality provided, semantic annotations can enrich aWESoME in terms of interoperability and usability.</sentence>
+    <sentence>The Semantic Web17 technologies have reached a point where all the necessary tools and standards suffice for machine interpretable information on the Web.</sentence>
+    <sentence>As web development and usage patterns shift from data to services, many efforts to apply the same semantic web methodologies to services have been presented.</sentence>
+    <sentence>Some did not succeed as W3C recommendations, but provide rich expressiveness, such as OWL-S.18 Other approaches, such as SAWSDL19- annotations for WSDL are based on simplicity and effectiveness.</sentence>
+    <sentence>We have developed an ontology to describe entities in the Smart IHU domain, and Smart Spaces in general, and plan to explore both directions towards Semantic Web Services: describe the service in a complex model (i.e.</sentence>
+    <sentence>the ontology), following the OWL-S approach, and using direct annotations on WSDL, following the SAWSDL approach.</sentence>
+    <sentence>Finally, we plan to develop applications based on well-known A.I.</sentence>
+    <sentence>methodologies to benefit from the infrastructure and present intelligent behavior in the system.</sentence>
+    <sentence>The applications presented so far, are merely GUIs that showcase the capabilities of aWESoME and offer a user-friendly view of the system’s status.</sentence>
+    <sentence>However, known methodologies of A.I.</sentence>
+    <sentence>have been used in research to provide automation of tasks in Smart Spaces.</sentence>
+    <sentence>The most common objective for service-oriented systems is automatic Service Composition using simple matching or A.I.</sentence>
+    <sentence>Planning.</sentence>
+    <sentence>We plan to exploit semantic annotations on aWESoME and employ such techniques to profit from existing solutions (e.g.</sentence>
+    <sentence>known planning algorithms) to automate tasks in the Smart IHU environment, towards both saving energy and raising user comfort.</sentence>
+  </section>
+  <section name="Conclusion">
+    <sentence>This work presents a middleware for Ambient Intelligence systems, based on the Service-Oriented Architecture for interoperability, the current sensor network deployment in a Smart University system, including a prototype board Server, and finally sample client applications.</sentence>
+    <sentence>As Ambient Intelligence systems are characterized by diversity in hardware and the market has not yet reached a point where devices can be exploited by computer programs in homogeneous ways, a middleware is often employed to tackle this obstacle.</sentence>
+    <sentence>Also, the paradigm shift to service computing has widely been adopted in Ambient Intelligence as it provides a useful abstraction for complex ambient applications to simply get things done.</sentence>
+    <sentence>The proposed middleware is both able to expose functions and data of various devices and device families and follows the service-oriented paradigm to harvest its benefits.</sentence>
+    <sentence>The driver layer of the middleware contains device drivers for ZigBee Smart Plugs, Sensor Boards, Smart Clampers and Z-Wave devices while the service layer contains services that expose the methods of these drivers and additional software-based services such as Wake-On-Lan and remote shutdown to manage IT equipment.</sentence>
+    <sentence>aWESoME is deployed in a Smart University setting, namely the Smart IHU project.</sentence>
+    <sentence>Each driver and/or service module can be separately installed in aWESoME servers that are distributed in the building.</sentence>
+    <sentence>Thus, coverage restrictions of the smart device networks are lifted.</sentence>
+    <sentence>To maintain compactness and low power consumption of the aWESoME infrastructure itself, we demonstrate a prototype board aWESoME server along with performance and consumption measurements.</sentence>
+    <sentence>Current topology includes a laptop server and a board server that cover the most vital part of the School of Science and Technology (the ground floor).</sentence>
+    <sentence>A Service Broker for aWESoME has been developed to complete the architecture paradigm with provisioning capabilities, supported by the WS-Discovery standard.</sentence>
+    <sentence>As the system is based on distributed servers, and services can possibly enter and leave the environment (due to portability or failure), the Service Broker serves to intermediate and locate Service Providers for Service Clients.</sentence>
+    <sentence>Finally, two kinds of aWESoME clients, a desktop application and a smartphone application, are presented to showcase aWESoME functionality and allow monitoring and managing the Smart IHU environment in a user-friendly way.</sentence>
+    <sentence>1 The ZigBee Alliance: http://www.zigbee.org/.</sentence>
+    <sentence>2 Z-Wave: http://www.z-wave.com.</sentence>
+    <sentence>3 INSTEON: http://www.insteon.net/.</sentence>
+    <sentence>4 X10: http://www.x10.com.</sentence>
+    <sentence>5 UPnP Forum: http://www.upnp.org/.</sentence>
+    <sentence>6 The World Wide Web Consortium: http://www.w3.org/.</sentence>
+    <sentence>7 The Web Service Description Language 1.1: http://www.w3.org/TR/wsdl.</sentence>
+    <sentence>8 The Hydra Middleware online: http://www.hydramiddleware.eu.</sentence>
+    <sentence>9 aWESoME online: http://lpis.csd.auth.gr/people/thanosgstavr/development.html#awesome.</sentence>
+    <sentence>10 Plugwise company: http://www.plugwise.com.</sentence>
+    <sentence>11 Prisma Electronics: http://www.prismaelectronics.eu.</sentence>
+    <sentence>12 CurrentCost: http://www.currentcost.com/.</sentence>
+    <sentence>13 OWL energy monitor: http://www.theowl.com/.</sentence>
+    <sentence>14 Foxboard by Acme systems: http://www.acmesystems.it/?id=FOXG20.</sentence>
+    <sentence>15 Android homepage: http://www.android.com/.</sentence>
+    <sentence>16 Android SDK: http://developer.android.com/sdk/.</sentence>
+    <sentence>17 The Semantic Web initiative: http://semanticweb.org.</sentence>
+    <sentence>18 The OWL-S ontology for services: http://www.daml.org/services/owl-s/1.0/.</sentence>
+    <sentence>19 SAWSDL at W3C: http://www.w3.org/2002/ws/sawsdl/.</sentence>
+  </section>
+</article>

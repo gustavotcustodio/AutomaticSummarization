@@ -1,0 +1,192 @@
+The paper focuses on improving the standalone low-cost INS accuracy. Random forest regression based model is proposed to improve the INS positioning accuracy. Proposed model is shown to perform better than existing neural network model. A total of 24–56% of improvement in the positional accuracy was observed. Proposed model is applicable to land vehicle navigation where low-cost INS is utilized.
+
+0.107475 - This paper, for the first time, introduces a random forest regression based Inertial Navigation System (INS) and Global Positioning System (GPS) integration methodology to provide continuous, accurate and reliable navigation solution.
+0.092722 - Numerous techniques such as those based on Kalman filter (KF) and artificial intelligence approaches exist to fuse the INS and GPS data.
+0.139966 - The basic idea behind these fusion techniques is to model the INS error during GPS signal availability.
+0.139246 - In the case of outages, the developed model provides an INS error estimates, thereby maintaining the continuity and improving the navigation solution accuracy.
+0.063063 - KF based approaches possess several inadequacies related to sensor error model, immunity to noise, and computational load.
+0.126264 - Alternatively, neural network (NN) proposed to overcome KF limitations works unsatisfactorily for low-cost INS, as they suffer from poor generalization capability due to the presence of high amount of noise.
+0.142991 - In this study, random forest regression has shown to effectively model the highly non-linear INS error due to its improved generalization capability.
+0.074468 - To evaluate the proposed method effectiveness in bridging the period of GPS outages, four simulated GPS outages are considered over a real field test data.
+0.136561 - The proposed methodology illustrates a significant reduction in the positional error by 24–56%.
+0.098427 - Global Positioning System (GPS) is the most widespread technology used in the field of positioning, navigation, mapping and timing etc.
+0.075019 - For land vehicle navigation, GPS provides position and velocity components along the three dimensions that helps in answering the fundamental questions such as “What is vehicles current location or its heading direction?”.
+0.027972 - Under favorable conditions, GPS provides continuous and accurate navigation information over a long period of time.
+0.110527 - However in certain scenarios, when vehicle passes through urban areas or through forest, the positioning accuracy degrades due to the blockage of satellite’s signals.
+0.064725 - As a result, the navigation solution becomes futile.
+0.109542 - To overcome such accompanying intermittency in GPS signal, a combined system consisting of GPS and INS is utilized.
+0.094455 - INS is a self-contained positioning and attitude device which consists of an Inertial Measurement Unit (IMU), and an onboard computer to process the raw IMU measurements.
+0.063830 - IMU is capable of measuring vehicle’s linear and angular acceleration through three sets of accelerometers and gyroscopes placed along the three mutually orthogonal directions.
+0.104193 - However, due to the presence of noise in the raw IMU measurements, the standalone INS solution drifts with time depending upon the grade of the INS.
+0.075595 - As a result, INS accuracy deteriorates with time unless periodically calibrated by other sensors.
+0.060148 - Thus, in an integrated INS/GPS system, GPS compliments INS through its error estimation process which results in frequent calibration of the INS.
+0.047619 - On the other hand, INS bridges GPS signal gaps, assists in signal reacquisition after an outage, and reduces the search domain for detecting and correcting GPS cycle slips (El-Rabbany, 2006; Wong, Schwarz, & Cannon, 1988).
+0.105770 - Hence, the hybridized system proves to be superior to either of the standalone systems (i.e., INS or GPS).
+0.070151 - The integration technique usually works in two different phases depending upon the availability of the GPS signal which, if available, models and estimates the INS errors, and delivers the accurate and high rate navigation parameters.
+0.129175 - However, in the second phases i.e., during outages, the developed model is employed for INS error estimation and is further compensated to reduce the drift in the standalone INS solution.
+0.124910 - Different approaches based on Bayesian filtering and artificial intelligence techniques have been proposed to improve the effectiveness of the integration methodology in bridging GPS outages.
+0.027304 - Bayesian filtering approach (Vaníček & Omerbašic, 1999; Hostetler & Andreas, 1983; Ristic, Sanjeev, & Neil, 2004) such as Kalman filtering and particle filtering (Aggarwal, Syed, & El-Sheimy, 2008; Arulampalan, Maksell, Gordon, & Clapp, 2002; Ristic et al., 2004), are the most popular estimation tools for GPS/INS integration.
+0.079605 - However, performance limitations in the former filtering approach do take place in the case of low-cost INS due to several related assumptions including, but not limiting to Gaussian white noise, ideal dynamics model, and non-linear error linearization, whereas the latter approach uses a cluster of random particles to represent the posterior distribution, which makes it not applicable for real-time applications.
+0.048110 - Alternatively, artificial intelligence approaches such as those based on Multi-Layer Perceptron Neural Networks (MLPNNs), Radial Basis Function Neural Networks (RBFNNs), and Adaptive Neuro-Fuzzy Inference System (ANFIS) have gained the popularity in recent years due to its ability to handle the problem of non-linearity (El-Sheimy, Chiang, & Noureldin, 2006; Semeniuk & Noureldin, 2006).
+0.000000 - El-Sheimy et al.
+0.099426 - (2006), proposed the neural network based Position Update Architecture (PUA), and Position and Velocity Updates Architecture (PVUA).
+0.120767 - Both models were shown to be able to deliver better performance than KF due to its improved ability to model the non-linear relationship effectively.
+0.124865 - Though the Artificial Neural Network (ANN) based architecture (i.e., PUA and PVUA) performs better than KF approaches as explained in (El-Sheimy et al., 2006), the accuracy of these architectures degrades in the case of low-cost INS.
+0.120773 - This is mainly due to the presence of high inherent INS sensor errors (e.g.
+0.079051 - turn-on biases, in-run biases, and scale factor drifts) which increases the non-linear complexity of the input/output functional relationship being modeled, causing to limit the ANN generalization ability which in turn affects its prediction accuracy.
+0.096759 - In this research, we propose the implementation of random forest regression (RFR) based GPS/INS integration methodology to avoid any generated over fitting (Breiman, 2001; Svetnik, Liaw, Tong, Culberson, Sheridan et al., 2003).
+0.167926 - Thereby, the proposed model results in better prediction accuracy.
+0.121165 - The paper is organized into the following sections: Section 2 gives an overview of the existing neural network based PUA technique for INS/GPS integration.
+0.064897 - Section 3 describes the proposed methodology along with its implementation.
+0.108373 - Section 4 presents the results of the random forest regression model and provides a comparison with the existing ANN based PUA technique.
+0.069153 - Section 5 concludes the paper.
+0.043047 - Artificial Neural Networks (ANNs) are being widely used as they are capable of modeling any non linear system with ease (Zhang & Gupta, 2000; Chiang, 2004; Akkala, Bhatt, Devabhakthuni, & Kumar, in press; Watson & Gupta, 1996).
+0.058288 - Basic ANN contains one input layer and one output layer which, in general, have to capture the inherent relation between the input and output.
+0.100523 - In the article scope, the ANN has to capture the non linear relationship relating GPS and INS data.
+0.072072 - On this regard, multi-layer feed forward networks like the multilayer perceptron (MLP) was proposed and implemented.
+0.028986 - Apart from the basic input and output layers, MLP contains one or more hidden layers.
+0.094948 - Present function of ANN is to fuse the INS and GPS data taking advantage of a multi-layer perceptron network with three layers namely input layer, hidden layer and output layer.
+0.038835 - All the three layers employ different activation function.
+0.083657 - Here we implement Position Update Architecture (PUA) to MLP neural network to integrate the INS and GPS data (El-Sheimy et al., 2006; Chiang, 2004; Chiang & El-Sheimy, 2001).
+0.087050 - A MLP utilizing PUA is shown in Fig 1.
+0.057348 - The PUA MLP network Fig 1.
+0.064257 - The PUA MLP network.
+0.118010 - A MLP network is trained during the GPS availability, and the trained model is used to predict the required output parameters at the time of outages.
+0.091816 - As can be seen in Fig 1, the inputs to the neural network are INS velocity VINS(t), and azimuth ΦINS(t), whereas the outputs are the position coordinate differences between two consecutive epochs.
+0.126536 - The efficiency of the model is characterized by mean square error given in (1).
+0.053812 - The mean square error can be reduced by proper weight update which is done by making a comparison between the output of the PUA and the actual coordinate differences obtained from GPS.
+0.056952 - (1) Where Ny represents the number of neurons in the output layer, ypq is the desired output, and is the predicted output given by: (2) (3) where voq represents the qth neuron bias weight parameter in the output layer.
+0.056645 - The weight link between the hidden layer kth neuron and output layer qth neuron is given by vkq.
+0.086142 - The output of the kth hidden neuron is represented by zk given in (3), where σ( ) is the activation function of the hidden neuron.
+0.086022 - xi is the ith input neuron.
+0.059925 - uik is the weight link between the kth hidden neuron and ith input neuron and uok is the kth hidden neuron bias parameter.
+0.084673 - So, the process of comparing and adjusting the neural network weights is done iteratively during the GPS signal availability.
+0.075188 - Thus during outages, the output position coordinate differences are predicted by this trained model.
+0.084746 - The implementation of PUA utilizing ANN is given in Algorithm 1.
+0.000000 - Algorithm 1.
+0.043573 - ANN implementation for Position Update Architecture (PUA) Step 1: Identification of inputs and outputs for the present architecture.
+0.072841 - Step 2: For the set of inputs and outputs we train the MLP neural network.
+0.034858 - Step 3: We obtain the estimation error by comparing the ANN output with the reference value (GPS values).
+0.082596 - Step 4: Updating the weights to reduce the estimation error.
+0.000000 - Step 5: Repeat steps 2–4 until GPS outage occurs.
+0.101449 - Step 6: During GPS outage we utilize this trained model to get the navigation parameters.
+0.164572 - The major drawback with this PUA utilizing MLP is the performance limitation for low cost INS.
+0.083333 - This limitation is due to the highly nonlinear input–output functional relationship due to the presence of high inherent sensor errors.
+0.093750 - To deal with such complex relationships we need to enhance the prediction accuracy.
+0.071931 - Hence, we adopt a new methodology called random forest regression (RFR) which is capable of handling complex input–output functional relationships.
+0.109700 - Random Forest, proposed by Breiman (2001), is an improved classification and regression tree method that gained popularity for its robustness and flexibility in modeling the input–output functional relationship appropriately.
+0.061002 - Such method consists of a collection of regression trees trained using different bootstrap samples of the training data.
+0.076503 - Each tree acts as a regression function on its own, and the final output is taken as the average of the individual tree outputs.
+0.062016 - Moreover, due to the RFR built-in cross validation capability carried with the help of out-of-bag samples, it provides a realistic prediction error estimates during the training process, and hence, it is suitable for real time implementation.
+0.051633 - Furthermore, unlike neural networks (NNs), RFR handles the high dimensional data effectively (Svetnik et al., 2003).
+0.039216 - It is worth to point out here that RFR is being applied to various fields such as language modeling for speech recognition (Xu & Jelinek, 2004), bioinformatics (Jiang, Deng, Chen, Tao, Sha et al., 2004), species distribution modeling (Cutler, Edwards, Beard, Cutler, Hess et al., 2007) and ecosystem modeling (Prasad, Iverson, & Liaw, 2006).
+0.095541 - Methodology Random forest regression is a non-parametric regression approach.
+0.044872 - It consists of a set of M trees {T1(X), T2(X), … , TM(X)}, where X = {x1, x2, … , xp}, is a p-dimension input vector that forms a forest.
+0.070922 - The ensemble produces M outputs corresponding to each tree Ŷ1 = T1(X) ,… , ŶM = TM(X), where Ŷm, m = 1 ,… , M, is the mth tree output.
+0.088542 - To obtain the final output, an average of all tree predictions is calculated.
+0.068207 - Given a input–output dataset corresponding to PUA i.e.,{(X1, Y1), … , (Xn, Yn)}, where Xi, i = 1, … , n is an input vector containing INS velocities and azimuth and Yi as the GPS position coordinate differences between two consecutive epochs, the training procedure is adopted as follows: 1.
+0.032634 - From the available dataset, draw a bootstrap sample i.e., a randomly selected sample with replacement.
+0.044905 - Evolve a tree using the bootstrap sample with the following modifications: at each node choose the best split among a randomly selected subset of mtry descriptors.
+0.051371 - Here, mtry acts as an essential tuning parameter in the algorithm.
+0.081800 - The tree is grown to the maximum size (i.e., until no further splits are possible) and not pruned back.
+0.043360 - Step 2 is repeated until user defined number of trees are grown.
+0.065440 - For each regression tree construction, a new training set (bootstrap samples) is drawn with replacement from the original training set.
+0.050684 - So, while choosing the boot strap samples some of the training data may be left out of the sample and some may be repeated in the sample.
+0.039548 - These left out data sample constitute the out-of-bag samples.
+0.094813 - A total of two third sample of the new training sample is utilized for deriving the regression function whereas one third constitutes the out-of-bag sample.
+0.098522 - Thus, each time a regression tree is constructed using randomized drawn training sample from the original dataset; an out-of-bag sample is used to test its accuracy.
+0.119679 - This in-built validation features improves the generalization capability of the random forests when an independent test data is utilized.
+0.073718 - To obtain the total learning error, an average of the prediction error estimate of each individual tree constructed using their out-of-bag sample is obtained given by (4).
+0.097027 - In (4), Ŷ(Xi) is the predicted output corresponding to a given input sample whereas Yi, is the observed output and n represents the total number of out of bag samples.
+0.090247 - This error estimates determine how efficient the random forest prediction would be when it is exposed to unknown/unseen samples.
+0.062358 - (4) Fig 2 below represents the random forests workflow.
+0.098160 - The input training samples {X1, X2, … , Xn} shown on left is used to grow the user defined number of trees.
+0.059701 - However, to define the out-of-bag error estimate, the testing samples i.e., the inputs for prediction (as shown in Fig 2) are passed along the trees and the final output i.e., average of individual tree estimates is obtained.
+0.080169 - Thus, based on the final predicted and observed output, the out-of-bag error estimate is calculated using (4).
+0.036706 - Random Forests work flow Fig 2.
+0.041261 - Random Forests work flow.
+0.156488 - Application to INS/GPS integration In our study, a random forest regression methodology utilizing Position Update Architecture (PUA) is proposed.
+0.073099 - PUA model, as explained in Section 2, utilizes INS derived velocity and azimuth component as input and the output as the corresponding position coordinate differences between two consecutive epochs, taken from the GPS.
+0.087146 - Thus, the PUA is trained using a suitable modeling technique as long as the GPS signals are available.
+0.118714 - In the case of outages, the trained PUA model predicts the position coordinate differences using INS solution as input.
+0.088496 - Originally, the PUA model proposed by El-Sheimy et al.
+0.101222 - (2006) is based on neural network.
+0.184045 - In an effort to improve the PUA prediction accuracy, a random forest regression model is utilized wherein an input–output functional relationship is developed.
+0.043360 - In RFR, M trees are fully grown using the available training samples.
+0.067633 - The newly constructed regression trees can then be utilized for prediction corresponding to unknown samples.
+0.115288 - The detailed implementation of the proposed RFR based PUA is given in Algorithm 2.
+0.000000 - Algorithm 2.
+0.103235 - Proposed RFR based PUA training procedure Step 1: Identify the input and output for developing random forest regression model as per Position Update Architecture (PUA).
+0.081301 - Step 2: Decide the number of trees to be grown in forests.
+0.031250 - Step 3: Grow each tree using bootstrapped sample taken from the original dataset.
+0.065511 - Step 4: Evaluate the prediction error corresponding to the regression trees grown, using out of bag sample and obtain the average error.
+0.068759 - Step 5: During GPS outages obtain the trees output for a given input (i.e., INS velocity and azimuth) and average the predictions to obtain the final output i.e., position coordinates.
+0.093883 - The proposed RFR model is validated and compared with existing Artificial Neural Network (ANN) model using real field test data obtained using low grade MEMS based IMU, high grade IMU and Differential GPS (DGPS) solution under both GPS outages and no outages conditions.
+0.119075 - The effectiveness of any integration methodology depends on the percentage of reduction in the standalone INS positional error compared to the existing technique, during the period of GPS outages.
+0.082272 - In our study, we evaluated our proposed RFR based INS/GPS integration technique against existing ANN based PUA, as it has been proven to work better than KF.
+0.031088 - The field test data was collected using Crossbow IMU 300CC-100, reference high grade IMU by Honeywell (HG 1700), Novatel OEM GPS receivers and a computer.
+0.079605 - The IMU data collection rate was 100 Hz and their specifications is shown in Table 1.
+0.000000 - Table 1.
+0.013605 - Characteristics of Crossbow IMU and HG 1700.
+0.022122 - Crossbow IMU 300CC HG 1700 Gyroscope Bias <±2.0 °/s 1.0 °/hr Scale factor <1% 150 ppm Random walk <2.25 °/√hr 0.12 °/√hr Accelerometer Bias ±30.0 mg 1.0 mg Scale factor <1% 300 ppm Random walk <0.15 m/s/√hr 0.019 m/s/√hr Fig 3 depicts the field test trajectory that comprises of all the real-life scenarios encountered by a typical land vehicle which includes high speed highway section, suburban roads with hills, trees and winding turns, urban streets with frequent stops and sudden vehicle accelerations/decelerations.
+0.074906 - Four simulated GPS outages of 30 s each were considered to evaluate the proposed methodology effectiveness against PUA, as shown in Fig 3.
+0.029144 - These outages were considered under diverse conditions such as straight portions, turns, slopes, high speeds and slow speeds as is encountered in real time.
+0.021680 - Field test trajectory showing simulated GPS outages (in blue) (For… Fig 3.
+0.079511 - Field test trajectory showing simulated GPS outages (in blue) (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.).
+0.174954 - The proposed random forest regression model is trained during GPS availability, and the trained model is then used to predict the position coordinates during outages.
+0.095489 - The training samples contain the INS velocity and azimuth and the output is the GPS position coordinate differences between consecutive epochs.
+0.072072 - The training is done by selecting a bootstrap sample from the training data and thus growing trees.
+0.054852 - These newly constructed regression trees are then used for predicting the output for unknown samples corresponding to GPS outages.
+0.062500 - The final output will be the average of predictions of all the trees.
+0.081531 - The PUA model considered in this study utilizes INS velocity and azimuth as input and the position coordinate differences between two consecutive epochs (taken from GPS) as the desired output.
+0.111236 - Thus, the PUA model based on ANN is trained as long as the GPS signals are available whereas in the case of outages, the trained model is utilized to predict the position coordinates difference (El-Sheimy et al., 2006; Bhatt, Aggarwal, Devabhaktuni, & Bhattacharya, 2012).
+0.047619 - The ANN is trained using quasi-Newton training algorithm because of its faster convergence ability (Dennis & Schnabel, 1983 ; Likas & Stafylopatis, 2000).
+0.100984 - The model performance parameter is evaluated with Root Mean Square Error (RMSE), given in (5); by comparing the predicted position components obtained using the proposed methodology (RFR) and the existing neural network based PUA with the reference solution (GPS).
+0.063291 - (5) where and yp are the predicted and the desired output and N corresponds to the GPS outage duration.
+0.065707 - As explained, the RFR method fuses the INS and GPS data and develops the regression trees before the outages occur.
+0.165411 - During outages the trained model is used to predict the output.
+0.087945 - Fig 4 illustrates the 1st GPS outage of duration 30 s. The drift in the positional error using RFR methodology (in red1) is less when compared to PUA (in green).
+0.052434 - The RMSE is calculated for both the methodologies and are obtained as 35.55 m for RFR and 46.82 m for PUA.
+0.162048 - Thus from the values of RMSE we observe that the percentage improvement in the positioning accuracy was 24.06%.
+0.013605 - Performance during GPS outage 1 Fig 4.
+0.015152 - Performance during GPS outage 1.
+0.089888 - The second outage is considered to be a more challenging one as it corresponds to the portion of the trajectory along a curve.
+0.131657 - The predicted and the reference trajectories obtained using the proposed and existing model is as shown in Fig 5.
+0.082716 - Here the RFR method obtained a reduction in RMSE from 274.6 m to 128.2 m there by showing a 53.3% improvement in positional error when compared to PUA.
+0.013605 - Performance during GPS outage 2 Fig 5.
+0.015152 - Performance during GPS outage 2.
+0.082902 - From Fig 6 it is clearly evident that for 3rd outage the RFR trajectory shows a negligible positional drift from reference trajectory (blue) compared to PUA.
+0.146150 - The RFR model also reduces the positional error which is 107.2 m for neural network based PUA model to 47.44 m thus demonstrating an overall percentage improvement of 55.75% in positioning accuracy.
+0.013605 - Performance during GPS outage 3 Fig 6.
+0.015152 - Performance during GPS outage 3.
+0.046620 - Fig 7 depicts the predicted trajectory of both PUA and RFR methodologies for the 4th outage.
+0.151961 - The proposed RFR model produces a RMSE of 82.5 m which is less in comparison to standard PUA which is 136.6 m. Thus, apart from improvement in positional drift, a total of 39.6% improvement in positional accuracy was demonstrated.
+0.013605 - Performance during GPS outage 4 Fig 7.
+0.015152 - Performance during GPS outage 4.
+0.089744 - For all the four simulated GPS outages considered in this study, the RFR algorithm was able to reduce the time growing positional error associated with standalone INS solution effectively.
+0.145498 - A quantitative comparison of the accumulated position error using our proposed RFR algorithm in comparison to the conventional ANN based PUA model is shown in Table 2.
+0.000000 - Table 2.
+0.124661 - Position errors for the proposed RFR model and the conventional PUA model.
+0.020774 - GPS outage length (m) Total positional error (m) Percentage improvement (%) ANN RFR Outage 1 (30 s) 317 46.82 35.55 24.06 Outage 2 (30 s) 348 274.64 128.22 53.31 Outage 3 (30 s) 472 107.2 47.44 55.75 Outage 4 (30 s) 394 136.33 82.52 39.6 From Figs.
+0.145930 - 4–7 we can notice that the navigation accuracy of the proposed RFR model was found to outperform conventional neural network based PUA model.
+0.075397 - We performed this study considering a low-grade INS which may produce huge positional drifts for longer periods of GPS outages.
+0.096718 - Hence we considered outage periods of 30 s each and thus can observe that the proposed RFR model produces less positional drift compared to conventional PUA.
+0.084175 - The proposed methodology is capable of delivering stable output for the case where vehicle experience sudden change in its movement as demonstrated through outage 2 (Fig 5).
+0.072464 - We trained the RFR model for a fixed number of regression trees, which are 500.
+0.113821 - The system accuracy depends on the number of trees to be grown.
+0.085015 - Thus by varying the number of trees the error value and the positional drift can be varied in case of RFR model.
+0.143291 - In an effort to develop an improved integration methodology for INS and GPS integration, the paper introduced the random forest regression model.
+0.033755 - RFR based non-linear modeling has various advantages such as it avoids data over fitting and offers high dimensionality.
+0.098692 - It models the non-linear functional relationship between the INS solution and the corresponding GPS position coordinate differences between two consecutive epochs, when the GPS signal is available.
+0.098862 - However, in the case of outages, the developed model utilizes the INS solution as inputs and predicts the corresponding position coordinate differences and thus provides the reliable estimates.
+0.111231 - This research fulfills the basic goal of reducing the drift in the predicted position coordinate differences using low-cost IMUs.
+0.155032 - Through the simulated GPS outages considered in this study, it has been shown that RFR model improves the standalone INS accuracy in comparison to ANN based PUA model.
+0.208366 - Overall the percentage improvement in the position accuracy was found to improve by 56%.
+0.027211 - 1 For interpretation of color in Figs.
+0.105263 - 4 and 6, the reader is referred to the web version of this article.
+
+[Frase 161] The proposed RFR model produces a RMSE of 82.5 m which is less in comparison to standard PUA which is 136.6 m. Thus, apart from improvement in positional drift, a total of 39.6% improvement in positional accuracy was demonstrated.
+[Frase 112] In an effort to improve the PUA prediction accuracy, a random forest regression model is utilized wherein an input–output functional relationship is developed.
+[Frase 32] Though the Artificial Neural Network (ANN) based architecture (i.e., PUA and PVUA) performs better than KF approaches as explained in (El-Sheimy et al., 2006), the accuracy of these architectures degrades in the case of low-cost INS.
+[Frase 157] The RFR model also reduces the positional error which is 107.2 m for neural network based PUA model to 47.44 m thus demonstrating an overall percentage improvement of 55.75% in positioning accuracy.
+[Frase 134] The proposed random forest regression model is trained during GPS availability, and the trained model is then used to predict the position coordinates during outages.
